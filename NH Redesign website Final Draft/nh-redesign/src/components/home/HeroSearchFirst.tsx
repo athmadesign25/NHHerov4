@@ -65,6 +65,7 @@ export default function HeroSearchFirst() {
                 />
                 <div className={styles.pulseIconWrapper} style={{ marginRight: '10px' }}>
                   <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
+                  <span className={styles.pulseText}>Ask Pulse</span>
                 </div>
               </div>
             </form>
