@@ -64,7 +64,7 @@ export default function AppDownloadBanner() {
             <Image
               alt="NH Care App Mockups"
               src={mockupImg}
-              style={{ width: "100%", maxWidth: "425px", height: "auto", objectFit: "contain" }}
+              style={{ width: "100%", maxWidth: "425px", height: "100%", objectFit: "contain", objectPosition: "bottom right", transform: "scale(1.5)", transformOrigin: "bottom right" }}
             />
           </div>
         </motion.div>

@@ -9,6 +9,8 @@ import {
 import { Search } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./HeroSearchFirst.module.css";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../public/assets/pulse animation.json";
 
 const popularTags = ["chest pain", "cancer", "surgery", "liver"];
 
@@ -33,7 +35,7 @@ export default function HeroSearchFirst() {
   return (
     <section className={styles.hero} id="hero-section-search-first">
       <video
-        src="/Hero-Video-New.mp4"
+        src="/Hero Video.mp4"
         autoPlay
         muted
         loop
@@ -46,16 +48,10 @@ export default function HeroSearchFirst() {
         <div className={styles.heroStack}>
           <div className={styles.titleUnit}>
             <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.05} />
-            <SplitText
-              text="Compassion Backed by Expertise"
-              tag="h2"
-              className={styles.subHeadline}
-              delay={0.15}
-            />
-          </div>
-
-          <div ref={searchRef} className={styles.searchWrap}>
-            <form className={styles.searchBarForm} onSubmit={(e) => e.preventDefault()}>
+            <p className={styles.subHeadline}>
+              Compassion Backed by Expertise
+            </p>
+            <form className={styles.searchBarForm} onSubmit={(e) => e.preventDefault()} style={{ marginTop: '32px' }}>
               <div className={styles.searchContainer}>
                 <div className={styles.searchIconWrapper}>
                   <Search className={styles.searchIcon} size={18} />
@@ -65,43 +61,16 @@ export default function HeroSearchFirst() {
                   placeholder="Book Doctors, Find Specialities or Treatments.."
                   className={styles.searchInput}
                   value={searchQuery}
-                  onFocus={() => setIsSearchOpen(true)}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setIsSearchOpen(true);
-                  }}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                <div className={styles.pulseIconWrapper} style={{ marginRight: '10px' }}>
+                  <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
+                </div>
               </div>
             </form>
-
-            <AnimatePresence>
-              {isSearchOpen && (
-                <motion.div
-                  className={styles.dropdown}
-                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  <div className={styles.popularSearches}>
-                    <div className={styles.popularTitle}>what people are searching for :</div>
-                    <div className={styles.popularTags}>
-                      {popularTags.map((tag) => (
-                        <button
-                          key={tag}
-                          type="button"
-                          className={styles.popularTagBtn}
-                          onClick={() => setSearchQuery(tag)}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
+
+
         </div>
       </div>
 

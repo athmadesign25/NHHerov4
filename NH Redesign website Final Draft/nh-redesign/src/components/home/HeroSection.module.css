@@ -25,7 +25,6 @@
   object-fit: cover;
   z-index: 1;
   pointer-events: none;
-  filter: blur(2px);
   transform: scale(1.01);
 }
 
@@ -35,7 +34,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(11, 15, 25, 0.45);
+  background: radial-gradient(ellipse at bottom center, rgba(0, 0, 0, 0.15) 0%, transparent 70%),
+              rgba(0, 0, 0, 0.1);
   z-index: 2;
   pointer-events: none;
   transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -163,7 +163,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: var(--sp-2);
+  margin-top: 60px;
 }
 
 .searchColumns {
@@ -482,32 +482,65 @@
 }
 
 .searchContainer {
+  position: relative;
   display: flex;
   align-items: center;
-  background: rgba(11, 15, 25, 0.65);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  background: linear-gradient(110deg, rgba(0, 0, 0, 0.25) 30%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.25) 70%);
+  background-size: 200% 100%;
+  animation: streakMove 4s linear infinite;
   border-radius: var(--radius-full);
   height: 54px; /* Fixed height matching CTA buttons */
   padding: 0 4px 0 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 15px rgba(255, 85, 85, 0.3), 0 0 15px rgba(85, 170, 255, 0.3);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes spinBorder {
+  to { --border-angle: 360deg; }
+}
+
+.searchContainer::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-full);
+  padding: 1px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 50%, #ff5555 75%, #55aaff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes streakMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .searchContainer:focus-within,
 .searchContainerActive {
-  background: rgba(255, 255, 255, 0.32);
-  border-color: #38BDF8;
-  box-shadow: 0 12px 45px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+}
+
+.searchContainer:focus-within::before,
+.searchContainerActive::before {
+  background: #ffffff;
+  animation: none;
 }
 
 .searchIconWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -517,7 +550,7 @@
 }
 
 .searchIcon {
-  color: var(--color-primary);
+  color: #ffffff;
   flex-shrink: 0;
   filter: none;
 }
@@ -1364,4 +1397,55 @@
   .sideTabs {
     display: none;
   }
+}
+
+/* Pulse AI Icon animations */
+.pulseIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.pulseIconWrapper::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: conic-gradient(from var(--border-angle, 0deg), rgba(139, 92, 246, 0.35), rgba(236, 72, 153, 0.35), rgba(239, 68, 68, 0.35), rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.35));
+  -webkit-mask: radial-gradient(circle, #fff 0%, transparent 70%);
+  mask: radial-gradient(circle, #fff 0%, transparent 70%);
+  animation: spinBorder 4s linear infinite, pulseGlow 2.5s infinite alternate ease-in-out;
+  z-index: 0;
+  pointer-events: none;
+}
+.pulseIconWrapper::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 20%, #8b5cf6 40%, #ec4899 60%, #ef4444 80%, #3b82f6 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 3s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+.pulseIcon {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@keyframes pulseGlow {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 1; }
 }

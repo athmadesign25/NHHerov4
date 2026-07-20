@@ -8,6 +8,8 @@ import { ChevronRight, Play, Stethoscope, Users, Building2, Activity, Clock, Cal
 import styles from "./HeroSection.module.css";
 import SplitText from "@/components/ui/SplitText";
 import MagneticButton from "@/components/ui/MagneticButton";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../public/assets/pulse animation.json";
 
 /* Floating tag badge, like in the reference */
 function FloatingBadge({
@@ -652,6 +654,9 @@ export default function HeroSection() {
                         }}
                         className={styles.searchInput}
                       />
+                      <div className={styles.pulseIconWrapper} style={{ marginRight: '14px' }}>
+                        <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
+                      </div>
                       {searchQuery.trim().length > 0 && (
                         <button type="submit" className={styles.searchBtn}>
                           Search

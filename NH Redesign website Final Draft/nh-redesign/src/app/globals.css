@@ -137,9 +137,9 @@ ul, ol {
 
 /* ─── CONTAINER ──────────────────────────────────────────────────────────── */
 .container {
-  max-width: var(--max-width);
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 var(--sp-3);
+  padding: 0 250px;
   width: 100%;
 }
 
