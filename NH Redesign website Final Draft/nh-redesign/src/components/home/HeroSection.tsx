@@ -658,11 +658,7 @@ export default function HeroSection() {
                         <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
                         <span className={styles.pulseText}>Ask Pulse</span>
                       </div>
-                      {searchQuery.trim().length > 0 && (
-                        <button type="submit" className={styles.searchBtn}>
-                          Search
-                        </button>
-                      )}
+
                     </div>
 
                     {/* Progressive Search Dropdown */}
