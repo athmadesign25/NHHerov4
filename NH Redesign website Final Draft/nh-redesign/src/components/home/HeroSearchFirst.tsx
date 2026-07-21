@@ -525,9 +525,43 @@ export default function HeroSearchFirst() {
   return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Control video playback based on search state
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    
+    if (videoRef.current) {
+      if (isOpen) {
+        // Smoothly slow down the video
+        let rate = videoRef.current.playbackRate;
+        intervalId = setInterval(() => {
+          if (videoRef.current && isOpen) {
+            rate -= 0.05; // Decrease rate gradually
+            if (rate <= 0.1) {
+              videoRef.current.pause();
+              videoRef.current.playbackRate = 1.0; // reset for next play
+              clearInterval(intervalId);
+            } else {
+              videoRef.current.playbackRate = rate;
+            }
+          } else {
+            clearInterval(intervalId);
+          }
+        }, 30); // ~600ms total duration
+      } else {
+        clearInterval(intervalId);
+        videoRef.current.playbackRate = 1.0;
+        videoRef.current.play().catch((err) => {
+          console.log("Playback prevented:", err);
+        });
+      }
+    }
+    return () => clearInterval(intervalId);
+  }, [isOpen]);
+
   return (
     <section className={styles.hero} id="hero-section-search-first">
       <video
+        ref={videoRef}
         src="/Hero Video.mp4"
         autoPlay
         muted
