@@ -47,10 +47,10 @@ const stories = [
 
 export default function PatientStories() {
   const videos = [
-    { videoId: "ZSEB_JWPLXE", thumb: "/assets/patient_story_1.png", title: "Cardiac Recovery Journey with NH Team" },
-    { videoId: "zj57LyreDYU", thumb: "/assets/patient_story_2.png", title: "Cancer Care Experience from Diagnosis to Healing" },
-    { videoId: "k09KKJSy8e8", thumb: "/assets/patient_story_3.png", title: "Spine Surgery Success and Mobility Restoration" },
-    { videoId: "UBNybY1lc6k", thumb: "/assets/patient_story_4.png", title: "Transplant Care Testimonial and Family Support" }
+    { videoId: "ZSEB_JWPLXE", thumb: "/assets/patient_in_1.png", title: "Cardiac Recovery Journey with NH Team" },
+    { videoId: "zj57LyreDYU", thumb: "/assets/patient_in_2.png", title: "Cancer Care Experience from Diagnosis to Healing" },
+    { videoId: "k09KKJSy8e8", thumb: "/assets/patient_in_3.png", title: "Spine Surgery Success and Mobility Restoration" },
+    { videoId: "UBNybY1lc6k", thumb: "/assets/patient_in_4.png", title: "Transplant Care Testimonial and Family Support" }
   ];
 
   const items = Array.from({ length: stories.length * 2 }, (_, i) => {

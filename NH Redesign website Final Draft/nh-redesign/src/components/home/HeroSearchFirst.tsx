@@ -12,6 +12,8 @@ import SplitText from "@/components/ui/SplitText";
 import styles from "./HeroSearchFirst.module.css";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
+import PixelRipple from "./PixelRipple";
+import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
 
 const popularTags = ["chest pain", "cancer", "surgery", "liver"];
 
@@ -104,7 +106,7 @@ const doctorsData = [
     location: "Bengaluru",
     hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
     additionalHospitals: 1,
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_1.png",
     keywords: ["cardiology", "heart", "ravi", "prakash", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -112,7 +114,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Guwahati",
     hospital: "Narayana Superspeciality Hospital, Guwahati",
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_2.png",
     keywords: ["cardiology", "heart", "ravi", "kumar", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -121,7 +123,7 @@ const doctorsData = [
     location: "Mumbai",
     hospital: "NH Children's Hospital, Mumbai",
     additionalHospitals: 2,
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_3.png",
     keywords: ["neurology", "brain", "ravi", "shankar", "doctor", "specialist", "neurologist"]
   },
   {
@@ -129,7 +131,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Bengaluru",
     hospital: "Narayana Multispeciality Hospital, HSR Bangalore",
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_1.png",
     keywords: ["cardiology", "heart", "prakash", "sharma", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -137,7 +139,7 @@ const doctorsData = [
     speciality: "Orthopaedics",
     location: "Kolkata",
     hospital: "Narayana Superspeciality Hospital, Howrah, kolkata",
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_2.png",
     keywords: ["orthopaedics", "bone", "prakash", "gupta", "doctor", "specialist", "orthopaedic"]
   },
   {
@@ -145,7 +147,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Bengaluru",
     hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_3.png",
     keywords: ["cardiology", "heart", "rajiv", "menon", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -154,7 +156,7 @@ const doctorsData = [
     location: "Mumbai",
     hospital: "NH Children's Hospital, Mumbai",
     additionalHospitals: 1,
-    photo: "/doctor_avatar_female.png",
+    photo: "/assets/doctor_1.png",
     keywords: ["neurology", "brain", "priya", "sharma", "doctor", "specialist", "neurologist"]
   },
   {
@@ -162,7 +164,7 @@ const doctorsData = [
     speciality: "Oncology",
     location: "Kolkata",
     hospital: "Narayana Multispeciality Hospital, Barasat, kolkata",
-    photo: "/doctor_avatar_male.png",
+    photo: "/assets/doctor_2.png",
     keywords: ["oncology", "cancer", "arun", "krishnan", "doctor", "specialist", "oncologist"]
   },
   {
@@ -170,7 +172,7 @@ const doctorsData = [
     speciality: "Orthopaedics",
     location: "Bengaluru",
     hospital: "Narayana Multispeciality Clinic, HSR Bangalore",
-    photo: "/doctor_avatar_female.png",
+    photo: "/assets/doctor_3.png",
     keywords: ["orthopaedics", "bone", "joint", "sunita", "patel", "doctor", "specialist"]
   }
 ];
@@ -322,22 +324,26 @@ const articlesData = [
   {
     name: "Understanding Heart Health: 5 Tips to Keep Your Heart Strong",
     keywords: ["heart", "cardiac", "strong", "healthy", "lifestyle", "angioplasty"],
-    image: "/Specialities icons/Cardiology.svg"
+    image: "https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=150&h=150&fit=crop&q=80",
+    description: "Discover essential lifestyle changes and habits that promote long-term cardiovascular wellness."
   },
   {
     name: "Living with Migraines: Identifying Triggers and Finding Relief",
     keywords: ["migraine", "headache", "brain", "nerve", "seizure", "triggers"],
-    image: "/Specialities icons/Neurology.svg"
+    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=150&h=150&fit=crop&q=80",
+    description: "Learn how to track your triggers and explore effective treatments for severe migraine headaches."
   },
   {
     name: "Cancer Care: The Role of Early Screening & Detection",
     keywords: ["cancer", "tumor", "chemo", "screening", "detection"],
-    image: "/Specialities icons/Cancercare.svg"
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=150&h=150&fit=crop&q=80",
+    description: "Early detection is key. Understand the recommended screening guidelines for different types of cancer."
   },
   {
     name: "Keeping Joints and Bones Healthy in Your Golden Years",
     keywords: ["bone", "joint", "healthy", "aging", "arthritis"],
-    image: "/Specialities icons/Orthopaedics.svg"
+    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=150&h=150&fit=crop&q=80",
+    description: "Practical advice on nutrition, exercise, and supplements to maintain bone density as you age."
   }
 ];
 
@@ -371,6 +377,19 @@ export default function HeroSearchFirst() {
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
+  const [isPulseActive, setIsPulseActive] = useState(false);
+  const [showPixelRipple, setShowPixelRipple] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isPulseActive) {
+      // Delay ripple slightly to sync with the chat expansion animation (0.4s)
+      timer = setTimeout(() => setShowPixelRipple(true), 300);
+    } else {
+      setShowPixelRipple(false);
+    }
+    return () => clearTimeout(timer);
+  }, [isPulseActive]);
   const [lastSearch, setLastSearch] = useState<string | null>(null);
   const searchRef = useRef<HTMLFormElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -410,6 +429,7 @@ export default function HeroSearchFirst() {
       }
       router.push(`/search?q=${encodeURIComponent(query)}`);
       setIsOpen(false);
+      setIsPulseActive(false);
     }
   };
 
@@ -420,6 +440,7 @@ export default function HeroSearchFirst() {
     }
     router.push(`/search?q=${encodeURIComponent(name)}`);
     setIsOpen(false);
+    setIsPulseActive(false);
   };
 
   // Filter lists based on input (semantic keyword search & exact name match)
@@ -517,6 +538,7 @@ export default function HeroSearchFirst() {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setIsPulseActive(false);
         setSearchQuery("");
       }
     }
@@ -570,6 +592,7 @@ export default function HeroSearchFirst() {
         className={styles.bgVideo}
       />
       <div className={`${styles.videoOverlay} ${isOpen ? styles.videoOverlayActive : ""}`} />
+      <PixelRipple trigger={showPixelRipple} />
 
       <div className={styles.centerWrap}>
         <div className={styles.heroStack}>
@@ -597,7 +620,8 @@ export default function HeroSearchFirst() {
                         : { delay: 0.65, duration: 0.6 }
                     }
                   >
-                    <div className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}>
+                    {!isPulseActive && (
+                      <div className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}>
                       <div className={styles.searchIconWrapper}>
                         <Search className={styles.searchIcon} size={18} />
                       </div>
@@ -616,17 +640,42 @@ export default function HeroSearchFirst() {
                         }}
                         className={styles.searchInput}
                       />
-                      <div className={styles.pulseIconWrapper} style={{ marginRight: '14px' }}>
+                      <div 
+                        className={styles.pulseIconWrapper} 
+                        style={{ marginRight: '14px' }}
+                        onClick={(e) => {
+                          if (!isOpen) {
+                            setIsOpen(true);
+                            setHasOpened(true);
+                            e.preventDefault();
+                            return;
+                          }
+                          setIsPulseActive(true);
+                        }}
+                      >
                         <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
                         <span className={styles.pulseText}>Ask Pulse</span>
                       </div>
 
                     </div>
+                    )}
 
                     {/* Progressive Search Dropdown */}
-                    <AnimatePresence>
-                      {isOpen && (
+                    <AnimatePresence mode="wait">
+                      {isPulseActive ? (
                         <motion.div
+                          key="pulse-workspace"
+                          className={styles.pulseWorkspaceContainer}
+                          initial={{ height: 56, opacity: 0.5 }}
+                          animate={{ height: "75vh", opacity: 1 }}
+                          exit={{ height: 56, opacity: 0 }}
+                          transition={{ duration: 0.4, ease: "easeInOut" }}
+                        >
+                           <PulseAIWorkspace onClose={() => setIsPulseActive(false)} />
+                        </motion.div>
+                      ) : isOpen ? (
+                        <motion.div
+                          key="dropdown"
                           className={styles.dropdown}
                           initial={{ opacity: 0, y: 10, scale: 0.98 }}
                           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -660,7 +709,7 @@ export default function HeroSearchFirst() {
                             onClick={() => setActiveDropdownTab("doctors_specialities")}
                             className={`${styles.dropdownTab} ${activeDropdownTab === "doctors_specialities" ? styles.activeTab : ""}`}
                           >
-                            Doctors ({filteredDoctors.length + filteredSpecs.length})
+                            Appointments ({filteredDoctors.length + filteredSpecs.length})
                           </button>
                           <button
                             type="button"
@@ -753,12 +802,12 @@ export default function HeroSearchFirst() {
                                         alt={spec.name}
                                         className={styles.specImage}
                                       />
-                                      <div className={styles.specInfo} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                      <div className={styles.specInfo} style={{ display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden' }}>
                                         <div className={styles.specName}>
                                           <HighlightMatch text={spec.name} query={searchQuery} />
                                         </div>
                                         {spec.matchingKeyword && (
-                                          <div style={{ fontSize: "10.5px", color: "#64748B", fontWeight: 500 }}>
+                                          <div style={{ fontSize: "10.5px", color: "#64748B", fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                             Relates to: <HighlightMatch text={spec.matchingKeyword} query={searchQuery} />
                                           </div>
                                         )}
@@ -901,7 +950,7 @@ export default function HeroSearchFirst() {
                                 <div
                                   key={a.name}
                                   onClick={() => handleSelectSuggestion(a.name)}
-                                  className={styles.suggestionItem}
+                                  className={styles.treatmentCard}
                                 >
                                   {a.image ? (
                                     <img
@@ -914,13 +963,20 @@ export default function HeroSearchFirst() {
                                       <FileText size={14} />
                                     </div>
                                   )}
-                                  <div className={styles.itemText}>
-                                    <div style={{ fontWeight: 600, fontSize: "14.5px" }}>
-                                      <HighlightMatch text={a.name} query={searchQuery} />
+                                  <div className={styles.treatmentInfo}>
+                                    <div className={styles.treatmentHeader}>
+                                      <div className={styles.treatmentName}>
+                                        <HighlightMatch text={a.name} query={searchQuery} />
+                                      </div>
+                                      {a.matchingKeyword && (
+                                        <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                          Relates to: <HighlightMatch text={a.matchingKeyword} query={searchQuery} />
+                                        </div>
+                                      )}
                                     </div>
-                                    {a.matchingKeyword && (
-                                      <div style={{ fontSize: "11px", color: "#64748B", marginTop: "2px" }}>
-                                        Relates to: <HighlightMatch text={a.matchingKeyword} query={searchQuery} />
+                                    {a.description && (
+                                      <div className={styles.treatmentDesc}>
+                                        {a.description}
                                       </div>
                                     )}
                                   </div>
@@ -938,7 +994,7 @@ export default function HeroSearchFirst() {
                     </>
                   )}
                 </motion.div>
-                      )}
+                      ) : null}
                     </AnimatePresence>
                   </motion.form>
 

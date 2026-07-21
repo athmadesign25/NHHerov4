@@ -196,15 +196,13 @@ export default function CentreOfExcellence() {
   return (
     <section ref={sectionRef} className={styles.section} id="centre-of-excellence">
       <div className="container">
-        {/* Section Header */}
         <div className={styles.header}>
+          <div className="section-eyebrow">CENTRES OF EXCELLENCE</div>
           <h2 className={styles.sectionTitle}>40+ Specialities. World-Class Care.</h2>
           <p className={`section-subtitle ${styles.sectionSubtitle}`}>
             Integrated expertise across tertiary and quaternary care, delivered through one trusted network.
           </p>
         </div>
-
-        <div className={styles.tierLabel}>Centres of Excellence</div>
 
         {/* Carousel */}
         <div className={styles.carouselWrapper}>
@@ -308,7 +306,7 @@ export default function CentreOfExcellence() {
           </div>
         </div>
 
-        <div className={`${styles.tierLabel} ${styles.tierLabelSecondary}`}>All Specialities</div>
+
         <div className={styles.specialitiesGrid}>
           {SPECIALITIES.map((spec) => (
             <Link key={spec.name} aria-label={spec.name} href={spec.href} className={styles.specialityCard}>
