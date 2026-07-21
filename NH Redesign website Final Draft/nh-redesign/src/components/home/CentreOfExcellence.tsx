@@ -103,22 +103,17 @@ const getCardTransform = (index: number, activeIndex: number, total: number, isM
     zIndex = 10;
     width = 700;
   } else if (isNext) {
-    translateX = 470;
-    opacity = 0.86;
+    translateX = 720;
+    opacity = 0.6;
     zIndex = 6;
-    width = 220;
+    width = 260;
   } else if (isPrev) {
-    translateX = -470;
-    opacity = 0.86;
-    zIndex = 6;
-    width = 220;
-  } else if (diff < -1) {
-    translateX = -760;
+    translateX = -720;
     opacity = 0;
     zIndex = 0;
-    width = 0;
+    width = 260;
   } else {
-    translateX = 760;
+    translateX = 1400;
     opacity = 0;
     zIndex = 0;
     width = 0;
@@ -130,7 +125,7 @@ const getCardTransform = (index: number, activeIndex: number, total: number, isM
     zIndex,
     width,
     isFocused,
-    showContent: isFocused || isNext || isPrev,
+    showContent: isFocused || isNext,
     isNext,
     isPrev
   };
@@ -141,6 +136,22 @@ export default function CentreOfExcellence() {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [isInView, setIsInView] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
+  const [sideContentReady, setSideContentReady] = React.useState(true);
+  const isFirstRender = React.useRef(true);
+
+  const moveToIndex = (nextIndex: number) => {
+    setSideContentReady(false);
+    setActiveIndex(nextIndex);
+  };
+
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    setSideContentReady(false);
+  }, [activeIndex]);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;
@@ -218,6 +229,8 @@ export default function CentreOfExcellence() {
           >
             {CARDS.map((card, index) => {
               const { translateX, opacity, zIndex, width, isFocused, showContent, isNext, isPrev } = getCardTransform(index, activeIndex, CARDS.length, isMobile);
+              const isSideCard = !isFocused && isNext;
+              const cardOpacity = opacity;
               return (
                 <motion.div 
                   key={card.id}
@@ -229,7 +242,7 @@ export default function CentreOfExcellence() {
                   }}
                   animate={{
                     x: translateX,
-                    opacity: opacity,
+                    opacity: cardOpacity,
                     width: width ?? "100%"
                   }}
                   transition={{
@@ -237,16 +250,22 @@ export default function CentreOfExcellence() {
                     duration: 0.78,
                     ease: [0.22, 1, 0.36, 1]
                   }}
+                  onAnimationComplete={() => {
+                    setSideContentReady(true);
+                  }}
                   onClick={() => {
                     if (!isFocused) {
-                      setActiveIndex(index);
+                      moveToIndex(index);
                     }
                   }}
                 >
-                  <div className={`${styles.card} ${isFocused ? styles.cardFocused : ""}`}>
+                  <div className={`${styles.card} ${isFocused ? styles.cardFocused : ""} ${isSideCard ? styles.cardSide : ""}`}>
                     {/* Left Column: Content — always rendered for CSS transitions */}
-                    <div 
-                      className={`${styles.cardContent} ${(isNext || isPrev) ? styles.cardContentPreview : ""} ${!showContent ? styles.cardContentHidden : ""}`}
+                    <motion.div 
+                      className={`${styles.cardContent} ${(isNext || isPrev) ? styles.cardContentPreview : ""} ${!showContent || (isSideCard && !sideContentReady) ? styles.cardContentHidden : ""}`}
+                      initial={isFocused ? { opacity: 0, y: 14 } : false}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
                     >
                       <span className={styles.cardCategory}>{card.category}</span>
                       <h3 className={styles.cardTitle}>{card.title}</h3>
@@ -254,7 +273,7 @@ export default function CentreOfExcellence() {
                         <motion.div
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                          transition={{ duration: 0.35, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
                         >
                           <p className={styles.cardDesc}>{card.desc}</p>
                           <div>
@@ -266,7 +285,7 @@ export default function CentreOfExcellence() {
                           </div>
                         </motion.div>
                       )}
-                    </div>
+                    </motion.div>
 
                     {/* Right Column: Image */}
                     <div className={styles.cardImgWrap}>
@@ -290,7 +309,7 @@ export default function CentreOfExcellence() {
             <button
               type="button"
               className={styles.navBtn}
-              onClick={() => setActiveIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length)}
+              onClick={() => moveToIndex((activeIndex - 1 + CARDS.length) % CARDS.length)}
               aria-label="Previous centre"
             >
               <ChevronLeft size={18} />
@@ -298,7 +317,7 @@ export default function CentreOfExcellence() {
             <button
               type="button"
               className={styles.navBtn}
-              onClick={() => setActiveIndex((prev) => (prev + 1) % CARDS.length)}
+              onClick={() => moveToIndex((activeIndex + 1) % CARDS.length)}
               aria-label="Next centre"
             >
               <ChevronRight size={18} />

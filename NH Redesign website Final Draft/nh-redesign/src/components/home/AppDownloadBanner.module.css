@@ -117,6 +117,16 @@
   height: 100%;
 }
 
+.mockupImg {
+  width: 100%;
+  max-width: 425px;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom right;
+  transform: scale(1.5);
+  transform-origin: bottom right;
+}
+
 @media (max-width: 960px) {
   .inner {
     grid-template-columns: 1fr;
@@ -128,7 +138,15 @@
   }
 
   .mockupContainer {
-    margin: 0 auto;
+    margin: 0;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+  }
+  
+  .mockupImg {
+    transform: scale(1.2); /* Slightly smaller scale on mobile */
+    margin-right: -5%; /* Ensure it hugs the right edge tightly */
   }
 }
 

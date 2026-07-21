@@ -597,10 +597,15 @@ export default function HeroSearchFirst() {
       <div className={styles.centerWrap}>
         <div className={styles.heroStack}>
           <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-            <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.05} />
-            <p className={styles.subHeadline}>
+            <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
+            <motion.p 
+              className={styles.subHeadline}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
+            >
               Compassion Backed by Expertise
-            </p>
+            </motion.p>
             
           </div>
 
@@ -617,7 +622,7 @@ export default function HeroSearchFirst() {
                       ? { duration: 0.4, ease: [0.16, 1, 0.3, 1] } 
                       : hasOpened 
                         ? { duration: 0.2, ease: "easeOut" } 
-                        : { delay: 0.65, duration: 0.6 }
+                        : { delay: 0.4, duration: 0.6 }
                     }
                   >
                     {!isPulseActive && (

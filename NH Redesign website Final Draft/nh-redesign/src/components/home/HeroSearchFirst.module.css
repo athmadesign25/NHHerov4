@@ -564,10 +564,6 @@
     height: 100dvh;
   }
 
-  .heroStack {
-    transform: translateY(3vh);
-  }
-
   .headline {
     font-size: clamp(30px, 8vw, 40px);
   }
@@ -647,7 +643,7 @@
 
   .pulseShellAnchor {
     left: 0;
-    width: 100vw;
+    width: 100%;
     transform: none;
   }
 

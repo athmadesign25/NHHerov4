@@ -229,3 +229,16 @@
     height: 248px;
   }
 }
+
+@media (max-width: 700px) {
+  .card {
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 92vw;
+    max-width: 100%;
+  }
+}
