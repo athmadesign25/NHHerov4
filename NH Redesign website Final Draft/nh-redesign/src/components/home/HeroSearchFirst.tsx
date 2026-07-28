@@ -584,7 +584,7 @@ export default function HeroSearchFirst() {
     <section className={styles.hero} id="hero-section-search-first">
       <video
         ref={videoRef}
-        src="/Hero Video.mp4"
+        src="/Hero-Video-New.mp4"
         autoPlay
         muted
         loop

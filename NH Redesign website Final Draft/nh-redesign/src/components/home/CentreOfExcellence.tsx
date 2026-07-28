@@ -101,14 +101,14 @@ const getCardTransform = (index: number, activeIndex: number, total: number, isM
     translateX = 0;
     opacity = 1;
     zIndex = 10;
-    width = 700;
+    width = 860;
   } else if (isNext) {
-    translateX = 720;
+    translateX = 880;
     opacity = 0.6;
     zIndex = 6;
     width = 260;
   } else if (isPrev) {
-    translateX = -720;
+    translateX = -880;
     opacity = 0;
     zIndex = 0;
     width = 260;

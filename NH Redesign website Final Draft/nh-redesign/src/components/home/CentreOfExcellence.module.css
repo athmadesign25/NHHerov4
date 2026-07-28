@@ -61,7 +61,7 @@
   position: relative;
   width: 100%;
   height: 440px;
-  padding: 0 96px;
+  padding: 0 32px;
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -74,7 +74,7 @@
 .slide {
   position: absolute;
   top: 0;
-  left: 96px;
+  left: 32px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -267,23 +267,15 @@
 .carouselArrows {
   position: absolute;
   top: 50%;
-  left: 0;
-  right: 0;
+  left: -64px;
+  right: -64px;
   display: flex;
   justify-content: space-between;
   gap: 10px;
   transform: translateY(-50%);
-  padding: 0 32px;
+  padding: 0;
   z-index: 20;
   pointer-events: none;
-}
-
-.carouselArrows > button:first-child {
-  margin-left: -16px;
-}
-
-.carouselArrows > button:last-child {
-  margin-right: -16px;
 }
 
 .tierLabelSecondary {

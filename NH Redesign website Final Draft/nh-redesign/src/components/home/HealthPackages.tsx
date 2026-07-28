@@ -12,8 +12,8 @@ const packages = [
     id: "basic-health",
     title: "Basic Health Checkup",
     image: "/Health Checkup/Basic health.png",
-    description: "Essential screenings for a healthy lifestyle, ideal for individuals under 30.",
-
+    description: "Essential screenings for a healthy lifestyle",
+    idealFor: "Ideal for under 30 yrs",
     features: [
       "Complete Blood Count (CBC)",
       "Lipid Profile (Cholesterol)",
@@ -26,8 +26,8 @@ const packages = [
     id: "comprehensive-master",
     title: "Master Health Check",
     image: "/Health Checkup/Master health.png",
-    description: "Advanced diagnostic profile with cardiac and specialist consults. Ideal for 30-50 yrs.",
-
+    description: "Advanced diagnostic profile with cardiac and specialist consults.",
+    idealFor: "Ideal for 30-50 yrs",
     features: [
       "Cardiac Risk Markers (ECG, TMT)",
       "Kidney & Liver Function",
@@ -41,8 +41,8 @@ const packages = [
     id: "senior-citizen",
     title: "Senior Citizen Wellness",
     image: "/Health Checkup/Senior Citizen.png",
-    description: "Specialized screenings tailored for age-related health monitoring (50+ yrs).",
-
+    description: "Specialized screenings tailored for age-related health monitoring.",
+    idealFor: "50+ years",
     features: [
       "Bone Mineral Density",
       "Prostate/Breast Screening",
@@ -98,33 +98,37 @@ export default function HealthPackages() {
               variants={cardVariants}
               whileHover={{ y: -8, transition: { duration: 0.3, ease: "easeOut" } }}
             >
-              {pkg.popular && <div className={styles.popularBadge}>Most Recommended</div>}
+              {pkg.popular && <div className={styles.popularBadge}>MOST RECOMMENDED</div>}
               
-              <div className={styles.cardTop}>
-                <div className={styles.iconWrap}>
-                  <Image src={pkg.image} alt={pkg.title} width={0} height={0} sizes="100vw" style={{ width: '100%', height: 'auto' }} />
-                </div>
-                <h3 className={styles.cardTitle}>{pkg.title}</h3>
-                <p className={styles.cardDesc}>{pkg.description}</p>
+              <div className={styles.iconWrap}>
+                <Image src={pkg.image} alt={pkg.title} fill style={{ objectFit: 'cover', objectPosition: 'center 15%' }} sizes="(max-width: 768px) 100vw, 33vw" unoptimized />
               </div>
+              
+              <div className={styles.cardContent}>
+                <div className={styles.cardTop}>
+                  <h3 className={styles.cardTitle}>{pkg.title}</h3>
+                  <p className={styles.cardDesc}>{pkg.description}</p>
+                  <div className={styles.idealBadgeWrap}>
+                    <span className={styles.idealBadge}>{pkg.idealFor}</span>
+                  </div>
+                </div>
 
+                <div className={styles.cardBottom}>
+                  <ul className={styles.featureList}>
+                    {pkg.features.map((feature, i) => (
+                      <li key={i} className={styles.featureItem}>
+                        <CheckCircle2 size={16} className={styles.checkIcon} />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-
-              <div className={styles.cardBottom}>
-                <ul className={styles.featureList}>
-                  {pkg.features.map((feature, i) => (
-                    <li key={i} className={styles.featureItem}>
-                      <CheckCircle2 size={16} className={styles.checkIcon} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  className={`${styles.bookBtn} ${pkg.popular ? styles.bookBtnPrimary : styles.bookBtnSecondary}`}
-                >
-                  Book Package
-                </button>
+                  <button
+                    className={`${styles.bookBtn} ${pkg.popular ? styles.bookBtnPrimary : styles.bookBtnSecondary}`}
+                  >
+                    Book Package
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}
