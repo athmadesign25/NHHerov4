@@ -1,5 +1,5 @@
 .footer {
-  background: #0A192F;
+  background: #012255; /* Slightly darker than --color-primary-dark (#023070) */
   color: rgba(255, 255, 255, 0.85);
 }
 

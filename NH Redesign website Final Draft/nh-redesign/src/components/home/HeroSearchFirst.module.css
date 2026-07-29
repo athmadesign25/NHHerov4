@@ -44,6 +44,22 @@
   z-index: -1;
 }
 
+.videoOverlay::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45vh;
+  background: transparent;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(to top, black 10%, transparent 100%);
+  mask-image: linear-gradient(to top, black 10%, transparent 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .videoOverlayActive {
   background: rgba(11, 15, 25, 0.5);
   backdrop-filter: blur(8px);
@@ -74,7 +90,7 @@
   width: min(100%, calc(var(--hero-width) - 36px));
   text-align: center;
   margin-bottom: 14px;
-  margin-top: 100px;
+  margin-top: 180px; /* Increased from 100px to push content lower */
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -136,14 +152,30 @@
 .searchContainer::before {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: -1.5px;
   border-radius: var(--radius-full);
-  padding: 1px;
-  background: conic-gradient(from var(--border-angle, 0deg), transparent 50%, #ff5555 75%, #55aaff 100%);
+  padding: 1.5px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+}
+
+.searchContainer::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: var(--radius-full);
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(4px);
   animation: spinBorder 5s linear infinite;
   pointer-events: none;
 }
@@ -689,7 +721,7 @@
   background: rgba(11, 15, 25, 0.65);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full);
   height: 54px;
   padding: 0 4px 0 20px;
@@ -706,6 +738,13 @@
 .searchContainerActive::before {
   background: #ffffff;
   animation: none;
+}
+
+.searchContainer:focus-within::after,
+.searchContainerActive::after {
+  background: #ffffff;
+  animation: none;
+  filter: blur(8px);
 }
 
 .searchIconWrapper {
@@ -1454,4 +1493,66 @@
 .pulseWorkspaceContainer > * {
   flex: 1;
   min-height: 0;
+}
+
+.metricsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 16px;
+  gap: 16px;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.metricsHidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 12px 8px; /* Removed top padding */
+  flex: 1;
+}
+
+.metricItem:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.metricValue {
+  font-size: 18px; /* Reduced from 20px */
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+
+.metricLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .metricsRow {
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .metricItem {
+    flex: 1 1 45%;
+  }
+  .metricItem:not(:last-child) {
+    border-right: none;
+  }
+  .metricValue {
+    font-size: 16px; /* Reduced from 18px */
+  }
+  .metricLabel {
+    font-size: 12px;
+  }
 }

@@ -13,19 +13,19 @@ const featureCards = [
     descriptionLines: ["Protocols and tracked outcomes", "for safer recovery paths"],
   },
   {
-    tone: "amber",
+    tone: "red",
     icon: Stethoscope,
     title: "Top Medical Experts",
     descriptionLines: ["Senior specialists for complex", "procedures and continuity of care"],
   },
   {
-    tone: "green",
+    tone: "darkBlue",
     icon: Microscope,
     title: "Advanced Technology",
     descriptionLines: ["Modern diagnostics and surgical", "platforms for precision treatment"],
   },
   {
-    tone: "violet",
+    tone: "darkRed",
     icon: Award,
     title: "Patient-First Support",
     descriptionLines: ["Clear communication and care", "navigation for every family"],

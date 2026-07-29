@@ -6,6 +6,10 @@ import {
   AnimatePresence,
   motion,
   useReducedMotion,
+  useMotionValue,
+  useTransform,
+  animate,
+  useInView,
 } from "framer-motion";
 import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText} from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
@@ -368,6 +372,22 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
   );
 }
 
+
+function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, suffix?: string, duration?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10px" });
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString('en-IN') + suffix);
+
+  useEffect(() => {
+    if (isInView) {
+      const animation = animate(count, value, { duration, ease: "easeOut" });
+      return animation.stop;
+    }
+  }, [isInView, value, count, duration]);
+
+  return <motion.span ref={ref}>{rounded}</motion.span>;
+}
 
 export default function HeroSearchFirst() {
 
@@ -1003,7 +1023,49 @@ export default function HeroSearchFirst() {
                     </AnimatePresence>
                   </motion.form>
 
-
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={isOpen ? { opacity: 0, y: 20, pointerEvents: "none" } : { opacity: 1, y: 0, pointerEvents: "auto" }}
+            transition={{ duration: 0.6, delay: isOpen ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className={styles.metricsRow}
+          >
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+              className={styles.metricItem}
+            >
+              <div className={styles.metricValue}><CountingNumber value={5000} suffix="+" /></div>
+              <div className={styles.metricLabel}>Robotic Surgeries<br/>Performed</div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+              className={styles.metricItem}
+            >
+              <div className={styles.metricValue}><CountingNumber value={550000} suffix="+" /></div>
+              <div className={styles.metricLabel}>Cardiac Consults<br/>Annually</div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+              className={styles.metricItem}
+            >
+              <div className={styles.metricValue}><CountingNumber value={33000} suffix="+" /></div>
+              <div className={styles.metricLabel}>Image Guided<br/>Procedures</div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
+              className={styles.metricItem}
+            >
+              <div className={styles.metricValue}><CountingNumber value={8000} suffix="+" /></div>
+              <div className={styles.metricLabel}>Solid Organ<br/>Transplants</div>
+            </motion.div>
+          </motion.div>
 
         </div>
       </div>
