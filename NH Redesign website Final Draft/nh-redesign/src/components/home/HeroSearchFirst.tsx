@@ -569,7 +569,7 @@ export default function HeroSearchFirst() {
 
   // Control video playback based on search state
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | undefined;
+    let intervalId: NodeJS.Timeout | undefined = undefined;
     
     if (videoRef.current) {
       if (isOpen) {
