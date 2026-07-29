@@ -1,0 +1,13 @@
+.magnetic {
+  display: inline-flex;
+  position: relative;
+  /* Increase hit area for magnetism */
+  padding: 16px;
+  margin: -16px;
+}
+
+.inner {
+  display: inline-flex;
+  cursor: pointer;
+  user-select: none;
+}
