@@ -430,6 +430,16 @@
 .timeBtnActive { background: var(--color-primary); border-color: var(--color-primary); color: white; }
 .timeBtnActive:hover { background: #02387a; border-color: #02387a; }
 
+.slotFooter { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+.slotPrice { display: flex; flex-direction: column; gap: 2px; }
+.slotPriceVal { font-size: 15px; font-weight: 700; color: #1e293b; }
+.slotPriceLabel { font-size: 11px; color: #64748b; }
+.confirmSlotBtn {
+  background: var(--color-primary); color: white; border: none; border-radius: 9999px;
+  padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+}
+.confirmSlotBtn:hover { background: #02387a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2); }
+
 /* ─── UNDERSTAND MY HEALTH — TWO-COLUMN LAYOUT ──────────────── */
 .healthPanelLayout {
   display: flex;
