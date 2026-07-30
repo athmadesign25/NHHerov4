@@ -403,12 +403,17 @@ export default function HeroSearchFirst() {
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isPulseActive) {
+      document.body.style.overflow = "hidden";
       // Delay ripple slightly to sync with the chat expansion animation (0.4s)
       timer = setTimeout(() => setShowPixelRipple(true), 300);
     } else {
+      document.body.style.overflow = "";
       setShowPixelRipple(false);
     }
-    return () => clearTimeout(timer);
+    return () => {
+      document.body.style.overflow = "";
+      clearTimeout(timer);
+    };
   }, [isPulseActive]);
   const [lastSearch, setLastSearch] = useState<string | null>(null);
   const searchRef = useRef<HTMLFormElement>(null);

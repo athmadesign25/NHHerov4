@@ -3725,7 +3725,23 @@ export default function PulseAIWorkspace({ onClose }: { onClose?: () => void }) 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
-    // We are no longer blocking body overflow since it's embedded in the search container
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      if (typeof window !== "undefined" && (window as any).lenis) {
+        (window as any).lenis.stop();
+      }
+    } else {
+      document.body.style.overflow = "";
+      if (typeof window !== "undefined" && (window as any).lenis) {
+        (window as any).lenis.start();
+      }
+    }
+    return () => {
+      document.body.style.overflow = "";
+      if (typeof window !== "undefined" && (window as any).lenis) {
+        (window as any).lenis.start();
+      }
+    };
   }, [isOpen]);
 
   useEffect(() => {
