@@ -790,7 +790,7 @@ function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (slo
         </div>
         <button className={styles.confirmSlotBtn}
           onClick={() => onConfirm(`${dates[selectedDate]?.label} ${dates[selectedDate]?.day} Feb, ${selectedTime}`, visitType)}>
-          Confirm
+          Book Now
         </button>
       </div>
     </motion.div>
