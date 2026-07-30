@@ -372,8 +372,8 @@
 }
 .bookNowBtn {
   margin-top: 6px; padding: 7px 14px;
-  background: #034EA2; color: #ffffff;
-  border: none; border-radius: 8px; font-size: 12px; font-weight: 700;
+  background: var(--color-primary); color: #ffffff;
+  border: none; border-radius: 9999px; font-size: 12px; font-weight: 700;
   cursor: pointer; font-family: inherit; white-space: nowrap; transition: opacity 0.15s;
 }
 .bookNowBtn:hover { opacity: 0.9; }
