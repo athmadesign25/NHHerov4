@@ -115,37 +115,37 @@ const MOCK_DOCTORS: Doctor[] = [
     id: "d1", name: "Dr. Pradeep R Kumar", qualification: "MBBS, MD",
     speciality: "General Physician", hospital: "Mazumdar Shaw Medical Centre",
     plusHospitals: 1, slot: "Tomorrow, 02:30 PM", price: "₹800",
-    rating: 4.9, photo: "/doctor_avatar_male.png",
+    rating: 4.9, photo: "/assets/doctor_1.png",
   },
   {
     id: "d2", name: "Dr. Ananya Krishnan", qualification: "MBBS, DM (Cardiology)",
     speciality: "Cardiologist", hospital: "Narayana Institute of Cardiac Sciences",
     slot: "Today, 05:00 PM", price: "₹1,200",
-    rating: 4.8, photo: "/doctor_avatar_female.png",
+    rating: 4.8, photo: "/assets/doctor_2.png",
   },
   {
     id: "d3", name: "Dr. Rajiv Menon", qualification: "MBBS, MS, MCh",
     speciality: "Cardiac Surgeon", hospital: "Mazumdar Shaw Medical Centre",
     plusHospitals: 2, slot: "Thu, 10:00 AM", price: "₹1,500",
-    rating: 4.95, photo: "/doctor_avatar_male.png",
+    rating: 4.95, photo: "/assets/doctor_1.png",
   },
   {
     id: "d4", name: "Dr. Vikas Yadav", qualification: "MBBS, MD (Nephrology)",
     speciality: "Nephrologist", hospital: "Mazumdar Shaw Medical Centre",
     slot: "Today, 04:00 PM", price: "₹1,000",
-    rating: 4.85, photo: "/doctor_avatar_male.png",
+    rating: 4.85, photo: "/assets/doctor_1.png",
   },
   {
     id: "d5", name: "Dr. Rammaya Murthey", qualification: "MBBS, MD, FNB",
     speciality: "General Physician", hospital: "Narayana Institute of Cardiac Sciences",
     slot: "Tomorrow, 11:30 AM", price: "₹900",
-    rating: 4.9, photo: "/doctor_avatar_female.png",
+    rating: 4.9, photo: "/assets/doctor_2.png",
   },
   {
     id: "d6", name: "Dr. Sonakshi Sinha", qualification: "MBBS, MD, DM (Cardiology)",
     speciality: "Cardiologist", hospital: "Narayana Institute of Cardiac Sciences",
     slot: "Tomorrow, 02:00 PM", price: "₹1,100",
-    rating: 4.85, photo: "/doctor_avatar_female.png",
+    rating: 4.85, photo: "/assets/doctor_2.png",
   },
 ];
 
@@ -2112,7 +2112,7 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
         {msg.rtype === "modify_selection" && (
           <div className={styles.modifySelectionCard}>
             <div className={styles.modifyCardTop}>
-              <img src="/doctor_avatar_male.png" alt="Doctor" className={styles.modifyDocImg} />
+              <img src="/assets/doctor_1.png" alt="Doctor" className={styles.modifyDocImg} />
               <div className={styles.modifyCardDetails}>
                 <div className={styles.modifyDocName}>Appointment with Dr. Pradeep R Kumar</div>
                 <div className={styles.modifyDocSub}>Cardiologist • MBBS</div>
@@ -2138,7 +2138,7 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
               <span>❌ Your appointment is cancelled</span>
             </div>
             <div className={styles.modifyCardTop} style={{ padding: "16px", borderBottom: "none" }}>
-              <img src="/doctor_avatar_male.png" alt="Doctor" className={styles.modifyDocImg} />
+              <img src="/assets/doctor_1.png" alt="Doctor" className={styles.modifyDocImg} />
               <div className={styles.modifyCardDetails}>
                 <div className={styles.modifyDocName} style={{ color: "#64748b", textDecoration: "line-through" }}>
                   Appointment with Dr. Pradeep R Kumar
@@ -2503,9 +2503,9 @@ function Sidebar({ history, activeId, onSelect, onNew, onClose }: {
 
 const ASSOCIATED_PROFILES = [
   { id: "p1", name: "Omkar V", relation: "Self", avatar: "/patient_omkar.png" },
-  { id: "p2", name: "Ramesh V", relation: "Father", avatar: "/doctor_avatar_male.png" },
-  { id: "p3", name: "Saraswathi V", relation: "Mother", avatar: "/doctor_avatar_female.png" },
-  { id: "p4", name: "Ananya V", relation: "Daughter", avatar: "/doctor_avatar_female.png" }
+  { id: "p2", name: "Ramesh V", relation: "Father", avatar: "/assets/doctor_1.png" },
+  { id: "p3", name: "Saraswathi V", relation: "Mother", avatar: "/assets/doctor_2.png" },
+  { id: "p4", name: "Ananya V", relation: "Daughter", avatar: "/assets/doctor_2.png" }
 ];
 
 /* ─── ANIMATED PLACEHOLDER COMPONENT ─────────────────────── */
@@ -2737,7 +2737,7 @@ function Workspace({
             slot: "Today, 04:00 PM",
             price: "₹800",
             rating: 4.8,
-            photo: "/doctor_avatar_male.png"
+            photo: "/assets/doctor_1.png"
           }
         ]
       };
@@ -3533,7 +3533,7 @@ function PulseAIGateway({
                     </div>
                     
                     <div style={{ display: "flex", gap: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "12px", alignItems: "center" }}>
-                      <img src="/doctor_avatar_male.png" alt="Doctor" style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#e2e8f0" }} />
+                      <img src="/assets/doctor_1.png" alt="Doctor" style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#e2e8f0" }} />
                       <div style={{ flex: 1 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                           <span style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>Dr. Vikas Yadav</span>
