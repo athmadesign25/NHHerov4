@@ -532,6 +532,16 @@
   }
 }
 
+@media (max-width: 480px) {
+  .carouselWrapper {
+    height: 570px;
+  }
+  
+  .carousel, .slide {
+    height: 480px;
+  }
+}
+
 @media (max-width: 460px) {
   .slide {
     max-width: 85%;
