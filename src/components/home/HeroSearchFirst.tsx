@@ -1110,70 +1110,32 @@ export default function HeroSearchFirst() {
                             </div>
                           </div>
 
-                          {/* 2. Bottom Section: Pulse AI Preview (Glow Gradient box) */}
-                          {(() => {
-                            const response = getRealtimePulseResponse(searchQuery);
-                            return (
-                              <div 
-                                className={styles.pulseAIPreviewBox}
-                                onClick={() => setIsPulseActive(true)}
-                              >
-                                <div className={styles.pulsePreviewHeaderRow}>
-                                  <div className={styles.pulsePreviewBadge}>
-                                    <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
-                                    <span>Pulse AI Curated Recommendation</span>
-                                  </div>
-                                  <div className={styles.pulsePreviewTag}>Real-time Guide</div>
-                                </div>
-
-                                <div className={styles.pulsePreviewEmpathy}>
-                                  &ldquo;{response.empathy}&rdquo;
-                                </div>
-
-                                <div className={styles.pulsePreviewRecommendedDoc}>
-                                  <img 
-                                    src={response.suggestedDoc.photo} 
-                                    alt={response.suggestedDoc.name} 
-                                    className={styles.pulsePreviewDocPhoto} 
-                                  />
-                                  <div className={styles.pulsePreviewDocDetails}>
-                                    <div className={styles.pulsePreviewBestMatchTag}>
-                                      ✨ Best Match / Recommended Specialist
-                                    </div>
-                                    <div className={styles.pulsePreviewDocName}>
-                                      {response.suggestedDoc.name}
-                                    </div>
-                                    <div className={styles.pulsePreviewDocSub}>
-                                      {response.suggestedSpec} • {response.suggestedDoc.hospital}
-                                    </div>
-                                    <div className={styles.pulsePreviewDocSlot}>
-                                      Next Slot: <strong>{response.slot}</strong>
-                                    </div>
-                                  </div>
-                                  <div className={styles.pulsePreviewActions}>
-                                    <button 
-                                      className={styles.pulsePreviewBookBtn}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                      }}
-                                    >
-                                      Book Now
-                                    </button>
-                                    <button 
-                                      className={styles.pulsePreviewModifyBtn}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                      }}
-                                    >
-                                      Modify &amp; Book
-                                    </button>
-                                  </div>
-                                </div>
+                          {/* 2. Bottom Section: Pulse AI Pending/Hint (Glow Gradient box) */}
+                          <div 
+                            className={styles.pulseAIPreviewBox}
+                            onClick={handleSearch}
+                          >
+                            <div className={styles.pulsePreviewHeaderRow}>
+                              <div className={styles.pulsePreviewBadge}>
+                                <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
+                                <span>Pulse AI Curated Pathway</span>
                               </div>
-                            );
-                          })()}
+                              <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Ready to Analyze</div>
+                            </div>
+
+                            <div className={styles.pulseAIPendingContent}>
+                              <div className={styles.pulseAIPendingText}>
+                                We detected a symptom sentence: <strong>&ldquo;{searchQuery}&rdquo;</strong>
+                              </div>
+                              <p className={styles.pulseAIPendingHint}>
+                                Press <strong>Enter ↵</strong> or click <strong>Ask Pulse</strong> to submit this query to Pulse AI. It will analyze your symptom, draft an empathy response, and recommend matching specialists.
+                              </p>
+                              <div className={styles.pulseAIPendingCTA}>
+                                <span>Analyze Sentence with Pulse AI</span>
+                                <ChevronRight size={14} style={{ display: "inline-block", verticalAlign: "middle", marginLeft: "4px" }} />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       ) : (
                         <>

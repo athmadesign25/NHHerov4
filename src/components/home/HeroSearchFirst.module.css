@@ -1745,6 +1745,55 @@
   transform: translateY(-1px);
 }
 
+.pulseAIPendingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pulseAIPendingText {
+  font-size: 13.5px;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.pulseAIPendingText strong {
+  color: #7c3aed;
+  font-style: italic;
+}
+
+.pulseAIPendingHint {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pulseAIPendingHint strong {
+  color: #334155;
+  font-weight: 600;
+}
+
+.pulseAIPendingCTA {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+}
+
+.pulseAIPreviewBox:hover .pulseAIPendingCTA {
+  color: #6d28d9;
+  transform: translateX(4px);
+}
+
 .popularSearchesContainer {
   display: flex;
   flex-direction: column;
