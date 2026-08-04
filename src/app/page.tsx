@@ -25,10 +25,23 @@ export default function HomePage() {
           background: "#ffffff"
         }}
       >
-        <div style={{ background: "linear-gradient(135deg, #f5eff2 0%, #cbe1fc 100%)" }}>
+        {/* Dark theme section block with smooth fade transition from the fixed Hero background */}
+        <div style={{ background: "#090d16", position: "relative", zIndex: 11 }}>
+          {/* Transparent feathered fade mask at the top of the scroll list */}
+          <div style={{
+            position: "absolute",
+            top: "-150px",
+            left: 0,
+            right: 0,
+            height: "150px",
+            background: "linear-gradient(to bottom, transparent, #090d16)",
+            pointerEvents: "none",
+            zIndex: 12
+          }} />
           <CentreOfExcellence />
+          <HealthPackages />
         </div>
-        <HealthPackages />
+
         <PatientStories />
         <WhyChooseNH />
         <ChairmanQuote />

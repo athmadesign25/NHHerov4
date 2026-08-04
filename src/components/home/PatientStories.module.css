@@ -1,12 +1,18 @@
 .section {
   position: relative;
-  background: linear-gradient(180deg, transparent 0%, transparent 75%, #f2f7ff 100%);
-  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 75%, #f2f7ff 100%);
+  overflow: visible;
   padding: 140px 0 440px;
   min-height: 1200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  
+  /* Curved sheet transition over preceding dark section */
+  border-radius: 48px 48px 0 0;
+  margin-top: -48px;
+  z-index: 12;
+  box-shadow: 0 -16px 48px rgba(0, 0, 0, 0.08);
 }
 
 .backgroundGridWrap {
