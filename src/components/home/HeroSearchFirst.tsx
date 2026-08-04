@@ -524,6 +524,7 @@ export default function HeroSearchFirst() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [isPulseActive, setIsPulseActive] = useState(false);
+  const [isPulseAnalyzed, setIsPulseAnalyzed] = useState(false);
   const [pulseInitialAction, setPulseInitialAction] = useState<string | null>(null);
   const [pulseInitialActionData, setPulseInitialActionData] = useState<any>(null);
   const [showPixelRipple, setShowPixelRipple] = useState(false);
@@ -576,9 +577,10 @@ export default function HeroSearchFirst() {
     }
   }, []);
 
-  // Reset dropdown tab to Doctors when typing/query changes
+  // Reset dropdown tab and inline analysis when query changes
   useEffect(() => {
     setActiveDropdownTab("doctors_specialities");
+    setIsPulseAnalyzed(false);
   }, [searchQuery]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -595,11 +597,16 @@ export default function HeroSearchFirst() {
                                /have|fever|cough|tomorrow|symptom|feel|pain/i.test(query);
 
       if (isConversational) {
-        setIsPulseActive(true);
+        if (!isPulseAnalyzed) {
+          setIsPulseAnalyzed(true);
+        } else {
+          setIsPulseActive(true);
+          setIsOpen(false);
+        }
       } else {
         router.push(`/search?q=${encodeURIComponent(query)}`);
+        setIsOpen(false);
       }
-      setIsOpen(false);
     }
   };
 
@@ -839,7 +846,16 @@ export default function HeroSearchFirst() {
                         style={{ marginRight: '14px' }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setIsPulseActive(true);
+                          if (isConversational) {
+                            if (!isPulseAnalyzed) {
+                              setIsPulseAnalyzed(true);
+                            } else {
+                              setIsPulseActive(true);
+                              setIsOpen(false);
+                            }
+                          } else {
+                            setIsPulseActive(true);
+                          }
                         }}
                       >
                         <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
@@ -1042,7 +1058,7 @@ export default function HeroSearchFirst() {
                       {isConversational ? (
                         <div className={styles.pulsePreviewWrapper} data-lenis-prevent>
                           {/* 1. Top Section: General search results */}
-                          <div className={styles.pulseGeneralMatches}>
+                          <div className={`${styles.pulseGeneralMatches} ${isPulseAnalyzed ? styles.pulseGeneralMatchesDimmed : ""}`}>
                             <div className={styles.pulsePreviewTitle}>Standard Matches</div>
                             <div className={styles.dropdownTabContent} style={{ maxHeight: "200px" }}>
                               <div className={styles.dropdownSection}>
@@ -1110,16 +1126,81 @@ export default function HeroSearchFirst() {
                             </div>
                           </div>
 
-                          {/* 2. Bottom Section: Pulse AI Pending/Hint (Glow Gradient box) */}
-                          <div 
-                            className={styles.pulseAIPreviewBox}
-                            onClick={handleSearch}
-                            style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "14px", minHeight: "56px" }}
-                          >
-                            <div className={styles.pulseAIPendingOneLiner}>
-                              <span className={styles.pulseSparkleIcon}>✨</span> Press <strong>Enter ↵</strong> or click <strong>Ask Pulse</strong> to analyze this sentence with Pulse AI
+                          {/* 2. Bottom Section: Pulse AI Preview (Dynamic based on analysis status) */}
+                          {!isPulseAnalyzed ? (
+                            <div 
+                              className={styles.pulseAIPreviewBox}
+                              onClick={() => setIsPulseAnalyzed(true)}
+                              style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "14px", minHeight: "56px" }}
+                            >
+                              <div className={styles.pulseAIPendingOneLiner}>
+                                <span className={styles.pulseSparkleIcon}>✨</span> Press <strong>Enter ↵</strong> or click <strong>Ask Pulse</strong> to analyze this sentence with Pulse AI
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            (() => {
+                              const response = getRealtimePulseResponse(searchQuery);
+                              return (
+                                <div 
+                                  className={`${styles.pulseAIPreviewBox} ${styles.pulseAIPreviewBoxAnalyzed}`}
+                                >
+                                  <div className={styles.pulsePreviewHeaderRow}>
+                                    <div className={styles.pulsePreviewBadge}>
+                                      <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
+                                      <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
+                                    </div>
+                                    <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
+                                  </div>
+
+                                  <div className={styles.pulsePreviewEmpathy}>
+                                    &ldquo;{response.empathy}&rdquo;
+                                  </div>
+
+                                  <div className={styles.pulsePreviewRecommendedDoc}>
+                                    <img 
+                                      src={response.suggestedDoc.photo} 
+                                      alt={response.suggestedDoc.name} 
+                                      className={styles.pulsePreviewDocPhoto} 
+                                    />
+                                    <div className={styles.pulsePreviewDocDetails}>
+                                      <div className={styles.pulsePreviewBestMatchTag}>
+                                        ✨ Best Match / Recommended Specialist
+                                      </div>
+                                      <div className={styles.pulsePreviewDocName}>
+                                        {response.suggestedDoc.name}
+                                      </div>
+                                      <div className={styles.pulsePreviewDocSub}>
+                                        {response.suggestedSpec} • {response.suggestedDoc.hospital}
+                                      </div>
+                                      <div className={styles.pulsePreviewDocSlot}>
+                                        Next Slot: <strong>{response.slot}</strong>
+                                      </div>
+                                    </div>
+                                    <div className={styles.pulsePreviewActions}>
+                                      <button 
+                                        className={styles.pulsePreviewBookBtn}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                        }}
+                                      >
+                                        Book Now
+                                      </button>
+                                      <button 
+                                        className={styles.pulsePreviewModifyBtn}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                        }}
+                                      >
+                                        Modify &amp; Book
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()
+                          )}
                         </div>
                       ) : (
                         <>

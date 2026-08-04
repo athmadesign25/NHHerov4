@@ -1567,6 +1567,13 @@
 .pulseGeneralMatches {
   border-bottom: 1px solid #f1f5f9;
   padding-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.pulseGeneralMatchesDimmed {
+  opacity: 0.35;
+  filter: blur(0.5px);
+  pointer-events: none;
 }
 
 .pulsePreviewTitle {
@@ -1593,6 +1600,25 @@
   transform: translateY(-2px);
   border-color: rgba(79, 70, 229, 0.45);
   box-shadow: 0 10px 30px rgba(79, 70, 229, 0.15), 0 0 20px rgba(236, 72, 153, 0.12);
+}
+
+.pulseAIPreviewBoxAnalyzed {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.14) 0%, rgba(236, 72, 153, 0.14) 100%) !important;
+  border: 2px solid rgba(124, 58, 237, 0.6) !important;
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.25), 0 0 20px rgba(236, 72, 153, 0.15) !important;
+  animation: pulseCardGlow 2.5s infinite ease-in-out alternate;
+}
+
+@keyframes pulseCardGlow {
+  0% { box-shadow: 0 8px 32px rgba(124, 58, 237, 0.22), 0 0 15px rgba(236, 72, 153, 0.1); }
+  100% { box-shadow: 0 8px 32px rgba(124, 58, 237, 0.35), 0 0 28px rgba(236, 72, 153, 0.25); }
+}
+
+.pulseAnalyzedBadgeTitle {
+  font-weight: 800;
+  color: #7c3aed;
+  text-shadow: 0 1px 4px rgba(124, 58, 237, 0.15);
+  letter-spacing: -0.01em;
 }
 
 .pulsePreviewHeaderRow {
