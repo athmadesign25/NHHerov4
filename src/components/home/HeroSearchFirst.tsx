@@ -16,6 +16,7 @@ import SplitText from "@/components/ui/SplitText";
 import styles from "./HeroSearchFirst.module.css";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
+import starAnimation from "../../../public/assets/AI Searching 2.json";
 import PixelRipple from "./PixelRipple";
 import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
 
@@ -413,7 +414,7 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   
   if (ql.includes("heart") || ql.includes("chest") || ql.includes("cardio")) {
     return {
-      empathy: "I understand you are concerned about chest or cardiac symptoms. Based on your profile and preferred clinic (NICS Bangalore), we recommend a Cardiology review.",
+      empathy: "Recommended Care Pathway: Cardiology review based on your profile & preferred clinic.",
       suggestedDoc: {
         id: "d2",
         name: "Dr. Ananya Krishnan",
@@ -434,7 +435,7 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   
   if (ql.includes("brain") || ql.includes("nerve") || ql.includes("headache") || ql.includes("stroke") || ql.includes("tremor") || ql.includes("migraine")) {
     return {
-      empathy: "I understand you are experiencing nerve or headache symptoms. Based on your health record of neurological checks, we recommend starting with a Neurologist.",
+      empathy: "Recommended Care Pathway: Neurology consultation based on your health records.",
       suggestedDoc: {
         id: "d4",
         name: "Dr. Vikas Yadav",
@@ -455,7 +456,7 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
 
   if (ql.includes("cancer") || ql.includes("tumor") || ql.includes("oncology") || ql.includes("lump")) {
     return {
-      empathy: "I understand you are seeking guidance on tumor or oncology concerns. Based on your preferences at Narayana Superspeciality, we recommend consulting our lead Oncologist.",
+      empathy: "Recommended Care Pathway: Oncology consult at Narayana Superspeciality.",
       suggestedDoc: {
         id: "d3",
         name: "Dr. Rajiv Menon",
@@ -476,7 +477,7 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
 
   if (ql.includes("bone") || ql.includes("joint") || ql.includes("fracture") || ql.includes("knee") || ql.includes("back pain")) {
     return {
-      empathy: "I understand you have joint or bone pain. Based on your activity and local medical profile at HSR, we suggest consulting a Bone & Joint specialist.",
+      empathy: "Recommended Care Pathway: Orthopaedics consult based on activity and history.",
       suggestedDoc: {
         id: "d4",
         name: "Dr. Vikas Yadav",
@@ -496,7 +497,7 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   }
 
   return {
-    empathy: "I understand you are experiencing general discomfort like fever or cough. Based on your location in Bangalore and your last consult with Dr. Vikas Yadav, we suggest seeing a General Physician.",
+    empathy: "Recommended Care Pathway: General Physician consult based on history & location.",
     suggestedDoc: {
       id: "d1",
       name: "Dr. Pradeep R Kumar",
@@ -1149,7 +1150,7 @@ export default function HeroSearchFirst() {
                               >
                                 <div className={styles.pulsePreviewHeaderRow}>
                                   <div className={styles.pulsePreviewBadge}>
-                                    <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
+                                    <Lottie animationData={starAnimation} className={styles.pulsePreviewLottie} loop={true} />
                                     <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
                                   </div>
                                   <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
