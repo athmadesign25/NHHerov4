@@ -848,6 +848,9 @@ export default function HeroSearchFirst() {
                         type="text"
                         placeholder="Search doctors, specialities, or treatments..."
                         value={searchQuery}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
                         onChange={(e) => {
                           setSearchQuery(e.target.value);
                           setIsOpen(true);
