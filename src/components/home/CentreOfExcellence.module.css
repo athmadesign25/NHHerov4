@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   padding: var(--sp-10) 0;
-  background: #fcfcfc;
+  background: radial-gradient(circle at 50% 0%, #0f172a 0%, #090d16 100%);
   overflow: hidden;
 }
 
@@ -14,10 +14,14 @@
   padding: 0 20px;
 }
 
+.header :global(.section-eyebrow) {
+  color: #38bdf8 !important;
+}
+
 .sectionTitle {
   font-size: clamp(28px, 3.2vw, 44px);
   font-weight: 900;
-  color: var(--color-text, #1A1A2E);
+  color: #ffffff;
   margin-top: 0;
   margin-bottom: 8px;
   line-height: 1.18;
@@ -26,7 +30,7 @@
 
 .sectionSubtitle {
   font-size: var(--font-size-lg);
-  color: var(--color-text-secondary, #4A5568);
+  color: #94a3b8;
   line-height: 1.6;
   max-width: 680px;
   margin: 0 auto;
@@ -312,8 +316,8 @@
   gap: 0;
   width: 100%;
   margin-top: var(--sp-10);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
   background: #0b0f19;
 }
 
