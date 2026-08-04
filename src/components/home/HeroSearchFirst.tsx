@@ -819,6 +819,7 @@ export default function HeroSearchFirst() {
                         <Search className={styles.searchIcon} size={18} />
                       </div>
                       <input
+                        id="hero-search-input"
                         type="text"
                         placeholder="Search doctors, specialities, or treatments..."
                         value={searchQuery}
@@ -861,19 +862,179 @@ export default function HeroSearchFirst() {
                           data-lenis-prevent
                         >
                   {!searchQuery.trim() ? (
-                    <div className={styles.popularSearches}>
-                      <div className={styles.popularTitle}>what people are searching for :</div>
-                      <div className={styles.popularTags}>
-                        {["chest pain", "cancer", "surgery", "liver"].map((tag) => (
-                          <button
-                            key={tag}
-                            type="button"
-                            onClick={() => setSearchQuery(tag)}
-                            className={styles.popularTagBtn}
-                          >
-                            {tag}
-                          </button>
-                        ))}
+                    <div className={styles.popularSearchesContainer}>
+                      {/* Popular Tags */}
+                      <div className={styles.popularSearches}>
+                        <div className={styles.popularTitle}>what people are searching for :</div>
+                        <div className={styles.popularTags}>
+                          {["chest pain", "cancer", "surgery", "liver"].map((tag) => (
+                            <button
+                              key={tag}
+                              type="button"
+                              onClick={() => setSearchQuery(tag)}
+                              className={styles.popularTagBtn}
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Pulse AI Intent-Driven Entry Points */}
+                      <div className={styles.dropdownPulseDivider}>
+                        <span>Ask Pulse AI Workspace</span>
+                      </div>
+
+                      <div className={styles.entryCardsContainer}>
+                        {/* Card 1: Find the right doctor */}
+                        <div 
+                          className={`${styles.entryCard} ${styles.blueThemeCard}`}
+                          onClick={() => {
+                            setSearchQuery("Find doctor");
+                            setIsPulseActive(true);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className={styles.entryCardHeader}>
+                            <div className={styles.entryCardBannerWrap}>
+                              <img 
+                                src="/pulse_find_doctor_banner.png" 
+                                alt="Find the right doctor" 
+                                className={styles.entryCardBannerImg} 
+                              />
+                            </div>
+                            <div className={styles.entryCardMeta}>
+                              <h3 className={styles.entryCardTitle}>Find the right doctor</h3>
+                              <p className={styles.entryCardSubtitle}>Book the consultation you need</p>
+                            </div>
+                            <div className={styles.entryCardChevronBtn}>
+                              <ChevronRight size={16} />
+                            </div>
+                          </div>
+
+                          <div className={styles.intentSubSection}>
+                            <span className={styles.intentLabel}>Try asking for</span>
+                            <div className={styles.intentChipsWrap}>
+                              <button 
+                                className={`${styles.intentChip} ${styles.blueChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("I have been having ");
+                                  const searchInput = document.getElementById("hero-search-input");
+                                  if (searchInput) searchInput.focus();
+                                }}
+                              >
+                                I have a symptom
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.blueChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("I want to consult Dr. ");
+                                  const searchInput = document.getElementById("hero-search-input");
+                                  if (searchInput) searchInput.focus();
+                                }}
+                              >
+                                I know the doctor's name
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.blueChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("I want to book an appointment");
+                                  setIsPulseActive(true);
+                                }}
+                              >
+                                I want to book an appointment
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.blueChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("I am looking for a ");
+                                  const searchInput = document.getElementById("hero-search-input");
+                                  if (searchInput) searchInput.focus();
+                                }}
+                              >
+                                I know the speciality
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Card 2: Know your health */}
+                        <div 
+                          className={`${styles.entryCard} ${styles.tealThemeCard}`}
+                          onClick={() => {
+                            setSearchQuery("Know your health");
+                            setIsPulseActive(true);
+                          }}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className={styles.entryCardHeader}>
+                            <div className={styles.entryCardBannerWrap}>
+                              <img 
+                                src="/pulse_health_insights_banner.png" 
+                                alt="Know your health" 
+                                className={styles.entryCardBannerImg} 
+                              />
+                            </div>
+                            <div className={styles.entryCardMeta}>
+                              <h3 className={styles.entryCardTitle}>Know your health</h3>
+                              <p className={styles.entryCardSubtitle}>Get insights from medical history</p>
+                            </div>
+                            <div className={styles.entryCardChevronBtn}>
+                              <ChevronRight size={16} />
+                            </div>
+                          </div>
+
+                          <div className={styles.intentSubSection}>
+                            <span className={styles.intentLabel}>Try asking for</span>
+                            <div className={styles.intentChipsWrap}>
+                              <button 
+                                className={`${styles.intentChip} ${styles.tealChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("Summarize my health");
+                                  setIsPulseActive(true);
+                                }}
+                              >
+                                Summarize my health
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.tealChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("Please analyse report ");
+                                  const searchInput = document.getElementById("hero-search-input");
+                                  if (searchInput) searchInput.focus();
+                                }}
+                              >
+                                Analyse my reports
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.tealChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("Show my organ insights");
+                                  setIsPulseActive(true);
+                                }}
+                              >
+                                Show my organ insights
+                              </button>
+                              <button 
+                                className={`${styles.intentChip} ${styles.tealChip}`} 
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSearchQuery("Upload and review my report");
+                                  setIsPulseActive(true);
+                                }}
+                              >
+                                Upload and review my report
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ) : (
