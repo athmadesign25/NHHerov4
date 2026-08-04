@@ -715,50 +715,146 @@
   transform: translateY(-170px);
 }
 
+/* ── Overlay search bar (scroll-up mode) ───────────────────── */
 .searchContainer {
   display: flex;
   align-items: center;
-  background: rgba(11, 15, 25, 0.65);
+  background: rgba(11, 15, 25, 0.70);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full);
   height: 54px;
-  padding: 0 4px 0 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  padding: 0 16px 0 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+  position: relative;
+  /* No hard border — we use ::before for the gradient spin */
+  border: none;
 }
 
-.searchContainer:focus-within,
+.searchContainer::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: var(--radius-full);
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 25%,
+    rgba(219, 39, 119, 0.15) 50%,
+    rgba(219, 39, 119, 0.9) 75%,
+    rgba(99, 102, 241, 0.9) 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 4s linear infinite;
+  pointer-events: none;
+}
+
+.searchContainer::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius-full);
+  padding: 2px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 25%,
+    rgba(219, 39, 119, 0.05) 50%,
+    rgba(219, 39, 119, 0.35) 75%,
+    rgba(99, 102, 241, 0.4) 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(5px);
+  animation: spinBorder 4s linear infinite;
+  pointer-events: none;
+}
+
 .searchContainerActive {
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
-}
-
-.searchContainer:focus-within::before,
-.searchContainerActive::before {
-  background: #ffffff;
-  animation: none;
-}
-
-.searchContainer:focus-within::after,
-.searchContainerActive::after {
-  background: #ffffff;
-  animation: none;
-  filter: blur(8px);
+  box-shadow: 0 0 32px rgba(219, 39, 119, 0.25), 0 0 32px rgba(99, 102, 241, 0.2);
 }
 
 .searchIconWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  width: 32px;
-  height: 32px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  margin-left: 4px;
   margin-right: 12px;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Animated gradient ring on the single unified search icon */
+.searchIconPulse {
+  position: relative;
+}
+
+.searchIconPulse::before {
+  content: "";
+  position: absolute;
+  inset: -2.5px;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 20%,
+    rgba(219, 39, 119, 0.8) 50%,
+    rgba(99, 102, 241, 1) 75%,
+    rgba(219, 39, 119, 0.8) 90%,
+    transparent 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 2.5s linear infinite;
+  pointer-events: none;
+}
+
+.searchIconPulse::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 20%,
+    rgba(219, 39, 119, 0.3) 50%,
+    rgba(99, 102, 241, 0.35) 75%,
+    transparent 100%
+  );
+  filter: blur(6px);
+  animation: spinBorder 2.5s linear infinite;
+  pointer-events: none;
+}
+
+.searchIconPulse:hover {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 18px rgba(219, 39, 119, 0.35), 0 0 12px rgba(99, 102, 241, 0.3);
 }
 
 .searchIcon {

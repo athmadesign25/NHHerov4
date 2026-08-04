@@ -823,7 +823,24 @@ export default function HeroSearchFirst() {
                   >
                     {!isPulseActive && (
                       <div className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}>
-                      <div className={styles.searchIconWrapper}>
+                      <div
+                        className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isConversational) {
+                            if (!isPulseAnalyzed) {
+                              setIsPulseAnalyzed(true);
+                            } else {
+                              setIsPulseActive(true);
+                              setIsOpen(false);
+                            }
+                          } else {
+                            setIsPulseActive(true);
+                          }
+                        }}
+                        title="Open Pulse AI"
+                        style={{ cursor: "pointer" }}
+                      >
                         <Search className={styles.searchIcon} size={18} />
                       </div>
                       <input
@@ -842,26 +859,6 @@ export default function HeroSearchFirst() {
                         }}
                         className={styles.searchInput}
                       />
-                      <div 
-                        className={styles.pulseIconWrapper} 
-                        style={{ marginRight: '14px' }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (isConversational) {
-                            if (!isPulseAnalyzed) {
-                              setIsPulseAnalyzed(true);
-                            } else {
-                              setIsPulseActive(true);
-                              setIsOpen(false);
-                            }
-                          } else {
-                            setIsPulseActive(true);
-                          }
-                        }}
-                      >
-                        <Lottie animationData={pulseAnimation} className={styles.pulseIcon} loop={true} />
-                        <span className={styles.pulseText}>Ask Pulse</span>
-                      </div>
 
                     </div>
                     )}
