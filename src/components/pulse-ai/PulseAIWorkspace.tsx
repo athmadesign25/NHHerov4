@@ -3167,12 +3167,17 @@ function AnimatedPlaceholder({ visible }: { visible: boolean }) {
 
 /* ─── MAIN WORKSPACE ──────────────────────────────────────── */
 function Workspace({
-  onClose, initialQuery, clearInitialQuery, isLoggedIn, setIsLoggedIn,
+  onClose, initialQuery, clearInitialQuery,
+  initialAction, initialActionData, clearInitialAction,
+  isLoggedIn, setIsLoggedIn,
   isMaximized, onToggleMaximize
 }: {
   onClose: () => void;
   initialQuery?: string;
   clearInitialQuery?: () => void;
+  initialAction?: string | null;
+  initialActionData?: any;
+  clearInitialAction?: () => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (val: boolean) => void;
   isMaximized?: boolean;
@@ -3266,6 +3271,31 @@ function Workspace({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery]);
+
+  const initialActionProcessed = useRef(false);
+
+  // Execute external slot booking direct action from Hero search
+  useEffect(() => {
+    if (initialAction && initialActionData && !initialActionProcessed.current) {
+      initialActionProcessed.current = true;
+      const doc = initialActionData as any;
+      
+      // Setup natural booking conversation history
+      const userMsg: Message = { 
+        id: `u-${Date.now()}`, 
+        role: "user", 
+        text: `Book appointment with ${doc.name}`, 
+        ts: new Date() 
+      };
+      setMsgs([userMsg]);
+      
+      // Directly open slot picker
+      handleAction(initialAction, initialActionData);
+      
+      clearInitialAction?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAction, initialActionData]);
 
   const injectAI = useCallback((partial: Partial<Message>, delay = 1600) => {
     const thinkId = `think-${Date.now()}`;
@@ -4455,9 +4485,21 @@ function PulseAIGateway({
 }
 
 /* ─── ROOT EXPORT ─────────────────────────────────────────── */
-export default function PulseAIWorkspace({ onClose, initialQuery: propInitialQuery = "" }: { onClose?: () => void, initialQuery?: string }) {
+export default function PulseAIWorkspace({
+  onClose,
+  initialQuery: propInitialQuery = "",
+  initialAction: propInitialAction = null,
+  initialActionData: propInitialActionData = null
+}: {
+  onClose?: () => void;
+  initialQuery?: string;
+  initialAction?: string | null;
+  initialActionData?: any;
+}) {
   const [isOpen, setIsOpen] = useState(true);
   const [initialQuery, setInitialQuery] = useState(propInitialQuery);
+  const [initialAction, setInitialAction] = useState<string | null>(propInitialAction);
+  const [initialActionData, setInitialActionData] = useState<any>(propInitialActionData);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isMaximized, setIsMaximized] = useState(false);
 
@@ -4522,6 +4564,12 @@ export default function PulseAIWorkspace({ onClose, initialQuery: propInitialQue
                   onClose={handleClose}
                   initialQuery={initialQuery}
                   clearInitialQuery={() => setInitialQuery("")}
+                  initialAction={initialAction}
+                  initialActionData={initialActionData}
+                  clearInitialAction={() => {
+                    setInitialAction(null);
+                    setInitialActionData(null);
+                  }}
                   isLoggedIn={isLoggedIn}
                   setIsLoggedIn={setIsLoggedIn}
                   isMaximized={isMaximized}

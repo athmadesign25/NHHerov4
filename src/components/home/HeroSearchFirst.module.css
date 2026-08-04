@@ -818,10 +818,9 @@
 .dropdown {
   position: absolute;
   top: calc(100% + 12px);
-  bottom: auto;
   left: 0;
   width: 100%;
-  max-height: 440px;
+  max-height: 650px;
   overflow-y: auto;
   overscroll-behavior: contain;
   background: #ffffff;
@@ -1561,7 +1560,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: 480px;
+  max-height: 600px;
   overflow-y: auto;
 }
 
@@ -1580,20 +1579,20 @@
 }
 
 .pulseAIPreviewBox {
-  background: linear-gradient(135deg, rgba(3, 78, 162, 0.04) 0%, rgba(79, 70, 229, 0.04) 50%, rgba(236, 72, 153, 0.04) 100%);
-  border: 1px solid rgba(3, 78, 162, 0.12);
+  background: linear-gradient(135deg, rgba(3, 78, 162, 0.08) 0%, rgba(79, 70, 229, 0.08) 50%, rgba(236, 72, 153, 0.08) 100%);
+  border: 1.5px solid rgba(79, 70, 229, 0.25);
   border-radius: 14px;
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.03);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.06), 0 0 12px rgba(236, 72, 153, 0.04);
 }
 
 .pulseAIPreviewBox:hover {
   transform: translateY(-2px);
-  border-color: rgba(3, 78, 162, 0.24);
-  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.08), 0 0 14px rgba(79, 70, 229, 0.06);
+  border-color: rgba(79, 70, 229, 0.45);
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.15), 0 0 20px rgba(236, 72, 153, 0.12);
 }
 
 .pulsePreviewHeaderRow {
@@ -1620,11 +1619,11 @@
 .pulsePreviewTag {
   font-size: 10px;
   font-weight: 700;
-  color: #10b981;
-  background: #f0fdf4;
+  color: #7c3aed;
+  background: #f5f3ff;
   padding: 2px 8px;
   border-radius: 9999px;
-  border: 1px solid #dcfce7;
+  border: 1px solid #ddd6fe;
 }
 
 .pulsePreviewEmpathy {
@@ -1640,24 +1639,42 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(4px);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  padding: 10px 14px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .pulsePreviewDocPhoto {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
   background: #cbd5e1;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .pulsePreviewDocDetails {
   flex: 1;
+}
+
+.pulsePreviewBestMatchTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .pulsePreviewDocName {
@@ -1682,21 +1699,48 @@
   color: #034ea2;
 }
 
+.pulsePreviewActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .pulsePreviewBookBtn {
   background: linear-gradient(135deg, #034ea2 0%, #022e60 100%);
   color: white;
   border: none;
   border-radius: 9999px;
   padding: 7px 16px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 3px 8px rgba(3, 78, 162, 0.25);
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .pulsePreviewBookBtn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(3, 78, 162, 0.35);
+}
+
+.pulsePreviewModifyBtn {
+  background: transparent;
+  color: #034ea2;
+  border: 1px solid rgba(3, 78, 162, 0.4);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.pulsePreviewModifyBtn:hover {
+  background: rgba(3, 78, 162, 0.05);
+  border-color: #034ea2;
+  transform: translateY(-1px);
 }

@@ -391,7 +391,19 @@ function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, s
 
 interface RealtimePulseResponse {
   empathy: string;
-  suggestedDoc: typeof doctorsData[0];
+  suggestedDoc: {
+    id: string;
+    name: string;
+    qualification: string;
+    speciality: string;
+    hospital: string;
+    plusHospitals?: number;
+    slot: string;
+    price: string;
+    rating: number;
+    photo: string;
+    location?: string;
+  };
   suggestedSpec: string;
   slot: string;
 }
@@ -402,7 +414,19 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   if (ql.includes("heart") || ql.includes("chest") || ql.includes("cardio")) {
     return {
       empathy: "I understand you are concerned about chest or cardiac symptoms. Based on your profile and preferred clinic (NICS Bangalore), we recommend a Cardiology review.",
-      suggestedDoc: doctorsData[0],
+      suggestedDoc: {
+        id: "d2",
+        name: "Dr. Ananya Krishnan",
+        qualification: "MBBS, DM (Cardiology)",
+        speciality: "Cardiologist",
+        hospital: "Narayana Institute of Cardiac Sciences",
+        plusHospitals: 0,
+        slot: "Today, 05:00 PM",
+        price: "₹1,200",
+        rating: 4.8,
+        photo: "/assets/doctor_2.png",
+        location: "Bengaluru"
+      },
       suggestedSpec: "Cardiology",
       slot: "Today, 05:00 PM"
     };
@@ -411,7 +435,19 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   if (ql.includes("brain") || ql.includes("nerve") || ql.includes("headache") || ql.includes("stroke") || ql.includes("tremor") || ql.includes("migraine")) {
     return {
       empathy: "I understand you are experiencing nerve or headache symptoms. Based on your health record of neurological checks, we recommend starting with a Neurologist.",
-      suggestedDoc: doctorsData[2],
+      suggestedDoc: {
+        id: "d4",
+        name: "Dr. Vikas Yadav",
+        qualification: "MBBS, MD (Nephrology)",
+        speciality: "Nephrologist",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 0,
+        slot: "Today, 04:00 PM",
+        price: "₹1,000",
+        rating: 4.85,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      },
       suggestedSpec: "Neurology",
       slot: "Today, 04:00 PM"
     };
@@ -420,24 +456,60 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   if (ql.includes("cancer") || ql.includes("tumor") || ql.includes("oncology") || ql.includes("lump")) {
     return {
       empathy: "I understand you are seeking guidance on tumor or oncology concerns. Based on your preferences at Narayana Superspeciality, we recommend consulting our lead Oncologist.",
-      suggestedDoc: doctorsData[7],
+      suggestedDoc: {
+        id: "d3",
+        name: "Dr. Rajiv Menon",
+        qualification: "MBBS, MS, MCh",
+        speciality: "Cardiac Surgeon",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 2,
+        slot: "Thu, 10:00 AM",
+        price: "₹1,500",
+        rating: 4.95,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      },
       suggestedSpec: "Oncology",
-      slot: "Tomorrow, 10:00 AM"
+      slot: "Thu, 10:00 AM"
     };
   }
 
   if (ql.includes("bone") || ql.includes("joint") || ql.includes("fracture") || ql.includes("knee") || ql.includes("back pain")) {
     return {
       empathy: "I understand you have joint or bone pain. Based on your activity and local medical profile at HSR, we suggest consulting a Bone & Joint specialist.",
-      suggestedDoc: doctorsData[8],
+      suggestedDoc: {
+        id: "d4",
+        name: "Dr. Vikas Yadav",
+        qualification: "MBBS, MD (Nephrology)",
+        speciality: "Nephrologist",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 0,
+        slot: "Today, 04:00 PM",
+        price: "₹1,000",
+        rating: 4.85,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      },
       suggestedSpec: "Orthopaedics",
-      slot: "Tomorrow, 11:30 AM"
+      slot: "Today, 04:00 PM"
     };
   }
 
   return {
     empathy: "I understand you are experiencing general discomfort like fever or cough. Based on your location in Bangalore and your last consult with Dr. Vikas Yadav, we suggest seeing a General Physician.",
-    suggestedDoc: doctorsData[0],
+    suggestedDoc: {
+      id: "d1",
+      name: "Dr. Pradeep R Kumar",
+      qualification: "MBBS, MD",
+      speciality: "General Physician",
+      hospital: "Mazumdar Shaw Medical Centre",
+      plusHospitals: 1,
+      slot: "Tomorrow, 02:30 PM",
+      price: "₹800",
+      rating: 4.9,
+      photo: "/assets/doctor_1.png",
+      location: "Bengaluru"
+    },
     suggestedSpec: "General Medicine",
     slot: "Tomorrow, 02:30 PM"
   };
@@ -452,7 +524,15 @@ export default function HeroSearchFirst() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [isPulseActive, setIsPulseActive] = useState(false);
+  const [pulseInitialAction, setPulseInitialAction] = useState<string | null>(null);
+  const [pulseInitialActionData, setPulseInitialActionData] = useState<any>(null);
   const [showPixelRipple, setShowPixelRipple] = useState(false);
+
+  const handlePulseLaunchWithAction = (action: string, doctorData: any) => {
+    setPulseInitialAction(action);
+    setPulseInitialActionData(doctorData);
+    setIsPulseActive(true);
+  };
 
   const isConversational = searchQuery.trim().split(" ").length > 3 || 
                           /have|fever|cough|tomorrow|symptom|feel|pain/i.test(searchQuery.trim());
@@ -896,6 +976,9 @@ export default function HeroSearchFirst() {
                                     className={styles.pulsePreviewDocPhoto} 
                                   />
                                   <div className={styles.pulsePreviewDocDetails}>
+                                    <div className={styles.pulsePreviewBestMatchTag}>
+                                      ✨ Best Match / Recommended Specialist
+                                    </div>
                                     <div className={styles.pulsePreviewDocName}>
                                       {response.suggestedDoc.name}
                                     </div>
@@ -906,15 +989,26 @@ export default function HeroSearchFirst() {
                                       Next Slot: <strong>{response.slot}</strong>
                                     </div>
                                   </div>
-                                  <button 
-                                    className={styles.pulsePreviewBookBtn}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setIsPulseActive(true);
-                                    }}
-                                  >
-                                    Consult via Pulse
-                                  </button>
+                                  <div className={styles.pulsePreviewActions}>
+                                    <button 
+                                      className={styles.pulsePreviewBookBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                      }}
+                                    >
+                                      Book Now
+                                    </button>
+                                    <button 
+                                      className={styles.pulsePreviewModifyBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                      }}
+                                    >
+                                      Modify &amp; Book
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             );
@@ -1269,8 +1363,14 @@ export default function HeroSearchFirst() {
       </div>
       {isPulseActive && (
         <PulseAIWorkspace 
-          initialQuery={searchQuery}
-          onClose={() => setIsPulseActive(false)} 
+          initialQuery={pulseInitialAction ? "" : searchQuery}
+          initialAction={pulseInitialAction}
+          initialActionData={pulseInitialActionData}
+          onClose={() => {
+            setIsPulseActive(false);
+            setPulseInitialAction(null);
+            setPulseInitialActionData(null);
+          }} 
         />
       )}
     </section>
