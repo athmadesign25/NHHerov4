@@ -1127,80 +1127,138 @@ export default function HeroSearchFirst() {
                           </div>
 
                           {/* 2. Bottom Section: Pulse AI Preview (Dynamic based on analysis status) */}
-                          {!isPulseAnalyzed ? (
-                            <div 
-                              className={styles.pulseAIPreviewBox}
-                              onClick={() => setIsPulseAnalyzed(true)}
-                              style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "14px", minHeight: "56px" }}
-                            >
-                              <div className={styles.pulseAIPendingOneLiner}>
-                                <span className={styles.pulseSparkleIcon}>✨</span> Press <strong>Enter ↵</strong> or click <strong>Ask Pulse</strong> to analyze this sentence with Pulse AI
-                              </div>
-                            </div>
-                          ) : (
-                            (() => {
-                              const response = getRealtimePulseResponse(searchQuery);
+                          {(() => {
+                            if (!isPulseAnalyzed) {
                               return (
                                 <div 
-                                  className={`${styles.pulseAIPreviewBox} ${styles.pulseAIPreviewBoxAnalyzed}`}
+                                  className={styles.pulseAIPreviewBox}
+                                  onClick={() => setIsPulseAnalyzed(true)}
+                                  style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "14px", minHeight: "56px" }}
                                 >
-                                  <div className={styles.pulsePreviewHeaderRow}>
-                                    <div className={styles.pulsePreviewBadge}>
-                                      <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
-                                      <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
-                                    </div>
-                                    <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
-                                  </div>
-
-                                  <div className={styles.pulsePreviewEmpathy}>
-                                    &ldquo;{response.empathy}&rdquo;
-                                  </div>
-
-                                  <div className={styles.pulsePreviewRecommendedDoc}>
-                                    <img 
-                                      src={response.suggestedDoc.photo} 
-                                      alt={response.suggestedDoc.name} 
-                                      className={styles.pulsePreviewDocPhoto} 
-                                    />
-                                    <div className={styles.pulsePreviewDocDetails}>
-                                      <div className={styles.pulsePreviewBestMatchTag}>
-                                        ✨ Best Match / Recommended Specialist
-                                      </div>
-                                      <div className={styles.pulsePreviewDocName}>
-                                        {response.suggestedDoc.name}
-                                      </div>
-                                      <div className={styles.pulsePreviewDocSub}>
-                                        {response.suggestedSpec} • {response.suggestedDoc.hospital}
-                                      </div>
-                                      <div className={styles.pulsePreviewDocSlot}>
-                                        Next Slot: <strong>{response.slot}</strong>
-                                      </div>
-                                    </div>
-                                    <div className={styles.pulsePreviewActions}>
-                                      <button 
-                                        className={styles.pulsePreviewBookBtn}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                        }}
-                                      >
-                                        Book Now
-                                      </button>
-                                      <button 
-                                        className={styles.pulsePreviewModifyBtn}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                        }}
-                                      >
-                                        Modify &amp; Book
-                                      </button>
-                                    </div>
+                                  <div className={styles.pulseAIPendingOneLiner}>
+                                    <span className={styles.pulseSparkleIcon}>✨</span> Press <strong>Enter ↵</strong> or click <strong>Ask Pulse</strong> to analyze this sentence with Pulse AI
                                   </div>
                                 </div>
                               );
-                            })()
-                          )}
+                            }
+
+                            const response = getRealtimePulseResponse(searchQuery);
+                            return (
+                              <div 
+                                className={`${styles.pulseAIPreviewBox} ${styles.pulseAIPreviewBoxAnalyzed}`}
+                              >
+                                <div className={styles.pulsePreviewHeaderRow}>
+                                  <div className={styles.pulsePreviewBadge}>
+                                    <Lottie animationData={pulseAnimation} className={styles.pulsePreviewLottie} loop={true} />
+                                    <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
+                                  </div>
+                                  <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
+                                </div>
+
+                                <div className={styles.pulsePreviewEmpathy}>
+                                  &ldquo;{response.empathy}&rdquo;
+                                </div>
+
+                                <div className={styles.pulsePreviewRecommendedDoc}>
+                                  <img 
+                                    src={response.suggestedDoc.photo} 
+                                    alt={response.suggestedDoc.name} 
+                                    className={styles.pulsePreviewDocPhoto} 
+                                  />
+                                  <div className={styles.pulsePreviewDocDetails}>
+                                    <div className={styles.pulsePreviewBestMatchTag}>
+                                      ✨ Best Match / Recommended Specialist
+                                    </div>
+                                    <div className={styles.pulsePreviewDocName}>
+                                      {response.suggestedDoc.name}
+                                    </div>
+                                    <div className={styles.pulsePreviewDocSub}>
+                                      {response.suggestedSpec} • {response.suggestedDoc.hospital}
+                                    </div>
+                                    <div className={styles.pulsePreviewDocSlot}>
+                                      Next Slot: <strong>{response.slot}</strong>
+                                    </div>
+                                  </div>
+                                  <div className={styles.pulsePreviewActions}>
+                                    <button 
+                                      className={styles.pulsePreviewBookBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                      }}
+                                    >
+                                      Book Now
+                                    </button>
+                                    <button 
+                                      className={styles.pulsePreviewModifyBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                      }}
+                                    >
+                                      Modify &amp; Book
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Secondary alternate search options section */}
+                                <div className={styles.pulsePreviewSecondarySection}>
+                                  <div className={styles.pulseSecondaryTitle}>
+                                    <span>✨ If you are looking for something else</span>
+                                  </div>
+                                  <div className={styles.pulseSecondaryActionsRow}>
+                                    <div className={styles.pulseSecondaryChips}>
+                                      <button 
+                                        className={styles.pulseSecondaryChip}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSearchQuery("I have been having ");
+                                          setIsPulseAnalyzed(false);
+                                          const searchInput = document.getElementById("hero-search-input");
+                                          if (searchInput) searchInput.focus();
+                                        }}
+                                      >
+                                        I have a symptom
+                                      </button>
+                                      <button 
+                                        className={styles.pulseSecondaryChip}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSearchQuery("I am looking for a ");
+                                          setIsPulseAnalyzed(false);
+                                          const searchInput = document.getElementById("hero-search-input");
+                                          if (searchInput) searchInput.focus();
+                                        }}
+                                      >
+                                        I know the speciality
+                                      </button>
+                                      <button 
+                                        className={styles.pulseSecondaryChip}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSearchQuery("I want to consult Dr. ");
+                                          setIsPulseAnalyzed(false);
+                                          const searchInput = document.getElementById("hero-search-input");
+                                          if (searchInput) searchInput.focus();
+                                        }}
+                                      >
+                                        I know the doctor
+                                      </button>
+                                    </div>
+                                    <button 
+                                      className={styles.pulseViewAllDocsBtn}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsPulseActive(true);
+                                      }}
+                                    >
+                                      View all recommended doctors →
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       ) : (
                         <>

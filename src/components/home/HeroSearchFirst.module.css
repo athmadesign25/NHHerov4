@@ -1992,3 +1992,73 @@
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(13, 148, 136, 0.2);
 }
+
+.pulsePreviewSecondarySection {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(124, 58, 237, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pulseSecondaryTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.pulseSecondaryActionsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pulseSecondaryChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pulseSecondaryChip {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #034ea2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.pulseSecondaryChip:hover {
+  background: #034ea2;
+  color: #ffffff;
+  border-color: #034ea2;
+  transform: translateY(-1px);
+}
+
+.pulseViewAllDocsBtn {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7c3aed;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  font-family: inherit;
+}
+
+.pulseViewAllDocsBtn:hover {
+  color: #6d28d9;
+  text-decoration: underline;
+  transform: translateX(2px);
+}
