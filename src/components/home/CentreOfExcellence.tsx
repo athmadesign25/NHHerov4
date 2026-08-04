@@ -56,17 +56,159 @@ const CARDS = [
 ];
 
 const SPECIALITIES = [
-  { name: "Cardiology & Cardiac Surgery", href: "/specialities/cardiology", icon: "/Specialities icons/Cardiology.svg" },
-  { name: "Cancer Care", href: "/specialities/oncology", icon: "/Specialities icons/Cancercare.svg" },
-  { name: "Neurology & Neurosurgery", href: "/specialities/neurology", icon: "/Specialities icons/Neurology.svg" },
-  { name: "Orthopaedics", href: "/specialities/orthopaedics", icon: "/Specialities icons/Orthopaedics.svg" },
-  { name: "Nephrology & Transplant", href: "/specialities/nephrology", icon: "/Specialities icons/Nephrology.svg" },
-  { name: "Gastroenterology", href: "/specialities/gastroenterology", icon: "/Specialities icons/Gastro.svg" },
-  { name: "Paediatrics & Neonatology", href: "/specialities/paediatrics", icon: "/Specialities icons/Paedratic.svg" },
-  { name: "Obstetrics & Gynaecology", href: "/specialities/gynaecology", icon: "/Specialities icons/Gynaecology.svg" },
-  { name: "Ophthalmology", href: "/specialities/ophthalmology", icon: "/Specialities icons/General Medicine.svg" },
-  { name: "Urology", href: "/specialities/urology", icon: "/Specialities icons/Urology.svg" },
+  {
+    name: "Cardiology & Cardiac Surgery",
+    href: "/specialities/cardiology",
+    icon: "/Specialities icons/Cardiology.svg",
+    img: "/Advance Heart Care.png",
+    stats: { treatments: "1,200+", patients: "15,000+", tools: "18+" }
+  },
+  {
+    name: "Cancer Care",
+    href: "/specialities/oncology",
+    icon: "/Specialities icons/Cancercare.svg",
+    img: "/Oncology Institute.png",
+    stats: { treatments: "1,050+", patients: "12,000+", tools: "14+" }
+  },
+  {
+    name: "Neurology & Neurosurgery",
+    href: "/specialities/neurology",
+    icon: "/Specialities icons/Neurology.svg",
+    img: "/Brain and Spine.png",
+    stats: { treatments: "890+", patients: "9,500+", tools: "16+" }
+  },
+  {
+    name: "Orthopaedics",
+    href: "/specialities/orthopaedics",
+    icon: "/Specialities icons/Orthopaedics.svg",
+    img: "/Bone & Joint.png",
+    stats: { treatments: "2,400+", patients: "22,000+", tools: "12+" }
+  },
+  {
+    name: "Nephrology & Transplant",
+    href: "/specialities/nephrology",
+    icon: "/Specialities icons/Nephrology.svg",
+    img: "/specialities-bg.png",
+    stats: { treatments: "450+", patients: "6,800+", tools: "8+" }
+  },
+  {
+    name: "Gastroenterology",
+    href: "/specialities/gastroenterology",
+    icon: "/Specialities icons/Gastro.svg",
+    img: "/Digestive Health.png",
+    stats: { treatments: "1,500+", patients: "16,500+", tools: "10+" }
+  },
+  {
+    name: "Paediatrics & Neonatology",
+    href: "/specialities/paediatrics",
+    icon: "/Specialities icons/Paedratic.svg",
+    img: "/doctor_patient.png",
+    stats: { treatments: "3,100+", patients: "30,000+", tools: "20+" }
+  },
+  {
+    name: "Obstetrics & Gynaecology",
+    href: "/specialities/gynaecology",
+    icon: "/Specialities icons/Gynaecology.svg",
+    img: "/why-choose-nh-bg.png",
+    stats: { treatments: "2,800+", patients: "25,000+", tools: "15+" }
+  },
+  {
+    name: "Ophthalmology",
+    href: "/specialities/ophthalmology",
+    icon: "/Specialities icons/General Medicine.svg",
+    img: "/chairman background.png",
+    stats: { treatments: "1,600+", patients: "14,000+", tools: "11+" }
+  },
+  {
+    name: "Urology",
+    href: "/specialities/urology",
+    icon: "/Specialities icons/Urology.svg",
+    img: "/pulse_health_insights_banner.png",
+    stats: { treatments: "950+", patients: "8,200+", tools: "9+" }
+  },
 ];
+
+function FlipCard({ spec }: { spec: typeof SPECIALITIES[0] }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  return (
+    <Link 
+      href={spec.href} 
+      aria-label={spec.name} 
+      className={styles.flipCardWrapper}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className={styles.flipCardInner}>
+        
+        {/* Front Side */}
+        <div className={styles.flipCardFront}>
+          <div className={styles.cardImageContainer}>
+            <img 
+              src={spec.img} 
+              alt={spec.name} 
+              className={spec.name.includes("Nephrology") || spec.name.includes("Urology") ? `${styles.cardCoverImg} ${styles.imgContain}` : styles.cardCoverImg} 
+            />
+            <div className={styles.vignetteOverlay} />
+          </div>
+          
+          <div className={styles.frontContent}>
+            <div className={styles.specIconBadge}>
+              <img alt={spec.name} src={spec.icon} className={styles.specIconImg} />
+            </div>
+            <h4 className={styles.frontTitle}>{spec.name}</h4>
+          </div>
+        </div>
+
+        {/* Back Side */}
+        <div className={styles.flipCardBack}>
+          <video 
+            ref={videoRef}
+            src="/Doctor patient.mp4" 
+            className={styles.backVideo} 
+            muted 
+            loop 
+            playsInline 
+          />
+          <div className={styles.videoOverlay} />
+          
+          <div className={styles.backContent}>
+            <h4 className={styles.backTitle}>{spec.name}</h4>
+            <div className={styles.statsDivider} />
+            <div className={styles.statsList}>
+              <div className={styles.statItem}>
+                <span className={styles.statVal}>{spec.stats.treatments}</span>
+                <span className={styles.statLabel}>Successful Treatments</span>
+              </div>
+              <div className={styles.statItem}>
+                <span className={styles.statVal}>{spec.stats.patients}</span>
+                <span className={styles.statLabel}>Patients Cared For</span>
+              </div>
+              <div className={styles.statItem}>
+                <span className={styles.statVal}>{spec.stats.tools}</span>
+                <span className={styles.statLabel}>Advanced Tools</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </Link>
+  );
+}
 
 const getCardTransform = (index: number, activeIndex: number, total: number, isMobile: boolean) => {
   let diff = index - activeIndex;
@@ -324,18 +466,16 @@ export default function CentreOfExcellence() {
             </button>
           </div>
         </div>
+      </div>
 
+      {/* Full width edge-to-edge speciality wall */}
+      <div className={styles.specialitiesGridEdgeToEdge}>
+        {SPECIALITIES.map((spec) => (
+          <FlipCard key={spec.name} spec={spec} />
+        ))}
+      </div>
 
-        <div className={styles.specialitiesGrid}>
-          {SPECIALITIES.map((spec) => (
-            <Link key={spec.name} aria-label={spec.name} href={spec.href} className={styles.specialityCard}>
-              <span className={styles.specialityIconWrap}>
-                <img alt={spec.name} loading="lazy" width={56} height={56} src={spec.icon} className={styles.specialityIcon} />
-              </span>
-              <span className={styles.specialityName}>{spec.name}</span>
-            </Link>
-          ))}
-        </div>
+      <div className="container">
         <div className={styles.specialitiesCtaWrap}>
           <Link href="/specialities" className={styles.specialitiesCta}>
             View all specialties

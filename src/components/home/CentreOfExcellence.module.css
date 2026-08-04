@@ -306,80 +306,284 @@
   box-shadow: var(--shadow-md);
 }
 
-.specialitiesGrid {
+.specialitiesGridEdgeToEdge {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  margin-top: var(--sp-8);
-  border: 1px solid #e6eaee;
-  border-radius: var(--radius-xl);
+  width: 100%;
+  margin-top: var(--sp-10);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  background: #0b0f19;
+}
+
+/* 3D Flip Card Container */
+.flipCardWrapper {
+  position: relative;
+  height: 290px;
+  perspective: 1200px;
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.flipCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.2, 0.85, 0.32, 1.1);
+}
+
+.flipCardWrapper:hover .flipCardInner {
+  transform: rotateY(180deg);
+}
+
+/* Front & Back Faces */
+.flipCardFront,
+.flipCardBack {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-sizing: border-box;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* FRONT FACE */
+.flipCardFront {
+  background: #0b0f19;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px 24px;
+  z-index: 2;
+}
+
+.cardImageContainer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cardCoverImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.7) contrast(1.05);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.imgContain {
+  object-fit: contain;
+  background: radial-gradient(circle at 50% 50%, #151f32 0%, #0b0f19 100%);
+  padding: 32px;
+}
+
+.flipCardWrapper:hover .cardCoverImg {
+  transform: scale(1.06);
+}
+
+.vignetteOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(11, 15, 25, 0.95) 0%,
+    rgba(11, 15, 25, 0.45) 55%,
+    rgba(11, 15, 25, 0.1) 100%
+  );
+  z-index: 2;
+}
+
+.frontContent {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.specIconBadge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.flipCardWrapper:hover .specIconBadge {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.specIconImg {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.frontTitle {
+  font-size: 17px;
+  font-weight: 750;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* BACK FACE */
+.flipCardBack {
+  transform: rotateY(180deg);
+  background: #0a0e17;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px 20px;
+  z-index: 1;
   overflow: hidden;
 }
 
-.specialityCard {
+.backVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.videoOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(3, 78, 162, 0.88) 0%,
+    rgba(99, 102, 241, 0.82) 50%,
+    rgba(219, 39, 119, 0.82) 100%
+  );
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+.backContent {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: var(--sp-1);
-  min-height: 124px;
-  padding: var(--sp-2);
-  border-radius: 0;
-  border-right: 1px solid #e6eaee;
-  border-bottom: 1px solid #e6eaee;
-  background: rgba(255, 255, 255, 0.42);
-  box-shadow: none;
-  text-decoration: none;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  height: 100%;
+  justify-content: space-between;
+  text-align: left;
 }
 
-.specialityCard:nth-child(5n) {
-  border-right: none;
+.backTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s,
+              opacity 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
 }
 
-.specialityCard:nth-last-child(-n+5) {
-  border-bottom: none;
+.flipCardWrapper:hover .backTitle {
+  transform: translateY(0);
+  opacity: 1;
 }
 
-.specialityCard:hover {
-  transform: translateY(-2px);
-  border-color: #e6eaee;
-  box-shadow: var(--shadow-lg);
-  border-radius: 0;
+.statsDivider {
+  width: 32px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.35);
+  margin: 6px 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s ease 0.15s;
 }
 
-.specialityIconWrap {
-  width: 64px;
-  height: 64px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.flipCardWrapper:hover .statsDivider {
+  transform: scaleX(1);
 }
 
-.specialityIcon {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
+.statsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.specialityName {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.3;
+.statItem {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(14px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.flipCardWrapper:hover .statItem:nth-child(1) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.18s;
+}
+
+.flipCardWrapper:hover .statItem:nth-child(2) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.25s;
+}
+
+.flipCardWrapper:hover .statItem:nth-child(3) {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 0.32s;
+}
+
+.statVal {
+  font-size: 18px;
+  font-weight: 900;
+  color: #38bdf8;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1px;
 }
 
 .specialitiesCtaWrap {
   text-align: center;
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-12);
 }
 
 .specialitiesCta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 26px;
+  padding: 12px 28px;
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--color-primary);
   color: var(--color-primary);
@@ -415,24 +619,8 @@
 }
 
 @media (max-width: 1024px) {
-  .specialitiesGrid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  
-  /* Reset 5-column desktop rules */
-  .specialityCard:nth-child(5n) {
-    border-right: 1px solid #e6eaee;
-  }
-  .specialityCard:nth-last-child(-n+5) {
-    border-bottom: 1px solid #e6eaee;
-  }
-  
-  /* Apply 4-column rules */
-  .specialityCard:nth-child(4n) {
-    border-right: none;
-  }
-  .specialityCard:nth-last-child(-n+4) {
-    border-bottom: none;
+  .specialitiesGridEdgeToEdge {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -443,7 +631,7 @@
 
   .carouselWrapper {
     height: 430px;
-    perspective: none; /* Disable 3D transforms on mobile for better touch performance */
+    perspective: none;
   }
 
   .carousel {
@@ -479,28 +667,12 @@
     );
   }
 
-  .specialitiesGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  
-  /* Reset 4-column rules */
-  .specialityCard:nth-child(4n) {
-    border-right: 1px solid #e6eaee;
-  }
-  .specialityCard:nth-last-child(-n+4) {
-    border-bottom: 1px solid #e6eaee;
-  }
-  
-  /* Apply 2-column rules */
-  .specialityCard:nth-child(2n) {
-    border-right: none;
-  }
-  .specialityCard:nth-last-child(-n+2) {
-    border-bottom: none;
+  .specialitiesGridEdgeToEdge {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .specialityCard {
-    min-height: 116px;
+  .flipCardWrapper {
+    height: 260px;
   }
 
   .carouselArrows {
@@ -539,6 +711,14 @@
   
   .carousel, .slide {
     height: 480px;
+  }
+
+  .specialitiesGridEdgeToEdge {
+    grid-template-columns: 1fr;
+  }
+
+  .flipCardWrapper {
+    height: 240px;
   }
 }
 
