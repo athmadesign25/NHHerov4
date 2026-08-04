@@ -1214,9 +1214,8 @@ export default function HeroSearchFirst() {
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setSearchQuery("I have been having ");
-                                          setIsPulseAnalyzed(false);
-                                          const searchInput = document.getElementById("hero-search-input");
-                                          if (searchInput) searchInput.focus();
+                                          setIsPulseActive(true);
+                                          setIsOpen(false);
                                         }}
                                       >
                                         I have a symptom
@@ -1226,9 +1225,8 @@ export default function HeroSearchFirst() {
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setSearchQuery("I am looking for a ");
-                                          setIsPulseAnalyzed(false);
-                                          const searchInput = document.getElementById("hero-search-input");
-                                          if (searchInput) searchInput.focus();
+                                          setIsPulseActive(true);
+                                          setIsOpen(false);
                                         }}
                                       >
                                         I know the speciality
@@ -1238,9 +1236,8 @@ export default function HeroSearchFirst() {
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setSearchQuery("I want to consult Dr. ");
-                                          setIsPulseAnalyzed(false);
-                                          const searchInput = document.getElementById("hero-search-input");
-                                          if (searchInput) searchInput.focus();
+                                          setIsPulseActive(true);
+                                          setIsOpen(false);
                                         }}
                                       >
                                         I know the doctor
