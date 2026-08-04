@@ -1745,53 +1745,28 @@
   transform: translateY(-1px);
 }
 
-.pulseAIPendingContent {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.pulseAIPendingText {
+.pulseAIPendingOneLiner {
   font-size: 13.5px;
-  color: #1e293b;
+  color: #475569;
   font-weight: 500;
+  text-align: center;
   line-height: 1.4;
 }
 
-.pulseAIPendingText strong {
+.pulseAIPendingOneLiner strong {
   color: #7c3aed;
-  font-style: italic;
-}
-
-.pulseAIPendingHint {
-  font-size: 12.5px;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.pulseAIPendingHint strong {
-  color: #334155;
-  font-weight: 600;
-}
-
-.pulseAIPendingCTA {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
   font-weight: 700;
-  color: #7c3aed;
-  margin-top: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  transition: all 0.2s ease;
 }
 
-.pulseAIPreviewBox:hover .pulseAIPendingCTA {
-  color: #6d28d9;
-  transform: translateX(4px);
+.pulseSparkleIcon {
+  margin-right: 6px;
+  animation: pulseSparkle 1.8s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes pulseSparkle {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 1px rgba(124, 58, 237, 0.4)); }
+  50% { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.8)); }
 }
 
 .popularSearchesContainer {
