@@ -1,9 +1,14 @@
 .section {
   position: relative;
   width: 100%;
-  padding: var(--sp-10) 0;
-  background: radial-gradient(circle at 50% 0%, #0f172a 0%, #090d16 100%);
+  margin-top: -140px;
+  padding-top: calc(var(--sp-10) + 140px);
+  padding-bottom: var(--sp-10);
+  background: 
+    linear-gradient(to bottom, transparent 0%, #090d16 140px),
+    radial-gradient(circle at 50% 140px, #1e293b 0%, #090d16 100%);
   overflow: hidden;
+  z-index: 10;
 }
 
 /* ─── Header ────────────────────────────────────────── */
