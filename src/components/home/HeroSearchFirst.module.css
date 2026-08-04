@@ -1556,3 +1556,147 @@
     font-size: 12px;
   }
 }
+
+.pulsePreviewWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.pulseGeneralMatches {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+}
+
+.pulsePreviewTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.pulseAIPreviewBox {
+  background: linear-gradient(135deg, rgba(3, 78, 162, 0.04) 0%, rgba(79, 70, 229, 0.04) 50%, rgba(236, 72, 153, 0.04) 100%);
+  border: 1px solid rgba(3, 78, 162, 0.12);
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.03);
+}
+
+.pulseAIPreviewBox:hover {
+  transform: translateY(-2px);
+  border-color: rgba(3, 78, 162, 0.24);
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.08), 0 0 14px rgba(79, 70, 229, 0.06);
+}
+
+.pulsePreviewHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pulsePreviewBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.pulsePreviewLottie {
+  width: 24px;
+  height: 24px;
+}
+
+.pulsePreviewTag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #10b981;
+  background: #f0fdf4;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  border: 1px solid #dcfce7;
+}
+
+.pulsePreviewEmpathy {
+  font-size: 13.5px;
+  font-style: italic;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.pulsePreviewRecommendedDoc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.pulsePreviewDocPhoto {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #cbd5e1;
+}
+
+.pulsePreviewDocDetails {
+  flex: 1;
+}
+
+.pulsePreviewDocName {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.pulsePreviewDocSub {
+  font-size: 11.5px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.pulsePreviewDocSlot {
+  font-size: 11.5px;
+  color: #334155;
+  margin-top: 2px;
+}
+
+.pulsePreviewDocSlot strong {
+  color: #034ea2;
+}
+
+.pulsePreviewBookBtn {
+  background: linear-gradient(135deg, #034ea2 0%, #022e60 100%);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(3, 78, 162, 0.25);
+  font-family: inherit;
+}
+
+.pulsePreviewBookBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.35);
+}
