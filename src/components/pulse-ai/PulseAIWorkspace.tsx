@@ -40,8 +40,64 @@ type RespType =
   | "health_login" | "health_organs" | "health_analysis"
   | "booking_confirm" | "upload_state" | "triage" | "fallback"
   | "modify_selection" | "cancelled_card" | "order_summary"
-  | "find_doctor_options"
+  | "find_doctor_options" | "symptom_selector"
   | "tutorial_welcome" | "tutorial_step_report" | "tutorial_completed";
+
+interface Doctor {
+  id: string; name: string; qualification: string;
+  speciality: string; hospital: string; plusHospitals?: number;
+  slot: string; price: string; rating: number; photo: string;
+}
+
+interface ReportItem {
+  name: string; value: string;
+  status: "normal" | "high" | "low" | "borderline";
+  range: string; unit: string;
+}
+
+interface FindingItem {
+  text: string;
+  severity: "concern" | "improving" | "normal";
+  detail?: string;
+  evidence?: string[];
+}
+
+interface OrganHealth {
+  id: string; name: string; emoji: string; icon?: string;
+  status: "needs_attention" | "moderate" | "doing_good";
+  date: string; findings: FindingItem[];
+  recommendedSpecialist: string; recommendation: string;
+}
+
+/* ─── ORGAN SVG ICON MAP ─────────────────────────────────── */
+const organIconMap: Record<string, string> = {
+  brain:        "/Icons pulse ai organs/Brain.svg",
+  heart:        "/Icons pulse ai organs/Heart.svg",
+  lungs:        "/Icons pulse ai organs/Lungs.svg",
+  kidney:       "/Icons pulse ai organs/Kidney.svg",
+  digestive:    "/Icons pulse ai organs/Digestive.svg",
+  bones:        "/Icons pulse ai organs/Bones.svg",
+  immunity:     "/Icons pulse ai organs/Immunity.svg",
+  skin:         "/Icons pulse ai organs/Skin.svg",
+  endocrine:    "/Icons pulse ai organs/Hormones.svg",
+  reproductive: "/Icons pulse ai organs/Reproductive.svg",
+};
+
+interface TriagePathway {
+  title: string;
+  desc: string;
+  ctaText: string;
+  actionType: "er" | "video" | "consult";
+  dept?: string;
+}
+
+interface OrderSummaryData {
+  doctor: Doctor;
+  slot: string;
+  visitType: string;
+  clinicName: string;
+  fee: number;
+}
 
 interface FindDoctorOptionItem {
   title: string;
@@ -297,10 +353,29 @@ const QUICK_PROMPTS = [
 function aiResponse(q: string, isLoggedIn: boolean, userName = "Omkar"): Partial<Message> {
   const ql = q.toLowerCase();
 
-  if (ql === "i have a symptom") {
+  if (ql.startsWith("selected symptoms:")) {
+    const symptoms = q.replace(/selected symptoms:/i, "").trim();
+    const hasUrgent = ql.includes("breath") || ql.includes("chest") || ql.includes("heart");
+    if (hasUrgent) {
+      return {
+        text: `⚠️ Urgent Assessment: Based on your selected symptoms (${symptoms}), there is potential cardiac/respiratory distress. We suggest consulting a Cardiologist or visiting the ER immediately.\n**We have selected our top Cardiologists in Bangalore for you below:**`,
+        rtype: "doctors",
+        doctors: MOCK_DOCTORS.filter(d => d.speciality.toLowerCase().includes("cardio")),
+        followUps: ["Book video consultation", "Locate nearest ER", "Check medical records"]
+      };
+    }
     return {
-      text: "Please describe the symptoms or discomfort you are experiencing (e.g. chest pain, stomach ache, fever) so we can triage and guide you to the right department.",
-      followUps: ["Describe chest pain", "Describe fever and cough", "Book General Physician consult"]
+      text: `Based on your selected symptoms (${symptoms}) and Bangalore's ongoing health trends, we recommend consulting a General Physician.\n**We have selected our top General Medicine specialists in Bangalore for you below:**`,
+      rtype: "doctors",
+      doctors: MOCK_DOCTORS.filter(d => d.speciality.toLowerCase().includes("physician") || d.speciality.toLowerCase().includes("general")),
+      followUps: ["Book video consultation", "Book another speciality", "Check medical record history"]
+    };
+  }
+
+  if (ql === "i have a symptom" || q.trim() === "I have been having" || q.trim() === "I have been having ") {
+    return {
+      text: "Express what you are feeling, or select any of these ongoing symptoms currently trending in your city (Bangalore):",
+      rtype: "symptom_selector"
     };
   }
 
@@ -2250,6 +2325,176 @@ function GlitterCanvas() {
   );
 }
 
+function SymptomSelector({ onAction }: { onAction: (type: string, data?: unknown) => void }) {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [freeText, setFreeText] = useState("");
+
+  const symptoms = [
+    { label: "🤒 Fever", value: "Fever" },
+    { label: "😷 Dry Cough", value: "Dry Cough" },
+    { label: "🤕 Headache", value: "Headache" },
+    { label: "🦵 Joint Pain", value: "Joint Pain" },
+    { label: "🥱 Fatigue", value: "Fatigue" },
+    { label: "👃 Runny Nose", value: "Runny Nose" },
+    { label: "🤢 Nausea", value: "Nausea" },
+    { label: "🫁 Shortness of breath", value: "Shortness of breath" },
+    { label: "😰 Chills", value: "Chills" },
+    { label: "🌡️ Body Ache", value: "Body Ache" },
+  ];
+
+  const handleToggle = (val: string) => {
+    setSelected(prev =>
+      prev.includes(val) ? prev.filter(x => x !== val) : [...prev, val]
+    );
+  };
+
+  const handleSubmit = () => {
+    const allSymptoms = [...selected, ...(freeText.trim() ? [freeText.trim()] : [])];
+    if (allSymptoms.length > 0) {
+      onAction("submit_symptoms", allSymptoms.join(", "));
+    }
+  };
+
+  const hasAny = selected.length > 0 || freeText.trim().length > 0;
+
+  return (
+    <div style={{
+      marginTop: "12px",
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "16px",
+      padding: "16px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "540px"
+    }}>
+      {/* Header */}
+      <div style={{
+        fontSize: "12px",
+        fontWeight: 700,
+        color: "#64748b",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        marginBottom: "12px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
+      }}>
+        <span>📍 Bangalore Trending Symptoms</span>
+        <span style={{
+          background: "#ecfdf5",
+          color: "#059669",
+          padding: "2px 7px",
+          borderRadius: "9999px",
+          fontSize: "10px",
+          fontWeight: 700
+        }}>Live Data</span>
+      </div>
+
+      {/* Multi-select chips */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "14px" }}>
+        {symptoms.map(s => {
+          const isSelected = selected.includes(s.value);
+          return (
+            <button
+              key={s.value}
+              onClick={() => handleToggle(s.value)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "7px 13px",
+                borderRadius: "20px",
+                border: isSelected ? "1.5px solid #7c3aed" : "1.5px solid #e2e8f0",
+                background: isSelected
+                  ? "linear-gradient(135deg, #ede9fe 0%, #fae8ff 100%)"
+                  : "#f8fafc",
+                color: isSelected ? "#7c3aed" : "#475569",
+                fontSize: "13px",
+                fontWeight: isSelected ? 600 : 500,
+                cursor: "pointer",
+                transition: "all 0.18s ease",
+                boxShadow: isSelected ? "0 2px 8px rgba(124,58,237,0.12)" : "none"
+              }}
+            >
+              {isSelected && <span style={{ fontSize: "10px" }}>✓</span>}
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Free-text area */}
+      <div style={{
+        background: "#f8fafc",
+        border: "1.5px solid #e2e8f0",
+        borderRadius: "10px",
+        padding: "10px 12px",
+        marginBottom: "14px"
+      }}>
+        <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          Or describe in your own words
+        </div>
+        <textarea
+          value={freeText}
+          onChange={e => setFreeText(e.target.value)}
+          placeholder="e.g. I have had a sore throat and mild fever since yesterday..."
+          rows={2}
+          style={{
+            width: "100%",
+            background: "transparent",
+            border: "none",
+            outline: "none",
+            resize: "none",
+            fontSize: "13.5px",
+            color: "#1e293b",
+            fontFamily: "inherit",
+            lineHeight: "1.5"
+          }}
+        />
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderTop: "1.5px solid #f1f5f9",
+        paddingTop: "12px"
+      }}>
+        <span style={{ fontSize: "12px", color: "#94a3b8" }}>
+          {!hasAny
+            ? "Select or describe your symptoms"
+            : `${selected.length} chip(s) selected${freeText.trim() ? " + custom" : ""}`}
+        </span>
+        <button
+          onClick={handleSubmit}
+          disabled={!hasAny}
+          style={{
+            background: hasAny
+              ? "linear-gradient(135deg, #7c3aed 0%, #db2777 100%)"
+              : "#cbd5e1",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "20px",
+            padding: "9px 20px",
+            fontSize: "13.5px",
+            fontWeight: 700,
+            cursor: hasAny ? "pointer" : "not-allowed",
+            boxShadow: hasAny ? "0 4px 14px rgba(124,58,237,0.25)" : "none",
+            transition: "all 0.2s",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px"
+          }}
+        >
+          ✨ Analyze &amp; Find Doctor
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ─── MESSAGE BUBBLE ──────────────────────────────────────── */
 function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar", tutorialStep }: {
   msg: Message;
@@ -2567,6 +2812,11 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
               ))}
             </div>
           </div>
+        )}
+
+        {/* Interactive Multi-Select Symptom Selector */}
+        {msg.rtype === "symptom_selector" && (
+          <SymptomSelector onAction={onAction} />
         )}
 
         {/* Fallback navigation cards */}
@@ -3266,7 +3516,20 @@ function Workspace({
   useEffect(() => {
     if (initialQuery && !initialQueryProcessed.current) {
       initialQueryProcessed.current = true;
-      sendMessage(initialQuery);
+      const trimmed = initialQuery.trim();
+      // "I have been having" chip → skip sending a half-sentence; show symptom selector directly
+      if (trimmed === "I have been having" || trimmed === "I have been having ") {
+        const aiMsg: Message = {
+          id: `ai-sym-${Date.now()}`,
+          role: "ai",
+          text: "Express what you are feeling, or select any of these ongoing symptoms currently trending in your city (Bangalore):",
+          ts: new Date(),
+          rtype: "symptom_selector"
+        };
+        setMsgs([aiMsg]);
+      } else {
+        sendMessage(trimmed);
+      }
       clearInitialQuery?.();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -3549,10 +3812,25 @@ function Workspace({
       case "follow_up":
         sendMessage(data as string);
         break;
+      case "submit_symptoms": {
+        const symptoms = data as string;
+        // Post user bubble showing selected symptoms
+        const userSymptomMsg: Message = {
+          id: `u-sym-${Date.now()}`,
+          role: "user",
+          text: `I am experiencing: ${symptoms}`,
+          ts: new Date()
+        };
+        setMsgs(prev => [...prev, userSymptomMsg]);
+        // Analyse via aiResponse with prefixed key
+        const resp = aiResponse(`selected symptoms: ${symptoms}`, isLoggedIn, activeProfile.name);
+        injectAI(resp, 1400);
+        break;
+      }
       default:
         break;
     }
-  }, [isLoggedIn, injectAI, sendMessage]);
+  }, [isLoggedIn, injectAI, sendMessage, activeProfile]);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
