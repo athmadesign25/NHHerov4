@@ -452,9 +452,17 @@ export default function HeroSearchFirst() {
         localStorage.setItem("nh_last_search", query);
         setLastSearch(query);
       }
-      router.push(`/search?q=${encodeURIComponent(query)}`);
+
+      // Pulse Trigger Heuristic
+      const isConversational = query.split(" ").length > 3 || 
+                               /have|fever|cough|tomorrow|symptom|feel|pain/i.test(query);
+
+      if (isConversational) {
+        setIsPulseActive(true);
+      } else {
+        router.push(`/search?q=${encodeURIComponent(query)}`);
+      }
       setIsOpen(false);
-      setIsPulseActive(false);
     }
   };
 
@@ -563,13 +571,12 @@ export default function HeroSearchFirst() {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        setIsPulseActive(false);
         setSearchQuery("");
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
   
-  return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Control video playback based on search state
@@ -674,12 +681,7 @@ export default function HeroSearchFirst() {
                         className={styles.pulseIconWrapper} 
                         style={{ marginRight: '14px' }}
                         onClick={(e) => {
-                          if (!isOpen) {
-                            setIsOpen(true);
-                            setHasOpened(true);
-                            e.preventDefault();
-                            return;
-                          }
+                          e.stopPropagation();
                           setIsPulseActive(true);
                         }}
                       >
@@ -692,18 +694,7 @@ export default function HeroSearchFirst() {
 
                     {/* Progressive Search Dropdown */}
                     <AnimatePresence mode="wait">
-                      {isPulseActive ? (
-                        <motion.div
-                          key="pulse-workspace"
-                          className={styles.pulseWorkspaceContainer}
-                          initial={{ height: 56, opacity: 0.5 }}
-                          animate={{ height: "75vh", opacity: 1 }}
-                          exit={{ height: 56, opacity: 0 }}
-                          transition={{ duration: 0.4, ease: "easeInOut" }}
-                        >
-                           <PulseAIWorkspace onClose={() => setIsPulseActive(false)} />
-                        </motion.div>
-                      ) : isOpen ? (
+                      {isOpen ? (
                         <motion.div
                           key="dropdown"
                           className={styles.dropdown}
@@ -1074,27 +1065,12 @@ export default function HeroSearchFirst() {
 
         </div>
       </div>
-
-      <div className={styles.pulseShellAnchor}>
-        <div className={styles.pulseShell}>
-          <div className={styles.pulseInner}>
-            <div className={styles.pulseCenterUnit}>
-              <div
-                className={`${styles.logoGlow} ${prefersReducedMotion ? styles.logoGlowStatic : ""}`}
-                aria-hidden
-              />
-              <div className={styles.pulseLogoUnit}>
-                <img src="/pulse-ai.png" alt="Pulse AI" className={styles.pulseLogoImg} />
-              </div>
-              <div className={styles.pulseTextUnit}>
-                <div className={styles.pulseTitle}>Ask Pulse AI</div>
-                <p className={styles.pulseDescription}>Describe your symptoms, or ask a question..</p>
-                <p className={styles.pulseVersion}>v1.0</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {isPulseActive && (
+        <PulseAIWorkspace 
+          initialQuery={searchQuery}
+          onClose={() => setIsPulseActive(false)} 
+        />
+      )}
     </section>
   );
 }
