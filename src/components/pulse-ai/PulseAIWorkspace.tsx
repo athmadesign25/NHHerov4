@@ -2325,7 +2325,7 @@ function GlitterCanvas() {
   );
 }
 
-function SymptomSelector({ onAction }: { onAction: (type: string, data?: unknown) => void }) {
+function SymptomSelector({ text, onAction }: { text?: string; onAction: (type: string, data?: unknown) => void }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [freeText, setFreeText] = useState("");
 
@@ -2359,18 +2359,32 @@ function SymptomSelector({ onAction }: { onAction: (type: string, data?: unknown
 
   return (
     <div style={{
-      marginTop: "12px",
       background: "#ffffff",
       border: "1.5px solid #e2e8f0",
       borderRadius: "16px",
-      padding: "16px",
+      padding: "20px",
       boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
       width: "100%",
-      maxWidth: "540px"
+      maxWidth: "560px"
     }}>
+      {/* Empathetic Greeting Text inside the card for unified composition */}
+      {text && (
+        <div style={{
+          fontSize: "14px",
+          lineHeight: "1.6",
+          color: "#334155",
+          fontWeight: 500,
+          marginBottom: "16px",
+          borderBottom: "1px solid #f1f5f9",
+          paddingBottom: "14px"
+        }}>
+          {text}
+        </div>
+      )}
+
       {/* Header */}
       <div style={{
-        fontSize: "12px",
+        fontSize: "11.5px",
         fontWeight: 700,
         color: "#64748b",
         textTransform: "uppercase",
@@ -2380,15 +2394,7 @@ function SymptomSelector({ onAction }: { onAction: (type: string, data?: unknown
         alignItems: "center",
         gap: "6px"
       }}>
-        <span>📍 Bangalore Trending Symptoms</span>
-        <span style={{
-          background: "#ecfdf5",
-          color: "#059669",
-          padding: "2px 7px",
-          borderRadius: "9999px",
-          fontSize: "10px",
-          fontWeight: 700
-        }}>Live Data</span>
+        <span>🩺 Select any matching symptoms</span>
       </div>
 
       {/* Multi-select chips */}
@@ -2589,7 +2595,7 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
       <div className={styles.aiAvatar}><SparkleIcon size={16} /></div>
       <div className={styles.aiBubble}>
         {/* Text */}
-        {msg.text && (
+        {msg.text && msg.rtype !== "symptom_selector" && (
           <div className={styles.aiText}>
             <TextReveal text={msg.text} />
           </div>
@@ -2816,7 +2822,7 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
 
         {/* Interactive Multi-Select Symptom Selector */}
         {msg.rtype === "symptom_selector" && (
-          <SymptomSelector onAction={onAction} />
+          <SymptomSelector text={msg.text} onAction={onAction} />
         )}
 
         {/* Fallback navigation cards */}
@@ -3522,7 +3528,7 @@ function Workspace({
         const aiMsg: Message = {
           id: `ai-sym-${Date.now()}`,
           role: "ai",
-          text: "Express what you are feeling, or select any of these ongoing symptoms currently trending in your city (Bangalore):",
+          text: "To help us recommend the right specialist, please describe what you are feeling or select any of the common symptoms below:",
           ts: new Date(),
           rtype: "symptom_selector"
         };
