@@ -1,6 +1,6 @@
 .section {
   background: #ffffff;
-  padding: clamp(100px, 12vw, 160px) 0 clamp(40px, 6vw, 80px);
+  padding: clamp(140px, 14vw, 200px) 0 clamp(40px, 6vw, 80px);
 }
 
 .header {
