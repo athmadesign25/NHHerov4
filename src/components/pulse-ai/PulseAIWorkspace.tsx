@@ -5099,28 +5099,21 @@ export default function PulseAIWorkspace({
                 transition: { duration: 0.3, ease: "easeIn" } 
               }}
             >
-              {isLoggedIn ? (
-                <Workspace
-                  onClose={handleClose}
-                  initialQuery={initialQuery}
-                  clearInitialQuery={() => setInitialQuery("")}
-                  initialAction={initialAction}
-                  initialActionData={initialActionData}
-                  clearInitialAction={() => {
-                    setInitialAction(null);
-                    setInitialActionData(null);
-                  }}
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                  isMaximized={isMaximized}
-                  onToggleMaximize={() => setIsMaximized(m => !m)}
-                />
-              ) : (
-                <PulseAIGateway
-                  onLoginSuccess={() => setIsLoggedIn(true)}
-                  onClose={handleClose}
-                />
-              )}
+              <Workspace
+                onClose={handleClose}
+                initialQuery={initialQuery}
+                clearInitialQuery={() => setInitialQuery("")}
+                initialAction={initialAction}
+                initialActionData={initialActionData}
+                clearInitialAction={() => {
+                  setInitialAction(null);
+                  setInitialActionData(null);
+                }}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+                isMaximized={isMaximized}
+                onToggleMaximize={() => setIsMaximized(m => !m)}
+              />
             </motion.div>
           </motion.div>
         )}
