@@ -2521,19 +2521,72 @@ function InlinePhoneInput({ onAction }: { onAction: (type: string, data?: unknow
     <div style={{
       background: "#ffffff",
       border: "1.5px solid #e2e8f0",
-      borderRadius: "16px",
-      padding: "20px",
-      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      borderRadius: "20px",
+      padding: "24px",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
       width: "100%",
-      maxWidth: "420px",
+      maxWidth: "440px",
       marginTop: "8px"
     }}>
-      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "8px" }}>
+      {/* Premium Badge Header */}
+      <div style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        background: "rgba(3, 78, 162, 0.08)",
+        color: "#034ea2",
+        padding: "6px 12px",
+        borderRadius: "30px",
+        fontSize: "11px",
+        fontWeight: 700,
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
+        marginBottom: "16px"
+      }}>
+        <Sparkles size={12} fill="#034ea2" /> Unlocks Pulse AI Benefits
+      </div>
+
+      {/* Benefits checklist */}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        marginBottom: "20px",
+        background: "#f8fafc",
+        padding: "16px",
+        borderRadius: "12px",
+        border: "1px dashed #cbd5e1"
+      }}>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#034ea2", marginTop: "2px" }}><Shield size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Secure Health Profile</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Sync with your official clinical records & test histories.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#10b981", marginTop: "2px" }}><Activity size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Personalized Health Trends</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Unlock smart report summary & organ health trackers.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#f59e0b", marginTop: "2px" }}><Clock size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Priority Consult Confirmation</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Confirm appointment slots & sync instantly with doctors.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "4px" }}>
         Enter Mobile Number
       </div>
       <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
-        Enter your mobile number to instantly register/sign in and confirm your slot.
+        Instant verification to securely link your profile.
       </div>
+
       <div style={{ display: "flex", gap: "8px", position: "relative" }}>
         <div style={{
           display: "flex",
