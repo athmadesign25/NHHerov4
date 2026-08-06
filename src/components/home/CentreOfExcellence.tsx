@@ -13,42 +13,48 @@ const SPECIALITIES = [
     name: "Cardiology & Cardiac Surgery",
     href: "/specialities/cardiology",
     icon: "/Specialities icons/Cardiology.svg",
-    img: "/Advance Heart Care.png",
+    img: "/Specialities icons/Cardiology.jpeg",
+    video: "/Specialities icons/Cardiology.mp4",
     stats: { treatments: "1,200+", patients: "15,000+", tools: "18+" }
   },
   {
     name: "Cancer Care",
     href: "/specialities/oncology",
     icon: "/Specialities icons/Cancercare.svg",
-    img: "/Oncology Institute.png",
+    img: "/Specialities icons/Cancer Care.jpeg",
+    video: "/Specialities icons/Cancer Care.mp4",
     stats: { treatments: "1,050+", patients: "12,000+", tools: "14+" }
   },
   {
     name: "Neurology & Neurosurgery",
     href: "/specialities/neurology",
     icon: "/Specialities icons/Neurology.svg",
-    img: "/Brain and Spine.png",
+    img: "/Specialities icons/Neurology.jpeg",
+    video: "/Specialities icons/Neurology.mp4",
     stats: { treatments: "890+", patients: "9,500+", tools: "16+" }
   },
   {
     name: "Orthopaedics",
     href: "/specialities/orthopaedics",
     icon: "/Specialities icons/Orthopaedics.svg",
-    img: "/Bone & Joint.png",
+    img: "/Specialities icons/Orthopedics.jpeg",
+    video: "/Specialities icons/Orthopedics.mp4",
     stats: { treatments: "2,400+", patients: "22,000+", tools: "12+" }
   },
   {
     name: "Nephrology & Transplant",
     href: "/specialities/nephrology",
     icon: "/Specialities icons/Nephrology.svg",
-    img: "/specialities-bg.png",
+    img: "/Specialities icons/Nephrology.jpeg",
+    video: "/Specialities icons/Nephrology.mp4",
     stats: { treatments: "450+", patients: "6,800+", tools: "8+" }
   },
   {
     name: "Gastroenterology",
     href: "/specialities/gastroenterology",
     icon: "/Specialities icons/Gastro.svg",
-    img: "/Digestive Health.png",
+    img: "/Specialities icons/Gastroenterology.jpeg",
+    video: "/Specialities icons/Gastroenterology.mp4",
     stats: { treatments: "1,500+", patients: "16,500+", tools: "10+" }
   },
   {
@@ -56,6 +62,7 @@ const SPECIALITIES = [
     href: "/specialities/paediatrics",
     icon: "/Specialities icons/Paedratic.svg",
     img: "/doctor_patient.png",
+    video: "/Doctor patient.mp4",
     stats: { treatments: "3,100+", patients: "30,000+", tools: "20+" }
   },
   {
@@ -63,6 +70,7 @@ const SPECIALITIES = [
     href: "/specialities/gynaecology",
     icon: "/Specialities icons/Gynaecology.svg",
     img: "/why-choose-nh-bg.png",
+    video: "/Doctor patient.mp4",
     stats: { treatments: "2,800+", patients: "25,000+", tools: "15+" }
   },
   {
@@ -70,6 +78,7 @@ const SPECIALITIES = [
     href: "/specialities/ophthalmology",
     icon: "/Specialities icons/General Medicine.svg",
     img: "/chairman background.png",
+    video: "/Doctor patient.mp4",
     stats: { treatments: "1,600+", patients: "14,000+", tools: "11+" }
   },
   {
@@ -77,7 +86,24 @@ const SPECIALITIES = [
     href: "/specialities/urology",
     icon: "/Specialities icons/Urology.svg",
     img: "/pulse_health_insights_banner.png",
+    video: "/Doctor patient.mp4",
     stats: { treatments: "950+", patients: "8,200+", tools: "9+" }
+  },
+  {
+    name: "Pulmonology",
+    href: "/specialities/pulmonology",
+    icon: "/Specialities icons/Pulmonology.svg",
+    img: "/specialities-bg.png",
+    video: "/Doctor patient.mp4",
+    stats: { treatments: "780+", patients: "6,500+", tools: "8+" }
+  },
+  {
+    name: "Dental Care",
+    href: "/specialities/dental",
+    icon: "/Specialities icons/Dental.svg",
+    img: "/leadership-bg.png",
+    video: "/Doctor patient.mp4",
+    stats: { treatments: "1,100+", patients: "10,500+", tools: "12+" }
   },
 ];
 
@@ -130,7 +156,7 @@ function FlipCard({ spec }: { spec: typeof SPECIALITIES[0] }) {
         <div className={styles.flipCardBack}>
           <video 
             ref={videoRef}
-            src="/Doctor patient.mp4" 
+            src={spec.video} 
             className={styles.backVideo} 
             muted 
             loop 
