@@ -1,14 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./ChairmanQuote.module.css";
 
 export default function ChairmanQuote() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
+
   return (
-    <section className={styles.section} id="chairman-quote">
-      <div className="container">
+    <section className={styles.section} id="chairman-quote" ref={containerRef}>
+      <motion.div
+        style={{
+          position: "absolute",
+          top: "-25%",
+          left: 0,
+          width: "100%",
+          height: "150%",
+          backgroundImage: "url('/leadership-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          y: bgY,
+          zIndex: 0,
+        }}
+      />
+      <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <motion.div
           className={styles.card}
           initial={{ opacity: 0, y: 24 }}
@@ -24,7 +47,7 @@ export default function ChairmanQuote() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className={`section-eyebrow ${styles.eyebrow}`}>
-              LEADERSHIP <span className={styles.eyebrowQuote}>&rdquo;</span>
+              LEADERSHIP
             </div>
 
             <SplitText
