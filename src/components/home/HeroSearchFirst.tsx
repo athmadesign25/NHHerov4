@@ -8,6 +8,7 @@ import {
   useReducedMotion,
   useMotionValue,
   useTransform,
+  useScroll,
   animate,
   useInView,
 } from "framer-motion";
@@ -18,6 +19,21 @@ import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PixelRipple from "./PixelRipple";
 import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
+
+const STAT_GROUPS = [
+  [
+    { value: 5000, suffix: "+", label: "Robotic Surgeries\nPerformed" },
+    { value: 550000, suffix: "+", label: "Cardiac Consults\nAnnually" },
+    { value: 33000, suffix: "+", label: "Image Guided\nProcedures" },
+    { value: 8000, suffix: "+", label: "Solid Organ\nTransplants" }
+  ],
+  [
+    { value: 80000, suffix: "+", label: "Chemotherapy Sessions\nAnnually" },
+    { value: 15000, suffix: "+", label: "Joint Replacements\nPerformed" },
+    { value: 2000, suffix: "+", label: "Bone Marrow\nTransplants" },
+    { value: 120000, suffix: "+", label: "Dialysis Sessions\nAnnually" }
+  ]
+];
 
 const popularTags = ["chest pain", "cancer", "surgery", "liver"];
 
@@ -396,6 +412,16 @@ export default function HeroSearchFirst() {
   const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors_specialities" | "treatments_tests" | "articles">("doctors_specialities");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [currentStatGroup, setCurrentStatGroup] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStatGroup(prev => (prev + 1) % STAT_GROUPS.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
   const [hasOpened, setHasOpened] = useState(false);
   const [isPulseActive, setIsPulseActive] = useState(false);
   const [showPixelRipple, setShowPixelRipple] = useState(false);
@@ -419,6 +445,18 @@ export default function HeroSearchFirst() {
   const searchRef = useRef<HTMLFormElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
+
+  // Scroll Animation Logic
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  // Complete the animation over 100% of the wrapper's extra scroll distance
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  // Border radius from 0 to 8px
+  const heroRadius = useTransform(scrollYProgress, [0, 1], ["0px", "8px"]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
@@ -606,8 +644,16 @@ export default function HeroSearchFirst() {
   }, [isOpen]);
 
   return (
-    <section className={styles.hero} id="hero-section-search-first">
-      <video
+    <div ref={containerRef} style={{ height: "130vh", position: "relative", zIndex: 1, background: "#ffffff" }}>
+      <motion.section 
+        className={styles.hero} 
+        id="hero-section-search-first"
+        style={{
+          scale: heroScale,
+          borderRadius: heroRadius,
+        }}
+      >
+        <video
         ref={videoRef}
         src="/Hero-Video-New.mp4"
         autoPlay
@@ -618,6 +664,42 @@ export default function HeroSearchFirst() {
       />
       <div className={`${styles.videoOverlay} ${isOpen ? styles.videoOverlayActive : ""}`} />
       <PixelRipple trigger={showPixelRipple} />
+
+      <div className={styles.metricsSideWrap}>
+        <motion.div 
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={isOpen ? { opacity: 0, y: 20, filter: "blur(8px)", pointerEvents: "none" } : { opacity: 1, y: 0, filter: "blur(0px)", pointerEvents: "auto" }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className={styles.metricsRow}
+        >
+          {STAT_GROUPS[currentStatGroup].map((stat, i) => (
+            <div className={styles.metricItem} key={i}>
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.25, delay: i * 0.05, ease: "easeOut" }}
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
+                  <div className={styles.metricValue}>
+                    <CountingNumber value={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className={styles.metricLabel}>
+                    {stat.label.split('\n').map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        {idx !== stat.label.split('\n').length - 1 && <br/>}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          ))}
+        </motion.div>
+      </div>
 
       <div className={styles.centerWrap}>
         <div className={styles.heroStack}>
@@ -1028,49 +1110,7 @@ export default function HeroSearchFirst() {
                     </AnimatePresence>
                   </motion.form>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={isOpen ? { opacity: 0, y: 20, pointerEvents: "none" } : { opacity: 1, y: 0, pointerEvents: "auto" }}
-            transition={{ duration: 0.6, delay: isOpen ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className={styles.metricsRow}
-          >
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-              className={styles.metricItem}
-            >
-              <div className={styles.metricValue}><CountingNumber value={5000} suffix="+" /></div>
-              <div className={styles.metricLabel}>Robotic Surgeries<br/>Performed</div>
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-              className={styles.metricItem}
-            >
-              <div className={styles.metricValue}><CountingNumber value={550000} suffix="+" /></div>
-              <div className={styles.metricLabel}>Cardiac Consults<br/>Annually</div>
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
-              className={styles.metricItem}
-            >
-              <div className={styles.metricValue}><CountingNumber value={33000} suffix="+" /></div>
-              <div className={styles.metricLabel}>Image Guided<br/>Procedures</div>
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
-              className={styles.metricItem}
-            >
-              <div className={styles.metricValue}><CountingNumber value={8000} suffix="+" /></div>
-              <div className={styles.metricLabel}>Solid Organ<br/>Transplants</div>
-            </motion.div>
-          </motion.div>
+
 
         </div>
       </div>
@@ -1094,7 +1134,8 @@ export default function HeroSearchFirst() {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+        </div>
+      </motion.section>
+    </div>
   );
 }

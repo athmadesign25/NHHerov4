@@ -1,8 +1,19 @@
-.section {
+.scrollContainer {
   position: relative;
   width: 100%;
-  padding: var(--sp-10) 0;
-  background: #fcfcfc;
+  height: 300vh;
+  background: #ffffff;
+  padding-top: clamp(80px, 10vw, 120px);
+}
+
+.stickySection {
+  position: sticky;
+  top: var(--nav-height, 72px);
+  width: 100%;
+  height: calc(100dvh - var(--nav-height, 72px));
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-4) 0 0 0;
   overflow: hidden;
 }
 
@@ -10,7 +21,7 @@
 .header {
   text-align: center;
   max-width: 800px;
-  margin: 0 auto var(--sp-12) auto;
+  margin: 0 auto var(--sp-6) auto;
   padding: 0 20px;
 }
 
@@ -306,68 +317,215 @@
   box-shadow: var(--shadow-md);
 }
 
+.specialitiesGridWrap {
+  width: 100%;
+  flex: 1;
+  overflow: hidden; /* Hide overflow as framer-motion handles x transform */
+  margin-top: 0;
+}
+
 .specialitiesGrid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
   gap: 0;
-  margin-top: var(--sp-8);
-  border: 1px solid #e6eaee;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
+  width: max-content; /* Important: allow grid to be as wide as its children */
+  height: 100%;
+  padding: 0 calc(50vw - 250px);
+}
+.specialitiesGrid::-webkit-scrollbar {
+  display: none;
 }
 
 .specialityCard {
+  position: relative;
+  flex: 0 0 500px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: var(--sp-1);
-  min-height: 124px;
-  padding: var(--sp-2);
+  justify-content: flex-end;
+  height: 100%;
   border-radius: 0;
-  border-right: 1px solid #e6eaee;
-  border-bottom: 1px solid #e6eaee;
-  background: rgba(255, 255, 255, 0.42);
-  box-shadow: none;
+  overflow: hidden;
   text-decoration: none;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
-}
-
-.specialityCard:nth-child(5n) {
-  border-right: none;
-}
-
-.specialityCard:nth-last-child(-n+5) {
-  border-bottom: none;
+  background: transparent;
+  transition: transform var(--transition-base);
 }
 
 .specialityCard:hover {
-  transform: translateY(-2px);
-  border-color: #e6eaee;
-  box-shadow: var(--shadow-lg);
-  border-radius: 0;
+  transform: translateY(-4px);
 }
 
-.specialityIconWrap {
-  width: 64px;
-  height: 64px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.cardImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
 }
 
-.specialityIcon {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
+.specialityCard:hover .cardImage {
+  transform: scale(1.05);
+}
+
+.cardVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity var(--transition-base), transform var(--transition-slow);
+}
+
+.specialityCard:hover .cardVideo {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.specialityCard::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  z-index: 10;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  
+  /* Use rgba for better cross-browser mask support */
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  
+  pointer-events: none;
+  transition: all var(--transition-base);
+}
+
+.specialityCard:hover::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.cardTextWrap {
+  position: relative;
+  z-index: 20;
+  padding: 30px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.cardStats {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(10px);
+  filter: blur(8px);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.specialityCard:hover .cardStats {
+  opacity: 1;
+  max-height: 100px;
+  transform: translateY(0);
+  filter: blur(0);
+  margin-bottom: 12px;
+}
+
+.metricValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.metricLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.3;
 }
 
 .specialityName {
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cardAction {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.3;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all var(--transition-base);
+}
+
+.specialityCard:hover .cardAction {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.viewAllCard {
+  flex: 0 0 250px;
+  height: 100%;
+  border-radius: var(--radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all var(--transition-base);
+  margin-right: 24px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.viewAllCard:hover {
+  transform: translateY(-4px);
+}
+
+.viewAllContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.viewAllSubText {
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.viewAllIconWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(3, 78, 162, 0.1);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.viewAllCard:hover .viewAllIconWrap {
+  background: var(--color-primary);
+  color: #fff;
+  transform: scale(1.1) translateX(4px);
 }
 
 .specialitiesCtaWrap {
@@ -416,23 +574,7 @@
 
 @media (max-width: 1024px) {
   .specialitiesGrid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  
-  /* Reset 5-column desktop rules */
-  .specialityCard:nth-child(5n) {
-    border-right: 1px solid #e6eaee;
-  }
-  .specialityCard:nth-last-child(-n+5) {
-    border-bottom: 1px solid #e6eaee;
-  }
-  
-  /* Apply 4-column rules */
-  .specialityCard:nth-child(4n) {
-    border-right: none;
-  }
-  .specialityCard:nth-last-child(-n+4) {
-    border-bottom: none;
+    gap: 20px;
   }
 }
 
@@ -480,27 +622,12 @@
   }
 
   .specialitiesGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  
-  /* Reset 4-column rules */
-  .specialityCard:nth-child(4n) {
-    border-right: 1px solid #e6eaee;
-  }
-  .specialityCard:nth-last-child(-n+4) {
-    border-bottom: 1px solid #e6eaee;
-  }
-  
-  /* Apply 2-column rules */
-  .specialityCard:nth-child(2n) {
-    border-right: none;
-  }
-  .specialityCard:nth-last-child(-n+2) {
-    border-bottom: none;
+    gap: 16px;
   }
 
   .specialityCard {
-    min-height: 116px;
+    flex: 0 0 340px;
+    height: 460px;
   }
 
   .carouselArrows {
@@ -539,6 +666,14 @@
   
   .carousel, .slide {
     height: 480px;
+  }
+
+  .specialitiesGrid {
+    gap: 16px;
+  }
+
+  .specialityCard {
+    flex: 0 0 85vw;
   }
 }
 

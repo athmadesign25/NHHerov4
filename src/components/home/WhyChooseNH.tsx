@@ -5,28 +5,26 @@ import React from "react";
 import { Award, Microscope, Stethoscope, ShieldCheck } from "lucide-react";
 import styles from "./WhyChooseNH.module.css";
 
+import Image from "next/image";
+
 const featureCards = [
   {
-    tone: "blue",
-    icon: ShieldCheck,
+    image: "/whychoose/excellence.png",
     title: "Clinical Excellence",
     descriptionLines: ["Protocols and tracked outcomes", "for safer recovery paths"],
   },
   {
-    tone: "red",
-    icon: Stethoscope,
+    image: "/whychoose/experts.png",
     title: "Top Medical Experts",
     descriptionLines: ["Senior specialists for complex", "procedures and continuity of care"],
   },
   {
-    tone: "darkBlue",
-    icon: Microscope,
+    image: "/whychoose/technology.png",
     title: "Advanced Technology",
     descriptionLines: ["Modern diagnostics and surgical", "platforms for precision treatment"],
   },
   {
-    tone: "darkRed",
-    icon: Award,
+    image: "/whychoose/support.png",
     title: "Patient-First Support",
     descriptionLines: ["Clear communication and care", "navigation for every family"],
   },
@@ -79,34 +77,23 @@ export default function WhyChooseNH() {
 
         <div className={styles.featuresGrid}>
           {featureCards.map((card, index) => {
-            const Icon = card.icon;
             return (
               <motion.article
                 key={card.title}
-                className={`${styles.featureCard} ${styles[`tone${card.tone[0].toUpperCase()}${card.tone.slice(1)}`]}`}
+                className={styles.featureCard}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.45, delay: index * 0.07 }}
-                onMouseMove={(event) => {
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  const x = event.clientX - rect.left;
-                  const y = event.clientY - rect.top;
-                  event.currentTarget.style.setProperty("--mx", `${x}px`);
-                  event.currentTarget.style.setProperty("--my", `${y}px`);
-                }}
-                onMouseLeave={(event) => {
-                  event.currentTarget.style.setProperty("--mx", "50%");
-                  event.currentTarget.style.setProperty("--my", "50%");
-                }}
               >
-                <div className={styles.featureIcon}>
-                  <Icon size={30} />
+                <div className={styles.featureIllustration}>
+                  <Image src={card.image} alt={card.title} width={300} height={200} className={styles.featureImage} />
                 </div>
                 <h3 className={styles.featureTitle}>{card.title}</h3>
                 <p className={styles.featureDescription}>
-                  <span>{card.descriptionLines[0]}</span>
-                  <span>{card.descriptionLines[1]}</span>
+                  {card.descriptionLines.map((line, i) => (
+                    <span key={i}>{line}</span>
+                  ))}
                 </p>
               </motion.article>
             );
