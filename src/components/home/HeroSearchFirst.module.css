@@ -608,6 +608,8 @@
     --hero-width: calc(100vw - var(--sp-4));
     min-height: 100dvh;
     height: 100dvh;
+    transform: none !important;
+    border-radius: 0 !important;
   }
 
   .headline {
