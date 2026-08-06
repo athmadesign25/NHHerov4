@@ -337,11 +337,12 @@
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.75s cubic-bezier(0.2, 0.85, 0.32, 1.1);
+  transition: transform 0.15s ease-out;
 }
 
 .flipCardWrapper:hover .flipCardInner {
   transform: rotateY(180deg);
+  transition: transform 0.75s cubic-bezier(0.2, 0.85, 0.32, 1.1);
 }
 
 /* Front & Back Faces */
