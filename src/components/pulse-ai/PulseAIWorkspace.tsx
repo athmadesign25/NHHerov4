@@ -41,6 +41,7 @@ type RespType =
   | "booking_confirm" | "upload_state" | "triage" | "fallback"
   | "modify_selection" | "cancelled_card" | "order_summary"
   | "find_doctor_options" | "symptom_selector"
+  | "inline_phone_input" | "inline_otp_input"
   | "tutorial_welcome" | "tutorial_step_report" | "tutorial_completed";
 
 interface Doctor {
@@ -127,6 +128,7 @@ interface Message {
     lastVisitedDoctor: FindDoctorOptionItem;
     subChips: { label: string; prompt: string }[];
   };
+  inlinePhone?: string;
 }
 
 interface Convo {
@@ -2501,6 +2503,192 @@ function SymptomSelector({ text, onAction }: { text?: string; onAction: (type: s
   );
 }
 
+function InlinePhoneInput({ onAction }: { onAction: (type: string, data?: unknown) => void }) {
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSend = () => {
+    const cleanPhone = phone.trim();
+    if (!/^\d{10}$/.test(cleanPhone)) {
+      setError("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    setError("");
+    onAction("submit_inline_phone", cleanPhone);
+  };
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "16px",
+      padding: "20px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "420px",
+      marginTop: "8px"
+    }}>
+      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "8px" }}>
+        Enter Mobile Number
+      </div>
+      <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
+        Enter your mobile number to instantly register/sign in and confirm your slot.
+      </div>
+      <div style={{ display: "flex", gap: "8px", position: "relative" }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          background: "#f8fafc",
+          border: "1.5px solid #cbd5e1",
+          borderRadius: "8px",
+          padding: "0 12px",
+          fontSize: "14px",
+          color: "#475569",
+          fontWeight: 600
+        }}>
+          +91
+        </div>
+        <input 
+          type="text" 
+          value={phone}
+          maxLength={10}
+          onChange={e => {
+            const val = e.target.value.replace(/\D/g, "");
+            setPhone(val);
+            if (val.length === 10) setError("");
+          }}
+          placeholder="00000 00000"
+          style={{
+            flex: 1,
+            padding: "10px 14px",
+            border: "1.5px solid #cbd5e1",
+            borderRadius: "8px",
+            outline: "none",
+            fontSize: "14px",
+            color: "#1e293b",
+            fontWeight: 600
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+        />
+      </div>
+      {error && (
+        <div style={{ color: "#ef4444", fontSize: "11px", marginTop: "6px", fontWeight: 500 }}>
+          {error}
+        </div>
+      )}
+      <button
+        onClick={handleSend}
+        style={{
+          width: "100%",
+          marginTop: "16px",
+          background: "linear-gradient(135deg, #034ea2 0%, #002d62 100%)",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "8px",
+          padding: "12px",
+          fontSize: "13.5px",
+          fontWeight: 700,
+          cursor: "pointer",
+          transition: "opacity 0.2s"
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.95"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+      >
+        Send OTP via SMS
+      </button>
+    </div>
+  );
+}
+
+function InlineOTPInput({ phone, onAction }: { phone: string; onAction: (type: string, data?: unknown) => void }) {
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+
+  const handleVerify = () => {
+    if (otp.length !== 4) {
+      setError("Please enter a 4-digit code");
+      return;
+    }
+    setError("");
+    onAction("submit_inline_otp", otp);
+  };
+
+  const maskedPhone = phone.length >= 10 
+    ? `XXXXX XX${phone.slice(-3)}` 
+    : phone;
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "16px",
+      padding: "20px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "420px",
+      marginTop: "8px"
+    }}>
+      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "8px" }}>
+        Enter Verification Code
+      </div>
+      <div style={{ fontSize: "12.5px", color: "#64748b", lineHeight: "1.5", marginBottom: "16px" }}>
+        We have sent a 4-digit OTP to <strong style={{ color: "#334155" }}>+91 {maskedPhone}</strong>. Enter it below to complete sign in:
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
+        <input 
+          type="text" 
+          maxLength={4}
+          value={otp}
+          onChange={e => {
+            const val = e.target.value.replace(/\D/g, "");
+            setOtp(val);
+            if (val.length === 4) setError("");
+          }}
+          placeholder="••••"
+          style={{
+            width: "140px",
+            padding: "10px",
+            border: "1.5px solid #cbd5e1",
+            borderRadius: "8px",
+            outline: "none",
+            fontSize: "18px",
+            textAlign: "center",
+            letterSpacing: "8px",
+            fontWeight: 700,
+            color: "#1e293b"
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleVerify(); }}
+        />
+      </div>
+      {error && (
+        <div style={{ color: "#ef4444", fontSize: "11.5px", marginTop: "8px", textAlign: "center", fontWeight: 500 }}>
+          {error}
+        </div>
+      )}
+      <button
+        onClick={handleVerify}
+        style={{
+          width: "100%",
+          marginTop: "16px",
+          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "8px",
+          padding: "12px",
+          fontSize: "13.5px",
+          fontWeight: 700,
+          cursor: "pointer",
+          transition: "opacity 0.2s"
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.95"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+      >
+        Verify &amp; Confirm Booking
+      </button>
+    </div>
+  );
+}
+
 /* ─── MESSAGE BUBBLE ──────────────────────────────────────── */
 function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar", tutorialStep }: {
   msg: Message;
@@ -2823,6 +3011,15 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
         {/* Interactive Multi-Select Symptom Selector */}
         {msg.rtype === "symptom_selector" && (
           <SymptomSelector text={msg.text} onAction={onAction} />
+        )}
+
+        {/* Inline Triage Login Inputs */}
+        {msg.rtype === "inline_phone_input" && (
+          <InlinePhoneInput onAction={onAction} />
+        )}
+
+        {msg.rtype === "inline_otp_input" && (
+          <InlineOTPInput phone={msg.inlinePhone || ""} onAction={onAction} />
         )}
 
         {/* Fallback navigation cards */}
@@ -3765,7 +3962,10 @@ function Workspace({
 
         if (!isLoggedIn) {
           setPendingAction({ type: "confirm_slot", data });
-          setShowRegister(true);
+          injectAI({
+            text: "To finalize your booking, please enter your mobile number to sign in or register:",
+            rtype: "inline_phone_input"
+          }, 300);
         } else {
           injectAI({
             text: `Here is your order summary for **${doc.name}** at **${finalClinic}**. Please review your member discount, apply coupons, and complete payment:`,
@@ -3779,6 +3979,45 @@ function Workspace({
             }
           }, 500);
         }
+        break;
+      }
+      case "submit_inline_phone": {
+        const phone = data as string;
+        // 1. Show user message in chat
+        setMsgs(prev => [...prev, {
+          id: `usr-phone-${Date.now()}`,
+          role: "user",
+          text: `+91 ${phone}`,
+          ts: new Date()
+        }]);
+        // 2. Inject AI message to ask for OTP
+        injectAI({
+          text: `Please verify your phone number. We have sent a 4-digit verification code to +91 XXXXX XX${phone.slice(-3)}.`,
+          rtype: "inline_otp_input",
+          inlinePhone: phone
+        }, 600);
+        break;
+      }
+      case "submit_inline_otp": {
+        const otp = data as string;
+        // 1. Show user message in chat
+        setMsgs(prev => [...prev, {
+          id: `usr-otp-${Date.now()}`,
+          role: "user",
+          text: `OTP entered: ${otp}`,
+          ts: new Date()
+        }]);
+        // 2. Simulate login success and sync session state
+        setIsLoggedIn(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("isLoggedIn", "true");
+          window.dispatchEvent(new Event("login-state-changed"));
+        }
+        // 3. Inject AI response message
+        injectAI({
+          text: "🎉 Login successful! Welcome back, Omkar V. Resuming your booking details...",
+          rtype: "text"
+        }, 400);
         break;
       }
       case "complete_payment": {
@@ -4784,8 +5023,25 @@ export default function PulseAIWorkspace({
   const [initialQuery, setInitialQuery] = useState(propInitialQuery);
   const [initialAction, setInitialAction] = useState<string | null>(propInitialAction);
   const [initialActionData, setInitialActionData] = useState<any>(propInitialActionData);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      return stored !== "false";
+    }
+    return true;
+  });
   const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const handleLoginChange = () => {
+      if (typeof window !== "undefined") {
+        const stored = sessionStorage.getItem("isLoggedIn");
+        setIsLoggedIn(stored !== "false");
+      }
+    };
+    window.addEventListener("login-state-changed", handleLoginChange);
+    return () => window.removeEventListener("login-state-changed", handleLoginChange);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
