@@ -3333,7 +3333,7 @@ function WelcomeScreen({ onPrompt, onPrefill, activeChipId, isLoggedIn, userName
         </div>
 
         <h1 className={styles.greetingTitle}>
-          Hi {userName} <span className={styles.wavingHand}>👋</span>
+          {isLoggedIn ? `Hi ${userName}` : "Hi there!"} <span className={styles.wavingHand}>👋</span>
         </h1>
         <p className={styles.greetingSubtitle}>How can I help you today?</p>
       </motion.div>
