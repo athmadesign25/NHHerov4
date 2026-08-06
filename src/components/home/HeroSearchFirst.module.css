@@ -8,6 +8,7 @@
   min-height: 100vh;
   overflow: hidden;
   background: color-mix(in srgb, var(--color-text) 80%, black);
+  will-change: transform, border-radius;
 }
 
 .bgVideo {
@@ -1495,38 +1496,44 @@
   min-height: 0;
 }
 
-.metricsRow {
+.metricsSideWrap {
+  position: absolute;
+  left: max(4vw, 40px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
   display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  width: 100%;
-  margin-top: 16px;
-  gap: 16px;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-direction: column;
 }
 
-.metricsHidden {
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
+.metricsRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 28px;
+  margin-top: 0;
 }
 
 .metricItem {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 0 12px 8px; /* Removed top padding */
-  flex: 1;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0;
+  flex: none;
+  width: 100%;
 }
 
 .metricItem:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.25);
+  border-right: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 28px;
 }
 
 .metricValue {
   font-size: 18px; /* Reduced from 20px */
-  font-weight: 500;
+  font-weight: 700;
   color: #fff;
   margin-bottom: 6px;
   line-height: 1.1;
@@ -1539,9 +1546,8 @@
 }
 
 @media (max-width: 768px) {
-  .metricsRow {
-    flex-wrap: wrap;
-    margin-top: 0;
+  .metricsSideWrap {
+    display: none;
   }
   .metricItem {
     flex: 1 1 45%;

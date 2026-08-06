@@ -1,9 +1,7 @@
 .section {
   padding: clamp(48px, 6vw, 80px) 0 0 0;
-  background-image: url('/leadership-bg.png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
 }
 
 .card {

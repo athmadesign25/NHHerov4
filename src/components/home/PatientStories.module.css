@@ -2,8 +2,8 @@
   position: relative;
   background: linear-gradient(180deg, transparent 0%, transparent 75%, #f2f7ff 100%);
   overflow: hidden;
-  padding: 140px 0 440px;
-  min-height: 1200px;
+  padding: 200px 0 600px;
+  min-height: 1400px;
   display: flex;
   flex-direction: column;
   justify-content: center;

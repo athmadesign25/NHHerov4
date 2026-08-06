@@ -1,347 +1,166 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring, animate } from "framer-motion";
+import { ChevronRight, ArrowRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 import Link from "next/link";
-import advanceHeartCareImg from "../../../public/Advance Heart Care.jpg";
-import oncologyInstituteImg from "../../../public/Oncology Institute.jpg";
-import brainAndSpineImg from "../../../public/Brain and Spine.jpg";
-import boneAndJointImg from "../../../public/Bone & Joint.jpg";
-import digestiveHealthImg from "../../../public/Digestive Health.png";
-
-const CARDS = [
-  {
-    id: "card-cardiac",
-    category: "Cardiac Science",
-    title: "Advanced Heart Care",
-    desc: "Comprehensive cardiology services including complex adult and pediatric heart surgeries, heart transplants, and interventional cardiology with cutting-edge technology.",
-    img: advanceHeartCareImg,
-    link: "/specialities/cardiology",
-  },
-  {
-    id: "card-cancer",
-    category: "Cancer Care",
-    title: "Oncology Institute",
-    desc: "A multidisciplinary approach to cancer treatment offering medical, surgical, and radiation oncology with precise diagnostics and personalized care plans.",
-    img: oncologyInstituteImg,
-    link: "/specialities/oncology",
-  },
-  {
-    id: "card-neuro",
-    category: "Neurosciences",
-    title: "Brain & Spine",
-    desc: "Advanced treatment for neurological disorders including stroke management, brain tumor surgery, epilepsy treatment, and minimally invasive spine surgeries.",
-    img: brainAndSpineImg,
-    link: "/specialities/neurology",
-  },
-  {
-    id: "card-ortho",
-    category: "Orthopedics",
-    title: "Bone & Joint Health",
-    desc: "Expert care for musculoskeletal conditions with advanced joint replacements, sports medicine, and comprehensive rehabilitation programs.",
-    img: boneAndJointImg,
-    link: "/specialities/orthopedics",
-  },
-  {
-    id: "card-gastro",
-    category: "Gastro Sciences",
-    title: "Digestive Health",
-    desc: "Expert care for digestive and liver conditions involving advanced endoscopy, GI surgeries, and liver transplant procedures in highly specialized units.",
-    img: digestiveHealthImg,
-    link: "/specialities/gastroenterology",
-  }
-];
 
 const SPECIALITIES = [
-  { name: "Cardiology & Cardiac Surgery", href: "/specialities/cardiology", icon: "/Specialities icons/Cardiology.svg" },
-  { name: "Cancer Care", href: "/specialities/oncology", icon: "/Specialities icons/Cancercare.svg" },
-  { name: "Neurology & Neurosurgery", href: "/specialities/neurology", icon: "/Specialities icons/Neurology.svg" },
-  { name: "Orthopaedics", href: "/specialities/orthopaedics", icon: "/Specialities icons/Orthopaedics.svg" },
-  { name: "Nephrology & Transplant", href: "/specialities/nephrology", icon: "/Specialities icons/Nephrology.svg" },
-  { name: "Gastroenterology", href: "/specialities/gastroenterology", icon: "/Specialities icons/Gastro.svg" },
-  { name: "Paediatrics & Neonatology", href: "/specialities/paediatrics", icon: "/Specialities icons/Paedratic.svg" },
-  { name: "Obstetrics & Gynaecology", href: "/specialities/gynaecology", icon: "/Specialities icons/Gynaecology.svg" },
-  { name: "Ophthalmology", href: "/specialities/ophthalmology", icon: "/Specialities icons/General Medicine.svg" },
-  { name: "Urology", href: "/specialities/urology", icon: "/Specialities icons/Urology.svg" },
+  { name: "Cardiology & Cardiac Surgery", href: "/specialities/cardiology", icon: "/Specialities icons/Cardiology.svg", img: "/Specialities icons/Cardiology.jpeg", video: "/Specialities icons/Cardiology.mp4", stats: { value: "5,000+", label: "Cardiac Surgeries Performed" } },
+  { name: "Cancer Care", href: "/specialities/oncology", icon: "/Specialities icons/Cancercare.svg", img: "/Specialities icons/Cancer Care.jpeg", video: "/Specialities icons/Cancer Care.mp4", stats: { value: "10,000+", label: "Oncology Patients Treated" } },
+  { name: "Neurology & Neurosurgery", href: "/specialities/neurology", icon: "/Specialities icons/Neurology.svg", img: "/Specialities icons/Neurology.jpeg", video: "/Specialities icons/Neurology.mp4", stats: { value: "3,000+", label: "Neuro Surgeries Performed" } },
+  { name: "Orthopaedics", href: "/specialities/orthopaedics", icon: "/Specialities icons/Orthopaedics.svg", img: "/Specialities icons/Orthopedics.jpeg", video: "/Specialities icons/Orthopedics.mp4", stats: { value: "8,000+", label: "Joint Replacements" } },
+  { name: "Nephrology & Transplant", href: "/specialities/nephrology", icon: "/Specialities icons/Nephrology.svg", img: "/Specialities icons/Nephrology.jpeg", video: "/Specialities icons/Nephrology.mp4", stats: { value: "2,000+", label: "Kidney Transplants" } },
+  { name: "Gastroenterology", href: "/specialities/gastroenterology", icon: "/Specialities icons/Gastro.svg", img: "/Specialities icons/Gastroenterology.jpeg", video: "/Specialities icons/Gastroenterology.mp4", stats: { value: "15,000+", label: "Endoscopies Performed" } },
 ];
 
-const getCardTransform = (index: number, activeIndex: number, total: number, isMobile: boolean) => {
-  let diff = index - activeIndex;
-  
-  // Wrap around for circular loop
-  if (diff < -total / 2) diff += total;
-  if (diff > total / 2) diff -= total;
-  
-  const isFocused = diff === 0;
+const RollingNumber = ({ value, isHovered }: { value: string, isHovered: boolean }) => {
+  const numValue = parseInt(value.replace(/,/g, "").replace(/\+/g, ""));
+  const hasPlus = value.includes("+");
+  const [displayValue, setDisplayValue] = React.useState("0");
 
-  if (isMobile) {
-    return {
-      translateX: isFocused ? 0 : diff > 0 ? 120 : -120,
-      scale: isFocused ? 1 : 0.98,
-      opacity: isFocused ? 1 : 0,
-      zIndex: isFocused ? 10 : 0,
-      width: undefined,
-      isFocused,
-      showContent: isFocused,
-      isNext: false
-    };
-  }
+  React.useEffect(() => {
+    if (isHovered) {
+      const controls = animate(0, numValue, {
+        duration: 1.2,
+        ease: "easeOut",
+        onUpdate: (val) => {
+          setDisplayValue(Math.floor(val).toLocaleString());
+        }
+      });
+      return controls.stop;
+    } else {
+      setDisplayValue("0");
+    }
+  }, [isHovered, numValue]);
 
-  const isNext = diff === 1;
-  const isPrev = diff === -1;
-  let translateX = 0;
-  let opacity = 0;
-  let zIndex = 0;
-  let width = 700;
+  return <span>{displayValue}{hasPlus ? "+" : ""}</span>;
+};
 
-  if (isFocused) {
-    translateX = 0;
-    opacity = 1;
-    zIndex = 10;
-    width = 860;
-  } else if (isNext) {
-    translateX = 880;
-    opacity = 0.6;
-    zIndex = 6;
-    width = 260;
-  } else if (isPrev) {
-    translateX = -880;
-    opacity = 0;
-    zIndex = 0;
-    width = 260;
-  } else {
-    translateX = 1400;
-    opacity = 0;
-    zIndex = 0;
-    width = 0;
-  }
+const SpecialityCardItem = ({ spec }: { spec: typeof SPECIALITIES[0] }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovered, setIsHovered] = React.useState(false);
 
-  return {
-    translateX,
-    opacity,
-    zIndex,
-    width,
-    isFocused,
-    showContent: isFocused || isNext,
-    isNext,
-    isPrev
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
   };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  return (
+    <Link 
+      aria-label={spec.name} 
+      href={spec.href} 
+      className={styles.specialityCard}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <img alt={spec.name} loading="lazy" src={spec.img} className={styles.cardImage} />
+      {spec.video && (
+        <video 
+          ref={videoRef}
+          src={spec.video}
+          className={styles.cardVideo}
+          muted
+          loop
+          playsInline
+        />
+      )}
+      <div className={styles.cardTextWrap}>
+        {spec.stats && (
+          <div className={styles.cardStats}>
+            <div className={styles.metricValue}>
+              <RollingNumber value={spec.stats.value} isHovered={isHovered} />
+            </div>
+            <div className={styles.metricLabel}>{spec.stats.label}</div>
+          </div>
+        )}
+        <span className={styles.specialityName}>{spec.name}</span>
+        <span className={styles.cardAction}>
+          Explore <ChevronRight size={14} />
+        </span>
+      </div>
+    </Link>
+  );
 };
 
 export default function CentreOfExcellence() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [activeIndex, setActiveIndex] = React.useState(0);
-  const [isInView, setIsInView] = React.useState(false);
-  const [isMobile, setIsMobile] = React.useState(false);
-  const [sideContentReady, setSideContentReady] = React.useState(true);
-  const isFirstRender = React.useRef(true);
-
-  const moveToIndex = (nextIndex: number) => {
-    setSideContentReady(false);
-    setActiveIndex(nextIndex);
-  };
+  const containerRef = useRef<HTMLElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [maxScroll, setMaxScroll] = React.useState(0);
 
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-
-    setSideContentReady(false);
-  }, [activeIndex]);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      if (wrapRef.current && gridRef.current) {
+        const wrapWidth = wrapRef.current.clientWidth;
+        const gridWidth = gridRef.current.scrollWidth;
+        const offsetFromRight = wrapWidth / 2;
+        const scrollDistance = gridWidth - (wrapWidth / 2) - offsetFromRight;
+        setMaxScroll(Math.max(0, scrollDistance));
+      }
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  React.useEffect(() => {
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-      setIsInView(true);
-      return;
-    }
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.2 }
-    );
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 70,
+    damping: 25,
+    mass: 1,
+    restDelta: 0.001
+  });
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Autoplay carousel every 5 seconds only when in view
-  React.useEffect(() => {
-    if (!isInView) return;
-
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % CARDS.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isInView]);
-
-  const handleDragEnd = (event: any, info: any) => {
-    const threshold = 50;
-    if (info.offset.x < -threshold) {
-      setActiveIndex((prev) => (prev + 1) % CARDS.length);
-    } else if (info.offset.x > threshold) {
-      setActiveIndex((prev) => (prev - 1 + CARDS.length) % CARDS.length);
-    }
-  };
+  const xTransform = useTransform(smoothProgress, [0, 0.8], [0, -maxScroll], { clamp: true });
 
   return (
-    <section ref={sectionRef} className={styles.section} id="centre-of-excellence">
-      <div className="container">
-        <div className={styles.header}>
-          <div className="section-eyebrow">CENTRES OF EXCELLENCE</div>
-          <h2 className={styles.sectionTitle}>40+ Specialities. World-Class Care.</h2>
-          <p className={`section-subtitle ${styles.sectionSubtitle}`}>
-            Integrated expertise across tertiary and quaternary care, delivered through one trusted network.
-          </p>
-        </div>
-
-        {/* Carousel */}
-        <div className={styles.carouselWrapper}>
-          <motion.div 
-            className={styles.carousel} 
-            role="group" 
-            aria-label="Centres of Excellence Carousel"
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            onDragEnd={handleDragEnd}
-            style={{ cursor: "grab" }}
-            whileTap={{ cursor: "grabbing" }}
-          >
-            {CARDS.map((card, index) => {
-              const { translateX, opacity, zIndex, width, isFocused, showContent, isNext, isPrev } = getCardTransform(index, activeIndex, CARDS.length, isMobile);
-              const isSideCard = !isFocused && isNext;
-              const cardOpacity = opacity;
-              return (
-                <motion.div 
-                  key={card.id}
-                  className={styles.slide}
-                  style={{ 
-                    zIndex, 
-                    position: "absolute",
-                    cursor: isFocused ? "grab" : "pointer"
-                  }}
-                  animate={{
-                    x: translateX,
-                    opacity: cardOpacity,
-                    width: width ?? "100%"
-                  }}
-                  transition={{
-                    type: "tween",
-                    duration: 0.78,
-                    ease: [0.22, 1, 0.36, 1]
-                  }}
-                  onAnimationComplete={() => {
-                    setSideContentReady(true);
-                  }}
-                  onClick={() => {
-                    if (!isFocused) {
-                      moveToIndex(index);
-                    }
-                  }}
-                >
-                  <div className={`${styles.card} ${isFocused ? styles.cardFocused : ""} ${isSideCard ? styles.cardSide : ""}`}>
-                    {/* Left Column: Content — always rendered for CSS transitions */}
-                    <motion.div 
-                      className={`${styles.cardContent} ${(isNext || isPrev) ? styles.cardContentPreview : ""} ${!showContent || (isSideCard && !sideContentReady) ? styles.cardContentHidden : ""}`}
-                      initial={isFocused ? { opacity: 0, y: 14 } : false}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-                    >
-                      <span className={styles.cardCategory}>{card.category}</span>
-                      <h3 className={styles.cardTitle}>{card.title}</h3>
-                      {isFocused && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.35, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-                        >
-                          <p className={styles.cardDesc}>{card.desc}</p>
-                          <div>
-                            {/* Prevent drag gesture from interrupting link clicking */}
-                            <Link href={card.link} className={styles.cardCta} onPointerDown={(e) => e.stopPropagation()}>
-                              Know more
-                              <ChevronRight size={16} />
-                            </Link>
-                          </div>
-                        </motion.div>
-                      )}
-                    </motion.div>
-
-                    {/* Right Column: Image */}
-                    <div className={styles.cardImgWrap}>
-                      <Image
-                        src={card.img}
-                        alt={card.title}
-                        fill
-                        priority={index === 0}
-                        className={styles.cardImg}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                      <div className={styles.cardOverlay} />
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          <div className={styles.carouselArrows}>
-            <button
-              type="button"
-              className={styles.navBtn}
-              onClick={() => moveToIndex((activeIndex - 1 + CARDS.length) % CARDS.length)}
-              aria-label="Previous centre"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              className={styles.navBtn}
-              onClick={() => moveToIndex((activeIndex + 1) % CARDS.length)}
-              aria-label="Next centre"
-            >
-              <ChevronRight size={18} />
-            </button>
+    <section ref={containerRef} className={styles.scrollContainer} id="centre-of-excellence">
+      <div className={styles.stickySection}>
+        <div className="container">
+          <div className={styles.header}>
+            <div className="section-eyebrow">CENTRES OF EXCELLENCE</div>
+            <h2 className={styles.sectionTitle}>40+ Specialities. World-Class Care.</h2>
+            <p className={`section-subtitle ${styles.sectionSubtitle}`}>
+              Integrated expertise across tertiary and quaternary care, delivered through one trusted network.
+            </p>
           </div>
         </div>
 
-
-        <div className={styles.specialitiesGrid}>
+        <div ref={wrapRef} className={styles.specialitiesGridWrap}>
+          <motion.div 
+            ref={gridRef} 
+            className={styles.specialitiesGrid} 
+            style={{ x: xTransform }}
+          >
           {SPECIALITIES.map((spec) => (
-            <Link key={spec.name} aria-label={spec.name} href={spec.href} className={styles.specialityCard}>
-              <span className={styles.specialityIconWrap}>
-                <img alt={spec.name} loading="lazy" width={56} height={56} src={spec.icon} className={styles.specialityIcon} />
-              </span>
-              <span className={styles.specialityName}>{spec.name}</span>
-            </Link>
+            <SpecialityCardItem key={spec.name} spec={spec} />
           ))}
-        </div>
-        <div className={styles.specialitiesCtaWrap}>
-          <Link href="/specialities" className={styles.specialitiesCta}>
-            View all specialties
-            <ChevronRight size={16} />
+          <Link href="/specialities" className={styles.viewAllCard}>
+            <div className={styles.viewAllContent}>
+              <div className={styles.viewAllIconWrap}>
+                <ArrowRight size={24} />
+              </div>
+              <span className={styles.viewAllSubText}>View all</span>
+            </div>
           </Link>
-        </div>
+        </motion.div>
+      </div>
       </div>
     </section>
   );
