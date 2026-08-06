@@ -457,8 +457,6 @@ export default function HeroSearchFirst() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
   // Border radius from 0 to 8px
   const heroRadius = useTransform(scrollYProgress, [0, 1], ["0px", "8px"]);
-  // Parallax / Slide down to sit below the header
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0px", "64px"]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
@@ -653,7 +651,6 @@ export default function HeroSearchFirst() {
         style={{
           scale: heroScale,
           borderRadius: heroRadius,
-          y: heroY,
         }}
       >
         <video
