@@ -60,10 +60,10 @@
 .workspaceContainer {
   position: relative;
   z-index: 10;
-  width: 95vw;
-  max-width: 1240px;
-  height: 92vh;
-  max-height: 900px;
+  width: 90vw;
+  max-width: 860px;
+  height: 85vh;
+  max-height: 740px;
   display: flex;
   background: #ffffff;
   border-radius: 24px;
@@ -588,6 +588,7 @@
 /* ─── OFFICIAL NARAYANA HEALTH BOOKING SUMMARY ─────────────── */
 .nhBookingSummaryCard {
   width: 100%;
+  max-width: 620px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
