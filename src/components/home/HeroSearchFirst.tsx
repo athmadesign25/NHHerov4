@@ -454,7 +454,7 @@ export default function HeroSearchFirst() {
   });
 
   // Complete the animation over 100% of the wrapper's extra scroll distance
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
   // Border radius from 0 to 8px
   const heroRadius = useTransform(scrollYProgress, [0, 1], ["0px", "8px"]);
 
