@@ -108,9 +108,10 @@
 
   .link {
     flex: 1;
-    flex-direction: row;
-    padding: 16px 8px;
-    gap: 8px;
+    flex-direction: column;
+    padding: 12px 4px;
+    gap: 6px;
+    font-size: 10px;
   }
   
   .divider {
