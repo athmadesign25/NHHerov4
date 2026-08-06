@@ -3744,6 +3744,32 @@ function Workspace({
   useEffect(() => {
     if (initialAction && initialActionData && !initialActionProcessed.current) {
       initialActionProcessed.current = true;
+
+      if (initialAction === "require_login_module") {
+        const { moduleName, query } = initialActionData as { moduleName: string; query: string };
+        
+        // Setup welcome message explaining what the module can do, but requiring login
+        const introMsg: Message = {
+          id: `intro-${Date.now()}`,
+          role: "ai",
+          text: `Welcome to **${moduleName}**! Here you can get insights from your medical history, review your lab reports, and analyze your organ health. To access these personalized features, please verify your mobile number:`,
+          ts: new Date()
+        };
+        setMsgs([introMsg]);
+        
+        // Save the eventual query to run after login
+        setPendingAction({ type: "execute_query", data: query });
+        
+        // Inject the inline phone input immediately
+        injectAI({
+          text: "Enter your mobile number to sign in or register:",
+          rtype: "inline_phone_input"
+        }, 300);
+        
+        clearInitialAction?.();
+        return;
+      }
+
       const doc = initialActionData as any;
       
       // Setup natural booking conversation history
@@ -3944,6 +3970,11 @@ function Workspace({
         } catch {}
         setTutorialStep("done");
         setMsgs([]);
+        break;
+      }
+      case "execute_query": {
+        const query = data as string;
+        sendMessage(query);
         break;
       }
       case "book_now": {

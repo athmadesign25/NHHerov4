@@ -702,6 +702,15 @@ export default function HeroSearchFirst() {
     setIsPulseActive(true);
   };
 
+  const handleKnowYourHealthClick = (query: string) => {
+    setSearchQuery(query);
+    if (!isUserLoggedIn) {
+      handlePulseLaunchWithAction("require_login_module", { moduleName: "Know your health", query });
+    } else {
+      setIsPulseActive(true);
+    }
+  };
+
   const isConversational = searchQuery.trim().split(" ").length > 3 || 
                           /have|fever|cough|tomorrow|symptom|feel|pain/i.test(searchQuery.trim());
 
@@ -1149,8 +1158,7 @@ export default function HeroSearchFirst() {
                         <div 
                           className={`${styles.entryCard} ${styles.tealThemeCard}`}
                           onClick={() => {
-                            setSearchQuery("Know your health");
-                            setIsPulseActive(true);
+                            handleKnowYourHealthClick("Know your health");
                           }}
                           style={{ cursor: "pointer" }}
                         >
@@ -1178,8 +1186,7 @@ export default function HeroSearchFirst() {
                                 className={`${styles.intentChip} ${styles.tealChip}`} 
                                 onClick={(e) => { 
                                   e.stopPropagation(); 
-                                  setSearchQuery("Summarize my health");
-                                  setIsPulseActive(true);
+                                  handleKnowYourHealthClick("Summarize my health");
                                 }}
                               >
                                 Summarize my health
@@ -1188,7 +1195,7 @@ export default function HeroSearchFirst() {
                                 className={`${styles.intentChip} ${styles.tealChip}`} 
                                 onClick={(e) => { 
                                   e.stopPropagation(); 
-                                  setSearchQuery("Please analyse report ");
+                                  handleKnowYourHealthClick("Please analyse report ");
                                   const searchInput = document.getElementById("hero-search-input");
                                   if (searchInput) searchInput.focus();
                                 }}
@@ -1199,8 +1206,7 @@ export default function HeroSearchFirst() {
                                 className={`${styles.intentChip} ${styles.tealChip}`} 
                                 onClick={(e) => { 
                                   e.stopPropagation(); 
-                                  setSearchQuery("Show my organ insights");
-                                  setIsPulseActive(true);
+                                  handleKnowYourHealthClick("Show my organ insights");
                                 }}
                               >
                                 Show my organ insights
