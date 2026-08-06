@@ -407,15 +407,15 @@ interface RealtimePulseResponse {
   };
   suggestedSpec: string;
   slot: string;
+  recommendedDocs: any[];
 }
 
 function getRealtimePulseResponse(query: string): RealtimePulseResponse {
   const ql = query.toLowerCase();
   
   if (ql.includes("heart") || ql.includes("chest") || ql.includes("cardio")) {
-    return {
-      empathy: "Recommended Care Pathway: Cardiology review based on your profile & preferred clinic.",
-      suggestedDoc: {
+    const recs = [
+      {
         id: "d2",
         name: "Dr. Ananya Krishnan",
         qualification: "MBBS, DM (Cardiology)",
@@ -428,19 +428,49 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
         photo: "/assets/doctor_2.png",
         location: "Bengaluru"
       },
+      {
+        id: "d_card_2",
+        name: "Dr. Devi Prasad Shetty",
+        qualification: "MS, FRCS",
+        speciality: "Cardiac Surgeon",
+        hospital: "Narayana Institute of Cardiac Sciences",
+        plusHospitals: 3,
+        slot: "Tomorrow, 10:30 AM",
+        price: "₹1,500",
+        rating: 4.99,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      },
+      {
+        id: "d_card_3",
+        name: "Dr. Rajesh R. Sharma",
+        qualification: "MD, DM (Cardiology)",
+        speciality: "Cardiologist",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 1,
+        slot: "Tomorrow, 03:00 PM",
+        price: "₹1,100",
+        rating: 4.75,
+        photo: "/assets/doctor_2.png",
+        location: "Bengaluru"
+      }
+    ];
+    return {
+      empathy: "Recommended Care Pathway: Cardiology review based on your profile & preferred clinic.",
+      suggestedDoc: recs[0],
       suggestedSpec: "Cardiology",
-      slot: "Today, 05:00 PM"
+      slot: "Today, 05:00 PM",
+      recommendedDocs: recs
     };
   }
   
   if (ql.includes("brain") || ql.includes("nerve") || ql.includes("headache") || ql.includes("stroke") || ql.includes("tremor") || ql.includes("migraine")) {
-    return {
-      empathy: "Recommended Care Pathway: Neurology consultation based on your health records.",
-      suggestedDoc: {
-        id: "d4",
+    const recs = [
+      {
+        id: "d_neuro_1",
         name: "Dr. Vikas Yadav",
-        qualification: "MBBS, MD (Nephrology)",
-        speciality: "Nephrologist",
+        qualification: "MBBS, MD (Neurology)",
+        speciality: "Neurologist",
         hospital: "Mazumdar Shaw Medical Centre",
         plusHospitals: 0,
         slot: "Today, 04:00 PM",
@@ -449,19 +479,49 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
         photo: "/assets/doctor_1.png",
         location: "Bengaluru"
       },
+      {
+        id: "d_neuro_2",
+        name: "Dr. Sunil Kumar",
+        qualification: "MBBS, DM (Neurology)",
+        speciality: "Neurologist",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 2,
+        slot: "Tomorrow, 11:00 AM",
+        price: "₹1,200",
+        rating: 4.8,
+        photo: "/assets/doctor_2.png",
+        location: "Bengaluru"
+      },
+      {
+        id: "d_neuro_3",
+        name: "Dr. Preeti Sinha",
+        qualification: "MBBS, MD, DNB",
+        speciality: "Neurologist",
+        hospital: "Narayana Superspeciality Hospital",
+        plusHospitals: 1,
+        slot: "Tomorrow, 02:00 PM",
+        price: "₹1,000",
+        rating: 4.7,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      }
+    ];
+    return {
+      empathy: "Recommended Care Pathway: Neurology consultation based on your health records.",
+      suggestedDoc: recs[0],
       suggestedSpec: "Neurology",
-      slot: "Today, 04:00 PM"
+      slot: "Today, 04:00 PM",
+      recommendedDocs: recs
     };
   }
 
   if (ql.includes("cancer") || ql.includes("tumor") || ql.includes("oncology") || ql.includes("lump")) {
-    return {
-      empathy: "Recommended Care Pathway: Oncology consult at Narayana Superspeciality.",
-      suggestedDoc: {
-        id: "d3",
+    const recs = [
+      {
+        id: "d_onc_1",
         name: "Dr. Rajiv Menon",
-        qualification: "MBBS, MS, MCh",
-        speciality: "Cardiac Surgeon",
+        qualification: "MBBS, MS, MCh (Oncology)",
+        speciality: "Surgical Oncologist",
         hospital: "Mazumdar Shaw Medical Centre",
         plusHospitals: 2,
         slot: "Thu, 10:00 AM",
@@ -470,19 +530,49 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
         photo: "/assets/doctor_1.png",
         location: "Bengaluru"
       },
+      {
+        id: "d_onc_2",
+        name: "Dr. Someshwar Rao",
+        qualification: "MBBS, MD, DM",
+        speciality: "Medical Oncologist",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 1,
+        slot: "Tomorrow, 04:00 PM",
+        price: "₹1,400",
+        rating: 4.85,
+        photo: "/assets/doctor_2.png",
+        location: "Bengaluru"
+      },
+      {
+        id: "d_onc_3",
+        name: "Dr. Aruna Dev",
+        qualification: "MBBS, DNB (Oncology)",
+        speciality: "Radiation Oncologist",
+        hospital: "Narayana Superspeciality Hospital",
+        plusHospitals: 1,
+        slot: "Tomorrow, 09:30 AM",
+        price: "₹1,200",
+        rating: 4.9,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      }
+    ];
+    return {
+      empathy: "Recommended Care Pathway: Oncology consult at Narayana Superspeciality.",
+      suggestedDoc: recs[0],
       suggestedSpec: "Oncology",
-      slot: "Thu, 10:00 AM"
+      slot: "Thu, 10:00 AM",
+      recommendedDocs: recs
     };
   }
 
   if (ql.includes("bone") || ql.includes("joint") || ql.includes("fracture") || ql.includes("knee") || ql.includes("back pain")) {
-    return {
-      empathy: "Recommended Care Pathway: Orthopaedics consult based on activity and history.",
-      suggestedDoc: {
-        id: "d4",
+    const recs = [
+      {
+        id: "d_ortho_1",
         name: "Dr. Vikas Yadav",
-        qualification: "MBBS, MD (Nephrology)",
-        speciality: "Nephrologist",
+        qualification: "MBBS, MS (Ortho)",
+        speciality: "Orthopaedician",
         hospital: "Mazumdar Shaw Medical Centre",
         plusHospitals: 0,
         slot: "Today, 04:00 PM",
@@ -491,14 +581,44 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
         photo: "/assets/doctor_1.png",
         location: "Bengaluru"
       },
+      {
+        id: "d_ortho_2",
+        name: "Dr. Sandeep Naik",
+        qualification: "MBBS, MS (Ortho)",
+        speciality: "Orthopaedician",
+        hospital: "Mazumdar Shaw Medical Centre",
+        plusHospitals: 1,
+        slot: "Tomorrow, 12:00 PM",
+        price: "₹1,000",
+        rating: 4.8,
+        photo: "/assets/doctor_2.png",
+        location: "Bengaluru"
+      },
+      {
+        id: "d_ortho_3",
+        name: "Dr. R. K. Sen",
+        qualification: "MBBS, MS, MCh",
+        speciality: "Orthopaedic Surgeon",
+        hospital: "Narayana Superspeciality Hospital",
+        plusHospitals: 1,
+        slot: "Tomorrow, 04:00 PM",
+        price: "₹1,300",
+        rating: 4.75,
+        photo: "/assets/doctor_1.png",
+        location: "Bengaluru"
+      }
+    ];
+    return {
+      empathy: "Recommended Care Pathway: Orthopaedics consult based on activity and history.",
+      suggestedDoc: recs[0],
       suggestedSpec: "Orthopaedics",
-      slot: "Today, 04:00 PM"
+      slot: "Today, 04:00 PM",
+      recommendedDocs: recs
     };
   }
 
-  return {
-    empathy: "Recommended Care Pathway: General Physician consult based on history & location.",
-    suggestedDoc: {
+  const defaultRecs = [
+    {
       id: "d1",
       name: "Dr. Pradeep R Kumar",
       qualification: "MBBS, MD",
@@ -511,8 +631,40 @@ function getRealtimePulseResponse(query: string): RealtimePulseResponse {
       photo: "/assets/doctor_1.png",
       location: "Bengaluru"
     },
+    {
+      id: "d_gp_2",
+      name: "Dr. S. S. Murthy",
+      qualification: "MBBS, MD (Medicine)",
+      speciality: "General Physician",
+      hospital: "Mazumdar Shaw Medical Centre",
+      plusHospitals: 0,
+      slot: "Tomorrow, 10:00 AM",
+      price: "₹700",
+      rating: 4.8,
+      photo: "/assets/doctor_2.png",
+      location: "Bengaluru"
+    },
+    {
+      id: "d_gp_3",
+      name: "Dr. Maria Fernandes",
+      qualification: "MBBS, MD",
+      speciality: "General Physician",
+      hospital: "Narayana Multispeciality Clinic",
+      plusHospitals: 1,
+      slot: "Tomorrow, 11:30 AM",
+      price: "₹650",
+      rating: 4.7,
+      photo: "/assets/doctor_1.png",
+      location: "Bengaluru"
+    }
+  ];
+
+  return {
+    empathy: "Recommended Care Pathway: General Physician consult based on history & location.",
+    suggestedDoc: defaultRecs[0],
     suggestedSpec: "General Medicine",
-    slot: "Tomorrow, 02:30 PM"
+    slot: "Tomorrow, 02:30 PM",
+    recommendedDocs: defaultRecs
   };
 }
 
@@ -528,7 +680,21 @@ export default function HeroSearchFirst() {
   const [isPulseAnalyzed, setIsPulseAnalyzed] = useState(false);
   const [pulseInitialAction, setPulseInitialAction] = useState<string | null>(null);
   const [pulseInitialActionData, setPulseInitialActionData] = useState<any>(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
   const [showPixelRipple, setShowPixelRipple] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      setIsUserLoggedIn(stored !== "false");
+    }
+    const handleLoginChange = () => {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      setIsUserLoggedIn(stored !== "false");
+    };
+    window.addEventListener("login-state-changed", handleLoginChange);
+    return () => window.removeEventListener("login-state-changed", handleLoginChange);
+  }, []);
 
   const handlePulseLaunchWithAction = (action: string, doctorData: any) => {
     setPulseInitialAction(action);
@@ -1151,56 +1317,124 @@ export default function HeroSearchFirst() {
                                 <div className={styles.pulsePreviewHeaderRow}>
                                   <div className={styles.pulsePreviewBadge}>
                                     <Lottie animationData={starAnimation} className={styles.pulsePreviewLottie} loop={true} />
-                                    <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
+                                    {isUserLoggedIn ? (
+                                      <span className={styles.pulseAnalyzedBadgeTitle}>🔥 PULSE AI CURATED MATCH</span>
+                                    ) : (
+                                      <span className={styles.pulseAnalyzedBadgeTitle} style={{ color: "#0891b2" }}>✨ PULSE AI SPECIALIST RECOMMENDATIONS</span>
+                                    )}
                                   </div>
-                                  <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
+                                  {isUserLoggedIn ? (
+                                    <div className={styles.pulsePreviewTag} style={{ color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>Curated Live</div>
+                                  ) : (
+                                    <div className={styles.pulsePreviewTag} style={{ color: "#0891b2", background: "#ecfeff", border: "1px solid #a5f3fc" }}>Specialists matched</div>
+                                  )}
                                 </div>
 
-                                <div className={styles.pulsePreviewEmpathy}>
-                                  &ldquo;{response.empathy}&rdquo;
-                                </div>
+                                {isUserLoggedIn ? (
+                                  <>
+                                    <div className={styles.pulsePreviewEmpathy}>
+                                      &ldquo;{response.empathy}&rdquo;
+                                    </div>
 
-                                <div className={styles.pulsePreviewRecommendedDoc}>
-                                  <img 
-                                    src={response.suggestedDoc.photo} 
-                                    alt={response.suggestedDoc.name} 
-                                    className={styles.pulsePreviewDocPhoto} 
-                                  />
-                                  <div className={styles.pulsePreviewDocDetails}>
-                                    <div className={styles.pulsePreviewBestMatchTag}>
-                                      ✨ Best Match / Recommended Specialist
+                                    <div className={styles.pulsePreviewRecommendedDoc}>
+                                      <img 
+                                        src={response.suggestedDoc.photo} 
+                                        alt={response.suggestedDoc.name} 
+                                        className={styles.pulsePreviewDocPhoto} 
+                                      />
+                                      <div className={styles.pulsePreviewDocDetails}>
+                                        <div className={styles.pulsePreviewBestMatchTag}>
+                                          ✨ Best Match / Recommended Specialist
+                                        </div>
+                                        <div className={styles.pulsePreviewDocName}>
+                                          {response.suggestedDoc.name}
+                                        </div>
+                                        <div className={styles.pulsePreviewDocSub}>
+                                          {response.suggestedSpec} • {response.suggestedDoc.hospital}
+                                        </div>
+                                        <div className={styles.pulsePreviewDocSlot}>
+                                          Next Slot: <strong>{response.slot}</strong>
+                                        </div>
+                                      </div>
+                                      <div className={styles.pulsePreviewActions}>
+                                        <button 
+                                          className={styles.pulsePreviewBookBtn}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                          }}
+                                        >
+                                          Book Now
+                                        </button>
+                                        <button 
+                                          className={styles.pulsePreviewModifyBtn}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePulseLaunchWithAction("book_now", response.suggestedDoc);
+                                          }}
+                                        >
+                                          Modify &amp; Book
+                                        </button>
+                                      </div>
                                     </div>
-                                    <div className={styles.pulsePreviewDocName}>
-                                      {response.suggestedDoc.name}
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className={styles.pulsePreviewEmpathy} style={{ color: "#475569", fontWeight: 500 }}>
+                                      We found 3 highly qualified <strong>{response.suggestedSpec}</strong> specialists matching your symptoms. Select a doctor to review slots:
                                     </div>
-                                    <div className={styles.pulsePreviewDocSub}>
-                                      {response.suggestedSpec} • {response.suggestedDoc.hospital}
+
+                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "12px" }}>
+                                      {response.recommendedDocs.map((doc: any) => (
+                                        <div 
+                                          key={doc.id}
+                                          className={styles.pulsePreviewRecommendedDoc} 
+                                          style={{ border: "1px solid #e2e8f0", padding: "10px 14px", borderRadius: "10px", background: "#f8fafc", margin: 0 }}
+                                        >
+                                          <img 
+                                            src={doc.photo} 
+                                            alt={doc.name} 
+                                            className={styles.pulsePreviewDocPhoto} 
+                                            style={{ width: "42px", height: "42px" }}
+                                          />
+                                          <div className={styles.pulsePreviewDocDetails}>
+                                            <div className={styles.pulsePreviewDocName} style={{ fontSize: "14px", fontWeight: 700 }}>
+                                              {doc.name}
+                                            </div>
+                                            <div className={styles.pulsePreviewDocSub} style={{ fontSize: "12px", color: "#64748b" }}>
+                                              {doc.qualification} • {doc.hospital}
+                                            </div>
+                                            <div className={styles.pulsePreviewDocSlot} style={{ fontSize: "12.5px" }}>
+                                              Next Slot: <strong style={{ color: "#0891b2" }}>{doc.slot}</strong>
+                                            </div>
+                                          </div>
+                                          <div className={styles.pulsePreviewActions}>
+                                            <button 
+                                              className={styles.pulsePreviewBookBtn}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handlePulseLaunchWithAction("book_now", doc);
+                                              }}
+                                              style={{ padding: "6px 14px", fontSize: "12px" }}
+                                            >
+                                              Book Now
+                                            </button>
+                                            <button 
+                                              className={styles.pulsePreviewModifyBtn}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handlePulseLaunchWithAction("book_now", doc);
+                                              }}
+                                              style={{ padding: "6px 14px", fontSize: "12px" }}
+                                            >
+                                              View Slots
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
                                     </div>
-                                    <div className={styles.pulsePreviewDocSlot}>
-                                      Next Slot: <strong>{response.slot}</strong>
-                                    </div>
-                                  </div>
-                                  <div className={styles.pulsePreviewActions}>
-                                    <button 
-                                      className={styles.pulsePreviewBookBtn}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                      }}
-                                    >
-                                      Book Now
-                                    </button>
-                                    <button 
-                                      className={styles.pulsePreviewModifyBtn}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePulseLaunchWithAction("book_now", response.suggestedDoc);
-                                      }}
-                                    >
-                                      Modify &amp; Book
-                                    </button>
-                                  </div>
-                                </div>
+                                  </>
+                                )}
 
                                 {/* Secondary alternate search options section */}
                                 <div className={styles.pulsePreviewSecondarySection}>
