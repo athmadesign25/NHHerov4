@@ -1,27 +1,61 @@
 .section {
-  background: var(--color-primary-light);
+  position: relative;
+  background: linear-gradient(
+    160deg,
+    #101a2d 0%,
+    #172c4c 40%,
+    #1d385d 70%,
+    #0f1d33 100%
+  );
+  padding: 0;
+  margin: 0;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/DownloadNHbanner.jpeg?v=2');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .section::before {
+    background-attachment: fixed;
+  }
 }
 
 .inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--sp-5);
   align-items: stretch;
-  background: var(--color-primary-dark);
-  border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
+  min-height: 560px;
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
 }
 
 .contentCol {
   max-width: 680px;
-  text-align: center;
-  padding: clamp(24px, 3vw, 40px);
+  text-align: left;
+  padding: clamp(40px, 5vw, 80px) clamp(24px, 3vw, 40px);
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .eyebrow {
   color: rgba(255, 255, 255, 0.92);
+  margin-left: 0;
+  text-align: left;
 }
 
 .title {
@@ -40,8 +74,6 @@
 .subtitle {
   margin-top: var(--sp-3);
   max-width: 548px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .featuresWrap {
@@ -69,8 +101,15 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-.actionsRow {
+.actionsContainer {
   margin-top: var(--sp-4);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.actionsRow {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,14 +135,14 @@
 }
 
 .qrBox {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.9);
-  padding: 10px 12px;
+  padding: 12px 16px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -112,9 +151,12 @@
 
 .mockupContainer {
   display: flex;
-  justify-content: flex-end;
-  align-items: stretch;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
   height: 100%;
+  position: relative;
 }
 
 .mockupImg {
@@ -123,8 +165,71 @@
   height: 100%;
   object-fit: contain;
   object-position: bottom right;
-  transform: scale(1.5);
+  transform: scale(1.15);
   transform-origin: bottom right;
+}
+
+.mockupImgAnimated {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.floatingBadgeWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  pointer-events: none;
+  width: 100%;
+  transform: translateX(-90px);
+  margin-bottom: -170px;
+}
+
+.floatingBadge {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  box-shadow: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dotsContainer {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 20;
+  transform: translateX(-90px);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.activeDot {
+  background: #ffffff;
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 960px) {
@@ -145,7 +250,7 @@
   }
   
   .mockupImg {
-    transform: scale(1.2); /* Slightly smaller scale on mobile */
+    transform: scale(1.0); /* Slightly smaller scale on mobile */
     margin-right: -5%; /* Ensure it hugs the right edge tightly */
   }
 }

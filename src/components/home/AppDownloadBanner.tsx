@@ -1,24 +1,37 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { QrCode, CircleCheckBig } from "lucide-react";
-import Image from "next/image";
-import mockupImg from "../../../public/Mockups.png";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CircleCheckBig } from "lucide-react";
 import styles from "./AppDownloadBanner.module.css";
+
+const SCREENS = [
+  "/NHCare Screens/Book Appointment.png",
+  "/NHCare Screens/Health Records.png",
+  "/NHCare Screens/Video Consultation.png",
+  "/NHCare Screens/Vital Tracking.png",
+];
 
 const appHighlights = [
   "Book appointments in 60 seconds",
-  "Video consultations from home",
   "Access your health records anytime",
+  "Video consultations from home",
   "Track vitals and wellness reports",
-  "Manage your entire family",
 ];
 
 export default function AppDownloadBanner() {
+  const [currentScreen, setCurrentScreen] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentScreen((prev) => (prev + 1) % SCREENS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [currentScreen]);
+
   return (
-    <section className={`section ${styles.section}`} id="app-download-banner">
-      <div className="container">
-        <motion.div
+    <section className={styles.section} id="app-download-banner">
+      <motion.div
           className={styles.inner}
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -37,38 +50,73 @@ export default function AppDownloadBanner() {
               their journey end-to-end from booking to recovery.
             </p>
 
-            <div className={styles.featuresWrap}>
-              {appHighlights.map((item) => (
-                <div key={item} className={styles.featureChip}>
-                  <CircleCheckBig size={14} />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
 
-            <div className={styles.actionsRow}>
-              <a href="#" tabIndex={0} className={styles.storeBadge}>
-                <img alt="Download on the App Store" src="/App%20store.svg" />
-              </a>
-              <a href="#" tabIndex={0} className={styles.storeBadge}>
-                <img alt="Get it on Google Play" src="/Google%20play.svg" />
-              </a>
+
+            <div className={styles.actionsContainer}>
               <div className={styles.qrBox}>
-                <QrCode size={22} />
+                <img src="/qr.svg" alt="QR Code" width={84} height={84} style={{ borderRadius: 8 }} />
                 <span>Scan to install</span>
+              </div>
+              <div className={styles.actionsRow}>
+                <a href="#" tabIndex={0} className={styles.storeBadge}>
+                  <img alt="Download on the App Store" src="/App%20store.svg" />
+                </a>
+                <a href="#" tabIndex={0} className={styles.storeBadge}>
+                  <img alt="Get it on Google Play" src="/Google%20play.svg" />
+                </a>
               </div>
             </div>
           </div>
 
           <div className={styles.mockupContainer}>
-            <Image
-              alt="NH Care App Mockups"
-              src={mockupImg}
-              className={styles.mockupImg}
+            <div className={styles.floatingBadgeWrap}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentScreen}
+                  className={`${styles.featureChip} ${styles.floatingBadge}`}
+                  initial={{ opacity: 0, y: 15, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -15, scale: 0.9 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <CircleCheckBig size={16} />
+                  <span>{appHighlights[currentScreen]}</span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <img 
+               src={SCREENS[0]} 
+               className={styles.mockupImg} 
+               style={{ visibility: 'hidden' }} 
+               alt="" 
             />
+            
+            <AnimatePresence>
+              <motion.img
+                key={currentScreen}
+                src={SCREENS[currentScreen]}
+                alt="NH Care App Screens"
+                className={`${styles.mockupImg} ${styles.mockupImgAnimated}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              />
+            </AnimatePresence>
+
+            <div className={styles.dotsContainer}>
+              {SCREENS.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`${styles.dot} ${idx === currentScreen ? styles.activeDot : ""}`}
+                  onClick={() => setCurrentScreen(idx)}
+                  aria-label={`View screen ${idx + 1}`}
+                />
+              ))}
+            </div>
           </div>
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
