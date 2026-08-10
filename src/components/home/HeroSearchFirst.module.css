@@ -339,7 +339,7 @@
 
 .dropdownTabContent {
   padding-top: 14px;
-  max-height: min(50vh, 420px);
+  max-height: calc(100vh - 190px);
   overflow-y: auto;
 }
 
@@ -721,7 +721,7 @@
 }
 
 .searchBarFormActive {
-  transform: translateY(-170px);
+  transform: translateY(-265px);
 }
 
 /* ── Overlay search bar (scroll-up mode) ───────────────────── */
@@ -935,7 +935,7 @@
   top: calc(100% + 12px);
   left: 0;
   width: 100%;
-  max-height: 650px;
+  max-height: calc(100vh - 30px);
   overflow-y: auto;
   overscroll-behavior: contain;
   background: #ffffff;
@@ -1128,7 +1128,7 @@
 }
 
 .dropdownTabContent {
-  max-height: 410px;
+  max-height: calc(100vh - 190px);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -1431,13 +1431,13 @@
 
 @media (max-width: 1024px) {
   .searchBarFormActive {
-    transform: translateY(-140px);
+    transform: translateY(-210px);
   }
 }
 
 @media (max-width: 768px) {
   .searchBarFormActive {
-    transform: translateY(-120px);
+    transform: translateY(-170px);
   }
 
   .searchContainer {
@@ -1489,7 +1489,7 @@
 
 @media (max-width: 640px) {
   .searchBarFormActive {
-    transform: translateY(-95px);
+    transform: translateY(-130px);
   }
 
   .searchContainer {

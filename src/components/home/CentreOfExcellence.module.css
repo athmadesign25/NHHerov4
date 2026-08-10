@@ -324,7 +324,7 @@
 /* 3D Flip Card Container */
 .flipCardWrapper {
   position: relative;
-  height: 290px;
+  height: 360px;
   perspective: 1200px;
   text-decoration: none;
   display: block;
@@ -443,13 +443,13 @@
 }
 
 .frontTitle {
-  font-size: 17px;
-  font-weight: 750;
+  font-size: 21px;
+  font-weight: 800;
   color: #ffffff;
   margin: 0;
   line-height: 1.25;
-  letter-spacing: -0.01em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.015em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* BACK FACE */
@@ -499,12 +499,12 @@
 }
 
 .backTitle {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 20px;
+  font-weight: 850;
   color: #ffffff;
   margin: 0;
   line-height: 1.25;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
   transform: translateY(10px);
   opacity: 0;
   transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s,
@@ -677,7 +677,7 @@
   }
 
   .flipCardWrapper {
-    height: 260px;
+    height: 300px;
   }
 
   .carouselArrows {
@@ -723,7 +723,7 @@
   }
 
   .flipCardWrapper {
-    height: 240px;
+    height: 280px;
   }
 }
 

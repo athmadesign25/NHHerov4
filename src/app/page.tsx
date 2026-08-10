@@ -37,7 +37,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
+    <div style={{ backgroundColor: "#0b0f19" }}>
       <FloatingQuickActions />
       
       {/* Wrapper to apply the high-performance 3D perspective scale reveal */}
@@ -86,6 +86,6 @@ export default function HomePage() {
         <ChairmanQuote />
         <AppDownloadBanner />
       </div>
-    </>
+    </div>
   );
 }

@@ -71,11 +71,11 @@ export default function Navbar() {
         top: "0px",
         zIndex: 1000,
         width: "100%",
-        backgroundColor: isNavbarActive ? "#FFFFFF" : "transparent",
-        backdropFilter: isNavbarActive ? "blur(12px)" : "none",
-        WebkitBackdropFilter: isNavbarActive ? "blur(12px)" : "none",
-        boxShadow: isNavbarActive ? "rgba(0, 0, 0, 0.08) 0px 1px 3px" : "none",
-        transition: "all 0.3s ease"
+        backgroundColor: isNavbarActive ? "rgba(255, 255, 255, 0.8)" : "transparent",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        boxShadow: isNavbarActive ? "rgba(0, 0, 0, 0.05) 0px 1px 3px, inset 0 -1px 0 rgba(255, 255, 255, 0.2)" : "none",
+        transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)"
       }}
     >
       <div className={`container ${styles.navContainer}`}>
