@@ -2,8 +2,9 @@
   position: relative;
   width: 100%;
   background: #ffffff;
-  padding: clamp(80px, 10vw, 120px) 0;
+  padding: clamp(160px, 16vw, 220px) 0 0;
 }
+
 
 /* ─── Header ────────────────────────────────────────── */
 .header {
@@ -35,7 +36,7 @@
 .specialitiesGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 0;
   width: 100%;
 }
 
@@ -44,18 +45,16 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   overflow: hidden;
   text-decoration: none;
-  background: #000;
-  aspect-ratio: 3 / 4;
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  aspect-ratio: 1 / 1;
+  transition: transform var(--transition-base);
 }
 
 .specialityCard:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+  z-index: 2;
 }
 
 .cardImage {
@@ -106,6 +105,17 @@
   background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%);
 }
 
+/* Blend the last row into the dark blue background of the next section */
+.specialityCard:nth-last-child(-n+4)::after {
+  height: 60%;
+  background: linear-gradient(to top, #0f1d33 0%, #0f1d33 10%, rgba(15, 29, 51, 0.4) 50%, transparent 100%);
+}
+
+.specialityCard:nth-last-child(-n+4):hover::after {
+  height: 60%;
+  background: linear-gradient(to top, #0f1d33 0%, #0f1d33 15%, rgba(15, 29, 51, 0.6) 60%, transparent 100%);
+}
+
 .cardTextWrap {
   position: relative;
   z-index: 20;
@@ -137,7 +147,7 @@
 }
 
 .metricValue {
-  font-size: 16px;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
   line-height: 1.1;
@@ -175,37 +185,24 @@
 }
 
 /* ─── CTA Button ─────────────────────────────────────── */
-.specialitiesCtaWrap {
-  text-align: center;
-  margin-top: var(--sp-10);
-}
 
-.specialitiesCta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
-}
 
-.specialitiesCta:hover {
-  transform: translateY(-2px);
-  background: var(--color-primary-dark);
-  box-shadow: var(--shadow-md);
-}
 
 /* ─── Responsive ─────────────────────────────────────── */
 @media (max-width: 1024px) {
   .specialitiesGrid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 0;
+  }
+}
+
+.gridAnimatedWrapper {
+  padding: 0 calc(250px * var(--progress, 0));
+}
+
+@media (max-width: 1024px) {
+  .gridAnimatedWrapper {
+    padding: 0 calc(var(--sp-2) * var(--progress, 0));
   }
 }
 
@@ -214,9 +211,14 @@
     padding: 60px 0;
   }
 
+  .gridAnimatedWrapper {
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
   .specialitiesGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 0;
   }
 
   .cardTextWrap {
@@ -231,7 +233,7 @@
 @media (max-width: 480px) {
   .specialitiesGrid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 0;
   }
 
   .specialityCard {

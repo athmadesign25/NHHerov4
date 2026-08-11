@@ -25,9 +25,7 @@ export default function HomePage() {
           background: "#ffffff"
         }}
       >
-        <div style={{ background: "#ffffff" }}>
-          <CentreOfExcellence />
-        </div>
+        <CentreOfExcellence />
         <WhyChooseNH />
         <PatientStories />
         <ChairmanQuote />

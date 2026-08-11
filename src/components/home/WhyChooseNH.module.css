@@ -1,52 +1,156 @@
 .section {
-  background: #ffffff;
-  padding: clamp(140px, 14vw, 200px) 0 clamp(40px, 6vw, 80px);
+  background: linear-gradient(
+    160deg,
+    #101a2d 0%,
+    #172c4c 40%,
+    #1d385d 70%,
+    #0f1d33 100%
+  );
+  padding: clamp(48px, 6vw, 64px) 0 clamp(40px, 6vw, 80px);
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.specialitiesCtaWrap {
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  margin-bottom: clamp(140px, 16vw, 220px);
+}
+
+.specialitiesCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.specialitiesCta:hover {
+  transform: translateY(-2px);
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.dotGridBackground {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 120%;
+  height: 140%;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .header {
   text-align: center;
   max-width: 760px;
-  margin: 0 auto var(--sp-6);
+  margin: 0 auto clamp(80px, 8vw, 120px);
+  position: relative;
+  z-index: 10;
+}
+
+.header h2 {
+  color: #ffffff !important;
 }
 
 .headerSubtitle {
   white-space: nowrap;
   margin-left: auto;
   margin-right: auto;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .featuresGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(320px, 1fr));
-  gap: 1px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(80px, 8vw, 140px);
   max-width: 1040px;
   margin: 0 auto;
-  background: rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+}
+
+.connectorTrack {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 20%;
+  right: 20%;
+  z-index: 0;
+  display: none;
+}
+
+.connectorSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.svgTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 0.1px;
+  stroke-linecap: round;
+}
+
+.svgFill {
+  fill: none;
+  stroke: url(#glowGradient);
+  stroke-width: 0.3px;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(3, 78, 162, 0.8)) drop-shadow(0 0 8px rgba(237, 28, 36, 0.5));
+}
+
+@media (min-width: 768px) {
+  .connectorTrack {
+    display: block;
+  }
 }
 
 .featureCard {
-  background: #ffffff;
+  background: transparent;
+  color: #ffffff;
   border-radius: 0;
   border: none;
-  padding: clamp(24px, 2.5vw, 32px);
   min-height: clamp(280px, 25vw, 320px);
   text-align: left;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  transition: transform var(--transition-base);
   position: relative;
   overflow: hidden;
+  width: 100%;
+  max-width: 680px;
 }
 
-.featureCard:hover {
-  background: #fdfdfd;
+.featureCard:nth-child(odd) {
+  align-self: flex-start;
 }
+
+.featureCard:nth-child(even) {
+  align-self: flex-end;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.featureCard:nth-child(even) .featureDescription {
+  align-items: flex-end;
+}
+
 
 .featureIllustration {
-  margin-bottom: var(--sp-4);
+  margin-bottom: clamp(72px, 8vw, 88px);
   width: 100%;
   display: flex;
   justify-content: flex-start;
@@ -54,16 +158,42 @@
 }
 
 .featureImage {
-  width: 100%;
   height: auto;
   border-radius: 4px;
   object-fit: cover;
+}
+
+/* Pseudo-random sizing for the 4 cards */
+.featureCard:nth-child(1) .featureImage {
+  width: 100%;
   aspect-ratio: 16/9;
+}
+.featureCard:nth-child(1) .featureIllustration,
+.featureCard:nth-child(2) .featureIllustration {
+  margin-bottom: clamp(48px, 6vw, 64px);
+}
+.featureCard:nth-child(2) .featureImage {
+  width: 95%;
+  aspect-ratio: 4/3;
+}
+.featureCard:nth-child(2) .featureIllustration {
+  justify-content: flex-end;
+}
+.featureCard:nth-child(3) .featureImage {
+  width: 100%;
+  aspect-ratio: 3/2;
+}
+.featureCard:nth-child(4) .featureImage {
+  width: 90%;
+  aspect-ratio: 1/1;
+}
+.featureCard:nth-child(4) .featureIllustration {
+  justify-content: flex-end;
 }
 
 .featureTitle {
   margin: 0 0 8px 0;
-  color: var(--color-text);
+  color: #ffffff;
   font-size: 18px;
   line-height: 1.2;
   font-weight: 700;
@@ -79,7 +209,7 @@
 
 .featureDescription {
   margin: 0;
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.8);
   font-size: clamp(0.95rem, 1vw, 1.05rem);
   line-height: 1.5;
   display: flex;

@@ -1534,7 +1534,7 @@
 }
 
 .metricValue {
-  font-size: 18px; /* Reduced from 20px */
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 6px;
@@ -1558,7 +1558,7 @@
     border-right: none;
   }
   .metricValue {
-    font-size: 16px; /* Reduced from 18px */
+    font-size: 24px;
   }
   .metricLabel {
     font-size: 12px;

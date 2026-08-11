@@ -11,6 +11,7 @@ import {
   useScroll,
   animate,
   useInView,
+  useSpring,
 } from "framer-motion";
 import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText} from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
@@ -393,7 +394,15 @@ function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, s
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10px" });
   const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString('en-IN') + suffix);
+  const rounded = useTransform(count, (latest) => {
+    const num = Math.round(latest);
+    if (num >= 100000) {
+      return (num / 100000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'L' + suffix;
+    } else if (num >= 1000) {
+      return (num / 1000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'K' + suffix;
+    }
+    return num.toLocaleString('en-IN') + suffix;
+  });
 
   useEffect(() => {
     if (isInView) {
@@ -450,13 +459,20 @@ export default function HeroSearchFirst() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "center start"]
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 25,
+    mass: 1,
+    restDelta: 0.001
   });
 
   // Complete the animation over 100% of the wrapper's extra scroll distance
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const heroScale = useTransform(smoothProgress, [0, 1], [1, 0.85]);
   // Border radius from 0 to 8px
-  const heroRadius = useTransform(scrollYProgress, [0, 1], ["0px", "8px"]);
+  const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
