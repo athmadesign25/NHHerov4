@@ -80,43 +80,6 @@
   margin: 0 auto;
 }
 
-.connectorTrack {
-  position: absolute;
-  top: 10%;
-  bottom: 10%;
-  left: 20%;
-  right: 20%;
-  z-index: 0;
-  display: none;
-}
-
-.connectorSvg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.svgTrack {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.05);
-  stroke-width: 0.1px;
-  stroke-linecap: round;
-}
-
-.svgFill {
-  fill: none;
-  stroke: url(#glowGradient);
-  stroke-width: 0.3px;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(3, 78, 162, 0.8)) drop-shadow(0 0 8px rgba(237, 28, 36, 0.5));
-}
-
-@media (min-width: 768px) {
-  .connectorTrack {
-    display: block;
-  }
-}
-
 .featureCard {
   background: transparent;
   color: #ffffff;

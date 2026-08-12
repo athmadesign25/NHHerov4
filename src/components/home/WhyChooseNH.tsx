@@ -78,15 +78,6 @@ export default function WhyChooseNH() {
     restDelta: 0.001,
   });
 
-  // Create a reveal progress from 0 to 115 (to ensure the mask completely clears the bottom)
-  const revealProgress = useTransform(smoothScrollYProgress, [0.15, 1], [0, 115]);
-  
-  // Create a smooth fading mask for the tip of the line
-  const maskImage = useTransform(
-    revealProgress,
-    (p) => `linear-gradient(to bottom, black ${Math.max(0, p - 15)}%, transparent ${p}%)`
-  );
-
   // Background dot grid parallax (moves down slowly while scrolling down)
   const bgYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
@@ -126,27 +117,6 @@ export default function WhyChooseNH() {
         </div>
 
         <div className={styles.featuresGrid}>
-          <div className={styles.connectorTrack}>
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className={styles.connectorSvg}>
-              <defs>
-                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="var(--color-primary)" />
-                  <stop offset="100%" stopColor="var(--color-emergency)" />
-                </linearGradient>
-              </defs>
-              {/* Random, organic curve connecting the staggered cards */}
-              <path 
-                d="M 30,5 C 70,20 85,35 60,45 C 30,55 15,70 40,85 C 60,95 70,100 50,100" 
-                className={styles.svgTrack}
-              />
-              {/* Glowing animated fill with soft faded tip */}
-              <motion.path 
-                d="M 30,5 C 70,20 85,35 60,45 C 30,55 15,70 40,85 C 60,95 70,100 50,100" 
-                className={styles.svgFill}
-                style={{ WebkitMaskImage: maskImage, maskImage: maskImage }}
-              />
-            </svg>
-          </div>
           {featureCards.map((card, index) => {
             return (
               <motion.article
