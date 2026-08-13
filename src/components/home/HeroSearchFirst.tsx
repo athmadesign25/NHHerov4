@@ -1031,11 +1031,11 @@ export default function HeroSearchFirst() {
                               <div className={styles.dropdownTabContent} style={{ maxHeight: "200px" }}>
                                 <div className={styles.dropdownSection}>
                                   {/* Speciality matched if any */}
-                                  {displaySpecs.length > 0 && (
+                                  {filteredSpecs.length > 0 && (
                                     <div style={{ marginBottom: "12px" }}>
                                       <div className={styles.sectionHeader} style={{ fontSize: "11px", marginBottom: "6px" }}>Specialities</div>
                                       <div className={styles.specGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
-                                        {displaySpecs.map((spec) => (
+                                        {filteredSpecs.map((spec) => (
                                           <div
                                             key={spec.name}
                                             onClick={() => handleSelectSuggestion(spec.name)}
@@ -1071,7 +1071,7 @@ export default function HeroSearchFirst() {
                                      });
 
                                      if (displayDoctors.length === 0) {
-                                       return displaySpecs.length === 0 ? (
+                                       return filteredSpecs.length === 0 ? (
                                          <div className={styles.noResults} style={{ padding: "8px 0" }}>No direct general results found</div>
                                        ) : null;
                                      }
@@ -1241,11 +1241,11 @@ export default function HeroSearchFirst() {
                                     <div className={styles.dropdownTabContent} style={{ maxHeight: "200px" }}>
                                       <div className={styles.dropdownSection}>
                                         {/* Speciality matched if any */}
-                                        {displaySpecs.length > 0 && (
+                                        {filteredSpecs.length > 0 && (
                                           <div style={{ marginBottom: "12px" }}>
                                             <div className={styles.sectionHeader} style={{ fontSize: "11px", marginBottom: "6px" }}>Specialities</div>
                                             <div className={styles.specGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
-                                              {displaySpecs.map((spec) => (
+                                              {filteredSpecs.map((spec) => (
                                                 <div
                                                   key={spec.name}
                                                   onClick={() => handleSelectSuggestion(spec.name)}
@@ -1315,7 +1315,7 @@ export default function HeroSearchFirst() {
                                             </div>
                                           </div>
                                         ) : (
-                                          displaySpecs.length === 0 && (
+                                          filteredSpecs.length === 0 && (
                                             <div className={styles.noResults} style={{ padding: "8px 0" }}>No direct general results found</div>
                                           )
                                         )}
