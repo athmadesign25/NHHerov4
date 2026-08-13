@@ -1058,19 +1058,19 @@ export default function HeroSearchFirst() {
                                   )}
 
                                    {(() => {
-                                     const hospitalDoctors = displayDoctors.filter(doc => {
+                                     const hospitalDoctors = filteredDoctors.filter(doc => {
                                        if (simulatedUserLocation === "far_away") return false;
                                        return doc.consultationModes === "hospital" || doc.consultationModes === "both" || !doc.consultationModes;
                                      });
 
-                                     const videoDoctors = displayDoctors.filter(doc => {
+                                     const videoDoctors = filteredDoctors.filter(doc => {
                                        if (simulatedUserLocation === "far_away") {
                                          return doc.consultationModes === "video" || doc.consultationModes === "both" || !doc.consultationModes;
                                        }
                                        return doc.consultationModes === "video";
                                      });
 
-                                     if (displayDoctors.length === 0) {
+                                     if (filteredDoctors.length === 0) {
                                        return filteredSpecs.length === 0 ? (
                                          <div className={styles.noResults} style={{ padding: "8px 0" }}>No direct general results found</div>
                                        ) : null;
@@ -1268,11 +1268,11 @@ export default function HeroSearchFirst() {
                                         )}
 
                                         {/* Doctors matched if any */}
-                                        {displayDoctors.length > 0 ? (
+                                        {filteredDoctors.length > 0 ? (
                                           <div>
                                             <div className={styles.sectionHeader} style={{ fontSize: "11px", marginBottom: "6px" }}>Doctors</div>
                                             <div className={styles.doctorGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
-                                              {displayDoctors.map((doc) => (
+                                              {filteredDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
                                                   onClick={() => handleSelectSuggestion(doc.name)}
