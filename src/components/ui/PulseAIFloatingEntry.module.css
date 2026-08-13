@@ -1,0 +1,112 @@
+.floatingButton {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9001; /* Slightly above the FloatingQuickActions */
+  border: none;
+  width: 100px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(8, 82, 164, 0.9), rgba(237, 28, 36, 0.9));
+  padding: 2px;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(3, 78, 162, 0.4), 0 0 20px rgba(237, 28, 36, 0.3);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.floatingButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1) 50%, rgba(255,255,255,0));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(100px) scale(0.8);
+}
+
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.floatingButton:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(3, 78, 162, 0.5), 0 0 30px rgba(237, 28, 36, 0.5);
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3), transparent 60deg);
+  transform-origin: center;
+  animation: rotateGlow 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(10, 10, 10, 0.85); /* Dark background to contrast the colorful glow */
+  padding: 16px 8px;
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1;
+}
+
+.lottieWrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5));
+}
+
+.text {
+  color: #fff;
+  font-family: Inter, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: -0.01em;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+
+@media (max-width: 900px) {
+  .floatingButton {
+    /* Push it above the other floating action bar */
+    bottom: calc(max(16px, env(safe-area-inset-bottom)) + 100px);
+    right: 16px;
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
   AnimatePresence,
@@ -478,6 +479,19 @@ export default function HeroSearchFirst() {
     return () => window.removeEventListener("login-state-changed", handleLoginChange);
   }, []);
 
+  useEffect(() => {
+    const handleOpenPulse = () => {
+      setHasOpened(true);
+      setIsPulseActive(true);
+      // Give time for layout to shift before animating content
+      setTimeout(() => setIsPulseAnalyzed(true), 300);
+      setSearchQuery("");
+      setHasSubmittedQuery(false);
+    };
+    window.addEventListener("openPulseAI", handleOpenPulse);
+    return () => window.removeEventListener("openPulseAI", handleOpenPulse);
+  }, []);
+
   const handlePulseLaunchWithAction = (action: string, doctorData: any) => {
     setPulseInitialAction(action);
     setPulseInitialActionData(doctorData);
@@ -720,7 +734,7 @@ export default function HeroSearchFirst() {
   }, [isOpen, isPulseActive]);
 
   return (
-    <div ref={containerRef} style={{ height: "130vh", position: "relative", zIndex: 1, background: "#ffffff" }}>
+    <div ref={containerRef} style={{ height: "130vh", position: "relative", zIndex: isPulseActive ? 9999 : 1, background: "#ffffff" }}>
       <motion.section 
         className={styles.hero} 
         id="hero-section-search-first"
@@ -738,8 +752,7 @@ export default function HeroSearchFirst() {
         playsInline
         className={styles.bgVideo}
       />
-      <div className={`${styles.videoOverlay} ${isOpen ? styles.videoOverlayActive : ""}`} />
-      <PixelRipple trigger={showPixelRipple} />
+      <div className={`${styles.videoOverlay} ${isOpen && !isPulseActive ? styles.videoOverlayActive : ""}`} />
 
       <div className={styles.metricsSideWrap}>
         <motion.div 
@@ -2033,17 +2046,24 @@ export default function HeroSearchFirst() {
           </div>
         </div>
         </div>
-      {isPulseActive && (
-        <PulseAIWorkspace 
-          initialQuery={pulseInitialAction ? "" : searchQuery}
-          initialAction={pulseInitialAction}
-          initialActionData={pulseInitialActionData}
-          onClose={() => {
-            setIsPulseActive(false);
-            setPulseInitialAction(null);
-            setPulseInitialActionData(null);
-          }} 
-        />
+      {isPulseActive && typeof document !== "undefined" && createPortal(
+        <div style={{ position: "fixed", inset: 0, zIndex: 99999, pointerEvents: "auto" }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(11, 15, 25, 0.5)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
+          <PixelRipple trigger={showPixelRipple} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+            <PulseAIWorkspace 
+              initialQuery={pulseInitialAction ? "" : searchQuery}
+              initialAction={pulseInitialAction}
+              initialActionData={pulseInitialActionData}
+              onClose={() => {
+                setIsPulseActive(false);
+                setPulseInitialAction(null);
+                setPulseInitialActionData(null);
+              }}
+            />
+          </div>
+        </div>,
+        document.body
       )}
       </motion.section>
     </div>

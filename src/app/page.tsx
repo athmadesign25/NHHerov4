@@ -7,12 +7,14 @@ import PatientStories from "@/components/home/PatientStories";
 import ChairmanQuote from "@/components/home/ChairmanQuote";
 import AppDownloadBanner from "@/components/home/AppDownloadBanner";
 import FloatingQuickActions from "@/components/ui/FloatingQuickActions";
+import PulseAIFloatingEntry from "@/components/ui/PulseAIFloatingEntry";
 import Footer from "@/components/layout/Footer";
 
 export default function HomePage() {
   return (
     <>
       <FloatingQuickActions />
+      <PulseAIFloatingEntry />
       
       {/* Hero section will be positioned fixed behind the document flow */}
       <HeroSearchFirst />

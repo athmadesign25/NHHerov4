@@ -159,17 +159,22 @@ export default function WhyChooseNH() {
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.9, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 style={{ y: yTransforms[index] }}
-                whileHover={{ scale: 1.03, transition: { duration: 0.3, ease: "easeOut" } }}
               >
-                <motion.div className={styles.featureIllustration} style={{ y: imageYTransforms[index] }}>
-                  <Image src={card.image} alt={card.title} width={800} height={600} className={styles.featureImage} />
+                <motion.div
+                  style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "inherit", textAlign: "inherit" }}
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <motion.div className={styles.featureIllustration} style={{ y: imageYTransforms[index] }}>
+                    <Image src={card.image} alt={card.title} width={800} height={600} className={styles.featureImage} />
+                  </motion.div>
+                  <h3 className={styles.featureTitle}>{card.title}</h3>
+                  <p className={styles.featureDescription}>
+                    {card.descriptionLines.map((line, i) => (
+                      <span key={i}>{line}</span>
+                    ))}
+                  </p>
                 </motion.div>
-                <h3 className={styles.featureTitle}>{card.title}</h3>
-                <p className={styles.featureDescription}>
-                  {card.descriptionLines.map((line, i) => (
-                    <span key={i}>{line}</span>
-                  ))}
-                </p>
               </motion.article>
             );
           })}
