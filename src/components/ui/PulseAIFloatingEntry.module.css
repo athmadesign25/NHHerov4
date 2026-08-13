@@ -6,8 +6,8 @@
   border: none;
   width: 100px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(8, 82, 164, 0.9), rgba(237, 28, 36, 0.9));
-  padding: 2px;
+  background: linear-gradient(135deg, rgba(8, 82, 164, 0.5), rgba(237, 28, 36, 0.5));
+  padding: 1px;
   cursor: pointer;
   box-shadow: 0 8px 32px rgba(3, 78, 162, 0.4), 0 0 20px rgba(237, 28, 36, 0.3);
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
@@ -19,7 +19,7 @@
   position: absolute;
   inset: 0;
   border-radius: 16px;
-  padding: 2px;
+  padding: 1px;
   background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1) 50%, rgba(255,255,255,0));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -72,7 +72,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(10, 10, 10, 0.85); /* Dark background to contrast the colorful glow */
+  background: rgba(10, 10, 10, 0.5); /* 50% opacity */
   padding: 16px 8px;
   border-radius: 14px;
   backdrop-filter: blur(12px);

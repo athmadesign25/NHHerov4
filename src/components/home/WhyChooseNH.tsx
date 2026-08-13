@@ -162,8 +162,6 @@ export default function WhyChooseNH() {
               >
                 <motion.div
                   style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "inherit", textAlign: "inherit" }}
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div className={styles.featureIllustration} style={{ y: imageYTransforms[index] }}>
                     <Image src={card.image} alt={card.title} width={800} height={600} className={styles.featureImage} />
