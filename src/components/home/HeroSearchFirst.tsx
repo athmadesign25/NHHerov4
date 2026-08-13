@@ -213,7 +213,10 @@ const doctorsData: DoctorData[] = [
 const getRealtimePulseResponse = (query: string) => {
   return {
     suggestedSpec: "Cardiology",
-    suggestedDoc: doctorsData[0]
+    suggestedDoc: doctorsData[0],
+    empathy: "I understand you are feeling unwell. Let's find a doctor for you.",
+    slot: "Today, 4:00 PM",
+    recommendedDocs: doctorsData.slice(0, 3)
   };
 };
 
