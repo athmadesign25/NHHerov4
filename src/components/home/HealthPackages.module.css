@@ -1,4 +1,10 @@
 .section {
+  position: relative;
+  width: 100%;
+  background: #f2f7ff;
+}
+
+.animatedWrapper {
   background: linear-gradient(
     160deg,
     #101a2d 0%,
@@ -6,13 +12,14 @@
     #1d385d 70%,
     #0f1d33 100%
   );
-  padding: var(--sp-10) 0;
+  padding: var(--sp-12) 0;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 
 /* Subtle dot-grid overlay like hero */
-.section::before {
+.animatedWrapper::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -21,11 +28,11 @@
   pointer-events: none;
 }
 
-.section :global(.section-eyebrow) {
+.animatedWrapper :global(.section-eyebrow) {
   color: rgba(255, 255, 255, 0.92);
 }
 
-.section :global(.section-eyebrow)::after {
+.animatedWrapper :global(.section-eyebrow)::after {
   background: var(--color-emergency);
 }
 

@@ -28,8 +28,8 @@ export default function HomePage() {
         <CentreOfExcellence />
         <WhyChooseNH />
         <PatientStories />
-        <ChairmanQuote />
         <HealthPackages />
+        <ChairmanQuote />
         <AppDownloadBanner />
       </div>
     </>

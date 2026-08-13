@@ -81,6 +81,10 @@ export default function WhyChooseNH() {
   // Background dot grid parallax (moves down slowly while scrolling down)
   const bgYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
+  // Parallax ambient glowing orbs (move up from bottom while scrolling down)
+  const orbRedY = useTransform(scrollYProgress, [0, 1], ["20%", "-40%"]);
+  const orbBlueY = useTransform(scrollYProgress, [0, 1], ["40%", "-60%"]);
+
   // Parallax offsets for a dynamic staggered scroll feel (intensified)
   const yTransforms = [
     useTransform(scrollYProgress, [0, 1], [0, -100]),
@@ -100,7 +104,16 @@ export default function WhyChooseNH() {
 
   return (
     <section ref={sectionRef} className={`section ${styles.section}`} id="why-choose-nh">
-      <motion.div className={styles.dotGridBackground} style={{ y: bgYTransform }} />
+      {/* Background Dot Grid Parallax */}
+      <motion.div 
+        className={styles.dotGridBackground} 
+        style={{ y: bgYTransform }} 
+      />
+
+      {/* Ambient Parallax Glowing Orbs */}
+      <motion.div className={styles.ambientOrbRed} style={{ y: orbRedY }} />
+      <motion.div className={styles.ambientOrbBlue} style={{ y: orbBlueY }} />
+
       <div className="container">
         <div className={styles.specialitiesCtaWrap}>
           <Link href="/specialities" className={styles.specialitiesCta}>

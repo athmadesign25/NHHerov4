@@ -1,8 +1,17 @@
 .section {
   position: relative;
-  background: linear-gradient(180deg, transparent 0%, transparent 75%, #f2f7ff 100%);
+  background: linear-gradient(
+    180deg, 
+    #0f1d33 0%, 
+    rgba(15, 29, 51, 0.8) 6%, 
+    rgba(15, 29, 51, 0.3) 14%, 
+    rgba(15, 29, 51, 0.05) 22%, 
+    #ffffff 28%, 
+    #ffffff 75%, 
+    #f2f7ff 100%
+  );
   overflow: hidden;
-  padding: 200px 0 600px;
+  padding: 400px 0 600px;
   min-height: 1400px;
   display: flex;
   flex-direction: column;

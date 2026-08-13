@@ -1,15 +1,28 @@
 .section {
   background: linear-gradient(
-    160deg,
-    #101a2d 0%,
-    #172c4c 40%,
-    #1d385d 70%,
+    180deg,
+    #0f1d33 0%,
+    #142541 25%,
+    #1d385d 50%,
+    #142541 75%,
     #0f1d33 100%
   );
   padding: clamp(48px, 6vw, 64px) 0 clamp(40px, 6vw, 80px);
   position: relative;
   overflow: hidden;
   color: #ffffff;
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15%;
+  background: linear-gradient(to bottom, transparent, #0f1d33);
+  z-index: 5;
+  pointer-events: none;
 }
 
 .specialitiesCtaWrap {
@@ -50,6 +63,33 @@
   background-size: 36px 36px;
   pointer-events: none;
   z-index: 1;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 20%, black 35%);
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 20%, black 35%);
+}
+
+.ambientOrbRed, .ambientOrbBlue {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+.ambientOrbRed {
+  width: 700px;
+  height: 700px;
+  background: var(--color-emergency);
+  bottom: -30%;
+  left: -10%;
+}
+
+.ambientOrbBlue {
+  width: 900px;
+  height: 900px;
+  background: #0077ff; /* A bright, vibrant blue for glowing */
+  bottom: -40%;
+  right: -15%;
 }
 
 .header {
@@ -182,13 +222,15 @@
 
 
 .badgesWrap {
+  position: relative;
+  z-index: 10;
   margin-top: clamp(16px, 2vw, 24px);
   max-width: 1040px;
   margin-left: auto;
   margin-right: auto;
   border-radius: var(--radius-lg);
   border: 0;
-  background: var(--color-primary-light);
+  background: #ffffff;
   padding: clamp(12px, 1.4vw, 16px) clamp(6px, 1vw, 12px);
 }
 
