@@ -121,7 +121,18 @@ const specialitiesData = [
   }
 ];
 
-const doctorsData = [
+type DoctorData = {
+  name: string;
+  speciality: string;
+  location: string;
+  hospital: string;
+  additionalHospitals?: number;
+  photo: string;
+  keywords: string[];
+  consultationModes?: "hospital" | "video" | "both";
+};
+
+const doctorsData: DoctorData[] = [
   {
     name: "Dr. Ravi Prakash",
     speciality: "Cardiology",
