@@ -65,10 +65,16 @@ const accreditations = [
 export default function WhyChooseNH() {
   const [failedLogos, setFailedLogos] = React.useState<Record<string, boolean>>({});
   const sectionRef = useRef<HTMLElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
+  });
+
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: featuresRef,
+    offset: ["end 80%", "end -20%"],
   });
 
   // Smooth the scroll progress so the line animation starts slowly and feels fluid
@@ -77,6 +83,17 @@ export default function WhyChooseNH() {
     damping: 15,
     restDelta: 0.001,
   });
+
+  const smoothExitProgress = useSpring(exitProgress, {
+    stiffness: 100,
+    damping: 20,
+    restDelta: 0.001,
+  });
+
+  const sectionScale = useTransform(smoothExitProgress, [0, 1], [1, 0.90]);
+  const sectionRadius = useTransform(smoothExitProgress, [0, 1], ["0px", "32px"]);
+
+
 
   // Background dot grid parallax (moves down slowly while scrolling down)
   const bgYTransform = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
@@ -104,15 +121,19 @@ export default function WhyChooseNH() {
 
   return (
     <section ref={sectionRef} className={`section ${styles.section}`} id="why-choose-nh">
-      {/* Background Dot Grid Parallax */}
       <motion.div 
-        className={styles.dotGridBackground} 
-        style={{ y: bgYTransform }} 
-      />
+        className={styles.animatedWrapper}
+        style={{ scale: sectionScale, borderRadius: sectionRadius, transformOrigin: 'top center' }}
+      >
+        {/* Background Dot Grid Parallax */}
+        <motion.div 
+          className={styles.dotGridBackground} 
+          style={{ y: bgYTransform }} 
+        />
 
-      {/* Ambient Parallax Glowing Orbs */}
-      <motion.div className={styles.ambientOrbRed} style={{ y: orbRedY }} />
-      <motion.div className={styles.ambientOrbBlue} style={{ y: orbBlueY }} />
+        {/* Ambient Parallax Glowing Orbs */}
+        <motion.div className={styles.ambientOrbRed} style={{ y: orbRedY }} />
+        <motion.div className={styles.ambientOrbBlue} style={{ y: orbBlueY }} />
 
       <div className="container">
         <div className={styles.specialitiesCtaWrap}>
@@ -129,7 +150,7 @@ export default function WhyChooseNH() {
           </p>
         </div>
 
-        <div className={styles.featuresGrid}>
+        <div className={styles.featuresGrid} ref={featuresRef}>
           {featureCards.map((card, index) => {
             return (
               <motion.article
@@ -177,7 +198,8 @@ export default function WhyChooseNH() {
             ))}
           </div>
         </div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }

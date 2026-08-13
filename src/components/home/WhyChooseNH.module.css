@@ -1,4 +1,10 @@
 .section {
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.animatedWrapper {
   background: linear-gradient(
     180deg,
     #0f1d33 0%,
@@ -13,7 +19,7 @@
   color: #ffffff;
 }
 
-.section::after {
+.animatedWrapper::after {
   content: "";
   position: absolute;
   bottom: 0;
