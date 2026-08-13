@@ -210,6 +210,13 @@ const doctorsData: DoctorData[] = [
   }
 ];
 
+const getRealtimePulseResponse = (query: string) => {
+  return {
+    suggestedSpec: "Cardiology",
+    suggestedDoc: doctorsData[0]
+  };
+};
+
 const doctorRoles = [
   {
     role: "Cardiologists",
