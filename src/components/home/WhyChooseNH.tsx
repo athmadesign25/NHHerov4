@@ -7,6 +7,7 @@ import Link from "next/link";
 import styles from "./WhyChooseNH.module.css";
 
 import Image from "next/image";
+import LiquidGrid from "./LiquidGrid";
 
 const featureCards = [
   {
@@ -125,11 +126,8 @@ export default function WhyChooseNH() {
         className={styles.animatedWrapper}
         style={{ scale: sectionScale, borderRadius: sectionRadius, transformOrigin: 'top center' }}
       >
-        {/* Background Dot Grid Parallax */}
-        <motion.div 
-          className={styles.dotGridBackground} 
-          style={{ y: bgYTransform }} 
-        />
+        {/* Liquid Grid Interactive Background */}
+        <LiquidGrid yTransform={bgYTransform as any} />
 
         {/* Ambient Parallax Glowing Orbs */}
         <motion.div className={styles.ambientOrbRed} style={{ y: orbRedY }} />

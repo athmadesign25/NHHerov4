@@ -124,6 +124,8 @@
   gap: clamp(80px, 8vw, 140px);
   max-width: 1040px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 
 .featureCard {
