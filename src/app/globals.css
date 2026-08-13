@@ -365,3 +365,7 @@ body:has(#hero-section) > footer {
   display: none !important;
 }
 
+
+/* Hide navbar when Pulse AI is maximized */
+body.pulse-maximized nav { display: none !important; opacity: 0; pointer-events: none; }
+

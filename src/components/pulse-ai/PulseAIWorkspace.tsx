@@ -9,10 +9,12 @@ import {
   User, Activity, FlaskConical, AlertCircle, CheckCircle,
   TrendingUp, Brain, Pill, Video, RefreshCw,
   MoreHorizontal, Copy, ThumbsUp, ThumbsDown, BookOpen,
-  Phone, Upload, ChevronDown, Hospital, ArrowLeft
+  Phone, Upload, ChevronDown, Hospital, ArrowLeft, ChevronUp,
+  Crown, Tag, Coins, Shield, Sparkles, Maximize2, Minimize2
 } from "lucide-react";
 import styles from "./PulseAIWorkspace.module.css";
 import lottie from "lottie-web";
+import PixelRipple from "../home/PixelRipple";
 
 function LottieAnimation({ animationPath, width = 60, height = 60 }: { animationPath: string; width?: number; height?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,9 @@ type RespType =
   | "text" | "doctors" | "slot_picker" | "report"
   | "health_login" | "health_organs" | "health_analysis"
   | "booking_confirm" | "upload_state" | "triage" | "fallback"
-  | "modify_selection" | "cancelled_card"
+  | "modify_selection" | "cancelled_card" | "order_summary"
+  | "find_doctor_options" | "symptom_selector"
+  | "inline_phone_input" | "inline_otp_input"
   | "tutorial_welcome" | "tutorial_step_report" | "tutorial_completed";
 
 interface Doctor {
@@ -89,11 +93,28 @@ interface TriagePathway {
   dept?: string;
 }
 
+interface OrderSummaryData {
+  doctor: Doctor;
+  slot: string;
+  visitType: string;
+  clinicName: string;
+  fee: number;
+}
+
+interface FindDoctorOptionItem {
+  title: string;
+  badge: string;
+  prompt: string;
+  photo?: string;
+  icon?: string;
+}
+
 interface Message {
   id: string; role: MsgRole; text: string; ts: Date;
   rtype?: RespType;
   doctors?: Doctor[];
   slotDoctor?: Doctor;
+  orderSummaryData?: OrderSummaryData;
   reportItems?: ReportItem[];
   reportNote?: string;
   followUps?: string[];
@@ -103,6 +124,12 @@ interface Message {
   triageUrgency?: "high" | "medium" | "low";
   triageAnalysis?: string;
   triagePathways?: TriagePathway[];
+  findDoctorOptions?: {
+    recommendedSpeciality: FindDoctorOptionItem;
+    lastVisitedDoctor: FindDoctorOptionItem;
+    subChips: { label: string; prompt: string }[];
+  };
+  inlinePhone?: string;
 }
 
 interface Convo {
@@ -328,6 +355,105 @@ const QUICK_PROMPTS = [
 /* ─── AI RESPONSE ENGINE ──────────────────────────────────── */
 function aiResponse(q: string, isLoggedIn: boolean, userName = "Omkar"): Partial<Message> {
   const ql = q.toLowerCase();
+
+  if (ql.startsWith("selected symptoms:")) {
+    const symptoms = q.replace(/selected symptoms:/i, "").trim();
+    const hasUrgent = ql.includes("breath") || ql.includes("chest") || ql.includes("heart");
+    if (hasUrgent) {
+      return {
+        text: `⚠️ Urgent Assessment: Based on your selected symptoms (${symptoms}), there is potential cardiac/respiratory distress. We suggest consulting a Cardiologist or visiting the ER immediately.\n**We have selected our top Cardiologists in Bangalore for you below:**`,
+        rtype: "doctors",
+        doctors: MOCK_DOCTORS.filter(d => d.speciality.toLowerCase().includes("cardio")),
+        followUps: ["Book video consultation", "Locate nearest ER", "Check medical records"]
+      };
+    }
+    return {
+      text: `Based on your selected symptoms (${symptoms}) and Bangalore's ongoing health trends, we recommend consulting a General Physician.\n**We have selected our top General Medicine specialists in Bangalore for you below:**`,
+      rtype: "doctors",
+      doctors: MOCK_DOCTORS.filter(d => d.speciality.toLowerCase().includes("physician") || d.speciality.toLowerCase().includes("general")),
+      followUps: ["Book video consultation", "Book another speciality", "Check medical record history"]
+    };
+  }
+
+  if (ql === "i have a symptom" || q.trim() === "I have been having" || q.trim() === "I have been having ") {
+    return {
+      text: "Express what you are feeling, or select any of these ongoing symptoms currently trending in your city (Bangalore):",
+      rtype: "symptom_selector"
+    };
+  }
+
+  if (ql === "i want to book an appointment") {
+    return aiResponse("find doctor", isLoggedIn, userName);
+  }
+
+  if (ql === "summarize my health") {
+    return aiResponse("health organs", isLoggedIn, userName);
+  }
+
+  if (ql === "analyse my reports") {
+    return aiResponse("report", isLoggedIn, userName);
+  }
+
+  if (ql === "show my organ insights") {
+    return aiResponse("health organs", isLoggedIn, userName);
+  }
+
+  if (ql === "upload and review my report") {
+    return {
+      text: "Please upload your medical report (PDF or Image) using the **'+'** button on the bottom left, and I will instantly analyze it for you.\n\nAlternatively, you can simulate a report analysis below:",
+      followUps: ["Simulate blood report analysis", "Summarize my health"]
+    };
+  }
+
+  if (ql === "find doctor" || ql.includes("find the right doctor") || ql === "find doctor card") {
+    return {
+      text: "Here are the doctors we recommend based on your previous consultations.\n\nYou can also find a doctor by describing your symptoms, choosing a specialty, or searching by doctor name.",
+      rtype: "find_doctor_options",
+      findDoctorOptions: {
+        recommendedSpeciality: {
+          title: "Book for General medicine",
+          badge: "Recommended",
+          prompt: "Book for General Physician"
+        },
+        lastVisitedDoctor: {
+          title: "Book for Dr Pradeep kumar",
+          badge: "Last visited",
+          prompt: "Book for Dr Pradeep R Kumar",
+          photo: "/doctor_avatar_male.png"
+        },
+        subChips: [
+          { label: "I have a symptom", prompt: "I have a symptom" },
+          { label: "I know the speciality", prompt: "I know the speciality" },
+          { label: "I know the doctor", prompt: "I know the doctor's name" }
+        ]
+      }
+    };
+  }
+
+  if (ql.includes("i know the speciality") || ql.includes("choose a speciality") || ql.includes("know the speciality")) {
+    return {
+      text: "Which medical speciality would you like to consult?\n**Here are the primary specialities available for booking:**",
+      followUps: [
+        "Book for General Physician",
+        "Book for Nephrologist",
+        "Book for Cardiologist",
+        "Book for Neurologist",
+        "Book for Gastroenterologist"
+      ]
+    };
+  }
+
+  if (ql.includes("i know the doctor") || ql.includes("search doctor by name")) {
+    return {
+      text: "Which doctor would you like to book an appointment with?\n**Select from your frequent doctors or search by typing their name:**",
+      followUps: [
+        "Book for Dr Pradeep R Kumar",
+        "Book for Dr Vikas Yadav",
+        "Book for Dr Ananya Krishnan",
+        "Book for Dr Sonakshi Sinha"
+      ]
+    };
+  }
 
   if (ql.includes("upcoming appointments") || ql.includes("show appointments")) {
     return {
@@ -583,26 +709,10 @@ function aiResponse(q: string, isLoggedIn: boolean, userName = "Omkar"): Partial
 
   if (ql.includes("fever") || ql.includes("stomach") || ql.includes("headache") || ql.includes("pain") || ql.includes("cough") || ql.includes("symptom")) {
     return {
-      text: "⚠️ Triage Assessment: General Consultation Recommended",
-      rtype: "triage",
-      triageUrgency: "medium",
-      triageAnalysis: "Your symptoms (general pain, fever, or digestive discomfort) indicate a need for professional evaluation. While not an acute emergency, a timely review helps prevent complications.",
-      triagePathways: [
-        {
-          title: "Consult a General Physician",
-          desc: "Schedule a physical consultation with our General Medicine department for diagnostics and prescriptions.",
-          ctaText: "Find General Physician",
-          actionType: "consult",
-          dept: "General Medicine"
-        },
-        {
-          title: "On-Demand Video Consult",
-          desc: "Speak with a physician online from your home in under 10 minutes for fast clinical advice.",
-          ctaText: "Consult Online",
-          actionType: "video"
-        }
-      ],
-      followUps: ["Find GP near me", "Book video consultation", "Log symptoms", "Check health snapshot"],
+      text: "I understand how uncomfortable general symptoms like fever, pain, or discomfort can be, and how important it is to find relief quickly.\n**Based on your symptoms, we suggest booking an appointment with a General Physician for clinical evaluation, or selecting one of our top general doctors below.**",
+      rtype: "doctors",
+      doctors: MOCK_DOCTORS.filter(d => d.speciality.toLowerCase().includes("physician") || d.speciality.toLowerCase().includes("general")),
+      followUps: ["Book video consultation", "Book another speciality", "Log symptoms", "Check health snapshot"],
     };
   }
   return {
@@ -701,10 +811,112 @@ function DoctorCard({ doc, onBookNow }: { doc: Doctor; onBookNow: (doc: Doctor) 
 }
 
 /* ─── SLOT PICKER CARD ────────────────────────────────────── */
-function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (slot: string, type: string) => void }) {
+interface ClinicOption {
+  id: string;
+  name: string;
+  area: string;
+  fee: number;
+  feeStr: string;
+  morningSlots: { time: string; isRecommended?: boolean }[];
+  afternoonSlots: { time: string; isRecommended?: boolean }[];
+}
+
+function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (details: { slot: string; type: string; clinic: string; fee: number }) => void }) {
   const [visitType, setVisitType] = useState<"hospital" | "video">("hospital");
   const [selectedDate, setSelectedDate] = useState(0);
+
+  // Clinic options for the doctor across different hospitals in the city
+  const clinicOptions: ClinicOption[] = [
+    {
+      id: "c1",
+      name: doctor.hospital || "Mazumdar Shaw Medical Centre",
+      area: "Health City, Bommasandra",
+      fee: 800,
+      feeStr: "₹800",
+      morningSlots: [
+        { time: "09:15 AM", isRecommended: true },
+        { time: "10:30 AM", isRecommended: false },
+        { time: "11:45 AM", isRecommended: false }
+      ],
+      afternoonSlots: [
+        { time: "02:30 PM", isRecommended: false },
+        { time: "04:00 PM", isRecommended: false },
+        { time: "05:15 PM", isRecommended: false }
+      ]
+    },
+    {
+      id: "c2",
+      name: "Narayana City Clinic",
+      area: "HSR Layout, Sector 3",
+      fee: 750,
+      feeStr: "₹750",
+      morningSlots: [
+        { time: "08:45 AM", isRecommended: false },
+        { time: "11:15 AM", isRecommended: true }
+      ],
+      afternoonSlots: [
+        { time: "03:30 PM", isRecommended: false },
+        { time: "04:45 PM", isRecommended: false }
+      ]
+    },
+    {
+      id: "c3",
+      name: "Narayana Multispeciality Hospital",
+      area: "Whitefield Main Rd",
+      fee: 900,
+      feeStr: "₹900",
+      morningSlots: [
+        { time: "10:00 AM", isRecommended: false },
+        { time: "11:30 AM", isRecommended: false }
+      ],
+      afternoonSlots: [
+        { time: "01:15 PM", isRecommended: false },
+        { time: "06:00 PM", isRecommended: true }
+      ]
+    }
+  ];
+
+  const [selectedClinic, setSelectedClinic] = useState<ClinicOption>(clinicOptions[0]);
+
+  // Video Consultation tele-health configuration
+  const videoData = {
+    fee: 500,
+    feeStr: "₹500",
+    morningSlots: [
+      { time: "08:30 AM", isRecommended: false },
+      { time: "11:00 AM", isRecommended: false }
+    ],
+    afternoonSlots: [
+      { time: "01:30 PM", isRecommended: false },
+      { time: "05:30 PM", isRecommended: true },
+      { time: "07:15 PM", isRecommended: false }
+    ]
+  };
+
+  const currentFeeStr = visitType === "hospital" ? selectedClinic.feeStr : videoData.feeStr;
+  const currentNumericFee = visitType === "hospital" ? selectedClinic.fee : videoData.fee;
+  const currentMorning = visitType === "hospital" ? selectedClinic.morningSlots : videoData.morningSlots;
+  const currentAfternoon = visitType === "hospital" ? selectedClinic.afternoonSlots : videoData.afternoonSlots;
+
   const [selectedTime, setSelectedTime] = useState("09:15 AM");
+
+  const handleClinicChange = (clinic: ClinicOption) => {
+    setSelectedClinic(clinic);
+    const recM = clinic.morningSlots.find(s => s.isRecommended);
+    const recA = clinic.afternoonSlots.find(s => s.isRecommended);
+    setSelectedTime(recM?.time || recA?.time || clinic.morningSlots[0]?.time || "09:15 AM");
+  };
+
+  const handleVisitTypeChange = (type: "hospital" | "video") => {
+    setVisitType(type);
+    if (type === "video") {
+      const recM = videoData.morningSlots.find(s => s.isRecommended);
+      const recA = videoData.afternoonSlots.find(s => s.isRecommended);
+      setSelectedTime(recM?.time || recA?.time || videoData.morningSlots[0]?.time || "05:30 PM");
+    } else {
+      handleClinicChange(selectedClinic);
+    }
+  };
 
   const dates = Array.from({ length: 6 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() + i + 1);
@@ -714,9 +926,6 @@ function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (slo
       isToday: i === 0
     };
   });
-
-  const morningSlots  = ["09:15 AM", "09:45 AM", "10:15 AM"];
-  const afternoonSlots = ["12:45 PM", "01:15 PM", "03:00 PM"];
 
   return (
     <motion.div className={styles.slotPickerCard}
@@ -728,21 +937,44 @@ function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (slo
         <div>
           <div className={styles.slotDocName}>{doctor.name}</div>
           <div className={styles.slotDocSpec}>{doctor.speciality}</div>
-          <div className={styles.slotDocHospital}><MapPin size={11} />{doctor.hospital}</div>
+          <div className={styles.slotDocHospital}><MapPin size={11} />{visitType === "hospital" ? selectedClinic.name : "Narayana Tele-Health Online"}</div>
         </div>
       </div>
 
       {/* Visit type toggle */}
       <div className={styles.visitToggle}>
         <button className={`${styles.visitBtn} ${visitType === "hospital" ? styles.visitBtnActive : ""}`}
-          onClick={() => setVisitType("hospital")}>
+          onClick={() => handleVisitTypeChange("hospital")}>
           <Hospital size={14} /> Hospital Visit
         </button>
         <button className={`${styles.visitBtn} ${visitType === "video" ? styles.visitBtnActive : ""}`}
-          onClick={() => setVisitType("video")}>
+          onClick={() => handleVisitTypeChange("video")}>
           <Video size={14} /> Video Consultation
         </button>
       </div>
+
+      {/* Clinic branch selection (Only when Hospital Visit selected) */}
+      {visitType === "hospital" && (
+        <div className={styles.slotSection}>
+          <div className={styles.slotSectionLabel}>
+            <MapPin size={13} /> Select Preferred Clinic Branch
+          </div>
+          <div className={styles.clinicBranchRow}>
+            {clinicOptions.map(c => (
+              <button
+                key={c.id}
+                className={`${styles.clinicBranchBtn} ${selectedClinic.id === c.id ? styles.clinicBranchBtnActive : ""}`}
+                onClick={() => handleClinicChange(c)}
+              >
+                <div>
+                  <div className={styles.clinicBranchName}>{c.name}</div>
+                  <div className={styles.clinicBranchMeta}>{c.area}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Date selector */}
       <div className={styles.slotSection}>
@@ -761,36 +993,263 @@ function SlotPickerCard({ doctor, onConfirm }: { doctor: Doctor; onConfirm: (slo
 
       {/* Time slots */}
       <div className={styles.slotSection}>
-        <div className={styles.slotSectionLabel}><Clock size={13} /> Select time</div>
-        <div className={styles.timeGroup}>
-          <div className={styles.timeGroupLabel}>☀ Morning</div>
-          <div className={styles.timeRow}>
-            {morningSlots.map(t => (
-              <button key={t} className={`${styles.timeBtn} ${selectedTime === t ? styles.timeBtnActive : ""}`}
-                onClick={() => setSelectedTime(t)}>{t}</button>
-            ))}
-          </div>
+        <div className={styles.slotSectionLabel}>
+          <Clock size={13} /> Select time · {visitType === "video" ? "Online Tele-Consult" : selectedClinic.name}
         </div>
-        <div className={styles.timeGroup}>
-          <div className={styles.timeGroupLabel}>🌤 Afternoon</div>
-          <div className={styles.timeRow}>
-            {afternoonSlots.map(t => (
-              <button key={t} className={`${styles.timeBtn} ${selectedTime === t ? styles.timeBtnActive : ""}`}
-                onClick={() => setSelectedTime(t)}>{t}</button>
-            ))}
+        
+        {currentMorning.length > 0 && (
+          <div className={styles.timeGroup}>
+            <div className={styles.timeGroupLabel}>☀ Morning</div>
+            <div className={styles.timeRow}>
+              {currentMorning.map(s => (
+                <button
+                  key={s.time}
+                  className={`${styles.timeBtn} ${selectedTime === s.time ? styles.timeBtnActive : ""} ${s.isRecommended ? styles.timeBtnRecommended : ""}`}
+                  onClick={() => setSelectedTime(s.time)}
+                >
+                  {s.time}
+                  {s.isRecommended && <span className={styles.recommendedTag}>✨ Recommended</span>}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {currentAfternoon.length > 0 && (
+          <div className={styles.timeGroup}>
+            <div className={styles.timeGroupLabel}>🌤 Afternoon / Evening</div>
+            <div className={styles.timeRow}>
+              {currentAfternoon.map(s => (
+                <button
+                  key={s.time}
+                  className={`${styles.timeBtn} ${selectedTime === s.time ? styles.timeBtnActive : ""} ${s.isRecommended ? styles.timeBtnRecommended : ""}`}
+                  onClick={() => setSelectedTime(s.time)}
+                >
+                  {s.time}
+                  {s.isRecommended && <span className={styles.recommendedTag}>✨ Recommended</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Price + Confirm */}
       <div className={styles.slotFooter}>
         <div className={styles.slotPrice}>
-          <span className={styles.slotPriceVal}>{doctor.price}</span>
-          <span className={styles.slotPriceLabel}>• {visitType === "video" ? "Video Consultation" : "Hospital Visit"} • {dates[selectedDate]?.label} {dates[selectedDate]?.day} Feb • {selectedTime}</span>
+          <span className={styles.slotPriceVal}>{currentFeeStr}</span>
+          <span className={styles.slotPriceLabel}>
+            • {visitType === "video" ? "Video Consultation" : selectedClinic.name} • {dates[selectedDate]?.label} {dates[selectedDate]?.day} Feb • {selectedTime}
+          </span>
         </div>
         <button className={styles.confirmSlotBtn}
-          onClick={() => onConfirm(`${dates[selectedDate]?.label} ${dates[selectedDate]?.day} Feb, ${selectedTime}`, visitType)}>
-          Book Now
+          onClick={() => onConfirm({
+            slot: `${dates[selectedDate]?.label} ${dates[selectedDate]?.day} Feb, ${selectedTime}`,
+            type: visitType,
+            clinic: visitType === "hospital" ? selectedClinic.name : "Narayana Tele-Health",
+            fee: currentNumericFee
+          })}>
+          <CheckCircle size={15} /> Confirm &amp; Proceed to Checkout
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── OFFICIAL NARAYANA HEALTH IN-APP BOOKING SUMMARY ─────── */
+function OrderSummaryCard({
+  doctor,
+  slot,
+  visitType,
+  clinicName,
+  fee,
+  userName = "Omkar V",
+  onPaySuccess
+}: {
+  doctor: Doctor;
+  slot: string;
+  visitType: string;
+  clinicName: string;
+  fee: number;
+  userName?: string;
+  onPaySuccess: (paymentMethod: string, netAmount: number) => void;
+}) {
+  const [hasAryaPlan, setHasAryaPlan] = useState(true);
+  const [couponApplied, setCouponApplied] = useState(true);
+  const [couponCode, setCouponCode] = useState("NH10");
+  const [couponDiscount, setCouponDiscount] = useState(100);
+  const [useHealthCredits, setUseHealthCredits] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const aryaFee = hasAryaPlan ? 189 : 0;
+  const creditsDiscount = useHealthCredits ? 50 : 0;
+  const currentCouponDisc = couponApplied ? couponDiscount : 0;
+
+  const totalPayable = Math.max(0, fee + aryaFee - currentCouponDisc - creditsDiscount);
+
+  const handlePay = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      onPaySuccess("UPI / NetBanking", totalPayable);
+    }, 1000);
+  };
+
+  return (
+    <motion.div className={styles.nhBookingSummaryCard}
+      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+      {/* Header Bar */}
+      <div className={styles.nhHeaderBar}>
+        <div className={styles.nhHeaderTitleRow} style={{ marginBottom: '14px' }}>
+          <span className={styles.nhHeaderTitle}>Booking summary</span>
+        </div>
+      </div>
+
+      <div className={styles.nhSummaryBody}>
+        {/* Appointment details */}
+        <div className={styles.nhApptBox}>
+          <div className={styles.nhApptDocHeader}>
+            <img src={doctor.photo} alt={doctor.name} className={styles.nhDocAvatar}
+              onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%23e2e8f0' rx='10'/%3E%3C/svg%3E"; }} />
+            <div style={{ flex: 1 }}>
+              <div className={styles.nhDocName}>{doctor.name}</div>
+              <div className={styles.nhDocSpec}>{doctor.speciality}</div>
+            </div>
+            <ChevronDown size={18} color="#64748b" />
+          </div>
+
+          <div className={styles.nhApptInfoList}>
+            <div className={styles.nhApptInfoItem}>
+              <MapPin size={14} color="#64748b" />
+              <span>{visitType === "video" ? "Narayana Tele-Health Online" : clinicName || doctor.hospital}</span>
+            </div>
+            <div className={styles.nhApptInfoItem}>
+              <Calendar size={14} color="#64748b" />
+              <span>{slot}</span>
+            </div>
+            <div className={styles.nhApptInfoItem}>
+              <User size={14} color="#64748b" />
+              <span>{userName}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Arya Plan Banner */}
+        {hasAryaPlan && (
+          <div className={styles.aryaBanner}>
+            <div className={styles.aryaTopRow}>
+              <div className={styles.aryaLeft}>
+                <Crown size={18} color="#701a75" />
+                <div>
+                  <div className={styles.aryaTitle}>You've added the Arya Plan!</div>
+                  <div className={styles.aryaSub}>12 months plan</div>
+                </div>
+              </div>
+              <button className={styles.aryaRemoveBtn} onClick={() => setHasAryaPlan(false)}>Remove</button>
+            </div>
+            <div className={styles.aryaSavedBadge}>₹1200 saved on this order</div>
+          </div>
+        )}
+
+        {/* Offers and benefits section */}
+        <div className={styles.offersSection}>
+          <div className={styles.offersSectionTitle}>Offers and benefits</div>
+
+          {/* Coupon Card */}
+          <div className={styles.couponCard}>
+            <div className={styles.couponCardTop}>
+              <div className={styles.couponLeftInfo}>
+                <Tag size={18} color="#034ea2" />
+                <div>
+                  <div className={styles.couponTitle}>COUPON CODE</div>
+                  <div className={styles.couponSaveSub}>Save extra <span className={styles.couponSaveNum}>₹200</span></div>
+                </div>
+              </div>
+              <button
+                className={styles.applyPillBtn}
+                onClick={() => {
+                  setCouponApplied(!couponApplied);
+                  if (!couponApplied) setCouponDiscount(200);
+                }}
+              >
+                {couponApplied ? "Applied ✓" : "Apply"}
+              </button>
+            </div>
+
+            <div className={styles.viewAllCouponsRow}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <Sparkles size={16} color="#10b981" />
+                <span>View all coupons</span>
+              </div>
+              <ChevronRight size={16} color="#64748b" />
+            </div>
+          </div>
+
+          {/* Sponsorship card */}
+          <div className={styles.sponsorshipCard}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Shield size={16} color="#034ea2" />
+              <span>Apply sponsorship benefits</span>
+            </div>
+            <ChevronRight size={16} color="#64748b" />
+          </div>
+
+          {/* Health Credits toggle */}
+          <div className={styles.healthCreditsCard}>
+            <div className={styles.healthCreditsLeft}>
+              <Coins size={18} color="#854d0e" />
+              <span>50 Health Credits applied</span>
+            </div>
+            <div
+              className={`${styles.toggleSwitch} ${useHealthCredits ? styles.toggleSwitchActive : ""}`}
+              onClick={() => setUseHealthCredits(!useHealthCredits)}
+            >
+              <div className={`${styles.toggleThumb} ${useHealthCredits ? styles.toggleThumbActive : ""}`} />
+            </div>
+          </div>
+        </div>
+
+        {/* Payment details box */}
+        <div className={styles.paymentDetailsBox}>
+          <div className={styles.paymentDetailsTitle}>Payment details</div>
+
+          <div className={styles.paymentLine}>
+            <span>Consultation fee</span>
+            <span>₹{fee.toLocaleString("en-IN")}</span>
+          </div>
+
+          {hasAryaPlan && (
+            <div className={styles.paymentLine}>
+              <span>Arya plan membership</span>
+              <span>+₹189</span>
+            </div>
+          )}
+
+          {couponApplied && (
+            <div className={styles.paymentLineGreen}>
+              <span>Discount Applied ({couponCode})</span>
+              <span>-₹{couponDiscount}</span>
+            </div>
+          )}
+
+          {useHealthCredits && (
+            <div className={styles.paymentLineGreen}>
+              <span>Health Credits Applied</span>
+              <span>-₹50</span>
+            </div>
+          )}
+
+          <div className={styles.paymentLineDivider} />
+
+          <div className={styles.totalPayableLine}>
+            <span>Total payable</span>
+            <span>₹{totalPayable.toLocaleString("en-IN")}</span>
+          </div>
+        </div>
+
+        {/* Primary CTA */}
+        <button className={styles.nhPayNowBtn} onClick={handlePay} disabled={isProcessing}>
+          {isProcessing ? "Processing Payment..." : `Pay ₹${totalPayable.toLocaleString("en-IN")}`}
         </button>
       </div>
     </motion.div>
@@ -1869,10 +2328,427 @@ function GlitterCanvas() {
   );
 }
 
+function SymptomSelector({ text, onAction }: { text?: string; onAction: (type: string, data?: unknown) => void }) {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [freeText, setFreeText] = useState("");
+
+  const symptoms = [
+    { label: "🤒 Fever", value: "Fever" },
+    { label: "😷 Dry Cough", value: "Dry Cough" },
+    { label: "🤕 Headache", value: "Headache" },
+    { label: "🦵 Joint Pain", value: "Joint Pain" },
+    { label: "🥱 Fatigue", value: "Fatigue" },
+    { label: "👃 Runny Nose", value: "Runny Nose" },
+    { label: "🤢 Nausea", value: "Nausea" },
+    { label: "🫁 Shortness of breath", value: "Shortness of breath" },
+    { label: "😰 Chills", value: "Chills" },
+    { label: "🌡️ Body Ache", value: "Body Ache" },
+  ];
+
+  const handleToggle = (val: string) => {
+    setSelected(prev =>
+      prev.includes(val) ? prev.filter(x => x !== val) : [...prev, val]
+    );
+  };
+
+  const handleSubmit = () => {
+    const allSymptoms = [...selected, ...(freeText.trim() ? [freeText.trim()] : [])];
+    if (allSymptoms.length > 0) {
+      onAction("submit_symptoms", allSymptoms.join(", "));
+    }
+  };
+
+  const hasAny = selected.length > 0 || freeText.trim().length > 0;
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "16px",
+      padding: "20px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "560px"
+    }}>
+      {/* Empathetic Greeting Text inside the card for unified composition */}
+      {text && (
+        <div style={{
+          fontSize: "14px",
+          lineHeight: "1.6",
+          color: "#334155",
+          fontWeight: 500,
+          marginBottom: "16px",
+          borderBottom: "1px solid #f1f5f9",
+          paddingBottom: "14px"
+        }}>
+          {text}
+        </div>
+      )}
+
+      {/* Header */}
+      <div style={{
+        fontSize: "11.5px",
+        fontWeight: 700,
+        color: "#64748b",
+        textTransform: "uppercase",
+        letterSpacing: "0.05em",
+        marginBottom: "12px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
+      }}>
+        <span>🩺 Select any matching symptoms</span>
+      </div>
+
+      {/* Multi-select chips */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "14px" }}>
+        {symptoms.map(s => {
+          const isSelected = selected.includes(s.value);
+          return (
+            <button
+              key={s.value}
+              onClick={() => handleToggle(s.value)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "7px 13px",
+                borderRadius: "20px",
+                border: isSelected ? "1.5px solid #7c3aed" : "1.5px solid #e2e8f0",
+                background: isSelected
+                  ? "linear-gradient(135deg, #ede9fe 0%, #fae8ff 100%)"
+                  : "#f8fafc",
+                color: isSelected ? "#7c3aed" : "#475569",
+                fontSize: "13px",
+                fontWeight: isSelected ? 600 : 500,
+                cursor: "pointer",
+                transition: "all 0.18s ease",
+                boxShadow: isSelected ? "0 2px 8px rgba(124,58,237,0.12)" : "none"
+              }}
+            >
+              {isSelected && <span style={{ fontSize: "10px" }}>✓</span>}
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Free-text area */}
+      <div style={{
+        background: "#f8fafc",
+        border: "1.5px solid #e2e8f0",
+        borderRadius: "10px",
+        padding: "10px 12px",
+        marginBottom: "14px"
+      }}>
+        <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 600, marginBottom: "6px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          Or describe in your own words
+        </div>
+        <textarea
+          value={freeText}
+          onChange={e => setFreeText(e.target.value)}
+          placeholder="e.g. I have had a sore throat and mild fever since yesterday..."
+          rows={2}
+          style={{
+            width: "100%",
+            background: "transparent",
+            border: "none",
+            outline: "none",
+            resize: "none",
+            fontSize: "13.5px",
+            color: "#1e293b",
+            fontFamily: "inherit",
+            lineHeight: "1.5"
+          }}
+        />
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderTop: "1.5px solid #f1f5f9",
+        paddingTop: "12px"
+      }}>
+        <span style={{ fontSize: "12px", color: "#94a3b8" }}>
+          {!hasAny
+            ? "Select or describe your symptoms"
+            : `${selected.length} chip(s) selected${freeText.trim() ? " + custom" : ""}`}
+        </span>
+        <button
+          onClick={handleSubmit}
+          disabled={!hasAny}
+          style={{
+            background: hasAny
+              ? "linear-gradient(135deg, #7c3aed 0%, #db2777 100%)"
+              : "#cbd5e1",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "20px",
+            padding: "9px 20px",
+            fontSize: "13.5px",
+            fontWeight: 700,
+            cursor: hasAny ? "pointer" : "not-allowed",
+            boxShadow: hasAny ? "0 4px 14px rgba(124,58,237,0.25)" : "none",
+            transition: "all 0.2s",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px"
+          }}
+        >
+          ✨ Analyze &amp; Find Doctor
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InlinePhoneInput({ onAction }: { onAction: (type: string, data?: unknown) => void }) {
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSend = () => {
+    const cleanPhone = phone.trim();
+    if (!/^\d{10}$/.test(cleanPhone)) {
+      setError("Please enter a valid 10-digit mobile number");
+      return;
+    }
+    setError("");
+    onAction("submit_inline_phone", cleanPhone);
+  };
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "20px",
+      padding: "24px",
+      boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "440px",
+      marginTop: "8px"
+    }}>
+      {/* Premium Badge Header */}
+      <div style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        background: "rgba(3, 78, 162, 0.08)",
+        color: "#034ea2",
+        padding: "6px 12px",
+        borderRadius: "30px",
+        fontSize: "11px",
+        fontWeight: 700,
+        letterSpacing: "0.04em",
+        textTransform: "uppercase",
+        marginBottom: "16px"
+      }}>
+        <Sparkles size={12} fill="#034ea2" /> Unlocks Pulse AI Benefits
+      </div>
+
+      {/* Benefits checklist */}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        marginBottom: "20px",
+        background: "#f8fafc",
+        padding: "16px",
+        borderRadius: "12px",
+        border: "1px dashed #cbd5e1"
+      }}>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#034ea2", marginTop: "2px" }}><Shield size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Secure Health Profile</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Sync with your official clinical records & test histories.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#10b981", marginTop: "2px" }}><Activity size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Personalized Health Trends</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Unlock smart report summary & organ health trackers.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+          <div style={{ color: "#f59e0b", marginTop: "2px" }}><Clock size={14} /></div>
+          <div>
+            <div style={{ fontSize: "12.5px", fontWeight: 700, color: "#1e293b" }}>Priority Consult Confirmation</div>
+            <div style={{ fontSize: "11.5px", color: "#64748b" }}>Confirm appointment slots & sync instantly with doctors.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "4px" }}>
+        Enter Mobile Number
+      </div>
+      <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
+        Instant verification to securely link your profile.
+      </div>
+
+      <div style={{ display: "flex", gap: "8px", position: "relative" }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          background: "#f8fafc",
+          border: "1.5px solid #cbd5e1",
+          borderRadius: "8px",
+          padding: "0 12px",
+          fontSize: "14px",
+          color: "#475569",
+          fontWeight: 600
+        }}>
+          +91
+        </div>
+        <input 
+          type="text" 
+          value={phone}
+          maxLength={10}
+          onChange={e => {
+            const val = e.target.value.replace(/\D/g, "");
+            setPhone(val);
+            if (val.length === 10) setError("");
+          }}
+          placeholder="00000 00000"
+          style={{
+            flex: 1,
+            padding: "10px 14px",
+            border: "1.5px solid #cbd5e1",
+            borderRadius: "8px",
+            outline: "none",
+            fontSize: "14px",
+            color: "#1e293b",
+            fontWeight: 600
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+        />
+      </div>
+      {error && (
+        <div style={{ color: "#ef4444", fontSize: "11px", marginTop: "6px", fontWeight: 500 }}>
+          {error}
+        </div>
+      )}
+      <button
+        onClick={handleSend}
+        style={{
+          width: "100%",
+          marginTop: "16px",
+          background: "linear-gradient(135deg, #034ea2 0%, #002d62 100%)",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "8px",
+          padding: "12px",
+          fontSize: "13.5px",
+          fontWeight: 700,
+          cursor: "pointer",
+          transition: "opacity 0.2s"
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.95"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+      >
+        Send OTP via SMS
+      </button>
+    </div>
+  );
+}
+
+function InlineOTPInput({ phone, onAction }: { phone: string; onAction: (type: string, data?: unknown) => void }) {
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+
+  const handleVerify = () => {
+    if (otp.length !== 4) {
+      setError("Please enter a 4-digit code");
+      return;
+    }
+    setError("");
+    onAction("submit_inline_otp", otp);
+  };
+
+  const maskedPhone = phone.length >= 10 
+    ? `XXXXX XX${phone.slice(-3)}` 
+    : phone;
+
+  return (
+    <div style={{
+      background: "#ffffff",
+      border: "1.5px solid #e2e8f0",
+      borderRadius: "16px",
+      padding: "20px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.06)",
+      width: "100%",
+      maxWidth: "420px",
+      marginTop: "8px"
+    }}>
+      <div style={{ fontSize: "14px", fontWeight: 700, color: "#1e293b", marginBottom: "8px" }}>
+        Enter Verification Code
+      </div>
+      <div style={{ fontSize: "12.5px", color: "#64748b", lineHeight: "1.5", marginBottom: "16px" }}>
+        We have sent a 4-digit OTP to <strong style={{ color: "#334155" }}>+91 {maskedPhone}</strong>. Enter it below to complete sign in:
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
+        <input 
+          type="text" 
+          maxLength={4}
+          value={otp}
+          onChange={e => {
+            const val = e.target.value.replace(/\D/g, "");
+            setOtp(val);
+            if (val.length === 4) setError("");
+          }}
+          placeholder="••••"
+          style={{
+            width: "140px",
+            padding: "10px",
+            border: "1.5px solid #cbd5e1",
+            borderRadius: "8px",
+            outline: "none",
+            fontSize: "18px",
+            textAlign: "center",
+            letterSpacing: "8px",
+            fontWeight: 700,
+            color: "#1e293b"
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleVerify(); }}
+        />
+      </div>
+      {error && (
+        <div style={{ color: "#ef4444", fontSize: "11.5px", marginTop: "8px", textAlign: "center", fontWeight: 500 }}>
+          {error}
+        </div>
+      )}
+      <button
+        onClick={handleVerify}
+        style={{
+          width: "100%",
+          marginTop: "16px",
+          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+          color: "#ffffff",
+          border: "none",
+          borderRadius: "8px",
+          padding: "12px",
+          fontSize: "13.5px",
+          fontWeight: 700,
+          cursor: "pointer",
+          transition: "opacity 0.2s"
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.95"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+      >
+        Verify &amp; Confirm Booking
+      </button>
+    </div>
+  );
+}
+
 /* ─── MESSAGE BUBBLE ──────────────────────────────────────── */
-function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
+function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar", tutorialStep }: {
   msg: Message;
   onAction: (type: string, data?: unknown) => void;
+  onPrefill?: (prefix: string, chipId: string) => void;
+  activeChipId?: string | null;
   userName?: string;
   tutorialStep?: string;
 }) {
@@ -1961,10 +2837,98 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
       <div className={styles.aiAvatar}><SparkleIcon size={16} /></div>
       <div className={styles.aiBubble}>
         {/* Text */}
-        {msg.text && (
+        {msg.text && msg.rtype !== "symptom_selector" && (
           <div className={styles.aiText}>
             <TextReveal text={msg.text} />
           </div>
+        )}
+
+        {/* Find Doctor Options Cards */}
+        {msg.rtype === "find_doctor_options" && msg.findDoctorOptions && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: revealDelay, duration: 0.3 }}
+            className={styles.findDoctorOptionsContainer}
+          >
+            {/* Card 1: Recommended Speciality */}
+            <motion.button
+              className={styles.findDoctorOptionCard}
+              whileHover={{ scale: 1.01, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onAction("follow_up", msg.findDoctorOptions?.recommendedSpeciality.prompt)}
+            >
+              <div className={styles.findDoctorCardLeft}>
+                <div className={styles.findDoctorIconBadgeBlue}>
+                  <Stethoscope size={18} color="#0284C7" />
+                </div>
+                <span className={styles.findDoctorCardTitle}>
+                  {msg.findDoctorOptions.recommendedSpeciality.title}
+                </span>
+              </div>
+              <span className={styles.findDoctorCardTag}>
+                ✦ {msg.findDoctorOptions.recommendedSpeciality.badge}
+              </span>
+            </motion.button>
+
+            {/* Card 2: Last Visited Doctor */}
+            <motion.button
+              className={styles.findDoctorOptionCard}
+              whileHover={{ scale: 1.01, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => onAction("follow_up", msg.findDoctorOptions?.lastVisitedDoctor.prompt)}
+            >
+              <div className={styles.findDoctorCardLeft}>
+                <img 
+                  src={msg.findDoctorOptions.lastVisitedDoctor.photo || "/doctor_avatar_male.png"} 
+                  alt="Doctor" 
+                  className={styles.findDoctorAvatarImg} 
+                />
+                <span className={styles.findDoctorCardTitle}>
+                  {msg.findDoctorOptions.lastVisitedDoctor.title}
+                </span>
+              </div>
+              <span className={styles.findDoctorCardTag}>
+                ✦ {msg.findDoctorOptions.lastVisitedDoctor.badge}
+              </span>
+            </motion.button>
+
+            {/* Sub Chips Section */}
+            <div className={styles.findDoctorSubChipsSection}>
+              <div className={styles.findDoctorSparkleHeader}>
+                <Sparkles size={16} color="#38BDF8" />
+                <span>If you are looking for something else</span>
+              </div>
+              <div className={styles.findDoctorSubChipsWrap}>
+                {msg.findDoctorOptions.subChips.map(chip => {
+                  const isSymptom = chip.label.toLowerCase().includes("symptom");
+                  const isSpeciality = chip.label.toLowerCase().includes("speciality");
+                  const isDoctor = chip.label.toLowerCase().includes("doctor");
+                  let prefix = "";
+                  let chipId = "";
+                  if (isSymptom) { prefix = "I have been having "; chipId = "find_symptom"; }
+                  else if (isSpeciality) { prefix = "I am looking for a "; chipId = "find_speciality"; }
+                  else if (isDoctor) { prefix = "I want to consult Dr. "; chipId = "find_doctor"; }
+
+                  return (
+                    <button
+                      key={chip.label}
+                      className={`${styles.findDoctorSubChip} ${activeChipId === chipId ? styles.findDoctorSubChipActive : ""}`}
+                      onClick={() => {
+                        if (onPrefill && prefix) {
+                          onPrefill(prefix, chipId);
+                        } else {
+                          onAction("follow_up", chip.prompt);
+                        }
+                      }}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
         )}
 
         {/* Doctors */}
@@ -1992,7 +2956,9 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
         {msg.rtype === "slot_picker" && msg.slotDoctor && (
           <SlotPickerCard
             doctor={msg.slotDoctor}
-            onConfirm={(slot, type) => onAction("confirm_slot", { doctor: msg.slotDoctor, slot, type })}
+            onConfirm={({ slot, type, clinic, fee }) =>
+              onAction("confirm_slot", { doctor: msg.slotDoctor, slot, type, clinic, fee })
+            }
           />
         )}
 
@@ -2096,6 +3062,20 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
           </div>
         )}
 
+        {/* Interactive Multi-Select Symptom Selector */}
+        {msg.rtype === "symptom_selector" && (
+          <SymptomSelector text={msg.text} onAction={onAction} />
+        )}
+
+        {/* Inline Triage Login Inputs */}
+        {msg.rtype === "inline_phone_input" && (
+          <InlinePhoneInput onAction={onAction} />
+        )}
+
+        {msg.rtype === "inline_otp_input" && (
+          <InlineOTPInput phone={msg.inlinePhone || ""} onAction={onAction} />
+        )}
+
         {/* Fallback navigation cards */}
         {msg.rtype === "fallback" && (
           <div className={styles.quickCards} style={{ marginTop: "12px", width: "100%" }}>
@@ -2127,6 +3107,86 @@ function MsgBubble({ msg, onAction, userName = "Omkar", tutorialStep }: {
               <button className={styles.modifyBtnSecondary} onClick={() => onAction("follow_up", "Cancel appointment")}>
                 Cancel appointment
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Order Summary & Checkout Card */}
+        {msg.rtype === "order_summary" && msg.orderSummaryData && (
+          <OrderSummaryCard
+            doctor={msg.orderSummaryData.doctor}
+            slot={msg.orderSummaryData.slot}
+            visitType={msg.orderSummaryData.visitType}
+            clinicName={msg.orderSummaryData.clinicName}
+            fee={msg.orderSummaryData.fee}
+            userName={userName}
+            onPaySuccess={(payMethod, amount) => {
+              onAction("complete_payment", {
+                doctor: msg.orderSummaryData?.doctor,
+                slot: msg.orderSummaryData?.slot,
+                visitType: msg.orderSummaryData?.visitType,
+                clinicName: msg.orderSummaryData?.clinicName,
+                payMethod,
+                amount
+              });
+            }}
+          />
+        )}
+
+        {/* Booking Confirmation Card */}
+        {msg.rtype === "booking_confirm" && (
+          <div className={styles.bookingConfirmCard}>
+            <div className={styles.bookingConfirmHeader}>
+              <div className={styles.bookingSuccessIconWrap}>
+                <CheckCircle size={22} color="#16a34a" />
+              </div>
+              <div>
+                <div className={styles.bookingConfirmTitle}>Appointment Confirmed!</div>
+                <div className={styles.bookingConfirmSub}>Your slot is reserved &amp; synced with clinic records</div>
+              </div>
+            </div>
+
+            <div className={styles.bookingConfirmBody}>
+              <div className={styles.bookingDocInfo}>
+                <img
+                  src={msg.slotDoctor?.photo || "/doctor_avatar_male.png"}
+                  alt={msg.slotDoctor?.name || "Doctor"}
+                  className={styles.bookingDocPhoto}
+                />
+                <div>
+                  <div className={styles.bookingDocName}>{msg.slotDoctor?.name || "Dr. Pradeep R Kumar"}</div>
+                  <div className={styles.bookingDocSpec}>{msg.slotDoctor?.speciality || "General Physician"}</div>
+                  <div className={styles.bookingDocHospital}>
+                    <MapPin size={12} /> {msg.slotDoctor?.hospital || "Mazumdar Shaw Medical Centre"}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.bookingGridDetails}>
+                <div className={styles.bookingDetailItem}>
+                  <span className={styles.bookingDetailLabel}>Date &amp; Time</span>
+                  <span className={styles.bookingDetailVal}>📅 {msg.text.match(/\*\*(.*?)\*\*/)?.[1] || "Tomorrow, 02:30 PM"}</span>
+                </div>
+                <div className={styles.bookingDetailItem}>
+                  <span className={styles.bookingDetailLabel}>Booking ID</span>
+                  <span className={styles.bookingDetailVal}>#NH-894210</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.bookingNextActions}>
+              <div className={styles.bookingNextTitle}>Next Steps</div>
+              <div className={styles.bookingCtaGrid}>
+                <button className={styles.bookingCtaPrimary} onClick={() => onAction("follow_up", "Add appointment to my calendar")}>
+                  <Calendar size={14} /> Add to Calendar
+                </button>
+                <button className={styles.bookingCtaSecondary} onClick={() => onAction("follow_up", "Get directions to hospital")}>
+                  <MapPin size={14} /> Get Directions
+                </button>
+                <button className={styles.bookingCtaSecondary} onClick={() => onAction("follow_up", "Book another appointment")}>
+                  <Plus size={14} /> Book Another
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -2309,101 +3369,125 @@ const welcomeCardVariants = {
   },
 };
 
-function WelcomeScreen({ onPrompt, isLoggedIn, userName = "Omkar V" }: { onPrompt: (p: string) => void; isLoggedIn: boolean; userName?: string }) {
-  if (isLoggedIn) {
-    return (
-      <div className={styles.welcomeScreen} style={{ padding: "32px 24px", gap: 0 }}>
-        <motion.div className={styles.welcomeIconWrap} style={{ marginBottom: "24px" }}
-          initial={{ opacity: 0, y: -45, scale: 0.6, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-          transition={{ type: "spring", stiffness: 100, damping: 13, delay: 0.2 }}>
-          <LottieAnimation animationPath="/Logo/AI Searching 2.json" width={94} height={94} />
-        </motion.div>
-        
-        <div style={{ color: "#034ea2", fontWeight: 700, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "8px", display: "flex", justifyContent: "center", width: "100%" }}>
-          <TextReveal text="Welcome back" baseDelay={0.7} fontWeight={700} color="#034ea2" align="center" />
-        </div>
-        
-        <h2 className={styles.welcomeTitle} style={{ fontSize: "25px", marginBottom: "16px", fontWeight: 800 }}>
-          <TextReveal text={"Hi " + userName + " 👋"} baseDelay={1.1} fontWeight={800} color="#1e293b" wordDelay={0.06} align="center" />
-        </h2>
-
-        <div className={styles.welcomeSubtitle} style={{ fontSize: "14.5px", lineHeight: "1.5", marginBottom: "34px", display: "flex", justifyContent: "center", width: "100%" }}>
-          <div style={{ fontWeight: 500, color: "#475569", fontSize: "14.5px", lineHeight: "1.55", textAlign: "center", width: "100%" }}>
-            <TextReveal text={"Your cardiology follow-up is due.\nShall I help you book an appointment?"} baseDelay={1.7} fontWeight={500} color="#475569" align="center" wordDelay={0.05} />
+function WelcomeScreen({ onPrompt, onPrefill, activeChipId, isLoggedIn, userName = "Omkar V" }: { onPrompt: (p: string) => void; onPrefill: (prefix: string, chipId: string) => void; activeChipId: string | null; isLoggedIn: boolean; userName?: string }) {
+  return (
+    <div className={styles.pulseNewLandingContainer}>
+      {/* 1. Sparkle Animated AI Icon & Greeting */}
+      <motion.div 
+        className={styles.landingHeroSection}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className={styles.sparkleIconContainer} style={{ width: "94px", height: "94px" }}>
+          <div className={styles.sparkleIconGlow} style={{ inset: "-12px" }} />
+          <div style={{ zIndex: 2 }}>
+            <LottieAnimation animationPath="/Logo/AI Searching 2.json" width={94} height={94} />
           </div>
         </div>
 
-        {/* Quick Nav Cards */}
-        <motion.div
-          className={styles.quickCards}
-          style={{ margin: 0, width: "100%" }}
-          variants={welcomeContainerVariants}
-          initial="hidden"
-          animate="visible"
+        <h1 className={styles.greetingTitle}>
+          {isLoggedIn ? `Hi ${userName}` : "Hi there!"} <span className={styles.wavingHand}>👋</span>
+        </h1>
+        <p className={styles.greetingSubtitle}>How can I help you today?</p>
+      </motion.div>
+
+      {/* 2. Main Entry Point Cards Container */}
+      <div className={styles.entryCardsContainer}>
+        {/* Card 1: Find the right doctor (Blue theme) */}
+        <motion.div 
+          className={`${styles.entryCard} ${styles.blueThemeCard}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          whileHover={{ y: -6, scale: 1.015, boxShadow: "0 14px 34px rgba(0, 0, 0, 0.08)" }}
+          whileTap={{ scale: 0.995 }}
+          onClick={() => onPrompt("Find doctor")}
+          style={{ cursor: "pointer" }}
         >
-          {QUICK_PROMPTS.map(({ icon: Icon, label, prompt, color }) => (
-            <motion.button
-              key={label}
-              className={styles.quickCard}
-              onClick={() => onPrompt(prompt)}
-              variants={welcomeCardVariants}
-              whileHover={{ scale: 1.03, y: -2, transition: { duration: 0.15 } }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className={styles.quickCardIcon} style={{ background: `${color}18`, color }}><Icon size={22} /></div>
-              <span className={styles.quickCardLabel}>{label}</span>
-            </motion.button>
-          ))}
+          <div className={styles.entryCardHeader}>
+            <div className={styles.entryCardBannerWrap}>
+              <img 
+                src="/pulse_find_doctor_banner.png" 
+                alt="Find the right doctor" 
+                className={styles.entryCardBannerImg} 
+              />
+            </div>
+            <div className={styles.entryCardMeta}>
+              <h3 className={styles.entryCardTitle}>Find the right doctor</h3>
+              <p className={styles.entryCardSubtitle}>Book the consultation you need</p>
+            </div>
+            <div className={styles.entryCardChevronBtn}>
+              <ChevronRight size={18} />
+            </div>
+          </div>
+
+          <div className={styles.intentSubSection}>
+            <span className={styles.intentLabel}>Try asking for</span>
+            <div className={styles.intentChipsWrap}>
+              <button className={`${styles.intentChip} ${styles.blueChip} ${activeChipId === "symptom" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrefill("I have been having ", "symptom"); }}>
+                I have a symptom
+              </button>
+              <button className={`${styles.intentChip} ${styles.blueChip} ${activeChipId === "doctor" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrefill("I want to consult Dr. ", "doctor"); }}>
+                I know the doctor's name
+              </button>
+              <button className={`${styles.intentChip} ${styles.blueChip} ${activeChipId === "book" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrompt("I want to book an appointment"); }}>
+                I want to book an appointment
+              </button>
+              <button className={`${styles.intentChip} ${styles.blueChip} ${activeChipId === "speciality" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrefill("I am looking for a ", "speciality"); }}>
+                I know the speciality
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Card 2: Know your health (Mint/Teal theme) */}
+        <motion.div 
+          className={`${styles.entryCard} ${styles.tealThemeCard}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          whileHover={{ y: -6, scale: 1.015, boxShadow: "0 14px 34px rgba(0, 0, 0, 0.08)" }}
+          whileTap={{ scale: 0.995 }}
+          onClick={() => onPrompt("Know your health")}
+          style={{ cursor: "pointer" }}
+        >
+          <div className={styles.entryCardHeader}>
+            <div className={styles.entryCardBannerWrap}>
+              <img 
+                src="/pulse_health_insights_banner.png" 
+                alt="Know your health" 
+                className={styles.entryCardBannerImg} 
+              />
+            </div>
+            <div className={styles.entryCardMeta}>
+              <h3 className={styles.entryCardTitle}>Know your health</h3>
+              <p className={styles.entryCardSubtitle}>Get insights from medical history</p>
+            </div>
+            <div className={styles.entryCardChevronBtn}>
+              <ChevronRight size={18} />
+            </div>
+          </div>
+
+          <div className={styles.intentSubSection}>
+            <span className={styles.intentLabel}>Try asking for</span>
+            <div className={styles.intentChipsWrap}>
+              <button className={`${styles.intentChip} ${styles.tealChip} ${activeChipId === "health_summary" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrompt("Summarize my health"); }}>
+                Summarize my health
+              </button>
+              <button className={`${styles.intentChip} ${styles.tealChip} ${activeChipId === "report" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrefill("Please analyse report ", "report"); }}>
+                Analyse my reports
+              </button>
+              <button className={`${styles.intentChip} ${styles.tealChip} ${activeChipId === "organ_insights" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrompt("Show my organ insights"); }}>
+                Show my organ insights
+              </button>
+              <button className={`${styles.intentChip} ${styles.tealChip} ${activeChipId === "upload_review" ? styles.intentChipActive : ""}`} onClick={(e) => { e.stopPropagation(); onPrompt("Upload and review my report"); }}>
+                Upload and review my report
+              </button>
+            </div>
+          </div>
         </motion.div>
       </div>
-    );
-  }
-
-  return (
-    <div className={styles.welcomeScreen} style={{ padding: "32px 24px", gap: 0 }}>
-      <motion.div className={styles.welcomeIconWrap} style={{ marginBottom: "24px" }}
-        initial={{ opacity: 0, y: -45, scale: 0.6, filter: "blur(6px)" }}
-        animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-        transition={{ type: "spring", stiffness: 100, damping: 13, delay: 0.2 }}>
-        <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-          <LottieAnimation animationPath="/Logo/AI Searching 2.json" width={117} height={117} />
-        </motion.div>
-      </motion.div>
-      <h2 className={styles.welcomeTitle} style={{ fontSize: "24px", marginBottom: "13px", fontWeight: 800 }}>
-        <TextReveal text={isLoggedIn ? "Hi " + userName : "Hi there! 👋"} baseDelay={0.8} fontWeight={800} color="#1e293b" wordDelay={0.08} align="center" />
-      </h2>
-      <p className={styles.welcomeSubtitle} style={{ fontSize: "14px", lineHeight: "1.5", marginBottom: "38px" }}>
-        <TextReveal text="I can help you find doctors, manage reports, book consultations and more." baseDelay={1.4} fontWeight={400} color="#64748b" align="center" />
-      </p>
-      <motion.div
-        className={styles.quickCards}
-        variants={welcomeContainerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {QUICK_PROMPTS.map(({ icon: Icon, label, prompt, color }) => (
-          <motion.button
-            key={label}
-            className={styles.quickCard}
-            onClick={() => onPrompt(prompt)}
-            variants={welcomeCardVariants}
-            whileHover={{ scale: 1.03, y: -2, transition: { duration: 0.15 } }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className={styles.quickCardIcon} style={{ background: `${color}18`, color }}><Icon size={22} /></div>
-            <span className={styles.quickCardLabel}>{label}</span>
-          </motion.button>
-        ))}
-      </motion.div>
-      <motion.p
-        className={styles.betaBanner}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.3, duration: 0.5 }}
-      >
-        <AlertCircle size={13} /> Pulse AI is in beta and may have errors. Always consult a licensed physician.
-      </motion.p>
     </div>
   );
 }
@@ -2590,13 +3674,21 @@ function AnimatedPlaceholder({ visible }: { visible: boolean }) {
 
 /* ─── MAIN WORKSPACE ──────────────────────────────────────── */
 function Workspace({
-  onClose, initialQuery, clearInitialQuery, isLoggedIn, setIsLoggedIn
+  onClose, initialQuery, clearInitialQuery,
+  initialAction, initialActionData, clearInitialAction,
+  isLoggedIn, setIsLoggedIn,
+  isMaximized, onToggleMaximize
 }: {
   onClose: () => void;
   initialQuery?: string;
   clearInitialQuery?: () => void;
+  initialAction?: string | null;
+  initialActionData?: any;
+  clearInitialAction?: () => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (val: boolean) => void;
+  isMaximized?: boolean;
+  onToggleMaximize?: () => void;
 }) {
   // Associated Accounts Profiles selector
   const [activeProfile, setActiveProfile] = useState(ASSOCIATED_PROFILES[0]);
@@ -2622,30 +3714,48 @@ function Workspace({
   const fileRef                           = useRef<HTMLInputElement>(null);
   const chatRef                           = useRef<HTMLDivElement>(null);
   const inputRef                          = useRef<HTMLTextAreaElement>(null);
+  const topMenuRef                        = useRef<HTMLDivElement>(null);
+  const [showGoToTop, setShowGoToTop]     = useState(false);
+
+  const [activeChipId, setActiveChipId] = useState<string | null>(null);
+
+  const handlePrefillPrompt = useCallback((prefix: string, chipId: string) => {
+    setInput(prefix);
+    setActiveChipId(chipId);
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.selectionStart = prefix.length;
+        inputRef.current.selectionEnd = prefix.length;
+      }
+    }, 50);
+  }, []);
+
+  const scrollToTopMenu = useCallback(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" }), 80);
   }, []);
   useEffect(() => { scrollToBottom(); }, [msgs, scrollToBottom]);
 
-  // After login, resume pending action
   useEffect(() => {
-    if (isLoggedIn && pendingAction) {
-      const action = pendingAction;
-      setPendingAction(null);
-      handleAction(action.type, action.data);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
-
-  // Execute external query from Hero search CTA
-  useEffect(() => {
-    if (initialQuery) {
-      sendMessage(initialQuery);
-      clearInitialQuery?.();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQuery]);
+    const el = chatRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      if (el.scrollTop > 80 && msgs.length > 0 && !isThinking) {
+        setShowGoToTop(true);
+      } else {
+        setShowGoToTop(false);
+      }
+    };
+    el.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [msgs.length, isThinking]);
 
   const injectAI = useCallback((partial: Partial<Message>, delay = 1600) => {
     const thinkId = `think-${Date.now()}`;
@@ -2715,6 +3825,7 @@ function Workspace({
 
   const sendMessage = useCallback((text: string) => {
     if (!text.trim() || isThinking) return;
+    setActiveChipId(null);
 
     // INTERCEPT IF TUTORIAL SIMULATION IS ACTIVE
     if (tutorialStep === "triage_prefilled") {
@@ -2829,6 +3940,11 @@ function Workspace({
         setMsgs([]);
         break;
       }
+      case "execute_query": {
+        const query = data as string;
+        sendMessage(query);
+        break;
+      }
       case "book_now": {
         const doc = data as Doctor;
         const slotMsg: Message = { id: `slot-${Date.now()}`, role: "ai", text: `Great choice! Select a date and time to see ${doc.name}.`, ts: new Date(), rtype: "slot_picker", slotDoctor: doc };
@@ -2836,17 +3952,83 @@ function Workspace({
         break;
       }
       case "confirm_slot": {
-        const { doctor, slot, type: vtype } = data as { doctor: Doctor; slot: string; type: string };
+        const { doctor, slot, type: vtype, clinic, fee } = (data || {}) as {
+          doctor?: Doctor; slot?: string; type?: string; clinic?: string; fee?: number;
+        };
+        const lastSlotMsg = msgs.slice().reverse().find(m => m.rtype === "slot_picker");
+        const doc = doctor || lastSlotMsg?.slotDoctor || MOCK_DOCTORS[0];
+        const finalClinic = clinic || (vtype === "video" ? "Narayana Tele-Health" : doc.hospital || "Mazumdar Shaw Medical Centre");
+
         if (!isLoggedIn) {
-          setPendingAction({ type: "booking_confirmed", data: { doctor, slot, vtype } });
-          setShowRegister(true);
+          setPendingAction({ type: "confirm_slot", data });
+          injectAI({
+            text: "To finalize your booking, please enter your mobile number to sign in or register:",
+            rtype: "inline_phone_input"
+          }, 300);
         } else {
           injectAI({
-            text: `✅ Your appointment with **${doctor.name}** is confirmed for **${slot}** (${vtype === "video" ? "Video Consultation" : "Hospital Visit"}).`,
-            rtype: "booking_confirm",
-            followUps: ["Add to calendar", "View appointment", "Book another"],
-          }, 800);
+            text: `Here is your order summary for **${doc.name}** at **${finalClinic}**. Please review your member discount, apply coupons, and complete payment:`,
+            rtype: "order_summary",
+            orderSummaryData: {
+              doctor: doc,
+              slot: slot || "Tomorrow, 09:15 AM",
+              visitType: vtype || "hospital",
+              clinicName: finalClinic,
+              fee: fee || 800
+            }
+          }, 500);
         }
+        break;
+      }
+      case "submit_inline_phone": {
+        const phone = data as string;
+        // 1. Show user message in chat
+        setMsgs(prev => [...prev, {
+          id: `usr-phone-${Date.now()}`,
+          role: "user",
+          text: `+91 ${phone}`,
+          ts: new Date()
+        }]);
+        // 2. Inject AI message to ask for OTP
+        injectAI({
+          text: `Please verify your phone number. We have sent a 4-digit verification code to +91 XXXXX XX${phone.slice(-3)}.`,
+          rtype: "inline_otp_input",
+          inlinePhone: phone
+        }, 600);
+        break;
+      }
+      case "submit_inline_otp": {
+        const otp = data as string;
+        // 1. Show user message in chat
+        setMsgs(prev => [...prev, {
+          id: `usr-otp-${Date.now()}`,
+          role: "user",
+          text: `OTP entered: ${otp}`,
+          ts: new Date()
+        }]);
+        // 2. Simulate login success and sync session state
+        setIsLoggedIn(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("isLoggedIn", "true");
+          window.dispatchEvent(new Event("login-state-changed"));
+        }
+        // 3. Inject AI response message
+        injectAI({
+          text: "🎉 Login successful! Welcome back, Omkar V. Resuming your booking details...",
+          rtype: "text"
+        }, 400);
+        break;
+      }
+      case "complete_payment": {
+        const { doctor, slot, visitType: vtype, clinicName, payMethod, amount } = data as {
+          doctor: Doctor; slot: string; visitType: string; clinicName: string; payMethod: string; amount: number;
+        };
+        injectAI({
+          text: `✅ Payment of **₹${amount}** via **${payMethod}** successful! Your appointment with **${doctor?.name || "Dr. Pradeep R Kumar"}** is confirmed for **${slot}** (${vtype === "video" ? "Video Consultation" : clinicName}).`,
+          rtype: "booking_confirm",
+          slotDoctor: doctor,
+          followUps: ["Add appointment to my calendar", "Get directions to hospital", "Book another appointment"],
+        }, 600);
         break;
       }
       case "booking_confirmed": {
@@ -2854,7 +4036,8 @@ function Workspace({
         injectAI({
           text: `✅ Your appointment with **${doctor.name}** is confirmed for **${slot}** (${vtype === "video" ? "Video Consultation" : "Hospital Visit"}).`,
           rtype: "booking_confirm",
-          followUps: ["Add to calendar", "View appointment", "Book another"],
+          slotDoctor: doctor,
+          followUps: ["Add appointment to my calendar", "Get directions to hospital", "Book another appointment"],
         }, 800);
         break;
       }
@@ -2873,10 +4056,114 @@ function Workspace({
       case "follow_up":
         sendMessage(data as string);
         break;
+      case "submit_symptoms": {
+        const symptoms = data as string;
+        // Post user bubble showing selected symptoms
+        const userSymptomMsg: Message = {
+          id: `u-sym-${Date.now()}`,
+          role: "user",
+          text: `I am experiencing: ${symptoms}`,
+          ts: new Date()
+        };
+        setMsgs(prev => [...prev, userSymptomMsg]);
+        // Analyse via aiResponse with prefixed key
+        const resp = aiResponse(`selected symptoms: ${symptoms}`, isLoggedIn, activeProfile.name);
+        injectAI(resp, 1400);
+        break;
+      }
       default:
         break;
     }
-  }, [isLoggedIn, injectAI, sendMessage]);
+  }, [isLoggedIn, injectAI, sendMessage, activeProfile]);
+
+
+  // After login, resume pending action
+  useEffect(() => {
+    if (isLoggedIn && pendingAction) {
+      const action = pendingAction;
+      setPendingAction(null);
+      handleAction(action.type, action.data);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
+
+  
+
+  const initialQueryProcessed = useRef(false);
+
+  // Execute external query from Hero search CTA
+  useEffect(() => {
+    if (initialQuery && !initialQueryProcessed.current) {
+      initialQueryProcessed.current = true;
+      const trimmed = initialQuery.trim();
+      // "I have been having" chip → skip sending a half-sentence; show symptom selector directly
+      if (trimmed === "I have been having" || trimmed === "I have been having ") {
+        const aiMsg: Message = {
+          id: `ai-sym-${Date.now()}`,
+          role: "ai",
+          text: "To help us recommend the right specialist, please describe what you are feeling or select any of the common symptoms below:",
+          ts: new Date(),
+          rtype: "symptom_selector"
+        };
+        setMsgs([aiMsg]);
+      } else {
+        sendMessage(trimmed);
+      }
+      clearInitialQuery?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery]);
+
+  const initialActionProcessed = useRef(false);
+
+  // Execute external slot booking direct action from Hero search
+  useEffect(() => {
+    if (initialAction && initialActionData && !initialActionProcessed.current) {
+      initialActionProcessed.current = true;
+
+      if (initialAction === "require_login_module") {
+        const { moduleName, query } = initialActionData as { moduleName: string; query: string };
+        
+        // Setup welcome message explaining what the module can do, but requiring login
+        const introMsg: Message = {
+          id: `intro-${Date.now()}`,
+          role: "ai",
+          text: `Welcome to **${moduleName}**! Here you can get insights from your medical history, review your lab reports, and analyze your organ health. To access these personalized features, please verify your mobile number:`,
+          ts: new Date()
+        };
+        setMsgs([introMsg]);
+        
+        // Save the eventual query to run after login
+        setPendingAction({ type: "execute_query", data: query });
+        
+        // Inject the inline phone input immediately
+        injectAI({
+          text: "Enter your mobile number to sign in or register:",
+          rtype: "inline_phone_input"
+        }, 300);
+        
+        clearInitialAction?.();
+        return;
+      }
+
+      const doc = initialActionData as any;
+      
+      // Setup natural booking conversation history
+      const userMsg: Message = { 
+        id: `u-${Date.now()}`, 
+        role: "user", 
+        text: `Book appointment with ${doc.name}`, 
+        ts: new Date() 
+      };
+      setMsgs([userMsg]);
+      
+      // Directly open slot picker
+      handleAction(initialAction, initialActionData);
+      
+      clearInitialAction?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAction, initialActionData]);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -2921,19 +4208,77 @@ function Workspace({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
+    const val = e.target.value;
+    setInput(val);
     e.target.style.height = "auto";
     e.target.style.height = Math.min(e.target.scrollHeight, 140) + "px";
+
+    if (activeChipId) {
+      let expectedPrefix = "";
+      if (activeChipId === "symptom" || activeChipId === "find_symptom") expectedPrefix = "I have been having ";
+      else if (activeChipId === "speciality" || activeChipId === "find_speciality") expectedPrefix = "I am looking for a ";
+      else if (activeChipId === "doctor" || activeChipId === "find_doctor") expectedPrefix = "I want to consult Dr. ";
+      else if (activeChipId === "report") expectedPrefix = "Please analyse report ";
+
+      if (!val.startsWith(expectedPrefix)) {
+        setActiveChipId(null);
+      }
+    }
   };
 
   return (
-    <div className={styles.workspaceLayout}>
+    <div className={`${styles.workspaceLayout} ${isMaximized ? styles.workspaceLayoutMaximized : ""}`}>
+      {/* SIDEBAR — visible when maximized */}
+      {isMaximized && (
+        <div className={styles.sidebar}>
+          <div className={styles.sidebarHeader}>
+            <div className={styles.sidebarBrand}>
+              <img src="/assets/Pulse AI logo.svg" alt="Pulse AI" style={{ height: "30px" }} />
+            </div>
+            <button className={styles.sidebarClose} onClick={onClose} aria-label="Close Pulse AI">
+              <X size={16} />
+            </button>
+          </div>
+          <button className={styles.newChatBtn} onClick={() => { setMsgs([]); setInput(""); }}>
+            <Plus size={14} /> New Chat
+          </button>
+          <div className={styles.historyLabel}>
+            <History size={12} /> Recent
+          </div>
+          <div className={styles.historyList}>
+            {history.map(c => (
+              <button key={c.id} className={`${styles.historyItem} ${activeConvo === c.id ? styles.historyItemActive : ""}`}
+                onClick={() => setActiveConvo(c.id)}>
+                <MessageSquare size={14} className={styles.historyIcon} />
+                <div className={styles.historyContent}>
+                  <div className={styles.historyTitle}>{c.title}</div>
+                  <div className={styles.historyPreview}>{c.preview}</div>
+                  <div className={styles.historyTs}>{c.ts}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {/* CENTER CHAT */}
       <div className={styles.chatArea}>
         <div className={styles.chatHeader}>
           <div className={styles.chatHeaderLeft}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img src="/assets/Pulse AI logo.svg" alt="Pulse AI Logo" style={{ height: "38px" }} />
+            <button 
+              onClick={() => {
+                if (msgs.length > 0) {
+                  setMsgs([]);
+                } else if (onClose) {
+                  onClose();
+                }
+              }}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#1e293b", transition: "background 0.2s" }}
+              title="Back"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src="/assets/Pulse AI logo.svg" alt="Pulse AI Logo" style={{ height: "32px" }} />
             </div>
           </div>
           <div className={styles.chatHeaderRight} style={{ position: "relative" }}>
@@ -3025,7 +4370,15 @@ function Workspace({
                 Sign In
               </button>
             )}
-            <button className={styles.headerIconBtn} style={{ marginLeft: "6px" }} onClick={onClose}>
+            <button
+              className={styles.headerIconBtn}
+              style={{ marginLeft: "6px" }}
+              onClick={onToggleMaximize}
+              title={isMaximized ? "Restore window view" : "Expand to full screen"}
+            >
+              {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            </button>
+            <button className={styles.headerIconBtn} style={{ marginLeft: "4px" }} onClick={onClose} title="Close Pulse AI">
               <X size={18} />
             </button>
           </div>
@@ -3040,7 +4393,7 @@ function Workspace({
                   Pulse AI is a support assistant to guide your health journey. For any diagnosis, treatment, or medical decisions, please always seek final clinical advice from a licensed physician.
                 </span>
               </div>
-              <button onClick={() => setShowDisclaimer(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "#b45309", display: "flex", alignItems: "center", justifyContent: "center", padding: "2px", marginLeft: "12px", flexShrink: 0 }} aria-label="Close disclaimer">
+              <button onClick={(e) => { e.stopPropagation(); setShowDisclaimer(false); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#b45309", display: "flex", alignItems: "center", justifyContent: "center", padding: "2px", marginLeft: "12px", flexShrink: 0 }} aria-label="Close disclaimer">
                 <X size={14} />
               </button>
             </div>
@@ -3048,46 +4401,70 @@ function Workspace({
         )}
 
         <div className={styles.chatMessages} ref={chatRef} data-lenis-prevent>
-          {msgs.length === 0 ? (
-            <div style={{ display: "flex", flexDirection: "column", width: "100%", flexGrow: 1, justifyContent: "center", alignItems: "center" }}>
-              <div style={{ maxWidth: "800px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <WelcomeScreen onPrompt={sendMessage} isLoggedIn={isLoggedIn} userName={activeProfile.name} />
-              </div>
+          <div ref={topMenuRef} id="pulse-main-menu-top" style={{ display: "flex", flexDirection: "column", width: "100%", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ maxWidth: "800px", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <WelcomeScreen onPrompt={sendMessage} onPrefill={handlePrefillPrompt} activeChipId={activeChipId} isLoggedIn={isLoggedIn} userName={activeProfile.name} />
             </div>
-          ) : (
-            <div className={styles.msgList}>{msgs.map(m => (
-                <MsgBubble key={m.id} msg={m} onAction={handleAction} userName={activeProfile.name} tutorialStep={tutorialStep} />
-              ))}</div>
+          </div>
+
+          {msgs.length > 0 && (
+            <div className={styles.msgList} style={{ marginTop: "24px", paddingTop: "20px", borderTop: "1px dashed rgba(139, 92, 246, 0.2)" }}>
+              {msgs.map(m => (
+                <MsgBubble key={m.id} msg={m} onAction={handleAction} onPrefill={handlePrefillPrompt} activeChipId={activeChipId} userName={activeProfile.name} tutorialStep={tutorialStep} />
+              ))}
+            </div>
           )}
         </div>
 
-        {/* History suggestion chips attached directly above the input bar */}
-        {isLoggedIn && msgs.length === 0 && (
-          <div style={{ width: "100%", display: "flex", justifyContent: "center", flexShrink: 0 }}>
-            <div className={styles.historySuggestionsWrap} style={{ padding: "0 24px 8px", display: "flex", flexDirection: "column", gap: "6px", maxWidth: "800px", width: "100%" }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" }}>
-                🕒 Based on your history
+        {/* Floating Go To Top Menu Button */}
+        <AnimatePresence>
+          {showGoToTop && (
+            <motion.button
+              initial={{ opacity: 0, y: 12, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              onClick={scrollToTopMenu}
+              className={styles.goToTopMenuBtn}
+              aria-label="Go to top menu"
+            >
+              <div className={styles.goToTopIconWrap}>
+                <ChevronUp size={15} className={styles.goToTopIcon} />
               </div>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                <button className={styles.historyFollowUpChip} onClick={() => sendMessage("Book for Dr vikas yadav")}>
-                  Book for Dr vikas yadav
-                </button>
-                <button className={styles.historyFollowUpChip} onClick={() => sendMessage("Book for Dr Sonakshi Sinha")}>
-                  Book for Dr Sonakshi Sinha
-                </button>
-                <button className={styles.historyFollowUpChip} onClick={() => sendMessage("Book for General Physician")}>
-                  Book for General Physician
-                </button>
-                <button className={styles.historyFollowUpChip} onClick={() => sendMessage("Book for cardiologist")}>
-                  Book for cardiologist
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+              <span className={styles.goToTopText}>Go to top menu</span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+
 
         {/* Input Bar */}
-        <div className={styles.inputBar}>
+        <div className={styles.inputBar} style={{ position: "relative" }}>
+          <AnimatePresence>
+            {activeChipId && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className={styles.prefillGuideTooltip}
+                style={{
+                  position: "absolute",
+                  bottom: "76px",
+                  left: "50%",
+                  zIndex: 100
+                }}
+              >
+                <span style={{ marginRight: "6px" }}>✍️</span>
+                <span>
+                  {activeChipId.includes("symptom") && "Complete typing your symptoms (e.g. fever, headache)"}
+                  {activeChipId.includes("speciality") && "Complete typing the speciality (e.g. cardiologist)"}
+                  {activeChipId.includes("doctor") && "Complete typing the doctor's name"}
+                  {activeChipId === "report" && "Complete typing the report name"}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div style={{ maxWidth: "800px", width: "100%", display: "flex", alignItems: "flex-end", gap: "8px", margin: "0 auto" }}>
             <div className={styles.plusMenuWrap}>
               <button className={styles.circularPlusBtn} onClick={() => setShowPlusMenu(p => !p)} aria-label="Attach file">
@@ -3719,10 +5096,40 @@ function PulseAIGateway({
 }
 
 /* ─── ROOT EXPORT ─────────────────────────────────────────── */
-export default function PulseAIWorkspace({ onClose }: { onClose?: () => void }) {
+export default function PulseAIWorkspace({
+  onClose,
+  initialQuery: propInitialQuery = "",
+  initialAction: propInitialAction = null,
+  initialActionData: propInitialActionData = null
+}: {
+  onClose?: () => void;
+  initialQuery?: string;
+  initialAction?: string | null;
+  initialActionData?: any;
+}) {
   const [isOpen, setIsOpen] = useState(true);
-  const [initialQuery, setInitialQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [initialQuery, setInitialQuery] = useState(propInitialQuery);
+  const [initialAction, setInitialAction] = useState<string | null>(propInitialAction);
+  const [initialActionData, setInitialActionData] = useState<any>(propInitialActionData);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      return stored !== "false";
+    }
+    return true;
+  });
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const handleLoginChange = () => {
+      if (typeof window !== "undefined") {
+        const stored = sessionStorage.getItem("isLoggedIn");
+        setIsLoggedIn(stored !== "false");
+      }
+    };
+    window.addEventListener("login-state-changed", handleLoginChange);
+    return () => window.removeEventListener("login-state-changed", handleLoginChange);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -3755,6 +5162,15 @@ export default function PulseAIWorkspace({ onClose }: { onClose?: () => void }) 
     return () => window.removeEventListener("open-pulse-ai", handleExternalOpen);
   }, []);
 
+  useEffect(() => {
+    if (isOpen && isMaximized) {
+      document.body.classList.add("pulse-maximized");
+    } else {
+      document.body.classList.remove("pulse-maximized");
+    }
+    return () => document.body.classList.remove("pulse-maximized");
+  }, [isOpen, isMaximized]);
+
   const handleClose = () => {
     setIsOpen(false);
     if (onClose) onClose();
@@ -3762,37 +5178,44 @@ export default function PulseAIWorkspace({ onClose }: { onClose?: () => void }) 
 
   return (
     <>
-      {/* PulseTrigger has been removed because it is now triggered by the Hero search bar */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div className={styles.workspaceOverlay} key="pulse-workspace"
+          <motion.div className={`${styles.workspaceOverlay} ${isMaximized ? styles.workspaceOverlayMaximized : ""}`} key="pulse-workspace"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}>
-            <motion.div className={styles.workspaceContainer}
-              initial={{ opacity: 0 }}
+            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}>
+            <div className={styles.overlayBg}>
+              <PixelRipple trigger={isOpen} />
+            </div>
+            <motion.div className={`${styles.workspaceContainer} ${isMaximized ? styles.workspaceContainerMaximized : ""}`}
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
               animate={{ 
                 opacity: 1,
-                transition: { duration: 0.4, ease: "easeOut" } 
+                y: 0,
+                scale: 1,
+                transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] } 
               }}
               exit={{ 
                 opacity: 0,
-                transition: { duration: 0.3, ease: "easeIn" } 
+                y: 10,
+                scale: 0.98,
+                transition: { duration: 0.12, ease: [0.22, 1, 0.36, 1] } 
               }}
             >
-              {isLoggedIn ? (
-                <Workspace
-                  onClose={handleClose}
-                  initialQuery={initialQuery}
-                  clearInitialQuery={() => setInitialQuery("")}
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                />
-              ) : (
-                <PulseAIGateway
-                  onLoginSuccess={() => setIsLoggedIn(true)}
-                  onClose={handleClose}
-                />
-              )}
+              <Workspace
+                onClose={handleClose}
+                initialQuery={initialQuery}
+                clearInitialQuery={() => setInitialQuery("")}
+                initialAction={initialAction}
+                initialActionData={initialActionData}
+                clearInitialAction={() => {
+                  setInitialAction(null);
+                  setInitialActionData(null);
+                }}
+                isLoggedIn={isLoggedIn}
+                setIsLoggedIn={setIsLoggedIn}
+                isMaximized={isMaximized}
+                onToggleMaximize={() => setIsMaximized(m => !m)}
+              />
             </motion.div>
           </motion.div>
         )}

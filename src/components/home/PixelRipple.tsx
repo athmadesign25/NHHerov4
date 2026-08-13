@@ -26,7 +26,7 @@ export default function PixelRipple({ trigger }: PixelRippleProps) {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const PIXEL_SIZE = 4;
+    const PIXEL_SIZE = 2;
     const GAP = 1;
     const TOTAL_SIZE = PIXEL_SIZE + GAP;
     
