@@ -454,6 +454,7 @@ export default function HeroSearchFirst() {
   const [isPulseActive, setIsPulseActive] = useState(false);
   const [isPulseAnalyzed, setIsPulseAnalyzed] = useState(false);
   const [hasSubmittedQuery, setHasSubmittedQuery] = useState(false);
+  const [showGenericMatchesInPulse, setShowGenericMatchesInPulse] = useState(false);
   const [simulatedUserLocation, setSimulatedUserLocation] = useState<"same_city" | "nearby" | "far_away">("same_city");
   const [showPixelRipple, setShowPixelRipple] = useState(false);
 
