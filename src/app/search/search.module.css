@@ -17,17 +17,61 @@
 
 .tabScroll {
   display: flex;
-  gap: 8px;
+  background: var(--color-bg-alt);
   overflow-x: auto;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #E2E8F0;
+  padding-top: 24px;
+  padding-bottom: 0;
+  border-bottom: none;
   margin-bottom: 24px;
   white-space: nowrap;
   scrollbar-width: none;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding-left: 250px;
+  padding-right: 250px;
+}
+
+@media (max-width: 1024px) {
+  .tabScroll {
+    padding-left: var(--sp-2);
+    padding-right: var(--sp-2);
+  }
+}
+
+@media (max-width: 768px) {
+  .tabScroll {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 .tabScroll::-webkit-scrollbar {
   display: none;
+}
+
+.activeTab::before,
+.activeTab::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.activeTab::before {
+  left: -12px;
+  background: radial-gradient(circle at 0 0, transparent 12px, var(--color-bg-card) 12.5px);
+}
+
+.activeTab::after {
+  right: -12px;
+  background: radial-gradient(circle at 100% 0, transparent 12px, var(--color-bg-card) 12.5px);
 }
 
 .grid3col {
@@ -50,4 +94,99 @@
   .locationContainer select {
     flex: 1;
   }
+}
+
+.doctorsLayout {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .doctorsLayout {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+.filterPanel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 24px;
+  position: sticky;
+  top: 104px;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .filterPanel {
+    display: block;
+  }
+}
+
+.filterGroup {
+  margin-bottom: 24px;
+}
+
+.filterGroup:last-child {
+  margin-bottom: 0;
+}
+
+.filterTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: var(--transition-fast);
+}
+
+.checkboxLabel:hover {
+  color: var(--color-text);
+}
+
+.checkboxLabel:last-child {
+  margin-bottom: 0;
+}
+
+.checkboxInput {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  background: var(--color-bg-card);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.checkboxInput:checked {
+  background: var(--color-emergency);
+  border-color: var(--color-emergency);
+}
+
+.checkboxInput:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
