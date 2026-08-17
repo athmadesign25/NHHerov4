@@ -125,7 +125,7 @@ const doctorsData = [
     location: "Bengaluru",
     hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
     additionalHospitals: 1,
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["cardiology", "heart", "ravi", "prakash", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -133,7 +133,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Guwahati",
     hospital: "Narayana Superspeciality Hospital, Guwahati",
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["cardiology", "heart", "ravi", "kumar", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -142,7 +142,7 @@ const doctorsData = [
     location: "Mumbai",
     hospital: "NH Children's Hospital, Mumbai",
     additionalHospitals: 2,
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["neurology", "brain", "ravi", "shankar", "doctor", "specialist", "neurologist"]
   },
   {
@@ -150,7 +150,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Bengaluru",
     hospital: "Narayana Multispeciality Hospital, HSR Bangalore",
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["cardiology", "heart", "prakash", "sharma", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -158,7 +158,7 @@ const doctorsData = [
     speciality: "Orthopaedics",
     location: "Kolkata",
     hospital: "Narayana Superspeciality Hospital, Howrah, kolkata",
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["orthopaedics", "bone", "prakash", "gupta", "doctor", "specialist", "orthopaedic"]
   },
   {
@@ -166,7 +166,7 @@ const doctorsData = [
     speciality: "Cardiology",
     location: "Bengaluru",
     hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["cardiology", "heart", "rajiv", "menon", "doctor", "specialist", "cardiologist"]
   },
   {
@@ -175,7 +175,7 @@ const doctorsData = [
     location: "Mumbai",
     hospital: "NH Children's Hospital, Mumbai",
     additionalHospitals: 1,
-    photo: "/doctor_avatar_female.png",
+    photo: "/images/misc/doctor_avatar_female.png",
     keywords: ["neurology", "brain", "priya", "sharma", "doctor", "specialist", "neurologist"]
   },
   {
@@ -183,7 +183,7 @@ const doctorsData = [
     speciality: "Oncology",
     location: "Kolkata",
     hospital: "Narayana Multispeciality Hospital, Barasat, kolkata",
-    photo: "/doctor_avatar_male.png",
+    photo: "/images/misc/doctor_avatar_male.png",
     keywords: ["oncology", "cancer", "arun", "krishnan", "doctor", "specialist", "oncologist"]
   },
   {
@@ -191,7 +191,7 @@ const doctorsData = [
     speciality: "Orthopaedics",
     location: "Bengaluru",
     hospital: "Narayana Multispeciality Clinic, HSR Bangalore",
-    photo: "/doctor_avatar_female.png",
+    photo: "/images/misc/doctor_avatar_female.png",
     keywords: ["orthopaedics", "bone", "joint", "sunita", "patel", "doctor", "specialist"]
   }
 ];
@@ -560,7 +560,7 @@ export default function HeroSection() {
       {/* Full-screen Background Video */}
       <video
         ref={videoRef}
-        src="/Hero-Video-New.mp4"
+        src="/videos/Hero-Video-New.mp4"
         autoPlay
         muted
         loop
@@ -750,7 +750,7 @@ export default function HeroSection() {
                                       className={styles.doctorCard}
                                     >
                                       <img
-                                        src={doc.photo || "/doctor_avatar_male.png"}
+                                        src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                         alt={doc.name}
                                         className={styles.doctorPhoto}
                                       />

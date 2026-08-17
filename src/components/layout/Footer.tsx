@@ -58,7 +58,7 @@ export default function Footer() {
               <div className={styles.brand}>
                 <div className={styles.brandLogo}>
                   <Image 
-                    src="/NH Logo_white.svg" 
+                    src="/logos/NH Logo_white.svg" 
                     alt="Narayana Health" 
                     width={180} 
                     height={60} 

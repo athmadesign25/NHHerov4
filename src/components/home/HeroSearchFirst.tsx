@@ -745,7 +745,7 @@ export default function HeroSearchFirst() {
       >
         <video
         ref={videoRef}
-        src="/Hero-Video-New.mp4"
+        src="/videos/Hero-Video-New.mp4"
         autoPlay
         muted
         loop
@@ -1013,7 +1013,7 @@ export default function HeroSearchFirst() {
                           <div className={styles.entryCardHeader}>
                             <div className={styles.entryCardBannerWrap}>
                               <img 
-                                src="/pulse_find_doctor_banner.png" 
+                                src="/images/pulse-ai/pulse_find_doctor_banner.png" 
                                 alt="Find the right doctor" 
                                 className={styles.entryCardBannerImg} 
                               />
@@ -1039,7 +1039,7 @@ export default function HeroSearchFirst() {
                           <div className={styles.entryCardHeader}>
                             <div className={styles.entryCardBannerWrap}>
                               <img 
-                                src="/pulse_health_insights_banner.png" 
+                                src="/images/pulse-ai/pulse_health_insights_banner.png" 
                                 alt="Know your health" 
                                 className={styles.entryCardBannerImg} 
                               />
@@ -1127,7 +1127,7 @@ export default function HeroSearchFirst() {
                                                    style={{ padding: "8px 10px" }}
                                                  >
                                                    <img
-                                                     src={doc.photo || "/doctor_avatar_male.png"}
+                                                     src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                                      alt={doc.name}
                                                      className={styles.doctorPhoto}
                                                      style={{ width: "32px", height: "32px" }}
@@ -1171,7 +1171,7 @@ export default function HeroSearchFirst() {
                                                    style={{ padding: "8px 10px" }}
                                                  >
                                                    <img
-                                                     src={doc.photo || "/doctor_avatar_male.png"}
+                                                     src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                                      alt={doc.name}
                                                      className={styles.doctorPhoto}
                                                      style={{ width: "32px", height: "32px" }}
@@ -1315,7 +1315,7 @@ export default function HeroSearchFirst() {
                                                   style={{ padding: "8px 10px" }}
                                                 >
                                                   <img
-                                                    src={doc.photo || "/doctor_avatar_male.png"}
+                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                                     alt={doc.name}
                                                     className={styles.doctorPhoto}
                                                     style={{ width: "32px", height: "32px" }}
@@ -1715,7 +1715,7 @@ export default function HeroSearchFirst() {
                                                   className={styles.doctorCard}
                                                 >
                                                   <img
-                                                    src={doc.photo || "/doctor_avatar_male.png"}
+                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                                     alt={doc.name}
                                                     className={styles.doctorPhoto}
                                                   />
@@ -1765,7 +1765,7 @@ export default function HeroSearchFirst() {
                                                   className={styles.doctorCard}
                                                 >
                                                   <img
-                                                    src={doc.photo || "/doctor_avatar_male.png"}
+                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
                                                     alt={doc.name}
                                                     className={styles.doctorPhoto}
                                                   />
@@ -2035,7 +2035,7 @@ export default function HeroSearchFirst() {
                 aria-hidden
               />
               <div className={styles.pulseLogoUnit}>
-                <img src="/pulse-ai.png" alt="Pulse AI" className={styles.pulseLogoImg} />
+                <img src="/images/pulse-ai/pulse-ai.png" alt="Pulse AI" className={styles.pulseLogoImg} />
               </div>
               <div className={styles.pulseTextUnit}>
                 <div className={styles.pulseTitle}>Ask Pulse AI</div>

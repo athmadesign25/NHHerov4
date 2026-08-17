@@ -24,7 +24,7 @@ export default function ChairmanQuote() {
           left: 0,
           width: "100%",
           height: "150%",
-          backgroundImage: "url('/leadership-bg.png')",
+          backgroundImage: "url('/images/backgrounds/leadership-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           y: bgY,
@@ -81,7 +81,7 @@ export default function ChairmanQuote() {
             >
               <motion.div className={styles.imageInner}>
                 <Image
-                  src="/chairman-portrait.png"
+                  src="/images/backgrounds/chairman-portrait.png"
                   alt="Dr. Devi Prasad Shetty — Founder and Chairman, Narayana Health"
                   fill
                   className={styles.image}

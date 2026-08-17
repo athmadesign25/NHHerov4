@@ -370,7 +370,7 @@ function SearchResultsContent() {
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "#F8FAFC" }}>
       {/* Top Search Banner */}
       <div style={{ background: "linear-gradient(135deg, #022352 0%, #034EA2 100%)", padding: "40px 0 48px", color: "#FFFFFF" }}>
-        <div className="container" style={{ maxWidth: 840 }}>
+        <div className="container">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
               <h1 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, letterSpacing: "-0.01em" }}>
@@ -447,7 +447,7 @@ function SearchResultsContent() {
       </div>
 
       {/* Tabs and Content Wrapper */}
-      <div className="container" style={{ padding: "24px var(--sp-3)", maxWidth: 1024 }}>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 24 }}>
         {/* Horizontal Navigation Filters */}
         <div className={styles.tabScroll}>
           {TABS.map((tab) => {

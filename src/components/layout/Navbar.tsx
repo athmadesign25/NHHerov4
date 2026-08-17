@@ -57,7 +57,7 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ width: "108px", height: "auto", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ color: "transparent", width: "100%", height: "auto" }} src={isNavbarActive ? "/NH-logo.svg" : "/NH_Logo_white_1.png"} priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ color: "transparent", width: "100%", height: "auto" }} src={isNavbarActive ? "/logos/NH-logo.svg" : "/logos/NH_Logo_white_1.png"} priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className="desktop-nav">
@@ -291,7 +291,7 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", backgroundColor: "#fff", zIndex: 1001, overflowY: "auto", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", borderBottom: "1px solid #eee" }}>
-            <Image alt="Narayana Health" width={108} height={34} style={{ width: "108px", height: "auto" }} src="/NH-logo.svg" />
+            <Image alt="Narayana Health" width={108} height={34} style={{ width: "108px", height: "auto" }} src="/logos/NH-logo.svg" />
             <button onClick={() => setIsMobileMenuOpen(false)} style={{ background: "none", border: "none", padding: "8px", cursor: "pointer" }}>
               <X size={24} />
             </button>

@@ -7,7 +7,7 @@ import PatientStories from "@/components/home/PatientStories";
 import ChairmanQuote from "@/components/home/ChairmanQuote";
 import AppDownloadBanner from "@/components/home/AppDownloadBanner";
 import FloatingQuickActions from "@/components/ui/FloatingQuickActions";
-import PulseAIFloatingEntry from "@/components/ui/PulseAIFloatingEntry";
+import PulseAIFloatingEntry from "@/components/pulse-ai/PulseAIFloatingEntry";
 import Footer from "@/components/layout/Footer";
 
 export default function HomePage() {

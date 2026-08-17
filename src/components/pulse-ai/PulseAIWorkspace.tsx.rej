@@ -1,9 +1,0 @@
-@@ -1866,7 +1866,7 @@
-     scaleY: 1,
-     scaleX: 1,
-     transition: {
--      type: "spring",
-+      type: "spring" as const,
-       stiffness: 170,
-       damping: 11, // elastic bounce
-       mass: 0.8,

@@ -419,7 +419,7 @@ function aiResponse(q: string, isLoggedIn: boolean, userName = "Omkar"): Partial
           title: "Book for Dr Pradeep kumar",
           badge: "Last visited",
           prompt: "Book for Dr Pradeep R Kumar",
-          photo: "/doctor_avatar_male.png"
+          photo: "/images/misc/doctor_avatar_male.png"
         },
         subChips: [
           { label: "I have a symptom", prompt: "I have a symptom" },
@@ -2880,7 +2880,7 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
             >
               <div className={styles.findDoctorCardLeft}>
                 <img 
-                  src={msg.findDoctorOptions.lastVisitedDoctor.photo || "/doctor_avatar_male.png"} 
+                  src={msg.findDoctorOptions.lastVisitedDoctor.photo || "/images/misc/doctor_avatar_male.png"} 
                   alt="Doctor" 
                   className={styles.findDoctorAvatarImg} 
                 />
@@ -3149,7 +3149,7 @@ function MsgBubble({ msg, onAction, onPrefill, activeChipId, userName = "Omkar",
             <div className={styles.bookingConfirmBody}>
               <div className={styles.bookingDocInfo}>
                 <img
-                  src={msg.slotDoctor?.photo || "/doctor_avatar_male.png"}
+                  src={msg.slotDoctor?.photo || "/images/misc/doctor_avatar_male.png"}
                   alt={msg.slotDoctor?.name || "Doctor"}
                   className={styles.bookingDocPhoto}
                 />
@@ -3408,7 +3408,7 @@ function WelcomeScreen({ onPrompt, onPrefill, activeChipId, isLoggedIn, userName
           <div className={styles.entryCardHeader}>
             <div className={styles.entryCardBannerWrap}>
               <img 
-                src="/pulse_find_doctor_banner.png" 
+                src="/images/pulse-ai/pulse_find_doctor_banner.png" 
                 alt="Find the right doctor" 
                 className={styles.entryCardBannerImg} 
               />
@@ -3455,7 +3455,7 @@ function WelcomeScreen({ onPrompt, onPrefill, activeChipId, isLoggedIn, userName
           <div className={styles.entryCardHeader}>
             <div className={styles.entryCardBannerWrap}>
               <img 
-                src="/pulse_health_insights_banner.png" 
+                src="/images/pulse-ai/pulse_health_insights_banner.png" 
                 alt="Know your health" 
                 className={styles.entryCardBannerImg} 
               />
@@ -3586,7 +3586,7 @@ function Sidebar({ history, activeId, onSelect, onNew, onClose }: {
 
 
 const ASSOCIATED_PROFILES = [
-  { id: "p1", name: "Omkar V", relation: "Self", avatar: "/patient_omkar.png" },
+  { id: "p1", name: "Omkar V", relation: "Self", avatar: "/images/misc/patient_omkar.png" },
   { id: "p2", name: "Ramesh V", relation: "Father", avatar: "/assets/doctor_1.png" },
   { id: "p3", name: "Saraswathi V", relation: "Mother", avatar: "/assets/doctor_2.png" },
   { id: "p4", name: "Ananya V", relation: "Daughter", avatar: "/assets/doctor_2.png" }

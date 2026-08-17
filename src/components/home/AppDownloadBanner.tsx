@@ -59,10 +59,10 @@ export default function AppDownloadBanner() {
               </div>
               <div className={styles.actionsRow}>
                 <a href="#" tabIndex={0} className={styles.storeBadge}>
-                  <img alt="Download on the App Store" src="/App%20store.svg" />
+                  <img alt="Download on the App Store" src="/logos/App%20store.svg" />
                 </a>
                 <a href="#" tabIndex={0} className={styles.storeBadge}>
-                  <img alt="Get it on Google Play" src="/Google%20play.svg" />
+                  <img alt="Get it on Google Play" src="/logos/Google%20play.svg" />
                 </a>
               </div>
             </div>
