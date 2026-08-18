@@ -15,10 +15,24 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 // Mock Data
 const ALL_SPECIALTIES = [
-  "Adult Cardiology", "Adult Critical Care Medicine", "Adult Haemato-oncology and BMT", "Anesthesiology", "Audiology",
-  "Blood Bank", "Breast Oncology & Oncoplastic Surgery", "Cancer Care", "Cardiac Sciences", "Cardiac Surgery - Adult", 
-  "Cardiology", "Cardiology - Paediatric", "Child & Adolescent Psychiatry", "Clinical Genetics", "Clinical Hematology", 
-  "Clinical Immunology", "Clinical Nutrition", "Clinical Psychology", "Cosmetology", "Critical Care"
+  "Cardiologist",
+  "Orthopaedician",
+  "Oncologist",
+  "Neurologist",
+  "Pediatrician",
+  "Cardiac Surgeon",
+  "General Surgeon",
+  "Vascular Surgeon",
+  "Plastic Surgeon",
+  "Gastroenterologist",
+  "Pulmonologist",
+  "Endocrinologist",
+  "Nephrologist",
+  "Urologist",
+  "Gynecologist",
+  "ENT Specialist",
+  "Dermatologist",
+  "Dentist"
 ];
 
 const doctorsData = [
@@ -794,7 +808,20 @@ function SearchResultsContent() {
 
   // Sync state if URL query changes
   useEffect(() => {
-    setQuery(initialQuery);
+    const q = initialQuery.trim().toLowerCase();
+    const isSpecialty = doctorsData.some(d => d.speciality.toLowerCase() === q);
+    
+    if (isSpecialty && q !== "") {
+      const matchedSpecialty = doctorsData.find(d => d.speciality.toLowerCase() === q)?.speciality;
+      if (matchedSpecialty) {
+        setSelectedSpecialties([matchedSpecialty]);
+        setQuery("");
+      }
+    } else {
+      setQuery(initialQuery);
+      setSelectedSpecialties([]);
+    }
+
     setLocation(searchParams.get("location") || "All");
     setActiveTab("doctors");
   }, [initialQuery, searchParams]);
@@ -807,11 +834,16 @@ function SearchResultsContent() {
 
   // Filter logic for each category
   const filteredDoctors = doctorsData.filter((d) => {
-    const matchesQuery = d.name.toLowerCase().includes(query.toLowerCase()) ||
+    const matchesQuery = query === "" ? true : (
+      d.name.toLowerCase().includes(query.toLowerCase()) ||
       d.speciality.toLowerCase().includes(query.toLowerCase()) ||
-      d.hospital.toLowerCase().includes(query.toLowerCase());
+      d.hospital.toLowerCase().includes(query.toLowerCase())
+    );
     const matchesLocation = location === "All" || d.city.toLowerCase() === location.toLowerCase();
-    return matchesQuery && matchesLocation;
+    const matchesSpecialty = selectedSpecialties.length === 0 || selectedSpecialties.includes(d.speciality);
+    const matchesHospital = selectedHospitals.length === 0 || selectedHospitals.includes(d.hospital);
+
+    return matchesQuery && matchesLocation && matchesSpecialty && matchesHospital;
   });
 
   const filteredHospitals = hospitalsData.filter((h) => {
