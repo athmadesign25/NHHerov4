@@ -1324,6 +1324,13 @@ function SearchResultsContent() {
                       ))}
                     </div>
 
+                    {/* Search Summary Text */}
+                    {activeTab === "doctors" && (
+                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                        Showing results for {consultationType === "Video Consultation" ? "video consultations" : "hospital visits"} in {location === "All" ? "all locations" : `${location} location`}
+                      </div>
+                    )}
+
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 20 }}>
                     {isFiltering ? (
                       Array.from({ length: 4 }).map((_, i) => (
