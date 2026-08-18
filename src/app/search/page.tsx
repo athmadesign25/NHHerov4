@@ -11,6 +11,7 @@ import {
   FileText, Calendar, Star, MapPin, Clock, ArrowRight, ShieldAlert,
   ChevronRight, Building, Video, PhoneCall, ArrowRightLeft
 } from "lucide-react";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 // Mock Data
 const ALL_SPECIALTIES = [
@@ -58,6 +59,7 @@ const doctorsData = [
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,200",
+    isExecutive: true,
   },
   {
     id: "dr-3",
@@ -135,7 +137,295 @@ const doctorsData = [
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹900",
   },
+  {
+    id: "dr-7",
+    name: "Dr. Sandeep Kumar",
+    speciality: "Orthopedic Surgery",
+    degrees: "MBBS, MS (Orthopedics), Fellowship in Joint Replacement",
+    hospital: "NH Guwahati",
+    hospitalCount: "",
+    city: "Guwahati",
+    experience: "16 Years",
+    rating: 4.5,
+    reviews: 320,
+    available: "Available Tom",
+    availability: {
+      hospital: "Tom, 10:00 AM",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹800",
+  },
+  {
+    id: "dr-8",
+    name: "Dr. Vikram Singh",
+    speciality: "Interventional Cardiology",
+    degrees: "MBBS, MD, DM (Cardiology), FACC",
+    hospital: "NH Jaipur",
+    hospitalCount: "+1",
+    city: "Jaipur",
+    experience: "25 Years",
+    rating: 4.9,
+    reviews: 1540,
+    available: "Next Available: Monday",
+    availability: {
+      hospital: "Mon, 11:30 AM",
+      video: "Mon, 04:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹2,500",
+    isExecutive: true,
+  },
+  {
+    id: "dr-9",
+    name: "Dr. Meera Nanda",
+    speciality: "Medical Oncology",
+    degrees: "MBBS, MD, DM (Medical Oncology)",
+    hospital: "NH Delhi",
+    hospitalCount: "",
+    city: "Delhi",
+    experience: "19 Years",
+    rating: 4.7,
+    reviews: 845,
+    available: "No Slots Available",
+    availability: {
+      hospital: "",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹1,500",
+  },
+  {
+    id: "dr-10",
+    name: "Dr. Sameer Desai",
+    speciality: "Pediatric Cardiology",
+    degrees: "MBBS, MD (Pediatrics), FNB (Pediatric Cardiology)",
+    hospital: "NH Mumbai",
+    hospitalCount: "+2",
+    city: "Mumbai",
+    experience: "14 Years",
+    rating: 4.8,
+    reviews: 670,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 03:00 PM",
+      video: "Today, 05:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹1,100",
+  },
+  {
+    id: "dr-11",
+    name: "Dr. Kavita Reddy",
+    speciality: "Surgical Oncology",
+    degrees: "MBBS, MS, MCh (Surgical Oncology)",
+    hospital: "NH Bangalore",
+    hospitalCount: "",
+    city: "Bangalore",
+    experience: "21 Years",
+    rating: 4.9,
+    reviews: 1120,
+    available: "Available Tom",
+    availability: {
+      hospital: "",
+      video: "Tom, 12:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹1,800",
+  },
+  {
+    id: "dr-12",
+    name: "Dr. Ananya Sharma",
+    speciality: "Joint Replacement",
+    degrees: "MBBS, MS (Orthopedics)",
+    hospital: "NH Shimoga",
+    hospitalCount: "",
+    city: "Shimoga",
+    experience: "12 Years",
+    rating: 4.6,
+    reviews: 450,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 02:00 PM",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹750",
+  },
+  {
+    id: "dr-13",
+    name: "Dr. Rahul Verma",
+    speciality: "Neuro Surgery",
+    degrees: "MBBS, MS, MCh (Neurosurgery)",
+    hospital: "NH Dharwad",
+    hospitalCount: "",
+    city: "Dharwad",
+    experience: "22 Years",
+    rating: 4.8,
+    reviews: 1100,
+    available: "Next Available: Tom",
+    availability: {
+      hospital: "Tom, 10:30 AM",
+      video: "Tom, 03:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹1,800",
+  },
+  {
+    id: "dr-14",
+    name: "Dr. Siddharth Rao",
+    speciality: "Interventional Cardiology",
+    degrees: "MBBS, MD, DM (Cardiology)",
+    hospital: "NH Ahmedabad",
+    hospitalCount: "+1",
+    city: "Ahmedabad",
+    experience: "18 Years",
+    rating: 4.7,
+    reviews: 890,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 04:00 PM",
+      video: "Today, 08:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹1,200",
+  },
+  {
+    id: "dr-15",
+    name: "Dr. Sneha Patil",
+    speciality: "Medical Oncology",
+    degrees: "MBBS, MD (Medicine), DM (Oncology)",
+    hospital: "NH Kolar",
+    hospitalCount: "",
+    city: "Kolar",
+    experience: "15 Years",
+    rating: 4.9,
+    reviews: 650,
+    available: "Available Tom",
+    availability: {
+      hospital: "",
+      video: "Tom, 01:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹1,000",
+  },
+  {
+    id: "dr-16",
+    name: "Dr. Kunal Basu",
+    speciality: "Pediatric Cardiology",
+    degrees: "MBBS, MD, Fellowship in Pediatric Cardiology",
+    hospital: "NH Barasat",
+    hospitalCount: "",
+    city: "Barasat",
+    experience: "11 Years",
+    rating: 4.5,
+    reviews: 210,
+    available: "Next Available: Thursday",
+    availability: {
+      hospital: "Thu, 11:00 AM",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹900",
+  },
+  {
+    id: "dr-17",
+    name: "Dr. Amitab Ghosh",
+    speciality: "Surgical Oncology",
+    degrees: "MBBS, MS, MCh (Surgical Oncology)",
+    hospital: "NH Jamshedpur",
+    hospitalCount: "+2",
+    city: "Jamshedpur",
+    experience: "26 Years",
+    rating: 4.9,
+    reviews: 1800,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 12:30 PM",
+      video: "Today, 05:30 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹2,200",
+    isExecutive: true,
+  },
+  {
+    id: "dr-18",
+    name: "Dr. Ritu Singh",
+    speciality: "Orthopedic Surgery",
+    degrees: "MBBS, MS (Orthopedics)",
+    hospital: "NH Gurugram",
+    hospitalCount: "",
+    city: "Gurugram",
+    experience: "14 Years",
+    rating: 4.7,
+    reviews: 740,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 09:00 AM",
+      video: "Today, 11:00 AM"
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹1,500",
+  },
+  {
+    id: "dr-19",
+    name: "Dr. Tariq Khan",
+    speciality: "Neuro Surgery",
+    degrees: "MBBS, MS, MCh (Neurosurgery)",
+    hospital: "NH Howrah",
+    hospitalCount: "+1",
+    city: "Howrah",
+    experience: "20 Years",
+    rating: 4.8,
+    reviews: 1300,
+    available: "No Slots Available",
+    availability: {
+      hospital: "",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹1,600",
+  },
+  {
+    id: "dr-20",
+    name: "Dr. Priti Gowda",
+    speciality: "Joint Replacement",
+    degrees: "MBBS, MS (Orthopedics)",
+    hospital: "NH Mysore",
+    hospitalCount: "",
+    city: "Mysore",
+    experience: "17 Years",
+    rating: 4.6,
+    reviews: 580,
+    available: "Available Tom",
+    availability: {
+      hospital: "Tom, 04:00 PM",
+      video: ""
+    },
+    img: "/images/misc/doctor_avatar_female_v2.png",
+    fee: "₹1,100",
+  },
+  {
+    id: "dr-21",
+    name: "Dr. Vivek Anand",
+    speciality: "Interventional Cardiology",
+    degrees: "MBBS, MD, DM (Cardiology)",
+    hospital: "NH Hosur",
+    hospitalCount: "",
+    city: "Hosur",
+    experience: "13 Years",
+    rating: 4.7,
+    reviews: 490,
+    available: "Available Today",
+    availability: {
+      hospital: "Today, 10:00 AM",
+      video: "Today, 02:00 PM"
+    },
+    img: "/images/misc/doctor_avatar_male_v2.png",
+    fee: "₹1,000",
+  }
 ];
+
 
 const hospitalsData = [
   {
@@ -333,8 +623,8 @@ const articlesData = [
 const TABS = [
   { id: "doctors", label: "Doctors", countKey: "doctors" },
   { id: "packages_tests", label: "Health Packages & Tests", countKey: "packages_tests" },
-  { id: "treatments", label: "Treatments", countKey: "treatments" },
-  { id: "articles", label: "Articles", countKey: "articles" },
+  { id: "treatments", label: "Procedures & Treatments", countKey: "treatments" },
+  { id: "articles", label: "Articles & Blogs", countKey: "articles" },
 ];
 
 function SearchResultsContent() {
@@ -342,7 +632,7 @@ function SearchResultsContent() {
   const router = useRouter();
   
   const initialQuery = searchParams.get("q") || searchParams.get("search") || "";
-  const initialLocation = searchParams.get("location") || "All";
+  const initialLocation = searchParams.get("location") || "Bangalore";
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
   const [activeTab, setActiveTab] = useState("doctors");
@@ -425,6 +715,16 @@ function SearchResultsContent() {
     articles: filteredArticles.length,
   };
 
+  const activeDynamicFiltersCount = 
+    selectedSpecialties.length + 
+    selectedHospitals.length + 
+    selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").length + 
+    selectedExpertise.length + 
+    selectedGender.length + 
+    selectedLanguage.length;
+
+  const shouldGroupFilters = activeDynamicFiltersCount > 5;
+
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       {/* Top Search Banner */}
@@ -432,6 +732,10 @@ function SearchResultsContent() {
         <div className="container">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
+              <Breadcrumbs items={[
+                { label: "Home", href: "/" },
+                { label: "Search Results" }
+              ]} />
               <h1 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, letterSpacing: "-0.01em" }}>
                 Search Results
               </h1>
@@ -474,7 +778,7 @@ function SearchResultsContent() {
 
               {/* Location Filter Selector */}
               <div className={styles.locationContainer}>
-                <MapPin size={18} style={{ marginRight: 8, color: "var(--color-primary, #034EA2)" }} />
+                <MapPin size={18} style={{ marginRight: 4, color: "#000000" }} />
                 <select
                   value={location}
                   onChange={(e) => {
@@ -495,9 +799,23 @@ function SearchResultsContent() {
                 >
                   <option value="All">All Locations</option>
                   <option value="Bangalore">Bangalore</option>
-                  <option value="Kolkata">Kolkata</option>
-                  <option value="Mumbai">Mumbai</option>
+                  <option value="Guwahati">Guwahati</option>
+                  <option value="Dharwad">Dharwad</option>
+                  <option value="Shimoga">Shimoga</option>
                   <option value="Ahmedabad">Ahmedabad</option>
+                  <option value="Jaipur">Jaipur</option>
+                  <option value="Kolar">Kolar</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Raipur">Raipur</option>
+                  <option value="Kolkata">Kolkata</option>
+                  <option value="Davangere">Davangere</option>
+                  <option value="Barasat">Barasat</option>
+                  <option value="Jamshedpur">Jamshedpur</option>
+                  <option value="Gurugram">Gurugram</option>
+                  <option value="Howrah">Howrah</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Mysore">Mysore</option>
+                  <option value="Hosur">Hosur</option>
                 </select>
               </div>
             </form>
@@ -713,7 +1031,7 @@ function SearchResultsContent() {
                           </button>
                         )}
                       </div>
-                      {["Surgeon", "Consultant", "Specialist"].map((exp) => (
+                      {["Orthopedic Surgery", "Joint Replacement", "Interventional Cardiology", "Pediatric Cardiology", "Medical Oncology", "Surgical Oncology", "Neuro Surgery"].map((exp) => (
                         <label key={exp} className={styles.checkboxLabel}>
                           <input 
                             type="checkbox" 
@@ -906,14 +1224,68 @@ function SearchResultsContent() {
                         </button>
                       </div>
 
+                      {/* Default Quick Filter Pills */}
+                      <button
+                        onClick={() => toggleFilter(setSelectedAvailability, "Available Today")}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          height: 32,
+                          padding: "0 12px",
+                          boxSizing: "border-box",
+                          borderRadius: 16,
+                          border: `1px solid ${selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-border)"}`,
+                          background: selectedAvailability.includes("Available Today") ? "rgba(237, 28, 36, 0.08)" : "#ffffff",
+                          color: selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-text-secondary)",
+                          fontSize: 13,
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "var(--transition-fast)"
+                        }}
+                      >
+                        Today
+                      </button>
+                      <button
+                        onClick={() => toggleFilter(setSelectedAvailability, "Available Tomorrow")}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          height: 32,
+                          padding: "0 12px",
+                          boxSizing: "border-box",
+                          borderRadius: 16,
+                          border: `1px solid ${selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-border)"}`,
+                          background: selectedAvailability.includes("Available Tomorrow") ? "rgba(237, 28, 36, 0.08)" : "#ffffff",
+                          color: selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-text-secondary)",
+                          fontSize: 13,
+                          fontWeight: 500,
+                          cursor: "pointer",
+                          transition: "var(--transition-fast)"
+                        }}
+                      >
+                        Tomorrow
+                      </button>
+
                       {/* Dynamic Filter Pills */}
                       {[
-                        ...selectedSpecialties.map(val => ({ label: val, remove: () => toggleFilter(setSelectedSpecialties, val) })),
-                        ...selectedHospitals.map(val => ({ label: val, remove: () => toggleFilter(setSelectedHospitals, val) })),
-                        ...selectedAvailability.map(val => ({ label: val, remove: () => toggleFilter(setSelectedAvailability, val) })),
-                        ...selectedExpertise.map(val => ({ label: val, remove: () => toggleFilter(setSelectedExpertise, val) })),
-                        ...selectedGender.map(val => ({ label: val, remove: () => toggleFilter(setSelectedGender, val) })),
-                        ...selectedLanguage.map(val => ({ label: val, remove: () => toggleFilter(setSelectedLanguage, val) }))
+                        ...(shouldGroupFilters && selectedSpecialties.length > 1 
+                          ? [{ label: `Speciality (${selectedSpecialties.length})`, remove: () => setSelectedSpecialties([]) }] 
+                          : selectedSpecialties.map(val => ({ label: val, remove: () => toggleFilter(setSelectedSpecialties, val) }))),
+                        ...(shouldGroupFilters && selectedHospitals.length > 1 
+                          ? [{ label: `Hospital (${selectedHospitals.length})`, remove: () => setSelectedHospitals([]) }] 
+                          : selectedHospitals.map(val => ({ label: val, remove: () => toggleFilter(setSelectedHospitals, val) }))),
+                        ...(shouldGroupFilters && selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").length > 1 
+                          ? [{ label: `Availability (${selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").length})`, remove: () => setSelectedAvailability(prev => prev.filter(v => v === "Available Today" || v === "Available Tomorrow")) }] 
+                          : selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").map(val => ({ label: val, remove: () => toggleFilter(setSelectedAvailability, val) }))),
+                        ...(shouldGroupFilters && selectedExpertise.length > 1 
+                          ? [{ label: `Expertise (${selectedExpertise.length})`, remove: () => setSelectedExpertise([]) }] 
+                          : selectedExpertise.map(val => ({ label: val, remove: () => toggleFilter(setSelectedExpertise, val) }))),
+                        ...(shouldGroupFilters && selectedGender.length > 1 
+                          ? [{ label: `Gender (${selectedGender.length})`, remove: () => setSelectedGender([]) }] 
+                          : selectedGender.map(val => ({ label: val, remove: () => toggleFilter(setSelectedGender, val) }))),
+                        ...(shouldGroupFilters && selectedLanguage.length > 1 
+                          ? [{ label: `Language (${selectedLanguage.length})`, remove: () => setSelectedLanguage([]) }] 
+                          : selectedLanguage.map(val => ({ label: val, remove: () => toggleFilter(setSelectedLanguage, val) })))
                       ].map((filter, index) => (
                         <div 
                           key={index} 
@@ -924,7 +1296,9 @@ function SearchResultsContent() {
                             background: "rgba(237, 28, 36, 0.08)", 
                             border: "1px solid var(--color-emergency)", 
                             borderRadius: 16, 
-                            padding: "4px 12px", 
+                            height: 32,
+                            padding: "0 12px",
+                            boxSizing: "border-box", 
                             fontSize: 13, 
                             fontWeight: 500,
                             color: "var(--color-emergency)" 
@@ -997,12 +1371,18 @@ function SearchResultsContent() {
                         background: "var(--color-bg-card)", 
                         border: "1px solid var(--color-border)", 
                         borderRadius: 16, 
-                        overflow: "hidden",
-                        boxShadow: "var(--shadow-sm)" 
+                        overflow: "visible", // Changed to visible for the ribbon folds to show
+                        boxShadow: "var(--shadow-sm)",
+                        position: "relative" // Added position relative for the absolute ribbon
                       }}
                     >
+                      {(doc as any).isExecutive && (
+                        <div style={{ position: "absolute", top: -4, right: 20, zIndex: 10 }}>
+                          <Image src="/Appointment/Executive tag.svg" alt="Executive" width={88} height={24} />
+                        </div>
+                      )}
                       {/* Top Section */}
-                      <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18 }}>
+                      <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
                             <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 80, height: 80, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
@@ -1035,10 +1415,12 @@ function SearchResultsContent() {
                         </div>
 
                         <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 12, marginBottom: 16 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
-                            <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} />
-                            {doc.availability.hospital}
-                          </div>
+                          {consultationType !== "Video Consultation" && (
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                              <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} />
+                              {doc.availability.hospital}
+                            </div>
+                          )}
                           <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
                             <Image src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={16} height={16} />
                             {doc.availability.video}
