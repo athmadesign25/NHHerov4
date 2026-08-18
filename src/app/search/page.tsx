@@ -9,7 +9,7 @@ import styles from "./search.module.css";
 import { 
   Search, X, User, Building2, Activity, ShieldCheck, 
   FileText, Calendar, Star, MapPin, Clock, ArrowRight, ShieldAlert,
-  ChevronRight, Building, Video, PhoneCall, ArrowRightLeft
+  ChevronRight, ChevronDown, Building, Video, PhoneCall, ArrowRightLeft, Filter
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
@@ -35,7 +35,7 @@ const doctorsData = [
     reviews: 1240,
     available: "Available Today",
     availability: {
-      hospital: "Tom, 02:30 PM",
+      hospital: "Today, 02:30 PM",
       video: "Today, 10:00 AM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
@@ -52,10 +52,10 @@ const doctorsData = [
     experience: "15 Years",
     rating: 4.8,
     reviews: 890,
-    available: "Next Available: Tom",
+    available: "Next Available: Tomorrow",
     availability: {
-      hospital: "Tom, 11:00 AM",
-      video: "Tom, 04:00 PM"
+      hospital: "Tomorrow, 11:00 AM",
+      video: "Tomorrow, 04:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,200",
@@ -75,7 +75,7 @@ const doctorsData = [
     available: "Available Today",
     availability: {
       hospital: "Today, 05:30 PM",
-      video: "Tom, 09:00 AM"
+      video: "Tomorrow, 09:00 AM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹2,000",
@@ -93,7 +93,7 @@ const doctorsData = [
     reviews: 560,
     available: "Available Today",
     availability: {
-      hospital: "Tom, 01:00 PM",
+      hospital: "Tomorrow, 01:00 PM",
       video: "Today, 03:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
@@ -112,8 +112,8 @@ const doctorsData = [
     reviews: 980,
     available: "Next Available: Day After",
     availability: {
-      hospital: "Wed, 10:30 AM",
-      video: "Tom, 06:00 PM"
+      hospital: "Tue, 10:30 AM",
+      video: "Tomorrow, 06:00 PM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹1,800",
@@ -148,10 +148,10 @@ const doctorsData = [
     experience: "16 Years",
     rating: 4.5,
     reviews: 320,
-    available: "Available Tom",
+    available: "Available Tomorrow",
     availability: {
-      hospital: "Tom, 10:00 AM",
-      video: ""
+      hospital: "Tomorrow, 10:00 AM",
+      video: "Tomorrow, 04:30 PM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹800",
@@ -189,8 +189,8 @@ const doctorsData = [
     reviews: 845,
     available: "No Slots Available",
     availability: {
-      hospital: "",
-      video: ""
+      hospital: "Today, 02:00 PM",
+      video: "26 Jan, 11:00 AM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,500",
@@ -225,10 +225,10 @@ const doctorsData = [
     experience: "21 Years",
     rating: 4.9,
     reviews: 1120,
-    available: "Available Tom",
+    available: "Available Tomorrow",
     availability: {
-      hospital: "",
-      video: "Tom, 12:00 PM"
+      hospital: "Tomorrow, 09:30 AM",
+      video: "Tomorrow, 12:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,800",
@@ -247,7 +247,7 @@ const doctorsData = [
     available: "Available Today",
     availability: {
       hospital: "Today, 02:00 PM",
-      video: ""
+      video: "Today, 05:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹750",
@@ -263,10 +263,10 @@ const doctorsData = [
     experience: "22 Years",
     rating: 4.8,
     reviews: 1100,
-    available: "Next Available: Tom",
+    available: "Next Available: Tomorrow",
     availability: {
-      hospital: "Tom, 10:30 AM",
-      video: "Tom, 03:00 PM"
+      hospital: "Tomorrow, 10:30 AM",
+      video: "Tomorrow, 03:00 PM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹1,800",
@@ -301,10 +301,10 @@ const doctorsData = [
     experience: "15 Years",
     rating: 4.9,
     reviews: 650,
-    available: "Available Tom",
+    available: "Available Tomorrow",
     availability: {
-      hospital: "",
-      video: "Tom, 01:00 PM"
+      hospital: "Tue, 09:00 AM",
+      video: "Tomorrow, 01:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,000",
@@ -322,8 +322,8 @@ const doctorsData = [
     reviews: 210,
     available: "Next Available: Thursday",
     availability: {
-      hospital: "Thu, 11:00 AM",
-      video: ""
+      hospital: "Today, 11:00 AM",
+      video: "26 Jan, 10:00 AM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹900",
@@ -380,8 +380,8 @@ const doctorsData = [
     reviews: 1300,
     available: "No Slots Available",
     availability: {
-      hospital: "",
-      video: ""
+      hospital: "29 Jan, 10:00 AM",
+      video: "29 Jan, 04:00 PM"
     },
     img: "/images/misc/doctor_avatar_male_v2.png",
     fee: "₹1,600",
@@ -397,10 +397,10 @@ const doctorsData = [
     experience: "17 Years",
     rating: 4.6,
     reviews: 580,
-    available: "Available Tom",
+    available: "Available Tomorrow",
     availability: {
-      hospital: "Tom, 04:00 PM",
-      video: ""
+      hospital: "Tomorrow, 04:00 PM",
+      video: "Tomorrow, 06:00 PM"
     },
     img: "/images/misc/doctor_avatar_female_v2.png",
     fee: "₹1,100",
@@ -477,6 +477,8 @@ const treatmentsData = [
     speciality: "Cardiology",
     description: "Minimally invasive coronary angioplasty and advanced coronary artery bypass grafting (CABG) surgeries to restore normal blood flow to the heart.",
     duration: "2 - 5 Hours",
+    type: "Procedures",
+    image: "/images/procedures/procedure_cardiology.png",
   },
   {
     id: "treat-2",
@@ -484,6 +486,8 @@ const treatmentsData = [
     speciality: "Neurology",
     description: "Surgical procedure used to treat a variety of disabling neurological symptoms, most commonly for Parkinson's disease.",
     duration: "3 - 6 Hours",
+    type: "Procedures",
+    image: "/images/procedures/procedure_surgery.png",
   },
   {
     id: "treat-3",
@@ -491,6 +495,8 @@ const treatmentsData = [
     speciality: "Oncology",
     description: "Advanced radiotherapy including TrueBeam and personalized chemotherapy regimens tailored to treat specific cancer forms effectively.",
     duration: "Varies per plan",
+    type: "Treatments",
+    image: "/images/procedures/procedure_mri.png",
   },
   {
     id: "treat-4",
@@ -498,6 +504,8 @@ const treatmentsData = [
     speciality: "Orthopaedics",
     description: "Robot-assisted total and partial joint replacement procedures using durable implants designed for faster recovery and mobility.",
     duration: "1 - 2 Hours",
+    type: "Procedures",
+    image: "/images/procedures/procedure_surgery.png",
   },
   {
     id: "treat-5",
@@ -505,7 +513,90 @@ const treatmentsData = [
     speciality: "Gastroenterology",
     description: "Diagnostic and therapeutic endoscopic procedures for digestive disorders, including colonoscopy, ERCP, and EUS.",
     duration: "30 - 60 Mins",
+    type: "Procedures",
+    image: "/images/procedures/procedure_surgery.png",
   },
+  {
+    id: "treat-6",
+    name: "Bone Marrow Transplant",
+    speciality: "Haematology",
+    description: "A procedure to replace damaged or destroyed bone marrow with healthy bone marrow stem cells.",
+    duration: "2 - 4 Hours",
+    type: "Treatments",
+    image: "/images/procedures/procedure_surgery.png",
+  },
+  {
+    id: "treat-7",
+    name: "Cataract Surgery",
+    speciality: "Ophthalmology",
+    description: "A procedure to remove the lens of your eye and, in most cases, replace it with an artificial lens.",
+    duration: "30 - 45 Mins",
+    type: "Procedures",
+    image: "/images/procedures/procedure_surgery.png",
+  },
+  {
+    id: "treat-8",
+    name: "Echocardiogram (ECHO)",
+    speciality: "Cardiology",
+    description: "An ultrasound of the heart to see how well the heart muscle and valves are working.",
+    duration: "30 - 60 Mins",
+    type: "Procedures",
+    image: "/images/procedures/procedure_mri.png",
+  },
+  {
+    id: "treat-9",
+    name: "Laser Eye Surgery (LASIK)",
+    speciality: "Ophthalmology",
+    description: "A refractive surgical procedure that uses a laser to reshape the cornea to correct myopia, hyperopia, and astigmatism.",
+    duration: "15 - 30 Mins",
+    type: "Procedures",
+    image: "/images/procedures/procedure_surgery.png",
+  },
+  {
+    id: "treat-10",
+    name: "MRI Scan (Magnetic Resonance Imaging)",
+    speciality: "Radiology",
+    description: "A non-invasive imaging technology that produces three dimensional detailed anatomical images.",
+    duration: "30 - 90 Mins",
+    type: "Treatments",
+    image: "/images/procedures/procedure_mri.png",
+  },
+  {
+    id: "treat-11",
+    name: "Pacemaker Implantation",
+    speciality: "Cardiology",
+    description: "Surgery to implant a small electronic device in the chest to help regulate slow or irregular heartbeats.",
+    duration: "1 - 2 Hours",
+    type: "Procedures",
+    image: "/images/procedures/procedure_cardiology.png",
+  },
+  {
+    id: "treat-12",
+    name: "Renal Dialysis",
+    speciality: "Nephrology",
+    description: "A treatment for kidney failure that removes waste and extra fluid from the blood.",
+    duration: "3 - 4 Hours",
+    type: "Treatments",
+    image: "/images/procedures/procedure_mri.png",
+  },
+  {
+    id: "treat-13",
+    name: "Ultrasound Guided Biopsy",
+    speciality: "Radiology",
+    description: "A minimally invasive procedure that uses ultrasound imaging to help locate a lesion and guide a needle to extract tissue.",
+    duration: "30 - 60 Mins",
+    type: "Procedures",
+    image: "/images/procedures/procedure_mri.png",
+  },
+  {
+    id: "treat-14",
+    name: "Varicose Vein Laser Therapy",
+    speciality: "Vascular Surgery",
+    description: "A minimally invasive laser treatment used to shrink and close abnormally enlarged veins in the legs.",
+    duration: "45 - 60 Mins",
+    type: "Treatments",
+    image: "/images/procedures/procedure_surgery.png",
+  }
 ];
 
 const packagesData = [
@@ -516,6 +607,11 @@ const packagesData = [
     tests: "68 Tests",
     inclusions: ["Complete Blood Count (CBC)", "Lipid Profile", "Liver Function", "Kidney Function", "Diabetic Screening", "ECG", "Physician Consultation"],
     popular: true,
+    gender: "Anyone",
+    hospital: "NH Bangalore",
+    type: "Health Packages",
+    image: "/Health Checkup/Basic health.png",
+    idealFor: "Ideal for Men • 20-35 yrs"
   },
   {
     id: "pkg-2",
@@ -524,6 +620,11 @@ const packagesData = [
     tests: "12 Tests",
     inclusions: ["ECG", "Echocardiography (ECHO)", "TMT (Treadmill Test)", "Lipid Profile", "Cardiologist Consultation"],
     popular: false,
+    gender: "Anyone",
+    hospital: "NH Mumbai",
+    type: "Health Packages",
+    image: "/Health Checkup/Men's health.png",
+    idealFor: "Ideal for Men • 35-50 yrs"
   },
   {
     id: "pkg-3",
@@ -532,6 +633,11 @@ const packagesData = [
     tests: "42 Tests",
     inclusions: ["Thyroid Profile", "Mammography / Breast Ultrasound", "Pap Smear", "Vitamin D3", "Gynecologist Consultation"],
     popular: true,
+    gender: "Female",
+    hospital: "NH Bangalore",
+    type: "Health Packages",
+    image: "/Health Checkup/Master health.png",
+    idealFor: "Ideal for Women • 20-40 yrs"
   },
   {
     id: "pkg-4",
@@ -540,6 +646,11 @@ const packagesData = [
     tests: "8 Tests",
     inclusions: ["Calcium Test", "Vitamin D3", "Uric Acid", "Orthopaedic consultation", "Bone Mineral Density Scan"],
     popular: false,
+    gender: "Anyone",
+    hospital: "NH Kolkata",
+    type: "Health Packages",
+    image: "/Health Checkup/Senior Citizen.png",
+    idealFor: "Ideal for Seniors • 60+ yrs"
   },
 ];
 
@@ -550,6 +661,9 @@ const labsData = [
     price: "₹349",
     time: "Reports in 6 Hours",
     parameters: "24 Parameters (Hb, RBC, WBC, Platelets, etc.)",
+    gender: "Anyone",
+    hospital: "NH Bangalore",
+    type: "Tests"
   },
   {
     id: "lab-2",
@@ -557,6 +671,9 @@ const labsData = [
     price: "₹499",
     time: "Reports in 8 Hours",
     parameters: "8 Parameters (Total Cholesterol, HDL, LDL, Triglycerides)",
+    gender: "Anyone",
+    hospital: "NH Mumbai",
+    type: "Tests"
   },
   {
     id: "lab-3",
@@ -564,6 +681,9 @@ const labsData = [
     price: "₹399",
     time: "Reports in 6 Hours",
     parameters: "Measures average blood sugar levels over the past 3 months",
+    gender: "Anyone",
+    hospital: "NH Delhi",
+    type: "Tests"
   },
   {
     id: "lab-4",
@@ -571,6 +691,9 @@ const labsData = [
     price: "₹599",
     time: "Reports in 12 Hours",
     parameters: "3 Key Thyroid Hormones Checked",
+    gender: "Anyone",
+    hospital: "NH Jaipur",
+    type: "Tests"
   },
   {
     id: "lab-5",
@@ -578,6 +701,9 @@ const labsData = [
     price: "₹699",
     time: "Reports in 8 Hours",
     parameters: "11 Parameters including Bilirubin, SGOT, SGPT, Proteins",
+    gender: "Anyone",
+    hospital: "NH Guwahati",
+    type: "Tests"
   },
 ];
 
@@ -590,6 +716,7 @@ const articlesData = [
     category: "Cardiology",
     date: "June 12, 2026",
     summary: "Heart health is vital for overall wellness. Learn from top cardiologists about the warning signs of cardiac issues and lifestyle changes to safeguard your cardiovascular system.",
+    image: "/images/articles/blog_heart_health.png",
   },
   {
     id: "art-2",
@@ -599,6 +726,7 @@ const articlesData = [
     category: "Neurology",
     date: "May 28, 2026",
     summary: "Migraine isn't just a headache. Discover the neurological triggers, preventative care, and advanced therapeutic methods like Botox or neuromodulation for chronic relief.",
+    image: "/images/articles/blog_migraine.png",
   },
   {
     id: "art-3",
@@ -608,6 +736,7 @@ const articlesData = [
     category: "Oncology",
     date: "June 02, 2026",
     summary: "Early detection saves lives. Learn how periodic screenings, self-examinations, and modern molecular diagnostics help spot oncology issues in their initial treatable stages.",
+    image: "/images/articles/blog_cancer_care.png",
   },
   {
     id: "art-4",
@@ -617,6 +746,7 @@ const articlesData = [
     category: "Orthopaedics",
     date: "April 15, 2026",
     summary: "Osteoarthritis and bone loss are common as we age. Find out how targeted physical therapy, diet, and posture correction help prevent orthopaedic operations.",
+    image: "/images/articles/blog_joints_bones.png",
   },
 ];
 
@@ -644,6 +774,13 @@ function SearchResultsContent() {
   const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string[]>([]);
+  const [selectedAlphabets, setSelectedAlphabets] = useState<string[]>([]);
+  const [selectedTreatmentTypes, setSelectedTreatmentTypes] = useState<string[]>([]);
+  
+  const [selectedPackageGender, setSelectedPackageGender] = useState<string[]>([]);
+  const [selectedPackageHospitals, setSelectedPackageHospitals] = useState<string[]>([]);
+  const [selectedPackageType, setSelectedPackageType] = useState<string[]>([]);
+
   const [specLimit, setSpecLimit] = useState(8);
   const [isFiltering, setIsFiltering] = useState(false);
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
@@ -685,21 +822,32 @@ function SearchResultsContent() {
     return matchesQuery && matchesLocation;
   });
 
-  const filteredTreatments = treatmentsData.filter((t) =>
-    t.name.toLowerCase().includes(query.toLowerCase()) ||
-    t.speciality.toLowerCase().includes(query.toLowerCase()) ||
-    t.description.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredTreatments = treatmentsData.filter((t) => {
+    const matchesQuery = t.name.toLowerCase().includes(query.toLowerCase()) ||
+      t.speciality.toLowerCase().includes(query.toLowerCase()) ||
+      t.description.toLowerCase().includes(query.toLowerCase());
+    
+    const matchesAlphabet = selectedAlphabets.length === 0 || selectedAlphabets.includes(t.name.charAt(0).toUpperCase());
+    const matchesType = selectedTreatmentTypes.length === 0 || selectedTreatmentTypes.includes(t.type);
+    
+    return matchesQuery && matchesAlphabet && matchesType;
+  });
 
-  const filteredPackages = packagesData.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase()) ||
-    p.inclusions.some(i => i.toLowerCase().includes(query.toLowerCase()))
-  );
+  const filteredPackages = packagesData.filter((p) => {
+    const matchesQuery = p.name.toLowerCase().includes(query.toLowerCase()) || p.inclusions.some(i => i.toLowerCase().includes(query.toLowerCase()));
+    const matchesGender = selectedPackageGender.length === 0 || selectedPackageGender.includes(p.gender as string) || p.gender === "Anyone";
+    const matchesHospital = selectedPackageHospitals.length === 0 || selectedPackageHospitals.includes(p.hospital as string);
+    const matchesType = selectedPackageType.length === 0 || selectedPackageType.includes(p.type as string);
+    return matchesQuery && matchesGender && matchesHospital && matchesType;
+  });
 
-  const filteredLabs = labsData.filter((l) =>
-    l.name.toLowerCase().includes(query.toLowerCase()) ||
-    l.parameters.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredLabs = labsData.filter((l) => {
+    const matchesQuery = l.name.toLowerCase().includes(query.toLowerCase()) || l.parameters.toLowerCase().includes(query.toLowerCase());
+    const matchesGender = selectedPackageGender.length === 0 || selectedPackageGender.includes(l.gender as string) || l.gender === "Anyone";
+    const matchesHospital = selectedPackageHospitals.length === 0 || selectedPackageHospitals.includes(l.hospital as string);
+    const matchesType = selectedPackageType.length === 0 || selectedPackageType.includes(l.type as string);
+    return matchesQuery && matchesGender && matchesHospital && matchesType;
+  });
 
   const filteredArticles = articlesData.filter((a) =>
     a.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -776,48 +924,6 @@ function SearchResultsContent() {
                 />
               </div>
 
-              {/* Location Filter Selector */}
-              <div className={styles.locationContainer}>
-                <MapPin size={18} style={{ marginRight: 4, color: "#000000" }} />
-                <select
-                  value={location}
-                  onChange={(e) => {
-                    const newLoc = e.target.value;
-                    setLocation(newLoc);
-                    router.push(`/search?q=${encodeURIComponent(query.trim())}&location=${encodeURIComponent(newLoc)}`);
-                  }}
-                  style={{
-                    border: "none",
-                    outline: "none",
-                    background: "transparent",
-                    fontSize: 15,
-                    fontWeight: 400,
-                    color: "#1E293B",
-                    cursor: "pointer",
-                    paddingRight: 8,
-                  }}
-                >
-                  <option value="All">All Locations</option>
-                  <option value="Bangalore">Bangalore</option>
-                  <option value="Guwahati">Guwahati</option>
-                  <option value="Dharwad">Dharwad</option>
-                  <option value="Shimoga">Shimoga</option>
-                  <option value="Ahmedabad">Ahmedabad</option>
-                  <option value="Jaipur">Jaipur</option>
-                  <option value="Kolar">Kolar</option>
-                  <option value="Mumbai">Mumbai</option>
-                  <option value="Raipur">Raipur</option>
-                  <option value="Kolkata">Kolkata</option>
-                  <option value="Davangere">Davangere</option>
-                  <option value="Barasat">Barasat</option>
-                  <option value="Jamshedpur">Jamshedpur</option>
-                  <option value="Gurugram">Gurugram</option>
-                  <option value="Howrah">Howrah</option>
-                  <option value="Delhi">Delhi</option>
-                  <option value="Mysore">Mysore</option>
-                  <option value="Hosur">Hosur</option>
-                </select>
-              </div>
             </form>
           </div>
         </div>
@@ -1109,8 +1215,10 @@ function SearchResultsContent() {
 
                   {/* Main Grid Content Area */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                    {/* Active Filter Pills */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                    {/* Top Control Bar (Pills + Location) */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: 16 }}>
+                      {/* Active Filter Pills (Left Side) */}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", flex: 1 }}>
                       {/* Custom Toggle Switch */}
                       <div 
                         style={{ 
@@ -1322,6 +1430,49 @@ function SearchResultsContent() {
                           </button>
                         </div>
                       ))}
+                      </div>
+
+                      {/* Location Pill (Right Side) */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                        <MapPin size={14} color="var(--color-primary)" />
+                        <select
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          style={{
+                            appearance: "none",
+                            WebkitAppearance: "none",
+                            border: "none",
+                            background: "transparent",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: "var(--color-primary)",
+                            cursor: "pointer",
+                            outline: "none",
+                            paddingRight: 16
+                          }}
+                        >
+                          <option value="All">All Locations</option>
+                          <option value="Bangalore">Bangalore</option>
+                          <option value="Guwahati">Guwahati</option>
+                          <option value="Dharwad">Dharwad</option>
+                          <option value="Shimoga">Shimoga</option>
+                          <option value="Ahmedabad">Ahmedabad</option>
+                          <option value="Jaipur">Jaipur</option>
+                          <option value="Kolar">Kolar</option>
+                          <option value="Mumbai">Mumbai</option>
+                          <option value="Raipur">Raipur</option>
+                          <option value="Kolkata">Kolkata</option>
+                          <option value="Davangere">Davangere</option>
+                          <option value="Barasat">Barasat</option>
+                          <option value="Jamshedpur">Jamshedpur</option>
+                          <option value="Gurugram">Gurugram</option>
+                          <option value="Howrah">Howrah</option>
+                          <option value="Delhi">Delhi</option>
+                          <option value="Mysore">Mysore</option>
+                          <option value="Hosur">Hosur</option>
+                        </select>
+                        <ChevronDown size={14} color="var(--color-primary)" style={{ position: "absolute", right: 8, pointerEvents: "none" }} />
+                      </div>
                     </div>
 
                     {/* Search Summary Text */}
@@ -1359,7 +1510,7 @@ function SearchResultsContent() {
                                <div style={{ width: 100, height: 28, background: "#E2E8F0", borderRadius: 14 }} />
                                <div style={{ width: 100, height: 28, background: "#E2E8F0", borderRadius: 14 }} />
                              </div>
-                             <div style={{ height: 1, background: "var(--color-border)", margin: "16px -18px 16px -18px" }} />
+                             <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                <div style={{ width: 80, height: 24, background: "#E2E8F0", borderRadius: 4 }} />
                                <div style={{ display: "flex", gap: 8 }}>
@@ -1384,8 +1535,28 @@ function SearchResultsContent() {
                       }}
                     >
                       {(doc as any).isExecutive && (
-                        <div style={{ position: "absolute", top: -4, right: 20, zIndex: 10 }}>
+                        <div style={{ position: "absolute", top: -4, right: 20, zIndex: 10, width: 88, height: 24 }}>
                           <Image src="/Appointment/Executive tag.svg" alt="Executive" width={88} height={24} />
+                          <div style={{ position: "absolute", inset: 0, overflow: "hidden", WebkitMaskImage: "url('/Appointment/Executive tag.svg')", maskImage: "url('/Appointment/Executive tag.svg')", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}>
+                            <motion.div
+                              initial={{ x: "-150%" }}
+                              animate={{ x: "250%" }}
+                              transition={{
+                                repeat: Infinity,
+                                duration: 2.5,
+                                ease: "easeInOut",
+                                repeatDelay: 2
+                              }}
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                bottom: 0,
+                                width: "40%",
+                                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent)",
+                                transform: "skewX(-20deg)"
+                              }}
+                            />
+                          </div>
                         </div>
                       )}
                       {/* Top Section */}
@@ -1393,16 +1564,38 @@ function SearchResultsContent() {
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
                             <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 80, height: 80, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
-                              <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
-                            </Link>
-                            <Link href={`/doctors/${doc.id}`} style={{ display: "flex", justifyContent: "center", alignItems: "center", width: 80, padding: "4px 0", background: "var(--color-bg-alt)", color: "var(--color-primary)", borderRadius: 6, fontSize: 9, fontWeight: 500, textDecoration: "none" }}>
-                              View Profile <ChevronRight size={10} style={{ marginLeft: 2 }} />
+                              <motion.div whileHover="hover" initial="initial" style={{ width: "100%", height: "100%", position: "relative" }}>
+                                <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
+                                <motion.div 
+                                  variants={{
+                                    initial: { opacity: 0, y: 10 },
+                                    hover: { opacity: 1, y: 0 }
+                                  }}
+                                  transition={{ duration: 0.2 }}
+                                  style={{
+                                    position: "absolute",
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))",
+                                    color: "#ffffff",
+                                    fontSize: 9,
+                                    fontWeight: 600,
+                                    padding: "20px 4px 4px 4px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                  }}
+                                >
+                                  View profile <ChevronRight size={10} style={{ marginLeft: 2 }} />
+                                </motion.div>
+                              </motion.div>
                             </Link>
                           </div>
-                          <div style={{ display: "flex", flexDirection: "column" }}>
+                          <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
                             <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4 }}>{doc.name}</h3>
                             <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>{doc.speciality}</p>
-                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)" }}>{doc.degrees}</p>
+                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
                           </div>
                         </div>
                       </div>
@@ -1434,7 +1627,7 @@ function SearchResultsContent() {
                           </div>
                         </div>
 
-                        <div style={{ height: 1, background: "var(--color-border)", margin: "16px -18px 16px -18px" }} />
+                        <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
 
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -1508,49 +1701,424 @@ function SearchResultsContent() {
 
               {/* TREATMENTS PANEL */}
               {activeTab === "treatments" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                  {filteredTreatments.map((treat) => (
-                    <div 
-                      key={treat.id}
-                      style={{ 
-                        background: "#FFFFFF", 
-                        border: "1px solid #E2E8F0", 
-                        borderRadius: 16, 
-                        padding: 20, 
-                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" 
-                      }}
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                        <div>
-                          <span style={{ fontSize: 10, background: "rgba(220,38,38,0.08)", color: "#DC2626", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
-                            {treat.speciality}
-                          </span>
-                          <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1E293B", marginTop: 6 }}>{treat.name}</h3>
-                        </div>
-                        <span style={{ fontSize: 12, color: "#64748B", display: "flex", alignItems: "center", gap: 4 }}>
-                          <Clock size={12} /> {treat.duration}
-                        </span>
+                <div className={styles.doctorsLayout}>
+                  {/* Left Sidebar Filters */}
+                  <div className={styles.filterPanel}>
+                    {/* A-Z Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Browse by A-Z</h4>
+                        {selectedAlphabets.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedAlphabets([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear <X size={12} />
+                          </button>
+                        )}
                       </div>
-                      <p style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, marginBottom: 16 }}>
-                        {treat.description}
-                      </p>
-                      <div style={{ display: "flex", gap: 12 }}>
-                        <Link href="/doctors" style={{ padding: "8px 16px", background: "var(--color-primary, #034EA2)", color: "#FFFFFF", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-                          Find Specialists
-                        </Link>
-                        <Link href="/" style={{ padding: "8px 16px", background: "transparent", color: "var(--color-primary, #034EA2)", border: "1px solid var(--color-primary, #034EA2)", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-                          Learn Treatment Details
-                        </Link>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+                        {Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)).map(letter => (
+                          <label key={letter} style={{
+                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            padding: "8px 0", border: "1px solid", 
+                            borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
+                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "#fff",
+                            color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
+                            borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
+                            transition: "all 0.2s"
+                          }}>
+                            <input 
+                              type="checkbox" 
+                              style={{ display: "none" }}
+                              checked={selectedAlphabets.includes(letter)}
+                              onChange={() => toggleFilter(setSelectedAlphabets, letter)}
+                            />
+                            {letter}
+                          </label>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                  {filteredTreatments.length === 0 && <EmptyState category="treatments" />}
+
+                    {/* Type Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Type</h4>
+                        {selectedTreatmentTypes.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedTreatmentTypes([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear <X size={12} />
+                          </button>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {["Procedures", "Treatments"].map((type) => (
+                          <label key={type} className={styles.checkboxLabel}>
+                            <input 
+                              type="checkbox" 
+                              className={styles.checkboxInput}
+                              checked={selectedTreatmentTypes.includes(type)}
+                              onChange={() => toggleFilter(setSelectedTreatmentTypes, type)}
+                            />
+                            {type}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Grid Content Area */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                    {/* Active Filters Pills */}
+                    {(selectedAlphabets.length > 0 || selectedTreatmentTypes.length > 0) && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                        {[
+                          ...selectedAlphabets.map(val => ({ label: val, remove: () => toggleFilter(setSelectedAlphabets, val) })),
+                          ...selectedTreatmentTypes.map(val => ({ label: val, remove: () => toggleFilter(setSelectedTreatmentTypes, val) }))
+                        ].map((filter, index) => (
+                          <div 
+                            key={index} 
+                            style={{ 
+                              display: "inline-flex", 
+                              alignItems: "center", 
+                              gap: 6, 
+                              background: "rgba(237, 28, 36, 0.08)", 
+                              border: "1px solid var(--color-emergency)", 
+                              borderRadius: 16, 
+                              height: 32,
+                              padding: "0 12px",
+                              boxSizing: "border-box", 
+                              fontSize: 13, 
+                              fontWeight: 500,
+                              color: "var(--color-emergency)" 
+                            }}
+                          >
+                            {filter.label}
+                            <button 
+                              onClick={filter.remove}
+                              style={{ 
+                                display: "flex", 
+                                alignItems: "center", 
+                                justifyContent: "center", 
+                                background: "none", 
+                                border: "none", 
+                                padding: 0, 
+                                cursor: "pointer", 
+                                color: "var(--color-emergency)" 
+                              }}
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                        ))}
+
+                      </div>
+                    )}
+
+                    {/* Search Summary Text */}
+                    {activeTab === "treatments" && (
+                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                        Showing results for {selectedTreatmentTypes.length > 0 ? selectedTreatmentTypes.join(" and ").toLowerCase() : "procedures and treatments"} {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
+                      </div>
+                    )}
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 20 }}>
+                      {filteredTreatments.map((treat) => (
+                        <motion.div 
+                          key={treat.id} 
+                          whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
+                          transition={{ duration: 0.2 }}
+                          style={{ 
+                            background: "var(--color-bg-card)", 
+                            border: "1px solid var(--color-border)", 
+                            borderRadius: 16, 
+                            overflow: "hidden", 
+                            boxShadow: "var(--shadow-sm)",
+                            cursor: "pointer"
+                          }}
+                        >
+                          <div style={{ width: "100%", height: 240, position: "relative", padding: 16 }}>
+                            <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 12, overflow: "hidden" }}>
+                              <Image 
+                                src={(treat as any).image || "/images/misc/procedure_placeholder.png"} 
+                                alt={treat.name} 
+                                fill 
+                                style={{ objectFit: "cover" }} 
+                              />
+                              <div style={{ 
+                                position: "absolute", top: 8, left: 8, 
+                                background: "rgba(255,255,255,0.9)", padding: "4px 10px", 
+                                borderRadius: 20, fontSize: 12, fontWeight: 700, 
+                                color: "var(--color-primary)" 
+                              }}>
+                                {(treat as any).type || "Procedures"}
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ padding: "0 20px 20px 20px" }}>
+                            <span style={{ 
+                              fontSize: 10, color: "var(--color-primary)", 
+                              fontWeight: 700, textTransform: "uppercase", 
+                              letterSpacing: "0.05em", marginBottom: 12, 
+                              display: "inline-block" 
+                            }}>
+                              {treat.speciality}
+                            </span>
+                            <h3 style={{ fontSize: 18, fontWeight: 700, color: "var(--color-text)", marginBottom: 8, lineHeight: 1.3 }}>
+                              {treat.name}
+                            </h3>
+                            <p style={{ 
+                              fontSize: 14, color: "var(--color-text-secondary)", 
+                              lineHeight: 1.5, marginBottom: 20, 
+                              display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" 
+                            }}>
+                              {treat.description}
+                            </p>
+
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    {filteredTreatments.length === 0 && <EmptyState category="treatments" />}
+                  </div>
                 </div>
               )}
 
               {/* HEALTH PACKAGES & TESTS PANEL */}
               {activeTab === "packages_tests" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+                <div className={styles.doctorsLayout}>
+                  {/* Sidebar Filters */}
+                  <div className={styles.filterPanel}>
+
+                    {/* Gender Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Gender</h4>
+                        {selectedPackageGender.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedPackageGender([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear <X size={12} />
+                          </button>
+                        )}
+                      </div>
+                      {["Male", "Female", "Anyone"].map((gender) => (
+                        <label key={gender} className={styles.checkboxLabel}>
+                          <input 
+                            type="checkbox" 
+                            className={styles.checkboxInput}
+                            checked={selectedPackageGender.includes(gender)}
+                            onChange={() => toggleFilter(setSelectedPackageGender, gender)}
+                          />
+                          {gender}
+                        </label>
+                      ))}
+                    </div>
+
+                    {/* Hospitals Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Hospital</h4>
+                        {selectedPackageHospitals.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedPackageHospitals([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontSize: "var(--font-size-sm)", fontWeight: 600, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                      {["NH Bangalore", "NH Mumbai", "NH Delhi", "NH Kolkata", "NH Jaipur", "NH Guwahati"].map((hosp) => (
+                        <label key={hosp} className={styles.checkboxLabel}>
+                          <input 
+                            type="checkbox" 
+                            className={styles.checkboxInput}
+                            checked={selectedPackageHospitals.includes(hosp)}
+                            onChange={() => toggleFilter(setSelectedPackageHospitals, hosp)}
+                          />
+                          {hosp}
+                        </label>
+                      ))}
+                    </div>
+
+                    {/* Type Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Type</h4>
+                        {selectedPackageType.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedPackageType([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontSize: "var(--font-size-sm)", fontWeight: 600, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                      {["Health Packages", "Tests"].map((type) => (
+                        <label key={type} className={styles.checkboxLabel}>
+                          <input 
+                            type="checkbox" 
+                            className={styles.checkboxInput}
+                            checked={selectedPackageType.includes(type)}
+                            onChange={() => toggleFilter(setSelectedPackageType, type)}
+                          />
+                          {type}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Main Content Area */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 24, flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: 16 }}>
+                      {/* Active Filter Pills (Left Side) */}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", flex: 1 }}>
+                        {/* Quick Filter Pills (Default) */}
+                        {!selectedPackageGender.includes("Male") && (
+                          <button 
+                            onClick={() => toggleFilter(setSelectedPackageGender, "Male")}
+                            style={{ 
+                              display: "inline-flex", alignItems: "center", gap: 6, 
+                              background: "#FFFFFF", border: "1px solid var(--color-border)", 
+                              borderRadius: 16, height: 32, padding: "0 16px", 
+                              fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
+                              transition: "var(--transition-fast)"
+                            }}
+                          >
+                            Male
+                          </button>
+                        )}
+                        {!selectedPackageGender.includes("Female") && (
+                          <button 
+                            onClick={() => toggleFilter(setSelectedPackageGender, "Female")}
+                            style={{ 
+                              display: "inline-flex", alignItems: "center", gap: 6, 
+                              background: "#FFFFFF", border: "1px solid var(--color-border)", 
+                              borderRadius: 16, height: 32, padding: "0 16px", 
+                              fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
+                              transition: "var(--transition-fast)"
+                            }}
+                          >
+                            Female
+                          </button>
+                        )}
+                        
+                        {/* Dynamic Filter Pills */}
+                        {[
+                          ...(selectedPackageGender.map(val => ({ label: val, remove: () => toggleFilter(setSelectedPackageGender, val) }))),
+                          ...(selectedPackageHospitals.map(val => ({ label: val, remove: () => toggleFilter(setSelectedPackageHospitals, val) }))),
+                          ...(selectedPackageType.map(val => ({ label: val, remove: () => toggleFilter(setSelectedPackageType, val) })))
+                        ].map((filter, index) => (
+                          <div 
+                            key={index} 
+                            style={{ 
+                              display: "inline-flex", 
+                              alignItems: "center", 
+                              gap: 6, 
+                              background: "rgba(237, 28, 36, 0.08)", 
+                              border: "1px solid var(--color-emergency)", 
+                              borderRadius: 16, 
+                              height: 32,
+                              padding: "0 12px",
+                              boxSizing: "border-box", 
+                              fontSize: 13, 
+                              fontWeight: 500,
+                              color: "var(--color-emergency)" 
+                            }}
+                          >
+                            {filter.label}
+                            <button 
+                              onClick={filter.remove}
+                              style={{ 
+                                display: "flex", 
+                                alignItems: "center", 
+                                justifyContent: "center", 
+                                background: "none", 
+                                border: "none", 
+                                padding: 0, 
+                                cursor: "pointer", 
+                                color: "var(--color-emergency)",
+                                marginLeft: 4
+                              }}
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                        <MapPin size={14} color="var(--color-primary)" />
+                        <select
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          style={{
+                            appearance: "none",
+                            WebkitAppearance: "none",
+                            border: "none",
+                            background: "transparent",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: "var(--color-primary)",
+                            cursor: "pointer",
+                            outline: "none",
+                            paddingRight: 16
+                          }}
+                        >
+                          <option value="All">All Locations</option>
+                          <option value="Bangalore">Bangalore</option>
+                          <option value="Guwahati">Guwahati</option>
+                          <option value="Dharwad">Dharwad</option>
+                          <option value="Shimoga">Shimoga</option>
+                          <option value="Ahmedabad">Ahmedabad</option>
+                          <option value="Jaipur">Jaipur</option>
+                          <option value="Kolar">Kolar</option>
+                          <option value="Mumbai">Mumbai</option>
+                          <option value="Raipur">Raipur</option>
+                          <option value="Kolkata">Kolkata</option>
+                          <option value="Davangere">Davangere</option>
+                          <option value="Barasat">Barasat</option>
+                          <option value="Jamshedpur">Jamshedpur</option>
+                          <option value="Gurugram">Gurugram</option>
+                          <option value="Howrah">Howrah</option>
+                          <option value="Delhi">Delhi</option>
+                          <option value="Mysore">Mysore</option>
+                          <option value="Hosur">Hosur</option>
+                        </select>
+                        <ChevronDown size={14} color="var(--color-primary)" style={{ position: "absolute", right: 8, pointerEvents: "none" }} />
+                      </div>
+                    </div>
+
+                    {/* Search Summary Text */}
+                    {activeTab === "packages_tests" && (
+                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                        Showing results for {selectedPackageType.length > 0 ? selectedPackageType.join(" and ").toLowerCase() : "health packages and tests"} {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
+                      </div>
+                    )}
+
                   {filteredPackages.length > 0 && (
                     <div>
                       <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--color-text)", marginBottom: 16 }}>Health Packages</h2>
@@ -1560,44 +2128,66 @@ function SearchResultsContent() {
                             key={pkg.id}
                             style={{ 
                               background: "#FFFFFF", 
-                              border: pkg.popular ? "2px solid var(--color-primary)" : "1px solid #E2E8F0", 
+                              border: "1px solid #E2E8F0", 
                               borderRadius: 16, 
                               padding: 20, 
                               boxShadow: "var(--shadow-sm)",
-                              position: "relative"
+                              position: "relative",
+                              display: "flex",
+                              flexDirection: "column"
                             }}
                           >
-                            {pkg.popular && (
-                              <span style={{ position: "absolute", top: -11, right: 20, background: "var(--color-primary)", color: "#FFFFFF", fontSize: 9, fontWeight: 800, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                                Most Popular
-                              </span>
-                            )}
-                            <div style={{ marginBottom: 12 }}>
-                              <span style={{ fontSize: 12, color: "#64748B", fontWeight: 600 }}>{pkg.tests} Included</span>
-                              <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1E293B", marginTop: 4 }}>{pkg.name}</h3>
-                            </div>
-                            
-                            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-                              {pkg.inclusions.slice(0, 4).map((inc) => (
-                                <div key={inc} style={{ fontSize: 12, color: "#475569", display: "flex", alignItems: "center", gap: 6 }}>
-                                  <ShieldCheck size={14} style={{ color: "#10B981" }} /> {inc}
-                                </div>
-                              ))}
-                              {pkg.inclusions.length > 4 && (
-                                <div style={{ fontSize: 11, color: "var(--color-primary)", fontWeight: 700, paddingLeft: 20 }}>
-                                  + {pkg.inclusions.length - 4} more tests & evaluations
+                            <div style={{ flex: 1 }}>
+                              {pkg.image && (
+                                <div style={{ position: "relative", width: "100%", height: 170, marginBottom: 16, borderRadius: 12, overflow: "hidden" }}>
+                                  <Image src={pkg.image} alt={pkg.name} fill sizes="(max-width: 768px) 100vw, 300px" style={{ objectFit: "cover", objectPosition: "top" }} />
                                 </div>
                               )}
+                              <div style={{ marginBottom: 12 }}>
+                                {pkg.idealFor && (
+                                  <div style={{ 
+                                    display: "inline-flex", 
+                                    alignItems: "center", 
+                                    padding: "4px 10px", 
+                                    background: "rgba(3, 78, 162, 0.08)", 
+                                    color: "#1E293B", 
+                                    borderRadius: 16, 
+                                    fontSize: 11, 
+                                    fontWeight: 400, 
+                                    marginBottom: 8 
+                                  }}>
+                                    {pkg.idealFor}
+                                  </div>
+                                )}
+                                <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1E293B", marginTop: 4 }}>{pkg.name}</h3>
+                              </div>
+                              
+                              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
+                                {pkg.inclusions.slice(0, pkg.name.length > 34 ? 4 : 5).map((inc) => (
+                                  <div key={inc} style={{ fontSize: 12, color: "#475569", display: "flex", alignItems: "center", gap: 6 }}>
+                                    <ShieldCheck size={14} style={{ color: "#10B981" }} /> {inc}
+                                  </div>
+                                ))}
+                                <div style={{ fontSize: 11, color: "var(--color-primary)", fontWeight: 700, paddingLeft: 20 }}>
+                                  + {pkg.tests} included
+                                </div>
+                              </div>
                             </div>
 
-                            <div style={{ borderTop: "1px solid #F1F5F9", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <div>
-                                <div style={{ fontSize: 11, color: "#64748B" }}>Total Cost</div>
-                                <div style={{ fontSize: 18, fontWeight: 800, color: "#1E293B" }}>{pkg.price}</div>
+                            <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{pkg.price}</span>
+                                <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>Total cost</span>
                               </div>
-                              <Link href="/" style={{ padding: "8px 16px", background: "var(--color-primary)", color: "#FFFFFF", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-                                Book Package
-                              </Link>
+                              <div style={{ display: "flex", gap: 8 }}>
+                                <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
+                                  <PhoneCall size={18} />
+                                </a>
+                                <Link href="/" style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                  Book Package
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -1617,21 +2207,34 @@ function SearchResultsContent() {
                               border: "1px solid #E2E8F0", 
                               borderRadius: 16, 
                               padding: 18, 
-                              boxShadow: "var(--shadow-sm)" 
+                              boxShadow: "var(--shadow-sm)",
+                              display: "flex",
+                              flexDirection: "column"
                             }}
                           >
-                            <div style={{ marginBottom: 12 }}>
-                              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1E293B" }}>{lab.name}</h3>
-                              <p style={{ fontSize: 11, color: "#64748B", marginTop: 4 }}>{lab.parameters}</p>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ marginBottom: 12 }}>
+                                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1E293B" }}>{lab.name}</h3>
+                                <p style={{ fontSize: 11, color: "#64748B", marginTop: 4 }}>{lab.parameters}</p>
+                              </div>
+                              <p style={{ fontSize: 12, color: "#64748B", display: "flex", alignItems: "center", gap: 4, marginBottom: 8 }}>
+                                <Clock size={12} /> {lab.time}
+                              </p>
                             </div>
-                            <p style={{ fontSize: 12, color: "#64748B", display: "flex", alignItems: "center", gap: 4, marginBottom: 16 }}>
-                              <Clock size={12} /> {lab.time}
-                            </p>
-                            <div style={{ borderTop: "1px solid #F1F5F9", paddingTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <span style={{ fontSize: 16, fontWeight: 800, color: "#1E293B" }}>{lab.price}</span>
-                              <Link href="/" style={{ padding: "8px 16px", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-primary)", borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
-                                Add Test
-                              </Link>
+                            <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{lab.price}</span>
+                                <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>Total cost</span>
+                              </div>
+                              <div style={{ display: "flex", gap: 8 }}>
+                                <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
+                                  <PhoneCall size={18} />
+                                </a>
+                                <Link href="/" style={{ height: 44, padding: "0 24px", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-primary)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                  Add Test
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -1642,6 +2245,7 @@ function SearchResultsContent() {
                   {filteredPackages.length === 0 && filteredLabs.length === 0 && (
                     <EmptyState category="health packages and tests" />
                   )}
+                  </div>
                 </div>
               )}
 
@@ -1649,35 +2253,51 @@ function SearchResultsContent() {
               {activeTab === "articles" && (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
                   {filteredArticles.map((art) => (
-                    <div 
+                    <motion.div 
                       key={art.id}
+                      whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
+                      transition={{ duration: 0.2 }}
                       style={{ 
-                        background: "#FFFFFF", 
-                        border: "1px solid #E2E8F0", 
+                        background: "var(--color-bg-card)", 
+                        border: "1px solid var(--color-border)", 
                         borderRadius: 16, 
-                        padding: 20, 
-                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" 
+                        overflow: "hidden", 
+                        boxShadow: "var(--shadow-sm)",
+                        cursor: "pointer"
                       }}
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                        <span style={{ fontSize: 10, background: "rgba(3,78,162,0.08)", color: "var(--color-primary, #034EA2)", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
-                          {art.category}
-                        </span>
-                        <span style={{ fontSize: 11, color: "#94A3B8" }}>{art.date}</span>
+                      <div style={{ width: "100%", height: 240, position: "relative", padding: 16 }}>
+                        <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: 12, overflow: "hidden" }}>
+                          <Image 
+                            src={art.image}
+                            alt={art.title}
+                            fill
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
                       </div>
-                      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E293B", lineHeight: 1.4, marginBottom: 8 }}>
-                        {art.title}
-                      </h3>
-                      <p style={{ fontSize: 13, color: "#64748B", lineHeight: 1.5, marginBottom: 16 }}>
-                        {art.summary}
-                      </p>
-                      <div style={{ borderTop: "1px solid #F1F5F9", paddingTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
-                        <span style={{ color: "#475569" }}>By <strong>{art.author}</strong></span>
-                        <span style={{ color: "#94A3B8", display: "flex", alignItems: "center", gap: 4 }}>
-                          <Clock size={12} /> {art.readTime}
-                        </span>
+                      <div style={{ padding: "0 20px 20px 20px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                          <span style={{ fontSize: 10, color: "var(--color-primary)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                            {art.category}
+                          </span>
+                          <span style={{ fontSize: 11, color: "#94A3B8" }}>{art.date}</span>
+                        </div>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E293B", lineHeight: 1.4, marginBottom: 8 }}>
+                          {art.title}
+                        </h3>
+                        <p style={{ fontSize: 13, color: "#64748B", lineHeight: 1.5, marginBottom: 16 }}>
+                          {art.summary}
+                        </p>
+                        <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
+                          <span style={{ color: "#475569" }}>By <strong>{art.author}</strong></span>
+                          <span style={{ color: "#94A3B8", display: "flex", alignItems: "center", gap: 4 }}>
+                            <Clock size={12} /> {art.readTime}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                   {filteredArticles.length === 0 && <EmptyState category="articles" />}
                 </div>
