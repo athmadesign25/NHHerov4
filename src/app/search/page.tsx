@@ -1625,7 +1625,11 @@ function SearchResultsContent() {
                             </Link>
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                            <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4 }}>{doc.name}</h3>
+                            <Link href={`/doctors/${doc.id}`} style={{ textDecoration: "none" }}>
+                              <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", transition: "color 0.15s" }}>
+                                {doc.name}
+                              </h3>
+                            </Link>
                             <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>{doc.speciality}</p>
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
                           </div>

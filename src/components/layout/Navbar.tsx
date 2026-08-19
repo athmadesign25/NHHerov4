@@ -24,17 +24,19 @@ export default function Navbar() {
         setScrolled(false);
       }
 
-      // Show search icon after scrolling by the search bar on homepage (approx. 350px), or always on other pages
-      if (!isHomePage || window.scrollY > 350) {
-        setShowSearchIcon(true);
+      const isSearchPage = pathname === "/search";
+      if (isHomePage) {
+        setShowSearchIcon(window.scrollY > 350);
+      } else if (isSearchPage) {
+        setShowSearchIcon(window.scrollY > 150);
       } else {
-        setShowSearchIcon(false);
+        setShowSearchIcon(true);
       }
     };
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage]);
+  }, [isHomePage, pathname]);
 
   const isNavbarActive = !isHomePage || scrolled;
 
