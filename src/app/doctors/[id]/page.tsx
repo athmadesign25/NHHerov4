@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MapPin, Clock, Phone, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video } from "lucide-react";
+import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 const doctors: Record<string, {
@@ -586,8 +586,8 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             >
               Book Appointment
             </button>
-            <a href="tel:18001030" id="doctor-call-btn" style={{ width: "100%", padding: "12px", border: "1.5px solid var(--color-border)", color: "var(--color-text-secondary)", fontWeight: 600, fontSize: "var(--font-size-sm)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "border-color 0.15s, color 0.15s" }}>
-              <Phone size={15} />
+            <a href="tel:18001030" id="doctor-call-btn" style={{ width: "100%", padding: "12px", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "background-color 0.15s" }}>
+              <PhoneCall size={15} />
               Call for Enquiry
             </a>
           </motion.div>
