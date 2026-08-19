@@ -131,6 +131,7 @@ type DoctorData = {
   photo: string;
   keywords: string[];
   consultationModes?: "hospital" | "video" | "both";
+  availability?: { hospital?: string; video?: string };
 };
 
 const doctorsData: DoctorData[] = [
@@ -183,6 +184,46 @@ const doctorsData: DoctorData[] = [
     hospital: "Mazumdar Shaw Medical Centre, Bangalore",
     photo: "/assets/doctor_3.png",
     keywords: ["cardiology", "heart", "rajiv", "menon", "doctor", "specialist", "cardiologist"]
+  },
+  {
+    name: "Dr. Amit Bansal",
+    speciality: "Cardiology",
+    location: "Mumbai",
+    hospital: "NH Children's Hospital, Mumbai",
+    photo: "/assets/doctor_1.png",
+    keywords: ["cardiology", "heart", "amit", "bansal", "doctor", "specialist", "cardiologist"]
+  },
+  {
+    name: "Dr. Kavita Reddy",
+    speciality: "Cardiology",
+    location: "Bengaluru",
+    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
+    photo: "/assets/doctor_2.png",
+    keywords: ["cardiology", "heart", "kavita", "reddy", "doctor", "specialist", "cardiologist"]
+  },
+  {
+    name: "Dr. Sameer Desai",
+    speciality: "Cardiology",
+    location: "Guwahati",
+    hospital: "Narayana Superspeciality Hospital, Guwahati",
+    photo: "/assets/doctor_3.png",
+    keywords: ["cardiology", "heart", "sameer", "desai", "doctor", "specialist", "cardiologist"]
+  },
+  {
+    name: "Dr. Ananya Singh",
+    speciality: "Cardiology",
+    location: "Kolkata",
+    hospital: "Narayana Superspeciality Hospital, Howrah, kolkata",
+    photo: "/assets/doctor_1.png",
+    keywords: ["cardiology", "heart", "ananya", "singh", "doctor", "specialist", "cardiologist"]
+  },
+  {
+    name: "Dr. Vikram Joshi",
+    speciality: "Cardiology",
+    location: "Bengaluru",
+    hospital: "Narayana Multispeciality Hospital, HSR Bangalore",
+    photo: "/assets/doctor_2.png",
+    keywords: ["cardiology", "heart", "vikram", "joshi", "doctor", "specialist", "cardiologist"]
   },
   {
     name: "Dr. Priya Sharma",
@@ -441,7 +482,7 @@ export default function HeroSearchFirst() {
 
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors_specialities" | "treatments_tests" | "articles">("doctors_specialities");
+  const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors" | "specialties" | "treatments_tests" | "articles">("doctors");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -570,7 +611,7 @@ export default function HeroSearchFirst() {
 
   // Reset dropdown tab to Doctors when typing/query changes
   useEffect(() => {
-    setActiveDropdownTab("doctors_specialities");
+    setActiveDropdownTab("doctors");
   }, [searchQuery]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -878,103 +919,7 @@ export default function HeroSearchFirst() {
                           transition={{ duration: 0.2, ease: "easeOut" }}
                           data-lenis-prevent
                         >
-                          {/* Location Simulation Bar */}
-                          <div 
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: "6px 12px",
-                              background: "#f8fafc",
-                              borderRadius: "12px",
-                              marginBottom: "10px",
-                              border: "1px solid #e2e8f0",
-                              flexShrink: 0
-                            }}
-                          >
-                            <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "flex", alignItems: "center", gap: "4px" }}>
-                              📍 Simulating Location:
-                            </span>
-                            <div style={{ display: "flex", gap: "6px" }}>
-                              <button
-                                type="button"
-                                onClick={() => setSimulatedUserLocation("same_city")}
-                                style={{
-                                  padding: "4px 10px",
-                                  borderRadius: "9999px",
-                                  fontSize: "10.5px",
-                                  fontWeight: 700,
-                                  cursor: "pointer",
-                                  background: simulatedUserLocation === "same_city" ? "#16a34a" : "white",
-                                  color: simulatedUserLocation === "same_city" ? "white" : "#475569",
-                                  border: "1px solid #cbd5e1",
-                                  transition: "all 0.15s ease"
-                                }}
-                              >
-                                Same City
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setSimulatedUserLocation("nearby")}
-                                style={{
-                                  padding: "4px 10px",
-                                  borderRadius: "9999px",
-                                  fontSize: "10.5px",
-                                  fontWeight: 700,
-                                  cursor: "pointer",
-                                  background: simulatedUserLocation === "nearby" ? "#ea580c" : "white",
-                                  color: simulatedUserLocation === "nearby" ? "white" : "#475569",
-                                  border: "1px solid #cbd5e1",
-                                  transition: "all 0.15s ease"
-                                }}
-                              >
-                                Nearby (100km)
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setSimulatedUserLocation("far_away")}
-                                style={{
-                                  padding: "4px 10px",
-                                  borderRadius: "9999px",
-                                  fontSize: "10.5px",
-                                  fontWeight: 700,
-                                  cursor: "pointer",
-                                  background: simulatedUserLocation === "far_away" ? "#7c3aed" : "white",
-                                  color: simulatedUserLocation === "far_away" ? "white" : "#475569",
-                                  border: "1px solid #cbd5e1",
-                                  transition: "all 0.15s ease"
-                                }}
-                              >
-                                Far Away (Video)
-                              </button>
-                            </div>
-                          </div>
 
-                          {/* Location simulation description banner */}
-                          {searchQuery.trim() && simulatedUserLocation !== "same_city" && (
-                            <div 
-                              style={{
-                                padding: "8px 12px",
-                                background: simulatedUserLocation === "nearby" ? "#fffbeb" : "#faf5ff",
-                                border: simulatedUserLocation === "nearby" ? "1px solid #fef3c7" : "1px solid #f3e8ff",
-                                borderRadius: "10px",
-                                color: simulatedUserLocation === "nearby" ? "#b45309" : "#6b21a8",
-                                fontSize: "11px",
-                                fontWeight: 600,
-                                marginBottom: "10px",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "6px",
-                                flexShrink: 0
-                              }}
-                            >
-                              {simulatedUserLocation === "nearby" ? (
-                                <span>📍 No Narayana Health facilities found in your city. Showing matches from the nearest available facility (within 100km).</span>
-                              ) : (
-                                <span>💻 No facilities available in your area. Showing doctors available for online video consultation.</span>
-                              )}
-                            </div>
-                          )}
 
                           {!searchQuery.trim() ? (
                     <div className={styles.popularSearchesContainer}>
@@ -1120,38 +1065,49 @@ export default function HeroSearchFirst() {
                                              </div>
                                              <div className={styles.doctorGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "8px" }}>
                                                {hospitalDoctors.map((doc) => (
-                                                 <div
-                                                   key={doc.name}
-                                                   onClick={() => handleSelectSuggestion(doc.name)}
-                                                   className={styles.doctorCard}
-                                                   style={{ padding: "8px 10px" }}
-                                                 >
-                                                   <img
-                                                     src={doc.photo || "/images/misc/doctor_avatar_male.png"}
-                                                     alt={doc.name}
-                                                     className={styles.doctorPhoto}
-                                                     style={{ width: "32px", height: "32px" }}
-                                                   />
-                                                   <div className={styles.doctorInfo} style={{ width: "100%" }}>
-                                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", gap: "8px" }}>
-                                                       <div className={styles.doctorName} style={{ fontSize: "13px", fontWeight: 700 }}>
-                                                         <HighlightMatch text={doc.name} query={searchQuery} />
-                                                       </div>
-                                                       {/* Compact Circular Icons */}
-                                                       <div style={{ display: "flex", gap: "4px", alignItems: "center", flexShrink: 0 }}>
-                                                         <span title="Hospital Visit Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
-                                                           <Building2 size={10} color="#16a34a" />
-                                                         </span>
-                                                         {(doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                           <span title="Video Consultation Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>
-                                                             <Video size={10} color="#7c3aed" />
-                                                           </span>
-                                                         )}
-                                                       </div>
-                                                     </div>
-                                                     <div className={styles.doctorSpec} style={{ fontSize: "11px" }}>{doc.speciality}</div>
-                                                   </div>
-                                                 </div>
+                                                <div
+                                                  key={doc.name}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  className={styles.doctorCard}
+                                                >
+                                                  <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
+                                                    <img
+                                                      src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+                                                      alt={doc.name}
+                                                      className={styles.doctorPhoto}
+                                                    />
+                                                    <div className={styles.doctorInfo} style={{ width: "100%" }}>
+                                                      <div className={styles.doctorName}>
+                                                        <HighlightMatch text={doc.name} query={searchQuery} />
+                                                      </div>
+                                                      <div className={styles.doctorSpec}>{doc.speciality}</div>
+                                                      <div className={styles.doctorLoc}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                        <span>
+                                                          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                            {doc.hospital}
+                                                            {doc.additionalHospitals && (
+                                                              <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
+                                                            )}
+                                                          </span>
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  
+                                                  <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
+                                                      {doc.availability?.hospital || "Today 05:30 PM"}
+                                                    </div>
+                                                    {(doc.consultationModes === "both" || !doc.consultationModes) && (
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                        <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
+                                                        {doc.availability?.video || "Today 05:30 PM"}
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                </div>
                                                ))}
                                              </div>
                                            </div>
@@ -1164,39 +1120,49 @@ export default function HeroSearchFirst() {
                                              </div>
                                              <div className={styles.doctorGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "8px" }}>
                                                {videoDoctors.map((doc) => (
-                                                 <div
-                                                   key={doc.name}
-                                                   onClick={() => handleSelectSuggestion(doc.name)}
-                                                   className={styles.doctorCard}
-                                                   style={{ padding: "8px 10px" }}
-                                                 >
-                                                   <img
-                                                     src={doc.photo || "/images/misc/doctor_avatar_male.png"}
-                                                     alt={doc.name}
-                                                     className={styles.doctorPhoto}
-                                                     style={{ width: "32px", height: "32px" }}
-                                                   />
-                                                   <div className={styles.doctorInfo} style={{ width: "100%" }}>
-                                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", gap: "8px" }}>
-                                                       <div className={styles.doctorName} style={{ fontSize: "13px", fontWeight: 700 }}>
-                                                         <HighlightMatch text={doc.name} query={searchQuery} />
-                                                       </div>
-                                                       {/* Compact Circular Icons */}
-                                                       <div style={{ display: "flex", gap: "4px", alignItems: "center", flexShrink: 0 }}>
-                                                         {simulatedUserLocation === "far_away" && doc.consultationModes === "hospital" ? (
-                                                           <span title="No Online Consultation" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f1f5f9", border: "1px solid #cbd5e1" }}>
-                                                             <span style={{ fontSize: "9px" }}>❌</span>
-                                                           </span>
-                                                         ) : (
-                                                           <span title="Video Consultation Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>
-                                                             <Video size={10} color="#7c3aed" />
-                                                           </span>
-                                                         )}
-                                                       </div>
-                                                     </div>
-                                                     <div className={styles.doctorSpec} style={{ fontSize: "11px" }}>{doc.speciality}</div>
-                                                   </div>
-                                                 </div>
+                                                <div
+                                                  key={doc.name}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  className={styles.doctorCard}
+                                                >
+                                                  <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
+                                                    <img
+                                                      src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+                                                      alt={doc.name}
+                                                      className={styles.doctorPhoto}
+                                                    />
+                                                    <div className={styles.doctorInfo} style={{ width: "100%" }}>
+                                                      <div className={styles.doctorName}>
+                                                        <HighlightMatch text={doc.name} query={searchQuery} />
+                                                      </div>
+                                                      <div className={styles.doctorSpec}>{doc.speciality}</div>
+                                                      <div className={styles.doctorLoc}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                        <span>
+                                                          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                            {doc.hospital}
+                                                            {doc.additionalHospitals && (
+                                                              <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
+                                                            )}
+                                                          </span>
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  
+                                                  <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
+                                                    {simulatedUserLocation === "far_away" && doc.consultationModes === "hospital" ? (
+                                                      <span title="No Online Consultation" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f1f5f9", border: "1px solid #cbd5e1" }}>
+                                                        <span style={{ fontSize: "9px" }}>❌</span>
+                                                      </span>
+                                                    ) : (
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                        <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
+                                                        {doc.availability?.video || "Today 05:30 PM"}
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                </div>
                                                ))}
                                              </div>
                                            </div>
@@ -1306,44 +1272,49 @@ export default function HeroSearchFirst() {
                                         {filteredDoctors.length > 0 ? (
                                           <div>
                                             <div className={styles.sectionHeader} style={{ fontSize: "11px", marginBottom: "6px" }}>Doctors</div>
-                                            <div className={styles.doctorGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+                                            <div className={styles.doctorGrid} style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "8px" }}>
                                               {filteredDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
                                                   onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
-                                                  style={{ padding: "8px 10px" }}
                                                 >
-                                                  <img
-                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
-                                                    alt={doc.name}
-                                                    className={styles.doctorPhoto}
-                                                    style={{ width: "32px", height: "32px" }}
-                                                  />
-                                                  <div className={styles.doctorInfo} style={{ width: "100%" }}>
-                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: "8px" }}>
-                                                      <div className={styles.doctorName} style={{ fontSize: "13px", fontWeight: 700 }}>
+                                                  <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
+                                                    <img
+                                                      src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+                                                      alt={doc.name}
+                                                      className={styles.doctorPhoto}
+                                                    />
+                                                    <div className={styles.doctorInfo} style={{ width: "100%" }}>
+                                                      <div className={styles.doctorName}>
                                                         <HighlightMatch text={doc.name} query={searchQuery} />
                                                       </div>
-                                                      <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", justifyContent: "flex-end", flexShrink: 0 }}>
-                                                        {(simulatedUserLocation === "same_city" || simulatedUserLocation === "nearby") && (doc.consultationModes === "hospital" || doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                          <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", fontSize: "9px", fontWeight: 700, color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "1px 5px", borderRadius: "4px", whiteSpace: "nowrap" }}>
-                                                            <Building2 size={9} /> Hosp {simulatedUserLocation === "nearby" ? "(65km)" : ""}
+                                                      <div className={styles.doctorSpec}>{doc.speciality}</div>
+                                                      <div className={styles.doctorLoc}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                        <span>
+                                                          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                            {doc.hospital}
+                                                            {doc.additionalHospitals && (
+                                                              <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
+                                                            )}
                                                           </span>
-                                                        )}
-                                                        {(doc.consultationModes === "video" || doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                          <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", fontSize: "9px", fontWeight: 700, color: "#7c3aed", background: "#f5f3ff", border: "1px solid #ddd6fe", padding: "1px 5px", borderRadius: "4px", whiteSpace: "nowrap" }}>
-                                                            <Video size={9} /> Online
-                                                          </span>
-                                                        )}
-                                                        {simulatedUserLocation === "far_away" && doc.consultationModes === "hospital" && (
-                                                          <span style={{ display: "inline-flex", alignItems: "center", gap: "3px", fontSize: "9px", fontWeight: 700, color: "#94a3b8", background: "#f1f5f9", border: "1px solid #e2e8f0", padding: "1px 5px", borderRadius: "4px", whiteSpace: "nowrap" }}>
-                                                            ❌ No Online
-                                                          </span>
-                                                        )}
+                                                        </span>
                                                       </div>
                                                     </div>
-                                                    <div className={styles.doctorSpec} style={{ fontSize: "11px" }}>{doc.speciality}</div>
+                                                  </div>
+                                                  
+                                                  <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
+                                                      {doc.availability?.hospital || "Today 05:30 PM"}
+                                                    </div>
+                                                    {(doc.consultationModes === "both" || !doc.consultationModes) && (
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                        <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
+                                                        {doc.availability?.video || "Today 05:30 PM"}
+                                                      </div>
+                                                    )}
                                                   </div>
                                                 </div>
                                               ))}
@@ -1642,49 +1613,58 @@ export default function HeroSearchFirst() {
                             <div className={styles.dropdownTabButtons}>
                               <button
                                 type="button"
-                                onClick={() => setActiveDropdownTab("doctors_specialities")}
-                                className={`${styles.dropdownTab} ${activeDropdownTab === "doctors_specialities" ? styles.activeTab : ""}`}
+                                onClick={() => setActiveDropdownTab("doctors")}
+                                className={`${styles.dropdownTab} ${activeDropdownTab === "doctors" ? styles.activeTab : ""}`}
                               >
-                                Appointments ({filteredDoctors.length + filteredSpecs.length})
+                                Doctors ({filteredDoctors.length})
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setActiveDropdownTab("specialties")}
+                                className={`${styles.dropdownTab} ${activeDropdownTab === "specialties" ? styles.activeTab : ""}`}
+                              >
+                                Specialty ({filteredSpecs.length})
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setActiveDropdownTab("treatments_tests")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "treatments_tests" ? styles.activeTab : ""}`}
                               >
-                                Treatments & Tests ({filteredTreatments.length})
+                                Procedures & Treatments ({filteredTreatments.length})
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setActiveDropdownTab("articles")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "articles" ? styles.activeTab : ""}`}
                               >
-                                Articles ({filteredArticles.length})
+                                Articles & Blogs ({filteredArticles.length})
                               </button>
                             </div>
 
-                            {activeDropdownTab === "doctors_specialities" && (
-                              <div className={styles.dropdownLocationFilter}>
-                                <MapPin size={14} className={styles.locationPinIcon} />
-                                <select
-                                  value={selectedLocation}
-                                  onChange={(e) => setSelectedLocation(e.target.value)}
-                                  className={styles.locationDropdownSelect}
-                                >
-                                  <option value="All Locations">All Locations</option>
-                                  {Array.from(new Set(doctorsData.map((d) => d.location))).map((loc) => (
-                                    <option key={loc} value={loc}>
-                                      {loc}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            )}
+                            
                           </div>
 
                           <div className={styles.dropdownTabContent} data-lenis-prevent>
-                            {activeDropdownTab === "doctors_specialities" && (
+                            {activeDropdownTab === "doctors" && (
                               <div className={styles.dropdownSection} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "-8px" }}>
+                                  <span style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>Showing matches from the nearest available facility.</span>
+                                  <div className={styles.dropdownLocationFilter}>
+                                    <MapPin size={14} className={styles.locationPinIcon} />
+                                  <select
+                                    value={selectedLocation}
+                                    onChange={(e) => setSelectedLocation(e.target.value)}
+                                    className={styles.locationDropdownSelect}
+                                  >
+                                    <option value="All Locations">All Locations</option>
+                                    {Array.from(new Set(doctorsData.map((d) => d.location))).map((loc) => (
+                                      <option key={loc} value={loc}>
+                                        {loc}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  </div>
+                                </div>
                                 {/* Doctors Section */}
                                 {filteredDoctors.length > 0 && (
                                   (() => {
@@ -1708,43 +1688,48 @@ export default function HeroSearchFirst() {
                                               <Building2 size={13} /> Hospital Visit (In-Person)
                                             </div>
                                             <div className={styles.doctorGrid}>
-                                              {hospitalDoctors.map((doc) => (
+                                              {hospitalDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
                                                   onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
-                                                  <img
-                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
-                                                    alt={doc.name}
-                                                    className={styles.doctorPhoto}
-                                                  />
-                                                  <div className={styles.doctorInfo} style={{ width: "100%" }}>
-                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", gap: "8px" }}>
+                                                  <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
+                                                    <img
+                                                      src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+                                                      alt={doc.name}
+                                                      className={styles.doctorPhoto}
+                                                    />
+                                                    <div className={styles.doctorInfo} style={{ width: "100%" }}>
                                                       <div className={styles.doctorName}>
                                                         <HighlightMatch text={doc.name} query={searchQuery} />
                                                       </div>
-                                                      <div style={{ display: "flex", gap: "4px", alignItems: "center", flexShrink: 0 }}>
-                                                        <span title="Hospital Visit Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
-                                                          <Building2 size={10} color="#16a34a" />
-                                                        </span>
-                                                        {(doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                          <span title="Video Consultation Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>
-                                                            <Video size={10} color="#7c3aed" />
+                                                      <div className={styles.doctorSpec}>{doc.speciality}</div>
+                                                      <div className={styles.doctorLoc}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                        <span>
+                                                          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                            {doc.hospital}
+                                                            {doc.additionalHospitals && (
+                                                              <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
+                                                            )}
                                                           </span>
-                                                        )}
+                                                        </span>
                                                       </div>
                                                     </div>
-                                                    <div className={styles.doctorSpec}>{doc.speciality}</div>
-                                                    <div className={styles.doctorLoc}>
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                                      <span>
-                                                        {doc.hospital}
-                                                        {doc.additionalHospitals && (
-                                                          <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
-                                                        )}
-                                                      </span>
+                                                  </div>
+                                                  
+                                                  <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
+                                                      {doc.availability?.hospital || "Today 05:30 PM"}
                                                     </div>
+                                                    {(doc.consultationModes === "both" || !doc.consultationModes) && (
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                        <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
+                                                        {doc.availability?.video || "Today 05:30 PM"}
+                                                      </div>
+                                                    )}
                                                   </div>
                                                 </div>
                                               ))}
@@ -1758,44 +1743,48 @@ export default function HeroSearchFirst() {
                                               <Video size={13} /> Video Consultation (Online)
                                             </div>
                                             <div className={styles.doctorGrid}>
-                                              {videoDoctors.map((doc) => (
+                                              {videoDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
                                                   onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
-                                                  <img
-                                                    src={doc.photo || "/images/misc/doctor_avatar_male.png"}
-                                                    alt={doc.name}
-                                                    className={styles.doctorPhoto}
-                                                  />
-                                                  <div className={styles.doctorInfo} style={{ width: "100%" }}>
-                                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", gap: "8px" }}>
+                                                  <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
+                                                    <img
+                                                      src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+                                                      alt={doc.name}
+                                                      className={styles.doctorPhoto}
+                                                    />
+                                                    <div className={styles.doctorInfo} style={{ width: "100%" }}>
                                                       <div className={styles.doctorName}>
                                                         <HighlightMatch text={doc.name} query={searchQuery} />
                                                       </div>
-                                                      <div style={{ display: "flex", gap: "4px", alignItems: "center", flexShrink: 0 }}>
-                                                        {simulatedUserLocation === "far_away" && doc.consultationModes === "hospital" ? (
-                                                          <span title="No Online Consultation" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f1f5f9", border: "1px solid #cbd5e1" }}>
-                                                            <span style={{ fontSize: "9px" }}>❌</span>
+                                                      <div className={styles.doctorSpec}>{doc.speciality}</div>
+                                                      <div className={styles.doctorLoc}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                                        <span>
+                                                          <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                                                            {doc.hospital}
+                                                            {doc.additionalHospitals && (
+                                                              <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
+                                                            )}
                                                           </span>
-                                                        ) : (
-                                                          <span title="Video Consultation Available" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f5f3ff", border: "1px solid #ddd6fe" }}>
-                                                            <Video size={10} color="#7c3aed" />
-                                                          </span>
-                                                        )}
+                                                        </span>
                                                       </div>
                                                     </div>
-                                                    <div className={styles.doctorSpec}>{doc.speciality}</div>
-                                                    <div className={styles.doctorLoc}>
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.locIcon}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                                      <span>
-                                                        {doc.hospital}
-                                                        {doc.additionalHospitals && (
-                                                          <span className={styles.plusMoreBadge}> +{doc.additionalHospitals}</span>
-                                                        )}
+                                                  </div>
+                                                  
+                                                  <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
+                                                    {simulatedUserLocation === "far_away" && doc.consultationModes === "hospital" ? (
+                                                      <span title="No Online Consultation" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "18px", height: "18px", borderRadius: "50%", background: "#f1f5f9", border: "1px solid #cbd5e1" }}>
+                                                        <span style={{ fontSize: "9px" }}>❌</span>
                                                       </span>
-                                                    </div>
+                                                    ) : (
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                        <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
+                                                        {doc.availability?.video || "Today 05:30 PM"}
+                                                      </div>
+                                                    )}
                                                   </div>
                                                 </div>
                                               ))}
@@ -1807,12 +1796,35 @@ export default function HeroSearchFirst() {
                                   })()
                                 )}
 
+                                {filteredDoctors.length === 0 && (
+                                  <div className={styles.noResults}>No matching doctors found</div>
+                                )}
+
+                                {filteredDoctors.length > 6 && (
+                                  <button
+                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                                    }}
+                                  >
+                                    View all {filteredDoctors.length} Doctors
+                                  </button>
+                                )}
+                              </div>
+                            )}
+
+                            {activeDropdownTab === "specialties" && (
+                              <div className={styles.dropdownSection} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                                <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginBottom: "-8px" }}>
+                                  Showing top matching specialties.
+                                </div>
                                 {/* Specialities Section */}
                                 {filteredSpecs.length > 0 && (
                                   <div>
                                     <div className={styles.sectionHeader}>Specialities</div>
                                     <div className={styles.specGrid}>
-                                      {filteredSpecs.map((spec) => (
+                                      {filteredSpecs.slice(0, 6).map((spec) => (
                                         <div
                                           key={spec.name}
                                           onClick={() => handleSelectSuggestion(spec.name)}
@@ -1839,20 +1851,35 @@ export default function HeroSearchFirst() {
                                   </div>
                                 )}
 
-                                {filteredDoctors.length === 0 && filteredSpecs.length === 0 && (
-                                  <div className={styles.noResults}>No matching doctors or specialities found</div>
+                                {filteredSpecs.length === 0 && (
+                                  <div className={styles.noResults}>No matching specialities found</div>
+                                )}
+
+                                {filteredSpecs.length > 6 && (
+                                  <button
+                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                                    }}
+                                  >
+                                    View all {filteredSpecs.length} Specialties
+                                  </button>
                                 )}
                               </div>
                             )}
 
                             {activeDropdownTab === "treatments_tests" && (
                               <div className={styles.dropdownSection} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                                <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginBottom: "-8px" }}>
+                                  Showing top matching procedures and treatments.
+                                </div>
                                 {/* Health Checkup Packages Section */}
                                 {filteredHealthCheckups.length > 0 && (
                                   <div>
                                     <div className={styles.sectionHeader}>Health Checkup Packages</div>
                                     <div className={styles.treatmentGrid}>
-                                      {filteredHealthCheckups.map((t) => (
+                                      {filteredHealthCheckups.slice(0, 6).map((t) => (
                                         <div
                                           key={t.name}
                                           onClick={() => handleSelectSuggestion(t.name)}
@@ -1887,7 +1914,7 @@ export default function HeroSearchFirst() {
                                   <div>
                                     <div className={styles.sectionHeader}>Lab Tests</div>
                                     <div className={styles.treatmentGrid}>
-                                      {filteredLabTests.map((t) => (
+                                      {filteredLabTests.slice(0, 6).map((t) => (
                                         <div
                                           key={t.name}
                                           onClick={() => handleSelectSuggestion(t.name)}
@@ -1928,7 +1955,7 @@ export default function HeroSearchFirst() {
                                   <div>
                                     <div className={styles.sectionHeader}>Treatments</div>
                                     <div className={styles.treatmentGrid}>
-                                      {filteredOnlyTreatments.map((t) => (
+                                      {filteredOnlyTreatments.slice(0, 6).map((t) => (
                                         <div
                                           key={t.name}
                                           onClick={() => handleSelectSuggestion(t.name)}
@@ -1959,55 +1986,84 @@ export default function HeroSearchFirst() {
                                 )}
 
                                 {filteredTreatments.length === 0 && (
-                                  <div className={styles.noResults}>No matching treatments, packages or tests found</div>
+                                  <div className={styles.noResults}>No matching treatments or tests found</div>
+                                )}
+
+                                {filteredTreatments.length > 6 && (
+                                  <button
+                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                                    }}
+                                  >
+                                    View all {filteredTreatments.length} Procedures & Treatments
+                                  </button>
                                 )}
                               </div>
                             )}
 
                             {activeDropdownTab === "articles" && (
-                              <div className={styles.dropdownSection}>
-                                {filteredArticles.length > 0 ? (
-                                  filteredArticles.map((a) => (
-                                    <div
-                                      key={a.name}
-                                      onClick={() => handleSelectSuggestion(a.name)}
-                                      className={styles.treatmentCard}
-                                    >
-                                      {a.image ? (
-                                        <img
-                                          src={a.image}
-                                          alt={a.name}
-                                          className={styles.articleImage}
-                                        />
-                                      ) : (
-                                        <div className={styles.itemIconWrap}>
-                                          <FileText size={14} />
-                                        </div>
-                                      )}
-                                      <div className={styles.treatmentInfo}>
-                                        <div className={styles.treatmentHeader}>
-                                          <div className={styles.treatmentName}>
-                                            <HighlightMatch text={a.name} query={searchQuery} />
+                              <div className={styles.dropdownSection} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                                <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginBottom: "-8px" }}>
+                                  Showing top matching articles and blogs.
+                                </div>
+                                <div className={styles.articleList}>
+                                  {filteredArticles.length > 0 ? (
+                                    filteredArticles.slice(0, 6).map((a) => (
+                                      <div
+                                        key={a.name}
+                                        onClick={() => handleSelectSuggestion(a.name)}
+                                        className={styles.treatmentCard}
+                                      >
+                                        {a.image ? (
+                                          <img
+                                            src={a.image}
+                                            alt={a.name}
+                                            className={styles.articleImage}
+                                          />
+                                        ) : (
+                                          <div className={styles.itemIconWrap}>
+                                            <FileText size={14} />
                                           </div>
-                                          {a.matchingKeyword && (
-                                            <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
-                                              Relates to: <HighlightMatch text={a.matchingKeyword} query={searchQuery} />
+                                        )}
+                                        <div className={styles.treatmentInfo}>
+                                          <div className={styles.treatmentHeader}>
+                                            <div className={styles.treatmentName}>
+                                              <HighlightMatch text={a.name} query={searchQuery} />
+                                            </div>
+                                            {a.matchingKeyword && (
+                                              <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                Relates to: <HighlightMatch text={a.matchingKeyword} query={searchQuery} />
+                                              </div>
+                                            )}
+                                          </div>
+                                          {a.description && (
+                                            <div className={styles.treatmentDesc}>
+                                              {a.description}
                                             </div>
                                           )}
                                         </div>
-                                        {a.description && (
-                                          <div className={styles.treatmentDesc}>
-                                            {a.description}
-                                          </div>
+                                        {lastSearch && lastSearch.toLowerCase() === a.name.toLowerCase() && (
+                                          <span className={styles.itemTag}>Last Searched</span>
                                         )}
                                       </div>
-                                      {lastSearch && lastSearch.toLowerCase() === a.name.toLowerCase() && (
-                                        <span className={styles.itemTag}>Last Searched</span>
-                                      )}
-                                    </div>
-                                  ))
-                                ) : (
-                                  <div className={styles.noResults}>No matching articles found</div>
+                                    ))
+                                  ) : (
+                                    <div className={styles.noResults}>No matching articles found</div>
+                                  )}
+                                </div>
+
+                                {filteredArticles.length > 6 && (
+                                  <button
+                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                                    }}
+                                  >
+                                    View all {filteredArticles.length} Articles & Blogs
+                                  </button>
                                 )}
                               </div>
                             )}

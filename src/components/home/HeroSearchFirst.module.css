@@ -368,7 +368,6 @@
   gap: 10px;
 }
 
-.doctorCard,
 .specCard,
 .treatmentCard {
   width: 100%;
@@ -384,11 +383,29 @@
   cursor: pointer;
 }
 
-.doctorCard:hover,
+.doctorCard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid #cfd8e5;
+  background: #eef2f7;
+  padding: 12px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
 .specCard:hover,
 .treatmentCard:hover {
   background: #f7faff;
   border-color: #0f58b8;
+}
+
+.doctorCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(12, 24, 57, 0.08);
 }
 
 .doctorPhoto {
@@ -1093,10 +1110,10 @@
 
 .doctorCard {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   padding: 10px;
-  background: #f8fafc;
+  background: linear-gradient(to right, #ffffff 0%, #EBF3FC 100%);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   cursor: pointer;
