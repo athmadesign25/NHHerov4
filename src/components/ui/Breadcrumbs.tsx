@@ -9,9 +9,15 @@ interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
+  theme?: "light" | "dark";
 }
 
-export default function Breadcrumbs({ items }: BreadcrumbsProps) {
+export default function Breadcrumbs({ items, theme = "dark" }: BreadcrumbsProps) {
+  const isDark = theme === "dark";
+  const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-secondary)";
+  const activeColor = isDark ? "#ffffff" : "var(--color-text)";
+  const arrowColor = isDark ? "rgba(255, 255, 255, 0.4)" : "var(--color-border)";
+
   return (
     <nav aria-label="Breadcrumb" style={{ marginBottom: 16 }}>
       <ol style={{ display: "flex", alignItems: "center", listStyle: "none", padding: 0, margin: 0, gap: 8 }}>
@@ -23,20 +29,20 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
               {item.href && !isLast ? (
                 <Link 
                   href={item.href} 
-                  style={{ color: "rgba(255, 255, 255, 0.7)", textDecoration: "none", transition: "color 0.2s" }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = "#ffffff"}
-                  onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)"}
+                  style={{ color: inactiveColor, textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = activeColor}
+                  onMouseLeave={(e) => e.currentTarget.style.color = inactiveColor}
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span style={{ color: "#ffffff" }}>
+                <span style={{ color: activeColor }}>
                   {item.label}
                 </span>
               )}
               
               {!isLast && (
-                <ChevronRight size={14} style={{ marginLeft: 8, color: "rgba(255, 255, 255, 0.4)" }} />
+                <ChevronRight size={14} style={{ marginLeft: 8, color: arrowColor }} />
               )}
             </li>
           );
