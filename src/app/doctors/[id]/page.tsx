@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video } from "lucide-react";
+import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
-  city: string; experienceYears: string; rating: number; reviews: number;
+  city: string;
+  locations?: { name: string; city: string }[]; experienceYears: string; rating: number; reviews: number;
   img: string; fee: string; about: string;
   specialities: { name: string; subtext: string }[];
   languages: { name: string; script: string }[];
@@ -21,6 +22,10 @@ const doctors: Record<string, {
   "dr-1": {
     name: "Dr. Rajiv Menon", speciality: "Cardiology", subSpeciality: "Interventional Cardiology",
     hospital: "NH Bangalore — Mazumdar Shaw", city: "Bengaluru",
+    locations: [
+      { name: "NH Bangalore — Mazumdar Shaw", city: "Bengaluru" },
+      { name: "Narayana Health City", city: "Bengaluru" }
+    ],
     experienceYears: "22 Years", rating: 4.9, reviews: 1240, img: "/assets/doctor_1.png",
     fee: "₹1,500",
     about: "Dr. Rajiv Menon is one of India's foremost interventional cardiologists with over 22 years of experience in complex coronary interventions, structural heart disease, and advanced heart failure management.",
@@ -125,6 +130,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   const [selectedDate, setSelectedDate] = useState("27");
   const [selectedTime, setSelectedTime] = useState("09:15 AM");
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
+  const scrollDates = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 150;
+      scrollContainerRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
@@ -150,19 +163,21 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             >
               <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
-                  <div style={{ position: "relative", width: 140, height: 140, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
+                  <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
                     <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column" }}>
                     <h1 style={{ fontSize: "var(--font-size-3xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em", marginBottom: 4 }}>{doc.name}</h1>
                     <div style={{ fontSize: "var(--font-size-lg)", color: "var(--color-text)", fontWeight: 400, marginBottom: 12 }}>{doc.speciality} · {doc.subSpeciality}</div>
                     
-                    <div style={{ display: "flex", gap: "var(--sp-4)", flexWrap: "wrap", marginBottom: 12 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
-                        <MapPin size={16} style={{ color: "var(--color-text)" }} />
-                        {doc.hospital}, {doc.city}
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+                      {(doc.locations || [{ name: doc.hospital, city: doc.city }]).map((loc, idx) => (
+                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
+                          <MapPin size={16} style={{ color: "var(--color-text)" }} />
+                          {loc.name}, {loc.city}
+                        </div>
+                      ))}
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginTop: 4 }}>
                         <Clock size={16} style={{ color: "var(--color-text)" }} />
                         {doc.experienceYears} Experience
                       </div>
@@ -435,20 +450,28 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   <Calendar size={18} style={{ color: "var(--color-text)" }} />
                   Select date
                 </div>
-                <button 
-                  onClick={() => setSelectedDate("24")}
-                  style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", padding: 0 }}
-                >
-                  <RotateCcw size={14} /> Today
-                </button>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <button 
+                    onClick={() => setSelectedDate("24")}
+                    style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", padding: 0 }}
+                  >
+                    <RotateCcw size={14} /> Today
+                  </button>
+                  <div style={{ width: 1, height: 16, background: "var(--color-border)", margin: "0 4px" }} />
+                  <button onClick={() => scrollDates("left")} style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-bg-alt)", border: "none", borderRadius: "50%", width: 28, height: 28, cursor: "pointer", color: "var(--color-text-secondary)" }}>
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button onClick={() => scrollDates("right")} style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-bg-alt)", border: "none", borderRadius: "50%", width: 28, height: 28, cursor: "pointer", color: "var(--color-text-secondary)" }}>
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: "flex", alignItems: "stretch", gap: 12 }}>
                 <div style={{ background: "#F1F5F9", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>FEB</span>
                 </div>
-                
-                <div style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none" }} className="hide-scrollbar">
+                <div ref={scrollContainerRef} style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none" }} className="hide-scrollbar">
                   <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
                   {[
                     { date: "24", day: "Mon" },

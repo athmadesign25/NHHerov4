@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./search.module.css";
+import { searchHealthcare, getCityId, NH_CITIES, type NormalizedResults } from "@/lib/searchService";
 import { 
   Search, X, User, Building2, Activity, ShieldCheck, 
   FileText, Calendar, Star, MapPin, Clock, ArrowRight, ShieldAlert,
@@ -767,8 +768,7 @@ const articlesData = [
 const TABS = [
   { id: "doctors", label: "Doctors", countKey: "doctors" },
   { id: "packages_tests", label: "Health Packages & Tests", countKey: "packages_tests" },
-  { id: "specialty", label: "Specialty", countKey: "specialty" },
-  { id: "treatments", label: "Procedures & Treatments", countKey: "treatments" },
+  { id: "treatments", label: "Treatments & Procedures", countKey: "treatments" },
   { id: "articles", label: "Articles & Blogs", countKey: "articles" },
 ];
 
@@ -777,7 +777,7 @@ function SearchResultsContent() {
   const router = useRouter();
   
   const initialQuery = searchParams.get("q") || searchParams.get("search") || "";
-  const initialLocation = searchParams.get("location") || "Bangalore";
+  const initialLocation = searchParams.get("location") || "All";
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
   const [activeTab, setActiveTab] = useState("doctors");
@@ -800,7 +800,56 @@ function SearchResultsContent() {
   const [isFiltering, setIsFiltering] = useState(false);
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
 
+  // --- API integration ---
+  const [apiData, setApiData] = useState<NormalizedResults | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+
+
   // Toggle filter helper
+
+  // Debounced API call — triggers from 1 char, re-fetches on city change
+  useEffect(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      setApiData(null);
+      return;
+    }
+
+    setIsFiltering(true);
+    const cityId = getCityId(location);
+
+    debounceTimerRef.current = setTimeout(async () => {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      try {
+        const results = await searchHealthcare(trimmedQuery, cityId, controller.signal);
+        if (!controller.signal.aborted) {
+          setApiData(results);
+          setIsFiltering(false);
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") return;
+        if (!controller.signal.aborted) {
+          console.error("[Search API]", err);
+          setApiData(null);
+          setIsFiltering(false);
+        }
+      }
+    }, 280);
+
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, location]);
+
+
   const toggleFilter = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string) => {
     setter(prev => prev.includes(value) ? prev.filter(item => item !== value) : [...prev, value]);
     setIsFiltering(true);
@@ -888,16 +937,79 @@ function SearchResultsContent() {
     a.summary.toLowerCase().includes(query.toLowerCase())
   );
 
-  const filteredSpecialty = ALL_SPECIALTIES.filter((s) => s.toLowerCase().includes(query.toLowerCase()));
+  
+  // --- Derive display data: API results override static when query is active ---
+  const useApiData = apiData !== null && query.trim() !== "";
 
-  const counts: Record<string, number> = {
-    doctors: filteredDoctors.length,
+  // Doctors: map API fields to the shape the card already expects
+  const displayDoctors = useApiData
+    ? apiData!.doctors.map((d) => ({
+        id: String(d.id),
+        name: d.name,
+        speciality: d.speciality,
+        degrees: d.speciality,
+        hospital: d.hospital,
+        hospitalCount: "",
+        city: location,
+        experience: "",
+        rating: 0,
+        reviews: 0,
+        available: d.apptEnabled || d.walkinEnabled ? "Available Today" : "Check Availability",
+        availability: d.availability,
+        img: d.photo,
+        fee: "",
+        isExecutive: false,
+      }))
+    : filteredDoctors;
+
+  // Treatments & Procedures tab — treatments first
+  const displayTreatments = useApiData
+    ? [
+        ...apiData!.treatments.map((t) => ({
+          id: `treat-api-${t.id}`,
+          name: t.name,
+          speciality: t.speciality,
+          description: t.speciality ? `Related to ${t.speciality}` : "",
+          duration: "",
+          type: "Treatments" as string,
+          image: t.image,
+        })),
+        ...apiData!.procedures.map((p) => ({
+          id: `proc-api-${p.id}`,
+          name: p.name,
+          speciality: p.speciality,
+          description: p.speciality ? `Related to ${p.speciality}` : "",
+          duration: "",
+          type: "Procedures" as string,
+          image: p.image,
+        })),
+      ]
+    : filteredTreatments;
+
+  // Articles & Blogs tab
+  const displayArticles = useApiData
+    ? apiData!.blogs.map((b) => ({
+        id: `blog-api-${b.id}`,
+        title: b.name,
+        author: "",
+        readTime: "",
+        category: b.speciality || "Health",
+        date: "",
+        summary: "",
+        image: b.image,
+      }))
+    : filteredArticles;
+
+  const counts: Record<string, number | string> = {
+    doctors: isFiltering && !apiData ? "…" : useApiData ? apiData!.doctors.length : filteredDoctors.length,
     hospitals: filteredHospitals.length,
-    treatments: filteredTreatments.length,
+    treatments: isFiltering && !apiData ? "…" : useApiData
+      ? apiData!.procedures.length + apiData!.treatments.length
+      : filteredTreatments.length,
     packages_tests: filteredPackages.length + filteredLabs.length,
-    specialty: filteredSpecialty.length,
-    articles: filteredArticles.length,
+    articles: isFiltering && !apiData ? "…" : useApiData ? apiData!.blogs.length : filteredArticles.length,
   };
+
 
   const activeDynamicFiltersCount = 
     selectedSpecialties.length + 
@@ -1555,7 +1667,7 @@ function SearchResultsContent() {
                         </motion.div>
                       ))
                     ) : (
-                      filteredDoctors.map((doc) => (
+                      displayDoctors.map((doc) => (
                     <div 
                       key={doc.id}
                       style={{ 
@@ -1687,7 +1799,7 @@ function SearchResultsContent() {
                       </div>
                     </div>
                   )))}
-                  {filteredDoctors.length === 0 && !isFiltering && <EmptyState category="doctors" />}
+                  {displayDoctors.length === 0 && !isFiltering && <EmptyState category="doctors" />}
                 </div>
                 </div>
                 </div>
@@ -1874,7 +1986,7 @@ function SearchResultsContent() {
                     )}
 
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 20 }}>
-                      {filteredTreatments.map((treat) => (
+                      {displayTreatments.map((treat) => (
                         <motion.div 
                           key={treat.id} 
                           whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
@@ -1930,7 +2042,7 @@ function SearchResultsContent() {
                         </motion.div>
                       ))}
                     </div>
-                    {filteredTreatments.length === 0 && <EmptyState category="treatments" />}
+                    {displayTreatments.length === 0 && !isFiltering && <EmptyState category="treatments" />}
                   </div>
                 </div>
               )}
@@ -2427,7 +2539,7 @@ function SearchResultsContent() {
               {/* ARTICLES PANEL */}
               {activeTab === "articles" && (
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
-                  {filteredArticles.map((art) => (
+                  {displayArticles.map((art) => (
                     <motion.div 
                       key={art.id}
                       whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
@@ -2474,7 +2586,7 @@ function SearchResultsContent() {
                       </div>
                     </motion.div>
                   ))}
-                  {filteredArticles.length === 0 && <EmptyState category="articles" />}
+                  {displayArticles.length === 0 && !isFiltering && <EmptyState category="articles" />}
                 </div>
               )}
             </motion.div>
