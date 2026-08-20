@@ -22,6 +22,7 @@ import pulseAnimation from "../../../public/assets/pulse animation.json";
 import starAnimation from "../../../public/assets/AI Searching 2.json";
 import PixelRipple from "./PixelRipple";
 import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
+import { searchHealthcare, getCityId, NH_CITIES, type NormalizedResults } from "@/lib/searchService";
 
 const STAT_GROUPS = [
   [
@@ -548,7 +549,7 @@ export default function HeroSearchFirst() {
     }
   };
 
-  const isConversational = searchQuery.trim().split(" ").length > 3 || 
+  const isConversational = searchQuery.trim().split(/\s+/).filter(Boolean).length > 4 || 
                           /have|fever|cough|tomorrow|symptom|feel|pain/i.test(searchQuery.trim());
 
   useEffect(() => {
@@ -567,6 +568,13 @@ export default function HeroSearchFirst() {
     };
   }, [isPulseActive]);
   const [lastSearch, setLastSearch] = useState<string | null>(null);
+
+  // --- API integration state ---
+  const [apiData, setApiData] = useState<NormalizedResults | null>(null);
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const searchRef = useRef<HTMLFormElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -608,6 +616,47 @@ export default function HeroSearchFirst() {
       }
     }
   }, []);
+
+  // Debounced API call — fires from first character, cancels stale requests
+  useEffect(() => {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+
+    const trimmedQuery = searchQuery.trim();
+    if (!trimmedQuery) {
+      setApiData(null);
+      setIsApiLoading(false);
+      return;
+    }
+
+    setIsApiLoading(true);
+    const cityId = getCityId(selectedLocation);
+
+    debounceTimerRef.current = setTimeout(async () => {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      try {
+        const results = await searchHealthcare(trimmedQuery, cityId, controller.signal);
+        if (!controller.signal.aborted) {
+          setApiData(results);
+          setIsApiLoading(false);
+        }
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") return;
+        if (!controller.signal.aborted) {
+          console.error("[Search API]", err);
+          setApiData(null);
+          setIsApiLoading(false);
+        }
+      }
+    }, 280);
+
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, selectedLocation]);
 
   // Reset dropdown tab to Doctors when typing/query changes
   useEffect(() => {
@@ -727,6 +776,87 @@ export default function HeroSearchFirst() {
       .slice(0, 6);
 
   const hasSuggestions = filteredDoctors.length > 0 || filteredSpecs.length > 0 || filteredTreatments.length > 0 || filteredArticles.length > 0;
+
+  // --- Derive display data: prefer API results when available, fall back to static ---
+  const useApiData = apiData !== null && searchQuery.trim() !== "";
+
+  const displayDoctors = useApiData
+    ? apiData!.doctors.slice(0, 6).map((d) => ({
+        name: d.name,
+        speciality: d.speciality,
+        location: d.hospital,
+        hospital: d.hospital,
+        additionalHospitals: undefined as number | undefined,
+        photo: d.photo,
+        keywords: [] as string[],
+        consultationModes: (
+          d.vcEnabled && (d.apptEnabled || d.walkinEnabled) ? "both"
+            : d.vcEnabled ? "video"
+            : "hospital"
+        ) as "both" | "video" | "hospital",
+        availability: d.availability,
+      }))
+    : filteredDoctors;
+
+  const displaySpecs = useApiData
+    ? apiData!.specialities.slice(0, 6).map((s) => ({
+        name: s.name,
+        slug: s.slug,
+        image: s.image,
+        keywords: [] as string[],
+        matchingKeyword: null as string | null,
+      }))
+    : filteredSpecs;
+
+  const displaySubSpecs = useApiData
+    ? apiData!.subSpecialities.slice(0, 6).map((s) => ({
+        name: s.name,
+        slug: s.slug,
+        image: s.image,
+        parentSpeciality: s.parentSpeciality,
+      }))
+    : [];
+
+  const loading = isApiLoading && !apiData;
+  const tabCounts = {
+    doctors: loading ? -1 : useApiData ? apiData!.doctors.length : filteredDoctors.length,
+    specialties: loading ? -1 : useApiData
+      ? apiData!.specialities.length + apiData!.subSpecialities.length
+      : filteredSpecs.length,
+    treatments: loading ? -1 : useApiData
+      ? apiData!.procedures.length + apiData!.treatments.length
+      : filteredTreatments.length,
+    articles: loading ? -1 : useApiData ? apiData!.blogs.length : filteredArticles.length,
+  };
+
+  // Combine procedures + treatments for the "Procedures & Treatments" tab
+  const displayProcedureItems = useApiData
+    ? apiData!.procedures.map((p) => ({
+        name: p.name,
+        type: "Procedures" as const,
+        speciality: p.speciality,
+        image: p.image,
+      }))
+    : filteredOnlyTreatments;
+
+  const displayTreatmentItems = useApiData
+    ? apiData!.treatments.map((t) => ({
+        name: t.name,
+        type: "Treatments" as const,
+        speciality: t.speciality,
+        image: t.image,
+      }))
+    : [];
+
+  const displayArticles = useApiData
+    ? apiData!.blogs.slice(0, 6).map((b) => ({
+        name: b.name,
+        keywords: [] as string[],
+        image: b.image,
+        description: b.speciality || "",
+        matchingKeyword: null as string | null,
+      }))
+    : filteredArticles;
 
   // Close dropdown on click outside and reset search query
   useEffect(() => {
@@ -1616,28 +1746,28 @@ export default function HeroSearchFirst() {
                                 onClick={() => setActiveDropdownTab("doctors")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "doctors" ? styles.activeTab : ""}`}
                               >
-                                Doctors ({filteredDoctors.length})
+                                Doctors ({tabCounts.doctors < 0 ? "…" : tabCounts.doctors})
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setActiveDropdownTab("specialties")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "specialties" ? styles.activeTab : ""}`}
                               >
-                                Specialty ({filteredSpecs.length})
+                                Specialty ({tabCounts.specialties < 0 ? "…" : tabCounts.specialties})
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setActiveDropdownTab("treatments_tests")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "treatments_tests" ? styles.activeTab : ""}`}
                               >
-                                Procedures & Treatments ({filteredTreatments.length})
+                                Treatments & Procedures ({tabCounts.treatments < 0 ? "…" : tabCounts.treatments})
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setActiveDropdownTab("articles")}
                                 className={`${styles.dropdownTab} ${activeDropdownTab === "articles" ? styles.activeTab : ""}`}
                               >
-                                Articles & Blogs ({filteredArticles.length})
+                                Articles & Blogs ({tabCounts.articles < 0 ? "…" : tabCounts.articles})
                               </button>
                             </div>
 
@@ -1657,23 +1787,21 @@ export default function HeroSearchFirst() {
                                     className={styles.locationDropdownSelect}
                                   >
                                     <option value="All Locations">All Locations</option>
-                                    {Array.from(new Set(doctorsData.map((d) => d.location))).map((loc) => (
-                                      <option key={loc} value={loc}>
-                                        {loc}
-                                      </option>
+                                    {NH_CITIES.map((c) => (
+                                      <option key={c.value} value={c.value}>{c.label}</option>
                                     ))}
                                   </select>
                                   </div>
                                 </div>
                                 {/* Doctors Section */}
-                                {filteredDoctors.length > 0 && (
+                                {displayDoctors.length > 0 && (
                                   (() => {
-                                    const hospitalDoctors = filteredDoctors.filter(doc => {
+                                    const hospitalDoctors = displayDoctors.filter(doc => {
                                       if (simulatedUserLocation === "far_away") return false;
                                       return doc.consultationModes === "hospital" || doc.consultationModes === "both" || !doc.consultationModes;
                                     });
 
-                                    const videoDoctors = filteredDoctors.filter(doc => {
+                                    const videoDoctors = displayDoctors.filter(doc => {
                                       if (simulatedUserLocation === "far_away") {
                                         return doc.consultationModes === "video" || doc.consultationModes === "both" || !doc.consultationModes;
                                       }
@@ -1796,11 +1924,15 @@ export default function HeroSearchFirst() {
                                   })()
                                 )}
 
-                                {filteredDoctors.length === 0 && (
+                                {displayDoctors.length === 0 && !isApiLoading && (
                                   <div className={styles.noResults}>No matching doctors found</div>
                                 )}
 
-                                {filteredDoctors.length > 6 && (
+                                {isApiLoading && (
+                                  <div className={styles.noResults} style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>Searching…</div>
+                                )}
+
+                                {tabCounts.doctors > 6 && (
                                   <button
                                     style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
                                     onClick={() => {
@@ -1808,7 +1940,7 @@ export default function HeroSearchFirst() {
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
                                     }}
                                   >
-                                    View all {filteredDoctors.length} Doctors
+                                    View all {tabCounts.doctors} Doctors
                                   </button>
                                 )}
                               </div>
@@ -1820,11 +1952,11 @@ export default function HeroSearchFirst() {
                                   Showing top matching specialties.
                                 </div>
                                 {/* Specialities Section */}
-                                {filteredSpecs.length > 0 && (
+                                {displaySpecs.length > 0 && (
                                   <div>
                                     <div className={styles.sectionHeader}>Specialities</div>
                                     <div className={styles.specGrid}>
-                                      {filteredSpecs.slice(0, 6).map((spec) => (
+                                      {displaySpecs.slice(0, 6).map((spec) => (
                                         <div
                                           key={spec.name}
                                           onClick={() => handleSelectSuggestion(spec.name)}
@@ -1851,11 +1983,47 @@ export default function HeroSearchFirst() {
                                   </div>
                                 )}
 
-                                {filteredSpecs.length === 0 && (
+                                {displaySpecs.length === 0 && !isApiLoading && displaySubSpecs.length === 0 && (
                                   <div className={styles.noResults}>No matching specialities found</div>
                                 )}
 
-                                {filteredSpecs.length > 6 && (
+                                {/* Sub-Specialities section — only shown when API data is active */}
+                                {displaySubSpecs.length > 0 && (
+                                  <div>
+                                    <div className={styles.sectionHeader}>Sub-Specialities</div>
+                                    <div className={styles.specGrid}>
+                                      {displaySubSpecs.map((sub) => (
+                                        <div
+                                          key={sub.name}
+                                          onClick={() => handleSelectSuggestion(sub.name)}
+                                          className={styles.specCard}
+                                        >
+                                          <img
+                                            src={sub.image || "/Specialities icons/General Medicine.svg"}
+                                            alt={sub.name}
+                                            className={styles.specImage}
+                                          />
+                                          <div className={styles.specInfo} style={{ display: "flex", flexDirection: "column", gap: "2px", overflow: "hidden" }}>
+                                            <div className={styles.specName}>
+                                              <HighlightMatch text={sub.name} query={searchQuery} />
+                                            </div>
+                                            {sub.parentSpeciality && (
+                                              <div style={{ fontSize: "10.5px", color: "#64748B", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                                {sub.parentSpeciality.split(",")[0]}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {isApiLoading && displaySpecs.length === 0 && displaySubSpecs.length === 0 && (
+                                  <div className={styles.noResults} style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>Searching…</div>
+                                )}
+
+                                {tabCounts.specialties > 6 && (
                                   <button
                                     style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
                                     onClick={() => {
@@ -1863,7 +2031,7 @@ export default function HeroSearchFirst() {
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
                                     }}
                                   >
-                                    View all {filteredSpecs.length} Specialties
+                                    View all {tabCounts.specialties} Specialties
                                   </button>
                                 )}
                               </div>
@@ -1874,122 +2042,237 @@ export default function HeroSearchFirst() {
                                 <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginBottom: "-8px" }}>
                                   Showing top matching procedures and treatments.
                                 </div>
-                                {/* Health Checkup Packages Section */}
-                                {filteredHealthCheckups.length > 0 && (
-                                  <div>
-                                    <div className={styles.sectionHeader}>Health Checkup Packages</div>
-                                    <div className={styles.treatmentGrid}>
-                                      {filteredHealthCheckups.slice(0, 6).map((t) => (
-                                        <div
-                                          key={t.name}
-                                          onClick={() => handleSelectSuggestion(t.name)}
-                                          className={styles.treatmentCard}
-                                        >
-                                          {t.image && (
-                                            <img
-                                              src={t.image}
-                                              alt={t.name}
-                                              className={styles.treatmentImage}
-                                            />
-                                          )}
-                                          <div className={styles.treatmentInfo}>
-                                            <div className={styles.treatmentHeader}>
-                                              <div className={styles.treatmentName}>
-                                                <HighlightMatch text={t.name} query={searchQuery} />
-                                              </div>
-                                              <div style={{ fontSize: '10.5px', color: 'var(--color-primary, #034EA2)', fontWeight: 500 }}>
-                                                {t.testCount}
+                                {useApiData ? (
+                                  <>
+                                    {displayTreatmentItems.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Treatments</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {displayTreatmentItems.map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.image && (
+                                                <img
+                                                  src={t.image}
+                                                  alt={t.name}
+                                                  className={styles.treatmentImage}
+                                                />
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  {t.speciality && (
+                                                    <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                      {t.speciality}
+                                                    </div>
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                            <div className={styles.treatmentDesc}>{t.description}</div>
-                                          </div>
+                                          ))}
                                         </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Lab Tests Section */}
-                                {filteredLabTests.length > 0 && (
-                                  <div>
-                                    <div className={styles.sectionHeader}>Lab Tests</div>
-                                    <div className={styles.treatmentGrid}>
-                                      {filteredLabTests.slice(0, 6).map((t) => (
-                                        <div
-                                          key={t.name}
-                                          onClick={() => handleSelectSuggestion(t.name)}
-                                          className={styles.treatmentCard}
-                                        >
-                                          {t.name.includes("CBC") ? (
-                                            <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#EF4444" }}>
-                                              <Droplets size={20} />
-                                            </div>
-                                          ) : t.name.includes("Thyroid") ? (
-                                            <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(168, 85, 247, 0.1)", color: "#A855F7" }}>
-                                              <FlaskConical size={20} />
-                                            </div>
-                                          ) : (
-                                            <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#10B981" }}>
-                                              <Activity size={20} />
-                                            </div>
-                                          )}
-                                          <div className={styles.treatmentInfo}>
-                                            <div className={styles.treatmentHeader}>
-                                              <div className={styles.treatmentName}>
-                                                <HighlightMatch text={t.name} query={searchQuery} />
-                                              </div>
-                                              <div style={{ fontSize: '10.5px', color: 'var(--color-primary, #034EA2)', fontWeight: 500 }}>
-                                                {t.testCount}
+                                      </div>
+                                    )}
+                                    {displayProcedureItems.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Procedures</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {displayProcedureItems.map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.image && (
+                                                <img
+                                                  src={t.image}
+                                                  alt={t.name}
+                                                  className={styles.treatmentImage}
+                                                />
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  {t.speciality && (
+                                                    <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                      {t.speciality}
+                                                    </div>
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                            <div className={styles.treatmentDesc}>{t.description}</div>
-                                          </div>
+                                          ))}
                                         </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Treatments Section */}
-                                {filteredOnlyTreatments.length > 0 && (
-                                  <div>
-                                    <div className={styles.sectionHeader}>Treatments</div>
-                                    <div className={styles.treatmentGrid}>
-                                      {filteredOnlyTreatments.slice(0, 6).map((t) => (
-                                        <div
-                                          key={t.name}
-                                          onClick={() => handleSelectSuggestion(t.name)}
-                                          className={styles.treatmentCard}
-                                        >
-                                          {t.image && (
-                                            <img
-                                              src={t.image}
-                                              alt={t.name}
-                                              className={styles.treatmentImage}
-                                            />
-                                          )}
-                                          <div className={styles.treatmentInfo}>
-                                            <div className={styles.treatmentHeader}>
-                                              <div className={styles.treatmentName}>
-                                                <HighlightMatch text={t.name} query={searchQuery} />
-                                              </div>
-                                              <div style={{ fontSize: '10.5px', color: 'var(--color-primary, #034EA2)', fontWeight: 500 }}>
-                                                Related to: <HighlightMatch text={t.speciality ?? ""} query={searchQuery} />
+                                      </div>
+                                    )}
+                                    {displayTreatmentItems.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Treatments</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {displayTreatmentItems.map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.image && (
+                                                <img
+                                                  src={t.image}
+                                                  alt={t.name}
+                                                  className={styles.treatmentImage}
+                                                />
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  {t.speciality && (
+                                                    <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                      {t.speciality}
+                                                    </div>
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                            <div className={styles.treatmentDesc}>{t.description}</div>
-                                          </div>
+                                          ))}
                                         </div>
-                                      ))}
-                                    </div>
-                                  </div>
+                                      </div>
+                                    )}
+                                    {displayProcedureItems.length === 0 && displayTreatmentItems.length === 0 && !isApiLoading && (
+                                      <div className={styles.noResults}>No matching treatments or tests found</div>
+                                    )}
+                                    {isApiLoading && displayProcedureItems.length === 0 && displayTreatmentItems.length === 0 && (
+                                      <div className={styles.noResults} style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>Searching…</div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    {/* Health Checkup Packages Section */}
+                                    {filteredHealthCheckups.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Health Checkup Packages</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {filteredHealthCheckups.slice(0, 6).map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.image && (
+                                                <img
+                                                  src={t.image}
+                                                  alt={t.name}
+                                                  className={styles.treatmentImage}
+                                                />
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                    {(t as any).testCount}
+                                                  </div>
+                                                </div>
+                                                <div className={styles.treatmentDesc}>{t.description}</div>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Lab Tests Section */}
+                                    {filteredLabTests.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Lab Tests</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {filteredLabTests.slice(0, 6).map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.name.includes("CBC") ? (
+                                                <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#EF4444" }}>
+                                                  <Droplets size={20} />
+                                                </div>
+                                              ) : t.name.includes("Thyroid") ? (
+                                                <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(168, 85, 247, 0.1)", color: "#A855F7" }}>
+                                                  <FlaskConical size={20} />
+                                                </div>
+                                              ) : (
+                                                <div className={styles.labIconWrap} style={{ backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#10B981" }}>
+                                                  <Activity size={20} />
+                                                </div>
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                    {(t as any).testCount}
+                                                  </div>
+                                                </div>
+                                                <div className={styles.treatmentDesc}>{t.description}</div>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Treatments Section */}
+                                    {filteredOnlyTreatments.length > 0 && (
+                                      <div>
+                                        <div className={styles.sectionHeader}>Treatments</div>
+                                        <div className={styles.treatmentGrid}>
+                                          {filteredOnlyTreatments.slice(0, 6).map((t) => (
+                                            <div
+                                              key={t.name}
+                                              onClick={() => handleSelectSuggestion(t.name)}
+                                              className={styles.treatmentCard}
+                                            >
+                                              {t.image && (
+                                                <img
+                                                  src={t.image}
+                                                  alt={t.name}
+                                                  className={styles.treatmentImage}
+                                                />
+                                              )}
+                                              <div className={styles.treatmentInfo}>
+                                                <div className={styles.treatmentHeader}>
+                                                  <div className={styles.treatmentName}>
+                                                    <HighlightMatch text={t.name} query={searchQuery} />
+                                                  </div>
+                                                  <div style={{ fontSize: "10.5px", color: "var(--color-primary, #034EA2)", fontWeight: 500 }}>
+                                                    Related to: <HighlightMatch text={(t as any).speciality ?? ""} query={searchQuery} />
+                                                  </div>
+                                                </div>
+                                                <div className={styles.treatmentDesc}>{t.description}</div>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {filteredTreatments.length === 0 && (
+                                      <div className={styles.noResults}>No matching treatments or tests found</div>
+                                    )}
+                                  </>
                                 )}
 
-                                {filteredTreatments.length === 0 && (
-                                  <div className={styles.noResults}>No matching treatments or tests found</div>
-                                )}
-
-                                {filteredTreatments.length > 6 && (
+                                {tabCounts.treatments > 8 && (
                                   <button
                                     style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
                                     onClick={() => {
@@ -1997,7 +2280,7 @@ export default function HeroSearchFirst() {
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
                                     }}
                                   >
-                                    View all {filteredTreatments.length} Procedures & Treatments
+                                    View all {tabCounts.treatments} Procedures &amp; Treatments
                                   </button>
                                 )}
                               </div>
@@ -2009,8 +2292,8 @@ export default function HeroSearchFirst() {
                                   Showing top matching articles and blogs.
                                 </div>
                                 <div className={styles.articleList}>
-                                  {filteredArticles.length > 0 ? (
-                                    filteredArticles.slice(0, 6).map((a) => (
+                                  {displayArticles.length > 0 ? (
+                                    displayArticles.slice(0, 6).map((a) => (
                                       <div
                                         key={a.name}
                                         onClick={() => handleSelectSuggestion(a.name)}
@@ -2049,12 +2332,14 @@ export default function HeroSearchFirst() {
                                         )}
                                       </div>
                                     ))
+                                  ) : isApiLoading ? (
+                                    <div className={styles.noResults} style={{ color: "var(--color-text-muted)", fontStyle: "italic" }}>Searching…</div>
                                   ) : (
                                     <div className={styles.noResults}>No matching articles found</div>
                                   )}
                                 </div>
 
-                                {filteredArticles.length > 6 && (
+                                {tabCounts.articles > 6 && (
                                   <button
                                     style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
                                     onClick={() => {
@@ -2062,7 +2347,7 @@ export default function HeroSearchFirst() {
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
                                     }}
                                   >
-                                    View all {filteredArticles.length} Articles & Blogs
+                                    View all {tabCounts.articles} Articles &amp; Blogs
                                   </button>
                                 )}
                               </div>
