@@ -284,7 +284,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", padding: "var(--sp-4)", boxShadow: "var(--shadow-lg)" }}
+            style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", padding: "var(--sp-4)", boxShadow: "var(--shadow-sm)" }}
           >
             {/* Consultation Type Toggle */}
             <div style={{ 
@@ -443,45 +443,53 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 </button>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div style={{ background: "#F1F5F9", borderRadius: 20, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em" }}>FEB</span>
+              <div style={{ display: "flex", alignItems: "stretch", gap: 12 }}>
+                <div style={{ background: "#F1F5F9", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>FEB</span>
                 </div>
                 
-                {[
-                  { date: "24", day: "Mon" },
-                  { date: "25", day: "Tue" },
-                  { date: "26", day: "Wed" },
-                  { date: "27", day: "Thu" },
-                  { date: "28", day: "Fri" }
-                ].map((d, i) => (
-                  <button
-                    key={d.date}
-                    onClick={() => setSelectedDate(d.date)}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 4,
-                      padding: "8px 0",
-                      width: 52,
-                      border: selectedDate === d.date ? "1.5px solid var(--color-primary)" : "1.5px solid transparent",
-                      borderRadius: 12,
-                      background: "transparent",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      position: "relative"
-                    }}
-                  >
-                    <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 600, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text)" }}>{d.date}</span>
-                    <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 500, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text-secondary)" }}>{d.day}</span>
-                    {/* Vertical separator between items, except first and last */}
-                    {i !== 0 && i !== 4 && (
-                      <div style={{ position: "absolute", left: -6, top: "20%", height: "60%", width: 1, background: "var(--color-border-light)" }} />
-                    )}
-                  </button>
-                ))}
+                <div style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none" }} className="hide-scrollbar">
+                  <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+                  {[
+                    { date: "24", day: "Mon" },
+                    { date: "25", day: "Tue" },
+                    { date: "26", day: "Wed" },
+                    { date: "27", day: "Thu" },
+                    { date: "28", day: "Fri" },
+                    { date: "01", day: "Sat" },
+                    { date: "02", day: "Sun" },
+                    { date: "03", day: "Mon" },
+                    { date: "04", day: "Tue" }
+                  ].map((d, i) => (
+                    <button
+                      key={d.date}
+                      onClick={() => setSelectedDate(d.date)}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 4,
+                        padding: "8px 0",
+                        width: 52,
+                        flexShrink: 0,
+                        border: selectedDate === d.date ? "1.5px solid var(--color-primary)" : "1.5px solid transparent",
+                        borderRadius: 12,
+                        background: "transparent",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                        position: "relative"
+                      }}
+                    >
+                      <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 600, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text)" }}>{d.date}</span>
+                      <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 500, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text-secondary)" }}>{d.day}</span>
+                      {/* Vertical separator between items */}
+                      {i !== 0 && (
+                        <div style={{ position: "absolute", left: -6, top: "20%", height: "60%", width: 1, background: "var(--color-border-light)" }} />
+                      )}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 

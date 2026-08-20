@@ -912,17 +912,14 @@ function SearchResultsContent() {
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       {/* Top Search Banner */}
-      <div style={{ background: "linear-gradient(135deg, #022352 0%, #034EA2 100%)", padding: "40px 0 48px", color: "#FFFFFF" }}>
+      <div style={{ background: "linear-gradient(to bottom, #FFFFFF 0%, var(--color-bg-alt) 100%)", padding: "24px 0 24px", color: "var(--color-text)" }}>
         <div className="container">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
-              <Breadcrumbs items={[
+              <Breadcrumbs theme="light" items={[
                 { label: "Home", href: "/" },
                 { label: "Search Results" }
               ]} />
-              <h1 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, letterSpacing: "-0.01em" }}>
-                Search Results
-              </h1>
             </div>
 
             <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
@@ -936,13 +933,13 @@ function SearchResultsContent() {
                     width: "100%",
                     height: 52,
                     padding: "0 48px 0 52px",
-                    borderRadius: 12,
+                    borderRadius: 26,
                     border: "none",
                     outline: "none",
                     fontSize: 16,
                     color: "#1E293B",
                     fontWeight: 500,
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                 />
                 {query && (
@@ -2401,7 +2398,7 @@ function SearchResultsContent() {
                             whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
                             transition={{ duration: 0.2 }}
                             style={{ 
-                              background: "var(--color-bg-card)", 
+                              background: "linear-gradient(to right, #ffffff 0%, var(--color-primary-light) 100%)", 
                               padding: "0 20px", 
                               borderRadius: 12, 
                               border: "1px solid var(--color-border)",
