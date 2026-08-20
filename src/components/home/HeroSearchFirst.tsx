@@ -1774,7 +1774,7 @@ export default function HeroSearchFirst() {
                             
                           </div>
 
-                          <div className={styles.dropdownTabContent} data-lenis-prevent>
+                          <div className={styles.dropdownTabContent} style={{ maxHeight: activeDropdownTab === "treatments_tests" ? "min(50vh, 420px)" : undefined }} data-lenis-prevent>
                             {activeDropdownTab === "doctors" && (
                               <div className={styles.dropdownSection} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "-8px" }}>

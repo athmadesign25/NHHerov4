@@ -117,6 +117,26 @@
   position: sticky;
   top: 150px;
   display: none;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.filterPanel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filterPanel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filterPanel::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.filterPanel:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 1024px) {
