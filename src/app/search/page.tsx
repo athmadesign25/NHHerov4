@@ -767,6 +767,7 @@ const articlesData = [
 const TABS = [
   { id: "doctors", label: "Doctors", countKey: "doctors" },
   { id: "packages_tests", label: "Health Packages & Tests", countKey: "packages_tests" },
+  { id: "specialty", label: "Specialty", countKey: "specialty" },
   { id: "treatments", label: "Procedures & Treatments", countKey: "treatments" },
   { id: "articles", label: "Articles & Blogs", countKey: "articles" },
 ];
@@ -887,11 +888,14 @@ function SearchResultsContent() {
     a.summary.toLowerCase().includes(query.toLowerCase())
   );
 
+  const filteredSpecialty = ALL_SPECIALTIES.filter((s) => s.toLowerCase().includes(query.toLowerCase()));
+
   const counts: Record<string, number> = {
     doctors: filteredDoctors.length,
     hospitals: filteredHospitals.length,
     treatments: filteredTreatments.length,
     packages_tests: filteredPackages.length + filteredLabs.length,
+    specialty: filteredSpecialty.length,
     articles: filteredArticles.length,
   };
 
@@ -1595,7 +1599,7 @@ function SearchResultsContent() {
                       <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                            <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 80, height: 80, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
+                            <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
                               <motion.div whileHover="hover" initial="initial" style={{ width: "100%", height: "100%", position: "relative" }}>
                                 <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                                 <motion.div 
@@ -1631,7 +1635,11 @@ function SearchResultsContent() {
                               </h3>
                             </Link>
                             <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>{doc.speciality}</p>
-                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
+                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 4 }}>
+                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>English</span>
+                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>Hindi</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2281,6 +2289,140 @@ function SearchResultsContent() {
                   {filteredPackages.length === 0 && filteredLabs.length === 0 && (
                     <EmptyState category="health packages and tests" />
                   )}
+                  </div>
+                </div>
+              )}
+
+              {/* SPECIALTIES PANEL */}
+              {activeTab === "specialty" && (
+                <div className={styles.doctorsLayout}>
+                  {/* Left Sidebar Filters */}
+                  <div className={styles.filterPanel}>
+                    {/* A-Z Filter */}
+                    <div className={styles.filterGroup}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Browse by A-Z</h4>
+                        {selectedAlphabets.length > 0 && (
+                          <button
+                            onClick={() => {
+                              setSelectedAlphabets([]);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 300);
+                            }}
+                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                          >
+                            Clear <X size={12} />
+                          </button>
+                        )}
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8 }}>
+                        {Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i)).map(letter => (
+                          <label key={letter} style={{
+                            display: "flex", alignItems: "center", justifyContent: "center", 
+                            padding: "8px 0", border: "1px solid", 
+                            borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
+                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "#fff",
+                            color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
+                            borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
+                            transition: "all 0.2s"
+                          }}>
+                            <input 
+                              type="checkbox" 
+                              style={{ display: "none" }}
+                              checked={selectedAlphabets.includes(letter)}
+                              onChange={() => toggleFilter(setSelectedAlphabets, letter)}
+                            />
+                            {letter}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Main Grid Content Area */}
+                  <div>
+                    <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: 16 }}>
+                      Showing results for specialties {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
+                    </div>
+
+                    {selectedAlphabets.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 24 }}>
+                        {selectedAlphabets.map(alphabet => (
+                          <div 
+                            key={alphabet}
+                            style={{ 
+                              display: "inline-flex", alignItems: "center", gap: 6, 
+                              background: "rgba(237, 28, 36, 0.08)", border: "1px solid var(--color-emergency)", 
+                              borderRadius: 16, height: 32, padding: "0 12px", 
+                              fontSize: 13, fontWeight: 500, color: "var(--color-emergency)"
+                            }}
+                          >
+                            {alphabet}
+                            <button 
+                              onClick={() => toggleFilter(setSelectedAlphabets, alphabet)}
+                              style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", padding: 0, cursor: "pointer", color: "var(--color-emergency)" }}
+                            >
+                              <X size={14} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <h2 style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text)", marginBottom: selectedAlphabets.length > 0 ? 16 : 24 }}>Specialties</h2>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+                      {filteredSpecialty.filter(s => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).map((spec) => {
+                        const iconMap: Record<string, string> = {
+                          "Cardiologist": "Cardiology.svg",
+                          "Orthopaedician": "Orthopaedics.svg",
+                          "Oncologist": "Cancercare.svg",
+                          "Neurologist": "Neurology.svg",
+                          "Pediatrician": "Paedratic.svg",
+                          "Cardiac Surgeon": "Cardiac Science.svg",
+                          "General Surgeon": "General Surgery.svg",
+                          "Vascular Surgeon": "General Surgery.svg",
+                          "Plastic Surgeon": "General Surgery.svg",
+                          "Gastroenterologist": "Gastro.svg",
+                          "Pulmonologist": "Pulmonology.svg",
+                          "Endocrinologist": "Diabetology.svg",
+                          "Nephrologist": "Nephrology.svg",
+                          "Urologist": "Urology.svg",
+                          "Gynecologist": "Gynaecology.svg",
+                          "ENT Specialist": "General Medicine.svg",
+                          "Dermatologist": "General Medicine.svg",
+                          "Dentist": "Dental.svg"
+                        };
+                        const iconFile = iconMap[spec] || "General Medicine.svg";
+
+                        return (
+                          <motion.div 
+                            key={spec}
+                            whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
+                            transition={{ duration: 0.2 }}
+                            style={{ 
+                              background: "var(--color-bg-card)", 
+                              padding: "0 20px", 
+                              borderRadius: 12, 
+                              border: "1px solid var(--color-border)",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                              cursor: "pointer",
+                              height: 72
+                            }}
+                          >
+                            <img 
+                              src={`/Specialities icons/${iconFile}`} 
+                              alt={spec} 
+                              style={{ width: 24, height: 24, objectFit: "contain" }} 
+                            />
+                            <span style={{ fontSize: 16, fontWeight: 600, color: "var(--color-text)", lineHeight: 1.2 }}>{spec}</span>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                    {filteredSpecialty.filter(s => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).length === 0 && <EmptyState category="specialties" />}
                   </div>
                 </div>
               )}
