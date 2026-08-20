@@ -1226,12 +1226,12 @@ export default function HeroSearchFirst() {
                                                   </div>
                                                   
                                                   <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
-                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                       <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
                                                       {doc.availability?.hospital || "Today 05:30 PM"}
                                                     </div>
                                                     {(doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                         <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
                                                         {doc.availability?.video || "Today 05:30 PM"}
                                                       </div>
@@ -1286,7 +1286,7 @@ export default function HeroSearchFirst() {
                                                         <span style={{ fontSize: "9px" }}>❌</span>
                                                       </span>
                                                     ) : (
-                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                         <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
                                                         {doc.availability?.video || "Today 05:30 PM"}
                                                       </div>
@@ -1435,12 +1435,12 @@ export default function HeroSearchFirst() {
                                                   </div>
                                                   
                                                   <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
-                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                       <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
                                                       {doc.availability?.hospital || "Today 05:30 PM"}
                                                     </div>
                                                     {(doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                         <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
                                                         {doc.availability?.video || "Today 05:30 PM"}
                                                       </div>
@@ -1715,7 +1715,7 @@ export default function HeroSearchFirst() {
                                       setShowGenericMatchesInPulse(true);
                                     }}
                                     style={{
-                                      background: "transparent",
+                                      background: "#ffffff",
                                       border: "1px solid #cbd5e1",
                                       color: "#64748b",
                                       padding: "6px 14px",
@@ -1739,39 +1739,65 @@ export default function HeroSearchFirst() {
                       ) : (
                         <>
                           {/* Tabs Selector at the top */}
-                          <div className={styles.dropdownTabs}>
-                            <div className={styles.dropdownTabButtons}>
-                              <button
-                                type="button"
-                                onClick={() => setActiveDropdownTab("doctors")}
-                                className={`${styles.dropdownTab} ${activeDropdownTab === "doctors" ? styles.activeTab : ""}`}
-                              >
-                                Doctors ({tabCounts.doctors < 0 ? "…" : tabCounts.doctors})
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setActiveDropdownTab("specialties")}
-                                className={`${styles.dropdownTab} ${activeDropdownTab === "specialties" ? styles.activeTab : ""}`}
-                              >
-                                Specialty ({tabCounts.specialties < 0 ? "…" : tabCounts.specialties})
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setActiveDropdownTab("treatments_tests")}
-                                className={`${styles.dropdownTab} ${activeDropdownTab === "treatments_tests" ? styles.activeTab : ""}`}
-                              >
-                                Treatments & Procedures ({tabCounts.treatments < 0 ? "…" : tabCounts.treatments})
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setActiveDropdownTab("articles")}
-                                className={`${styles.dropdownTab} ${activeDropdownTab === "articles" ? styles.activeTab : ""}`}
-                              >
-                                Articles & Blogs ({tabCounts.articles < 0 ? "…" : tabCounts.articles})
-                              </button>
-                            </div>
-
-                            
+                          <div style={{ display: "flex", gap: "2px", overflowX: "auto", scrollbarWidth: "none", marginBottom: "16px", background: "var(--color-bg-alt)", borderRadius: "16px 16px 0 0" }}>
+                            {[
+                              { id: "doctors", label: "Doctors", count: tabCounts.doctors },
+                              { id: "specialties", label: "Specialty", count: tabCounts.specialties },
+                              { id: "treatments_tests", label: "Treatments & Procedures", count: tabCounts.treatments },
+                              { id: "articles", label: "Articles & Blogs", count: tabCounts.articles }
+                            ].map((tab) => {
+                              const isActive = activeDropdownTab === tab.id;
+                              return (
+                                <button
+                                  key={tab.id}
+                                  type="button"
+                                  onClick={() => setActiveDropdownTab(tab.id as any)}
+                                  style={{
+                                    position: "relative",
+                                    padding: "12px 18px",
+                                    background: isActive 
+                                      ? "linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box, linear-gradient(to bottom, var(--color-emergency, #EF4444) 0%, #F1F5F9 70%) border-box" 
+                                      : "#F1F5F9",
+                                    border: "1px solid transparent",
+                                    borderRadius: "16px 16px 0 0",
+                                    fontSize: "14px",
+                                    fontWeight: 600,
+                                    color: isActive ? "#000000" : "#64748B",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px",
+                                    marginBottom: "-1px",
+                                    transition: "0.2s",
+                                    whiteSpace: "nowrap"
+                                  }}
+                                >
+                                  {tab.label}
+                                  <span style={{
+                                    fontSize: "11px", 
+                                    background: isActive ? "rgba(3, 78, 162, 0.08)" : "#E2E8F0", 
+                                    color: isActive ? "#000000" : "#64748B",
+                                    padding: "2px 6px",
+                                    borderRadius: "10px",
+                                    fontWeight: 500
+                                  }}>
+                                    {tab.count < 0 ? "…" : tab.count}
+                                  </span>
+                                  {isActive && (
+                                    <div style={{
+                                      position: "absolute",
+                                      bottom: 0,
+                                      left: "calc(50% - 18px)",
+                                      width: "36px",
+                                      height: "2px",
+                                      background: "var(--color-emergency, #EF4444)",
+                                      borderRadius: "4px",
+                                      transformOrigin: "center bottom"
+                                    }} />
+                                  )}
+                                </button>
+                              );
+                            })}
                           </div>
 
                           <div className={styles.dropdownTabContent} style={{ maxHeight: activeDropdownTab === "treatments_tests" ? "min(50vh, 420px)" : undefined }} data-lenis-prevent>
@@ -1848,12 +1874,12 @@ export default function HeroSearchFirst() {
                                                   </div>
                                                   
                                                   <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
-                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                       <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
                                                       {doc.availability?.hospital || "Today 05:30 PM"}
                                                     </div>
                                                     {(doc.consultationModes === "both" || !doc.consultationModes) && (
-                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                         <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
                                                         {doc.availability?.video || "Today 05:30 PM"}
                                                       </div>
@@ -1908,7 +1934,7 @@ export default function HeroSearchFirst() {
                                                         <span style={{ fontSize: "9px" }}>❌</span>
                                                       </span>
                                                     ) : (
-                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "linear-gradient(135deg, #ffffff 0%, #EBF3FC 100%)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+                                                      <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "#ffffff", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
                                                         <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
                                                         {doc.availability?.video || "Today 05:30 PM"}
                                                       </div>
@@ -1934,7 +1960,7 @@ export default function HeroSearchFirst() {
 
                                 {tabCounts.doctors > 6 && (
                                   <button
-                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    style={{ display: "block", padding: "10px 24px", margin: "8px auto 0", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-border)", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", transition: "var(--transition-fast)" }}
                                     onClick={() => {
                                       setIsOpen(false);
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
@@ -2025,7 +2051,7 @@ export default function HeroSearchFirst() {
 
                                 {tabCounts.specialties > 6 && (
                                   <button
-                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    style={{ display: "block", padding: "10px 24px", margin: "8px auto 0", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-border)", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", transition: "var(--transition-fast)" }}
                                     onClick={() => {
                                       setIsOpen(false);
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
@@ -2274,7 +2300,7 @@ export default function HeroSearchFirst() {
 
                                 {tabCounts.treatments > 8 && (
                                   <button
-                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    style={{ display: "block", padding: "10px 24px", margin: "8px auto 0", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-border)", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", transition: "var(--transition-fast)" }}
                                     onClick={() => {
                                       setIsOpen(false);
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
@@ -2341,7 +2367,7 @@ export default function HeroSearchFirst() {
 
                                 {tabCounts.articles > 6 && (
                                   <button
-                                    style={{ width: "100%", padding: "12px", background: "#f8fafc", color: "var(--color-primary)", border: "1px solid #e2e8f0", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", marginTop: "8px", transition: "background 0.2s" }}
+                                    style={{ display: "block", padding: "10px 24px", margin: "8px auto 0", background: "transparent", color: "var(--color-primary)", border: "1px solid var(--color-border)", borderRadius: "100px", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", transition: "var(--transition-fast)" }}
                                     onClick={() => {
                                       setIsOpen(false);
                                       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
