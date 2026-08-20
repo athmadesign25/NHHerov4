@@ -14,7 +14,7 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ items, theme = "dark" }: BreadcrumbsProps) {
   const isDark = theme === "dark";
-  const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-secondary)";
+  const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-muted)";
   const activeColor = isDark ? "#ffffff" : "var(--color-text)";
   const arrowColor = isDark ? "rgba(255, 255, 255, 0.4)" : "var(--color-border)";
 
