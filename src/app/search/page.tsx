@@ -948,7 +948,7 @@ function SearchResultsContent() {
     ? apiData!.specialities.map((s) => ({
         id: s.id,
         name: s.name,
-        description: s.description || "",
+        description: (s as any).description || "",
         image: (s as any).image || "/images/misc/procedure_placeholder.png"
       }))
     : filteredSpecialties;
