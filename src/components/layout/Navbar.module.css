@@ -174,9 +174,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 20px;
-  border-radius: 8px; /* Rectangular rounded secondary button radius */
-  font-size: 13.5px;
+  padding: 8px 24px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
