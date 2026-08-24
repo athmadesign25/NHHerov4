@@ -172,7 +172,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
           ]}
         />
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "var(--sp-4)", alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 480px", gap: "var(--sp-4)", alignItems: "start" }}>
           {/* Left Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
             

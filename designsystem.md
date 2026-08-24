@@ -101,7 +101,7 @@ All margins, paddings, and gaps must follow the 8-point grid scale to ensure con
 - `--radius-md`: 10px
 - `--radius-lg`: 14px
 - `--radius-xl`: 20px
-- `--radius-full`: 9999px (Pills, circular buttons)
+- `--radius-full`: 9999px (Pills, primary buttons, circular buttons)
 
 ### Shadows & Elevation
 - `--shadow-sm`: Rest state for subtle cards / buttons.
