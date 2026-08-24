@@ -1,43 +1,162 @@
-.section {
+.wrapper {
   position: relative;
   width: 100%;
-  background: #ffffff;
-  padding: clamp(160px, 16vw, 220px) 0 0;
+  background: transparent;
+  z-index: 1;
 }
 
+/* ─── Pinned Sticky Track ───────────────────────────── */
+.scrollTrack {
+  position: relative;
+  width: 100%;
+  height: 140vh;
+  z-index: 2;
+}
+
+.stickySection {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.centerContent {
+  position: relative;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
 /* ─── Header ────────────────────────────────────────── */
 .header {
+  position: relative;
+  z-index: 70;
   text-align: center;
-  max-width: 800px;
-  margin: 0 auto var(--sp-8) auto;
-  padding: 0 20px;
+  max-width: 1050px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .sectionTitle {
-  font-size: clamp(28px, 3.2vw, 44px);
-  font-weight: 900;
-  color: var(--color-text, #1A1A2E);
+  font-size: clamp(28px, 3.4vw, 48px);
+  font-weight: 800;
+  color: #000000 !important;
   margin-top: 0;
-  margin-bottom: 8px;
-  line-height: 1.18;
+  margin-bottom: 20px;
+  line-height: 1.22;
   letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    white-space: normal;
+  }
 }
 
 .sectionSubtitle {
-  font-size: var(--font-size-lg);
-  color: var(--color-text-secondary, #4A5568);
-  line-height: 1.6;
-  max-width: 680px;
+  font-size: clamp(16px, 1.3vw, 20px);
+  font-weight: 400 !important;
+  color: #000000 !important;
+  line-height: 1.65;
+  max-width: 720px;
   margin: 0 auto;
+  position: relative;
+  z-index: 75;
+  opacity: 1;
 }
 
-/* ─── Grid ───────────────────────────────────────────── */
+/* ─── Scroll Progress Indicator Unit (Balanced Spacing) ─── */
+.scrollIndicatorUnit {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 80;
+  pointer-events: none;
+  user-select: none;
+}
+
+.scrollDashTrack {
+  width: 2px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.scrollDashFill {
+  width: 100%;
+  background: #000000;
+  border-radius: 2px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.scrollUpText {
+  color: #000000 !important;
+  text-align: center;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Specialty Animated Grid Section (Full-Bleed End-to-End, Zero Gap, Non-Rounded) ─── */
+.gridSection {
+  position: relative;
+  width: 100%;
+  z-index: 90;
+  margin-top: -10vh;
+  padding: 0 0 100px 0;
+  box-sizing: border-box;
+}
+
+.gridAnimatedWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 95;
+  transform-origin: center top;
+  will-change: transform, opacity, border-radius;
+}
+
 .specialitiesGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
   width: 100%;
+  gap: 0;
+  box-sizing: border-box;
 }
 
 .specialityCard {
@@ -48,9 +167,12 @@
   border-radius: 0;
   overflow: hidden;
   text-decoration: none;
-  background: transparent;
+  background: #090d16;
   aspect-ratio: 1 / 1;
-  transition: transform var(--transition-base);
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
 }
 
 .specialityCard:hover {
@@ -59,12 +181,12 @@
 
 .cardImage {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  z-index: 1;
 }
 
 .specialityCard:hover .cardImage {
@@ -73,110 +195,116 @@
 
 .cardVideo {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  z-index: 1;
-  transition: opacity var(--transition-base), transform var(--transition-slow);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+  pointer-events: none;
 }
 
-.specialityCard:hover .cardVideo {
+.specialityCard:hover .cardVideo,
+.cardVideoActive {
   opacity: 1;
   transform: scale(1.05);
 }
 
-.specialityCard::after {
-  content: "";
+.cardOverlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  z-index: 10;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 0) 100%);
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.25) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 3;
+  transition: background 0.3s ease;
   pointer-events: none;
-  transition: background var(--transition-base);
 }
 
-.specialityCard:hover::after {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%);
-}
-
-/* Blend the last row into the dark blue background of the next section */
-.specialityCard:nth-last-child(-n+4)::after {
-  height: 60%;
-  background: linear-gradient(to top, #0f1d33 0%, #0f1d33 10%, rgba(15, 29, 51, 0.4) 50%, transparent 100%);
-}
-
-.specialityCard:nth-last-child(-n+4):hover::after {
-  height: 60%;
-  background: linear-gradient(to top, #0f1d33 0%, #0f1d33 15%, rgba(15, 29, 51, 0.6) 60%, transparent 100%);
+.specialityCard:hover .cardOverlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
 .cardTextWrap {
   position: relative;
-  z-index: 20;
+  z-index: 4;
   padding: 24px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 6px;
   width: 100%;
 }
 
+/* Metric stats visible upfront with transparent/grey normal state -> white/current grey on hover */
 .cardStats {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transform: translateY(10px);
-  filter: blur(4px);
-  transition: all var(--transition-base);
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-
-.specialityCard:hover .cardStats {
-  opacity: 1;
-  max-height: 60px;
-  transform: translateY(0);
-  filter: blur(0);
   margin-bottom: 8px;
 }
 
 .metricValue {
+  font-family: Inter, var(--font-sans), sans-serif;
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.1;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.specialityCard:hover .metricValue {
+  color: #FFFFFF;
 }
 
 .metricLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
   line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.specialityCard:hover .metricLabel {
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .specialityName {
-  font-size: clamp(18px, 2vw, 24px);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(18px, 1.8vw, 22px);
   font-weight: 700;
-  color: #ffffff;
+  color: #FFFFFF;
   line-height: 1.2;
   letter-spacing: -0.01em;
+  transition: transform 0.3s ease;
+}
+
+.specialityCard:hover .specialityName {
+  transform: translateY(-2px);
 }
 
 .cardAction {
-  font-size: 12px;
-  font-weight: 600;
-  color: #ffffff;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
   opacity: 0;
   transform: translateY(10px);
-  transition: all var(--transition-base);
+  transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .specialityCard:hover .cardAction {
@@ -184,11 +312,74 @@
   transform: translateY(0);
 }
 
-/* ─── CTA Button ─────────────────────────────────────── */
+.actionArrow {
+  transition: transform 0.25s ease;
+}
 
+.specialityCard:hover .actionArrow {
+  transform: translateX(3px);
+}
 
+/* Bottom View All Specialties CTA */
+.bottomCtaWrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}
 
-/* ─── Responsive ─────────────────────────────────────── */
+/* End-to-end horizontal linear gradient: solid white at bottom, smoothly diffusing towards top */
+.bottomCtaWrap::before {
+  content: "";
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 340px;
+  background: linear-gradient(
+    to top,
+    #FFFFFF 0%,
+    #FFFFFF 25%,
+    rgba(255, 255, 255, 0.9) 45%,
+    rgba(255, 255, 255, 0.5) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Secondary Button (Matching Top Nav Login Button Specs) */
+.viewAllBtn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-primary, #034EA2);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--color-primary, #034EA2);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.viewAllBtn:hover {
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  border-color: var(--color-primary, #034EA2);
+}
+
 @media (max-width: 1024px) {
   .specialitiesGrid {
     grid-template-columns: repeat(3, 1fr);
@@ -196,37 +387,10 @@
   }
 }
 
-.gridAnimatedWrapper {
-  padding: 0 calc(250px * var(--progress, 0));
-}
-
-@media (max-width: 1024px) {
-  .gridAnimatedWrapper {
-    padding: 0 calc(var(--sp-2) * var(--progress, 0));
-  }
-}
-
 @media (max-width: 768px) {
-  .section {
-    padding: 60px 0;
-  }
-
-  .gridAnimatedWrapper {
-    padding: 0 !important;
-    border-radius: 0 !important;
-  }
-
   .specialitiesGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0;
-  }
-
-  .cardTextWrap {
-    padding: 16px;
-  }
-
-  .specialityName {
-    font-size: 16px;
   }
 }
 
@@ -235,7 +399,6 @@
     grid-template-columns: 1fr;
     gap: 0;
   }
-
   .specialityCard {
     aspect-ratio: 16 / 9;
   }

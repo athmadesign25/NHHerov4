@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Landing Page V1",
+  title: "Landing Page V2",
   description:
     "India's most trusted hospital network with 3,000+ specialists across 30+ specialities. Book appointments, find doctors, and access world-class healthcare.",
   keywords: "Narayana Health, hospital, doctors, cardiology, oncology, book appointment",
@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     title: "Narayana Health",
     description: "World-Class Care, Close to Home",
     type: "website",
+  },
+  icons: {
+    icon: "/favicon.svg",
   },
 };
 

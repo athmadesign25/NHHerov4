@@ -169,27 +169,39 @@
   color: #ffffff;
 }
 
-/* Responsive Login Button */
+/* Rectangular Rounded Secondary Login Button */
 .loginBtnResponsive {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 8px 20px;
-  border-radius: 9999px;
-  font-size: 13px;
+  border-radius: 8px; /* Rectangular rounded secondary button radius */
+  font-size: 13.5px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .loginBtnActive {
-  border: 1px solid var(--nh-red, #d93832);
-  color: var(--nh-red, #d93832);
+  border: 1.5px solid var(--color-primary, #034EA2);
+  color: var(--color-primary, #034EA2);
+  background: transparent;
+}
+
+.loginBtnActive:hover {
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
 }
 
 .loginBtnInactive {
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #FFFFFF;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+  background: transparent;
+}
+
+.loginBtnInactive:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
 }
 
 .loginIconResponsive {

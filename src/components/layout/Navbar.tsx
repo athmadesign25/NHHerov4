@@ -24,19 +24,17 @@ export default function Navbar() {
         setScrolled(false);
       }
 
-      const isSearchPage = pathname === "/search";
-      if (isHomePage) {
-        setShowSearchIcon(window.scrollY > 350);
-      } else if (isSearchPage) {
-        setShowSearchIcon(window.scrollY > 150);
-      } else {
+      // Show search icon after scrolling by the search bar on homepage (approx. 350px), or always on other pages
+      if (!isHomePage || window.scrollY > 350) {
         setShowSearchIcon(true);
+      } else {
+        setShowSearchIcon(false);
       }
     };
     window.addEventListener("scroll", handleScroll);
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage, pathname]);
+  }, [isHomePage]);
 
   const isNavbarActive = !isHomePage || scrolled;
 
@@ -59,7 +57,7 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ width: "108px", height: "auto", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ color: "transparent", width: "100%", height: "auto" }} src={isNavbarActive ? "/logos/NH-logo.svg" : "/logos/NH_Logo_white_1.png"} priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ color: "transparent", width: "100%", height: "auto" }} src={isNavbarActive ? "/NH-logo.svg" : "/NH_Logo_white_1.png"} priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className="desktop-nav">
@@ -68,43 +66,43 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("find-a-doctor")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/search?q=Dr.&location=All">
+            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/find-a-doctor">
               Find a Doctor<ChevronDown size={14} />
             </Link>
             {activeDropdown === "find-a-doctor" && (
               <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Top Specialties</div>
-                  <Link href="/search?q=Cardiologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
-                  <Link href="/search?q=Orthopaedician&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
-                  <Link href="/search?q=Oncologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
-                  <Link href="/search?q=Neurologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
-                  <Link href="/search?q=Pediatrician&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
+                  <Link href="/specialities/cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
+                  <Link href="/specialities/orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
+                  <Link href="/specialities/oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
+                  <Link href="/specialities/neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
+                  <Link href="/specialities/pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Surgical Specialists</div>
-                  <Link href="/search?q=Cardiac%20Surgeon&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
-                  <Link href="/search?q=General%20Surgeon&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
-                  <Link href="/search?q=Vascular%20Surgeon&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
-                  <Link href="/search?q=Plastic%20Surgeon&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
+                  <Link href="/specialities/cardiac-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
+                  <Link href="/specialities/general-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
+                  <Link href="/specialities/vascular-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
+                  <Link href="/specialities/plastic-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Internal Medicine</div>
-                  <Link href="/search?q=Gastroenterologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
-                  <Link href="/search?q=Pulmonologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
-                  <Link href="/search?q=Endocrinologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
-                  <Link href="/search?q=Nephrologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
+                  <Link href="/specialities/gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
+                  <Link href="/specialities/pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
+                  <Link href="/specialities/endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
+                  <Link href="/specialities/nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Other Specialists</div>
-                  <Link href="/search?q=Urologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
-                  <Link href="/search?q=Gynecologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
-                  <Link href="/search?q=ENT%20Specialist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
-                  <Link href="/search?q=Dermatologist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
-                  <Link href="/search?q=Dentist&location=All" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
+                  <Link href="/specialities/urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
+                  <Link href="/specialities/gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
+                  <Link href="/specialities/ent-specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
+                  <Link href="/specialities/dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
+                  <Link href="/specialities/dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/search?q=Dr.&location=All" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <Link href="/find-a-doctor" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -293,13 +291,13 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", backgroundColor: "#fff", zIndex: 1001, overflowY: "auto", display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", borderBottom: "1px solid #eee" }}>
-            <Image alt="Narayana Health" width={108} height={34} style={{ width: "108px", height: "auto" }} src="/logos/NH-logo.svg" />
+            <Image alt="Narayana Health" width={108} height={34} style={{ width: "108px", height: "auto" }} src="/NH-logo.svg" />
             <button onClick={() => setIsMobileMenuOpen(false)} style={{ background: "none", border: "none", padding: "8px", cursor: "pointer" }}>
               <X size={24} />
             </button>
           </div>
           <div style={{ display: "flex", flexDirection: "column", padding: "16px", gap: "16px" }}>
-            <Link href="/search?q=Dr.&location=All" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Find a Doctor <ChevronRight size={16} /></Link>
+            <Link href="/find-a-doctor" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Find a Doctor <ChevronRight size={16} /></Link>
             <Link href="/hospitals" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Hospitals & Clinics <ChevronRight size={16} /></Link>
             <Link href="/health-checks" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Health Checkups <ChevronRight size={16} /></Link>
             <Link href="/specialities" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Treatments & Specialities <ChevronRight size={16} /></Link>
