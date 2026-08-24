@@ -1761,7 +1761,7 @@ function SearchResultsContent() {
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: doc.name.length > 22 ? 1 : 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
                             {doc.experience && (
                               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
-                                <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>{doc.experience}</span>
+                                <span style={{ fontSize: 12, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 500 }}>{doc.experience}</span>
                               </div>
                             )}
                           </div>
