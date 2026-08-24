@@ -964,7 +964,7 @@ function SearchResultsContent() {
         hospital: d.hospital,
         hospitalCount: "",
         city: location,
-        experience: "",
+        experience: d.experience ? (d.experience.toLowerCase().includes("year") ? d.experience : `${d.experience} Years`) : "",
         rating: 0,
         reviews: 0,
         available: d.apptEnabled || d.walkinEnabled ? "Available Today" : "Check Availability",

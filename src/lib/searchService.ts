@@ -10,6 +10,9 @@ export interface ApiDoctor {
     appt_enabled?: boolean;
     walkin_enabled?: boolean;
     vc_enabled?: boolean;
+    no_of_years?: number | string;
+    experience_years?: number | string;
+    experience?: string;
   } | null;
 }
 
@@ -46,6 +49,7 @@ export interface NormalizedDoctor {
   walkinEnabled: boolean;
   vcEnabled: boolean;
   availability: { hospital: string; video: string };
+  experience?: string;
 }
 
 export interface NormalizedSpeciality {
@@ -375,6 +379,7 @@ export function normalizeSearchResponse(raw: RawApiResponse): NormalizedResults 
     apptEnabled: d.metaData?.appt_enabled ?? false,
     walkinEnabled: d.metaData?.walkin_enabled ?? false,
     vcEnabled: d.metaData?.vc_enabled ?? false,
+    experience: (d.metaData?.no_of_years ?? d.metaData?.experience_years ?? d.metaData?.experience)?.toString() || "",
     availability: {
       hospital: "Today 05:30 PM",
       video: "Today 05:30 PM",
