@@ -452,7 +452,12 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <button 
-                    onClick={() => setSelectedDate("24")}
+                    onClick={() => {
+                      setSelectedDate("24");
+                      if (scrollContainerRef.current) {
+                        scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                      }
+                    }}
                     style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", padding: 0 }}
                   >
                     <RotateCcw size={14} /> Today
