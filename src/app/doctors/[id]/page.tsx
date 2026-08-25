@@ -6,6 +6,9 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { searchDoctorsData } from "../../search/mockDoctors";
+import { searchHealthcare, type NormalizedDoctor } from "@/lib/searchService";
+import { useSearchParams } from "next/navigation";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -208,7 +211,32 @@ function SectionHeading({ title }: { title: string }) {
 
 export default function DoctorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
-  const doc = doctors[id] || doctors["dr-1"];
+  const searchParams = useSearchParams();
+  const nameParam = searchParams.get("n");
+
+  const [apiDoc, setApiDoc] = useState<NormalizedDoctor | null>(null);
+
+  useEffect(() => {
+    if (nameParam) {
+      searchHealthcare(nameParam, null).then((res) => {
+        const found = res.doctors.find((d) => d.id.toString() === id);
+        if (found) setApiDoc(found);
+      }).catch(console.error);
+    }
+  }, [nameParam, id]);
+
+  const baseDoc = doctors[id] || doctors["dr-1"];
+  const searchDoc = searchDoctorsData.find((d: any) => d.id === id);
+  
+  const doc = {
+    ...baseDoc,
+    name: apiDoc?.name || searchDoc?.name || (doctors[id] ? baseDoc.name : `Doctor ${id}`),
+    speciality: apiDoc?.speciality || searchDoc?.speciality || baseDoc.speciality,
+    img: apiDoc?.photo || searchDoc?.img || baseDoc.img,
+    city: searchDoc?.city || baseDoc.city, // api doesn't return city directly
+    hospital: apiDoc?.hospital || searchDoc?.hospital || baseDoc.hospital,
+    experienceYears: apiDoc?.experience ? `${apiDoc.experience} Years` : (searchDoc?.experience || baseDoc.experienceYears),
+  };
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
   const [actualDates] = useState(() => generateDates(15));
@@ -254,6 +282,18 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             { label: doc.name }
           ]}
         />
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "24px", marginBottom: "32px" }}>
+          <button 
+            onClick={() => window.history.back()} 
+            style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 style={{ fontSize: "var(--font-size-2xl)", fontWeight: 800, color: "var(--color-text)", margin: 0, letterSpacing: "-0.01em" }}>Select date & slot</h1>
+        </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 550px", gap: "var(--sp-4)", alignItems: "start" }}>
           {/* Left Column */}
@@ -696,7 +736,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: "18px", borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
                     <div style={{ display: "flex", gap: "16px" }}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "8px", flexShrink: 0 }}>
-                        <Link style={{ position: "relative", width: "120px", height: "120px", borderRadius: "12px", overflow: "hidden", background: "var(--color-border)", display: "block" }} href={`/doctors/${docId}`}>
+                        <Link style={{ position: "relative", width: "120px", height: "120px", borderRadius: "12px", overflow: "hidden", background: "var(--color-border)", display: "block" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
                           <div style={{ width: "100%", height: "100%", position: "relative" }}>
                             <Image alt={doc.name} loading="lazy" decoding="async" fill style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, objectFit: "cover", color: "transparent" }} sizes="100vw" src={doc.img} />
                             <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))", color: "#ffffff", fontSize: "9px", fontWeight: 600, padding: "20px 4px 4px 4px", display: "flex", justifyContent: "center", alignItems: "center", opacity: 0, transform: "translateY(10px)" }}>
@@ -707,7 +747,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                         </Link>
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                        <Link style={{ textDecoration: "none" }} href={`/doctors/${docId}`}>
+                        <Link style={{ textDecoration: "none" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
                           <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: "4px", cursor: "pointer", transition: "color 0.15s", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</h3>
                         </Link>
                         <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.speciality}</p>
@@ -747,7 +787,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                         <a href="tel:18001030" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", borderRadius: "22px", border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
                           <PhoneCall size={18} />
                         </a>
-                        <Link style={{ height: "44px", padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: "22px", fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }} href={`/doctors/${docId}/book`}>
+                        <Link style={{ height: "44px", padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: "22px", fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
                           Book now
                         </Link>
                       </div>

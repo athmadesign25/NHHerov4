@@ -559,6 +559,7 @@ export default function HeroSection() {
     <section className={styles.hero} id="hero-section">
       {/* Full-screen Background Video */}
       <video
+        id="hero-video"
         ref={videoRef}
         src="/Hero Video.mp4"
         autoPlay

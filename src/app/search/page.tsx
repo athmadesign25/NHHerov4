@@ -1722,7 +1722,7 @@ function SearchResultsContent() {
                       <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                            <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
+                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
                               <motion.div whileHover="hover" initial="initial" style={{ width: "100%", height: "100%", position: "relative" }}>
                                 <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                                 <motion.div 
@@ -1752,7 +1752,7 @@ function SearchResultsContent() {
                             </Link>
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                            <Link href={`/doctors/${doc.id}`} style={{ textDecoration: "none" }}>
+                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ textDecoration: "none" }}>
                               <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", transition: "color 0.15s", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {doc.name}
                               </h3>
@@ -1806,7 +1806,7 @@ function SearchResultsContent() {
                             <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
                               <PhoneCall size={18} />
                             </a>
-                            <Link href={`/doctors/${doc.id}/book`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                               Book now
                             </Link>
                           </div>

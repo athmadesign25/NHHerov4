@@ -1,35 +1,101 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronDown, Mail, Smartphone } from "lucide-react";
+import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
+import styles from "./LoginModal.module.css";
+import Image from "next/image";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess?: () => void;
 }
 
-export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
   const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
+  const [step, setStep] = useState<"phone" | "otp">("phone");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [mobileError, setMobileError] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const handleContinue = () => {
+    if (activeTab === "mobile") {
+      if (mobileNumber.length !== 10) {
+        setMobileError(true);
+        return;
+      }
+      setStep("otp");
+    }
+  };
+
+  const handleVerify = () => {
+    if (isVerifying) return;
+    setIsVerifying(true);
+    setTimeout(() => {
+      setIsVerifying(false);
+      if (onLoginSuccess) onLoginSuccess();
+      onClose();
+    }, 1500);
+  };
+
+  const handleOtpChange = (index: number, value: string) => {
+    if (value && !/^\d+$/.test(value)) return;
+    const newOtp = [...otp];
+    newOtp[index] = value.substring(value.length - 1);
+    setOtp(newOtp);
+    if (value && index < 5) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    } else if (e.key === "Enter") {
+      handleVerify();
+    }
+  };
   
   useEffect(() => {
     setMounted(true);
   }, []);
-  
-  // Prevent body scroll when modal is open
+
+  // Reset modal state when it opens
   useEffect(() => {
+    if (isOpen) {
+      setStep("phone");
+      setMobileNumber("");
+      setMobileError(false);
+      setOtp(["", "", "", "", "", ""]);
+      setActiveTab("mobile");
+    }
+  }, [isOpen]);
+  
+  // Prevent body scroll when modal is open and pause background video
+  useEffect(() => {
+    const videos = document.querySelectorAll("video");
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
+      videos.forEach(v => v.pause());
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      videos.forEach(v => v.play().catch(err => console.log("Playback prevented:", err)));
     }
+    
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      // Only force play on unmount if we were open
+      if (isOpen) {
+        document.querySelectorAll("video").forEach(v => v.play().catch(e => {}));
+      }
     };
   }, [isOpen]);
 
@@ -76,22 +142,26 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            style={{
-              position: "relative",
-              zIndex: 10000,
-              background: "var(--color-bg-card, #ffffff)",
-              width: "100%",
-              maxWidth: "440px",
-              borderRadius: "24px",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
-              overflow: "hidden",
-              display: "flex",
-              flexDirection: "column"
-            }}
+            className={styles.modalContainer}
           >
+            {/* Image Column */}
+            <div className={styles.imageColumn}>
+              <Image 
+                src="/assets/doctor_team.png" 
+                alt="Narayana Health" 
+                fill 
+                style={{ objectFit: "cover", objectPosition: "center" }}
+                priority
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent)", zIndex: 1 }}></div>
+              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "#ffffff" }}>
+                <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
+                <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
+              </div>
+            </div>
+          <div className={styles.formColumn}>
             {/* Header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px", borderBottom: "1px solid var(--color-border)" }}>
-              <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, #0f172a)", margin: 0 }}>Login / Register</h2>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "24px" }}>
               <button 
                 onClick={onClose}
                 style={{ 
@@ -115,17 +185,26 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </div>
 
             {/* Body */}
-            <div style={{ padding: "32px 24px" }}>
+            <div style={{ padding: "0px 24px 32px 24px", height: "510px", display: "flex", flexDirection: "column" }}>
+              <div style={{ flexShrink: 0, textAlign: "center", marginBottom: "24px" }}>
+                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, #0f172a)", margin: "0 0 8px 0" }}>Login / Register</h2>
+                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, #475569)", margin: 0, lineHeight: 1.5 }}>
+                  Sign in to manage appointments, access reports, and stay connected with your doctors.
+                </p>
+              </div>
               
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: step === "otp" ? "space-between" : "flex-start" }}>
+              {step === "phone" ? (
+                <>
               {/* Tabs */}
-              <div style={{ display: "flex", background: "var(--color-bg-alt, #f8fafc)", borderRadius: "100px", padding: "4px", marginBottom: "24px" }}>
+              <div style={{ display: "flex", background: "#F1F5F9", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
                 <button
                   onClick={() => setActiveTab("mobile")}
                   style={{
                     position: "relative",
                     flex: 1,
-                    padding: "10px",
-                    borderRadius: "100px",
+                    padding: "6px 16px",
+                    borderRadius: "20px",
                     border: "none",
                     background: "transparent",
                     color: activeTab === "mobile" ? "var(--color-emergency)" : "var(--color-text-secondary)",
@@ -141,7 +220,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   {activeTab === "mobile" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 100, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -157,8 +236,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   style={{
                     position: "relative",
                     flex: 1,
-                    padding: "10px",
-                    borderRadius: "100px",
+                    padding: "6px 16px",
+                    borderRadius: "20px",
                     border: "none",
                     background: "transparent",
                     color: activeTab === "email" ? "var(--color-emergency)" : "var(--color-text-secondary)",
@@ -174,7 +253,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   {activeTab === "email" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 100, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -214,7 +293,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                           <option value="+91">🇮🇳 +91</option>
                           <option value="+880">🇧🇩 +880</option>
                         </select>
-                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, #475569)" }}>
+                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, #475569)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <ChevronDown size={16} />
                         </div>
                       </div>
@@ -222,19 +301,38 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       {/* Phone Input */}
                       <input 
                         type="tel"
+                        maxLength={10}
                         placeholder="Enter your mobile number"
+                        value={mobileNumber}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '').substring(0, 10);
+                          setMobileNumber(val);
+                          setMobileError(false);
+                        }}
                         style={{
                           flex: 1,
                           padding: "14px 16px",
                           borderRadius: "100px",
-                          border: "1.5px solid var(--color-border, #e2e8f0)",
+                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, #e2e8f0)"}`,
                           background: "#ffffff",
                           fontSize: "var(--font-size-base, 16px)",
                           color: "var(--color-text, #0f172a)",
                           outline: "none"
                         }}
+                        onFocus={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-primary)"}
+                        onBlur={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-border)"}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleContinue();
+                          }
+                        }}
                       />
                     </div>
+                    {mobileError && (
+                      <div style={{ color: "var(--color-emergency)", fontSize: "12px", fontWeight: 500, marginTop: "8px", marginLeft: "108px" }}>
+                        Please enter a valid 10-digit mobile number.
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div>
@@ -259,6 +357,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
               {/* Continue Button */}
               <button 
+                onClick={handleContinue}
                 style={{
                   width: "100%",
                   padding: "14px",
@@ -314,9 +413,86 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.5 }}>
                 By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
               </p>
+                </>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "24px", animation: "fadeIn 0.3s ease-in-out", height: "100%", justifyContent: "space-between" }}>
+                  <div style={{ marginTop: "32px" }}>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, #475569)", marginBottom: "8px", textAlign: "center" }}>
+                      Enter the 6-digit OTP sent to <br/>
+                      <span style={{ fontWeight: 700, color: "var(--color-text, #0f172a)" }}>{mobileNumber}</span>
+                      <button onClick={() => setStep("phone")} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
+                    </label>
+                    <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "16px" }}>
+                      {[0, 1, 2, 3, 4, 5].map((i) => (
+                        <input
+                          key={i}
+                          ref={(el) => { otpRefs.current[i] = el; }}
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={otp[i]}
+                          onChange={(e) => handleOtpChange(i, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                          style={{
+                            width: "48px",
+                            height: "56px",
+                            textAlign: "center",
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            borderRadius: "12px",
+                            border: "1.5px solid var(--color-border, #e2e8f0)",
+                            background: "#ffffff",
+                            color: "var(--color-text, #0f172a)",
+                            outline: "none"
+                          }}
+                          onFocus={(e) => e.target.style.borderColor = "var(--color-primary)"}
+                          onBlur={(e) => e.target.style.borderColor = "var(--color-border)"}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <button 
+                    onClick={handleVerify}
+                    disabled={isVerifying}
+                    style={{
+                      width: "100%",
+                      padding: "14px",
+                      background: "var(--color-primary, #034ea2)",
+                      opacity: isVerifying ? 0.9 : 1,
+                      color: "#ffffff",
+                      fontSize: "var(--font-size-base, 16px)",
+                      fontWeight: 700,
+                      borderRadius: "100px",
+                      border: "none",
+                      cursor: isVerifying ? "progress" : "pointer",
+                      transition: "background 0.2s",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "8px"
+                    }}
+                  >
+                    {isVerifying ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                          style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
+                        />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Verify & Proceed"
+                    )}
+                  </button>
+                </div>
+              )}
+              </div>
 
             </div>
-          </motion.div>
+            </div>
+            
+            </motion.div>
         </div>
       )}
     </AnimatePresence>,
