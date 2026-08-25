@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight, ChevronDown, User } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { searchDoctorsData } from "../../search/mockDoctors";
 import { searchHealthcare, type NormalizedDoctor } from "@/lib/searchService";
@@ -164,6 +164,14 @@ const doctors: Record<string, {
   }
 };
 
+
+const MOCK_FAMILY_MEMBERS = [
+  { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
+  { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
+  { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
+  { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },
+];
+
 const slots = ["9:00 AM", "10:30 AM", "11:00 AM", "2:00 PM", "3:30 PM", "4:00 PM"];
 
 const generateDates = (daysCount: number) => {
@@ -239,6 +247,28 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   };
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeUserId, setActiveUserId] = useState(1);
+  const [isMembersExpanded, setIsMembersExpanded] = useState(false);
+  const activeUser = MOCK_FAMILY_MEMBERS.find(m => m.id === activeUserId) || MOCK_FAMILY_MEMBERS[0];
+  const membersDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (membersDropdownRef.current && !membersDropdownRef.current.contains(event.target as Node)) {
+        setIsMembersExpanded(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const [actualDates] = useState(() => generateDates(15));
   const [selectedDate, setSelectedDate] = useState(actualDates[0].date);
   const [selectedTime, setSelectedTime] = useState("09:15 AM");
@@ -292,7 +322,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
           >
             <ArrowLeft size={20} />
           </button>
-          <h1 style={{ fontSize: "var(--font-size-2xl)", fontWeight: 800, color: "var(--color-text)", margin: 0, letterSpacing: "-0.01em" }}>Select date & slot</h1>
+          <h1 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", margin: 0, letterSpacing: "-0.01em" }}>Select date & slot</h1>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 550px", gap: "var(--sp-4)", alignItems: "start" }}>
@@ -513,6 +543,48 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </button>
             </div>
 
+            {/* Select Member Dropdown */}
+            {isLoggedIn && (
+              <div style={{ marginBottom: 24, position: "relative" }} ref={membersDropdownRef}>
+                <div style={{ fontSize: "var(--font-size-base)", fontWeight: 500, color: "var(--color-text)", display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}><User size={18} style={{ color: "var(--color-text)" }} />Select member</div>
+                <button 
+                  onClick={() => setIsMembersExpanded(!isMembersExpanded)}
+                  style={{ width: "100%", height: 44, padding: "0 16px", borderRadius: 100, border: "1.5px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <img src={activeUser.img} alt={activeUser.name} style={{ width: 24, height: 24, borderRadius: "50%", objectFit: "cover" }} />
+                    <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 400, color: "var(--color-text)" }}>{activeUser.name}</span>
+                  </div>
+                  <ChevronDown size={16} style={{ color: "var(--color-text-secondary)", transform: isMembersExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
+                </button>
+
+                <AnimatePresence>
+                  {isMembersExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.15 }}
+                      style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#fff", borderRadius: 12, border: "1px solid var(--color-border)", boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)", zIndex: 50, padding: 8, display: "flex", flexDirection: "column", gap: 4 }}
+                    >
+                      {MOCK_FAMILY_MEMBERS.map(member => (
+                        <button
+                          key={member.id}
+                          onClick={() => { setActiveUserId(member.id); setIsMembersExpanded(false); }}
+                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: activeUserId === member.id ? "var(--color-bg-subtle)" : "transparent", border: "none", borderRadius: 8, cursor: "pointer", textAlign: "left", width: "100%" }}
+                          onMouseEnter={(e) => { if (activeUserId !== member.id) e.currentTarget.style.background = "#F1F5F9"; }}
+                          onMouseLeave={(e) => { if (activeUserId !== member.id) e.currentTarget.style.background = "transparent"; }}
+                        >
+                          <img src={member.img} alt={member.name} style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }} />
+                          <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 500, color: "var(--color-text)" }}>{member.name}</span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
             {/* Hospital Selector */}
             <AnimatePresence initial={false}>
               {consultationType === "Hospital Visit" && (
@@ -524,7 +596,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-base)", color: "var(--color-text)", fontWeight: 500, marginBottom: 12 }}>
                     <MapPin size={18} style={{ color: "var(--color-text)" }} />
-                    Select Hospital
+                    Select hospital
                   </div>
                   <div style={{ position: "relative" }}>
                     <select 

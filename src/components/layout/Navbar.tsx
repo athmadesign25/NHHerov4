@@ -23,6 +23,11 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    }
+  }, []);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const [activeUserId, setActiveUserId] = useState(1);
@@ -423,7 +428,7 @@ export default function Navbar() {
                     <button 
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
-                        setIsLoggedIn(false);
+                        setIsLoggedIn(false); localStorage.removeItem('isLoggedIn');
                       }}
                       style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, #ef4444)", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }} 
                       onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"} 
@@ -528,7 +533,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => setIsLoggedIn(true)} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => { setIsLoggedIn(true); localStorage.setItem('isLoggedIn', 'true'); }} />
     </nav>
   );
 }
