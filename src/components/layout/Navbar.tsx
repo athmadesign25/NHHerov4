@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import LoginModal from "@/components/auth/LoginModal";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User } from "lucide-react";
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showSearchIcon, setShowSearchIcon] = useState(false);
 
@@ -264,12 +266,13 @@ export default function Navbar() {
           >
             <Search size={18} strokeWidth={2.5} style={{ flexShrink: 0 }} />
           </button>
-          <Link 
+          <button 
             className={`${styles.loginBtnResponsive} ${isNavbarActive ? styles.loginBtnActive : styles.loginBtnInactive}`} 
-            href="/login"
+            onClick={() => setIsLoginModalOpen(true)}
+            style={{ cursor: "pointer", fontFamily: "inherit" }}
           >
             Login
-          </Link>
+          </button>
           <Link 
             href="/login" 
             className={styles.loginIconResponsive} 
@@ -304,7 +307,7 @@ export default function Navbar() {
             <Link href="/international-patients" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>International Patients <ChevronRight size={16} /></Link>
             
             <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
-              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ width: "100%", padding: "14px", textAlign: "center", border: "1px solid var(--color-primary, #034EA2)", color: "var(--color-primary, #034EA2)", borderRadius: "8px", fontWeight: 600 }}>Login / Register</Link>
+              <button onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} style={{ width: "100%", padding: "14px", textAlign: "center", border: "1px solid var(--color-primary, #034EA2)", background: "transparent", color: "var(--color-primary, #034EA2)", borderRadius: "8px", fontWeight: 600, fontSize: "16px", cursor: "pointer", fontFamily: "inherit" }}>Login / Register</button>
               <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} style={{ width: "100%", padding: "14px", textAlign: "center", background: "var(--color-emergency, #ED1C24)", color: "#fff", borderRadius: "8px", fontWeight: 600 }}>Book Appointment</Link>
             </div>
           </div>
@@ -350,6 +353,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
     </nav>
   );
 }

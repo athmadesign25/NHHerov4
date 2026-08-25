@@ -1383,7 +1383,7 @@ function SearchResultsContent() {
                         style={{ 
                           display: "flex", 
                           alignItems: "center", 
-                          background: "#E2E8F0", 
+                          background: "#F1F5F9", 
                           borderRadius: 24, 
                           padding: 4, 
                           gap: 4 

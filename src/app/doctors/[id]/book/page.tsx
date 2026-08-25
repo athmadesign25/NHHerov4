@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight, RotateCcw, CloudSun, Sun, Moon, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight, RotateCcw, CloudSun, Sun, Moon, ArrowLeft, CheckCircle2, Languages } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 // Mock data (same as profile page)
@@ -93,7 +93,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
           </Link>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 480px", gap: "var(--sp-6)", alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 550px", gap: "var(--sp-6)", alignItems: "start" }}>
           
           {/* Left Column - Doctor Summary */}
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-4)" }}>
@@ -116,12 +116,22 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 </div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <h2 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4 }}>{doc.name}</h2>
-                  <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-primary)", fontWeight: 600, marginBottom: 12 }}>{doc.speciality}</div>
+                  <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-primary)", fontWeight: 600, marginBottom: 12 }}>
+                    {doc.speciality} • {doc.subSpeciality}
+                  </div>
                   
-                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
                       <Clock size={14} />
                       {doc.experienceYears} Experience
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
+                      <MapPin size={14} />
+                      {doc.hospital}, {doc.city}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
+                      <Languages size={14} />
+                      {doc.languages?.map((l: any) => l.name).join(", ")}
                     </div>
                   </div>
                 </div>
@@ -160,7 +170,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
             <div style={{ 
               display: "flex", 
               alignItems: "center",
-              background: "#E2E8F0", 
+              background: "#F1F5F9", 
               borderRadius: 24, 
               padding: 4, 
               gap: 4,
