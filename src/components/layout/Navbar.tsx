@@ -9,7 +9,7 @@ import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , Ca
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
-  { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
+  { id: 1, name: "Vikram", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
   { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
   { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },

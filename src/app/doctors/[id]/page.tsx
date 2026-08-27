@@ -4,11 +4,12 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight, ChevronDown, User } from "lucide-react";
+import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, ArrowRight, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight, ChevronDown, User, Plus } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { searchDoctorsData } from "../../search/mockDoctors";
 import { searchHealthcare, type NormalizedDoctor } from "@/lib/searchService";
 import { useSearchParams } from "next/navigation";
+import AddPatientModal from "@/components/ui/AddPatientModal";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -166,7 +167,7 @@ const doctors: Record<string, {
 
 
 const MOCK_FAMILY_MEMBERS = [
-  { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
+  { id: 1, name: "Vikram", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
   { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
   { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },
@@ -249,10 +250,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   };
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
+  const [isConsultationExpanded, setIsConsultationExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeUserId, setActiveUserId] = useState(1);
   const [isMembersExpanded, setIsMembersExpanded] = useState(false);
-  const activeUser = MOCK_FAMILY_MEMBERS.find(m => m.id === activeUserId) || MOCK_FAMILY_MEMBERS[0];
+  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState(MOCK_FAMILY_MEMBERS);
+  const activeUser = familyMembers.find(m => m.id === activeUserId) || familyMembers[0];
   const membersDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -312,7 +317,16 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
     }
   };
 
+  const getOrdinalSuffix = (n: number) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+  const selectedDateObj = actualDates.find(d => d.date === selectedDate) || actualDates[0];
+  const formattedDateStr = `${getOrdinalSuffix(parseInt(selectedDate))} ${selectedDateObj.month.charAt(0) + selectedDateObj.month.slice(1).toLowerCase()} | ${selectedTime}`;
+
   return (
+    <>
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       <div className="container" style={{ paddingTop: "var(--sp-4)", paddingBottom: "var(--sp-4)" }}>
         <Breadcrumbs 
@@ -558,7 +572,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             {isLoggedIn && (
               <div style={{ marginBottom: 24, position: "relative" }} ref={membersDropdownRef}>
                 <div style={{ fontSize: "var(--font-size-base)", fontWeight: 500, color: "var(--color-text)", display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}><User size={18} style={{ color: "var(--color-text)" }} />Select member</div>
-                <button 
+                <motion.button 
+                  initial={{ scale: 1, boxShadow: "0px 0px 0px 0px rgba(3,78,162,0)", borderColor: "var(--color-border)" }}
+                  animate={{ 
+                    scale: [1, 1.02, 1],
+                    boxShadow: ["0px 0px 0px 0px rgba(3,78,162,0)", "0px 0px 0px 4px rgba(3,78,162,0.15)", "0px 0px 0px 0px rgba(3,78,162,0)"],
+                    borderColor: ["var(--color-border)", "var(--color-primary)", "var(--color-border)"]
+                  }}
+                  transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
                   onClick={() => setIsMembersExpanded(!isMembersExpanded)}
                   style={{ width: "100%", height: 44, padding: "0 16px", borderRadius: 100, border: "1.5px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}
                 >
@@ -567,7 +588,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 400, color: "var(--color-text)" }}>{activeUser.name}</span>
                   </div>
                   <ChevronDown size={16} style={{ color: "var(--color-text-secondary)", transform: isMembersExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
-                </button>
+                </motion.button>
 
                 <AnimatePresence>
                   {isMembersExpanded && (
@@ -578,7 +599,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                       transition={{ duration: 0.15 }}
                       style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#fff", borderRadius: 12, border: "1px solid var(--color-border)", boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)", zIndex: 50, padding: 8, display: "flex", flexDirection: "column", gap: 4 }}
                     >
-                      {MOCK_FAMILY_MEMBERS.map(member => (
+                      {familyMembers.map(member => (
                         <button
                           key={member.id}
                           onClick={() => { setActiveUserId(member.id); setIsMembersExpanded(false); }}
@@ -590,6 +611,18 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                           <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 500, color: "var(--color-text)" }}>{member.name}</span>
                         </button>
                       ))}
+                      <div style={{ height: 1, background: "var(--color-border)", margin: "4px 8px" }} />
+                      <button
+                        onClick={() => { setIsMembersExpanded(false); setIsAddPatientModalOpen(true); }}
+                        style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: "transparent", border: "none", borderRadius: 8, cursor: "pointer", textAlign: "left", width: "100%", color: "var(--color-primary)" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                      >
+                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(3,78,162,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                          <Plus size={16} style={{ color: "var(--color-primary)" }} />
+                        </div>
+                        <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 600 }}>Add new member</span>
+                      </button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -733,7 +766,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     Array.from({ length: 4 }).map((_, i) => (
                       <motion.div key={i} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 0.5, repeatType: "reverse" }} style={{ width: 80, height: 34, borderRadius: 100, background: "#F1F5F9" }} />
                     ))
-                  ) : (consultationType === "Hospital Visit" ? ["12:45 PM", "01:15 PM", "01:45 PM", "02:15 PM", "02:45 PM", "03:15 PM"] : ["12:00 PM", "12:30 PM", "02:00 PM", "03:00 PM"]).map((slot) => (
+                  ) : (consultationType === "Hospital Visit" ? ["12:45 PM", "01:15 PM", "02:15 PM"] : ["12:00 PM", "02:00 PM"]).map((slot) => (
                     <button 
                       key={slot} 
                       onClick={() => setSelectedTime(slot)}
@@ -780,20 +813,70 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "#fff", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10 }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
-            >
-              Book Appointment
-            </button>
-            <a href="tel:18001030" id="doctor-call-btn" style={{ width: "100%", padding: "14px", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "background-color 0.15s", textDecoration: "none" }}
-               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; }}
-               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
-            >
-              <PhoneCall size={15} />
-              Call for Enquiry
-            </a>
+            <div style={{ position: "sticky", bottom: -1, background: "var(--color-bg-card)", zIndex: 10, paddingTop: "16px", paddingBottom: "12px" }}>
+              {/* Smooth fade out mask for scrolling slots */}
+              <div style={{ position: "absolute", top: -32, left: 0, right: 0, height: 32, background: "linear-gradient(to top, var(--color-bg-card), transparent)", pointerEvents: "none" }} />
+              
+              <button id="book-appointment-btn" style={{ width: "100%", height: isLoggedIn ? 64 : 52, boxSizing: "border-box", background: "var(--color-primary)", color: "#fff", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ width: 130, flexShrink: 0 }}>
+                    {isLoggedIn ? (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
+                        <div style={{ fontSize: "16px", fontWeight: 500, lineHeight: 1 }}>₹2,580</div>
+                        <div style={{ fontSize: "12px", fontWeight: 400, color: "rgba(255,255,255,0.8)", lineHeight: 1, whiteSpace: "nowrap" }}>{formattedDateStr}</div>
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: "14px", fontWeight: 500, color: "rgba(255,255,255,0.9)", whiteSpace: "nowrap" }}>
+                        {formattedDateStr}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ width: 1, height: isLoggedIn ? 36 : 24, background: "rgba(255,255,255,0.3)" }} />
+                </div>
+                
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
+                  {isLoggedIn ? "Proceed to payment" : "Book now"}
+                </div>
+                
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "absolute", right: 24, display: "flex", alignItems: "center" }}
+                >
+                  <ArrowRight size={20} />
+                </motion.div>
+              </button>
+              <a href="tel:08067506838" id="doctor-call-btn" style={{ width: "100%", height: isLoggedIn ? 64 : 52, boxSizing: "border-box", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative", transition: "background-color 0.15s", textDecoration: "none" }}
+                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; }}
+                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ width: 130, flexShrink: 0, display: "flex", alignItems: "center", gap: 8, fontSize: "16px", fontWeight: 500, lineHeight: 1 }}>
+                    <PhoneCall size={20} />
+                    08067506838
+                  </div>
+                  <div style={{ width: 1, height: isLoggedIn ? 36 : 24, background: "var(--color-primary)", opacity: 0.3 }} />
+                </div>
+                
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
+                  Call for Enquiry
+                </div>
+                
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "absolute", right: 24, display: "flex", alignItems: "center" }}
+                >
+                  <ArrowRight size={20} />
+                </motion.div>
+              </a>
+            </div>
           </div>
+        </div>
+
         {/* Articles / Blogs */}
         <div style={{ marginTop: "var(--sp-8)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
@@ -816,24 +899,34 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 { id: 3, title: "The Role of Diet in Managing High Blood Pressure", date: "Dec 18, 2023", readTime: "6 min read", img: "/assets/hospital_3.png", category: "Diet & Nutrition" },
                 { id: 4, title: "Signs and Symptoms of Heart Attack", date: "Jan 05, 2024", readTime: "7 min read", img: "/assets/hospital_1.png", category: "Heart Health" },
               ].map((blog) => (
-                <div key={blog.id} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "hidden", boxShadow: "var(--shadow-sm)", position: "relative", minWidth: 320, width: 320, flexShrink: 0, scrollSnapAlign: "start", display: "flex", flexDirection: "column" }}>
-                  <div style={{ width: "100%", height: "160px", position: "relative", background: "var(--color-border)" }}>
-                    <Image src={blog.img} alt={blog.title} fill style={{ objectFit: "cover" }} sizes="320px" />
-                    <div style={{ position: "absolute", top: 12, left: 12, background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", padding: "4px 8px", borderRadius: "8px", fontSize: "11px", fontWeight: 700, color: "var(--color-primary)" }}>
-                      {blog.category}
+                <div key={blog.id} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "hidden", boxShadow: "var(--shadow-sm)", cursor: "pointer", position: "relative", minWidth: 400, width: 400, flexShrink: 0, scrollSnapAlign: "start", display: "flex", flexDirection: "column", transition: "transform 0.2s" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-lg)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-sm)"; }}
+                >
+                  <div style={{ width: "100%", height: "240px", position: "relative", padding: "16px" }}>
+                    <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "12px", overflow: "hidden" }}>
+                      <Image src={blog.img} alt={blog.title} fill style={{ objectFit: "cover" }} sizes="320px" />
                     </div>
                   </div>
-                  <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
-                    <h3 style={{ fontSize: "var(--font-size-base)", fontWeight: 700, color: "var(--color-text)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  <div style={{ padding: "0px 20px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                      <span style={{ fontSize: "10px", color: "var(--color-primary)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>{blog.category}</span>
+                      <span style={{ fontSize: "11px", color: "rgb(148, 163, 184)" }}>{blog.date}</span>
+                    </div>
+                    <h3 style={{ fontSize: "16px", fontWeight: 700, color: "rgb(30, 41, 59)", lineHeight: 1.4, marginBottom: "8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {blog.title}
                     </h3>
-                    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--color-text-secondary)", fontSize: "var(--font-size-sm)" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Calendar size={14} /> {blog.date}
-                      </span>
-                      <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Clock size={14} /> {blog.readTime}
-                      </span>
+                    <p style={{ fontSize: "13px", color: "rgb(100, 116, 139)", lineHeight: 1.5, marginBottom: "16px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      Learn from top specialists about the warning signs and lifestyle changes to safeguard your health.
+                    </p>
+                    <div style={{ marginTop: "auto" }}>
+                      <div style={{ height: "1px", background: "var(--color-border)", margin: "16px 0px" }}></div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                        <span style={{ color: "rgb(71, 85, 105)" }}>By <strong style={{ color: "var(--color-text)" }}>{doc.name}</strong></span>
+                        <span style={{ color: "rgb(148, 163, 184)", display: "flex", alignItems: "center", gap: "4px" }}>
+                          <Clock size={12} /> {blog.readTime}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -863,7 +956,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               <style dangerouslySetInnerHTML={{ __html: `.hide-scrollbar::-webkit-scrollbar { display: none; }` }} />
               
               {Object.entries(doctors).filter(([docId]) => docId !== id).map(([docId, doc]) => (
-                <div key={docId} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "visible", boxShadow: "var(--shadow-sm)", position: "relative", minWidth: 320, flexShrink: 0, scrollSnapAlign: "start" }}>
+                <div key={docId} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "visible", boxShadow: "var(--shadow-sm)", position: "relative", minWidth: 400, width: 400, flexShrink: 0, scrollSnapAlign: "start" }}>
                   <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: "18px", borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
                     <div style={{ display: "flex", gap: "16px" }}>
                       <div style={{ display: "flex", flexDirection: "column", gap: "8px", flexShrink: 0 }}>
@@ -935,5 +1028,20 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
 
         </div>
       </div>
+      
+      <AddPatientModal 
+        isOpen={isAddPatientModalOpen} 
+        onClose={() => setIsAddPatientModalOpen(false)} 
+        onAddPatient={(name) => {
+          const newMember = {
+            id: familyMembers.length + 1,
+            name,
+            img: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`
+          };
+          setFamilyMembers(prev => [...prev, newMember]);
+          setActiveUserId(newMember.id);
+        }}
+      />
+    </>
   );
 }

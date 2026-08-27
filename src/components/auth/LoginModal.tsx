@@ -453,19 +453,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   </div>
                   <button 
                     onClick={handleVerify}
-                    disabled={isVerifying}
+                    disabled={isVerifying || otp.join("").length !== 6}
                     style={{
                       width: "100%",
                       padding: "14px",
                       background: "var(--color-primary, #034ea2)",
-                      opacity: isVerifying ? 0.9 : 1,
+                      opacity: (isVerifying || otp.join("").length !== 6) ? 0.5 : 1,
                       color: "#ffffff",
                       fontSize: "var(--font-size-base, 16px)",
                       fontWeight: 700,
                       borderRadius: "100px",
                       border: "none",
-                      cursor: isVerifying ? "progress" : "pointer",
-                      transition: "background 0.2s",
+                      cursor: isVerifying ? "progress" : (otp.join("").length !== 6 ? "not-allowed" : "pointer"),
+                      transition: "background 0.2s, opacity 0.2s",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
