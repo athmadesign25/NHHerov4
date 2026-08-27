@@ -1,23 +1,499 @@
 .section {
-  width: 100%;
-  background: #FCFCFC;
-  padding: 40px 0 60px;
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  background: linear-gradient(180deg, #FCFCFC 50.97%, #E0ECFF 97.06%);
+  padding: 100px 250px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1440px) {
+  .section {
+    padding: 90px 140px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 64px 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 40px 20px;
+  }
 }
 
 .container {
   width: 100%;
-  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+}
+
+.header {
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.header :global(.section-eyebrow) {
+  color: #034EA2 !important;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header :global(.section-eyebrow)::after {
+  background: var(--color-emergency);
+}
+
+.sectionTitle {
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 800;
+  color: #0F172A;
+  margin-top: 8px;
+  letter-spacing: -0.025em;
+}
+
+/* Bento Grid Layout: 3 Columns Grid */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.15fr;
+  grid-template-rows: 348px 348px;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .bentoGrid {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Common Header Unit for Cards */
+.cardHeaderUnit {
+  position: relative;
+  z-index: 10;
+  padding: 44px 44px 0 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cardHeaderUnitNoSub {
+  position: relative;
+  z-index: 10;
+  padding: 44px 44px 0 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cardTitle {
+  color: #000000;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.cardSubtitle {
+  color: #475569;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 1: Patient-First Support (Top Left, height 720px -> spans 2 grid rows)
+   ───────────────────────────────────────────────────────────── */
+.card1 {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  position: relative;
+  height: 720px;
+  border-radius: 20px;
+  border: 4px solid #FFFFFF;
+  background: #CFEBFF;
+  box-shadow: 0 8px 16px 0 rgba(14, 69, 131, 0.10), 0 12px 10px 1px rgba(0, 0, 0, 0.01) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
-.fullImage {
+.videoWrapper1 {
+  position: relative;
   width: 100%;
-  height: auto;
+  height: calc(100% - 150px);
+  margin-top: auto;
+  overflow: hidden;
+}
+
+.cardVideo1 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+}
+
+.videoOverlayBlend1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 301px;
+  background: linear-gradient(0deg, #CFEBFF 1.28%, rgba(207, 235, 255, 0.00) 44.19%);
+  backdrop-filter: blur(8.68px);
+  -webkit-backdrop-filter: blur(8.68px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 2: Clinical Excellence (Top Middle, height 720px -> spans 2 grid rows)
+   ───────────────────────────────────────────────────────────── */
+.card2 {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  position: relative;
+  height: 720px;
+  border-radius: 20px;
+  border: 4px solid #FFFFFF;
+  background: #CFEBFF;
+  box-shadow: 0 8px 16px 0 rgba(14, 69, 131, 0.10), 0 12px 10px 1px rgba(0, 0, 0, 0.01) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.stackGalleryArea {
+  position: relative;
+  width: calc(100% - 32px);
+  height: 360px;
+  margin: 0 16px 16px 16px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.stackCard {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 248px;
+  border-radius: 20px;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 -6px 12px 0 rgba(0, 0, 0, 0.22);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform-origin: bottom center;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 3: Top Medical Experts (Top Right, height 348px)
+   ───────────────────────────────────────────────────────────── */
+.card3 {
+  grid-column: 3;
+  grid-row: 1;
+  position: relative;
+  height: 348px;
+  border-radius: 20px;
+  border: 4px solid #FFFFFF;
+  background: #CFEBFF;
+  box-shadow: 0 8px 16px 0 rgba(14, 69, 131, 0.10), 0 12px 10px 1px rgba(0, 0, 0, 0.01) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.doctorStackArea {
+  position: absolute;
+  bottom: 24px;
+  left: 44px;
+  height: 150px;
+  width: 240px;
+}
+
+.doctorTile {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 144px;
+  height: 150px;
+  border-radius: 18px;
+  border: 2.5px solid #FFFFFF;
+  box-shadow: 6px 0 10px 0 rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  background: #FFFFFF;
+}
+
+.doctorImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Stat Box for Card 3 */
+.card3StatBox {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 188px;
+  height: 148px;
+  padding: 24px 24px 24px 16px;
+  background: rgba(3, 78, 162, 0.90);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.25);
+}
+
+.statMetric3 {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statSubtitle3 {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 4: Our Accreditations (Spans Col 1 + Col 2 on bottom row)
+   ───────────────────────────────────────────────────────────── */
+.card4 {
+  grid-column: 1 / span 2;
+  grid-row: 3;
+  position: relative;
+  height: 348px;
+  border-radius: 20px;
+  border: 4px solid #FFFFFF;
+  background: #CFEBFF;
+  box-shadow: 0 8px 16px 0 rgba(14, 69, 131, 0.10), 0 12px 10px 1px rgba(0, 0, 0, 0.01) inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1101px) {
+  .bentoGrid {
+    grid-template-columns: 1fr 1fr 1.15fr;
+    grid-template-rows: 348px 348px 348px;
+  }
+  .card1 {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .card2 {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .card3 {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .card4 {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+  }
+  .card5 {
+    grid-column: 3;
+    grid-row: 2 / span 2;
+  }
+}
+
+.accreditationsRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 0 36px 36px 36px;
+  gap: 16px;
+}
+
+.accreditationItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.logoCircleContainer {
+  width: 132px;
+  height: 132px;
+  border-radius: 140px;
+  background: rgba(255, 255, 255, 0.30);
+  box-shadow: 0 0 33px 0 rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.capRectContainer {
+  width: 150px;
+  height: 132px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.30);
+  box-shadow: 0 0 33px 0 rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.nabhLogo {
+  width: 104px;
+  height: 104px;
   object-fit: contain;
-  border-radius: 12px;
+}
+
+.capLogo {
+  width: 140px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.nablLogo {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+}
+
+.jciLogo {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+
+.accreditationLabel {
+  color: #1E293B;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  max-width: 140px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 5: Woman Nurse Video + Cancer Surgeries (Col 3, Bottom)
+   ───────────────────────────────────────────────────────────── */
+.card5 {
+  grid-column: 3;
+  grid-row: 2 / span 2;
+  position: relative;
+  height: 720px;
+  border-radius: 20px;
+  border: 4px solid #FFFFFF;
+  background: #CFEBFF;
+  box-shadow: 0 8px 16px 0 rgba(14, 69, 131, 0.10), 0 12px 10px 1px rgba(0, 0, 0, 0.01) inset;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.cardVideo5 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.topRadialOverlay5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 354px;
+  background: radial-gradient(104.23% 85.32% at 51.17% 115.72%, rgba(14, 17, 38, 0.60) 35.81%, rgba(14, 17, 38, 0.00) 89%);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.bottomRadialOverlay5 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 354px;
+  background: radial-gradient(104.23% 85.32% at 51.17% 115.72%, rgba(187, 226, 254, 0.60) 35.81%, rgba(187, 226, 254, 0.00) 89%);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card5StatBox {
+  position: absolute;
+  right: 24px;
+  bottom: 44px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 24px 16px;
+  background: rgba(3, 78, 162, 0.90);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.25);
+}
+
+.surgeryIcon {
+  width: 80px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.statTextStack5 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statMetric5 {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statSubtitle5 {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+  max-width: 180px;
 }

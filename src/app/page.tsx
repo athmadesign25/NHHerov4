@@ -147,7 +147,10 @@ function GlobalNeatBackground() {
   return (
     <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
       <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 25%, rgba(247, 246, 242, 0.7) 0%, rgba(247, 246, 242, 0.25) 55%, transparent 90%)", pointerEvents: "none" }} />
+      {/* Light radial glow at top for Hero */}
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 20%, rgba(247, 246, 242, 0.7) 0%, rgba(247, 246, 242, 0.2) 45%, transparent 80%)", pointerEvents: "none" }} />
+      {/* Bottom dark layer matching top bg of Patient Stories (#061323) seamlessly without red glow, transitioning to #FCFCFC at bottom */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 0%, transparent 48%, #061323 68%, #061323 85%, #FCFCFC 98%)", pointerEvents: "none" }} />
     </div>
   );
 }
@@ -157,18 +160,22 @@ export default function HomePage() {
     <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
       <FloatingQuickActions />
       
-      {/* Master container with seamless NeatGradient background extending behind Hero AND CentreOfExcellence */}
+      {/* Master container with seamless NeatGradient background extending behind Hero, CentreOfExcellence AND PatientStories */}
       <div style={{ position: "relative", width: "100%", background: "transparent" }}>
         <GlobalNeatBackground />
         
         {/* Hero section with floating scaled card */}
-        <HeroSearchFirst />
+        <div style={{ position: "relative", zIndex: 100 }}>
+          <HeroSearchFirst />
+        </div>
 
         {/* CentreOfExcellence section with pinned title sequence & animated grid reveal */}
         <CentreOfExcellence />
+
+        {/* PatientStories section seamlessly sharing NeatGradient background */}
+        <PatientStories />
       </div>
 
-      <PatientStories />
       <HealthPackages />
       <WhyChooseNH />
 

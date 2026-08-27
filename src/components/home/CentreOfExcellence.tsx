@@ -8,7 +8,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronUp } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 
 const SPECIALITIES = [
@@ -222,17 +222,20 @@ export default function CentreOfExcellence() {
 
   const eyebrowOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
   const eyebrowY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [10, 0, 0, -16]);
+  const eyebrowBlur = useTransform(titleScrollProgress, [0.15, 0.38, 0.88, 0.98], ["blur(14px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
 
   const titleOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
   const titleY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [12, 0, 0, -16]);
+  const titleBlur = useTransform(titleScrollProgress, [0.28, 0.52, 0.88, 0.98], ["blur(16px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
 
   const subtitleOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
   const subtitleY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [12, 0, 0, -16]);
+  const subtitleBlur = useTransform(titleScrollProgress, [0.42, 0.68, 0.88, 0.98], ["blur(16px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
 
   const strokeProgressHeight = useTransform(titleScrollProgress, [0.04, 0.75], ["0%", "100%"]);
 
-  const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
-  const indicatorY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [10, 0, 0, -12]);
+  const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.08, 0.85, 0.96], [0, 1, 1, 0]);
+  const indicatorY = useTransform(titleScrollProgress, [0.00, 0.08, 0.85, 0.96], [12, 0, 0, -12]);
 
   // 2. Animated Grid Reveal Section
   const { scrollYProgress: gridScrollProgress } = useScroll({
@@ -243,10 +246,21 @@ export default function CentreOfExcellence() {
   const gridScale = useTransform(gridScrollProgress, [0, 1], [0.94, 1.0]);
   const gridRadius = useTransform(gridScrollProgress, [0, 1], ["24px", "0px"]);
   const gridOpacity = useTransform(gridScrollProgress, [0, 0.6], [0, 1]);
+  const gridBlur = useTransform(gridScrollProgress, [0, 0.7], ["blur(12px)", "blur(0px)"]);
 
-  // White 8px stroke around grid wrapper, disappears when section reaches full horizontal state (gridScrollProgress -> 1)
-  const gridBorderWidth = useTransform(gridScrollProgress, [0, 0.9, 1], ["8px", "8px", "0px"]);
-  const gridBorderColor = useTransform(gridScrollProgress, [0, 0.9, 1], ["#FFFFFF", "#FFFFFF", "transparent"]);
+  // 3. Exit Shrink & Rounding Transformation: gridAnimatedWrapper shrinks (1.0 -> 0.88) and corners round (0px -> 44px) as user scrolls out of the section
+  const { scrollYProgress: gridExitScrollProgress } = useScroll({
+    target: gridSectionRef,
+    offset: ["end end", "end start"],
+  });
+
+  const exitScale = useTransform(gridExitScrollProgress, [0.0, 0.75], [1.0, 0.88]);
+  const exitRadius = useTransform(gridExitScrollProgress, [0.0, 0.75], ["0px", "44px"]);
+
+  const combinedScale = useTransform([gridScale, exitScale], ([sIn, sOut]) => Number(sIn) * Number(sOut));
+  const combinedRadius = useTransform([gridRadius, exitRadius], ([rIn, rOut]) => {
+    return rOut !== "0px" ? rOut : rIn;
+  });
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -259,6 +273,7 @@ export default function CentreOfExcellence() {
                 style={{
                   opacity: eyebrowOpacity,
                   y: eyebrowY,
+                  filter: eyebrowBlur,
                   color: "#000000",
                   marginBottom: "28px",
                 }}
@@ -271,16 +286,37 @@ export default function CentreOfExcellence() {
                 style={{
                   opacity: titleOpacity,
                   y: titleY,
+                  filter: titleBlur,
                 }}
                 className={styles.sectionTitle}
               >
-                40+ Specialities. World-Class Care.
+                {["40+", "Specialities.", "World-Class", "Care."].map((word, index) => (
+                  <React.Fragment key={index}>
+                    <motion.span
+                      className={styles.flashWord}
+                      initial={{ color: "#000000" }}
+                      whileInView={{
+                        color: ["#000000", "#ED1C24", "#ED1C24", "#000000"],
+                      }}
+                      viewport={{ once: true, margin: "-10%" }}
+                      transition={{
+                        duration: 1.1,
+                        ease: [0.25, 1, 0.3, 1],
+                        delay: 0.3 + index * 0.28,
+                      }}
+                    >
+                      {word}
+                    </motion.span>
+                    {index < 3 ? " " : ""}
+                  </React.Fragment>
+                ))}
               </motion.h2>
 
               <motion.p
                 style={{
                   opacity: subtitleOpacity,
                   y: subtitleY,
+                  filter: subtitleBlur,
                 }}
                 className={styles.sectionSubtitle}
               >
@@ -291,21 +327,20 @@ export default function CentreOfExcellence() {
             </div>
           </div>
 
-          {/* Bottom Spaced Scroll Up Progress Dash Indicator Unit */}
+          {/* Bottom Spaced Keep Scrolling Indicator Unit with Double Blinking Top Arrow */}
           <motion.div
             className={styles.scrollIndicatorUnit}
             style={{
               opacity: indicatorOpacity,
               y: indicatorY,
+              x: "-50%",
             }}
           >
-            <div className={styles.scrollDashTrack}>
-              <motion.div
-                className={styles.scrollDashFill}
-                style={{ height: strokeProgressHeight }}
-              />
+            <div className={styles.doubleBlinkingArrows}>
+              <ChevronUp size={18} className={styles.arrowTop} />
+              <ChevronUp size={18} className={styles.arrowBottom} />
             </div>
-            <span className={styles.scrollUpText}>Scroll Up</span>
+            <span className={styles.scrollUpText}>Keep Scrolling</span>
           </motion.div>
         </section>
       </div>
@@ -315,12 +350,10 @@ export default function CentreOfExcellence() {
         <motion.div
           className={styles.gridAnimatedWrapper}
           style={{
-            scale: gridScale,
-            borderRadius: gridRadius,
+            scale: combinedScale,
+            borderRadius: combinedRadius,
             opacity: gridOpacity,
-            borderWidth: gridBorderWidth,
-            borderStyle: "solid",
-            borderColor: gridBorderColor,
+            filter: gridBlur,
             transformOrigin: "center top",
           }}
         >
@@ -329,15 +362,15 @@ export default function CentreOfExcellence() {
               <SpecialityCardItem key={idx} spec={spec} />
             ))}
           </div>
-        </motion.div>
 
-        {/* View All Specialties CTA Button */}
-        <div className={styles.bottomCtaWrap}>
-          <a href="/specialities" className={styles.viewAllBtn}>
-            View All Specialties
-            <ChevronRight size={16} />
-          </a>
-        </div>
+          {/* Seamless Dark Grid Extension with View All Specialties CTA */}
+          <div className={styles.gridBottomStrip}>
+            <a href="/specialities" className={styles.viewAllBtn}>
+              View All Specialties
+              <ChevronRight size={16} />
+            </a>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -291,14 +291,14 @@ function StoryCard({
         )}
       </button>
 
-      {/* Video element */}
+      {/* Video element (displaying paused video frame when unselected) */}
       <video
         ref={videoRef}
         src={card.video}
-        poster={card.image}
         playsInline
         loop
         muted={isMuted}
+        preload="metadata"
         className={styles.cardVideo}
         style={{ objectPosition: card.objectPosition }}
       />
@@ -321,7 +321,7 @@ function StoryCard({
 export default function PatientStories() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Scroll animation: entry scale (0.782 -> 1.0) & exit scale (1.0 -> 0.90 / 10% shrink when scrolling past)
+  // Scroll animation: exit scale (1.0 -> 0.90 / 10% shrink when scrolling past) & rounding (0px -> 24px)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -329,46 +329,58 @@ export default function PatientStories() {
 
   const rawScale = useTransform(
     scrollYProgress,
-    [0, 0.28, 0.65, 1.0],
-    [0.782, 1.0, 1.0, 0.90]
+    [0, 0.65, 1.0],
+    [1.0, 1.0, 0.90]
   );
   const rawBorderRadius = useTransform(
     scrollYProgress,
-    [0, 0.28, 0.65, 1.0],
-    [24, 0, 0, 16]
+    [0, 0.65, 1.0],
+    [0, 0, 24]
   );
 
   const scale = useSpring(rawScale, { stiffness: 140, damping: 28, restDelta: 0.001 });
   const borderRadius = useSpring(rawBorderRadius, { stiffness: 180, damping: 26, restDelta: 0.01 });
 
-  // Continuous integer representing the virtual step index (0 at start)
-  const [slideIndex, setSlideIndex] = useState(0);
+  /**
+   * centerIndex: the realIndex (0–5) of the card currently in center position.
+   * Arrows shift this by ±1 with infinite modular wrap.
+   * The carousel renders 5 slots at fixed pixel positions.
+   * Slot layout (relative to track start):
+   *   slot 0: leftmost visible card (partially in view)
+   *   slot 1: left card
+   *   slot 2: CENTER card (always active / playing)
+   *   slot 3: right card
+   *   slot 4: rightmost card (partially in view)
+   * 
+   * Track translateX keeps slot 2 (center) always centered in viewport.
+   * The center offset from track origin = CARD_STEP * 2 (slot index 2).
+   * Viewport centering is handled by CSS (track starts at negative offset).
+   */
+  const [centerIndex, setCenterIndex] = useState(0);
+  // direction: 1 = next (right), -1 = prev (left) — used for slide animation direction
+  const [direction, setDirection] = useState(1);
   const [hoveredRealIndex, setHoveredRealIndex] = useState<number | null>(null);
 
   // Mute state preserved for each of the 6 cards (default muted = true)
   const [mutedStates, setMutedStates] = useState<boolean[]>([
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
+    true, true, true, true, true, true,
   ]);
 
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = (realIndex: number) => {
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    // Only treat as hover if it's NOT already the center slot's card
     hoverTimerRef.current = setTimeout(() => {
       setHoveredRealIndex(realIndex);
-    }, 180);
+    }, 150);
   };
 
   const handleMouseLeave = () => {
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
     hoverTimerRef.current = setTimeout(() => {
       setHoveredRealIndex(null);
-    }, 100);
+    }, 120);
   };
 
   const toggleMute = (realIndex: number) => {
@@ -379,43 +391,51 @@ export default function PatientStories() {
     });
   };
 
-  // Center card is 2nd card in visible 3-card window (slideIndex + 1)
-  const centerRealIndex = (((slideIndex + 1) % CARDS_COUNT) + CARDS_COUNT) % CARDS_COUNT;
+  const goNext = () => {
+    setDirection(1);
+    setCenterIndex((prev) => (prev + 1) % CARDS_COUNT);
+  };
+  const goPrev = () => {
+    setDirection(-1);
+    setCenterIndex((prev) => (prev - 1 + CARDS_COUNT) % CARDS_COUNT);
+  };
 
-  // Active playing card index (hovered card overrides center card; center card is active when no card is hovered)
-  const activePlayingRealIndex =
-    hoveredRealIndex !== null ? hoveredRealIndex : centerRealIndex;
+  /**
+   * Build 5 slots. Slot 2 = centerIndex. Others wrap around it.
+   *   slot 0 = center - 2
+   *   slot 1 = center - 1
+   *   slot 2 = center  (autoplay)
+   *   slot 3 = center + 1
+   *   slot 4 = center + 2
+   */
+  const NUM_SLOTS = 5;
+  const slots = Array.from({ length: NUM_SLOTS }, (_, slotPos) => {
+    const offset = slotPos - 2;
+    const realIndex = ((centerIndex + offset) % CARDS_COUNT + CARDS_COUNT) % CARDS_COUNT;
+    return { slotPos, realIndex };
+  });
 
-  // Pre-render virtual relative slots around slideIndex from (slideIndex - 4) to (slideIndex + 5)
-  const visibleSlots: Array<{ step: number; realIndex: number; leftPx: number }> = [];
-  for (let s = slideIndex - 4; s <= slideIndex + 5; s++) {
-    const realIndex = ((s % CARDS_COUNT) + CARDS_COUNT) % CARDS_COUNT;
-    const leftPx = 54 + s * CARD_STEP;
-    visibleSlots.push({ step: s, realIndex, leftPx });
-  }
+  // Center card (slot 2) autoplays. Hovering a different card activates that one instead.
+  // When hover ends, center card resumes immediately.
 
   return (
     <section ref={sectionRef} className={styles.sectionWrap}>
       <motion.div
         className={`section ${styles.section}`}
         id="patient-stories"
-        style={{
-          scale,
-          borderRadius,
-          transformOrigin: "top center",
-          willChange: "transform, border-radius",
-        }}
+        style={{ scale, borderRadius }}
       >
         {/* Header Container */}
         <div className={`container ${styles.headerContainer}`}>
-          <motion.div
-            className={styles.header}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className={styles.eyebrowWrap}>
+          <div className={styles.header}>
+            {/* 1. Eyebrow Unit: Blurs in first */}
+            <motion.div
+              className={styles.eyebrowWrap}
+              initial={{ opacity: 0, filter: "blur(14px)", y: 18 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.0 }}
+            >
               <div
                 className={`section-eyebrow ${styles.eyebrowText}`}
                 style={{ marginBottom: 0 }}
@@ -423,49 +443,115 @@ export default function PatientStories() {
                 PATIENT STORIES
               </div>
               <div className={styles.eyebrowDash} />
-            </div>
-            <h2 className={`section-title ${styles.sectionTitle}`}>
+            </motion.div>
+
+            {/* 2. Section Title: Blurs in second */}
+            <motion.h2
+              className={`section-title ${styles.sectionTitle}`}
+              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+            >
               Lives Changed, Stories Told
-            </h2>
-            <p className={styles.sectionSubtitle}>
+            </motion.h2>
+
+            {/* 3. Section Subtitle: Blurs in third */}
+            <motion.p
+              className={styles.sectionSubtitle}
+              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+            >
               Real patients. Real outcomes. Thousands of life-changing stories.
-            </p>
-          </motion.div>
+            </motion.p>
+          </div>
         </div>
 
-        {/* Carousel Outer Container */}
-        <div className={styles.carouselOuter}>
+        {/* 4. Carousel Outer Container: Video Cards blur in cleanly without scale grow in */}
+        <motion.div
+          className={styles.carouselOuter}
+          initial={{ opacity: 0, filter: "blur(20px)" }}
+          whileInView={{ opacity: 1, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.68 }}
+        >
           {/* Sliding Track Viewport */}
           <div className={styles.trackViewport}>
             {/* Edge Fade & Gaussian Blur Overlays restricted strictly to carousel card height (676px) */}
             <div className={styles.edgeOverlayLeft} />
             <div className={styles.edgeOverlayRight} />
 
-            <div
-              className={styles.track}
-              style={{
-                transform: `translateX(calc(-${slideIndex * CARD_STEP}px))`,
-              }}
-            >
-              {visibleSlots.map(({ step, realIndex, leftPx }) => {
+            {/*
+              Track: 5 cards at fixed positions (slot 0..4).
+              Each card slot sits at: left = slotPos * CARD_STEP
+              The whole track is shifted so that slot 2 (center) is visually centered.
+              Centering offset = -(2 * CARD_STEP) + half_viewport_offset
+              This is handled via CSS in trackViewport / track.
+              Track has no translateX change — cards are always at their fixed slot positions.
+              Arrows change which realIndex maps to which slot, not the track position.
+            */}
+            <div className={styles.track}>
+              {slots.map(({ slotPos, realIndex }) => {
                 const card = initialCards[realIndex];
-                const isActive = activePlayingRealIndex === realIndex;
+                const isCenterSlot = slotPos === 2;
+                // Center slot autoplays. Hover on a side card activates it instead (pausing center).
+                const isActive =
+                  hoveredRealIndex !== null
+                    ? realIndex === hoveredRealIndex
+                    : isCenterSlot;
                 const isMuted = mutedStates[realIndex];
+                // Slide offset: new cards entering from direction, exiting to opposite
+                const slideOffsetEnter = direction * 48;
+                const slideOffsetExit = direction * -48;
 
                 return (
                   <div
-                    key={`slot-${step}`}
-                    style={{ position: "absolute", left: `${leftPx}px`, top: 0 }}
+                    key={`slot-${slotPos}`}
+                    style={{
+                      position: "absolute",
+                      left: `${slotPos * CARD_STEP}px`,
+                      top: 0,
+                    }}
                   >
-                    <StoryCard
-                      card={card}
-                      cardRealIndex={realIndex}
-                      isActive={isActive}
-                      isMuted={isMuted}
-                      onToggleMute={() => toggleMute(realIndex)}
-                      onMouseEnter={() => handleMouseEnter(realIndex)}
-                      onMouseLeave={handleMouseLeave}
-                    />
+                    <AnimatePresence mode="popLayout" initial={false}>
+                      <motion.div
+                        key={`card-${realIndex}`}
+                        initial={{
+                          opacity: 0,
+                          filter: "blur(8px)",
+                          x: slideOffsetEnter,
+                          scale: 0.97,
+                        }}
+                        animate={{
+                          opacity: 1,
+                          filter: "blur(0px)",
+                          x: 0,
+                          scale: 1,
+                        }}
+                        exit={{
+                          opacity: 0,
+                          filter: "blur(8px)",
+                          x: slideOffsetExit,
+                          scale: 0.97,
+                        }}
+                        transition={{
+                          duration: 0.55,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      >
+                        <StoryCard
+                          card={card}
+                          cardRealIndex={realIndex}
+                          isActive={isActive}
+                          isMuted={isMuted}
+                          onToggleMute={() => toggleMute(realIndex)}
+                          onMouseEnter={() => handleMouseEnter(realIndex)}
+                          onMouseLeave={handleMouseLeave}
+                        />
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 );
               })}
@@ -474,22 +560,22 @@ export default function PatientStories() {
 
           {/* Glass Navigation Arrows at Bottom Center */}
           <div className={styles.arrowsWrapper}>
-            {/* Left Arrow: moves card on right side to center (shifts track left) */}
+            {/* Left Arrow: moves set left (previous card becomes center) */}
             <button
               type="button"
               className={styles.arrowBtn}
-              onClick={() => setSlideIndex((prev) => prev + 1)}
-              aria-label="Move right card to center"
+              onClick={goPrev}
+              aria-label="Previous story"
             >
               <ChevronLeft size={24} strokeWidth={2} />
             </button>
 
-            {/* Right Arrow: moves card on left side to center (shifts track right) */}
+            {/* Right Arrow: moves set right (next card becomes center) */}
             <button
               type="button"
               className={styles.arrowBtn}
-              onClick={() => setSlideIndex((prev) => prev - 1)}
-              aria-label="Move left card to center"
+              onClick={goNext}
+              aria-label="Next story"
             >
               <ChevronRight size={24} strokeWidth={2} />
             </button>
@@ -501,8 +587,9 @@ export default function PatientStories() {
               View More Stories
             </a>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );
 }
+

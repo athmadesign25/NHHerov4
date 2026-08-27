@@ -2,7 +2,8 @@
   position: relative;
   width: 100%;
   background: #FCFCFC;
-  padding-top: 160px; /* Space after Patient Stories */
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 
 .sectionWrap :global(.section-eyebrow) {
@@ -16,7 +17,6 @@
   background: var(--color-emergency);
 }
 
-/* Header scrolls naturally with the page, NOT pinned */
 .header {
   position: relative;
   z-index: 20;
@@ -65,14 +65,13 @@
   margin: 0 auto;
 }
 
-/* Sticky scroll runway - card 1 scrolls until top edge hits navbar, then pins */
+/* Sticky Scroll Runway: Pins card to top nav as header scrolls up */
 .stackTrack {
   position: relative;
   width: 100%;
-  height: 300vh; /* Scroll runway for the 3-card stack interaction */
+  height: 180vh;
 }
 
-/* Sticky viewport pins at top nav (70px) */
 .stickyViewport {
   position: sticky;
   top: 70px;
@@ -81,221 +80,249 @@
   overflow: hidden;
 }
 
-/* Cards Layer Container fills the sticky viewport */
-.cardsLayer {
+.mainCard {
   position: relative;
   width: 100%;
   height: 100%;
-}
-
-/* Card Specs: full page width, fills cardsLayer */
-.cardContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+  min-height: calc(100vh - 70px);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
-  box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
   will-change: transform, filter, opacity, border-radius;
+}
+
+/* Dark Vignette Overlay for Crisp Contrast */
+.cardVignetteOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.20) 40%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Card Inner Content */
+.cardInnerContent {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  padding: 100px 250px;
   box-sizing: border-box;
 }
 
-/* Dark Overlay on Dimmed / Shrink State */
-.cardDimOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Text Unit Container inside Card */
-.cardTextUnit {
-  position: absolute;
-  top: 78px;
-  left: 144px;
-  width: 595px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  z-index: 10;
-  text-align: left;
-}
-
-.cardMainTitle {
-  color: #F7F7F7;
-  font-family: Inter, sans-serif;
-  font-size: 54px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.216px;
-  margin: 0;
-}
-
-.cardOverview {
-  color: #D1D1D1;
-  font-family: Inter, sans-serif;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.4;
-  margin: 0;
+@media (max-width: 1440px) {
+  .cardInnerContent {
+    padding: 90px 160px;
+  }
 }
 
 @media (max-width: 1024px) {
-  .cardTextUnit {
-    top: 48px;
-    left: 48px;
-    width: calc(100% - 96px);
-  }
-  .viewPackageBtn {
-    bottom: 48px;
-    right: 48px;
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-  .pointerContainer {
-    bottom: 48px;
-    left: 48px;
-  }
-  .checkCircle {
-    width: 30px;
-    height: 30px;
-  }
-  .pointerText {
-    font-size: 18px;
-  }
-  .cardMainTitle {
-    font-size: 38px;
-  }
-  .cardOverview {
-    font-size: 16px;
+  .cardInnerContent {
+    padding: 64px 60px;
+    min-height: 600px;
   }
 }
 
 @media (max-width: 640px) {
-  .cardTextUnit {
-    top: 28px;
-    left: 24px;
-    width: calc(100% - 48px);
-  }
-  .viewPackageBtn {
-    bottom: 28px;
-    right: 24px;
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-  .pointerContainer {
-    bottom: 28px;
-    left: 24px;
-  }
-  .checkCircle {
-    width: 26px;
-    height: 26px;
-  }
-  .pointerText {
-    font-size: 14px;
-  }
-  .cardMainTitle {
-    font-size: 26px;
-  }
-  .cardOverview {
-    font-size: 14px;
+  .cardInnerContent {
+    padding: 40px 24px;
+    min-height: 520px;
   }
 }
 
-/* View Package Secondary Button */
-.viewPackageBtn {
-  position: absolute;
-  bottom: 78px;
-  right: 124px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 26px;
-  border-radius: 12px;
-  border: 1.5px solid #ffffff;
-  color: #ffffff;
-  background: transparent;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.2;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  white-space: nowrap;
-}
-
-.viewPackageBtn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
-}
-
-/* Pointer Ticker Unit on Bottom Left */
-.pointerContainer {
-  position: absolute;
-  bottom: 78px;
-  left: 144px;
-  z-index: 10;
+/* Top Text Block */
+.topTextBlock {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 680px;
+}
+
+.cardMainTitle {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(30px, 3.6vw, 48px);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.cardSubtitle {
+  color: rgba(255, 255, 255, 0.90);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 580px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Bottom Unit Block: Clippings Rotator + Secondary Button stacked with 24px gap */
+.bottomUnitBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+/* 338px x 200px Clipping Wrapper & Growing Card Box */
+.clippingWrapper {
+  position: relative;
+  width: 338px;
+  height: 200px;
+}
+
+@media (max-width: 480px) {
+  .clippingWrapper {
+    width: 100%;
+    max-width: 338px;
+    height: 180px;
+  }
+}
+
+.clippingBox {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 8px 28px 0 rgba(0, 0, 0, 0.40);
+  overflow: hidden;
+  background: #0B1727;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  height: 44px;
+  transform-origin: center center;
+}
+
+.clippingImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.clippingDarkOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.68) 100%
+  );
+  z-index: 2;
+}
+
+.clippingTitle {
+  position: relative;
+  z-index: 3;
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  padding: 0 20px;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Sheen Shimmer */
+.clippingShimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.30) 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  z-index: 4;
   pointer-events: none;
 }
 
-.pointerItem {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.checkCircle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
+/* Glassy Timer Progress Bar Track & Fill */
+.clipProgressTrack {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 10;
+  overflow: hidden;
 }
 
-.pointerText {
-  font-family: Inter, sans-serif;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 1.2;
-  white-space: nowrap;
+.clipProgressFill {
+  height: 100%;
+  width: 100%;
   background: linear-gradient(
     90deg,
-    #FFFFFF 0%,
-    #FFFFFF 35%,
-    #E0F4FF 48%,
-    #80D4FF 50%,
-    #E0F4FF 52%,
-    #FFFFFF 65%,
-    #FFFFFF 100%
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.70) 70%,
+    rgba(255, 255, 255, 0.95) 100%
   );
-  background-size: 250% 100%;
-  background-repeat: no-repeat;
-  background-position: 0% 0%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 2px rgba(255, 255, 255, 0.9);
+  transform-origin: left center;
+}
+
+/* Secondary Button */
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: 1px solid #FFFFFF;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.secondaryButton:hover {
+  background: #FFFFFF;
+  color: #0F172A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
 

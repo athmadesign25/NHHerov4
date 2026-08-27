@@ -1,8 +1,7 @@
 .sectionWrap {
   position: relative;
   width: 100%;
-  background: #FFFFFF;
-  overflow: hidden;
+  background: transparent;
 }
 
 .section {
@@ -14,6 +13,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transform-origin: center top;
+  will-change: transform, border-radius;
 }
 
 .headerContainer {
@@ -71,13 +72,12 @@
   align-items: center;
 }
 
-/* Viewport for Card Track: 60px vertical padding prevents shadow clipping */
+/* Viewport for Card Track: explicit height = card height (676px) + 60px top + 60px bottom padding */
 .trackViewport {
   position: relative;
   width: 100%;
+  height: 796px; /* 676px card + 60px top pad + 60px bottom pad */
   overflow: hidden;
-  padding: 60px 0;
-  margin: -30px 0;
 }
 
 /* Edge Fade & Gaussian Blur Overlays restricted strictly to carousel card height (676px) */
@@ -111,13 +111,17 @@
   mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 60%, rgba(0, 0, 0, 0) 100%);
 }
 
-/* Sliding Track: relative container positioning virtualized card slots */
+/* Fixed Track: cards sit at absolute slot positions (slot * 572px).
+   Track is positioned so slot 2 (center card at left=1144px) is centered in viewport.
+   left: 50% puts left edge at viewport center. Then shift left by (1144 + 264)px
+   so that the center of slot 2 (1144 + 264 = 1408px from track origin) aligns to viewport center. */
 .track {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  width: 2860px; /* 5 slots * 572px */
   height: 676px;
-  will-change: transform;
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  left: 50%;
+  transform: translateX(-1408px);
+  top: 60px;
 }
 
 /* Card Specs: 528px width, 676px height, 4px solid white stroke, reduced roundedness (12px outer, 8px inner) */
@@ -131,7 +135,7 @@
   position: absolute;
   top: 0;
   border-radius: 12px;
-  border: 4px solid #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.45);
   background: #000;
   overflow: hidden;
@@ -146,7 +150,7 @@
   z-index: 8;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cardInactiveOverlay.showOverlay {
