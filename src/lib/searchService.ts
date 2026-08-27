@@ -439,14 +439,24 @@ export async function searchHealthcare(
   query: string,
   cityId: number | null,
   signal?: AbortSignal
-): Promise<NormalizedResults> {
-  const url = new URL("/api/search", window.location.origin);
-  url.searchParams.set("query", query.trim());
-  if (cityId !== null) url.searchParams.set("cityId", String(cityId));
+): Promise<NormalizedResults | null> {
+  try {
+    const url = new URL("/api/search", window.location.origin);
+    url.searchParams.set("query", query.trim());
+    if (cityId !== null) url.searchParams.set("cityId", String(cityId));
 
-  const res = await fetch(url.toString(), { signal });
-  if (!res.ok) throw new Error(`Search API error: ${res.status}`);
+    const res = await fetch(url.toString(), { signal });
+    if (!res.ok) {
+      console.warn(`Search API error: ${res.status}. Falling back to mock data.`);
+      return null;
+    }
 
-  const raw: RawApiResponse = await res.json();
-  return normalizeSearchResponse(raw);
+    const raw: RawApiResponse = await res.json();
+    return normalizeSearchResponse(raw);
+  } catch (err: any) {
+    if (err.name !== "AbortError") {
+      console.warn("Search API fetch failed:", err.message);
+    }
+    return null;
+  }
 }

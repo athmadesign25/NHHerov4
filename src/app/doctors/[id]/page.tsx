@@ -227,8 +227,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   useEffect(() => {
     if (nameParam) {
       searchHealthcare(nameParam, null).then((res) => {
-        const found = res.doctors.find((d) => d.id.toString() === id);
-        if (found) setApiDoc(found);
+        if (res) {
+          const found = res.doctors.find((d) => d.id.toString() === id);
+          if (found) setApiDoc(found);
+        }
       }).catch(console.error);
     }
   }, [nameParam, id]);
