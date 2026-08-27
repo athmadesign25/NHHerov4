@@ -298,8 +298,17 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
 
   const scrollSimilar = (direction: "left" | "right") => {
     if (similarScrollRef.current) {
-      const scrollAmount = 340;
+      const scrollAmount = 300;
       similarScrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const articlesScrollRef = useRef<HTMLDivElement>(null);
+  
+  const scrollArticles = (direction: "left" | "right") => {
+    if (articlesScrollRef.current) {
+      const scrollAmount = 300;
+      articlesScrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
     }
   };
 
@@ -784,6 +793,54 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               <PhoneCall size={15} />
               Call for Enquiry
             </a>
+          </div>
+        {/* Articles / Blogs */}
+        <div style={{ marginTop: "var(--sp-8)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
+            <h2 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em" }}>Articles by {doc.name}</h2>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button onClick={() => scrollArticles("left")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronLeft size={20} />
+              </button>
+              <button onClick={() => scrollArticles("right")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+          
+          <div style={{ position: "relative" }}>
+            <div ref={articlesScrollRef} className="hide-scrollbar" style={{ display: "flex", gap: "var(--sp-4)", overflowX: "auto", paddingBottom: "var(--sp-4)", scrollSnapType: "x mandatory", scrollbarWidth: "none", paddingRight: "100px" }}>
+              {[
+                { id: 1, title: "Understanding Heart Arrhythmias and Palpitations", date: "Oct 12, 2023", readTime: "5 min read", img: "/assets/hospital_1.png", category: "Heart Health" },
+                { id: 2, title: "Post-Surgery Recovery: What to Expect in the First Week", date: "Nov 04, 2023", readTime: "4 min read", img: "/assets/hospital_2.png", category: "Surgery" },
+                { id: 3, title: "The Role of Diet in Managing High Blood Pressure", date: "Dec 18, 2023", readTime: "6 min read", img: "/assets/hospital_3.png", category: "Diet & Nutrition" },
+                { id: 4, title: "Signs and Symptoms of Heart Attack", date: "Jan 05, 2024", readTime: "7 min read", img: "/assets/hospital_1.png", category: "Heart Health" },
+              ].map((blog) => (
+                <div key={blog.id} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "hidden", boxShadow: "var(--shadow-sm)", position: "relative", minWidth: 320, width: 320, flexShrink: 0, scrollSnapAlign: "start", display: "flex", flexDirection: "column" }}>
+                  <div style={{ width: "100%", height: "160px", position: "relative", background: "var(--color-border)" }}>
+                    <Image src={blog.img} alt={blog.title} fill style={{ objectFit: "cover" }} sizes="320px" />
+                    <div style={{ position: "absolute", top: 12, left: 12, background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(4px)", padding: "4px 8px", borderRadius: "8px", fontSize: "11px", fontWeight: 700, color: "var(--color-primary)" }}>
+                      {blog.category}
+                    </div>
+                  </div>
+                  <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+                    <h3 style={{ fontSize: "var(--font-size-base)", fontWeight: 700, color: "var(--color-text)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      {blog.title}
+                    </h3>
+                    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--color-text-secondary)", fontSize: "var(--font-size-sm)" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <Calendar size={14} /> {blog.date}
+                      </span>
+                      <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <Clock size={14} /> {blog.readTime}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Right gradient mask */}
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: "var(--sp-4)", width: "80px", background: "linear-gradient(to right, transparent, var(--color-bg-card))", pointerEvents: "none" }} />
           </div>
         </div>
 
