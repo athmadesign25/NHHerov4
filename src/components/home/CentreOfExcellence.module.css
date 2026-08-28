@@ -56,6 +56,14 @@
   justify-content: center;
 }
 
+.maskWrap {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  padding: 4px 6px;
+  margin: -4px -6px;
+}
+
 .sectionTitle {
   font-size: clamp(28px, 3.4vw, 48px);
   font-weight: 800;

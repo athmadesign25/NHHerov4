@@ -419,10 +419,11 @@ export default function PatientStories() {
   // When hover ends, center card resumes immediately.
 
   return (
-    <section ref={sectionRef} className={styles.sectionWrap}>
+    <section ref={sectionRef} className={styles.sectionWrap} data-nav-theme="dark">
       <motion.div
         className={`section ${styles.section}`}
         id="patient-stories"
+        data-nav-theme="dark"
         style={{ scale, borderRadius }}
       >
         {/* Header Container */}

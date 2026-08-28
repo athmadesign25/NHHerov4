@@ -418,3 +418,92 @@
   animation: gradientShimmer 3s infinite ease-in-out;
 }
 
+
+
+
+
+/* ─── Premium Hover Nav Links (Apple Inverse Focus) ───────────────────────────── */
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  color: var(--nav-fg-color, #FFFFFF) !important;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  /* Smooth opacity transition */
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  position: relative;
+  text-decoration: none;
+  background: transparent !important;
+  transform: none !important;
+}
+
+/* 1. When the ul (.desktop-nav) is hovered, dim ALL links */
+:global(.desktop-nav):hover .navLink {
+  opacity: 0.35;
+}
+
+/* 2. But keep the specifically hovered list item at full opacity */
+:global(.desktop-nav) .navItem:hover .navLink {
+  opacity: 1 !important;
+}
+
+/* Chevron rotation */
+.navLink svg {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  color: inherit !important;
+}
+
+.navItem:hover .navLink svg {
+  transform: rotate(180deg);
+}
+
+/* ─── Premium Hover Nav Links (Apple-Style Focus) ───────────────────────────── */
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  list-style: none;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navLink {
+  color: var(--nav-fg-color, #FFFFFF) !important;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  position: relative;
+  text-decoration: none;
+  background: transparent !important;
+  opacity: 0.85; /* Baseline softness */
+}
+
+/* 1. When a specific navItem is hovered, brighten ONLY its nav link (No inverse dimming) */
+.navItem:hover .navLink {
+  opacity: 1;
+}
+
+/* Chevron rotation */
+.navLink svg {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: inherit !important;
+}
+
+.navItem:hover .navLink svg {
+  transform: rotate(180deg);
+}
