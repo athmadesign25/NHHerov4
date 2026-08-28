@@ -8,8 +8,9 @@ import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, ArrowRight,
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { searchDoctorsData } from "../../search/mockDoctors";
 import { searchHealthcare, type NormalizedDoctor } from "@/lib/searchService";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import AddPatientModal from "@/components/ui/AddPatientModal";
+import LoginModal from "@/components/auth/LoginModal";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -221,6 +222,7 @@ function SectionHeading({ title }: { title: string }) {
 export default function DoctorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const nameParam = searchParams.get("n");
 
   const [apiDoc, setApiDoc] = useState<NormalizedDoctor | null>(null);
@@ -252,6 +254,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
   const [isConsultationExpanded, setIsConsultationExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [activeUserId, setActiveUserId] = useState(1);
   const [isMembersExpanded, setIsMembersExpanded] = useState(false);
   const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
@@ -568,66 +571,6 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </button>
             </div>
 
-            {/* Select Member Dropdown */}
-            {isLoggedIn && (
-              <div style={{ marginBottom: 24, position: "relative" }} ref={membersDropdownRef}>
-                <div style={{ fontSize: "var(--font-size-base)", fontWeight: 500, color: "var(--color-text)", display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}><User size={18} style={{ color: "var(--color-text)" }} />Select member</div>
-                <motion.button 
-                  initial={{ scale: 1, boxShadow: "0px 0px 0px 0px rgba(3,78,162,0)", borderColor: "var(--color-border)" }}
-                  animate={{ 
-                    scale: [1, 1.02, 1],
-                    boxShadow: ["0px 0px 0px 0px rgba(3,78,162,0)", "0px 0px 0px 4px rgba(3,78,162,0.15)", "0px 0px 0px 0px rgba(3,78,162,0)"],
-                    borderColor: ["var(--color-border)", "var(--color-primary)", "var(--color-border)"]
-                  }}
-                  transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
-                  onClick={() => setIsMembersExpanded(!isMembersExpanded)}
-                  style={{ width: "100%", height: 44, padding: "0 16px", borderRadius: 100, border: "1.5px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <img src={activeUser.img} alt={activeUser.name} style={{ width: 24, height: 24, borderRadius: "50%", objectFit: "cover" }} />
-                    <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 400, color: "var(--color-text)" }}>{activeUser.name}</span>
-                  </div>
-                  <ChevronDown size={16} style={{ color: "var(--color-text-secondary)", transform: isMembersExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
-                </motion.button>
-
-                <AnimatePresence>
-                  {isMembersExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.15 }}
-                      style={{ position: "absolute", top: "calc(100% + 8px)", left: 0, right: 0, background: "#fff", borderRadius: 12, border: "1px solid var(--color-border)", boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)", zIndex: 50, padding: 8, display: "flex", flexDirection: "column", gap: 4 }}
-                    >
-                      {familyMembers.map(member => (
-                        <button
-                          key={member.id}
-                          onClick={() => { setActiveUserId(member.id); setIsMembersExpanded(false); }}
-                          style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: activeUserId === member.id ? "var(--color-bg-subtle)" : "transparent", border: "none", borderRadius: 8, cursor: "pointer", textAlign: "left", width: "100%" }}
-                          onMouseEnter={(e) => { if (activeUserId !== member.id) e.currentTarget.style.background = "#F1F5F9"; }}
-                          onMouseLeave={(e) => { if (activeUserId !== member.id) e.currentTarget.style.background = "transparent"; }}
-                        >
-                          <img src={member.img} alt={member.name} style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }} />
-                          <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 500, color: "var(--color-text)" }}>{member.name}</span>
-                        </button>
-                      ))}
-                      <div style={{ height: 1, background: "var(--color-border)", margin: "4px 8px" }} />
-                      <button
-                        onClick={() => { setIsMembersExpanded(false); setIsAddPatientModalOpen(true); }}
-                        style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: "transparent", border: "none", borderRadius: 8, cursor: "pointer", textAlign: "left", width: "100%", color: "var(--color-primary)" }}
-                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-                      >
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(3,78,162,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <Plus size={16} style={{ color: "var(--color-primary)" }} />
-                        </div>
-                        <span style={{ fontSize: "var(--font-size-sm)", fontWeight: 600 }}>Add new member</span>
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
 
             {/* Hospital Selector */}
             <AnimatePresence initial={false}>
@@ -817,7 +760,22 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               {/* Smooth fade out mask for scrolling slots */}
               <div style={{ position: "absolute", top: -32, left: 0, right: 0, height: 32, background: "linear-gradient(to top, var(--color-bg-card), transparent)", pointerEvents: "none" }} />
               
-              <button id="book-appointment-btn" style={{ width: "100%", height: isLoggedIn ? 64 : 52, boxSizing: "border-box", background: "var(--color-primary)", color: "#fff", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative" }}
+              <button 
+                id="book-appointment-btn"
+                onClick={() => {
+                  if (isLoggedIn) {
+                    const qs = new URLSearchParams({
+                      doctorId: id,
+                      date: formattedDateStr.split(' | ')[0],
+                      time: selectedTime,
+                      needsPatientSelection: "true"
+                    }).toString();
+                    router.push(`/booking/summary?${qs}`);
+                  } else {
+                    setIsLoginModalOpen(true);
+                  }
+                }}
+                style={{ width: "100%", height: 52, boxSizing: "border-box", background: "var(--color-primary)", color: "#fff", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative" }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
               >
@@ -825,8 +783,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   <div style={{ width: 130, flexShrink: 0 }}>
                     {isLoggedIn ? (
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
-                        <div style={{ fontSize: "16px", fontWeight: 500, lineHeight: 1 }}>₹2,580</div>
-                        <div style={{ fontSize: "12px", fontWeight: 400, color: "rgba(255,255,255,0.8)", lineHeight: 1, whiteSpace: "nowrap" }}>{formattedDateStr}</div>
+                        <div style={{ fontSize: "14px", fontWeight: 500, color: "rgba(255, 255, 255, 0.9)", whiteSpace: "nowrap" }}>{formattedDateStr}</div>
                       </div>
                     ) : (
                       <div style={{ fontSize: "14px", fontWeight: 500, color: "rgba(255,255,255,0.9)", whiteSpace: "nowrap" }}>
@@ -834,11 +791,11 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                       </div>
                     )}
                   </div>
-                  <div style={{ width: 1, height: isLoggedIn ? 36 : 24, background: "rgba(255,255,255,0.3)" }} />
+                  <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.3)" }} />
                 </div>
                 
                 <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
-                  {isLoggedIn ? "Proceed to payment" : "Book now"}
+                  Book now
                 </div>
                 
                 <motion.div
@@ -849,7 +806,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   <ArrowRight size={20} />
                 </motion.div>
               </button>
-              <a href="tel:08067506838" id="doctor-call-btn" style={{ width: "100%", height: isLoggedIn ? 64 : 52, boxSizing: "border-box", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative", transition: "background-color 0.15s", textDecoration: "none" }}
+              <a href="tel:08067506838" id="doctor-call-btn" style={{ width: "100%", height: 52, boxSizing: "border-box", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative", transition: "background-color 0.15s", textDecoration: "none" }}
                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; }}
                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
               >
@@ -858,7 +815,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     <PhoneCall size={20} />
                     08067506838
                   </div>
-                  <div style={{ width: 1, height: isLoggedIn ? 36 : 24, background: "var(--color-primary)", opacity: 0.3 }} />
+                  <div style={{ width: 1, height: 24, background: "var(--color-primary)", opacity: 0.3 }} />
                 </div>
                 
                 <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
@@ -1041,6 +998,21 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
           setFamilyMembers(prev => [...prev, newMember]);
           setActiveUserId(newMember.id);
         }}
+      />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLoginSuccess={() => { 
+          setIsLoggedIn(true); 
+          localStorage.setItem('isLoggedIn', 'true');
+          const qs = new URLSearchParams({
+            doctorId: id,
+            date: formattedDateStr.split(' | ')[0],
+            time: selectedTime,
+            needsPatientSelection: "true"
+          }).toString();
+          router.push(`/booking/summary?${qs}`);
+        }} 
       />
     </>
   );

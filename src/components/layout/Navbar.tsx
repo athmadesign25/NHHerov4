@@ -23,14 +23,18 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [activeUserId, setActiveUserId] = useState(1);
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+      const storedActiveUser = localStorage.getItem('activeUserId');
+      if (storedActiveUser) {
+        setActiveUserId(parseInt(storedActiveUser, 10));
+      }
     }
   }, []);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
-  const [activeUserId, setActiveUserId] = useState(1);
   const activeUser = MOCK_FAMILY_MEMBERS.find(m => m.id === activeUserId) || MOCK_FAMILY_MEMBERS[0];
   const [isMembersExpanded, setIsMembersExpanded] = useState(false);
 
@@ -362,6 +366,7 @@ export default function Navbar() {
                             key={member.id}
                             onClick={() => {
                               setActiveUserId(member.id);
+                              localStorage.setItem('activeUserId', member.id.toString());
                               setIsProfileDropdownOpen(false);
                               setIsMembersExpanded(false);
                             }}
