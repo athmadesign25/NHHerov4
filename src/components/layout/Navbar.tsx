@@ -49,59 +49,118 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const [scrolled, setScrolled] = useState(false);
-  const [showSearchIcon, setShowSearchIcon] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isOverLightBackground, setIsOverLightBackground] = useState(false);
+  const isOverLightRef = useRef(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > 20) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
 
-      // Show search icon after scrolling by the search bar on homepage (approx. 350px), or always on other pages
-      if (!isHomePage || window.scrollY > 350) {
-        setShowSearchIcon(true);
-      } else {
-        setShowSearchIcon(false);
+      // Always show navbar near the top
+      if (currentScrollY < 120) {
+        setIsVisible(true);
+        lastScrollY.current = currentScrollY;
+        return;
       }
+
+      const delta = currentScrollY - lastScrollY.current;
+
+      // Dead zone: ignore tiny scroll movements / Lenis momentum jitter (less than 12px)
+      if (Math.abs(delta) < 12) {
+        return;
+      }
+
+      if (delta > 0) {
+        // Sustained downward scroll
+        setIsVisible(false);
+      } else {
+        // Sustained upward scroll
+        setIsVisible(true);
+      }
+
+      // Scalable real-time theme probe directly under Navbar center (y = 35px)
+      if (typeof document !== "undefined") {
+        const probeX = window.innerWidth / 2;
+        const probeY = 35;
+        const elements = document.elementsFromPoint(probeX, probeY);
+        let detectedTheme = "light";
+
+        for (const el of elements) {
+          if (el.closest("nav")) continue;
+          const themeEl = el.closest("[data-nav-theme]");
+          if (themeEl) {
+            detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
+            break;
+          }
+        }
+
+        const isLight = detectedTheme !== "dark";
+        if (isLight !== isOverLightRef.current) {
+          isOverLightRef.current = isLight;
+          setIsOverLightBackground(isLight);
+        }
+      }
+
+      // Update baseline after a meaningful scroll distance
+      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage]);
+  }, []);
 
   const isNavbarActive = !isHomePage || scrolled;
 
   return (
     <nav
-      className={isNavbarActive ? "scrolled" : ""}
       style={{
         position: "fixed",
         top: "0px",
         zIndex: 1000,
         width: "100%",
-        backgroundColor: isNavbarActive ? "#FFFFFF" : "transparent",
-        backdropFilter: isNavbarActive ? "blur(12px)" : "none",
-        WebkitBackdropFilter: isNavbarActive ? "blur(12px)" : "none",
-        boxShadow: isNavbarActive ? "rgba(0, 0, 0, 0.08) 0px 1px 3px" : "none",
-        transition: "all 0.3s ease"
-      }}
+        transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+        transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
+        "--nav-fg-color": isOverLightBackground ? "var(--color-text, #0f172a)" : "#ffffff"
+      } as React.CSSProperties}
     >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: -1,
+          backgroundColor: "transparent",
+          backdropFilter: "blur(20px) saturate(180%)",
+          WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          transition: "backdrop-filter 0.4s ease",
+          maskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
+          pointerEvents: "none"
+        }}
+      />
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ width: "108px", height: "auto", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ color: "transparent", width: "100%", height: "auto" }} src={isNavbarActive ? "/NH-logo.svg" : "/NH_Logo_white_1.png"} priority />
+            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH_Logo_white_1.png" priority />
             </div>
           </Link>
-          <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className="desktop-nav">
-          <li 
+          <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
+          <li className={styles.navItem}
             style={{ position: "relative" }}
             onMouseEnter={() => setActiveDropdown("find-a-doctor")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/search">
+            <Link className={styles.navLink} href="/search">
               Find a Doctor<ChevronDown size={14} />
             </Link>
             {activeDropdown === "find-a-doctor" && (
@@ -144,12 +203,12 @@ export default function Navbar() {
               </div>
             )}
           </li>
-          <li 
+          <li className={styles.navItem}
             style={{ position: "relative" }}
             onMouseEnter={() => setActiveDropdown("hospitals")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/hospitals">
+            <Link className={styles.navLink} href="/hospitals">
               Hospitals & Clinics<ChevronDown size={14} />
             </Link>
             {activeDropdown === "hospitals" && (
@@ -188,12 +247,12 @@ export default function Navbar() {
               </div>
             )}
           </li>
-          <li 
+          <li className={styles.navItem}
             style={{ position: "relative" }}
             onMouseEnter={() => setActiveDropdown("specialities")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/specialities">
+            <Link className={styles.navLink} href="/specialities">
               Treatment & Specialities<ChevronDown size={14} />
             </Link>
             {activeDropdown === "specialities" && (
@@ -230,12 +289,12 @@ export default function Navbar() {
               </div>
             )}
           </li>
-          <li 
+          <li className={styles.navItem}
             style={{ position: "relative" }}
             onMouseEnter={() => setActiveDropdown("health-checks")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", fontSize: "14px", fontWeight: 500, padding: "8px 12px", borderRadius: "var(--radius-sm, 4px)", display: "flex", alignItems: "center", gap: "4px", transition: "all 0.15s", whiteSpace: "nowrap", position: "relative" }} href="/health-checks">
+            <Link className={styles.navLink} href="/health-checks">
               Health Checkups<ChevronDown size={14} />
             </Link>
             {activeDropdown === "health-checks" && (
@@ -270,35 +329,14 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
             <MapPin size={18} strokeWidth={2.5} />
             <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
               <span style={{ fontSize: "14px", fontWeight: 500 }}>Bangalore</span>
               <ChevronDown size={14} />
             </span>
           </div>
-          <button
-            aria-label="Search"
-            onClick={() => setIsSearchOpen(true)}
-            style={{
-              padding: showSearchIcon ? "8px" : "0px",
-              width: showSearchIcon ? "34px" : "0px",
-              opacity: showSearchIcon ? 1 : 0,
-              visibility: showSearchIcon ? "visible" : "hidden",
-              pointerEvents: showSearchIcon ? "auto" : "none",
-              cursor: "pointer",
-              background: "transparent",
-              border: "none",
-              color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
-              overflow: "hidden",
-            }}
-          >
-            <Search size={18} strokeWidth={2.5} style={{ flexShrink: 0 }} />
-          </button>
+
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
               <button 
@@ -306,7 +344,7 @@ export default function Navbar() {
                   setIsProfileDropdownOpen(!isProfileDropdownOpen);
                   if (isProfileDropdownOpen) setIsMembersExpanded(false);
                 }}
-                className={`${styles.loginBtnResponsive} ${isNavbarActive ? styles.loginBtnActive : styles.loginBtnInactive}`} 
+                className={styles.loginBtnResponsive}
                 style={{ 
                   cursor: "pointer", 
                   fontFamily: "inherit", 
@@ -314,23 +352,24 @@ export default function Navbar() {
                   display: "flex", 
                   alignItems: "center", 
                   gap: "8px",
-                  background: isNavbarActive 
-                    ? (isProfileDropdownOpen ? "#e0efff" : "#f0f7ff")
-                    : (isProfileDropdownOpen ? "rgba(255, 255, 255, 0.25)" : "rgba(255, 255, 255, 0.15)"),
-                  color: isNavbarActive ? "var(--color-text, #0f172a)" : "#ffffff",
-                  backdropFilter: isNavbarActive ? "none" : "blur(12px)",
-                  border: "none",
+                  background: isProfileDropdownOpen 
+                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)") 
+                    : (isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)"),
+                  color: "var(--nav-fg-color)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
                   borderRadius: "100px",
                   transition: "all 0.2s"
                 }}
                 onMouseEnter={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isNavbarActive ? "#e0efff" : "rgba(255, 255, 255, 0.25)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
                   }
                 }}
                 onMouseLeave={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isNavbarActive ? "#f0f7ff" : "rgba(255, 255, 255, 0.15)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
                   }
                 }}
               >
@@ -447,9 +486,28 @@ export default function Navbar() {
             </div>
           ) : (
             <button 
-              className={`${styles.loginBtnResponsive} ${isNavbarActive ? styles.loginBtnActive : styles.loginBtnInactive}`} 
+              className={styles.loginBtnResponsive}
               onClick={() => setIsLoginModalOpen(true)}
-              style={{ cursor: "pointer", fontFamily: "inherit" }}
+              style={{ 
+                cursor: "pointer", 
+                fontFamily: "inherit",
+                background: isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)",
+                color: "var(--nav-fg-color)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
+                padding: "8px 24px",
+                borderRadius: "100px",
+                fontWeight: 600,
+                fontSize: "14px",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={(e) => { 
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
+              }}
+              onMouseLeave={(e) => { 
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
+              }}
             >
               Login
             </button>
@@ -458,15 +516,16 @@ export default function Navbar() {
             href="/login" 
             className={styles.loginIconResponsive} 
             style={{ 
-              color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", 
+              color: "var(--nav-fg-color)", 
               padding: "8px", 
               alignItems: "center", 
-              justifyContent: "center" 
+              justifyContent: "center",
+              transition: "color 0.4s ease"
             }}
           >
             <User size={18} strokeWidth={2.5} />
           </Link>
-          <button onClick={() => setIsMobileMenuOpen(true)} aria-label="Open navigation menu" style={{ color: isNavbarActive ? "var(--text-primary, #333)" : "#FFFFFF", padding: "8px", display: "none", cursor: "pointer", background: "none", border: "none" }} className="mobile-menu-btn">
+          <button onClick={() => setIsMobileMenuOpen(true)} aria-label="Open navigation menu" style={{ color: "var(--nav-fg-color)", padding: "8px", display: "none", cursor: "pointer", background: "none", border: "none", transition: "color 0.4s ease" }} className="mobile-menu-btn">
             <Menu size={24} />
           </button>
         </div>

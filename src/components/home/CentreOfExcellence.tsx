@@ -9,6 +9,7 @@ import {
   useInView,
 } from "framer-motion";
 import { ChevronRight, ChevronUp } from "lucide-react";
+import WordPullUp from "@/components/ui/word-pull-up";
 import styles from "./CentreOfExcellence.module.css";
 
 const SPECIALITIES = [
@@ -214,28 +215,27 @@ export default function CentreOfExcellence() {
   const titleTrackRef = useRef<HTMLDivElement>(null);
   const gridSectionRef = useRef<HTMLDivElement>(null);
 
-  // 1. Sticky Header Track Scroll Sequence
+  // 1. Sticky Header Track Scroll Sequence (Editorial Mask Reveal)
   const { scrollYProgress: titleScrollProgress } = useScroll({
     target: titleTrackRef,
     offset: ["start 80%", "end end"],
   });
 
-  const eyebrowOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
-  const eyebrowY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [10, 0, 0, -16]);
-  const eyebrowBlur = useTransform(titleScrollProgress, [0.15, 0.38, 0.88, 0.98], ["blur(14px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  // Eyebrow: enters 0.06 -> 0.22, holds until 0.86, exits 0.86 -> 0.98
+  const eyebrowY = useTransform(titleScrollProgress, [0.06, 0.22, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
+  const eyebrowOpacity = useTransform(titleScrollProgress, [0.06, 0.16, 0.88, 0.98], [0, 1, 1, 0]);
 
-  const titleOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
-  const titleY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [12, 0, 0, -16]);
-  const titleBlur = useTransform(titleScrollProgress, [0.28, 0.52, 0.88, 0.98], ["blur(16px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  // Main Heading: enters 0.18 -> 0.42, holds until 0.86, exits 0.86 -> 0.98
+  const titleY = useTransform(titleScrollProgress, [0.18, 0.42, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
+  const titleOpacity = useTransform(titleScrollProgress, [0.18, 0.30, 0.88, 0.98], [0, 1, 1, 0]);
 
-  const subtitleOpacity = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [1, 1, 1, 0]);
-  const subtitleY = useTransform(titleScrollProgress, [0.00, 0.04, 0.88, 0.98], [12, 0, 0, -16]);
-  const subtitleBlur = useTransform(titleScrollProgress, [0.42, 0.68, 0.88, 0.98], ["blur(16px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  // Subtitle: enters 0.30 -> 0.56, holds until 0.86, exits 0.86 -> 0.98
+  const subtitleY = useTransform(titleScrollProgress, [0.30, 0.56, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
+  const subtitleOpacity = useTransform(titleScrollProgress, [0.30, 0.44, 0.88, 0.98], [0, 1, 1, 0]);
 
-  const strokeProgressHeight = useTransform(titleScrollProgress, [0.04, 0.75], ["0%", "100%"]);
-
-  const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.08, 0.85, 0.96], [0, 1, 1, 0]);
-  const indicatorY = useTransform(titleScrollProgress, [0.00, 0.08, 0.85, 0.96], [12, 0, 0, -12]);
+  // Scroll Indicator
+  const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [0, 1, 1, 0]);
+  const indicatorY = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [16, 0, 0, -14]);
 
   // 2. Animated Grid Reveal Section
   const { scrollYProgress: gridScrollProgress } = useScroll({
@@ -246,7 +246,6 @@ export default function CentreOfExcellence() {
   const gridScale = useTransform(gridScrollProgress, [0, 1], [0.94, 1.0]);
   const gridRadius = useTransform(gridScrollProgress, [0, 1], ["24px", "0px"]);
   const gridOpacity = useTransform(gridScrollProgress, [0, 0.6], [0, 1]);
-  const gridBlur = useTransform(gridScrollProgress, [0, 0.7], ["blur(12px)", "blur(0px)"]);
 
   // 3. Exit Shrink & Rounding Transformation: gridAnimatedWrapper shrinks (1.0 -> 0.88) and corners round (0px -> 44px) as user scrolls out of the section
   const { scrollYProgress: gridExitScrollProgress } = useScroll({
@@ -269,61 +268,57 @@ export default function CentreOfExcellence() {
         <section className={styles.stickySection} id="centre-of-excellence">
           <div className={styles.centerContent}>
             <div className={styles.header}>
+              <div className={styles.maskWrap} style={{ marginBottom: "20px" }}>
+                <motion.div
+                  style={{
+                    y: eyebrowY,
+                    opacity: eyebrowOpacity,
+                    color: "#000000",
+                  }}
+                  className="section-eyebrow"
+                >
+                  CENTRES OF EXCELLENCE
+                </motion.div>
+              </div>
+
               <motion.div
                 style={{
-                  opacity: eyebrowOpacity,
-                  y: eyebrowY,
-                  filter: eyebrowBlur,
-                  color: "#000000",
-                  marginBottom: "28px",
+                  y: titleY,
+                  opacity: titleOpacity,
                 }}
-                className="section-eyebrow"
               >
-                CENTRES OF EXCELLENCE
+                <WordPullUp
+                  words="40+ Specialities. World-Class Care."
+                  as="h2"
+                  className={styles.sectionTitle}
+                  delayMultiple={0.09}
+                  framerProps={{
+                    hidden: { y: 16, opacity: 0 },
+                    show: {
+                      y: 0,
+                      opacity: 1,
+                      transition: {
+                        duration: 0.55,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
+                    },
+                  }}
+                />
               </motion.div>
 
-              <motion.h2
-                style={{
-                  opacity: titleOpacity,
-                  y: titleY,
-                  filter: titleBlur,
-                }}
-                className={styles.sectionTitle}
-              >
-                {["40+", "Specialities.", "World-Class", "Care."].map((word, index) => (
-                  <React.Fragment key={index}>
-                    <motion.span
-                      className={styles.flashWord}
-                      initial={{ color: "#000000" }}
-                      whileInView={{
-                        color: ["#000000", "#ED1C24", "#ED1C24", "#000000"],
-                      }}
-                      viewport={{ once: true, margin: "-10%" }}
-                      transition={{
-                        duration: 1.1,
-                        ease: [0.25, 1, 0.3, 1],
-                        delay: 0.3 + index * 0.28,
-                      }}
-                    >
-                      {word}
-                    </motion.span>
-                    {index < 3 ? " " : ""}
-                  </React.Fragment>
-                ))}
-              </motion.h2>
-
-              <motion.p
-                style={{
-                  opacity: subtitleOpacity,
-                  y: subtitleY,
-                  filter: subtitleBlur,
-                }}
-                className={styles.sectionSubtitle}
-              >
-                Integrated expertise across tertiary and quaternary care,
-                <br />
-                delivered through one trusted network.
-              </motion.p>
+              <div className={styles.maskWrap}>
+                <motion.p
+                  style={{
+                    y: subtitleY,
+                    opacity: subtitleOpacity,
+                  }}
+                  className={styles.sectionSubtitle}
+                >
+                  Integrated expertise across tertiary and quaternary care,
+                  <br />
+                  delivered through one trusted network.
+                </motion.p>
+              </div>
             </div>
           </div>
 
@@ -353,7 +348,6 @@ export default function CentreOfExcellence() {
             scale: combinedScale,
             borderRadius: combinedRadius,
             opacity: gridOpacity,
-            filter: gridBlur,
             transformOrigin: "center top",
           }}
         >

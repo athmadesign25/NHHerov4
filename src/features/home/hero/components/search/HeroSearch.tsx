@@ -1,432 +1,20 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+
+import Lottie from "lottie-react";
+import pulseAnimation from "@/../public/assets/pulse animation.json";
+import starAnimation from "@/../public/assets/AI Searching 2.json";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  useMotionValue,
-  useTransform,
-  useScroll,
-  animate,
-  useInView,
-  useSpring,
-} from "framer-motion";
-import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2, Mic, ArrowUp, Plus } from "lucide-react";
-import SplitText from "@/components/ui/SplitText";
-import styles from "./HeroSearchFirst.module.css";
-
-const STAT_GROUPS = [
-  [
-    { value: 5000, suffix: "+", label: "Robotic Surgeries\nPerformed" },
-    { value: 550000, suffix: "+", label: "Cardiac Consults\nAnnually" },
-    { value: 33000, suffix: "+", label: "Image Guided\nProcedures" },
-    { value: 8000, suffix: "+", label: "Solid Organ\nTransplants" }
-  ],
-  [
-    { value: 80000, suffix: "+", label: "Chemotherapy Sessions\nAnnually" },
-    { value: 15000, suffix: "+", label: "Joint Replacements\nPerformed" },
-    { value: 2000, suffix: "+", label: "Bone Marrow\nTransplants" },
-    { value: 120000, suffix: "+", label: "Dialysis Sessions\nAnnually" }
-  ]
-];
-
-const popularTags = ["chest pain", "cancer", "surgery", "liver"];
-
-// Speciality lists for auto-suggest with semantic keywords (symptoms, organs, treatments)
-const specialitiesData = [
-  { 
-    name: "Cardiology", 
-    slug: "cardiology",
-    image: "/Specialities icons/Cardiology.svg",
-    keywords: ["heart", "chest pain", "valve", "cardiac", "bypass", "bp", "hypertension", "angioplasty", "artery", "cardio", "palpitation", "cardiologist", "cardiac surgeon", "cardio specialists"] 
-  },
-  { 
-    name: "Neurology", 
-    slug: "neurology",
-    image: "/Specialities icons/Neurology.svg",
-    keywords: ["brain", "nerve", "stroke", "migraine", "headache", "spine", "seizure", "epilepsy", "paralysis", "neuro", "back pain", "neurologist", "neuro surgeon", "neuro specialists"] 
-  },
-  { 
-    name: "Oncology", 
-    slug: "oncology",
-    image: "/Specialities icons/Cancercare.svg",
-    keywords: ["cancer", "tumor", "chemotherapy", "radiation", "biopsy", "leukemia", "lymphoma", "onco", "tumor", "lump", "oncologist", "cancer specialist"] 
-  },
-  { 
-    name: "Orthopaedics", 
-    slug: "orthopaedics",
-    image: "/Specialities icons/Orthopaedics.svg",
-    keywords: ["bone", "joint", "fracture", "knee", "hip", "arthritis", "ligament", "sprain", "ortho", "backbone", "orthopaedic surgeon", "ortho specialist"] 
-  },
-  { 
-    name: "Paediatrics", 
-    slug: "paediatrics",
-    image: "/Specialities icons/Paedratic.svg",
-    keywords: ["child", "baby", "kid", "newborn", "vaccination", "paediatrician", "infant", "pediatric"] 
-  },
-  { 
-    name: "Gastroenterology", 
-    slug: "gastroenterology",
-    image: "/Specialities icons/Gastro.svg",
-    keywords: ["stomach", "liver", "digestion", "acidity", "gastric", "endoscopy", "ulcer", "gastro", "diarrhea"] 
-  },
-  { 
-    name: "Ophthalmology", 
-    slug: "ophthalmology",
-    image: "/Specialities icons/General Medicine.svg",
-    keywords: ["eye", "vision", "blind", "cataract", "lasik", "glasses", "lens", "sight"] 
-  },
-  { 
-    name: "ENT", 
-    slug: "ent",
-    image: "/Specialities icons/Lab test default icon.svg",
-    keywords: ["ear", "nose", "throat", "sinus", "tonsils", "hearing", "voice", "throat pain", "cold"] 
-  },
-  {
-    name: "Gynecology",
-    slug: "gynecology",
-    image: "/Specialities icons/Gynaecology.svg",
-    keywords: ["women", "pregnancy", "female", "maternity", "obgyn", "delivery", "period", "uterus"]
-  },
-  {
-    name: "Dermatology",
-    slug: "dermatology",
-    image: "/Specialities icons/Diabetology.svg",
-    keywords: ["skin", "hair", "nails", "acne", "rash", "dandruff", "eczema", "allergy"]
-  },
-  {
-    name: "Urology",
-    slug: "urology",
-    image: "/Specialities icons/Urology.svg",
-    keywords: ["urine", "bladder", "prostate", "kidney stone", "urinary"]
-  },
-  {
-    name: "Pulmonology",
-    slug: "pulmonology",
-    image: "/Specialities icons/Pulmonology.svg",
-    keywords: ["lungs", "breathing", "asthma", "respiratory", "cough", "bronchitis", "pneumonia"]
-  },
-  {
-    name: "Dental Care",
-    slug: "dental-care",
-    image: "/Specialities icons/Dental.svg",
-    keywords: ["teeth", "toothache", "root canal", "dental", "oral", "gums", "braces"]
-  }
-];
-
-type DoctorData = {
-  name: string;
-  speciality: string;
-  location: string;
-  hospital: string;
-  additionalHospitals?: number;
-  photo: string;
-  keywords: string[];
-  consultationModes?: "hospital" | "video" | "both";
-  availability?: { hospital?: string; video?: string };
-  id?: string | number;
-};
-
-const doctorsData: DoctorData[] = [
-  {
-    name: "Dr. Ravi Prakash",
-    speciality: "Cardiology",
-    location: "Bengaluru",
-    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
-    additionalHospitals: 1,
-    photo: "/assets/doctor_1.png",
-    keywords: ["cardiology", "heart", "ravi", "prakash", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Ravi Kumar",
-    speciality: "Cardiology",
-    location: "Guwahati",
-    hospital: "Narayana Superspeciality Hospital, Guwahati",
-    photo: "/assets/doctor_2.png",
-    keywords: ["cardiology", "heart", "ravi", "kumar", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Ravi Shankar",
-    speciality: "Neurology",
-    location: "Mumbai",
-    hospital: "NH Children's Hospital, Mumbai",
-    additionalHospitals: 2,
-    photo: "/assets/doctor_3.png",
-    keywords: ["neurology", "brain", "ravi", "shankar", "doctor", "specialist", "neurologist"]
-  },
-  {
-    name: "Dr. Prakash Sharma",
-    speciality: "Cardiology",
-    location: "Bengaluru",
-    hospital: "Narayana Multispeciality Hospital, HSR Bangalore",
-    photo: "/assets/doctor_1.png",
-    keywords: ["cardiology", "heart", "prakash", "sharma", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Prakash Gupta",
-    speciality: "Orthopaedics",
-    location: "Kolkata",
-    hospital: "Narayana Superspeciality Hospital, Howrah, kolkata",
-    photo: "/assets/doctor_2.png",
-    keywords: ["orthopaedics", "bone", "prakash", "gupta", "doctor", "specialist", "orthopaedic"]
-  },
-  {
-    name: "Dr. Rajiv Menon",
-    speciality: "Cardiology",
-    location: "Bengaluru",
-    hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-    photo: "/assets/doctor_3.png",
-    keywords: ["cardiology", "heart", "rajiv", "menon", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Amit Bansal",
-    speciality: "Cardiology",
-    location: "Mumbai",
-    hospital: "NH Children's Hospital, Mumbai",
-    photo: "/assets/doctor_1.png",
-    keywords: ["cardiology", "heart", "amit", "bansal", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Kavita Reddy",
-    speciality: "Cardiology",
-    location: "Bengaluru",
-    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
-    photo: "/assets/doctor_2.png",
-    keywords: ["cardiology", "heart", "kavita", "reddy", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Sameer Desai",
-    speciality: "Cardiology",
-    location: "Guwahati",
-    hospital: "Narayana Superspeciality Hospital, Guwahati",
-    photo: "/assets/doctor_3.png",
-    keywords: ["cardiology", "heart", "sameer", "desai", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Ananya Singh",
-    speciality: "Cardiology",
-    location: "Kolkata",
-    hospital: "Narayana Superspeciality Hospital, Howrah, kolkata",
-    photo: "/assets/doctor_1.png",
-    keywords: ["cardiology", "heart", "ananya", "singh", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Vikram Joshi",
-    speciality: "Cardiology",
-    location: "Bengaluru",
-    hospital: "Narayana Multispeciality Hospital, HSR Bangalore",
-    photo: "/assets/doctor_2.png",
-    keywords: ["cardiology", "heart", "vikram", "joshi", "doctor", "specialist", "cardiologist"]
-  },
-  {
-    name: "Dr. Priya Sharma",
-    speciality: "Neurology",
-    location: "Mumbai",
-    hospital: "NH Children's Hospital, Mumbai",
-    additionalHospitals: 1,
-    photo: "/assets/doctor_1.png",
-    keywords: ["neurology", "brain", "priya", "sharma", "doctor", "specialist", "neurologist"]
-  },
-  {
-    name: "Dr. Arun Krishnan",
-    speciality: "Oncology",
-    location: "Kolkata",
-    hospital: "Narayana Multispeciality Hospital, Barasat, kolkata",
-    photo: "/assets/doctor_2.png",
-    keywords: ["oncology", "cancer", "arun", "krishnan", "doctor", "specialist", "oncologist"]
-  },
-  {
-    name: "Dr. Sunita Patel",
-    speciality: "Orthopaedics",
-    location: "Bengaluru",
-    hospital: "Narayana Multispeciality Clinic, HSR Bangalore",
-    photo: "/assets/doctor_3.png",
-    keywords: ["orthopaedics", "bone", "joint", "sunita", "patel", "doctor", "specialist"]
-  }
-];
-
-const getRealtimePulseResponse = (query: string) => {
-  return {
-    suggestedSpec: "Cardiology",
-    suggestedDoc: doctorsData[0],
-    empathy: "I understand you are feeling unwell. Let's find a doctor for you.",
-    slot: "Today, 4:00 PM",
-    recommendedDocs: doctorsData.slice(0, 3)
-  };
-};
-
-const doctorRoles = [
-  {
-    role: "Cardiologists",
-    keywords: ["cardiology", "heart", "cardio", "bypass", "chest pain", "angioplasty", "clogged"]
-  },
-  {
-    role: "Cardiac Surgeon",
-    keywords: ["cardiology", "heart", "cardio", "bypass", "surgery", "angioplasty", "surgeon"]
-  },
-  {
-    role: "Cardio Specialists",
-    keywords: ["cardiology", "heart", "cardio", "specialist"]
-  },
-  {
-    role: "Neurologists",
-    keywords: ["neurology", "brain", "neuro", "stroke", "migraine", "headache"]
-  },
-  {
-    role: "Neuro Surgeons",
-    keywords: ["neurology", "brain", "neuro", "spine", "surgery", "surgeon"]
-  },
-  {
-    role: "Oncologists",
-    keywords: ["oncology", "cancer", "tumor", "chemotherapy"]
-  },
-  {
-    role: "Cancer Specialists",
-    keywords: ["oncology", "cancer", "onco", "tumor", "specialist"]
-  },
-  {
-    role: "Orthopaedic Surgeons",
-    keywords: ["orthopaedics", "bone", "joint", "ortho", "knee", "surgeon"]
-  },
-  {
-    role: "Bone & Joint Specialists",
-    keywords: ["orthopaedics", "bone", "joint", "ortho", "specialist"]
-  },
-  {
-    role: "Paediatricians",
-    keywords: ["paediatrics", "child", "kid", "baby", "pediatric"]
-  },
-  {
-    role: "Gastroenterologists",
-    keywords: ["gastroenterology", "stomach", "liver", "gastro"]
-  }
-];
-
-const treatmentsData = [
-  // Treatments
-  {
-    name: "Angioplasty & Bypass Surgery",
-    type: "treatment",
-    speciality: "Cardiology",
-    description: "Restores blood flow to blocked heart arteries using state-of-the-art stents and surgical bypass techniques.",
-    keywords: ["heart", "chest pain", "valve", "cardiac", "bypass", "angioplasty", "artery", "cardio", "clogged"],
-    image: "/Specialities icons/Cardiology.svg"
-  },
-  {
-    name: "Deep Brain Stimulation (DBS)",
-    type: "treatment",
-    speciality: "Neurology",
-    description: "Advanced neurosurgical procedure delivering electrical stimulation to brain areas targeting movement disorders.",
-    keywords: ["brain", "nerve", "stroke", "spine", "seizure", "epilepsy", "parkinson", "tremor"],
-    image: "/Specialities icons/Neurology.svg"
-  },
-  {
-    name: "Precision Radiotherapy & Chemotherapy",
-    type: "treatment",
-    speciality: "Oncology",
-    description: "Targeted cancer treatment using precise radiation beams and chemotherapy regimens to eliminate cancer cells.",
-    keywords: ["cancer", "tumor", "chemotherapy", "radiation", "biopsy", "leukemia", "lymphoma", "chemo"],
-    image: "/Specialities icons/Cancercare.svg"
-  },
-  {
-    name: "Knee & Hip Joint Replacements",
-    type: "treatment",
-    speciality: "Orthopaedics",
-    description: "Minimally invasive surgeries to replace worn-out joint surfaces with artificial implants for pain-free mobility.",
-    keywords: ["bone", "joint", "fracture", "knee", "hip", "arthritis", "ligament", "sprain", "replacement"],
-    image: "/Specialities icons/Orthopaedics.svg"
-  },
-  {
-    name: "Advanced Gastrointestinal Endoscopy",
-    type: "treatment",
-    speciality: "Gastroenterology",
-    description: "Diagnostic and therapeutic visual scope evaluation of the upper and lower digestive tract organs.",
-    keywords: ["stomach", "liver", "digestion", "acidity", "gastric", "endoscopy", "ulcer", "gastro"],
-    image: "/Specialities icons/Gastro.svg"
-  },
-  
-  // Health Checkups
-  {
-    name: "Executive Full Body Health Checkup",
-    type: "health_checkup",
-    testCount: "84 tests included",
-    description: "A comprehensive health screening covering vital organs like liver, kidney, heart, and metabolic parameters.",
-    keywords: ["health package", "checkup", "full body", "preventive", "blood test", "screening", "urine test", "ecg", "ultrasound", "package", "health"],
-    image: "/Health Checkup/Basic health.png"
-  },
-  {
-    name: "Comprehensive Cardiac Health Package",
-    type: "health_checkup",
-    testCount: "12 tests included",
-    description: "Specialized diagnostics targeting cardiac health, including ECG, lipid profile, and cardiologist consult.",
-    keywords: ["heart checkup", "cardiac", "blood test", "ecg", "cholesterol", "lipid profile", "health package", "package", "heart"],
-    image: "/Health Checkup/Master health.png"
-  },
-  {
-    name: "Advanced Diabetes Screening Package",
-    type: "health_checkup",
-    testCount: "15 tests included",
-    description: "Monitors blood glucose levels, HbA1c, renal profile, and nerve function for diabetes management.",
-    keywords: ["diabetes", "sugar check", "blood test", "hba1c", "glucose", "insulin", "health package", "package"],
-    image: "/Health Checkup/Senior Citizen.png"
-  },
-  
-  // Lab Tests
-  {
-    name: "CBC (Complete Blood Count) Lab Test",
-    type: "lab_test",
-    testCount: "24 parameters included",
-    description: "Evaluates your overall health and detects a wide range of disorders, including anemia and leukemia.",
-    keywords: ["cbc", "blood test", "lab test", "hemoglobin", "infection", "anemia", "test"],
-    image: "/Health Checkup/Basic health.png"
-  },
-  {
-    name: "Thyroid Profile (T3, T4, TSH) Lab Test",
-    type: "lab_test",
-    testCount: "3 parameters included",
-    description: "Measures the level of thyroid hormones in your blood to diagnose hyperthyroidism or hypothyroidism.",
-    keywords: ["thyroid", "tsh", "blood test", "lab test", "hormone", "hypothyroidism", "test"],
-    image: "/Health Checkup/Master health.png"
-  },
-  {
-    name: "Lipid Profile (Cholesterol) Lab Test",
-    type: "lab_test",
-    testCount: "8 parameters included",
-    description: "Measures cholesterol and triglycerides to assess cardiovascular health and risk of stroke or heart disease.",
-    keywords: ["lipid profile", "cholesterol", "blood test", "lab test", "heart", "triglycerides", "test"],
-    image: "/Health Checkup/Senior Citizen.png"
-  }
-];
-
-const articlesData = [
-  {
-    name: "Understanding Heart Health: 5 Tips to Keep Your Heart Strong",
-    keywords: ["heart", "cardiac", "strong", "healthy", "lifestyle", "angioplasty"],
-    image: "https://images.unsplash.com/photo-1531983412531-1f49a365ffed?w=150&h=150&fit=crop&q=80",
-    description: "Discover essential lifestyle changes and habits that promote long-term cardiovascular wellness."
-  },
-  {
-    name: "Living with Migraines: Identifying Triggers and Finding Relief",
-    keywords: ["migraine", "headache", "brain", "nerve", "seizure", "triggers"],
-    image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=150&h=150&fit=crop&q=80",
-    description: "Learn how to track your triggers and explore effective treatments for severe migraine headaches."
-  },
-  {
-    name: "Cancer Care: The Role of Early Screening & Detection",
-    keywords: ["cancer", "tumor", "chemo", "screening", "detection"],
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=150&h=150&fit=crop&q=80",
-    description: "Early detection is key. Understand the recommended screening guidelines for different types of cancer."
-  },
-  {
-    name: "Keeping Joints and Bones Healthy in Your Golden Years",
-    keywords: ["bone", "joint", "healthy", "aging", "arthritis"],
-    image: "https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=150&h=150&fit=crop&q=80",
-    description: "Practical advice on nutrition, exercise, and supplements to maintain bone density as you age."
-  }
-];
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2 } from "lucide-react";
+import styles from "@/components/home/HeroSearchFirst.module.css";
+import PixelRipple from "@/components/home/PixelRipple";
+import PulseAIWorkspace from "@/components/pulse-ai/PulseAIWorkspace";
+import { searchHealthcare, getCityId, NH_CITIES, type NormalizedResults } from "@/lib/searchService";
+import QuickTags from "@/features/home/hero/components/QuickTags";
+import { popularTags, specialitiesData, type DoctorData, doctorsData, getRealtimePulseResponse, doctorRoles, treatmentsData, articlesData } from "@/features/home/hero/hero.data";
 
 function HighlightMatch({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <span>{text}</span>;
@@ -450,59 +38,106 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 
-function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, suffix?: string, duration?: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-10px" });
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => {
-    const num = Math.round(latest);
-    if (num >= 100000) {
-      return (num / 100000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'L' + suffix;
-    } else if (num >= 1000) {
-      return (num / 1000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'K' + suffix;
-    }
-    return num.toLocaleString('en-IN') + suffix;
-  });
 
-  useEffect(() => {
-    if (isInView) {
-      const animation = animate(count, value, { duration, ease: "easeOut" });
-      return animation.stop;
-    }
-  }, [isInView, value, count, duration]);
 
-  return <motion.span ref={ref}>{rounded}</motion.span>;
+
+
+interface HeroSearchProps {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  isPulseActive: boolean;
+  onPulseActiveChange: (isActive: boolean) => void;
 }
 
-export default function HeroSearchFirst() {
-
+export default function HeroSearch({ isOpen, onOpenChange: setIsOpen, isPulseActive, onPulseActiveChange: setIsPulseActive }: HeroSearchProps) {
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors" | "specialties" | "treatments_tests" | "articles">("doctors");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
-  const [isOpen, setIsOpen] = useState(false);
-  const [isPulseActive, setIsPulseActive] = useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [hasOpened, setHasOpened] = useState(false);
+  const [isPulseAnalyzed, setIsPulseAnalyzed] = useState(false);
+  const [hasSubmittedQuery, setHasSubmittedQuery] = useState(false);
+  const [showGenericMatchesInPulse, setShowGenericMatchesInPulse] = useState(false);
+  const [simulatedUserLocation, setSimulatedUserLocation] = useState<"same_city" | "nearby" | "far_away">("same_city");
+  const [showPixelRipple, setShowPixelRipple] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
+  const [pulseInitialAction, setPulseInitialAction] = useState<string | null>(null);
+  const [pulseInitialActionData, setPulseInitialActionData] = useState<any>(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 26,
-    mass: 1,
-    restDelta: 0.001
-  });
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      setIsUserLoggedIn(stored !== "false");
+    }
+    const handleLoginChange = () => {
+      const stored = sessionStorage.getItem("isLoggedIn");
+      setIsUserLoggedIn(stored !== "false");
+    };
+    window.addEventListener("login-state-changed", handleLoginChange);
+    return () => window.removeEventListener("login-state-changed", handleLoginChange);
+  }, []);
 
-  // Complete the animation over 100% of the wrapper's extra scroll distance
-  const heroScale = useTransform(smoothProgress, [0, 1], [1, 0.85]);
-  // Border radius from 0 to 8px
-  const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
+  useEffect(() => {
+    const handleOpenPulse = () => {
+      setHasOpened(true);
+      setIsPulseActive(true);
+      // Give time for layout to shift before animating content
+      setTimeout(() => setIsPulseAnalyzed(true), 300);
+      setSearchQuery("");
+      setHasSubmittedQuery(false);
+    };
+    window.addEventListener("openPulseAI", handleOpenPulse);
+    return () => window.removeEventListener("openPulseAI", handleOpenPulse);
+  }, []);
+
+  const handlePulseLaunchWithAction = (action: string, doctorData: any) => {
+    setPulseInitialAction(action);
+    setPulseInitialActionData(doctorData);
+    setIsPulseActive(true);
+  };
+
+  const handleKnowYourHealthClick = (query: string) => {
+    setSearchQuery(query);
+    if (!isUserLoggedIn) {
+      handlePulseLaunchWithAction("require_login_module", { moduleName: "Know your health", query });
+    } else {
+      setIsPulseActive(true);
+    }
+  };
+
+  const isConversational = searchQuery.trim().split(/\s+/).filter(Boolean).length > 4 || 
+                          /have|fever|cough|tomorrow|symptom|feel|pain/i.test(searchQuery.trim());
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isPulseActive) {
+      document.body.style.overflow = "hidden";
+      // Delay ripple slightly to sync with the chat expansion animation (0.4s)
+      timer = setTimeout(() => setShowPixelRipple(true), 300);
+    } else {
+      document.body.style.overflow = "";
+      setShowPixelRipple(false);
+    }
+    return () => {
+      document.body.style.overflow = "";
+      clearTimeout(timer);
+    };
+  }, [isPulseActive]);
+  const [lastSearch, setLastSearch] = useState<string | null>(null);
+
+  // --- API integration state ---
+  const [apiData, setApiData] = useState<NormalizedResults | null>(null);
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const searchRef = useRef<HTMLFormElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll Animation Logic
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
@@ -561,7 +196,6 @@ export default function HeroSearchFirst() {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
       if (abortControllerRef.current) abortControllerRef.current.abort();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedLocation]);
 
   // Reset dropdown tab to Doctors when typing/query changes
@@ -581,16 +215,6 @@ export default function HeroSearchFirst() {
       setIsOpen(false);
       setIsPulseActive(false);
     }
-  };
-
-  const handleDoctorClick = (doc: DoctorData) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("nh_last_search", doc.name);
-      setLastSearch(doc.name);
-    }
-    router.push(`/doctors/${doc.id || 'dr-1'}?n=${encodeURIComponent(doc.name)}`);
-    setIsOpen(false);
-    setIsPulseActive(false);
   };
 
   const handleSelectSuggestion = (name: string) => {
@@ -698,7 +322,6 @@ export default function HeroSearchFirst() {
 
   const displayDoctors = useApiData
     ? apiData!.doctors.slice(0, 6).map((d) => ({
-        id: d.id,
         name: d.name,
         speciality: d.speciality,
         location: d.hospital,
@@ -746,136 +369,58 @@ export default function HeroSearchFirst() {
     articles: loading ? -1 : useApiData ? apiData!.blogs.length : filteredArticles.length,
   };
 
-  // Border radius rounds during scale-down, then stays locked
-  const heroRadius = useTransform(
-    smoothProgress,
-    [0, 0.05, 0.50, 1],
-    ["0px", "0px", "24px", "24px"]
-  );
+  // Combine procedures + treatments for the "Procedures & Treatments" tab
+  const displayProcedureItems = useApiData
+    ? apiData!.procedures.map((p) => ({
+        name: p.name,
+        type: "Procedures" as const,
+        speciality: p.speciality,
+        image: p.image,
+      }))
+    : filteredOnlyTreatments;
 
-  // Stage 1 (0 -> 0.50): Y stays locked at 0px
-  // Stage 2 (0.50 -> 1.0): Y moves smoothly upward
-  const heroY = useTransform(
-    smoothProgress,
-    [0, 0.50, 1],
-    ["0px", "0px", "-140px"]
-  );
+  const displayTreatmentItems = useApiData
+    ? apiData!.treatments.map((t) => ({
+        name: t.name,
+        type: "Treatments" as const,
+        speciality: t.speciality,
+        image: t.image,
+      }))
+    : [];
 
+  const displayArticles = useApiData
+    ? apiData!.blogs.slice(0, 6).map((b) => ({
+        name: b.name,
+        keywords: [] as string[],
+        image: b.image,
+        description: b.speciality || "",
+        matchingKeyword: null as string | null,
+      }))
+    : filteredArticles;
 
-
-  // Control video playback based on search state or Pulse AI state
+  // Close dropdown on click outside and reset search query
   useEffect(() => {
-    let intervalId: NodeJS.Timeout | undefined = undefined;
-    
-    if (videoRef.current) {
-      if (isOpen || isPulseActive) {
-        let rate = videoRef.current.playbackRate;
-        intervalId = setInterval(() => {
-          if (videoRef.current && (isOpen || isPulseActive)) {
-            rate -= 0.05; 
-            if (rate <= 0.1) {
-              videoRef.current.pause();
-              videoRef.current.playbackRate = 1.0; 
-            } else {
-              videoRef.current.playbackRate = rate;
-            }
-          } else {
-            clearInterval(intervalId);
-          }
-        }, 30); 
-      } else {
-        clearInterval(intervalId);
-        videoRef.current.playbackRate = 1.0;
-        videoRef.current.play().catch((err) => {
-          console.log("Playback prevented:", err);
-        });
+    function handleClickOutside(event: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setSearchQuery("");
       }
     }
-    return () => clearInterval(intervalId);
-  }, [isOpen, isPulseActive]);
+    document.addEventListener("mousedown", handleClickOutside);
+  
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div ref={containerRef} data-nav-theme="light" style={{ height: "185vh", position: "relative", zIndex: isPulseActive ? 9999 : 1, background: "transparent" }}>
-      <motion.section 
-        className={styles.hero} 
-        id="hero-section-search-first"
-        data-nav-theme="dark"
-        style={{
-          scale: heroScale,
-          borderRadius: heroRadius,
-          y: heroY,
-        }}
-      >
-        <video
-        ref={videoRef}
-        src="/videos/Hero-Video-New.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className={styles.bgVideo}
-      />
-      <div className={`${styles.videoOverlay} ${isOpen && !isPulseActive ? styles.videoOverlayActive : ""}`} />
-
-      <div className={styles.metricsSideWrap}>
-        <motion.div 
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-          animate={isOpen ? { opacity: 0, y: 20, filter: "blur(8px)", pointerEvents: "none" } : { opacity: 1, y: 0, filter: "blur(0px)", pointerEvents: "auto" }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className={styles.metricsRow}
-        >
-          {STAT_GROUPS[currentStatGroup].map((stat, i) => (
-            <div className={styles.metricItem} key={i}>
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.25, delay: i * 0.05, ease: "easeOut" }}
-                  style={{ display: "flex", flexDirection: "column" }}
-                >
-                  <div className={styles.metricValue}>
-                    <CountingNumber value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className={styles.metricLabel}>
-                    {stat.label.split('\n').map((line, idx) => (
-                      <React.Fragment key={idx}>
-                        {line}
-                        {idx !== stat.label.split('\n').length - 1 && <br/>}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-
-      <div className={styles.centerWrap}>
-        <div className={styles.heroStack}>
-          <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-            <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
-            <motion.p 
-              className={styles.subHeadline}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
-            >
-              Compassion Backed by Expertise
-            </motion.p>
-            
-          </div>
-
-<motion.form
+    <>
+      <motion.form
                     ref={searchRef}
                     onSubmit={handleSearch}
                     className={`${styles.searchBarForm} ${isOpen ? styles.searchBarFormActive : ""}`}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ 
                       opacity: 1, 
-                      y: 0 
+                      y: isOpen ? -490 : 0 
                     }}
                     transition={isOpen 
                       ? { duration: 0.4, ease: [0.16, 1, 0.3, 1] } 
@@ -885,48 +430,68 @@ export default function HeroSearchFirst() {
                     }
                   >
                     {!isPulseActive && (
-                      <motion.div 
-                        layout 
-                        className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}
-                        initial={false}
-                        animate={{ borderRadius: isOpen ? "24px" : "9999px" }}
-                        transition={{
-                          layout: { delay: isOpen ? 0.15 : 0.15, duration: 0.3, ease: [0.16, 1, 0.3, 1] },
-                          borderRadius: { delay: isOpen ? 0 : 0.45, duration: 0.15, ease: "easeInOut" }
+                      <div className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}>
+                      <div
+                        className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isConversational) {
+                            if (!isPulseAnalyzed) {
+                              setIsPulseAnalyzed(true);
+                            } else {
+                              setIsPulseActive(true);
+                              setIsOpen(false);
+                            }
+                          } else {
+                            setIsPulseActive(true);
+                          }
                         }}
+                        title="Open Pulse AI"
+                        style={{ cursor: "pointer" }}
                       >
+                        <Search className={styles.searchIcon} size={18} />
+                      </div>
+                      <input
+                        id="hero-search-input"
+                        type="text"
+                        placeholder="Search doctors, specialities, or treatments..."
+                        value={searchQuery}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setIsOpen(true);
+                          setHasOpened(true);
+                        }}
+                        onFocus={() => {
+                          setIsOpen(true);
+                          setHasOpened(true);
+                        }}
+                        className={styles.searchInput}
+                      />
+
+                    </div>
+                    )}
+
                     {/* Progressive Search Dropdown */}
                     <AnimatePresence mode="wait">
                       {isOpen ? (
                         <motion.div
-                          layout
                           key="dropdown"
                           className={styles.dropdown}
                           initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                          animate={{ opacity: 1, y: 0, scale: 1, transition: { delay: 0.45, duration: 0.25, ease: "easeOut" } }}
-                          exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.15, ease: "easeIn" } }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
                           data-lenis-prevent
                         >
 
 
                           {!searchQuery.trim() ? (
                     <div className={styles.popularSearchesContainer}>
-                      {/* Popular Tags */}
-                      <div className={styles.popularSearches}>
-                        <div className={styles.popularTitle}>what people are searching for :</div>
-                        <div className={styles.popularTags}>
-                          {["chest pain", "cancer", "surgery", "liver"].map((tag) => (
-                            <button
-                              key={tag}
-                              type="button"
-                              onClick={() => setSearchQuery(tag)}
-                              className={styles.popularTagBtn}
-                            >
-                              {tag}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+{/* Popular Tags */}
+                      <QuickTags tags={popularTags} onSelectTag={setSearchQuery} />
 
                       {/* Pulse AI Intent-Driven Entry Points */}
                       <div className={styles.dropdownPulseDivider}>
@@ -1055,7 +620,7 @@ export default function HeroSearchFirst() {
                                                {hospitalDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleDoctorClick(doc)}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1110,7 +675,7 @@ export default function HeroSearchFirst() {
                                                {videoDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleDoctorClick(doc)}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1264,7 +829,7 @@ export default function HeroSearchFirst() {
                                               {filteredDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleDoctorClick(doc)}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1703,7 +1268,7 @@ export default function HeroSearchFirst() {
                                               {hospitalDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleDoctorClick(doc)}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1758,7 +1323,7 @@ export default function HeroSearchFirst() {
                                               {videoDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleDoctorClick(doc)}
+                                                  onClick={() => handleSelectSuggestion(doc.name)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -2244,99 +1809,7 @@ export default function HeroSearchFirst() {
                 </motion.div>
                       ) : null}
                     </AnimatePresence>
-                    <div className={styles.searchHeaderPlaceholder} />
-                    
-                  </motion.div>
-                  )}
-                  
-                  {!isPulseActive && (
-                  <div className={`${styles.searchHeader} ${isOpen ? styles.searchHeaderActive : ""}`} style={{ position: "absolute", bottom: 0, left: 0, width: "100%", zIndex: 20 }}>
-                    <div className={`${styles.searchInputWrapper} ${isOpen ? styles.searchInputWrapperActive : ""}`}>
-                      <div
-                        className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (isOpen) {
-                            fileInputRef.current?.click();
-                            return;
-                          }
-                          if (isConversational) {
-                            if (!isPulseAnalyzed) {
-                              setIsPulseAnalyzed(true);
-                            } else {
-                              setIsPulseActive(true);
-                              setIsOpen(false);
-                            }
-                          } else {
-                            setIsPulseActive(true);
-                          }
-                        }}
-                        title="Open Pulse AI"
-                        style={{ cursor: "pointer" }}
-                      >
-                        {isOpen ? <Plus className={styles.searchIcon} size={18} /> : <Search className={styles.searchIcon} size={18} />}
-                      </div>
-                      <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        style={{ display: "none" }} 
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files.length > 0) {
-                            console.log("Files attached:", e.target.files);
-                            // Here you can handle the file upload logic
-                          }
-                        }}
-                        multiple
-                      />
-                      <input
-                        id="hero-search-input"
-                        type="text"
-                        placeholder="Search doctors, specialities, or treatments..."
-                        value={searchQuery}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value);
-                          setIsOpen(true);
-                          setHasOpened(true);
-                        }}
-                        onFocus={() => {
-                          setIsOpen(true);
-                          setHasOpened(true);
-                        }}
-                        className={styles.searchInput}
-                      />
-                      
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.8, x: 10 }}
-                            animate={{ opacity: 1, scale: 1, x: 0 }}
-                            exit={{ opacity: 0, scale: 0.8, x: 10 }}
-                            transition={{ duration: 0.2 }}
-                            className={styles.activeSearchActions}
-                          >
-                            <button type="button" className={styles.voiceBtn} aria-label="Voice search">
-                              <Mic size={18} />
-                            </button>
-                            <button type="button" className={styles.sendBtn} aria-label="Search">
-                              <ArrowUp size={18} />
-                            </button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </div>
-                  )}
-                    
                   </motion.form>
-
-
-
-        </div>
-
-
       {isPulseActive && typeof document !== "undefined" && createPortal(
         <div style={{ position: "fixed", inset: 0, zIndex: 99999, pointerEvents: "auto" }}>
           <div style={{ position: "absolute", inset: 0, background: "rgba(11, 15, 25, 0.5)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
@@ -2353,8 +1826,9 @@ export default function HeroSearchFirst() {
               }}
             />
           </div>
-        </div>
-      </motion.section>
-    </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/ui/SmoothScroll";
-import ScrollProgress from "@/components/ui/ScrollProgress";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -35,7 +34,6 @@ export default function RootLayout({
       <body>
         {/* Global UI interactions */}
         <SmoothScroll />
-        <ScrollProgress />
 
         {/* Layout */}
         <Navbar />
