@@ -243,7 +243,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
   
   const doc = {
     ...baseDoc,
-    name: apiDoc?.name || searchDoc?.name || (doctors[id] ? baseDoc.name : `Doctor ${id}`),
+    name: apiDoc?.name || searchDoc?.name || nameParam || (doctors[id] ? baseDoc.name : `Doctor ${id}`),
     speciality: apiDoc?.speciality || searchDoc?.speciality || baseDoc.speciality,
     img: apiDoc?.photo || searchDoc?.img || baseDoc.img,
     city: searchDoc?.city || baseDoc.city, // api doesn't return city directly

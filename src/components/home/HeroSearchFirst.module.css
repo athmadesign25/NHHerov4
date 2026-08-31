@@ -70,11 +70,16 @@
 }
 
 .centerWrap {
-  position: relative;
-  z-index: 3;
-  height: 100%;
-  display: grid;
-  place-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
 }
 
 .heroStack {

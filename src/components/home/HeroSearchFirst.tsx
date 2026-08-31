@@ -133,6 +133,7 @@ type DoctorData = {
   keywords: string[];
   consultationModes?: "hospital" | "video" | "both";
   availability?: { hospital?: string; video?: string };
+  id?: string | number;
 };
 
 const doctorsData: DoctorData[] = [
@@ -677,6 +678,16 @@ export default function HeroSearchFirst() {
     }
   };
 
+  const handleDoctorClick = (doc: DoctorData) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("nh_last_search", doc.name);
+      setLastSearch(doc.name);
+    }
+    router.push(`/doctors/${doc.id || 'dr-1'}?n=${encodeURIComponent(doc.name)}`);
+    setIsOpen(false);
+    setIsPulseActive(false);
+  };
+
   const handleSelectSuggestion = (name: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("nh_last_search", name);
@@ -782,6 +793,7 @@ export default function HeroSearchFirst() {
 
   const displayDoctors = useApiData
     ? apiData!.doctors.slice(0, 6).map((d) => ({
+        id: d.id,
         name: d.name,
         speciality: d.speciality,
         location: d.hospital,
@@ -1197,7 +1209,7 @@ export default function HeroSearchFirst() {
                                                {hospitalDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  onClick={() => handleDoctorClick(doc)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1252,7 +1264,7 @@ export default function HeroSearchFirst() {
                                                {videoDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  onClick={() => handleDoctorClick(doc)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1406,7 +1418,7 @@ export default function HeroSearchFirst() {
                                               {filteredDoctors.map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  onClick={() => handleDoctorClick(doc)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1845,7 +1857,7 @@ export default function HeroSearchFirst() {
                                               {hospitalDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  onClick={() => handleDoctorClick(doc)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -1900,7 +1912,7 @@ export default function HeroSearchFirst() {
                                               {videoDoctors.slice(0, 6).map((doc) => (
                                                 <div
                                                   key={doc.name}
-                                                  onClick={() => handleSelectSuggestion(doc.name)}
+                                                  onClick={() => handleDoctorClick(doc)}
                                                   className={styles.doctorCard}
                                                 >
                                                   <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
@@ -2393,26 +2405,7 @@ export default function HeroSearchFirst() {
         </div>
       </div>
 
-      <div className={styles.pulseShellAnchor}>
-        <div className={styles.pulseShell}>
-          <div className={styles.pulseInner}>
-            <div className={styles.pulseCenterUnit}>
-              <div
-                className={`${styles.logoGlow} ${prefersReducedMotion ? styles.logoGlowStatic : ""}`}
-                aria-hidden
-              />
-              <div className={styles.pulseLogoUnit}>
-                <img src="/images/pulse-ai/pulse-ai.png" alt="Pulse AI" className={styles.pulseLogoImg} />
-              </div>
-              <div className={styles.pulseTextUnit}>
-                <div className={styles.pulseTitle}>Ask Pulse AI</div>
-                <p className={styles.pulseDescription}>Describe your symptoms, or ask a question..</p>
-                <p className={styles.pulseVersion}>v1.0</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
+
       {isPulseActive && typeof document !== "undefined" && createPortal(
         <div style={{ position: "fixed", inset: 0, zIndex: 99999, pointerEvents: "auto" }}>
           <div style={{ position: "absolute", inset: 0, background: "rgba(11, 15, 25, 0.5)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />
