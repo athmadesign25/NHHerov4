@@ -1,0 +1,227 @@
+.container {
+  min-height: 100vh;
+  padding: calc(var(--nav-height) + 40px) 24px 80px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.contentWrapper {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.successIconWrapper {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: rgba(16, 185, 129, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: rgb(16, 185, 129);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.card {
+  background: var(--color-bg-card);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 24px;
+}
+
+.doctorImage {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.doctorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.doctorName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.doctorSpeciality {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  color: var(--color-text);
+}
+
+.detailIcon {
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.detailLabel {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 2px;
+}
+
+.detailValue {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .buttonGroup {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .buttonGroup > * {
+    width: 200px;
+  }
+}
+
+.appPromoCard {
+  background: linear-gradient(135deg, rgba(3, 78, 162, 0.05) 0%, rgba(3, 78, 162, 0.1) 100%);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  border: 1px solid rgba(3, 78, 162, 0.1);
+  margin-top: 40px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: left;
+}
+
+@media (min-width: 640px) {
+  .appPromoCard {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.appPromoContent {
+  flex: 1;
+}
+
+.appPromoTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.appPromoText {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.storeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.storeImageButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+  height: 40px; /* Or whatever matches the SVG */
+}
+
+.storeImageButton img {
+  height: 100%;
+  width: auto;
+}
+
+.storeImageButton:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.qrCodeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.qrCodeBox {
+  background: var(--color-bg-card);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.qrCodeText {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}

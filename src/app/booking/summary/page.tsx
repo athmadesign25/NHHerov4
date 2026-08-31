@@ -513,6 +513,7 @@ function BookingSummaryContent() {
                 fullWidth 
                 size="lg" 
                 style={{ fontSize: "16px" }}
+                onClick={() => router.push(`/booking/confirmation?doctorId=${doctorId}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&patientName=${encodeURIComponent(activePatientName || '')}`)}
               >
                 Pay ₹{total.toLocaleString()}
               </Button>
@@ -521,6 +522,7 @@ function BookingSummaryContent() {
                 size="lg" 
                 variant="outline"
                 style={{ fontSize: "16px", background: "var(--color-bg-card)" }}
+                onClick={() => router.push(`/booking/confirmation?doctorId=${doctorId}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&patientName=${encodeURIComponent(activePatientName || '')}`)}
               >
                 Pay at hospital
               </Button>
