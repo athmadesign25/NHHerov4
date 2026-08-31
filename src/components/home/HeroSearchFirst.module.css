@@ -134,7 +134,6 @@
 .searchContainer {
   position: relative;
   width: 100%;
-  min-height: 62px;
   border-radius: var(--radius-full);
   background: linear-gradient(110deg, rgba(0, 0, 0, 0.25) 30%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.25) 70%);
   background-size: 200% 100%;
@@ -144,6 +143,7 @@
   align-items: center;
   gap: 10px;
   padding: 0 var(--sp-2);
+  transition: background 0.3s ease 0.15s, border-color 0.3s ease 0.15s, box-shadow 0.3s ease 0.15s;
 }
 
 @property --border-angle {
@@ -168,6 +168,7 @@
   mask-composite: exclude;
   animation: spinBorder 5s linear infinite;
   pointer-events: none;
+  transition: opacity 0.3s ease 0.45s;
 }
 
 .searchContainer::after {
@@ -184,6 +185,7 @@
   filter: blur(4px);
   animation: spinBorder 5s linear infinite;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 @keyframes streakMove {
@@ -235,16 +237,10 @@
 }
 
 .dropdown {
-  position: absolute;
-  top: calc(100% + 14px);
-  left: 0;
+  position: relative;
   width: 100%;
-  border-radius: 24px;
-  border: 1px solid rgba(198, 209, 224, 0.8);
-  background: rgba(245, 247, 251, 0.96);
-  box-shadow: 0 20px 40px rgba(12, 24, 57, 0.25);
-  z-index: 14;
-  padding: 18px 22px 16px;
+  background: transparent;
+  padding: 12px 16px 20px 16px;
 }
 
 .popularSearches {
@@ -656,8 +652,6 @@
   }
 
   .dropdown {
-    top: auto;
-    bottom: calc(100% + 10px);
     max-height: min(65vh, 540px);
     overflow-y: auto;
     padding: 12px;
@@ -729,15 +723,16 @@
 
 .searchBarForm {
   width: 100%;
+  height: 54px;
   margin-top: 0;
   margin-bottom: 0;
   position: relative;
   z-index: 50;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 54px;
 }
 
 .searchBarFormActive {
-  transform: translateY(-170px);
+  transform: none;
 }
 
 .searchContainer {
@@ -749,27 +744,50 @@
   border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full);
   height: 54px;
-  padding: 0 4px 0 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: background 0.3s ease 0.15s, border-color 0.3s ease 0.15s, box-shadow 0.3s ease 0.15s;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.searchHeader {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.searchHeaderActive {
+  padding-bottom: 20px;
 }
 
 .searchContainer:focus-within,
 .searchContainerActive {
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  align-items: stretch;
+  height: auto;
+  padding: 0;
+  overflow: hidden;
+  transition: background 0.3s ease 0s, border-color 0.3s ease 0s, box-shadow 0.3s ease 0s;
 }
 
 .searchContainer:focus-within::before,
 .searchContainerActive::before {
-  background: #ffffff;
-  animation: none;
+  opacity: 0;
+  transition: opacity 0.3s ease 0s;
 }
 
 .searchContainer:focus-within::after,
 .searchContainerActive::after {
-  background: #ffffff;
-  animation: none;
-  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease 0s;
 }
 
 .searchIconWrapper {
@@ -797,7 +815,7 @@
   outline: none;
   background: transparent;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 14px;
   font-family: var(--font-family);
   width: 100%;
   transition: color 0.2s ease;
@@ -805,8 +823,8 @@
 }
 
 .searchInput:focus,
-.searchContainerActive .searchInput {
-  color: #ffffff;
+.searchHeaderActive .searchInput {
+  color: #0b0f19;
 }
 
 .searchInput::placeholder {
@@ -815,8 +833,8 @@
 }
 
 .searchInput:focus::placeholder,
-.searchContainerActive .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+.searchHeaderActive .searchInput::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .searchBtn {
@@ -841,20 +859,17 @@
 }
 
 .dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  bottom: auto;
-  left: 0;
+  position: relative;
   width: 100%;
   max-height: min(75vh, 580px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   z-index: 100;
-  padding: 16px;
+  padding: 0 20px 20px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1337,15 +1352,18 @@
 
 @media (max-width: 1024px) {
   .searchBarFormActive {
-    transform: translateY(-140px);
+    transform: none;
   }
 }
 
 @media (max-width: 768px) {
   .searchBarFormActive {
-    transform: translateY(-120px);
+    transform: none;
   }
 
+  .searchBarForm {
+    height: 48px;
+  }
   .searchContainer {
     height: 48px;
     padding: 0 4px 0 16px;
@@ -1364,9 +1382,6 @@
   .dropdown {
     max-height: min(75vh, 580px);
     padding: 12px;
-    border-radius: 16px;
-    top: calc(100% + 8px);
-    bottom: auto;
   }
 
   .popularSearches {
@@ -1395,9 +1410,12 @@
 
 @media (max-width: 640px) {
   .searchBarFormActive {
-    transform: translateY(-95px);
+    transform: none;
   }
 
+  .searchBarForm {
+    height: 46px;
+  }
   .searchContainer {
     height: 46px;
     padding: 0 4px 0 14px;
@@ -1487,11 +1505,15 @@
   transition: all 0.3s ease;
 }
 .searchContainer:focus-within .pulseIconWrapper,
-.searchContainerActive .pulseIconWrapper {
-  padding-right: 12px;
+.searchHeaderActive .pulseIconWrapper {
+  box-shadow: none;
 }
-.searchContainer:focus-within .pulseText,
-.searchContainerActive .pulseText {
+
+.searchHeaderActive .pulseText {
+  display: none;
+}
+
+.searchContainer:focus-within .pulseText {
   max-width: 100px;
   opacity: 1;
   margin-left: 4px;
@@ -1611,6 +1633,7 @@
   mask-composite: exclude;
   animation: spinBorder 2.5s linear infinite;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .searchIconPulse::after {
@@ -1628,6 +1651,13 @@
   filter: blur(6px);
   animation: spinBorder 2.5s linear infinite;
   pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.searchHeaderActive .searchIconPulse::before,
+.searchHeaderActive .searchIconPulse::after {
+  opacity: 0;
+  animation: none;
 }
 
 .searchIconPulse:hover {
@@ -2280,4 +2310,108 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.searchHeaderActive .searchIconWrapper {
+  background: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+  border: none;
+}
+
+.searchHeaderActive .searchIcon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+
+.searchHeaderPlaceholder {
+  height: 54px;
+  width: 100%;
+  flex-shrink: 0;
+  transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.searchContainerActive .searchHeaderPlaceholder {
+  height: 126px; /* 54px + 32px + 20px bottom padding + ~20px extra = 126px */
+}
+@media (max-width: 768px) {
+  .searchHeaderPlaceholder {
+    height: 48px;
+  }
+}
+@media (max-width: 480px) {
+  .searchHeaderPlaceholder {
+    height: 46px;
+  }
+}
+
+.activeSearchActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.voiceBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voiceBtn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #0b0f19;
+}
+
+.sendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-primary, #034ea2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.2);
+}
+
+.sendBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(3, 78, 162, 0.3);
+}
+
+.sendBtn svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sendBtn:hover svg {
+  transform: rotate(90deg);
+}
+
+.searchInputWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 54px;
+  border-radius: 24px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0;
+}
+
+.searchInputWrapperActive {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 52px 12px 12px 12px;
 }

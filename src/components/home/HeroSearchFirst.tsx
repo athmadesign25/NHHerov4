@@ -14,7 +14,7 @@ import {
   useInView,
   useSpring,
 } from "framer-motion";
-import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2 } from "lucide-react";
+import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2, Mic, ArrowUp, Plus } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./HeroSearchFirst.module.css";
 import Lottie from "lottie-react";
@@ -483,6 +483,7 @@ function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, s
 export default function HeroSearchFirst() {
 
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors" | "specialties" | "treatments_tests" | "articles">("doctors");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
@@ -995,7 +996,7 @@ export default function HeroSearchFirst() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ 
                       opacity: 1, 
-                      y: isOpen ? -490 : 0 
+                      y: 0 
                     }}
                     transition={isOpen 
                       ? { duration: 0.4, ease: [0.16, 1, 0.3, 1] } 
@@ -1005,60 +1006,26 @@ export default function HeroSearchFirst() {
                     }
                   >
                     {!isPulseActive && (
-                      <div className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}>
-                      <div
-                        className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (isConversational) {
-                            if (!isPulseAnalyzed) {
-                              setIsPulseAnalyzed(true);
-                            } else {
-                              setIsPulseActive(true);
-                              setIsOpen(false);
-                            }
-                          } else {
-                            setIsPulseActive(true);
-                          }
+                      <motion.div 
+                        layout 
+                        className={`${styles.searchContainer} ${isOpen ? styles.searchContainerActive : ""}`}
+                        initial={false}
+                        animate={{ borderRadius: isOpen ? "24px" : "9999px" }}
+                        transition={{
+                          layout: { delay: isOpen ? 0.15 : 0.15, duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+                          borderRadius: { delay: isOpen ? 0 : 0.45, duration: 0.15, ease: "easeInOut" }
                         }}
-                        title="Open Pulse AI"
-                        style={{ cursor: "pointer" }}
                       >
-                        <Search className={styles.searchIcon} size={18} />
-                      </div>
-                      <input
-                        id="hero-search-input"
-                        type="text"
-                        placeholder="Search doctors, specialities, or treatments..."
-                        value={searchQuery}
-                        autoComplete="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value);
-                          setIsOpen(true);
-                          setHasOpened(true);
-                        }}
-                        onFocus={() => {
-                          setIsOpen(true);
-                          setHasOpened(true);
-                        }}
-                        className={styles.searchInput}
-                      />
-
-                    </div>
-                    )}
-
                     {/* Progressive Search Dropdown */}
                     <AnimatePresence mode="wait">
                       {isOpen ? (
                         <motion.div
+                          layout
                           key="dropdown"
                           className={styles.dropdown}
                           initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          animate={{ opacity: 1, y: 0, scale: 1, transition: { delay: 0.45, duration: 0.25, ease: "easeOut" } }}
+                          exit={{ opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.15, ease: "easeIn" } }}
                           data-lenis-prevent
                         >
 
@@ -2398,6 +2365,92 @@ export default function HeroSearchFirst() {
                 </motion.div>
                       ) : null}
                     </AnimatePresence>
+                    <div className={styles.searchHeaderPlaceholder} />
+                    
+                  </motion.div>
+                  )}
+                  
+                  {!isPulseActive && (
+                  <div className={`${styles.searchHeader} ${isOpen ? styles.searchHeaderActive : ""}`} style={{ position: "absolute", bottom: 0, left: 0, width: "100%", zIndex: 20 }}>
+                    <div className={`${styles.searchInputWrapper} ${isOpen ? styles.searchInputWrapperActive : ""}`}>
+                      <div
+                        className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isOpen) {
+                            fileInputRef.current?.click();
+                            return;
+                          }
+                          if (isConversational) {
+                            if (!isPulseAnalyzed) {
+                              setIsPulseAnalyzed(true);
+                            } else {
+                              setIsPulseActive(true);
+                              setIsOpen(false);
+                            }
+                          } else {
+                            setIsPulseActive(true);
+                          }
+                        }}
+                        title="Open Pulse AI"
+                        style={{ cursor: "pointer" }}
+                      >
+                        {isOpen ? <Plus className={styles.searchIcon} size={18} /> : <Search className={styles.searchIcon} size={18} />}
+                      </div>
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        style={{ display: "none" }} 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            console.log("Files attached:", e.target.files);
+                            // Here you can handle the file upload logic
+                          }
+                        }}
+                        multiple
+                      />
+                      <input
+                        id="hero-search-input"
+                        type="text"
+                        placeholder="Search doctors, specialities, or treatments..."
+                        value={searchQuery}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        onChange={(e) => {
+                          setSearchQuery(e.target.value);
+                          setIsOpen(true);
+                          setHasOpened(true);
+                        }}
+                        onFocus={() => {
+                          setIsOpen(true);
+                          setHasOpened(true);
+                        }}
+                        className={styles.searchInput}
+                      />
+                      
+                      <AnimatePresence>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8, x: 10 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.8, x: 10 }}
+                            transition={{ duration: 0.2 }}
+                            className={styles.activeSearchActions}
+                          >
+                            <button type="button" className={styles.voiceBtn} aria-label="Voice search">
+                              <Mic size={18} />
+                            </button>
+                            <button type="button" className={styles.sendBtn} aria-label="Search">
+                              <ArrowUp size={18} />
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  )}
+                    
                   </motion.form>
 
 
