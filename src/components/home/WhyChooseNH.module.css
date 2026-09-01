@@ -1,7 +1,7 @@
 .section {
   position: relative;
   width: 100%;
-  background: linear-gradient(180deg, #FCFCFC 50.97%, #E0ECFF 97.06%);
+  background: transparent;
   padding: 100px 250px;
   box-sizing: border-box;
 }

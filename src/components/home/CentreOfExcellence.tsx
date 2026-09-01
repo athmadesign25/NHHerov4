@@ -210,10 +210,80 @@ function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
   );
 }
 
+// ─── 4 Columns Data Distribution for True Podium Stagger ───
+const COLUMN_SPECIALITIES = [
+  // Column 0: Cardiology, Nephrology, General Surgery
+  [SPECIALITIES[0], SPECIALITIES[4], SPECIALITIES[8]],
+  // Column 1: Cancer Care, Gastroenterology, Urology
+  [SPECIALITIES[1], SPECIALITIES[5], SPECIALITIES[9]],
+  // Column 2: Neurology, Pulmonology, Endocrinology
+  [SPECIALITIES[2], SPECIALITIES[6], SPECIALITIES[10]],
+  // Column 3: Orthopaedics, Paediatrics, Rheumatology
+  [SPECIALITIES[3], SPECIALITIES[7], SPECIALITIES[11]],
+];
+
+function PodiumColumnTrack({
+  colIndex,
+  items,
+  scrollYProgress,
+  screenMode,
+}: {
+  colIndex: number;
+  items: typeof SPECIALITIES;
+  scrollYProgress: import("framer-motion").MotionValue<number>;
+  screenMode: "desktop" | "tablet" | "mobile";
+}) {
+  const isDesktop = screenMode === "desktop";
+  const isTablet = screenMode === "tablet";
+  const yMultiplier = isDesktop ? 1.0 : isTablet ? 0.45 : 0;
+
+  // Asymmetric continuous parallax rate per column (Odd columns glide faster, Even columns lag gracefully)
+  const yOffsets = [
+    [40 * yMultiplier, -120 * yMultiplier],
+    [-30 * yMultiplier, 80 * yMultiplier],
+    [35 * yMultiplier, -90 * yMultiplier],
+    [-40 * yMultiplier, 105 * yMultiplier],
+  ][colIndex] || [0, 0];
+
+  const y = useTransform(scrollYProgress, [0, 1], yOffsets);
+
+  // Entrance reveal (0 -> 0.15) and photographic exit fade (0.68 -> 0.98) matching Podium
+  const opacity = useTransform(
+    scrollYProgress,
+    [0.0, 0.15, 0.68, 0.98],
+    [0.35, 1.0, 1.0, 0.18]
+  );
+
+  return (
+    <motion.div
+      className={`${styles.columnTrack} ${styles[`col${colIndex}`]}`}
+      style={{ y, opacity }}
+    >
+      {items.map((spec, idx) => (
+        <SpecialityCardItem key={idx} spec={spec} />
+      ))}
+    </motion.div>
+  );
+}
+
 export default function CentreOfExcellence() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const titleTrackRef = useRef<HTMLDivElement>(null);
   const gridSectionRef = useRef<HTMLDivElement>(null);
+
+  const [screenMode, setScreenMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+
+  useEffect(() => {
+    const updateScreen = () => {
+      const w = window.innerWidth;
+      if (w < 640) setScreenMode("mobile");
+      else if (w < 1024) setScreenMode("tablet");
+      else setScreenMode("desktop");
+    };
+    updateScreen();
+    window.addEventListener("resize", updateScreen, { passive: true });
+    return () => window.removeEventListener("resize", updateScreen);
+  }, []);
 
   // 1. Sticky Header Track Scroll Sequence (Editorial Mask Reveal)
   const { scrollYProgress: titleScrollProgress } = useScroll({
@@ -237,28 +307,10 @@ export default function CentreOfExcellence() {
   const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [0, 1, 1, 0]);
   const indicatorY = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [16, 0, 0, -14]);
 
-  // 2. Animated Grid Reveal Section
-  const { scrollYProgress: gridScrollProgress } = useScroll({
+  // 2. Continuous Scroll-Driven 4-Column Track Parallax Progression
+  const { scrollYProgress: trackProgress } = useScroll({
     target: gridSectionRef,
-    offset: ["start end", "start center"],
-  });
-
-  const gridScale = useTransform(gridScrollProgress, [0, 1], [0.94, 1.0]);
-  const gridRadius = useTransform(gridScrollProgress, [0, 1], ["24px", "0px"]);
-  const gridOpacity = useTransform(gridScrollProgress, [0, 0.6], [0, 1]);
-
-  // 3. Exit Shrink & Rounding Transformation: gridAnimatedWrapper shrinks (1.0 -> 0.88) and corners round (0px -> 44px) as user scrolls out of the section
-  const { scrollYProgress: gridExitScrollProgress } = useScroll({
-    target: gridSectionRef,
-    offset: ["end end", "end start"],
-  });
-
-  const exitScale = useTransform(gridExitScrollProgress, [0.0, 0.75], [1.0, 0.88]);
-  const exitRadius = useTransform(gridExitScrollProgress, [0.0, 0.75], ["0px", "44px"]);
-
-  const combinedScale = useTransform([gridScale, exitScale], ([sIn, sOut]) => Number(sIn) * Number(sOut));
-  const combinedRadius = useTransform([gridRadius, exitRadius], ([rIn, rOut]) => {
-    return rOut !== "0px" ? rOut : rIn;
+    offset: ["start 90%", "end 10%"],
   });
 
   return (
@@ -340,32 +392,31 @@ export default function CentreOfExcellence() {
         </section>
       </div>
 
-      {/* 2. Animated Grid Reveal Section */}
+      {/* 2. Editorial 4-Column Staggered Tracks (True Podium.global Architecture) */}
       <div ref={gridSectionRef} className={styles.gridSection}>
-        <motion.div
-          className={styles.gridAnimatedWrapper}
-          style={{
-            scale: combinedScale,
-            borderRadius: combinedRadius,
-            opacity: gridOpacity,
-            transformOrigin: "center top",
-          }}
-        >
-          <div className={styles.specialitiesGrid}>
-            {SPECIALITIES.map((spec, idx) => (
-              <SpecialityCardItem key={idx} spec={spec} />
+        <div className={styles.gridAnimatedWrapper}>
+          <div className={styles.columnsContainer}>
+            {COLUMN_SPECIALITIES.map((items, colIdx) => (
+              <PodiumColumnTrack
+                key={colIdx}
+                colIndex={colIdx}
+                items={items}
+                scrollYProgress={trackProgress}
+                screenMode={screenMode}
+              />
             ))}
           </div>
 
-          {/* Seamless Dark Grid Extension with View All Specialties CTA */}
+          {/* View All Specialties CTA */}
           <div className={styles.gridBottomStrip}>
             <a href="/specialities" className={styles.viewAllBtn}>
               View All Specialties
               <ChevronRight size={16} />
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
 }
+

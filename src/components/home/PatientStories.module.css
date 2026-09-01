@@ -6,9 +6,9 @@
 
 .section {
   position: relative;
-  background: radial-gradient(18.44% 30.37% at 50% 103.04%, rgba(237, 28, 36, 0.30) 0%, rgba(9, 38, 86, 0.00) 100%), linear-gradient(155deg, #061323 34.28%, #0F233A 41.61%, #0345A1 83.82%, #5388D2 113.54%);
+  background: transparent;
   overflow: hidden;
-  padding: 100px 0 100px;
+  padding: 120px 0 100px;
   min-height: 900px;
   display: flex;
   flex-direction: column;

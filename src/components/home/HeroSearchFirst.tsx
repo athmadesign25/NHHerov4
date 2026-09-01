@@ -27,26 +27,24 @@ export default function HeroSearchFirst() {
     restDelta: 0.001
   });
 
-  // Stage 1 (0 -> 0.50): Scale down from 1.0 to 0.75
-  // Stage 2 (0.50 -> 1.0): Lock scale at 0.75
+  // Stage 1: Scale down in place first (0 -> 0.6)
   const heroScale = useTransform(
     smoothProgress,
-    [0, 0.05, 0.50, 1],
-    [1, 1, 0.75, 0.75]
+    [0, 0.6, 1],
+    [1, 0.75, 0.75]
   );
 
-  // Border radius rounds during scale-down, then stays locked
+  // Border radius rounds during the scale-down phase
   const heroRadius = useTransform(
     smoothProgress,
-    [0, 0.05, 0.50, 1],
-    ["0px", "0px", "24px", "24px"]
+    [0, 0.6, 1],
+    ["0px", "24px", "24px"]
   );
 
-  // Stage 1 (0 -> 0.50): Y stays locked at 0px
-  // Stage 2 (0.50 -> 1.0): Y moves smoothly upward
+  // Stage 2: Slide up to reveal the next section (0.6 -> 1)
   const heroY = useTransform(
     smoothProgress,
-    [0, 0.50, 1],
+    [0, 0.6, 1],
     ["0px", "0px", "-140px"]
   );
 
@@ -84,7 +82,7 @@ export default function HeroSearchFirst() {
   }, [isOpen, isPulseActive]);
 
   return (
-    <div ref={containerRef} data-nav-theme="light" style={{ height: "185vh", position: "relative", zIndex: isPulseActive ? 9999 : 1, background: "transparent" }}>
+    <div ref={containerRef} data-nav-theme="light" style={{ height: "130vh", position: "relative", zIndex: isPulseActive ? 9999 : 1, background: "transparent" }}>
       <motion.section 
         className={styles.hero} 
         id="hero-section-search-first"
