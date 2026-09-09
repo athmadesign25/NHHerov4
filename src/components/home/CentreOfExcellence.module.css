@@ -142,7 +142,7 @@
   }
   50% {
     opacity: 1;
-    transform: translateY(-3px);
+    transform: translateY(3px);
   }
 }
 
@@ -238,7 +238,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 0;
+  border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
   background: #090d16;
@@ -523,6 +523,6 @@
   }
   .specialityCard {
     aspect-ratio: 16 / 10;
-    border-radius: 0;
+    border-radius: 8px;
   }
 }

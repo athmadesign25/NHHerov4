@@ -183,14 +183,9 @@
   pointer-events: none;
 }
 
-.ring1 {
-  inset: -10px -16px;
-}
-
 .ring2 {
-  inset: -20px -30px;
+  inset: -6px -8px;
 }
-
 
 .featurePill {
   display: flex;
@@ -243,36 +238,54 @@
 }
 
 .phoneMockupWrap {
-  width: 380px;
-  height: 460px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  width: 220px;
   position: relative;
   z-index: 1;
   margin-bottom: 0;
   transform-origin: bottom center;
+}
+
+/* Crops the base screen's bottom edge off (overflow hidden on a shorter box
+   than the image's natural height) so the phone appears to sink below the
+   frame instead of showing a hard bottom edge. */
+.phoneFrame {
+  position: relative;
+  width: 220px;
+  height: 330px;
+  overflow: hidden;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
 }
 
 .phoneImg {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom center;
-  transform-origin: bottom center;
-  transform: scale(1.06);
+  height: auto;
   display: block;
 }
 
-.bookingWrap .phoneImg,
-.regularWrap .phoneImg {
+/* Popup card: horizontal center sits on the base screen's right edge, ~28px
+   below its top, extending past the base screen rather than being cropped
+   to it. */
+.popupFrame {
+  position: absolute;
+  top: 28px;
+  left: 100%;
+  /* horizontal centering (-50% x) is applied via Framer Motion's animated
+     x prop in the TSX, not CSS transform — Framer's own transform (from
+     animating scale) would otherwise silently override a CSS transform here */
+  z-index: 4;
+  overflow: visible;
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.4));
+}
+
+.popupImg {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: bottom center;
-  transform-origin: bottom center;
-  transform: scale(1.06);
+  display: block;
+  border-radius: 14px;
 }
 
 /* Transparent Glass Carousel Arrow Buttons */

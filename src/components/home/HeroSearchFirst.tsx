@@ -455,28 +455,38 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 }
 
 
-function CountingNumber({ value, suffix = "", duration = 2 }: { value: number, suffix?: string, duration?: number }) {
+function MetricValueReveal({ value, suffix = "" }: { value: number, suffix?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10px" });
-  const count = useMotionValue(0);
+
+  // Dial up within a single fixed denomination (K/L) matching the final
+  // value, starting at 1 (of that denomination) instead of 0.
+  const { unit, to } = (() => {
+    if (value >= 100000) return { unit: "L", to: value / 100000 };
+    if (value >= 1000) return { unit: "K", to: value / 1000 };
+    return { unit: "", to: value };
+  })();
+
+  const count = useMotionValue(1);
   const rounded = useTransform(count, (latest) => {
-    const num = Math.round(latest);
-    if (num >= 100000) {
-      return (num / 100000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'L' + suffix;
-    } else if (num >= 1000) {
-      return (num / 1000).toLocaleString('en-IN', { maximumFractionDigits: 1 }) + 'K' + suffix;
-    }
-    return num.toLocaleString('en-IN') + suffix;
+    const num = unit ? latest : Math.round(latest);
+    const formattedNum = unit
+      ? num.toLocaleString('en-IN', { maximumFractionDigits: 1 })
+      : num.toLocaleString('en-IN');
+    return formattedNum + unit + suffix;
   });
 
   useEffect(() => {
-    if (isInView) {
-      const animation = animate(count, value, { duration, ease: "easeOut" });
-      return animation.stop;
-    }
-  }, [isInView, value, count, duration]);
+    if (!isInView) return;
+    const animation = animate(count, to, { duration: 1, ease: [0.16, 1, 0.3, 1] });
+    return animation.stop;
+  }, [isInView, to, count]);
 
-  return <motion.span ref={ref}>{rounded}</motion.span>;
+  return (
+    <motion.span ref={ref}>
+      {rounded}
+    </motion.span>
+  );
 }
 
 export default function HeroSearchFirst() {
@@ -969,7 +979,7 @@ export default function HeroSearchFirst() {
                   style={{ display: "flex", flexDirection: "column" }}
                 >
                   <div className={styles.metricValue}>
-                    <CountingNumber value={stat.value} suffix={stat.suffix} />
+                    <MetricValueReveal value={stat.value} suffix={stat.suffix} />
                   </div>
                   <div className={styles.metricLabel}>
                     {stat.label.split('\n').map((line, idx) => (

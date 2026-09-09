@@ -65,7 +65,8 @@
   margin: 0 auto;
 }
 
-/* Sticky Scroll Runway: Pins card to top nav as header scrolls up */
+/* Sticky Scroll Runway: Pins card to the very top of the viewport (navbar is
+   a transparent overlay, so the card can run full edge-to-edge). */
 .stackTrack {
   position: relative;
   width: 100%;
@@ -74,25 +75,46 @@
 
 .stickyViewport {
   position: sticky;
-  top: 70px;
+  top: 0;
   width: 100%;
-  height: calc(100vh - 70px);
-  /* allow card shadows to render outside the sticky container */
+  height: 100vh;
+  /* No background here — it must never show while the main card is
+     scaling in/out. The one-time reveal gets its own background, scoped
+     to just that gap, via .rightGradientOverlay below. */
   overflow: visible;
 }
 
-.mainCard {
+/* Scroll-linked grow/shrink applies to the whole section (main card + right
+   panel together) continuously; this is separate from the one-time
+   narrow-and-reveal transform below. */
+.sectionScaleWrap {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: calc(100vh - 70px);
+  overflow: hidden;
+  will-change: transform, border-radius;
+}
+
+.mainCard {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
-  background-position: center;
+  background-position: left center;
   background-repeat: no-repeat;
   overflow: hidden;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  will-change: transform, filter, opacity, border-radius;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* One-time narrow: leaves a 620px reveal on the right for the package panel.
+   Image is anchored via background-position:left above, so it never shifts —
+   the card just clips. (Widened from 560px so the peek card has breathing
+   room before the viewport edge instead of nearly touching it.) */
+.mainCardShrunk {
+  width: calc(100% - 620px);
 }
 
 /* Dark Vignette Overlay for Crisp Contrast */
@@ -109,37 +131,91 @@
   z-index: 2;
 }
 
+/* Fades/blurs the photo itself toward the card's own right edge, so it
+   continues into .rightGradientOverlay beyond it instead of ending in a
+   hard line. Two things make this seamless instead of a visible cut:
+   1) the gradient runs left-to-right (90deg) — a bare 0deg gradient always
+      runs along the box's HEIGHT regardless of its aspect ratio, so the
+      previous version never actually blended left-to-right at all.
+   2) a mask-image fades the element's own left boundary in gradually
+      (transparent for the first ~14%) so neither the color nor the
+      backdrop-filter blur switches on abruptly — that hard on/off edge was
+      also what read as scroll-time shimmer/jitter, since a crisp pixel
+      boundary combined with continuous scroll-linked scaling aliases every
+      frame. Solid on the right so it merges cleanly with the gap beyond. */
+.mainCardEdgeFade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  background: linear-gradient(90deg, rgba(3, 30, 57, 0) 0%, rgba(12, 26, 50, 0.55) 45%, #031E39 85%);
+  backdrop-filter: blur(31.52345848083496px);
+  -webkit-backdrop-filter: blur(31.52345848083496px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 14%, #000 55%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, transparent 14%, #000 55%, #000 100%);
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.mainCardEdgeFadeVisible {
+  opacity: 1;
+}
+
+/* Right-edge blend: grows from 0 to 560px in exact sync with the main card's
+   width shrink (same duration/easing), so its left edge sweeps left in step
+   with the card's right edge — one continuous moving wipe, not two separate
+   effects. A solid base color sits under the given gradient so this region
+   is fully opaque on its own; nothing else needs to provide a background. */
+.rightGradientOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(0deg, #0B1D37 2.31%, rgba(12, 26, 50, 0.71) 32.65%, rgba(14, 17, 38, 0.00) 68.06%), #0B1D37;
+  backdrop-filter: blur(31.52345848083496px);
+  -webkit-backdrop-filter: blur(31.52345848083496px);
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.rightGradientOverlayVisible {
+  width: 620px;
+}
+
 /* Card Inner Content */
 .cardInnerContent {
   position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
-  min-height: calc(100vh - 70px);
   width: 100%;
-  padding: 100px 250px;
+  padding: 100px 96px;
   box-sizing: border-box;
 }
 
 @media (max-width: 1440px) {
   .cardInnerContent {
-    padding: 90px 160px;
+    padding: 90px 80px;
   }
 }
 
 @media (max-width: 1024px) {
   .cardInnerContent {
     padding: 64px 60px;
-    min-height: 600px;
   }
 }
 
 @media (max-width: 640px) {
   .cardInnerContent {
     padding: 40px 24px;
-    min-height: 520px;
   }
 }
 
@@ -176,126 +252,182 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* Bottom Unit Block: Clippings Rotator + Secondary Button stacked with 24px gap */
-.bottomUnitBlock {
+/* Hover-only CTA on the main card itself (present in both the full-screen
+   and narrowed states) — revealed on hovering anywhere over the card. */
+.mainCardBookLink {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(8px);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mainCard:hover .mainCardBookLink {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Second, more specific hover: nudges the chevron itself right when hovering
+   the link directly (not just the card it's revealed on). Shared by both
+   .mainCardBookLink and .bookPackageLink. */
+.linkChevron {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mainCardBookLink:hover .linkChevron,
+.bookPackageLink:hover .linkChevron {
+  transform: translateX(3px);
+}
+
+/* ─── Right-Side Package Panel (appears once the one-time transform fires) ─── */
+.rightPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 620px;
+  height: 100%;
+  z-index: 5;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
-  margin-top: 40px;
-}
-
-/* 338px x 200px Clipping Wrapper & Growing Card Box */
-.clippingWrapper {
-  position: relative;
-  width: 338px;
-  height: 200px;
-}
-
-@media (max-width: 480px) {
-  .clippingWrapper {
-    width: 100%;
-    max-width: 338px;
-    height: 180px;
-  }
-}
-
-.clippingBox {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 8px 28px 0 rgba(0, 0, 0, 0.40);
-  overflow: hidden;
-  background: #0B1727;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  transform-origin: center center;
+  justify-content: center;
+  gap: 32px;
+  box-sizing: border-box;
 }
 
-.clippingImage {
+.packageStack {
+  position: relative;
+  width: 440px;
+  height: 600px;
+}
+
+/* Unified stack card: every package in the carousel uses this one class.
+   Position/size/opacity per-role (front / peek / hidden) are driven inline
+   by Framer Motion so a card can smoothly grow from "peek" into "front" (and
+   the next one grows into "peek" behind it) instead of the peek slot being a
+   static placeholder image. No border — was reading as an unwanted stroke. */
+.stackCard {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  top: 0;
+  left: 0;
+  width: 440px;
+  height: 600px;
+  padding: 64px 44px;
+  border-radius: 10px;
+  box-shadow: 8px 6px 18px 0 rgba(0, 0, 0, 0.44);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0B1727;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.clippingDarkOverlay {
+/* Subtle top/bottom darkening so text and arrows stay legible */
+.activeCardOverlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0.68) 100%
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 32%,
+    rgba(0, 0, 0, 0.15) 65%,
+    rgba(0, 0, 0, 0.6) 100%
   );
-  z-index: 2;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.clippingTitle {
+.activeCardTextUnit {
   position: relative;
-  z-index: 3;
-  color: #FFFFFF;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.activeCardTitle {
+  color: #FFF;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.25;
-  text-align: center;
-  padding: 0 20px;
+  line-height: normal;
   margin: 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Light Sheen Shimmer */
-.clippingShimmer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.30) 50%,
-    rgba(255, 255, 255, 0.05) 75%,
-    transparent 100%
-  );
-  transform: skewX(-20deg);
-  z-index: 4;
-  pointer-events: none;
+.activeCardSubtext {
+  color: #E1E1E1;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
 }
 
-/* Glassy Timer Progress Bar Track & Fill */
-.clipProgressTrack {
+/* Hover-only CTA link (replaces the old persistent "Book Health Check" button) */
+.bookPackageLink {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackCard:hover .bookPackageLink {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.packageArrows {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+
+.packageArrowBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  z-index: 10;
-  overflow: hidden;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.clipProgressFill {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.70) 70%,
-    rgba(255, 255, 255, 0.95) 100%
-  );
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 2px rgba(255, 255, 255, 0.9);
-  transform-origin: left center;
+.packageArrowBtn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #FFFFFF;
 }
 
 /* Secondary Button */
@@ -326,4 +458,14 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-
+/* Below this breakpoint the right-side reveal doesn't have room to work —
+   keep the main card at full width and skip the panel entirely. */
+@media (max-width: 1024px) {
+  .mainCardShrunk {
+    width: 100%;
+  }
+  .rightPanel,
+  .rightGradientOverlayVisible {
+    display: none;
+  }
+}

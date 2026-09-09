@@ -8,7 +8,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import { ChevronRight, ChevronUp } from "lucide-react";
+import { ChevronRight, ChevronDown } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 
 const SPECIALITIES = [
@@ -433,8 +433,8 @@ export default function CentreOfExcellence() {
             }}
           >
             <div className={styles.doubleBlinkingArrows}>
-              <ChevronUp size={18} className={styles.arrowTop} />
-              <ChevronUp size={18} className={styles.arrowBottom} />
+              <ChevronDown size={18} className={styles.arrowTop} />
+              <ChevronDown size={18} className={styles.arrowBottom} />
             </div>
             <span className={styles.scrollUpText}>Keep Scrolling</span>
           </motion.div>

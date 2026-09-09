@@ -6,36 +6,52 @@ import { Video, Calendar, FileText, Activity, ChevronLeft, ChevronRight } from "
 import Image from "next/image";
 import styles from "./AppDownloadBanner.module.css";
 
+// Popup card dimensions are each scaled by the same factor as the base phone
+// mockup (popup native px * (BASE_WIDTH / 726), base native width) so every
+// popup keeps its true size relative to the base screen instead of being
+// force-fit to a uniform box.
 const features = [
   {
     id: 1,
     title: "Video consultations from home",
     icon: Video,
     img: "/NHCare Screens/Video Consultation.png",
-    isBooking: false,
+    popupImg: "/NHCare Screens/Video Consultation Popup.png",
+    popupWidth: 182,
+    popupHeight: 247,
   },
   {
     id: 2,
     title: "Book appointments in 60 seconds",
     icon: Calendar,
     img: "/NHCare Screens/Book Appointment.png",
-    isBooking: true,
+    popupImg: "/NHCare Screens/Book Appointment Popup.png",
+    popupWidth: 184,
+    popupHeight: 174,
   },
   {
     id: 3,
     title: "Access your health records anytime",
     icon: FileText,
     img: "/NHCare Screens/Health Records.png",
-    isBooking: false,
+    popupImg: "/NHCare Screens/Health Records Popup.png",
+    popupWidth: 182,
+    popupHeight: 149,
   },
   {
     id: 4,
     title: "Track vitals and wellness reports",
     icon: Activity,
     img: "/NHCare Screens/Vital Tracking.png",
-    isBooking: false,
+    popupImg: "/NHCare Screens/Vital Tracking Popup.png",
+    popupWidth: 231,
+    popupHeight: 183,
   },
 ];
+
+const BASE_WIDTH = 220;
+const BASE_HEIGHT = 364; // natural aspect (726:1200) at BASE_WIDTH
+const BASE_VISIBLE_HEIGHT = 330; // crops the bottom edge off so the phone appears to sink below frame
 
 export default function AppDownloadBanner() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -126,15 +142,7 @@ export default function AppDownloadBanner() {
                 transition={{ duration: 0.35, ease: "easeOut" }}
                 className={styles.pillWrapper}
               >
-                {/* Ring 1 (Inner - appears 1st) */}
-                <motion.div
-                  className={`${styles.concentricRing} ${styles.ring1}`}
-                  initial={{ scale: 0.75, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 0.75 }}
-                  transition={{ duration: 0.38, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                />
-
-                {/* Ring 2 (Middle - appears 2nd) */}
+                {/* Ring (single outline ring, staggered in on mount) */}
                 <motion.div
                   className={`${styles.concentricRing} ${styles.ring2}`}
                   initial={{ scale: 0.75, opacity: 0 }}
@@ -177,16 +185,46 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0.5, scale: 0.97 }}
                   transition={{ duration: 0.35, ease: "easeOut" }}
                   style={{ transformOrigin: "bottom center" }}
-                  className={`${styles.phoneMockupWrap} ${activeFeature.isBooking ? styles.bookingWrap : styles.regularWrap}`}
+                  className={styles.phoneMockupWrap}
                 >
-                  <Image
-                    src={activeFeature.img}
-                    alt={activeFeature.title}
-                    width={380}
-                    height={540}
-                    className={styles.phoneImg}
-                    priority
-                  />
+                  {/* Base screen: bottom edge cropped off so it appears to sink below the frame */}
+                  <div className={styles.phoneFrame}>
+                    <Image
+                      src={activeFeature.img}
+                      alt={activeFeature.title}
+                      width={BASE_WIDTH}
+                      height={BASE_HEIGHT}
+                      className={styles.phoneImg}
+                      priority
+                    />
+                  </div>
+
+                  {/* Popup: center touches the base screen's right edge, ~28px below its top,
+                      appears as an overlay ~1s after the base screen mounts */}
+                  <motion.div
+                    className={styles.popupFrame}
+                    style={{
+                      width: activeFeature.popupWidth,
+                      height: activeFeature.popupHeight,
+                      transformOrigin: "bottom center",
+                    }}
+                    initial={{ opacity: 0, scale: 0.8, x: "-50%" }}
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                      x: "-50%",
+                      transition: { duration: 0.5, delay: 1, ease: [0.16, 1, 0.3, 1] },
+                    }}
+                    exit={{ opacity: 0, scale: 0.8, x: "-50%", transition: { duration: 0.2, ease: "easeIn" } }}
+                  >
+                    <Image
+                      src={activeFeature.popupImg}
+                      alt={`${activeFeature.title} popup`}
+                      width={activeFeature.popupWidth}
+                      height={activeFeature.popupHeight}
+                      className={styles.popupImg}
+                    />
+                  </motion.div>
                 </motion.div>
               </AnimatePresence>
 
