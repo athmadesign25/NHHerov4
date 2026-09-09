@@ -1,0 +1,528 @@
+.wrapper {
+  position: relative;
+  width: 100%;
+  background: transparent;
+  z-index: 1;
+}
+
+/* ─── Pinned Sticky Track ───────────────────────────── */
+.scrollTrack {
+  position: relative;
+  width: 100%;
+  height: 140vh;
+  z-index: 2;
+}
+
+.stickySection {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.centerContent {
+  position: relative;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── Header ────────────────────────────────────────── */
+.header {
+  position: relative;
+  z-index: 70;
+  text-align: center;
+  max-width: 1050px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sectionTitle {
+  font-size: clamp(28px, 3.4vw, 48px);
+  font-weight: 800;
+  color: #000000 !important;
+  margin-top: 0;
+  margin-bottom: 20px;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+.flashWord {
+  display: inline;
+  will-change: color;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    white-space: normal;
+  }
+}
+
+.sectionSubtitle {
+  font-size: clamp(16px, 1.3vw, 20px);
+  font-weight: 400 !important;
+  color: #000000 !important;
+  line-height: 1.65;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 75;
+  opacity: 1;
+}
+
+/* ─── Scroll Progress Indicator Unit (Keep Scrolling & Double Blinking Top Arrow) ─── */
+.scrollIndicatorUnit {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 80;
+  pointer-events: none;
+  user-select: none;
+}
+
+.doubleBlinkingArrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  margin-bottom: 2px;
+}
+
+.arrowTop,
+.arrowBottom {
+  color: #000000;
+  stroke-width: 2.5px;
+  margin-top: -10px;
+}
+
+.arrowTop:first-child {
+  margin-top: 0;
+}
+
+.arrowTop {
+  animation: blinkArrow 1.2s infinite ease-in-out;
+  animation-delay: 0s;
+}
+
+.arrowBottom {
+  animation: blinkArrow 1.2s infinite ease-in-out;
+  animation-delay: 0.25s;
+}
+
+@keyframes blinkArrow {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.scrollUpText {
+  color: #000000 !important;
+  text-align: center;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 400 !important;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* ─── 4-Column Track Architecture (Podium Layout: Full-Bleed End-to-End) ─── */
+.gridSection {
+  --gx-pad: 16px;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: -10vh auto 0;
+  padding: 0 var(--gx-pad);
+  z-index: 90;
+  box-sizing: border-box;
+}
+
+.gridAnimatedWrapper {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  box-sizing: border-box;
+  z-index: 95;
+}
+
+.columnsContainer {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+/* Reversible seamless handoff plate: transparent -> solid #031224 (exactly
+   matching the top color of Patient Stories' background gradient, so there's
+   no visible seam once it surfaces), driven by raw scroll position from the
+   "View All Specialties" button entering from the bottom of the viewport
+   through to just before Patient Stories surfaces. Negative z-index keeps it
+   behind the grid cards and CTA (which are non-positioned/positioned-with-
+   z-index respectively) within this stacking context, so only empty
+   background space changes color — the grid and CTA stay untouched. Bleeds
+   past the section's side padding so the outer margins also turn solid. */
+.handoffPlate {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--gx-pad));
+  right: calc(-1 * var(--gx-pad));
+  z-index: -1;
+  background: #031224;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.columnTrack {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  will-change: transform;
+}
+
+/* Base Staggered Layout Offsets (Never aligned horizontally) */
+.col0 {
+  padding-top: 0px;
+}
+
+.col1 {
+  padding-top: clamp(70px, 8vw, 130px);
+}
+
+.col2 {
+  padding-top: clamp(25px, 3.5vw, 55px);
+}
+
+.col3 {
+  padding-top: clamp(90px, 10vw, 165px);
+}
+
+.specialityCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 0;
+  overflow: hidden;
+  text-decoration: none;
+  background: #090d16;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
+}
+
+.specialityCard:hover {
+  z-index: 2;
+}
+
+.cardImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.05) saturate(85%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, filter 0.35s ease;
+  z-index: 1;
+}
+
+.specialityCard:hover .cardImage {
+  transform: scale(1.05);
+  filter: brightness(1.12) saturate(100%);
+}
+
+.cardVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: brightness(1.05) saturate(85%);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.specialityCard:hover .cardVideo,
+.cardVideoActive {
+  opacity: 1;
+  transform: scale(1.05);
+  filter: brightness(1.12) saturate(100%);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.20) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 3;
+  transition: background 0.35s ease, opacity 0.35s ease;
+  pointer-events: none;
+}
+
+/* Fast, smooth white shimmer sweep across card on hover */
+.specialityCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.04) 75%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.specialityCard:hover::before {
+  animation: cardShimmer 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardShimmer {
+  0% {
+    left: -100%;
+    opacity: 0.9;
+  }
+  100% {
+    left: 175%;
+    opacity: 0;
+  }
+}
+
+/* Subtle white glass overlay on hover */
+.specialityCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.10);
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.specialityCard:hover::after {
+  opacity: 1;
+}
+
+.cardTextWrap {
+  position: relative;
+  z-index: 4;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Metric stats visible upfront with transparent/grey normal state -> white/current grey on hover */
+.cardStats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.specialityCard:hover .metricValue {
+  color: #FFFFFF;
+}
+
+.metricLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.specialityCard:hover .metricLabel {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.specialityName {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(18px, 1.8vw, 22px);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  transition: transform 0.3s ease;
+}
+
+.specialityCard:hover .specialityName {
+  transform: translateY(-2px);
+}
+
+.cardAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.specialityCard:hover .cardAction {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.actionArrow {
+  transition: transform 0.25s ease;
+}
+
+.specialityCard:hover .actionArrow {
+  transform: translateX(3px);
+}
+
+/* Transparent Extension at Bottom of Grid (handoff plate below provides seamless bg transition).
+   Extra bottom padding gives the handoff plate room to reach full solid opacity
+   before Patient Stories' own background surfaces, avoiding a visible hard edge. */
+.gridBottomStrip {
+  position: relative;
+  width: 100%;
+  background: transparent;
+  padding: 64px 24px clamp(220px, 32vw, 420px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  z-index: 5;
+}
+
+.viewAllBtn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.viewAllBtn:hover {
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  border-color: var(--color-primary, #034EA2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .gridSection {
+    margin-top: -6vh;
+    padding: 0 12px;
+  }
+  .columnsContainer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .columnTrack {
+    flex: 0 0 calc(50% - 6px);
+    gap: 12px;
+  }
+  .col0 { padding-top: 0px; }
+  .col1 { padding-top: 50px; }
+  .col2 { padding-top: 0px; }
+  .col3 { padding-top: 50px; }
+}
+
+@media (max-width: 640px) {
+  .gridSection {
+    margin-top: -4vh;
+    padding: 0 8px;
+  }
+  .columnsContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .columnTrack {
+    flex: 1 1 100%;
+    gap: 10px;
+    padding-top: 0 !important;
+  }
+  .specialityCard {
+    aspect-ratio: 16 / 10;
+    border-radius: 0;
+  }
+}

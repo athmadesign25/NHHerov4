@@ -1,0 +1,507 @@
+.section {
+  position: relative;
+  width: 100%;
+  background: transparent;
+  padding: 80px 0 120px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 60px 0 90px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 40px 0 60px 0;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header with Blur-In Motion */
+.header {
+  margin-bottom: 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.header :global(.section-eyebrow) {
+  color: #034EA2 !important;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.header :global(.section-eyebrow)::after {
+  background: var(--color-emergency);
+}
+
+.sectionTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.025em;
+  margin: 0;
+  line-height: 1.15;
+}
+
+.sectionSubtitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 400;
+  color: #64748B;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Outer Grid Motion Container for Scroll Expansion to Full Page Width */
+.bentoExpandWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transform-origin: center center;
+}
+
+/* 12-Column Bento Grid - 8px Gap */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 390px 390px;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+  .bentoGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 8px;
+  }
+}
+
+/* Right to Left Fleeting Red Shimmer Sweep Keyframes (Sweeps from 100% to 0%, pure white at start and end) */
+@keyframes redFleetingShimmerRightToLeft {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 1: Hero Column 1 (Clinical Excellence - Spans 2 Rows, 788px height)
+   Max border radius: 10px, Title: 30px, Subtitle: 16px
+   ───────────────────────────────────────────────────────────── */
+.heroCard {
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 2;
+  position: relative;
+  height: 100%;
+  min-height: 788px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
+  background: #19100E;
+  box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+  .heroCard {
+    height: 520px;
+    min-height: 520px;
+  }
+}
+
+.heroBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heroCard:hover .heroBgImage {
+  transform: scale(1.04);
+}
+
+/* Smooth Progressive Top Gradient Overlay */
+.heroTopOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: linear-gradient(180deg, rgba(26, 17, 11, 0.92) 0%, rgba(26, 17, 11, 0.50) 45%, rgba(19, 16, 14, 0.00) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Smooth Progressive Bottom Dark Gradient Overlay */
+.heroBottomOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 260px;
+  background: linear-gradient(0deg, rgba(19, 16, 14, 0.95) 0%, rgba(19, 16, 14, 0.55) 45%, rgba(19, 16, 14, 0.00) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.heroHeaderUnit {
+  position: relative;
+  z-index: 10;
+  padding: 34px 34px 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+/* Title matches 30px font-size across all cards */
+.heroTitle {
+  color: #F7F7F7;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    #F7F7F7 0%,
+    #F7F7F7 35%,
+    #ED1C24 50%,
+    #FFA8AB 55%,
+    #F7F7F7 65%,
+    #F7F7F7 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroCard:hover .heroTitle {
+  animation: redFleetingShimmerRightToLeft 0.75s ease-in-out 1 forwards;
+}
+
+/* Subtitle matches 16px font-size across all cards */
+.heroSubtitle {
+  color: #D1D1D1;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.heroStatUnit {
+  position: relative;
+  z-index: 10;
+  padding: 0 34px 36px 34px;
+}
+
+/* Fixed Constant Height for Left Stroke to Prevent Jumps */
+.heroStatInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-left: 2px solid rgba(255, 255, 255, 0.40);
+  padding: 0 0 0 16px;
+  height: 64px;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+.heroStatValue {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.heroStatLabel {
+  color: #E1E1E1;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STANDARD BENTO CARDS (Height: 390px, Max 10px roundedness, 30px title, 16px subtitle)
+   ───────────────────────────────────────────────────────────── */
+.cardRow1Equal {
+  position: relative;
+  height: 390px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  background: #0F172A;
+  box-sizing: border-box;
+}
+
+.cardRow1Col2 {
+  grid-column: 5 / span 4;
+  grid-row: 1;
+}
+
+.cardRow1Col3 {
+  grid-column: 9 / span 4;
+  grid-row: 1;
+}
+
+.cardRow2Wider {
+  grid-column: 5 / span 5;
+  grid-row: 2;
+  position: relative;
+  height: 390px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  background: #0F172A;
+  box-sizing: border-box;
+}
+
+.cardBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cardRow1Equal:hover .cardBgImage,
+.cardRow2Wider:hover .cardBgImage {
+  transform: scale(1.04);
+}
+
+/* Progressive Top Gradient Overlay */
+.topBlurOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 220px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.40) 48%, rgba(0, 0, 0, 0.00) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cardHeaderUnit {
+  position: relative;
+  z-index: 10;
+  padding: 34px 34px 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.cardTitle {
+  color: #F7F7F7;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    #F7F7F7 0%,
+    #F7F7F7 40%,
+    #ED1C24 50%,
+    #FFA8AB 55%,
+    #F7F7F7 65%,
+    #F7F7F7 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cardRow1Equal:hover .cardTitle,
+.cardRow2Wider:hover .cardTitle {
+  animation: redFleetingShimmerRightToLeft 0.75s ease-in-out 1 forwards;
+}
+
+.cardSubtitle {
+  color: #D1D1D1;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARD 5: Accreditations (Increased Bottom Spacing, Transparent CAP PNG Logo)
+   ───────────────────────────────────────────────────────────── */
+.accreditationsCard {
+  grid-column: 10 / span 3;
+  grid-row: 2;
+  position: relative;
+  height: 390px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(0deg, rgba(10, 49, 103, 0.82) 0%, rgba(10, 49, 103, 0.82) 100%), url('/bento-accreditations-bg.png') lightgray 50% / cover no-repeat;
+  box-sizing: border-box;
+}
+
+.accreditationsTitle {
+  color: #F7F7F7;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 24px 0;
+  padding: 26px 28px 0 28px;
+  position: relative;
+  z-index: 10;
+  background: linear-gradient(
+    90deg,
+    #F7F7F7 0%,
+    #F7F7F7 40%,
+    #ED1C24 50%,
+    #FFA8AB 55%,
+    #F7F7F7 65%,
+    #F7F7F7 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.accreditationsCard:hover .accreditationsTitle {
+  animation: redFleetingShimmerRightToLeft 0.75s ease-in-out 1 forwards;
+}
+
+.logosStack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 28px 36px 28px;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Individual Accreditation Item Light-Up Hover (Stationary - No Shift) */
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 50px;
+  width: 100%;
+  opacity: 0.72;
+  cursor: pointer;
+  transform: none !important;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logoRow:hover {
+  opacity: 1;
+  transform: none !important;
+}
+
+.logoBox {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.90);
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.15), 0 0 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  box-sizing: border-box;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logoRow:hover .logoBox {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.12), 0 0 16px rgba(255, 255, 255, 0.40);
+}
+
+/* Visually uniform logo scaling */
+.logoNablImg {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  transform: scale(1.15);
+}
+
+.logoNabhImg {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  transform: scale(1.15);
+}
+
+.logoJciImg {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  transform: scale(1.15);
+}
+
+.logoCapImg {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  transform: scale(1.15);
+}
+
+.logoText {
+  color: rgba(255, 255, 255, 0.88);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.logoRow:hover .logoText {
+  color: #FFFFFF;
+  font-weight: 600;
+}
