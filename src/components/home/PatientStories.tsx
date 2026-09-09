@@ -181,6 +181,7 @@ function StoryCard({
   card,
   cardRealIndex,
   isActive,
+  isHovered,
   isMuted,
   onToggleMute,
   onMouseEnter,
@@ -189,6 +190,7 @@ function StoryCard({
   card: (typeof initialCards)[0];
   cardRealIndex: number;
   isActive: boolean;
+  isHovered: boolean;
   isMuted: boolean;
   onToggleMute: () => void;
   onMouseEnter: () => void;
@@ -197,11 +199,32 @@ function StoryCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showShimmer, setShowShimmer] = useState(false);
 
+  // A card becoming active by default (centered, on entering the section)
+  // doesn't jump straight to its video — it keeps showing the overview like
+  // any other card for a few seconds first. A card becoming active because
+  // it's hovered skips that delay entirely and plays right away, since a
+  // hover is a deliberate request for that card's attention, not a passive
+  // scroll-by. If it stops being active before the delay is up, the timer
+  // is cancelled and it never shows the video at all.
+  const [showVideo, setShowVideo] = useState(false);
+  useEffect(() => {
+    if (!isActive) {
+      setShowVideo(false);
+      return;
+    }
+    if (isHovered) {
+      setShowVideo(true);
+      return;
+    }
+    const timer = setTimeout(() => setShowVideo(true), 3500);
+    return () => clearTimeout(timer);
+  }, [isActive, isHovered]);
+
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
 
-    if (isActive) {
+    if (showVideo) {
       vid.muted = isMuted;
       const playPromise = vid.play();
       if (playPromise !== undefined) {
@@ -212,15 +235,15 @@ function StoryCard({
     } else {
       vid.pause();
     }
-  }, [isActive, isMuted]);
+  }, [showVideo, isMuted]);
 
   // Shimmer sweep bridges the overview-blur-out -> caption-blur-in handoff
   useEffect(() => {
-    if (!isActive) return;
+    if (!showVideo) return;
     setShowShimmer(true);
     const timer = setTimeout(() => setShowShimmer(false), 700);
     return () => clearTimeout(timer);
-  }, [isActive]);
+  }, [showVideo]);
 
   return (
     <article
@@ -308,6 +331,7 @@ function StoryCard({
       <video
         ref={videoRef}
         src={card.video}
+        poster={card.image}
         playsInline
         loop
         muted={isMuted}
@@ -319,18 +343,24 @@ function StoryCard({
       {/* Bottom Rectangular Overlay Gradient */}
       <div className={styles.bottomOverlay} />
 
-      {/* Subtle top-down wash behind the overview card, much softer than bottomOverlay */}
+      {/* Dark wash behind the overview unit — same reach/intensity as
+          bottomOverlay, just inverted vertically, since the overview no
+          longer has its own glass panel to lean on for contrast. */}
       <div className={styles.topOverlay} />
 
       {/* Shimmer sweep: bridges the overview-card blur-out and caption blur-in */}
       {showShimmer && <div className={styles.cardShimmerSweep} />}
 
-      {/* Ascending Karaoke Word Highlight Captions (Active state only) */}
-      <KaraokeCaption captions={card.captions} isPlaying={isActive} />
+      {/* Ascending Karaoke Word Highlight Captions (only once the video has
+          actually started, matching the delayed handoff below) */}
+      <KaraokeCaption captions={card.captions} isPlaying={showVideo} />
 
-      {/* Overview card: top-aligned with the mute/unmute button */}
+      {/* Overview unit: bare text/icon (no glass panel), top-aligned with
+          the mute button, left-aligned with the bottom text unit. Shows
+          until the video actually starts (including through the delay on a
+          freshly-active card), not just while inactive. */}
       <AnimatePresence>
-        {!isActive && (
+        {!showVideo && (
           <motion.div
             className={styles.overviewBoxTop}
             initial={{ opacity: 0, y: 6 }}
@@ -424,6 +454,14 @@ export default function PatientStories() {
     setDirection(-1);
     setCenterIndex((prev) => (prev - 1 + CARDS_COUNT) % CARDS_COUNT);
   };
+  const goToIndex = (targetIndex: number) => {
+    if (targetIndex === centerIndex) return;
+    // Whichever way around the loop is shorter, so the dots always animate
+    // the same direction a real drag/click there would imply.
+    const forwardDistance = (targetIndex - centerIndex + CARDS_COUNT) % CARDS_COUNT;
+    setDirection(forwardDistance <= CARDS_COUNT / 2 ? 1 : -1);
+    setCenterIndex(targetIndex);
+  };
 
   const NUM_SLOTS = 5;
   const slots = Array.from({ length: NUM_SLOTS }, (_, slotPos) => {
@@ -494,6 +532,7 @@ export default function PatientStories() {
                   hoveredRealIndex !== null
                     ? realIndex === hoveredRealIndex
                     : isCenterSlot;
+                const isHovered = realIndex === hoveredRealIndex;
                 const isMuted = mutedStates[realIndex];
                 const slideOffsetEnter = direction * 48;
                 const slideOffsetExit = direction * -48;
@@ -537,6 +576,7 @@ export default function PatientStories() {
                           card={card}
                           cardRealIndex={realIndex}
                           isActive={isActive}
+                          isHovered={isHovered}
                           isMuted={isMuted}
                           onToggleMute={() => toggleMute(realIndex)}
                           onMouseEnter={() => handleMouseEnter(realIndex)}
@@ -550,7 +590,7 @@ export default function PatientStories() {
             </div>
           </div>
 
-          {/* Glass Navigation Arrows at Bottom Center */}
+          {/* Glass Navigation Arrows + Dot Pill at Bottom Center */}
           <div className={styles.arrowsWrapper}>
             <button
               type="button"
@@ -558,8 +598,22 @@ export default function PatientStories() {
               onClick={goPrev}
               aria-label="Previous story"
             >
-              <ChevronLeft size={24} strokeWidth={2} />
+              <ChevronLeft size={18} strokeWidth={2} />
             </button>
+
+            <div className={styles.dotsPill} role="tablist" aria-label="Story navigation">
+              {initialCards.map((card, idx) => (
+                <button
+                  key={card.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={idx === centerIndex}
+                  aria-label={`Go to story ${idx + 1}`}
+                  className={`${styles.dot} ${idx === centerIndex ? styles.dotActive : ""}`}
+                  onClick={() => goToIndex(idx)}
+                />
+              ))}
+            </div>
 
             <button
               type="button"
@@ -567,7 +621,7 @@ export default function PatientStories() {
               onClick={goNext}
               aria-label="Next story"
             >
-              <ChevronRight size={24} strokeWidth={2} />
+              <ChevronRight size={18} strokeWidth={2} />
             </button>
           </div>
 
@@ -578,6 +632,18 @@ export default function PatientStories() {
             </a>
           </div>
         </motion.div>
+
+        {/* This section's own background gradient (see .section in the CSS)
+            resolves to a light #FCFCFC well before the section's bottom
+            edge (from ~87% down), handing off into HealthPackages' light
+            header — the section is marked dark overall for the carousel
+            above, but that bottom slice needs to flip back to light so the
+            navbar doesn't render white text on a near-white background. */}
+        <div
+          data-nav-theme="light"
+          style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "16%" }}
+          aria-hidden
+        />
       </div>
     </section>
   );

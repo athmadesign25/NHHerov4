@@ -1,59 +1,83 @@
+/* No card here — content sits directly on the shared page background.
+   Sticky-scroll pin lives inside .stackTrack/.stickyViewport below; this
+   outer section must stay overflow:visible or the sticky pin breaks. */
 .section {
   position: relative;
   background: transparent;
-  padding: clamp(60px, 8vw, 100px) 0;
   width: 100%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
 }
 
-/* Inner Glass Content Card: Aligned to container page width (matching ChairmanQuote card) */
-.contentCard {
+.stackTrack {
   position: relative;
-  z-index: 2;
   width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  min-height: 540px;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: radial-gradient(110% 140% at 50% -10%, rgba(13, 35, 75, 0.75) 0%, rgba(7, 20, 45, 0.85) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  padding: 56px 0 0 64px;
-  overflow: hidden;
+}
+
+.stickyViewport {
+  top: 0;
+  width: 100%;
   box-sizing: border-box;
 }
 
-/* ─── Left Column (Copy + Downloads) ─── */
-.leftCol {
+/* Fills the sticky viewport behind the content; opacity is tied to the
+   same shared darkOpacity value the page-level crossfade uses. Extends
+   well above its own box (top: -320px) with a mask fading it in gradually,
+   so the switch from the plain WhyChooseNH->Footer plate into this
+   section's own textured gradient reads as a soft blend instead of a hard
+   seam right at the section's top edge — the same trick used for the
+   plate's own arrival, just now scoped to this element instead of an
+   ancestor. (Deliberately NOT clipped by .stickyViewport, which must stay
+   overflow:visible for exactly this reason; the phone's own bottom-edge
+   crop is handled separately by .phoneFrame.) */
+.neatBackdrop {
+  position: absolute;
+  top: -320px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+}
+
+.contentStack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  max-width: 540px;
-  z-index: 5;
-  padding-bottom: 56px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 80px;
+  padding: clamp(72px, 9vw, 120px) clamp(24px, 6vw, 80px) 0;
+  box-sizing: border-box;
 }
 
-/* Eyebrow Layout: Text Top, Horizontal Red Dash Below, Left Aligned */
+/* ─── Centered Copy Block (Eyebrow + Title + Subtitle) ─── */
+.topTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  width: 100%;
+}
+
 .eyebrow {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.92);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .eyebrowLine {
@@ -65,52 +89,245 @@
 }
 
 .title {
-  font-size: clamp(34px, 3.8vw, 48px);
+  font-size: clamp(30px, 4vw, 52px);
   font-weight: 800;
   color: #FFFFFF;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  white-space: nowrap;
 }
 
-/* Red Emergency Gradient Title Highlight */
-.titleHighlight {
+/* Base (revealed) copy of the highlighted phrase — plain solid color, no
+   gradient. The continuous shimmer sweep lives on a separate overlay below
+   so it can run as ONE pass across the whole phrase instead of per-word
+   (background-clip:text doesn't cascade, so per-word was the only way to
+   get color on the reveal spans — the shimmer itself doesn't need per-word
+   spans, just one element spanning the full phrase). */
+.titleHighlightBase {
+  display: inline-block;
   color: var(--color-emergency, #ED1C24);
-  background: linear-gradient(135deg, #FF5252 0%, #ED1C24 100%);
+}
+
+.titleHighlightWrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* Invisible duplicate of "Always With You." stacked exactly on top of the
+   revealed words above. Stays hidden (opacity 0) until that word reveal has
+   visually finished, then fades in permanently as one continuous left-to-
+   right gradient (light red -> the brand red) across the whole phrase —
+   a plain per-word color would repeat the same light-to-dark span on each
+   word instead of reading as one gradient across the full phrase. */
+.titleShimmerOverlay {
+  position: absolute;
+  inset: 0;
+  display: inline-block;
+  white-space: nowrap;
+  color: var(--color-emergency, #ED1C24);
+  background-image: linear-gradient(90deg, #FFB3B3 0%, #ED1C24 100%);
+  background-repeat: no-repeat;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  pointer-events: none;
 }
 
-.subtitle {
-  font-size: 16px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
-  margin-bottom: 36px;
-  max-width: 480px;
-}
-
-/* Downloads Container Row (QR + Store Badges) */
-.downloadsRow {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+/* ─── Bottom-Anchored Block (Pill + Phone + QR/Store Row) ─── */
+.bottomBlock {
   width: 100%;
-}
-
-/* Authentic Reference QR Box Style */
-.qrBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  border-radius: var(--radius-lg, 16px);
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 12px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+}
+
+/* Feature Name Pill Wrapper */
+.pillWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.pillInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fixed width (sized for the longest feature title) so switching between
+   features of different text lengths never resizes the pill — which would
+   otherwise shove the flanking arrows sideways since the whole row is
+   centered as a unit. Content stays left-aligned inside that fixed box. */
+.featurePill {
+  display: flex;
+  width: 380px;
+  padding: 10px 18px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  border-radius: 48px;
+  border: 1.327px solid rgba(255, 255, 255, 0.20);
+  background: rgba(16, 10, 41, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.pillIconBg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(173deg, #4582F3 5.22%, #0B5DF4 118.69%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pillIcon {
+  color: #ffffff;
+}
+
+.pillText {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Trust Stack | Phone Carousel | Store Badges row. The phone is the only
+   true flex-flow child — it always centers on the row's own width
+   regardless of how wide the trust stack or store column happen to be.
+   Both side stacks are pulled out of flow (absolutely positioned against
+   this row's own left/right edges) specifically so their width can never
+   pull the phone off-center. */
+.bottomRow {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Positioning lives on a plain wrapper, separate from the motion.div that
+   carries the entrance animation — framer-motion writes its own inline
+   `transform` for an animated `y`, which would silently overwrite a CSS
+   transform:translateY(-50%) set directly on that same animated element
+   (this is what was cutting the store column off / miscentering both
+   stacks: top:50% was applying, but the -50% counter-shift never was). */
+.trustStackPosition,
+.storesColPosition {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.trustStackPosition {
+  left: 0;
+}
+
+.storesColPosition {
+  right: 0;
+}
+
+/* Left-side trust stack: three bare icon+caption units, no container —
+   mirrors the store column's own entrance timing/motion for cohesion.
+   Each unit is icon-left/text-right (rather than icon-above-text), which
+   keeps the whole stack shorter/more compact — closer in overall height to
+   the store column on the right, instead of towering well past it. */
+.trustStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.trustUnit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Fixed-width slot the icon is centered inside, rather than sizing the
+   icon's own box directly — the three icons render at different sizes
+   (see .trustIconLarge), so without a shared slot their differing widths
+   would leave the text column starting at a different x per row. Centering
+   inside a common slot keeps the icons on one visual column AND the text
+   starting at one consistent left margin. */
+.trustIconSlot {
+  width: 58px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trustIcon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+/* The heart and star icons are bare shapes with no backing shape of their
+   own (unlike the download icon's filled rounded-square backdrop), so at
+   matching box sizes they read visually lighter/smaller — scaled up here
+   to land at a comparable visual weight to the download icon beside them. */
+.trustIconLarge {
+  width: 58px;
+  height: 58px;
+}
+
+/* The heart's fill is a fairly dark, low-opacity red to begin with and
+   reads as subdued next to the other two icons' brighter colors. */
+.trustIconBright {
+  filter: brightness(1.18);
+}
+
+.trustTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.trustLabel {
+  color: rgba(255, 255, 255, 0.90);
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.trustMainText {
+  color: rgba(255, 255, 255, 0.90);
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.trustSubtext {
+  color: #D1D1D1;
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .qrLabel {
@@ -137,6 +354,15 @@
   transition: all 0.2s ease;
 }
 
+/* QR sits stacked (image above label) at the top of the stores column,
+   reusing .storeContainer's own glass/stroke styling for visual
+   consistency with the App Store / Google Play badges below it. */
+.qrContainer {
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px;
+}
+
 .storeContainer:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
@@ -154,91 +380,22 @@
   object-fit: contain;
 }
 
-/* ─── Right Column (Feature Carousel & Bottom Aligned Phone) ─── */
-.rightCol {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding-right: 36px;
-}
-
-/* Feature Name Pill Wrapper */
-.pillWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  margin-top: 12px;
-}
-
-.concentricRing {
-  position: absolute;
-  border-radius: 999px;
-  border: 1.327px solid rgba(255, 255, 255, 0.22);
-  pointer-events: none;
-}
-
-.ring2 {
-  inset: -6px -8px;
-}
-
-.featurePill {
-  display: flex;
-  padding: 10px 18px;
-  align-items: center;
-  gap: 10px;
-  border-radius: 48px;
-  border: 1.327px solid rgba(255, 255, 255, 0.20);
-  background: rgba(16, 10, 41, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-}
-
-.pillIconBg {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: linear-gradient(173deg, #4582F3 5.22%, #0B5DF4 118.69%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.pillIcon {
-  color: #ffffff;
-}
-
-.pillText {
-  color: #ffffff;
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-/* Phone Carousel Unit (Bottom Aligned, 10% Scale Reduction with Anchored Baseline) */
+/* Phone Carousel Unit */
 .phoneCarouselUnit {
   position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   width: 100%;
-  max-width: 520px;
-  margin-top: auto;
-  margin-bottom: 0;
+  max-width: 740px;
+}
+
+.phoneStageWrap {
+  position: relative;
 }
 
 .phoneMockupWrap {
-  width: 220px;
+  width: 310px;
   position: relative;
   z-index: 1;
   margin-bottom: 0;
@@ -247,11 +404,14 @@
 
 /* Crops the base screen's bottom edge off (overflow hidden on a shorter box
    than the image's natural height) so the phone appears to sink below the
-   frame instead of showing a hard bottom edge. */
+   frame instead of showing a hard bottom edge. Kept as a ratio of the
+   authored (final) size — since the enlarged "appear" state is reached via
+   a transform (scale) on an ancestor rather than literal width/height
+   changes, this crop ratio holds at every size along the transition. */
 .phoneFrame {
   position: relative;
-  width: 220px;
-  height: 330px;
+  width: 310px;
+  height: 464px;
   overflow: hidden;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
 }
@@ -265,12 +425,12 @@
   display: block;
 }
 
-/* Popup card: horizontal center sits on the base screen's right edge, ~28px
+/* Popup card: horizontal center sits on the base screen's right edge, ~32px
    below its top, extending past the base screen rather than being cropped
    to it. */
 .popupFrame {
   position: absolute;
-  top: 28px;
+  top: 32px;
   left: 100%;
   /* horizontal centering (-50% x) is applied via Framer Motion's animated
      x prop in the TSX, not CSS transform — Framer's own transform (from
@@ -288,60 +448,80 @@
   border-radius: 14px;
 }
 
-/* Transparent Glass Carousel Arrow Buttons */
-.carouselArrowLeft,
-.carouselArrowRight {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
+/* Small arrow buttons flanking the feature title pill itself */
+.pillArrowBtn {
+  position: relative;
+  flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.20);
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   color: #ffffff;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-.carouselArrowLeft {
-  left: -8px;
-}
-
-.carouselArrowRight {
-  right: -8px;
-}
-
-.carouselArrowLeft:hover,
-.carouselArrowRight:hover {
+.pillArrowBtn:hover {
   background: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-50%) scale(1.05);
+  transform: scale(1.05);
 }
 
 @media (max-width: 1024px) {
-  .contentCard {
-    grid-template-columns: 1fr;
-    padding: 40px 32px 0 32px;
-    min-height: auto;
+  .contentStack {
+    padding: 48px 24px 40px;
   }
-  .leftCol {
-    max-width: 100%;
+  .title {
+    white-space: normal;
+  }
+  /* The pill's arrows are the only carousel navigation now (the phone-side
+     ones were removed), so keep them — just tighten the row and truncate
+     long feature titles so it fits without pushing the arrows off-screen. */
+  .pillWrapper {
+    gap: 12px;
+  }
+  .pillArrowBtn {
+    width: 28px;
+    height: 28px;
+  }
+  .featurePill {
+    width: 220px;
+  }
+  .pillText {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 14px;
+  }
+  /* Both side stacks revert to normal flow here (desktop pulls them out
+     of flow via absolute positioning so their width can never drag the
+     phone off-center — not needed once everything just stacks). */
+  .bottomRow {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .trustStackPosition,
+  .storesColPosition {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+  .trustStack,
+  .storesCol {
     align-items: center;
-    text-align: center;
-    padding-bottom: 40px;
   }
-  .rightCol {
-    padding-right: 0;
+  .trustUnit {
+    justify-content: center;
   }
-  .subtitle {
-    text-align: center;
+  .phoneCarouselUnit {
+    order: -1;
   }
 }

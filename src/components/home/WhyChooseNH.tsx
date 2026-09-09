@@ -17,7 +17,7 @@ const ACCREDITATIONS = [
   { id: "cap", name: "CAP Accredited", logo: "/accreditations/cap-clean.png", logoClass: styles.logoCapImg },
 ];
 
-export default function WhyChooseNH() {
+export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [statIndex, setStatIndex] = useState(0);
 
@@ -60,9 +60,14 @@ export default function WhyChooseNH() {
           </p>
         </motion.div>
 
-        {/* Scroll Expansion Wrapper for Entire Bento Grid */}
+        {/* Scroll Expansion Wrapper for Entire Bento Grid. The whole section
+            is otherwise marked light (white bg around the header text), but
+            every tile in this grid is a dark photo/video card with its own
+            dark overlay — nested here so the navbar reads dark/white text
+            specifically while it's over the grid, not the lighter header. */}
         <motion.div
           className={styles.bentoExpandWrapper}
+          data-nav-theme="dark"
           style={{
             scale: gridScale,
             width: gridWidth,
@@ -196,6 +201,16 @@ export default function WhyChooseNH() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
             >
+              <video
+                className={styles.accreditationsBgVideo}
+                src="/0_ai_generated_Doctor_1280x720.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+              <div className={styles.accreditationsOverlay} />
+
               <h3 className={styles.accreditationsTitle}>Accreditations</h3>
 
               <div className={styles.logosStack}>
@@ -216,6 +231,17 @@ export default function WhyChooseNH() {
           </div>
         </motion.div>
       </div>
+
+      {/* This section's own bottom padding (after the bento grid) shares the
+          page-level crossfade plate with the gap/AppDownloadBanner that
+          follow it — by the time that plate is mostly dark navy here, a
+          static "light" tag would be wrong, so this mirrors the same
+          threshold the page passes down instead of a fixed value. */}
+      <div
+        data-nav-theme={crossfadeDark ? "dark" : "light"}
+        style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "140px" }}
+        aria-hidden
+      />
     </section>
   );
 }

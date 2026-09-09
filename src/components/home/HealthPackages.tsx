@@ -122,15 +122,18 @@ export default function HealthPackages() {
   // grows into the peek position) instead of the front card just crossfading
   // in place against a static peek image.
   const ROLE_STYLE = [
-    { top: 0, left: 0, width: 440, height: 600, opacity: 1, zIndex: 3 }, // front
-    { top: 88, left: 38, width: 424, height: 518, opacity: 0.2, zIndex: 2 }, // peek
-    { top: 118, left: 60, width: 396, height: 470, opacity: 0, zIndex: 1 }, // hidden, further back
+    { top: 0, left: 0, width: 483, height: 658, opacity: 1, zIndex: 3 }, // front
+    { top: 97, left: 42, width: 465, height: 568, opacity: 0.2, zIndex: 2 }, // peek
+    { top: 129, left: 66, width: 434, height: 515, opacity: 0, zIndex: 1 }, // hidden, further back
   ];
   const roleFor = (pkgIndex: number) => (pkgIndex - activeIndex + PACKAGES.length) % PACKAGES.length;
 
   return (
-    <div className={styles.sectionWrap} id="health-packages">
-      {/* Header section (scrolls up naturally, no eyebrow) */}
+    <div className={styles.sectionWrap} id="health-packages" data-nav-theme="light">
+      {/* Header section (scrolls up naturally, no eyebrow). Explicit here
+          (rather than relying on the probe's default light fallback) so
+          this doesn't silently depend on every other section always
+          tagging itself correctly. */}
       <div className="container">
         <div className={styles.header}>
           <div className={styles.titleWrap}>
@@ -148,7 +151,7 @@ export default function HealthPackages() {
 
       {/* Sticky Scroll Runway: Card pins to the very top and expands end-to-end */}
       <div ref={trackRef} className={styles.stackTrack}>
-        <div className={styles.stickyViewport}>
+        <div className={styles.stickyViewport} data-nav-theme="dark">
           <motion.div
             className={styles.sectionScaleWrap}
             style={{
@@ -157,8 +160,9 @@ export default function HealthPackages() {
               transformOrigin: "center top",
             }}
           >
-            {/* Main Card: only its width narrows (one-time), image stays
-                anchored to the left edge so it never shifts, just clips. */}
+            {/* Main Card: width narrows (one-time) while the photo itself
+                pans slightly rightward in sync, giving the shrink a subtle
+                parallax feel instead of a flat static crop. */}
             <div
               className={`${styles.mainCard} ${hasTransformed ? styles.mainCardShrunk : ""}`}
               style={{ backgroundImage: "url('/health-package-main-card.jpg')" }}
@@ -189,7 +193,6 @@ export default function HealthPackages() {
                   {/* Hover-only CTA, revealed on hovering anywhere over the main card */}
                   <a href="#book-health-package" className={styles.mainCardBookLink}>
                     Book Health Package
-                    <ChevronRight size={16} className={styles.linkChevron} />
                   </a>
                 </div>
               </div>
@@ -249,7 +252,6 @@ export default function HealthPackages() {
                           {/* Hover-only CTA link, only reachable on the front card */}
                           <a href="#book-health-package" className={styles.bookPackageLink}>
                             Book Health Package
-                            <ChevronRight size={16} className={styles.linkChevron} />
                           </a>
 
                           {/* Carousel arrows: only on the front card, only ever affect the right-side cards */}
@@ -280,6 +282,7 @@ export default function HealthPackages() {
 
                   <a href="#all-packages" className={styles.secondaryButton}>
                     See all 24 packages
+                    <ChevronRight size={16} className={styles.linkChevron} />
                   </a>
                 </motion.div>
               )}

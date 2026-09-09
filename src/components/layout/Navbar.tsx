@@ -51,6 +51,40 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
+    // Real-time theme probe directly under the navbar's center (y = 35px).
+    // Deliberately unconditional — it used to live inside the show/hide
+    // logic below and only ran once a scroll had traveled past a 120px
+    // threshold AND cleared a 12px dead-zone (both tuned for the hide-on-
+    // scroll-down behavior, not for theme accuracy). That meant the very
+    // first ~120px of scroll, and any small/slow scroll movement anywhere
+    // on the page, never re-checked the theme at all — so the navbar could
+    // sit on a dark section still showing dark (low-contrast) text, or
+    // vice versa, until a big enough scroll happened to also pass the
+    // unrelated hide/show gate. Running it on every scroll tick (plus once
+    // on mount) keeps it in sync with whatever is actually under it.
+    const probeTheme = () => {
+      if (typeof document === "undefined") return;
+      const probeX = window.innerWidth / 2;
+      const probeY = 35;
+      const elements = document.elementsFromPoint(probeX, probeY);
+      let detectedTheme = "light";
+
+      for (const el of elements) {
+        if (el.closest("nav")) continue;
+        const themeEl = el.closest("[data-nav-theme]");
+        if (themeEl) {
+          detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
+          break;
+        }
+      }
+
+      const isLight = detectedTheme !== "dark";
+      if (isLight !== isOverLightRef.current) {
+        isOverLightRef.current = isLight;
+        setIsOverLightBackground(isLight);
+      }
+    };
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -59,6 +93,8 @@ export default function Navbar() {
       } else {
         setScrolled(false);
       }
+
+      probeTheme();
 
       // Always show navbar near the top
       if (currentScrollY < 120) {
@@ -82,29 +118,6 @@ export default function Navbar() {
         setIsVisible(true);
       }
 
-      // Scalable real-time theme probe directly under Navbar center (y = 35px)
-      if (typeof document !== "undefined") {
-        const probeX = window.innerWidth / 2;
-        const probeY = 35;
-        const elements = document.elementsFromPoint(probeX, probeY);
-        let detectedTheme = "light";
-
-        for (const el of elements) {
-          if (el.closest("nav")) continue;
-          const themeEl = el.closest("[data-nav-theme]");
-          if (themeEl) {
-            detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
-            break;
-          }
-        }
-
-        const isLight = detectedTheme !== "dark";
-        if (isLight !== isOverLightRef.current) {
-          isOverLightRef.current = isLight;
-          setIsOverLightBackground(isLight);
-        }
-      }
-
       // Update baseline after a meaningful scroll distance
       lastScrollY.current = currentScrollY;
     };
@@ -123,6 +136,11 @@ export default function Navbar() {
         top: "0px",
         zIndex: 1000,
         width: "100%",
+        // Extra bottom padding so the backdrop-blur's fade mask (below) has
+        // room to taper off past the actual nav content, instead of eating
+        // into it — that overlap was what made the bar look like it was
+        // dissolving into the page rather than having a clean bottom edge.
+        paddingBottom: "20px",
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
         "--nav-fg-color": isOverLightBackground ? "var(--color-text, #0f172a)" : "#ffffff"
@@ -492,7 +510,7 @@ export default function Navbar() {
                 WebkitBackdropFilter: "blur(12px)",
                 border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
                 padding: "8px 24px",
-                borderRadius: "100px",
+                borderRadius: "var(--radius-md)",
                 fontWeight: 600,
                 fontSize: "14px",
                 transition: "all 0.2s"

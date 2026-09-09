@@ -32,7 +32,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-nav-theme="dark">
 
       {/* Main Footer */}
       <div className={styles.main}>

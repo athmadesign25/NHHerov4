@@ -47,6 +47,11 @@ export default function FloatingQuickActions() {
       const prevPointerEvents = containerRef.current.style.pointerEvents;
       containerRef.current.style.pointerEvents = "none";
 
+      // Same data-nav-theme probe the navbar uses (see Navbar.tsx) — reads
+      // whatever section marker actually sits under each link, instead of
+      // hard-coding a list of section names/classes here that would drift
+      // out of sync with it. Only the resulting colors differ (white vs
+      // this component's own blue, rather than the navbar's dark text).
       const linkRefs = [linkRef0, linkRef1];
       const newDarkState = linkRefs.map((ref) => {
         if (!ref.current) return false;
@@ -54,40 +59,16 @@ export default function FloatingQuickActions() {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        let topEl = document.elementFromPoint(centerX, centerY);
-
-        while (topEl) {
-          const className = typeof topEl.className === "string" ? topEl.className : "";
-          const id = topEl.id || "";
-          const tag = topEl.tagName || "";
-
-          // Check for Leadership section (ChairmanQuote)
-          if (id === "chairman-quote" || className.includes("ChairmanQuote")) {
-            const sectionRect = topEl.getBoundingClientRect();
-            if (rect.bottom >= sectionRect.bottom - 100) {
-              return true;
-            }
-            return false;
+        const elements = document.elementsFromPoint(centerX, centerY);
+        let detectedTheme = "light";
+        for (const el of elements) {
+          const themeEl = el.closest("[data-nav-theme]");
+          if (themeEl) {
+            detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
+            break;
           }
-
-          // Check if top-most visible section under this link is a dark section
-          if (
-            id === "hero-section-search-first" ||
-            id === "patient-stories" ||
-            className.includes("HeroSearchFirst") ||
-            className.includes("PatientStories") ||
-            className.includes("specialityCard") ||
-            className.includes("specialitiesGrid") ||
-            className.includes("AppDownloadBanner") ||
-            className.includes("Footer") ||
-            tag === "FOOTER"
-          ) {
-            return true;
-          }
-          topEl = topEl.parentElement;
         }
-
-        return false;
+        return detectedTheme === "dark";
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useRef, useEffect, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { NeatGradient } from "@firecms/neat";
 import HeroSearchFirst from "@/components/home/HeroSearchFirst";
 import CentreOfExcellence from "@/components/home/CentreOfExcellence";
@@ -161,13 +161,34 @@ function WhyNHToFooterBackground() {
   // Footer's dark bg as AppDownloadBanner's top edge rises up from the bottom
   // of the viewport, then stays dark for the rest of the page.
   const appDownloadRef = useRef<HTMLDivElement>(null);
+  const whyChooseNHRef = useRef<HTMLDivElement>(null);
 
+  // Tied to WhyChooseNH's own bottom edge (not AppDownloadBanner's), so the
+  // plate is already at ~0 opacity exactly when the bento grid's bottom
+  // edge first becomes visible from below, and finishes ramping to fully
+  // dark within the empty runway that follows (section padding + breathing
+  // gap) before AppDownloadBanner's own content appears. Without this, the
+  // opacity was already well underway by the time the opaque grid images
+  // stopped masking it, so the plate seemed to "switch on" as a hard
+  // rectangle right where the images ended.
   const { scrollYProgress } = useScroll({
-    target: appDownloadRef,
-    offset: ["start end", "start 35%"],
+    target: whyChooseNHRef,
+    offset: ["end end", "end 65%"],
   });
 
   const darkOpacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  // The navbar's theme probe reads a static data-nav-theme per DOM region,
+  // but this crossfade is a continuous scroll-linked value — a fixed
+  // "light" tag on WhyChooseNH's tail (and the gap after it) goes wrong
+  // partway through, once the plate has visibly turned dark navy there but
+  // the tag hasn't caught up, showing dark nav text/logo on a dark
+  // background. Mirroring the actual crossfade with a simple midpoint
+  // threshold keeps the navbar's theme in step with what's really on screen.
+  const [crossfadeDark, setCrossfadeDark] = useState(false);
+  useMotionValueEvent(darkOpacity, "change", (latest) => {
+    setCrossfadeDark(latest > 0.5);
+  });
 
   return (
     <div style={{ position: "relative", width: "100%", background: "linear-gradient(180deg, #FCFCFC 50.97%, #E0ECFF 97.06%)" }}>
@@ -184,13 +205,17 @@ function WhyNHToFooterBackground() {
       />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        <WhyChooseNH />
-        {/* breathing room between sections while the bg stays continuous underneath */}
-        <div style={{ height: "72px" }} />
-        <div ref={appDownloadRef}>
-          <AppDownloadBanner />
+        <div ref={whyChooseNHRef} data-nav-theme="light">
+          <WhyChooseNH crossfadeDark={crossfadeDark} />
         </div>
-        <div style={{ height: "72px" }} />
+        {/* breathing room between sections while the bg stays continuous
+            underneath — same dynamic theme as WhyChooseNH's own tail below,
+            since by the time this gap scrolls past the navbar the plate is
+            usually already most of the way through its crossfade. */}
+        <div style={{ height: "72px" }} data-nav-theme={crossfadeDark ? "dark" : "light"} />
+        <div ref={appDownloadRef} data-nav-theme="dark">
+          <AppDownloadBanner darkOpacity={darkOpacity} />
+        </div>
       </div>
     </div>
   );
@@ -206,13 +231,21 @@ export default function HomePage() {
         <GlobalNeatBackground />
 
         {/* Hero section with floating scaled card */}
-        <HeroSearchFirst />
+        <div data-nav-theme="dark">
+          <HeroSearchFirst />
+        </div>
 
-        {/* CentreOfExcellence section with pinned title sequence & animated grid reveal */}
-        <CentreOfExcellence />
+        {/* CentreOfExcellence section with pinned title sequence & animated grid reveal.
+            Mostly light (sticky title track); its own handoff-plate tail marks itself
+            dark internally as it turns solid navy ahead of Patient Stories. */}
+        <div data-nav-theme="light">
+          <CentreOfExcellence />
+        </div>
 
         {/* PatientStories section seamlessly sharing NeatGradient background */}
-        <PatientStories />
+        <div data-nav-theme="dark">
+          <PatientStories />
+        </div>
       </div>
 
       <HealthPackages />

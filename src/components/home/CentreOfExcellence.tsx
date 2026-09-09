@@ -226,11 +226,13 @@ function PodiumColumnTrack({
   items,
   scrollYProgress,
   screenMode,
+  exitOpacity,
 }: {
   colIndex: number;
   items: typeof SPECIALITIES;
   scrollYProgress: import("framer-motion").MotionValue<number>;
   screenMode: "desktop" | "tablet" | "mobile";
+  exitOpacity: import("framer-motion").MotionValue<number>;
 }) {
   const isDesktop = screenMode === "desktop";
   const isTablet = screenMode === "tablet";
@@ -246,11 +248,21 @@ function PodiumColumnTrack({
 
   const y = useTransform(scrollYProgress, [0, 1], yOffsets);
 
-  // Entrance reveal (0 -> 0.15) and photographic exit fade (0.68 -> 0.98) matching Podium
+  // Entrance reveal only (0 -> 0.15); the exit fade is handled by `exitOpacity`
+  // below instead of a second stop on this same section-relative progress —
+  // that older mapping ([0.68, 0.98] -> [1.0, 0.18]) only finished fading
+  // (and only to a lingering 18%, never fully invisible) hundreds of pixels
+  // after the handoff plate had already gone solid, leaving a ghostly card
+  // visibly overlapping the "solid dark" dwell and bleeding into Patient
+  // Stories. `exitOpacity` is shared raw-scroll-position state computed
+  // once in CentreOfExcellence as the exact inverse of the handoff plate's
+  // own fade-in, so cards are guaranteed to hit 0 opacity in lockstep with
+  // the plate reaching fully solid — no separate calibration to drift out
+  // of sync.
+  const entranceOpacity = useTransform(scrollYProgress, [0.0, 0.15], [0.35, 1.0]);
   const opacity = useTransform(
-    scrollYProgress,
-    [0.0, 0.15, 0.68, 0.98],
-    [0.35, 1.0, 1.0, 0.18]
+    [entranceOpacity, exitOpacity],
+    ([entrance, exit]: number[]) => Math.min(entrance, exit)
   );
 
   return (
@@ -357,6 +369,9 @@ export default function CentreOfExcellence() {
 
   const { scrollY } = useScroll();
   const handoffOpacity = useTransform(scrollY, handoffRange, [0, 1]);
+  // Cards fade out exactly as the plate fades in — the inverse of the same
+  // value — so they're guaranteed gone by the moment it's fully solid.
+  const cardExitOpacity = useTransform(handoffOpacity, (v) => 1 - v);
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -386,26 +401,38 @@ export default function CentreOfExcellence() {
                 }}
                 className={styles.sectionTitle}
               >
-                {["40+", "Specialities.", "World-Class", "Care."].map((word, index) => (
-                  <React.Fragment key={index}>
-                    <motion.span
-                      className={styles.flashWord}
-                      initial={{ color: "#000000" }}
-                      whileInView={{
-                        color: ["#000000", "#ED1C24", "#ED1C24", "#000000"],
-                      }}
-                      viewport={{ once: true, margin: "-10%" }}
-                      transition={{
-                        duration: 1.1,
-                        ease: [0.25, 1, 0.3, 1],
-                        delay: 0.3 + index * 0.28,
-                      }}
-                    >
-                      {word}
-                    </motion.span>
-                    {index < 3 ? " " : ""}
-                  </React.Fragment>
-                ))}
+                {/* Two groups slide in from above as their own units — first
+                    "40+ Specialities.", then "World-Class Care." Each one is
+                    red while it's still sliding/blurring in, then settles to
+                    the resting dark shade once that motion finishes. */}
+                <motion.span
+                  className={styles.titleGroup}
+                  initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{
+                    opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+                    y: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+                    filter: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+                    color: { duration: 0.4, ease: "easeInOut", delay: 0.5 },
+                  }}
+                >
+                  40+ Specialities.
+                </motion.span>{" "}
+                <motion.span
+                  className={styles.titleGroup}
+                  initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{
+                    opacity: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
+                    y: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
+                    filter: { duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.42 },
+                    color: { duration: 0.4, ease: "easeInOut", delay: 0.77 },
+                  }}
+                >
+                  World-Class Care.
+                </motion.span>
               </motion.h2>
 
               <motion.p
@@ -416,9 +443,24 @@ export default function CentreOfExcellence() {
                 }}
                 className={styles.sectionSubtitle}
               >
-                Integrated expertise across tertiary and quaternary care,
-                <br />
-                delivered through one trusted network.
+                <motion.span
+                  className={styles.subtitleLine}
+                  initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.62 }}
+                >
+                  Integrated expertise across tertiary and quaternary care,
+                </motion.span>
+                <motion.span
+                  className={styles.subtitleLine}
+                  initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.74 }}
+                >
+                  delivered through one trusted network.
+                </motion.span>
               </motion.p>
             </div>
           </div>
@@ -452,6 +494,7 @@ export default function CentreOfExcellence() {
                 items={items}
                 scrollYProgress={trackProgress}
                 screenMode={screenMode}
+                exitOpacity={cardExitOpacity}
               />
             ))}
           </div>

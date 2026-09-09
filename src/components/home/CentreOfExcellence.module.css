@@ -67,9 +67,9 @@
   white-space: nowrap;
 }
 
-.flashWord {
-  display: inline;
-  will-change: color;
+.titleGroup {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
 @media (max-width: 768px) {
@@ -88,6 +88,11 @@
   position: relative;
   z-index: 75;
   opacity: 1;
+}
+
+.subtitleLine {
+  display: block;
+  will-change: transform, opacity, filter;
 }
 
 /* ─── Scroll Progress Indicator Unit (Keep Scrolling & Double Blinking Top Arrow) ─── */
