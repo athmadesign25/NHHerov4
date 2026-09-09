@@ -219,7 +219,9 @@ export default function HealthPackages() {
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className={styles.packageStack}>
+                  <div className={styles.packageStackWrap}>
+                    <h3 className={styles.morePackagesTitle}>More Packages</h3>
+                    <div className={styles.packageStack}>
                     {PACKAGES.map((pkg, i) => {
                       const role = roleFor(i);
                       const roleStyle = ROLE_STYLE[role];
@@ -278,6 +280,7 @@ export default function HealthPackages() {
                         </motion.div>
                       );
                     })}
+                    </div>
                   </div>
 
                   <a href="#all-packages" className={styles.secondaryButton}>

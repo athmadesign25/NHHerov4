@@ -226,13 +226,11 @@ function PodiumColumnTrack({
   items,
   scrollYProgress,
   screenMode,
-  exitOpacity,
 }: {
   colIndex: number;
   items: typeof SPECIALITIES;
   scrollYProgress: import("framer-motion").MotionValue<number>;
   screenMode: "desktop" | "tablet" | "mobile";
-  exitOpacity: import("framer-motion").MotionValue<number>;
 }) {
   const isDesktop = screenMode === "desktop";
   const isTablet = screenMode === "tablet";
@@ -248,22 +246,11 @@ function PodiumColumnTrack({
 
   const y = useTransform(scrollYProgress, [0, 1], yOffsets);
 
-  // Entrance reveal only (0 -> 0.15); the exit fade is handled by `exitOpacity`
-  // below instead of a second stop on this same section-relative progress —
-  // that older mapping ([0.68, 0.98] -> [1.0, 0.18]) only finished fading
-  // (and only to a lingering 18%, never fully invisible) hundreds of pixels
-  // after the handoff plate had already gone solid, leaving a ghostly card
-  // visibly overlapping the "solid dark" dwell and bleeding into Patient
-  // Stories. `exitOpacity` is shared raw-scroll-position state computed
-  // once in CentreOfExcellence as the exact inverse of the handoff plate's
-  // own fade-in, so cards are guaranteed to hit 0 opacity in lockstep with
-  // the plate reaching fully solid — no separate calibration to drift out
-  // of sync.
-  const entranceOpacity = useTransform(scrollYProgress, [0.0, 0.15], [0.35, 1.0]);
-  const opacity = useTransform(
-    [entranceOpacity, exitOpacity],
-    ([entrance, exit]: number[]) => Math.min(entrance, exit)
-  );
+  // Entrance reveal only (0 -> 0.15); no exit fade — the cards stay fully
+  // visible for the rest of the scroll. Only the handoff plate behind them
+  // (see handoffOpacity/.handoffPlate) fades the background to solid as
+  // Patient Stories approaches; the grid itself never animates away.
+  const opacity = useTransform(scrollYProgress, [0.0, 0.15], [0.35, 1.0]);
 
   return (
     <motion.div
@@ -369,9 +356,6 @@ export default function CentreOfExcellence() {
 
   const { scrollY } = useScroll();
   const handoffOpacity = useTransform(scrollY, handoffRange, [0, 1]);
-  // Cards fade out exactly as the plate fades in — the inverse of the same
-  // value — so they're guaranteed gone by the moment it's fully solid.
-  const cardExitOpacity = useTransform(handoffOpacity, (v) => 1 - v);
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -494,7 +478,6 @@ export default function CentreOfExcellence() {
                 items={items}
                 scrollYProgress={trackProgress}
                 screenMode={screenMode}
-                exitOpacity={cardExitOpacity}
               />
             ))}
           </div>
