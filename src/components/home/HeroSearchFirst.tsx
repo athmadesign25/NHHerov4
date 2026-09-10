@@ -19,6 +19,7 @@ import pulseAnimation from "../../../public/assets/pulse animation.json";
 import starAnimation from "../../../public/assets/AI Searching 2.json";
 import PixelRipple from "./PixelRipple";
 import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
+import AIPulseSearchOverlay from "../ai-search/AIPulseSearchOverlay";
 
 const popularTags = ["chest pain", "cancer", "surgery", "liver"];
 
@@ -686,6 +687,8 @@ export default function HeroSearchFirst() {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [isPulseActive, setIsPulseActive] = useState(false);
+  const [isAISearchOpen, setIsAISearchOpen] = useState(false);
+  const [aiSearchInitialQuery, setAISearchInitialQuery] = useState("");
   const [isPulseAnalyzed, setIsPulseAnalyzed] = useState(false);
   const [hasSubmittedQuery, setHasSubmittedQuery] = useState(false);
   const [showGenericMatchesInPulse, setShowGenericMatchesInPulse] = useState(false);
@@ -728,19 +731,23 @@ export default function HeroSearchFirst() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isPulseActive) {
+    if (isPulseActive || isAISearchOpen) {
       document.body.style.overflow = "hidden";
-      // Delay ripple slightly to sync with the chat expansion animation (0.4s)
-      timer = setTimeout(() => setShowPixelRipple(true), 300);
+      document.body.classList.add("pulse-maximized");
+      if (isPulseActive) {
+        timer = setTimeout(() => setShowPixelRipple(true), 300);
+      }
     } else {
       document.body.style.overflow = "";
+      document.body.classList.remove("pulse-maximized");
       setShowPixelRipple(false);
     }
     return () => {
       document.body.style.overflow = "";
+      document.body.classList.remove("pulse-maximized");
       clearTimeout(timer);
     };
-  }, [isPulseActive]);
+  }, [isPulseActive, isAISearchOpen]);
   const [lastSearch, setLastSearch] = useState<string | null>(null);
   const searchRef = useRef<HTMLFormElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -1018,16 +1025,8 @@ export default function HeroSearchFirst() {
                         className={`${styles.searchIconWrapper} ${styles.searchIconPulse}`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (isConversational) {
-                            if (!isPulseAnalyzed) {
-                              setIsPulseAnalyzed(true);
-                            } else {
-                              setIsPulseActive(true);
-                              setIsOpen(false);
-                            }
-                          } else {
-                            setIsPulseActive(true);
-                          }
+                          e.preventDefault();
+                          setIsAISearchOpen(true);
                         }}
                         title="Open Pulse AI"
                         style={{ cursor: "pointer" }}
@@ -1037,21 +1036,24 @@ export default function HeroSearchFirst() {
                       <input
                         id="hero-search-input"
                         type="text"
-                        placeholder="Search doctors, specialities, or treatments..."
+                        placeholder="Ask Pulse AI — describe symptoms, find a doctor..."
                         value={searchQuery}
                         autoComplete="off"
                         autoCorrect="off"
                         spellCheck={false}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value);
-                          setIsOpen(true);
-                          setHasOpened(true);
+                        readOnly
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAISearchInitialQuery(searchQuery);
+                          setIsAISearchOpen(true);
                         }}
-                        onFocus={() => {
-                          setIsOpen(true);
-                          setHasOpened(true);
+                        onFocus={(e) => {
+                          e.target.blur();
+                          setAISearchInitialQuery(searchQuery);
+                          setIsAISearchOpen(true);
                         }}
                         className={styles.searchInput}
+                        style={{ cursor: "pointer" }}
                       />
 
                     </div>
@@ -2270,6 +2272,12 @@ export default function HeroSearchFirst() {
           }} 
         />
       )}
+      {/* AI Pulse Search Overlay — triggered when user clicks the search bar */}
+      <AIPulseSearchOverlay
+        isOpen={isAISearchOpen}
+        onClose={() => setIsAISearchOpen(false)}
+        initialQuery={aiSearchInitialQuery}
+      />
     </section>
   );
 }
