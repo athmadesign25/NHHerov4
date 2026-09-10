@@ -18,13 +18,13 @@ const PACKAGES = [
     id: "diabetes",
     title: "Diabetes Care Package",
     subtitle: "Blood sugar, kidney and eye screening bundled for early detection.",
-    image: "/clipping-diabetes.png",
+    image: "/diabetes-package.jpg",
   },
   {
     id: "thyroid",
     title: "Thyroid Health Package",
     subtitle: "Complete thyroid panel with expert review of your hormone levels.",
-    image: "/clipping-thyroid.png",
+    image: "/thyroid-package.jpg",
   },
 ];
 

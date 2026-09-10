@@ -454,7 +454,7 @@
   position: relative;
   width: 100%;
   background: transparent;
-  padding: 64px 24px clamp(220px, 32vw, 420px);
+  padding: 64px 24px clamp(90px, 10vw, 150px);
   display: flex;
   justify-content: center;
   align-items: center;

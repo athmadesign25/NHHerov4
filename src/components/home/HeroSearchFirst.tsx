@@ -633,6 +633,16 @@ export default function HeroSearchFirst() {
   // Border radius from 0 to 8px
   const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
 
+  // Blurs out across the full pre-engagement travel (container start to
+  // container end reaching the viewport top), so Hero is dissolving away
+  // right as CentreOfExcellence_header fades in on top of it — no blank
+  // gap between "hero gone" and "header appears".
+  const { scrollYProgress: heroExitProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  const heroBlur = useTransform(heroExitProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
+
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
     if (nextSection) {
@@ -947,6 +957,7 @@ export default function HeroSearchFirst() {
         style={{
           scale: heroScale,
           borderRadius: heroRadius,
+          filter: heroBlur,
         }}
       >
         <video
