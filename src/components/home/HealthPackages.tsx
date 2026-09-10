@@ -40,6 +40,16 @@ export default function HealthPackages() {
   const [hasTransformed, setHasTransformed] = useState(false);
   const [isFullyEntered, setIsFullyEntered] = useState(false);
 
+  // Background dark<->light switch (see .sectionWrap/.sectionWrapLight):
+  // deliberately its own state, NOT derived from isFullyEntered above —
+  // that one intentionally freezes once hasTransformed fires, since the
+  // card's own narrow/collapse is a one-time, never-reversed transform.
+  // The background isn't; it should keep tracking the card's actual
+  // current scroll-linked full-page state in both directions, forever, so
+  // scrolling back up past this section always restores the dark
+  // background once the card is no longer covering the whole viewport.
+  const [isCardFullPage, setIsCardFullPage] = useState(false);
+
   // Right-side package carousel (independent from the main card; never
   // affects it).
   const [activeIndex, setActiveIndex] = useState(0);
@@ -79,6 +89,10 @@ export default function HealthPackages() {
   useMotionValueEvent(enterProgress, "change", (latest) => {
     if (hasTransformed) return;
     setIsFullyEntered(latest >= 0.98);
+  });
+
+  useMotionValueEvent(enterProgress, "change", (latest) => {
+    setIsCardFullPage(latest >= 0.98);
   });
 
   useEffect(() => {
@@ -129,7 +143,11 @@ export default function HealthPackages() {
   const roleFor = (pkgIndex: number) => (pkgIndex - activeIndex + PACKAGES.length) % PACKAGES.length;
 
   return (
-    <div className={styles.sectionWrap} id="health-packages" data-nav-theme="light">
+    <div
+      className={`${styles.sectionWrap} ${isCardFullPage ? styles.sectionWrapLight : ""}`}
+      id="health-packages"
+      data-nav-theme={isCardFullPage ? "light" : "dark"}
+    >
       {/* Header section (scrolls up naturally, no eyebrow). Explicit here
           (rather than relying on the probe's default light fallback) so
           this doesn't silently depend on every other section always
@@ -142,9 +160,15 @@ export default function HealthPackages() {
               tag="h2"
               className={styles.title}
             />
-            <p className={`section-subtitle ${styles.subtitle}`}>
+            <motion.p
+              className={`section-subtitle ${styles.subtitle}`}
+              initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
+              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            >
               Built by the doctors who treat what these tests find
-            </p>
+            </motion.p>
           </div>
         </div>
       </div>
@@ -165,7 +189,7 @@ export default function HealthPackages() {
                 parallax feel instead of a flat static crop. */}
             <div
               className={`${styles.mainCard} ${hasTransformed ? styles.mainCardShrunk : ""}`}
-              style={{ backgroundImage: "url('/health-package-main-card.jpg')" }}
+              style={{ backgroundImage: "url('/health-package-main-card-flipped.jpg')" }}
             >
               <div className={styles.cardVignetteOverlay} />
 
@@ -217,7 +241,14 @@ export default function HealthPackages() {
                   className={styles.rightPanel}
                   initial={{ opacity: 0, y: 16, filter: "blur(24px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{
+                    duration: 0.9,
+                    ease: [0.16, 1, 0.3, 1],
+                    // Waits out the main card's own 1.6s collapse (width +
+                    // background-position transition in HealthPackages.module.css)
+                    // before blurring/growing in, instead of both happening at once.
+                    delay: 1.6,
+                  }}
                 >
                   <div className={styles.packageStackWrap}>
                     <h3 className={styles.morePackagesTitle}>More Packages</h3>

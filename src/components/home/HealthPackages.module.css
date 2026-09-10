@@ -1,9 +1,22 @@
+/* Dark by default — continues the same solid dark from PatientStories
+   (#031224) seamlessly through the title header and through the main
+   card's scroll-linked grow-in (the .stickyViewport/.stackTrack area
+   deliberately has no background of its own, so this is what shows in the
+   gaps around the card until it fills the screen). Switches to
+   .sectionWrapLight only once the card has reached full page (see
+   isFullyEntered in HealthPackages.tsx) — at that exact point the card
+   covers the entire viewport, so the swap is fully hidden and never
+   visible mid-transition. */
 .sectionWrap {
   position: relative;
   width: 100%;
-  background: #FCFCFC;
+  background: #031224;
   padding-top: 100px;
   padding-bottom: 100px;
+}
+
+.sectionWrapLight {
+  background: #FCFCFC;
 }
 
 .sectionWrap :global(.section-eyebrow) {
@@ -41,7 +54,7 @@
 .title {
   font-size: clamp(26px, 3vw, 44px);
   font-weight: 800;
-  color: #0F172A;
+  color: #FFFFFF;
   line-height: 1.18;
   letter-spacing: -0.025em;
   margin-bottom: 8px;
@@ -58,7 +71,7 @@
 
 .subtitle {
   font-size: 18px;
-  color: #475569;
+  color: rgba(255, 255, 255, 0.78);
   line-height: 1.6;
   text-align: center;
   width: 100%;
@@ -117,17 +130,18 @@
   overflow: hidden;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1), background-position 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 1.6s cubic-bezier(0.65, 0, 0.35, 1), background-position 1.6s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* One-time narrow: leaves a 680px reveal on the right for the package panel.
-   The photo pans rightward in step with the shrink (same duration/easing)
-   so the narrowing reads as one continuous move rather than a static crop.
-   (Widened from 560px so the peek card has breathing room before the
-   viewport edge instead of nearly touching it.) */
+   The photo pans in step with the shrink (same duration/easing) so the
+   narrowing reads as one continuous move rather than a static crop — all
+   the way to the image's own right edge, so it lands flush with the
+   card's new (narrower) right edge instead of stopping partway with more
+   image cropped off past it. */
 .mainCardShrunk {
   width: calc(100% - 680px);
-  background-position: 38% center;
+  background-position: 100% center;
 }
 
 /* Dark Vignette Overlay for Crisp Contrast */
@@ -161,20 +175,26 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 400px;
+  width: 0;
   background: linear-gradient(90deg, rgba(3, 30, 57, 0) 0%, rgba(12, 26, 50, 0.55) 45%, #031E39 85%);
   backdrop-filter: blur(31.52345848083496px);
   -webkit-backdrop-filter: blur(31.52345848083496px);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 14%, #000 55%, #000 100%);
   mask-image: linear-gradient(90deg, transparent 0%, transparent 14%, #000 55%, #000 100%);
-  opacity: 0;
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Grows in width (0 -> 400px) on the exact same duration/easing as the
+     card's own shrink, rather than fading in opacity on a separate,
+     faster timescale — that read as the mask popping in first and only
+     then the card moving, instead of one continuous motion. Since it's
+     already right-anchored to the card's own (moving) edge, growing its
+     width in lockstep means it's always covering right from that edge
+     outward, never lagging behind it. */
+  transition: width 1.6s cubic-bezier(0.65, 0, 0.35, 1);
   pointer-events: none;
   z-index: 3;
 }
 
 .mainCardEdgeFadeVisible {
-  opacity: 1;
+  width: 400px;
 }
 
 /* Right-edge blend: grows from 0 to 560px in exact sync with the main card's
@@ -197,7 +217,7 @@
     #001F3B;
   backdrop-filter: blur(31.52345848083496px);
   -webkit-backdrop-filter: blur(31.52345848083496px);
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 1.6s cubic-bezier(0.65, 0, 0.35, 1);
   overflow: hidden;
   pointer-events: none;
   z-index: 3;

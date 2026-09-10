@@ -13,10 +13,11 @@ interface SplitTextProps {
 }
 
 const wordVariants = {
-  hidden: { y: "110%", opacity: 0 },
+  hidden: { y: "-110%", opacity: 0, filter: "blur(10px)" },
   visible: (i: number) => ({
     y: "0%",
     opacity: 1,
+    filter: "blur(0px)",
     transition: {
       delay: i * 0.06,
       duration: 0.65,

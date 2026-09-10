@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import SplitText from "@/components/ui/SplitText";
 import styles from "./PatientStories.module.css";
 
 const initialCards = [
@@ -492,19 +493,16 @@ export default function PatientStories() {
               <div className={styles.eyebrowDash} />
             </motion.div>
 
-            <motion.h2
+            <SplitText
+              text="Lives Changed, Stories Told"
+              tag="h2"
               className={`section-title ${styles.sectionTitle}`}
-              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
-              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            >
-              Lives Changed, Stories Told
-            </motion.h2>
+              delay={0.25}
+            />
 
             <motion.p
               className={styles.sectionSubtitle}
-              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
+              initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
               whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               viewport={{ once: true, margin: "-30px" }}
               transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
@@ -633,17 +631,6 @@ export default function PatientStories() {
           </div>
         </motion.div>
 
-        {/* This section's own background gradient (see .section in the CSS)
-            resolves to a light #FCFCFC well before the section's bottom
-            edge (from ~87% down), handing off into HealthPackages' light
-            header — the section is marked dark overall for the carousel
-            above, but that bottom slice needs to flip back to light so the
-            navbar doesn't render white text on a near-white background. */}
-        <div
-          data-nav-theme="light"
-          style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "16%" }}
-          aria-hidden
-        />
       </div>
     </section>
   );

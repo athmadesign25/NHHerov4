@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import SplitText from "@/components/ui/SplitText";
 import styles from "./WhyChooseNH.module.css";
 
 const STATS = [
@@ -45,20 +46,35 @@ export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?:
   return (
     <section ref={sectionRef} className={styles.section} id="WhyChooseNH_section">
       <div className={styles.container}>
-        {/* Section Header with Blur-In Motion */}
-        <motion.div
-          className={styles.header}
-          initial={{ opacity: 0, filter: "blur(12px)", y: 20 }}
-          whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="section-eyebrow">BEST IN HEALTHCARE</div>
-          <h2 className={styles.sectionTitle}>Why Choose Narayana Health?</h2>
-          <p className={styles.sectionSubtitle}>
+        {/* Section Header: eyebrow keeps its own simple blur-in (same timing
+            as before); title/subtitle now animate independently instead of
+            as part of this shared block. */}
+        <div className={styles.header}>
+          <motion.div
+            className="section-eyebrow"
+            initial={{ opacity: 0, filter: "blur(12px)", y: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            BEST IN HEALTHCARE
+          </motion.div>
+          <SplitText
+            text="Why Choose Narayana Health?"
+            tag="h2"
+            className={styles.sectionTitle}
+            delay={0.15}
+          />
+          <motion.p
+            className={styles.sectionSubtitle}
+            initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+          >
             Where your health &amp; well-being comes first, always.
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         {/* Scroll Expansion Wrapper for Entire Bento Grid. The whole section
             is otherwise marked light (white bg around the header text), but

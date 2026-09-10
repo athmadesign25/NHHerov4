@@ -453,7 +453,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  height: 50px;
+  height: 56px;
   width: 100%;
   opacity: 0.72;
   cursor: pointer;
@@ -466,11 +466,14 @@
   transform: none !important;
 }
 
+/* Grown ~17.5% (48px -> 56px) in step with the logo scale bump below, so
+   the badge itself grows with the logo instead of the logo just
+   overflowing a fixed-size box. */
 .logoBox {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.90);
   box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.15), 0 0 12px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -486,33 +489,34 @@
   box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.12), 0 0 16px rgba(255, 255, 255, 0.40);
 }
 
-/* Visually uniform logo scaling */
+/* Visually uniform logo scaling — bumped ~17.5% larger (1.15 -> 1.35) for
+   better balance within the .logoBox badge. */
 .logoNablImg {
   width: 38px;
   height: 38px;
   object-fit: contain;
-  transform: scale(1.15);
+  transform: scale(1.35);
 }
 
 .logoNabhImg {
   width: 38px;
   height: 38px;
   object-fit: contain;
-  transform: scale(1.15);
+  transform: scale(1.35);
 }
 
 .logoJciImg {
   width: 38px;
   height: 38px;
   object-fit: contain;
-  transform: scale(1.15);
+  transform: scale(1.35);
 }
 
 .logoCapImg {
   width: 42px;
   height: 42px;
   object-fit: contain;
-  transform: scale(1.15);
+  transform: scale(1.35);
 }
 
 .logoText {

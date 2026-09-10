@@ -128,7 +128,7 @@ function RevealWords({
               <motion.span
                 className={wordClassName}
                 style={{ display: "inline-block" }}
-                initial={{ y: "110%", opacity: 0, filter: "blur(6px)" }}
+                initial={{ y: "-110%", opacity: 0, filter: "blur(6px)" }}
                 animate={inView ? { y: "0%", opacity: 1, filter: "blur(0px)" } : {}}
                 transition={{
                   y: { duration: 0.45, delay: wordDelay, ease: EASE },

@@ -4,9 +4,16 @@
   background: transparent;
 }
 
+/* Solid — matches CentreOfExcellence's own handoff-plate color exactly, so
+   the boundary between that section (already solid by the time this one
+   surfaces) and this one is a seamless, identical color with no edge.
+   Stays this same solid dark for this section's entire height; the
+   dark -> light handoff into HealthPackages is handled over there instead
+   (see HealthPackages.module.css/.tsx), timed to switch only once that
+   section's own card is fully full-page and hides it. */
 .section {
   position: relative;
-  background: linear-gradient(180deg, #031224 24.91%, #003674 40.48%, #F59090 52.34%, #FCFCFC 86.57%);
+  background: #031224;
   overflow: hidden;
   padding: 100px 0 100px;
   min-height: 900px;
@@ -459,6 +466,9 @@
   z-index: 30;
 }
 
+/* White-outlined — this section's own background is solid dark for its
+   full height (see .section), so the previous blue-on-dark styling read
+   as low-contrast; white matches the section's own text/eyebrow color. */
 .secondaryCtaBtn {
   display: inline-flex;
   align-items: center;
@@ -466,11 +476,11 @@
   gap: 10px;
   padding: 12px 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(3, 78, 162, 0.5);
-  background: rgba(3, 78, 162, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: #034EA2;
+  color: #FFFFFF;
   font-family: Inter, sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -478,14 +488,14 @@
   text-decoration: none;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.10);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
 }
 
 .secondaryCtaBtn:hover {
-  background: rgba(3, 78, 162, 0.12);
-  border-color: #034EA2;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.20);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
 }
 
 @media (max-width: 768px) {
