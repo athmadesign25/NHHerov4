@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import SplitText from "@/components/ui/SplitText";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./WhyChooseNH.module.css";
 
 const STATS = [
@@ -110,12 +111,9 @@ export default function WhyChooseNH() {
           >
             BEST IN HEALTHCARE
           </motion.div>
-          <SplitText
-            text="Why Choose Narayana Health?"
-            tag="h2"
-            className={styles.sectionTitle}
-            delay={0.15}
-          />
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect words={["Why Choose Narayana Health?"]} sweepMs={1200} />
+          </h2>
           <motion.p
             className={styles.sectionSubtitle}
             initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}

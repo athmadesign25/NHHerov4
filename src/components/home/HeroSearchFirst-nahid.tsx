@@ -14,10 +14,8 @@ import {
   useInView,
   useSpring,
 } from "framer-motion";
-import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2, Paperclip, ChevronDown, ArrowUp, Mic, Heart } from "lucide-react";
+import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2 } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
-import TextSweepEffect from "@/components/ui/TextSweepEffect";
-import AnimatedDoctorGroup from "./AnimatedDoctorGroup";
 import styles from "./HeroSearchFirst.module.css";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
@@ -498,9 +496,6 @@ export default function HeroSearchFirst() {
   const [activeDropdownTab, setActiveDropdownTab] = useState<"doctors" | "specialties" | "treatments_tests" | "articles">("doctors");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const [isOpen, setIsOpen] = useState(false);
-  const [location, setLocation] = useState("Bangalore");
-  const [isLocationMenuOpen, setIsLocationMenuOpen] = useState(false);
-  const LOCATIONS = ["Bangalore", "Delhi", "Mumbai", "Kolkata", "Chennai", "Hyderabad", "Pune", "Ahmedabad"];
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [currentStatGroup, setCurrentStatGroup] = React.useState(0);
 
@@ -637,16 +632,6 @@ export default function HeroSearchFirst() {
   const heroScale = useTransform(smoothProgress, [0, 1], [1, 0.85]);
   // Border radius from 0 to 8px
   const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
-
-  // Blurs out across the full pre-engagement travel (container start to
-  // container end reaching the viewport top), so Hero is dissolving away
-  // right as CentreOfExcellence_header fades in on top of it — no blank
-  // gap between "hero gone" and "header appears".
-  const { scrollYProgress: heroExitProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const heroBlur = useTransform(heroExitProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
@@ -962,7 +947,6 @@ export default function HeroSearchFirst() {
         style={{
           scale: heroScale,
           borderRadius: heroRadius,
-          filter: heroBlur,
         }}
       >
         <video
@@ -1015,13 +999,11 @@ export default function HeroSearchFirst() {
       <div className={styles.centerWrap}>
         <div className={styles.heroStack}>
           <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-            <h1 className={styles.headline}>
-              <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={1500} finalColor="#FFFFFF" />
-            </h1>
-            <motion.p
+            <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
+            <motion.p 
               className={styles.subHeadline}
-              initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
             >
               Compassion Backed by Expertise
@@ -1065,168 +1047,106 @@ export default function HeroSearchFirst() {
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {/* Top Input & Dynamic Suggestive Text Row */}
-                        {/* Top Input & Dynamic Suggestive Text Row */}
-                        <div className={styles.chatTopRow}>
-                          <div className={styles.chatInputWrapper}>
-                            <div className={styles.chatTextUnit}>
-                              <span className={styles.blinkingCursor}>|</span>
-                              {searchQuery ? (
-                                <span className={styles.typedText}>{searchQuery}</span>
-                              ) : (
-                                <AnimatePresence mode="wait">
-                                  <motion.span
-                                    key={AI_SUGGESTIONS[aiSuggestionIdx]}
-                                    className={styles.aiSuggestionText}
-                                    initial={{ opacity: 0, filter: "blur(8px)", y: 4 }}
-                                    animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                                    exit={{ opacity: 0, filter: "blur(8px)", y: -4 }}
-                                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                                  >
-                                    {AI_SUGGESTIONS[aiSuggestionIdx]}
-                                  </motion.span>
-                                </AnimatePresence>
-                              )}
-                            </div>
-                            <input
-                              id="hero-search-input"
-                              type="text"
-                              value={searchQuery}
-                              autoComplete="off"
-                              autoCorrect="off"
-                              spellCheck={false}
-                              onChange={(e) => {
-                                setSearchQuery(e.target.value);
-                                setIsOpen(true);
-                                setHasOpened(true);
-                              }}
-                              onFocus={() => {
-                                setIsOpen(true);
-                                setHasOpened(true);
-                              }}
-                              className={styles.hiddenSearchInput}
-                            />
-                          </div>
-                          
-                          <div className={styles.pulseAiLogo}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '-6px', marginLeft: '4px', position: 'relative', width: '36px', height: '20px' }}>
-                              <AnimatePresence>
-                                {!isScrolledPastHero && (
-                                  <motion.div 
-                                    layoutId="shared-pulse-transition" 
-                                    style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                  >
-                                    <Lottie animationData={pulseAnimation} style={{ width: "36px", height: "20px" }} loop={true} />
-                                  </motion.div>
-                                )}
+                        <div className={styles.chatTopInputRow}>
+                          <div className={styles.chatTextUnit}>
+                            <span className={styles.blinkingCursor}>|</span>
+                            {searchQuery ? (
+                              <span className={styles.typedText}>{searchQuery}</span>
+                            ) : (
+                              <AnimatePresence mode="wait">
+                                <motion.span
+                                  key={AI_SUGGESTIONS[aiSuggestionIdx]}
+                                  className={styles.aiSuggestionText}
+                                  initial={{ opacity: 0, filter: "blur(8px)", y: 4 }}
+                                  animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                                  exit={{ opacity: 0, filter: "blur(8px)", y: -4 }}
+                                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                                >
+                                  {AI_SUGGESTIONS[aiSuggestionIdx]}
+                                </motion.span>
                               </AnimatePresence>
-                            </div>
-                            <span>Pulse AI</span>
+                            )}
                           </div>
+                          <input
+                            id="hero-search-input"
+                            type="text"
+                            value={searchQuery}
+                            autoComplete="off"
+                            autoCorrect="off"
+                            spellCheck={false}
+                            onChange={(e) => {
+                              setSearchQuery(e.target.value);
+                              setIsOpen(true);
+                              setHasOpened(true);
+                            }}
+                            onFocus={() => {
+                              setIsOpen(true);
+                              setHasOpened(true);
+                            }}
+                            className={styles.hiddenSearchInput}
+                          />
                         </div>
 
                         {/* Bottom 3 Quick Buttons (Only in resting state, aligned to bottom of card) */}
                         {!isOpen && (
-                          <div className={styles.chatBottomRow}>
-                            <div className={styles.chatBottomLeft}>
-                              <button type="button" className={styles.iconBtn}>
-                                <Paperclip size={18} />
-                              </button>
-                              
-                              <div style={{ position: "relative" }}>
-                                <button 
-                                  type="button" 
-                                  className={`${styles.actionBtn} ${styles.locationBtn}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsLocationMenuOpen(!isLocationMenuOpen);
-                                  }}
-                                >
-                                  <MapPin size={14} /> 
-                                  <span>{location}</span>
-                                  <ChevronDown size={14} />
-                                </button>
-                                
-                                <AnimatePresence>
-                                  {isLocationMenuOpen && (
-                                    <motion.div
-                                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                                      exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                                      transition={{ duration: 0.2 }}
-                                      style={{
-                                        position: "absolute",
-                                        bottom: "calc(100% + 8px)",
-                                        left: 0,
-                                        width: "220px",
-                                        maxHeight: "240px",
-                                        overflowY: "auto",
-                                        background: "rgba(38, 44, 56, 0.95)",
-                                        backdropFilter: "blur(16px)",
-                                        WebkitBackdropFilter: "blur(16px)",
-                                        border: "1px solid rgba(255,255,255,0.1)",
-                                        borderRadius: "12px",
-                                        padding: "8px",
-                                        zIndex: 50,
-                                        boxShadow: "0 10px 30px rgba(0,0,0,0.3)"
-                                      }}
-                                    >
-                                      {LOCATIONS.map((loc) => (
-                                        <button
-                                          key={loc}
-                                          type="button"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setLocation(loc);
-                                            setIsLocationMenuOpen(false);
-                                          }}
-                                          style={{
-                                            display: "block",
-                                            width: "100%",
-                                            textAlign: "left",
-                                            padding: "10px 12px",
-                                            borderRadius: "8px",
-                                            background: "transparent",
-                                            border: "none",
-                                            color: location === loc ? "#ED1C24" : "rgba(255,255,255,0.8)",
-                                            fontSize: "14px",
-                                            fontWeight: location === loc ? 600 : 400,
-                                            cursor: "pointer",
-                                            transition: "all 0.2s"
-                                          }}
-                                          onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
-                                          onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                        >
-                                          {loc}
-                                        </button>
-                                      ))}
-                                    </motion.div>
-                                  )}
-                                </AnimatePresence>
-                              </div>
-                            </div>
-                            
-                            <div className={styles.chatBottomRight}>
-                              <button type="button" className={styles.iconBtn}>
-                                <Mic size={18} />
-                              </button>
-                              
-                              <button
-                                type="button"
-                                className={styles.submitBtn}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setIsOpen(true);
-                                  setHasOpened(true);
-                                  setActiveDropdownTab("doctors");
-                                }}
-                              >
-                                <ArrowUp size={20} strokeWidth={2.5} />
-                              </button>
-                            </div>
+                          <div className={styles.chatBottomButtonsRow}>
+                            <button
+                              type="button"
+                              className={styles.chatQuickBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOpen(true);
+                                setHasOpened(true);
+                                setActiveDropdownTab("doctors");
+                              }}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M7.34115 12.6667C10.2867 12.6667 12.6745 10.2789 12.6745 7.33333C12.6745 4.38781 10.2867 2 7.34115 2C4.39563 2 2.00781 4.38781 2.00781 7.33333C2.00781 10.2789 4.39563 12.6667 7.34115 12.6667Z" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M13.9995 13.9995L11.1328 11.1328" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              <span>Find the right doctor</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className={styles.chatQuickBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOpen(true);
+                                setHasOpened(true);
+                                setActiveDropdownTab("doctors");
+                              }}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.3359 7.33073H2.66927V13.3307C2.66927 13.6989 2.96775 13.9974 3.33594 13.9974H12.6693C13.0375 13.9974 13.3359 13.6989 13.3359 13.3307V7.33073ZM5.34245 11.3307C5.71064 11.3307 6.00911 11.6292 6.00911 11.9974C6.00911 12.3656 5.71064 12.6641 5.34245 12.6641H5.33594C4.96775 12.6641 4.66927 12.3656 4.66927 11.9974C4.66927 11.6292 4.96775 11.3307 5.33594 11.3307H5.34245ZM8.00911 11.3307C8.3773 11.3307 8.67578 11.6292 8.67578 11.9974C8.67578 12.3656 8.3773 12.6641 8.00911 12.6641H8.0026C7.63441 12.6641 7.33594 12.3656 7.33594 11.9974C7.33594 11.6292 7.63441 11.3307 8.0026 11.3307H8.00911ZM10.6758 11.3307C11.044 11.3307 11.3424 11.6292 11.3424 11.9974C11.3424 12.3656 11.044 12.6641 10.6758 12.6641H10.6693C10.3011 12.6641 10.0026 12.3656 10.0026 11.9974C10.0026 11.6292 10.3011 11.3307 10.6693 11.3307H10.6758ZM5.34245 8.66406C5.71064 8.66406 6.00911 8.96254 6.00911 9.33073C6.00911 9.69892 5.71064 9.9974 5.34245 9.9974H5.33594C4.96775 9.9974 4.66927 9.69892 4.66927 9.33073C4.66927 8.96254 4.96775 8.66406 5.33594 8.66406H5.34245ZM8.00911 8.66406C8.3773 8.66406 8.67578 8.96254 8.67578 9.33073C8.67578 9.69892 8.3773 9.9974 8.00911 9.9974H8.0026C7.63441 9.9974 7.33594 9.69892 7.33594 9.33073C7.33594 8.96254 7.63441 8.66406 8.0026 8.66406H8.00911ZM10.6758 8.66406C11.044 8.66406 11.3424 8.96254 11.3424 9.33073C11.3424 9.69892 11.044 9.9974 10.6758 9.9974H10.6693C10.3011 9.9974 10.0026 12.3656 10.0026 11.9974C10.0026 8.96254 10.3011 8.66406 10.6693 8.66406H10.6758ZM10.0026 3.9974V3.33073H6.0026V3.9974C6.0026 4.36559 5.70413 4.66406 5.33594 4.66406C4.96775 4.66406 4.66927 4.36559 4.66927 3.9974V3.33073H3.33594C2.96775 3.33073 2.66927 3.62921 2.66927 3.9974V5.9974H13.3359V3.9974C13.3359 3.62921 13.0375 3.33073 12.6693 3.33073H11.3359V3.9974C11.3359 4.36559 11.0375 4.66406 10.6693 4.66406C10.3011 4.66406 10.0026 4.36559 10.0026 3.9974ZM14.6693 13.3307C14.6693 14.4353 13.7738 15.3307 12.6693 15.3307H3.33594C2.23137 15.3307 1.33594 14.4353 1.33594 13.3307V3.9974C1.33594 2.89283 2.23137 1.9974 3.33594 1.9974H4.66927V1.33073C4.66927 0.962539 4.96775 0.664062 5.33594 0.664062C5.70413 0.664062 6.0026 0.962539 6.0026 1.33073V1.9974H10.0026V1.33073C10.0026 0.962539 10.3011 0.664062 10.6693 0.664062C11.0375 0.664062 11.3359 0.962539 11.3359 1.33073V1.9974H12.6693C13.7738 1.9974 14.6693 2.89283 14.6693 3.9974V13.3307Z" fill="white"/>
+                              </svg>
+                              <span>Book appointment</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className={styles.chatQuickBtn}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOpen(true);
+                                setHasOpened(true);
+                                setActiveDropdownTab("treatments_tests");
+                              }}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <g clipPath="url(#clip0_567_12622)">
+                                  <path d="M11.2086 2.86719H13.5773V15.5001H2.52344V2.86719H4.89211" stroke="white" strokeWidth="0.954648" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M9.62798 2.07912C9.62798 1.66031 9.46161 1.25865 9.16547 0.962513C8.86932 0.666371 8.46767 0.5 8.04886 0.5C7.63005 0.5 7.2284 0.666371 6.93226 0.962513C6.63611 1.25865 6.46974 1.66031 6.46974 2.07912H4.89062V4.44779H11.2071V2.07912H9.62798Z" stroke="white" strokeWidth="0.954648" strokeLinecap="round" strokeLinejoin="round"/>
+                                  <path d="M4.10156 9.97855H5.66489L6.47024 7.60987L7.2598 13.1368L8.83892 6.82031L9.62848 12.3472L10.418 9.97855H11.9972" stroke="white" strokeWidth="0.954648" strokeLinecap="round" strokeLinejoin="round"/>
+                                </g>
+                                <defs>
+                                  <clipPath id="clip0_567_12622">
+                                    <rect width="16" height="16" fill="white"/>
+                                  </clipPath>
+                                </defs>
+                              </svg>
+                              <span>Know your health</span>
+                            </button>
                           </div>
                         )}
                       </motion.div>
@@ -2588,7 +2508,26 @@ export default function HeroSearchFirst() {
         </div>
       </div>
 
-
+      <div className={styles.pulseShellAnchor}>
+        <div className={styles.pulseShell}>
+          <div className={styles.pulseInner}>
+            <div className={styles.pulseCenterUnit}>
+              <div
+                className={`${styles.logoGlow} ${prefersReducedMotion ? styles.logoGlowStatic : ""}`}
+                aria-hidden
+              />
+              <div className={styles.pulseLogoUnit}>
+                <img src="/images/pulse-ai/pulse-ai.png" alt="Pulse AI" className={styles.pulseLogoImg} />
+              </div>
+              <div className={styles.pulseTextUnit}>
+                <div className={styles.pulseTitle}>Ask Pulse AI</div>
+                <p className={styles.pulseDescription}>Describe your symptoms, or ask a question..</p>
+                <p className={styles.pulseVersion}>v1.0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
       {isPulseActive && typeof document !== "undefined" && createPortal(
         <div style={{ position: "fixed", inset: 0, zIndex: 99999, pointerEvents: "auto" }}>
           <div style={{ position: "absolute", inset: 0, background: "rgba(11, 15, 25, 0.5)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }} />

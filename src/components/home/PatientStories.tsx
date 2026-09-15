@@ -2,9 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import SplitText from "@/components/ui/SplitText";
+import { ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX, Quote } from "lucide-react";
 import styles from "./PatientStories.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 const initialCards = [
   {
@@ -486,12 +486,9 @@ export default function PatientStories() {
               <div className={styles.eyebrowDash} />
             </motion.div>
 
-            <SplitText
-              text="Lives Changed, Stories Told"
-              tag="h2"
-              className={`section-title ${styles.sectionTitle}`}
-              delay={0.25}
-            />
+            <h2 className={`section-title ${styles.sectionTitle}`}>
+              <TextSweepEffect words={["Lives Changed, Stories Told"]} sweepMs={1200} finalColor="#FFFFFF" />
+            </h2>
 
             <motion.p
               className={styles.sectionSubtitle}

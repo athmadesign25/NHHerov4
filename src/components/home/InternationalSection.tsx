@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Globe, Plane, Phone, ChevronRight } from "lucide-react";
 import styles from "./InternationalSection.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 const features = [
   { id: "intl-concierge", icon: Plane, title: "Airport Pickup", desc: "Dedicated transport from any major Indian airport" },
@@ -28,8 +29,8 @@ export default function InternationalSection() {
           >
             <div className={styles.eyebrow}>International Patients</div>
             <h2 className={styles.title}>
-              World-Class Care,<br />
-              <span className={styles.titleHighlight}>Without Borders</span>
+              <TextSweepEffect words={["World-Class Care,"]} sweepMs={1200} /><br />
+              <TextSweepEffect words={["Without Borders"]} className={styles.titleHighlight} sweepMs={1200} />
             </h2>
             <p className={styles.desc}>
               Over 64,000 international patients from 78 nationalities trust Narayana Health 

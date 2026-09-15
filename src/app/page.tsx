@@ -178,9 +178,8 @@ export default function HomePage() {
     <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
       <FloatingQuickActions />
 
-      {/* Master container with seamless NeatGradient background extending behind Hero, CentreOfExcellence AND PatientStories */}
-      <div style={{ position: "relative", width: "100%", background: "transparent", zIndex: 10 }}>
-        <GlobalNeatBackground />
+        {/* Master container with seamless background extending behind Hero, CentreOfExcellence AND PatientStories */}
+        <div style={{ position: "relative", width: "100%", background: "transparent", zIndex: 10 }}>
 
         {/* Hero section with floating scaled card */}
         <div data-nav-theme="dark">

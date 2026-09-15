@@ -3,7 +3,7 @@
    outer section must stay overflow:visible or the sticky pin breaks. */
 .section {
   position: relative;
-  background: transparent;
+  background: #FFFFFF;
   width: 100%;
   box-sizing: border-box;
 }

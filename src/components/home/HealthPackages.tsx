@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Layers, Clock, Sparkles, ArrowUpRight, ArrowRight } from "lucide-react";
 import styles from "./HealthPackages.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 type PackageCard = {
   id: string;
@@ -192,6 +193,8 @@ export default function HealthPackages() {
   // than initial/whileInView.
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
+  const zoomStartedRef = useRef(false);
+  const [zoomStarted, setZoomStarted] = useState(false);
 
   const packages = PACKAGES_BY_CITY[DETECTED_CITY] ?? [];
   const hasPackages = packages.length > 0;
@@ -266,6 +269,11 @@ export default function HealthPackages() {
       if (!textRevealedRef.current && p1 >= TEXT_REVEAL_P1_THRESHOLD) {
         textRevealedRef.current = true;
         setTextRevealed(true);
+      }
+      
+      if (!zoomStartedRef.current && p1 >= 0.05) {
+        zoomStartedRef.current = true;
+        setZoomStarted(true);
       }
 
       // Video plays once the section has appeared, and pauses again once
@@ -361,6 +369,8 @@ export default function HealthPackages() {
       // CSS override further down, which forces the same items opaque).
       textRevealedRef.current = true;
       setTextRevealed(true);
+      zoomStartedRef.current = true;
+      setZoomStarted(true);
     }
 
     // Drives hasAppearedRef and, for desktop, immediately re-syncs the
@@ -456,7 +466,7 @@ export default function HealthPackages() {
                   <div className={styles.eyebrowDash} />
                 </motion.div>
                 <h2 className={styles.title}>
-                  <RevealTitleWords lines={TITLE_LINES} active={textRevealed} startDelay={TEXT_REVEAL_TITLE_DELAY} />
+                  <TextSweepEffect words={[TITLE_LINES.join(" ")]} sweepMs={1500} finalColor="#FFFFFF" active={zoomStarted} delayMs={0} />
                 </h2>
               </div>
               <div className={styles.subGroup}>

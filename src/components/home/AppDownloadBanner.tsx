@@ -12,6 +12,7 @@ import { Video, Calendar, FileText, Activity, PersonStanding } from "lucide-reac
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
 import styles from "./AppDownloadBanner.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 type Feature = {
   id: number;
@@ -148,6 +149,10 @@ export default function AppDownloadBanner() {
   // phoneScale so both finish their travel together.
   const phoneEntryY = useTransform(enterProgress, [0, 0.4, 1], [entryOffsetY, entryOffsetY, 0]);
 
+  // Hand rotation and float on scroll to simulate lifting the phone
+  const handRotation = useTransform(enterProgress, [0, 1], [30, 0]);
+  const handY = useTransform(enterProgress, [0, 1], [60, 0]);
+
   // Measures the gap between the text unit's bottom and the phone stage's
   // own natural (already-enlarged, bottom-anchored) resting position, so
   // the "big" entry state can be pulled up to sit exactly 24px below the
@@ -267,11 +272,8 @@ export default function AppDownloadBanner() {
           window actually started before the pin had even finished
           engaging, so the footer appeared to slap on top immediately with
           no pause at all. */}
-      <div ref={trackRef} className={styles.stackTrack} style={{ height: isDesktopFX ? "300vh" : "auto" }}>
-        <div className={styles.stickyViewport} style={{ position: isDesktopFX ? "sticky" : "relative", height: isDesktopFX ? "100vh" : "auto" }}>
-          <div aria-hidden className={styles.neatBackdrop}>
-            <AppDownloadNeatBackground />
-          </div>
+      <div ref={trackRef} className={styles.stackTrack} style={{ height: "200vh" }}>
+        <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh" }}>
 
           <div className={styles.contentStack}>
           {/* Centered copy: eyebrow, then title a beat later, sequentially */}
@@ -293,212 +295,41 @@ export default function AppDownloadBanner() {
                 this title specifically. Shimmer + red highlight on line 2
                 are unchanged. */}
             <h2 id="app-download-title-unit" className={styles.title}>
-              <motion.span
-                className={styles.titleLine}
-                initial={{ opacity: 0, y: -24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: REVEAL.title, ease: EASE }}
-              >
-                Your Health,
-              </motion.span>
+              <span className={styles.titleLine}>
+                <TextSweepEffect words={["Your Health,"]} sweepMs={1500} />
+              </span>
               <br />
-              <motion.span
-                className={styles.titleLine}
-                initial={{ opacity: 0, y: -24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: REVEAL.title + 0.12, ease: EASE }}
-              >
+              <motion.span className={styles.titleLine}>
                 <span className={styles.titleHighlightWrap}>
-                  <span className={styles.titleHighlightBase}>Always With You.</span>
-                  {/* One continuous gradient spanning the whole phrase at once
-                      (rather than per-word, which would repeat light-to-dark
-                      on each word instead of reading as one sweep across the
-                      full phrase) — a plain duplicate copy overlaid on top,
-                      invisible until the line's own slide-down has settled,
-                      then fading in permanently. */}
-                  <motion.span
-                    aria-hidden
-                    className={styles.titleShimmerOverlay}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: false, amount: 0.3 }}
-                    transition={{ duration: 0.4, delay: SHIMMER_POP_DELAY, ease: "easeOut" }}
-                  >
-                    Always With You.
-                  </motion.span>
+                  <TextSweepEffect
+                    words={["Always With You."]}
+                    className={styles.titleHighlightBase}
+                    sweepMs={1500}
+                    holdMs={3500}
+                  />
                 </span>
               </motion.span>
             </h2>
           </div>
 
-          {/* Bottom-anchored block: feature pill, phone carousel, QR + stores.
-              Pushed to the bottom of the sticky viewport via margin-top:auto. */}
-          <div className={styles.bottomBlock}>
-            <motion.div
-              className={styles.pillWrapper}
-              animate={{
-                opacity: hasMatured && phoneSettled ? 1 : 0,
-                filter: hasMatured && phoneSettled ? "blur(0px)" : "blur(8px)",
-                y: hasMatured && phoneSettled ? 0 : 8,
-              }}
-              style={{ pointerEvents: hasMatured && phoneSettled ? "auto" : "none" }}
-              transition={{ duration: 0.5, ease: EASE }}
-            >
-              <div className={styles.pillInner}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeFeature.id}
-                    initial={{ opacity: 0, filter: "blur(8px)" }}
-                    animate={{ opacity: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, filter: "blur(8px)" }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
-                    className={styles.featurePill}
-                  >
-                    <div className={styles.pillIconBg}>
-                      <IconComponent className={styles.pillIcon} size={16} />
-                    </div>
-                    <span className={styles.pillText}>{activeFeature.title}</span>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-
-            <div className={styles.bottomRow}>
-              {/* Plain (non-motion) positioning wrapper: framer-motion writes
-                  its own inline `transform` for the `y` entrance animation
-                  below, which would otherwise silently overwrite this CSS
-                  translateY(-50%) centering if they lived on the same
-                  element. */}
-              <div className={styles.trustStackPosition}>
-              <motion.div
-                className={styles.trustStack}
-                animate={{
-                  opacity: hasMatured ? 1 : 0,
-                  filter: hasMatured ? "blur(0px)" : "blur(8px)",
-                  y: hasMatured ? 0 : 10,
-                }}
-                transition={{ duration: 0.5, delay: hasMatured ? 0.3 : 0, ease: EASE }}
-              >
-                {TRUST_STACK.map((item, i) => (
-                  <div key={item.subtext} className={`${styles.trustUnit} ${styles.storeContainer}`}>
-                    <div className={styles.trustIconSlot}>
-                      <img
-                        src={item.icon}
-                        alt=""
-                        className={[
-                          styles.trustIcon,
-                          i !== 1 ? styles.trustIconLarge : "",
-                        ].join(" ")}
-                      />
-                    </div>
-                    <div className={styles.trustTextBlock}>
-                      <span className={i === 0 ? styles.trustLabel : styles.trustMainText}>{item.label}</span>
-                      <span className={styles.trustSubtext}>{item.subtext}</span>
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-              </div>
-
-              <div
-                className={styles.phoneCarouselUnit}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                {/* Scroll-linked stage: travels from its enlarged "appear"
-                    spot down to resting size/position, bottom-anchored so it
-                    reads as sliding down while shrinking. The bottom edge of
-                    the phone itself is never revealed — .phoneFrame below
-                    keeps a shorter visible height than the image's own
-                    height at every scale, and .stickyViewport clips the rest. */}
-                <motion.div
-                  ref={phoneStageWrapRef}
-                  className={styles.phoneStageWrap}
-                  style={{
-                    // phoneScale/phoneEntryY are the "pre"-only entrance
-                    // grow-in + travel — frozen at their resting values once
-                    // matured/exiting so they can't fight the exit
-                    // wrapper's own continuous shrink further down (which
-                    // was making the phone look like it was regrowing huge
-                    // again on scroll-up).
-                    scale: isDesktopFX ? (phase === "pre" ? phoneScale : 1) : 1,
-                    y: isDesktopFX ? (phase === "pre" ? phoneEntryY : 0) : 0,
-                    transformOrigin: "bottom center",
-                  }}
-                >
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeFeature.id}
-                      initial={{ opacity: 0.5, scale: 0.97 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0.5, scale: 0.97 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      style={{ transformOrigin: "bottom center" }}
-                      className={styles.phoneMockupWrap}
-                    >
-                      {/* Wraps the phone frame so exiting recedes it as one piece —
-                          continuously scroll-linked (see exitOpacity/exitBlur/exitScale
-                          above), so it works the same regardless of which feature the
-                          autoplaying carousel landed on, and reverses smoothly if you
-                          scroll back down without fully leaving. "pre" leaves this neutral
-                          since the entrance handles its own reveal instead. */}
-                      <motion.div
-                        style={
-                          phase === "pre"
-                            ? { opacity: 1, filter: "blur(0px)", scale: 1, transformOrigin: "bottom center" }
-                            : { opacity: exitOpacity, filter: exitBlur, scale: exitScale, transformOrigin: "bottom center" }
-                        }
-                      >
-                        {/* Base screen: bottom edge cropped off so it appears to sink below the
-                            frame. Every feature (digital twin included) is now just its own
-                            complete phone-mockup image — fades in as part of phoneStageWrap's
-                            own scroll-driven reveal above, no separate timing of its own needed. */}
-                        <div className={styles.phoneFrame}>
-                          <Image
-                            src={activeFeature.img}
-                            alt={activeFeature.title}
-                            width={BASE_WIDTH}
-                            height={BASE_HEIGHT}
-                            className={styles.phoneImg}
-                            priority
-                          />
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  </AnimatePresence>
-                </motion.div>
-              </div>
-
-              <div className={styles.storesColPosition}>
-              <motion.div
-                className={styles.storesCol}
-                animate={{
-                  opacity: hasMatured ? 1 : 0,
-                  filter: hasMatured ? "blur(0px)" : "blur(8px)",
-                  y: hasMatured ? 0 : 10,
-                }}
-                transition={{ duration: 0.5, delay: hasMatured ? 0.3 : 0, ease: EASE }}
-              >
-                <div className={`${styles.storeContainer} ${styles.qrContainer}`}>
-                  <img src="/qr.svg" alt="QR Code" width={64} height={64} className={styles.qrImg} style={{ borderRadius: 6 }} />
-                  <span className={styles.qrLabel}>Scan to install</span>
-                </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <img alt="Download on the App Store" src="/App%20store.svg" />
-                  </a>
-                </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <img alt="Get it on Google Play" src="/Google%20play.svg" />
-                  </a>
-                </div>
-              </motion.div>
-              </div>
-            </div>
-          </div>
+          <motion.div
+            style={{
+              position: "relative",
+              rotate: handRotation,
+              y: handY,
+              pointerEvents: "none",
+              marginTop: "-30px",
+              marginBottom: "-45px"
+            }}
+          >
+            <Image
+              src="/Mobile phone in hand.png"
+              width={1019}
+              height={1130}
+              alt="Mobile phone in hand"
+              style={{ width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)" }}
+            />
+          </motion.div>
           </div>
         </div>
       </div>
