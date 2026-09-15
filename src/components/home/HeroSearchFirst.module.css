@@ -143,10 +143,9 @@
 
 /* AI Chat Search Box Container */
 .aiSearchContainer {
+  width: 100%;
+  height: 160px;
   display: flex;
-  width: 836px;
-  max-width: 100%;
-  height: 176px;
   padding: 24px;
   flex-direction: column;
   align-items: flex-start;
@@ -154,12 +153,12 @@
   gap: 12px;
   margin: 0 auto;
 
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
-  box-shadow: -60px 14px 80px 0 rgba(65, 99, 236, 0.18), 30px 14px 70px 0 rgba(170, 48, 64, 0.10), 0 10px 30px 0 rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(34px);
-  -webkit-backdrop-filter: blur(34px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(38, 44, 56, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
   position: relative;
   cursor: text;
@@ -284,9 +283,17 @@
   z-index: 0;
 }
 
-.chatTopInputRow {
+.chatTopRow {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chatInputWrapper {
+  position: relative;
+  flex: 1;
   display: flex;
   align-items: center;
 }
@@ -312,19 +319,19 @@
 }
 
 .aiSuggestionText {
-  color: rgba(255, 255, 255, 0.54);
+  color: rgba(255, 255, 255, 0.7);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: normal;
 }
 
 .typedText {
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 500;
   line-height: normal;
 }
 
@@ -338,42 +345,98 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 500;
   color: transparent;
 }
 
-.chatBottomButtonsRow {
+.pulseAiLogo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.chatBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  flex-wrap: wrap;
   margin-top: auto;
 }
 
-.chatQuickBtn {
+.chatBottomLeft, .chatBottomRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.iconBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.actionBtn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: rgba(255, 255, 255, 0.10);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 500;
-  line-height: normal;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
+}
+.actionBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-.chatQuickBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.40);
-  transform: translateY(-1px);
+.locationBtn {
+  border-color: rgba(237, 28, 36, 0.4);
+  background: rgba(237, 28, 36, 0.08);
+}
+.locationBtn:hover {
+  background: rgba(237, 28, 36, 0.15);
+  border-color: rgba(237, 28, 36, 0.6);
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: #034EA2;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.submitBtn:hover {
+  background: #023a78;
 }
 
 @property --border-angle {

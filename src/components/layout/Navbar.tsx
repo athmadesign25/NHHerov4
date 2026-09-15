@@ -162,8 +162,8 @@ export default function Navbar() {
       />
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
-          <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
+          <Link aria-label="Narayana Health Home" style={{ flexShrink: 0, display: "flex", alignItems: "center" }} href="/">
+            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center", transform: "translateY(-4px)" }}>
               <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
               <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH_Logo_white_1.png" priority />
             </div>

@@ -129,15 +129,16 @@ export default function FloatingQuickActions() {
             </div>
 
             <motion.button
+              layoutId="shared-pulse-transition"
               key="floating-pulse-fab-global"
               type="button"
               className={fabStyles.fabButton}
               onClick={() => setIsPulseWorkspaceOpen(true)}
               aria-label="Open Pulse AI"
-              initial={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className={fabStyles.pulseAnim}>
                 <Lottie animationData={pulseAnimation} loop={true} style={{ width: "100%", height: "100%" }} />
