@@ -1,67 +1,73 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   motion,
   AnimatePresence,
-  useInView,
   useScroll,
   useTransform,
   useMotionValueEvent,
-  type MotionValue,
 } from "framer-motion";
-import { Video, Calendar, FileText, Activity, ChevronLeft, ChevronRight } from "lucide-react";
+import { Video, Calendar, FileText, Activity, PersonStanding } from "lucide-react";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
 import styles from "./AppDownloadBanner.module.css";
 
-// Popup card dimensions are each scaled by the same factor as the base phone
-// mockup (popup native px * (BASE_WIDTH / 726), base native width) so every
-// popup keeps its true size relative to the base screen instead of being
-// force-fit to a uniform box.
-const features = [
+type Feature = {
+  id: number;
+  title: string;
+  icon: typeof Video;
+  img: string;
+};
+
+// Digital Twin is the entry-animated feature (id 0, always first — see the
+// digital-twin overlay logic below).
+const DIGITAL_TWIN_ID = 0;
+
+const features: Feature[] = [
+  {
+    id: DIGITAL_TWIN_ID,
+    title: "See your whole body's health at a glance",
+    icon: PersonStanding,
+    img: "/digital-twin-fullphone.png",
+  },
   {
     id: 1,
     title: "Video consultations from home",
     icon: Video,
     img: "/NHCare Screens/Video Consultation.png",
-    popupImg: "/NHCare Screens/Video Consultation Popup.png",
-    popupWidth: 257,
-    popupHeight: 348,
   },
   {
     id: 2,
     title: "Book appointments in 60 seconds",
     icon: Calendar,
     img: "/NHCare Screens/Book Appointment.png",
-    popupImg: "/NHCare Screens/Book Appointment Popup.png",
-    popupWidth: 259,
-    popupHeight: 246,
   },
   {
     id: 3,
     title: "Access your health records anytime",
     icon: FileText,
     img: "/NHCare Screens/Health Records.png",
-    popupImg: "/NHCare Screens/Health Records Popup.png",
-    popupWidth: 257,
-    popupHeight: 210,
   },
   {
     id: 4,
     title: "Track vitals and wellness reports",
     icon: Activity,
     img: "/NHCare Screens/Vital Tracking.png",
-    popupImg: "/NHCare Screens/Vital Tracking Popup.png",
-    popupWidth: 326,
-    popupHeight: 258,
   },
 ];
 
+// Digital twin is now just a plain feature image like the other four (a
+// complete phone mockup at the same 726x1200 native size as the rest —
+// see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
+// composited onto phone-base.png at runtime — so it needs no special
+// sizing/positioning constants of its own anymore.
+const MATURITY_THRESHOLD = 0.94;
+
 const TRUST_STACK = [
-  { icon: "/trust-heart-icon.svg", label: "India's Most Trusted", subtext: "Hospital App" },
-  { icon: "/downloads-count-icon.svg", label: "2.2M+", subtext: "Downloads" },
-  { icon: "/rating-star-icon.svg", label: "4.8", subtext: "Rating" },
+  { icon: "/trust-heart-icon-new.png", label: "India's Most Trusted", subtext: "Hospital App" },
+  { icon: "/downloads-count-icon-new.png", label: "2.2M+", subtext: "Downloads" },
+  { icon: "/rating-star-icon-new.png", label: "4.8", subtext: "Rating" },
 ];
 
 const BASE_WIDTH = 310;
@@ -93,67 +99,31 @@ const SHIMMER_POP_DELAY = REVEAL.title + 0.6;
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function RevealWords({
-  text,
-  startDelay,
-  reverse = false,
-  wordClassName,
-}: {
-  text: string;
-  startDelay: number;
-  reverse?: boolean;
-  wordClassName?: string;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  // A single useInView on the parent (proven pattern already used by
-  // SplitText.tsx elsewhere in this codebase) drives all the words — putting
-  // whileInView directly on each tiny word span was unreliable, they never
-  // triggered.
-  const inView = useInView(ref, { once: true, amount: 0.3 });
-  const words = text.split(" ");
-  return (
-    <span ref={ref}>
-      {words.map((word, i) => {
-        const order = reverse ? words.length - 1 - i : i;
-        const wordDelay = startDelay + order * 0.06;
-        return (
-          <React.Fragment key={i}>
-            {/* The trailing space between words must live OUTSIDE the
-                overflow:hidden clipped span — a browser's shrink-to-fit
-                width calculation trims trailing whitespace at the end of
-                inline-block content, so a space placed inside here gets
-                clipped away by overflow:hidden instead of rendering as a
-                visible gap. */}
-            <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "bottom" }}>
-              <motion.span
-                className={wordClassName}
-                style={{ display: "inline-block" }}
-                initial={{ y: "-110%", opacity: 0, filter: "blur(6px)" }}
-                animate={inView ? { y: "0%", opacity: 1, filter: "blur(0px)" } : {}}
-                transition={{
-                  y: { duration: 0.45, delay: wordDelay, ease: EASE },
-                  opacity: { duration: 0.45, delay: wordDelay, ease: EASE },
-                  filter: { duration: 0.45, delay: wordDelay, ease: EASE },
-                }}
-              >
-                {word}
-              </motion.span>
-            </span>
-            {i < words.length - 1 ? " " : ""}
-          </React.Fragment>
-        );
-      })}
-    </span>
-  );
-}
+// Three phases instead of a plain matured/not-matured boolean, so scrolling
+// back UP out of a matured state reads differently from scrolling DOWN into
+// it the first time:
+//  - "pre": first-time entry, continuous scroll-linked digital-twin assembly.
+//  - "matured": fully settled, normal carousel (autoplay, etc).
+//  - "exiting": was matured, now scrolling up — the current feature simply
+//    blurs out (a plain state transition, not the assembly reversed), until
+//    either scrolling back down re-matures it, or scrolling all the way back
+//    up resets to "pre" so the next entry replays the assembly from scratch.
+type Phase = "pre" | "matured" | "exiting";
 
-export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: MotionValue<number> }) {
+export default function AppDownloadBanner() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [hasMatured, setHasMatured] = useState(false);
+  const [phase, setPhase] = useState<Phase>("pre");
+  const phaseRef = useRef<Phase>("pre");
   const [isDesktopFX, setIsDesktopFX] = useState(false);
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const topTextBlockRef = useRef<HTMLDivElement>(null);
+  const phoneStageWrapRef = useRef<HTMLDivElement>(null);
+  const [entryOffsetY, setEntryOffsetY] = useState(0);
+  const [phoneSettled, setPhoneSettled] = useState(false);
+
+  const hasMatured = phase === "matured";
 
   // Scroll-driven entrance: the phone travels from an enlarged "appear" spot
   // down to its final bottom-anchored size/position over the pre-pin scroll
@@ -170,69 +140,142 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
   // very first pixel of scroll.
   const phoneScale = useTransform(enterProgress, [0, 0.4, 1], [PHONE_APPEAR_SCALE, PHONE_APPEAR_SCALE, 1]);
 
+  // No fade/blur on entry anymore — the phone is fully opaque and sharp
+  // from the moment it appears; the "entrance" reads entirely through
+  // motion instead: it starts big, sitting just under the text unit (see
+  // entryOffsetY below), and travels down into its normal carousel slot as
+  // phoneScale shrinks it back to size — same [0, 0.4, 1] shape as
+  // phoneScale so both finish their travel together.
+  const phoneEntryY = useTransform(enterProgress, [0, 0.4, 1], [entryOffsetY, entryOffsetY, 0]);
+
+  // Measures the gap between the text unit's bottom and the phone stage's
+  // own natural (already-enlarged, bottom-anchored) resting position, so
+  // the "big" entry state can be pulled up to sit exactly 24px below the
+  // text instead of wherever bottom-anchoring alone would leave it.
+  useEffect(() => {
+    const measure = () => {
+      const textEl = topTextBlockRef.current;
+      const phoneEl = phoneStageWrapRef.current;
+      if (!textEl || !phoneEl) return;
+      const textRect = textEl.getBoundingClientRect();
+      const phoneRect = phoneEl.getBoundingClientRect();
+      const desiredTop = textRect.bottom + 24;
+      setEntryOffsetY(desiredTop - phoneRect.top);
+    };
+    // Double rAF: waits for the phoneScale motion value's own initial style
+    // write (applied outside React's render) to land before measuring, so
+    // phoneRect reflects the already-enlarged state, not an unscaled one.
+    const raf1 = requestAnimationFrame(() => requestAnimationFrame(measure));
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(raf1);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Exit: continuous and scroll-linked (not a discrete state snap), so it
+  // works identically no matter which feature the autoplaying carousel
+  // happened to land on. Reads as the whole phone unit gently receding —
+  // shrinking, blurring and fading — in exact proportion to how far back up
+  // you scroll, then reversing smoothly if you scroll back down without
+  // fully leaving. Only applied once actually matured/exiting; "pre" leaves
+  // this neutral since the entrance above already handles that reveal.
+  const EXIT_PROGRESS_END = 0.6;
+  const exitAmount = useTransform(enterProgress, [MATURITY_THRESHOLD, EXIT_PROGRESS_END], [0, 1]);
+  const exitOpacity = useTransform(exitAmount, [0, 1], [1, 0]);
+  const exitBlur = useTransform(exitAmount, [0, 1], ["blur(0px)", "blur(30px)"]);
+  const exitScale = useTransform(exitAmount, [0, 1], [1, 0.9]);
+
   // Below desktop, the scroll-jacked pin/travel is disabled (per project
   // rule against scroll-driven animation on mobile) — everything just
-  // renders in its settled, fully-matured state statically.
+  // renders in its settled, fully-matured state statically. Checks
+  // window.innerWidth directly (rather than branching on the isDesktopFX
+  // state in a separate effect keyed off it) because that second effect
+  // would otherwise run once on mount with isDesktopFX's stale initial
+  // value (false) before this effect's own setIsDesktopFX(true) had
+  // propagated — forcing phase to "matured" on every desktop load too,
+  // which is what was letting autoplay jump the carousel off the
+  // digital-twin entry before it had ever been seen.
   useEffect(() => {
-    const check = () => setIsDesktopFX(window.innerWidth > 1024);
+    const check = () => {
+      const desktop = window.innerWidth > 1024;
+      setIsDesktopFX(desktop);
+      if (!desktop) {
+        phaseRef.current = "matured";
+        setPhase("matured");
+        setPhoneSettled(true);
+      }
+    };
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => {
-    if (!isDesktopFX) setHasMatured(true);
-  }, [isDesktopFX]);
-
-  // Reversible: scrolling back up un-matures the section again.
+  // Phase transitions driven by scroll direction, not just position — see
+  // the Phase type above for what each one means.
   useMotionValueEvent(enterProgress, "change", (latest) => {
     if (!isDesktopFX) return;
-    setHasMatured(latest >= 0.94);
+    // Feature pill waits for the phone to have fully finished its own
+    // travel (phoneScale/phoneEntryY both reach their end value at
+    // progress=1) before it's allowed to appear — a separate, stricter
+    // gate than MATURITY_THRESHOLD, which fires slightly earlier.
+    setPhoneSettled(latest >= 0.98);
+    const current = phaseRef.current;
+    let next: Phase = current;
+    if (current === "pre") {
+      if (latest >= MATURITY_THRESHOLD) next = "matured";
+    } else if (current === "matured") {
+      if (latest < MATURITY_THRESHOLD) next = "exiting";
+    } else if (current === "exiting") {
+      if (latest >= MATURITY_THRESHOLD) next = "matured";
+      else if (latest <= 0.05) next = "pre";
+    }
+    if (next !== current) {
+      phaseRef.current = next;
+      setPhase(next);
+    }
   });
 
-  // Carousel always resets to the first feature while not matured, so the
-  // pre-mature glimpse consistently shows the first feature.
+  // Carousel resets to the first (digital-twin) feature only on a fresh
+  // entry — not while merely "exiting", which should keep showing whatever
+  // was active and blur it out in place.
   useEffect(() => {
-    if (!hasMatured) setActiveIndex(0);
-  }, [hasMatured]);
+    if (phase === "pre") setActiveIndex(0);
+  }, [phase]);
 
   // Auto-play carousel every 4 seconds, only once matured and not hovered.
   useEffect(() => {
-    if (isHovered || !hasMatured) return;
+    if (isHovered || phase !== "matured") return;
 
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % features.length);
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [isHovered, hasMatured, activeIndex]);
-
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + features.length) % features.length);
-  };
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % features.length);
-  };
+  }, [isHovered, phase, activeIndex]);
 
   const activeFeature = features[activeIndex];
   const IconComponent = activeFeature.icon;
 
   return (
     <section className={styles.section} id="app-download-banner">
-      <div ref={trackRef} className={styles.stackTrack} style={{ height: isDesktopFX ? "200vh" : "auto" }}>
+      {/* 300vh (not 200vh): the extra pinned scroll distance this buys is
+          what gives the section a genuine "stay here" dwell once it's
+          fully matured, BEFORE the footer starts rising over it (see
+          FooterRevealWrapper, which anchors that reveal to the document's
+          true end, not to this track's own height) — at 200vh the reveal
+          window actually started before the pin had even finished
+          engaging, so the footer appeared to slap on top immediately with
+          no pause at all. */}
+      <div ref={trackRef} className={styles.stackTrack} style={{ height: isDesktopFX ? "300vh" : "auto" }}>
         <div className={styles.stickyViewport} style={{ position: isDesktopFX ? "sticky" : "relative", height: isDesktopFX ? "100vh" : "auto" }}>
-          <motion.div
-            aria-hidden
-            className={styles.neatBackdrop}
-            style={{ opacity: darkOpacity ?? 1 }}
-          >
+          <div aria-hidden className={styles.neatBackdrop}>
             <AppDownloadNeatBackground />
-          </motion.div>
+          </div>
 
           <div className={styles.contentStack}>
           {/* Centered copy: eyebrow, then title a beat later, sequentially */}
-          <div className={styles.topTextBlock}>
+          <div className={styles.topTextBlock} ref={topTextBlockRef}>
             <motion.div
               className={styles.eyebrow}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(10px)" }}
@@ -244,32 +287,49 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
               <span className={styles.eyebrowLine} />
             </motion.div>
 
-            <h2 className={styles.title}>
-              <RevealWords text="Your Health," startDelay={REVEAL.title} reverse />{" "}
-              <span className={styles.titleHighlightWrap}>
-                <RevealWords
-                  text="Always With You."
-                  startDelay={REVEAL.title}
-                  reverse
-                  wordClassName={styles.titleHighlightBase}
-                />
-                {/* One continuous gradient spanning the whole phrase at once
-                    (rather than per-word, which would repeat light-to-dark
-                    on each word instead of reading as one sweep across the
-                    full phrase) — a plain duplicate copy overlaid on top,
-                    invisible until the word reveal beneath it has settled,
-                    then fading in permanently. */}
-                <motion.span
-                  aria-hidden
-                  className={styles.titleShimmerOverlay}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.4, delay: SHIMMER_POP_DELAY, ease: "easeOut" }}
-                >
-                  Always With You.
-                </motion.span>
-              </span>
+            {/* Short slide-down entry: each line starts a short distance
+                above its resting spot and drops down while fading in, one
+                beat after the other — replaces the old per-word reveal for
+                this title specifically. Shimmer + red highlight on line 2
+                are unchanged. */}
+            <h2 id="app-download-title-unit" className={styles.title}>
+              <motion.span
+                className={styles.titleLine}
+                initial={{ opacity: 0, y: -24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: REVEAL.title, ease: EASE }}
+              >
+                Your Health,
+              </motion.span>
+              <br />
+              <motion.span
+                className={styles.titleLine}
+                initial={{ opacity: 0, y: -24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: REVEAL.title + 0.12, ease: EASE }}
+              >
+                <span className={styles.titleHighlightWrap}>
+                  <span className={styles.titleHighlightBase}>Always With You.</span>
+                  {/* One continuous gradient spanning the whole phrase at once
+                      (rather than per-word, which would repeat light-to-dark
+                      on each word instead of reading as one sweep across the
+                      full phrase) — a plain duplicate copy overlaid on top,
+                      invisible until the line's own slide-down has settled,
+                      then fading in permanently. */}
+                  <motion.span
+                    aria-hidden
+                    className={styles.titleShimmerOverlay}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.4, delay: SHIMMER_POP_DELAY, ease: "easeOut" }}
+                  >
+                    Always With You.
+                  </motion.span>
+                </span>
+              </motion.span>
             </h2>
           </div>
 
@@ -279,22 +339,13 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
             <motion.div
               className={styles.pillWrapper}
               animate={{
-                opacity: hasMatured ? 1 : 0,
-                filter: hasMatured ? "blur(0px)" : "blur(8px)",
-                y: hasMatured ? 0 : 8,
+                opacity: hasMatured && phoneSettled ? 1 : 0,
+                filter: hasMatured && phoneSettled ? "blur(0px)" : "blur(8px)",
+                y: hasMatured && phoneSettled ? 0 : 8,
               }}
-              style={{ pointerEvents: hasMatured ? "auto" : "none" }}
+              style={{ pointerEvents: hasMatured && phoneSettled ? "auto" : "none" }}
               transition={{ duration: 0.5, ease: EASE }}
             >
-              <button
-                onClick={handlePrev}
-                className={styles.pillArrowBtn}
-                aria-label="Previous feature"
-                type="button"
-              >
-                <ChevronLeft size={16} />
-              </button>
-
               <div className={styles.pillInner}>
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -312,15 +363,6 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                   </motion.div>
                 </AnimatePresence>
               </div>
-
-              <button
-                onClick={handleNext}
-                className={styles.pillArrowBtn}
-                aria-label="Next feature"
-                type="button"
-              >
-                <ChevronRight size={16} />
-              </button>
             </motion.div>
 
             <div className={styles.bottomRow}>
@@ -328,7 +370,7 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                   its own inline `transform` for the `y` entrance animation
                   below, which would otherwise silently overwrite this CSS
                   translateY(-50%) centering if they lived on the same
-                  element — same issue .popupFrame worked around earlier. */}
+                  element. */}
               <div className={styles.trustStackPosition}>
               <motion.div
                 className={styles.trustStack}
@@ -340,7 +382,7 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                 transition={{ duration: 0.5, delay: hasMatured ? 0.3 : 0, ease: EASE }}
               >
                 {TRUST_STACK.map((item, i) => (
-                  <div key={item.subtext} className={styles.trustUnit}>
+                  <div key={item.subtext} className={`${styles.trustUnit} ${styles.storeContainer}`}>
                     <div className={styles.trustIconSlot}>
                       <img
                         src={item.icon}
@@ -348,7 +390,6 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                         className={[
                           styles.trustIcon,
                           i !== 1 ? styles.trustIconLarge : "",
-                          i === 0 ? styles.trustIconBright : "",
                         ].join(" ")}
                       />
                     </div>
@@ -373,15 +414,19 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                     keeps a shorter visible height than the image's own
                     height at every scale, and .stickyViewport clips the rest. */}
                 <motion.div
+                  ref={phoneStageWrapRef}
                   className={styles.phoneStageWrap}
                   style={{
-                    scale: isDesktopFX ? phoneScale : 1,
+                    // phoneScale/phoneEntryY are the "pre"-only entrance
+                    // grow-in + travel — frozen at their resting values once
+                    // matured/exiting so they can't fight the exit
+                    // wrapper's own continuous shrink further down (which
+                    // was making the phone look like it was regrowing huge
+                    // again on scroll-up).
+                    scale: isDesktopFX ? (phase === "pre" ? phoneScale : 1) : 1,
+                    y: isDesktopFX ? (phase === "pre" ? phoneEntryY : 0) : 0,
                     transformOrigin: "bottom center",
                   }}
-                  initial={{ opacity: 0, filter: "blur(14px)" }}
-                  whileInView={{ opacity: 1, filter: "blur(0px)" }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.5, delay: REVEAL.image, ease: EASE }}
                 >
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -393,43 +438,33 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                       style={{ transformOrigin: "bottom center" }}
                       className={styles.phoneMockupWrap}
                     >
-                      {/* Base screen: bottom edge cropped off so it appears to sink below the frame */}
-                      <div className={styles.phoneFrame}>
-                        <Image
-                          src={activeFeature.img}
-                          alt={activeFeature.title}
-                          width={BASE_WIDTH}
-                          height={BASE_HEIGHT}
-                          className={styles.phoneImg}
-                          priority
-                        />
-                      </div>
-
-                      {/* Popup: center touches the base screen's right edge, ~32px
-                          below its top, appears as an overlay shortly after the base screen mounts */}
+                      {/* Wraps the phone frame so exiting recedes it as one piece —
+                          continuously scroll-linked (see exitOpacity/exitBlur/exitScale
+                          above), so it works the same regardless of which feature the
+                          autoplaying carousel landed on, and reverses smoothly if you
+                          scroll back down without fully leaving. "pre" leaves this neutral
+                          since the entrance handles its own reveal instead. */}
                       <motion.div
-                        className={styles.popupFrame}
-                        style={{
-                          width: activeFeature.popupWidth,
-                          height: activeFeature.popupHeight,
-                          transformOrigin: "bottom center",
-                        }}
-                        initial={{ opacity: 0, scale: 0.8, x: "-50%" }}
-                        animate={{
-                          opacity: 1,
-                          scale: 1,
-                          x: "-50%",
-                          transition: { duration: 0.5, delay: 0.35, ease: [0.16, 1, 0.3, 1] },
-                        }}
-                        exit={{ opacity: 0, scale: 0.8, x: "-50%", transition: { duration: 0.2, ease: "easeIn" } }}
+                        style={
+                          phase === "pre"
+                            ? { opacity: 1, filter: "blur(0px)", scale: 1, transformOrigin: "bottom center" }
+                            : { opacity: exitOpacity, filter: exitBlur, scale: exitScale, transformOrigin: "bottom center" }
+                        }
                       >
-                        <Image
-                          src={activeFeature.popupImg}
-                          alt={`${activeFeature.title} popup`}
-                          width={activeFeature.popupWidth}
-                          height={activeFeature.popupHeight}
-                          className={styles.popupImg}
-                        />
+                        {/* Base screen: bottom edge cropped off so it appears to sink below the
+                            frame. Every feature (digital twin included) is now just its own
+                            complete phone-mockup image — fades in as part of phoneStageWrap's
+                            own scroll-driven reveal above, no separate timing of its own needed. */}
+                        <div className={styles.phoneFrame}>
+                          <Image
+                            src={activeFeature.img}
+                            alt={activeFeature.title}
+                            width={BASE_WIDTH}
+                            height={BASE_HEIGHT}
+                            className={styles.phoneImg}
+                            priority
+                          />
+                        </div>
                       </motion.div>
                     </motion.div>
                   </AnimatePresence>
@@ -447,7 +482,7 @@ export default function AppDownloadBanner({ darkOpacity }: { darkOpacity?: Motio
                 transition={{ duration: 0.5, delay: hasMatured ? 0.3 : 0, ease: EASE }}
               >
                 <div className={`${styles.storeContainer} ${styles.qrContainer}`}>
-                  <img src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: 6 }} />
+                  <img src="/qr.svg" alt="QR Code" width={64} height={64} className={styles.qrImg} style={{ borderRadius: 6 }} />
                   <span className={styles.qrLabel}>Scan to install</span>
                 </div>
                 <div className={styles.storeContainer}>

@@ -328,11 +328,12 @@ function StoryCard({
         )}
       </button>
 
-      {/* Video element */}
+      {/* Video element — no poster: the inactive/static state is the video's
+          own paused first frame acting as its thumbnail, not a separate
+          static image asset. */}
       <video
         ref={videoRef}
         src={card.video}
-        poster={card.image}
         playsInline
         loop
         muted={isMuted}
@@ -455,14 +456,6 @@ export default function PatientStories() {
     setDirection(-1);
     setCenterIndex((prev) => (prev - 1 + CARDS_COUNT) % CARDS_COUNT);
   };
-  const goToIndex = (targetIndex: number) => {
-    if (targetIndex === centerIndex) return;
-    // Whichever way around the loop is shorter, so the dots always animate
-    // the same direction a real drag/click there would imply.
-    const forwardDistance = (targetIndex - centerIndex + CARDS_COUNT) % CARDS_COUNT;
-    setDirection(forwardDistance <= CARDS_COUNT / 2 ? 1 : -1);
-    setCenterIndex(targetIndex);
-  };
 
   const NUM_SLOTS = 5;
   const slots = Array.from({ length: NUM_SLOTS }, (_, slotPos) => {
@@ -472,11 +465,11 @@ export default function PatientStories() {
   });
 
   return (
-    <section ref={sectionRef} className={styles.sectionWrap}>
+    <section ref={sectionRef} className={styles.sectionWrap} data-nav-theme="dark">
       <div className={styles.section} id="patient-stories">
         {/* Header Container */}
         <div className={`container ${styles.headerContainer}`}>
-          <div className={styles.header}>
+          <div id="patient-stories-title-unit" className={styles.header}>
             <motion.div
               className={styles.eyebrowWrap}
               initial={{ opacity: 0, filter: "blur(14px)", y: 18 }}
@@ -588,40 +581,30 @@ export default function PatientStories() {
             </div>
           </div>
 
-          {/* Glass Navigation Arrows + Dot Pill at Bottom Center */}
-          <div className={styles.arrowsWrapper}>
-            <button
-              type="button"
-              className={styles.arrowBtn}
-              onClick={goPrev}
-              aria-label="Previous story"
-            >
-              <ChevronLeft size={18} strokeWidth={2} />
-            </button>
+          {/* Dark edge fades — same solid color as the section's own
+              background, so the carousel's outer edges blend seamlessly into
+              it on both sides — with the nav arrows sitting on top of them,
+              symmetric and edge-hugging on both sides. */}
+          <div className={`${styles.edgeFade} ${styles.edgeFadeLeft}`} aria-hidden />
+          <div className={`${styles.edgeFade} ${styles.edgeFadeRight}`} aria-hidden />
 
-            <div className={styles.dotsPill} role="tablist" aria-label="Story navigation">
-              {initialCards.map((card, idx) => (
-                <button
-                  key={card.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={idx === centerIndex}
-                  aria-label={`Go to story ${idx + 1}`}
-                  className={`${styles.dot} ${idx === centerIndex ? styles.dotActive : ""}`}
-                  onClick={() => goToIndex(idx)}
-                />
-              ))}
-            </div>
+          <button
+            type="button"
+            className={`${styles.arrowBtn} ${styles.arrowBtnLeft}`}
+            onClick={goPrev}
+            aria-label="Previous story"
+          >
+            <ChevronLeft size={22} strokeWidth={2} />
+          </button>
 
-            <button
-              type="button"
-              className={styles.arrowBtn}
-              onClick={goNext}
-              aria-label="Next story"
-            >
-              <ChevronRight size={18} strokeWidth={2} />
-            </button>
-          </div>
+          <button
+            type="button"
+            className={`${styles.arrowBtn} ${styles.arrowBtnRight}`}
+            onClick={goNext}
+            aria-label="Next story"
+          >
+            <ChevronRight size={22} strokeWidth={2} />
+          </button>
 
           {/* Secondary Outlined CTA Button */}
           <div className={styles.ctaWrapper}>

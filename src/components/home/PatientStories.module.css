@@ -375,90 +375,88 @@
   margin: 4px 0 0 0;
 }
 
-/* Navigation Arrows + Dot Pill — dark/navy for light-background
-   accessibility. Pulled up closer to the card track (negative margin
-   absorbing some of trackViewport's own bottom padding) so this whole
-   control unit reads as attached to the carousel, with more separation
-   kept below before the secondary CTA button. */
-.arrowsWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: -24px;
-  position: relative;
-  z-index: 30;
-  overflow: visible;
+/* Dark edge fades: same solid color as the section's own background
+   (#031224), fading to transparent toward the carousel's center, so the
+   track's outer edges blend seamlessly into the surrounding section on
+   both sides instead of cutting off hard. Sit above the card content but
+   below the nav arrows (z-index 25 vs. the arrows' 30), which are placed
+   on top of them. carouselOuter (their positioning parent) stays
+   overflow:visible, so these reach the section's own edges rather than
+   being clipped by trackViewport's own overflow:hidden. */
+.edgeFade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  z-index: 25;
+  pointer-events: none;
 }
 
+.edgeFadeLeft {
+  left: 0;
+  background: linear-gradient(90deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+}
+
+.edgeFadeRight {
+  right: 0;
+  background: linear-gradient(270deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+}
+
+/* Glass navigation arrows — overlaid directly on the carousel track
+   (carouselOuter is their positioning parent) on top of the dark edge
+   fades above, vertically centered on it so they read as part of the
+   carousel itself rather than a separate control row. Solid dark-navy
+   glass (not just a white tint) so the icon stays legible over any video
+   frame behind it, bright or dark, instead of nearly disappearing over
+   lighter footage. Both sides sit at the same inset from their own edge —
+   FloatingQuickActions now sits low near the page's Pulse button (see
+   FloatingQuickActions.module.css) rather than vertically centered, so it
+   no longer competes with this arrow for the same screen band. */
 .arrowBtn {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
   border-radius: 50%;
-  border: 1.5px solid rgba(120, 120, 130, 0.35);
-  background: rgba(120, 120, 130, 0.10);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #5B5F66;
-  width: 36px;
-  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(3, 18, 36, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(60, 60, 70, 0.10);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
+}
+
+.arrowBtnLeft {
+  left: 28px;
+}
+
+.arrowBtnRight {
+  right: 28px;
 }
 
 .arrowBtn:hover {
-  background: rgba(120, 120, 130, 0.18);
-  border-color: rgba(120, 120, 130, 0.6);
-  transform: scale(1.08);
-  box-shadow: 0 8px 24px rgba(60, 60, 70, 0.18);
-}
-
-/* Dot pill: same glass treatment and height as the arrow buttons on
-   either side of it, so the whole thing reads as one control unit. */
-.dotsPill {
-  height: 36px;
-  padding: 0 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(120, 120, 130, 0.35);
-  background: rgba(120, 120, 130, 0.10);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 16px rgba(60, 60, 70, 0.10);
-  box-sizing: border-box;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: rgba(120, 120, 130, 0.4);
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
-}
-
-.dot:hover {
-  background: rgba(120, 120, 130, 0.65);
-}
-
-.dotActive,
-.dotActive:hover {
-  width: 20px;
-  background: #5B5F66;
+  background: rgba(3, 18, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
 }
 
 /* Secondary CTA Button — dark/navy for light-background accessibility */
+/* .trackViewport already leaves 60px of empty space below the cards
+   themselves (see its own comment above) before this wrapper begins, so
+   the negative margin here pulls back up into that empty space to land
+   the button exactly 44px below the cards, not 44px below the viewport's
+   own (taller) box. */
 .ctaWrapper {
-  margin-top: 64px;
+  margin-top: -16px;
   display: flex;
   justify-content: center;
   align-items: center;

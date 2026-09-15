@@ -11,14 +11,11 @@ const STATS = [
   { value: "1,200+", label: "Robotic surgeries performed to date" },
 ];
 
-const ACCREDITATIONS = [
-  { id: "nabl", name: "NABL Accredited Laboratories", logo: "/accreditations/nabl-new.png", logoClass: styles.logoNablImg },
-  { id: "nabh", name: "NABH Certified Nursing Services", logo: "/accreditations/nabh-new.png", logoClass: styles.logoNabhImg },
-  { id: "jci", name: "JCI Accredited", logo: "/accreditations/jci-new.png", logoClass: styles.logoJciImg },
-  { id: "cap", name: "CAP Accredited", logo: "/accreditations/cap-clean.png", logoClass: styles.logoCapImg },
-];
+// How much raw scroll distance (px) the exit blur/fade eases over, once
+// triggered — see exitRange below for what triggers it.
+const EXIT_RANGE_PX = 400;
 
-export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?: boolean }) {
+export default function WhyChooseNH() {
   const sectionRef = useRef<HTMLElement>(null);
   const [statIndex, setStatIndex] = useState(0);
 
@@ -43,8 +40,62 @@ export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?:
   // Max 10px card corner radius -> unrounds to 0px for outer corners touching screen edge
   const edgeRadius = useTransform(enterProgress, [0.8, 1.0], ["10px", "0px"]);
 
+  // Exit: the whole section blurs + fades out only once AppDownloadBanner's
+  // own title has scrolled a third of the way up the viewport (from the
+  // bottom) — same "title unit crosses the 2/3-viewport line" convention
+  // used for CentreOfExcellence's own dim gating — rather than reacting to
+  // the (now-removed) page-level dark-bg crossfade, which triggered far
+  // earlier than this section actually finishes leaving the viewport.
+  const [exitRange, setExitRange] = useState<[number, number]>([0, 1]);
+
+  useEffect(() => {
+    const measure = () => {
+      const titleEl = document.getElementById("app-download-title-unit");
+      if (!titleEl) return;
+      const vh = window.innerHeight;
+      const titleTop = titleEl.getBoundingClientRect().top + window.scrollY;
+      const start = titleTop - (vh - vh / 3);
+      setExitRange([start, start + EXIT_RANGE_PX]);
+    };
+
+    // A single early measurement isn't reliable here — AppDownloadBanner's
+    // title sits far enough down the page that its absolute position can
+    // still drift by 100+ px after mount (cumulative layout settling
+    // everywhere above it), so this keeps re-measuring on scroll too
+    // (rAF-throttled, same pattern as HealthPackages' own scroll handler)
+    // rather than trusting one early snapshot.
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        measure();
+      });
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const settleTimer = setTimeout(measure, 500);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(settleTimer);
+    };
+  }, []);
+
+  const { scrollY } = useScroll();
+  const exitOpacity = useTransform(scrollY, exitRange, [1, 0]);
+  const exitBlur = useTransform(scrollY, exitRange, ["blur(0px)", "blur(20px)"]);
+
   return (
-    <section ref={sectionRef} className={styles.section} id="WhyChooseNH_section">
+    <motion.section
+      ref={sectionRef}
+      className={styles.section}
+      id="WhyChooseNH_section"
+      style={{ opacity: exitOpacity, filter: exitBlur }}
+    >
       <div className={styles.container}>
         {/* Section Header: eyebrow keeps its own simple blur-in (same timing
             as before); title/subtitle now animate independently instead of
@@ -206,7 +257,7 @@ export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?:
               </div>
             </motion.div>
 
-            {/* ROW 2 - CARD 5: Accreditations (Smaller/Compact 3 cols) */}
+            {/* ROW 2 - CARD 5: Comprehensive Care (Smaller/Compact 3 cols) */}
             <motion.div
               className={styles.accreditationsCard}
               style={{
@@ -217,47 +268,22 @@ export default function WhyChooseNH({ crossfadeDark = false }: { crossfadeDark?:
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
             >
-              <video
-                className={styles.accreditationsBgVideo}
-                src="/0_ai_generated_Doctor_1280x720.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
+              <img
+                src="/why-nh-comprehensive-care.jpg"
+                alt="Comprehensive Care"
+                className={styles.cardBgImage}
               />
-              <div className={styles.accreditationsOverlay} />
-
-              <h3 className={styles.accreditationsTitle}>Accreditations</h3>
-
-              <div className={styles.logosStack}>
-                {ACCREDITATIONS.map((acc) => (
-                  <div key={acc.id} className={styles.logoRow}>
-                    <div className={styles.logoBox}>
-                      <img
-                        src={acc.logo}
-                        alt={acc.name}
-                        className={acc.logoClass}
-                      />
-                    </div>
-                    <span className={styles.logoText}>{acc.name}</span>
-                  </div>
-                ))}
+              <div className={styles.accreditationsDarkOverlay} />
+              <div className={styles.cardHeaderUnit}>
+                <h3 className={styles.cardTitle}>Comprehensive Care</h3>
+                <p className={styles.cardSubtitle}>
+                  Multidisciplinary care across diagnosis, treatment, surgery, critical care and rehabilitation.
+                </p>
               </div>
             </motion.div>
           </div>
         </motion.div>
       </div>
-
-      {/* This section's own bottom padding (after the bento grid) shares the
-          page-level crossfade plate with the gap/AppDownloadBanner that
-          follow it — by the time that plate is mostly dark navy here, a
-          static "light" tag would be wrong, so this mirrors the same
-          threshold the page passes down instead of a fixed value. */}
-      <div
-        data-nav-theme={crossfadeDark ? "dark" : "light"}
-        style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "140px" }}
-        aria-hidden
-      />
-    </section>
+    </motion.section>
   );
 }

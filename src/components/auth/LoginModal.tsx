@@ -76,9 +76,11 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     }
   }, [isOpen]);
   
-  // Prevent body scroll when modal is open and pause background video
+  // Prevent body scroll when modal is open and pause the hero background video.
+  // Scoped to #hero-section-search-first only — other sections (e.g. HealthPackages) drive
+  // their own video play/pause via scroll position and must not be touched here.
   useEffect(() => {
-    const videos = document.querySelectorAll("video");
+    const videos = document.querySelectorAll<HTMLVideoElement>("#hero-section-search-first video");
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -88,13 +90,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       document.documentElement.style.overflow = "";
       videos.forEach(v => v.play().catch(err => console.log("Playback prevented:", err)));
     }
-    
+
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       // Only force play on unmount if we were open
       if (isOpen) {
-        document.querySelectorAll("video").forEach(v => v.play().catch(e => {}));
+        document.querySelectorAll<HTMLVideoElement>("#hero-section-search-first video").forEach(v => v.play().catch(() => {}));
       }
     };
   }, [isOpen]);
