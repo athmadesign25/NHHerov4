@@ -5,7 +5,7 @@ import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User, UserCog, CalendarCheck, FileText, LogOut, Users, Check } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
@@ -156,183 +156,183 @@ export default function Navbar() {
       />
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
-          <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+          <Link aria-label="Narayana Health Home" style={{ flexShrink: 0, display: "flex", alignItems: "center" }} href="/">
+            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center", transform: "translateY(-4px)" }}>
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH_Logo_white_1.png" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("find-a-doctor")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/search">
-              Find a Doctor<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "find-a-doctor" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Top Specialties</div>
-                  <Link href="/search?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
-                  <Link href="/search?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
-                  <Link href="/search?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
-                  <Link href="/search?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
-                  <Link href="/search?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Surgical Specialists</div>
-                  <Link href="/search?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
-                  <Link href="/search?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
-                  <Link href="/search?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
-                  <Link href="/search?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Internal Medicine</div>
-                  <Link href="/search?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
-                  <Link href="/search?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
-                  <Link href="/search?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
-                  <Link href="/search?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Other Specialists</div>
-                  <Link href="/search?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
-                  <Link href="/search?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
-                  <Link href="/search?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
-                  <Link href="/search?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
-                  <Link href="/search?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/search" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("hospitals")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/hospitals">
-              Hospitals & Clinics<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "hospitals" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, #E2E8F0)" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>SOUTH INDIA</div>
-                  <Link href="/hospitals/bengaluru-health-city" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru — Health City</Link>
-                  <Link href="/hospitals/bengaluru-mazumdar-shaw" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru —<br />Mazumdar Shaw</Link>
-                  <Link href="/hospitals/mysuru" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Mysuru</Link>
-                  <Link href="/hospitals/dharwad" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dharwad</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>EAST INDIA</div>
-                  <Link href="/hospitals/kolkata" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Kolkata</Link>
-                  <Link href="/hospitals/jamshedpur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jamshedpur</Link>
-                  <Link href="/hospitals/raipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Raipur</Link>
-                  <Link href="/hospitals/guwahati" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Guwahati</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>NORTH INDIA</div>
-                  <Link href="/hospitals/delhi-ncr" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Delhi NCR</Link>
-                  <Link href="/hospitals/gurugram" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gurugram</Link>
-                  <Link href="/hospitals/jaipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jaipur</Link>
-                  <Link href="/hospitals/jammu" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jammu</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>INTERNATIONAL</div>
-                  <Link href="/hospitals/cayman-islands" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cayman Islands</Link>
-                  <Link href="/hospitals/bangladesh-helpdesk" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bangladesh<br />Helpdesk</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/hospitals" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("specialities")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/specialities">
-              Treatment & Specialities<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "specialities" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, #E2E8F0)" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>HEART & VASCULAR</div>
-                  <Link href="/specialities/cardiology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiology</Link>
-                  <Link href="/specialities/cardiac-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgery</Link>
-                  <Link href="/specialities/vascular-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgery</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>CANCER CARE</div>
-                  <Link href="/specialities/medical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Medical Oncology</Link>
-                  <Link href="/specialities/surgical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Surgical Oncology</Link>
-                  <Link href="/specialities/radiation-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Radiation Oncology</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>BRAIN & SPINE</div>
-                  <Link href="/specialities/neurology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurology</Link>
-                  <Link href="/specialities/neurosurgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurosurgery</Link>
-                  <Link href="/specialities/spine-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Spine Surgery</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>BONES & JOINTS</div>
-                  <Link href="/specialities/orthopaedics" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedics</Link>
-                  <Link href="/specialities/joint-replacement" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Joint Replacement</Link>
-                  <Link href="/specialities/sports-medicine" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Sports Medicine</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("health-checks")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/health-checks">
-              Health Checkups<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "health-checks" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
-                <div style={{ gridColumn: "span 2" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Health Packages for Women</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                    <Link href="/specialities/vital-care-(below-40-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 40 years)</Link>
-                    <Link href="/specialities/prime-health-(40-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (40-45 years)</Link>
-                    <Link href="/specialities/enhanced-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (above 45 years)</Link>
-                    <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
+            <li className={styles.navItem}
+              style={{ position: "relative" }}
+              onMouseEnter={() => setActiveDropdown("find-a-doctor")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link className={styles.navLink} href="/search">
+                Find a Doctor<ChevronDown size={14} />
+              </Link>
+              {activeDropdown === "find-a-doctor" && (
+                <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Top Specialties</div>
+                    <Link href="/search?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
+                    <Link href="/search?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
+                    <Link href="/search?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
+                    <Link href="/search?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
+                    <Link href="/search?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Surgical Specialists</div>
+                    <Link href="/search?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
+                    <Link href="/search?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
+                    <Link href="/search?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
+                    <Link href="/search?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Internal Medicine</div>
+                    <Link href="/search?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
+                    <Link href="/search?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
+                    <Link href="/search?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
+                    <Link href="/search?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Other Specialists</div>
+                    <Link href="/search?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
+                    <Link href="/search?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
+                    <Link href="/search?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
+                    <Link href="/search?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
+                    <Link href="/search?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
+                  </div>
+                  <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
+                    <Link href="/search" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                      View all <ChevronRight size={14} />
+                    </Link>
                   </div>
                 </div>
-                <div style={{ gridColumn: "span 2" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Health Packages for Men</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                    <Link href="/specialities/vital-care-(below-35-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 35 years)</Link>
-                    <Link href="/specialities/prime-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (35-45 years)</Link>
-                    <Link href="/specialities/enhanced-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (35-45 years)</Link>
-                    <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
+              )}
+            </li>
+            <li className={styles.navItem}
+              style={{ position: "relative" }}
+              onMouseEnter={() => setActiveDropdown("hospitals")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link className={styles.navLink} href="/hospitals">
+                Hospitals & Clinics<ChevronDown size={14} />
+              </Link>
+              {activeDropdown === "hospitals" && (
+                <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, #E2E8F0)" }}>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>SOUTH INDIA</div>
+                    <Link href="/hospitals/bengaluru-health-city" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru — Health City</Link>
+                    <Link href="/hospitals/bengaluru-mazumdar-shaw" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru —<br />Mazumdar Shaw</Link>
+                    <Link href="/hospitals/mysuru" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Mysuru</Link>
+                    <Link href="/hospitals/dharwad" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dharwad</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>EAST INDIA</div>
+                    <Link href="/hospitals/kolkata" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Kolkata</Link>
+                    <Link href="/hospitals/jamshedpur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jamshedpur</Link>
+                    <Link href="/hospitals/raipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Raipur</Link>
+                    <Link href="/hospitals/guwahati" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Guwahati</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>NORTH INDIA</div>
+                    <Link href="/hospitals/delhi-ncr" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Delhi NCR</Link>
+                    <Link href="/hospitals/gurugram" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gurugram</Link>
+                    <Link href="/hospitals/jaipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jaipur</Link>
+                    <Link href="/hospitals/jammu" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jammu</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>INTERNATIONAL</div>
+                    <Link href="/hospitals/cayman-islands" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cayman Islands</Link>
+                    <Link href="/hospitals/bangladesh-helpdesk" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bangladesh<br />Helpdesk</Link>
+                  </div>
+                  <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
+                    <Link href="/hospitals" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                      View all <ChevronRight size={14} />
+                    </Link>
                   </div>
                 </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/health-checks" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
+              )}
+            </li>
+            <li className={styles.navItem}
+              style={{ position: "relative" }}
+              onMouseEnter={() => setActiveDropdown("specialities")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link className={styles.navLink} href="/specialities">
+                Treatment & Specialities<ChevronDown size={14} />
+              </Link>
+              {activeDropdown === "specialities" && (
+                <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, #E2E8F0)" }}>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>HEART & VASCULAR</div>
+                    <Link href="/specialities/cardiology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiology</Link>
+                    <Link href="/specialities/cardiac-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgery</Link>
+                    <Link href="/specialities/vascular-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgery</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>CANCER CARE</div>
+                    <Link href="/specialities/medical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Medical Oncology</Link>
+                    <Link href="/specialities/surgical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Surgical Oncology</Link>
+                    <Link href="/specialities/radiation-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Radiation Oncology</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>BRAIN & SPINE</div>
+                    <Link href="/specialities/neurology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurology</Link>
+                    <Link href="/specialities/neurosurgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurosurgery</Link>
+                    <Link href="/specialities/spine-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Spine Surgery</Link>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>BONES & JOINTS</div>
+                    <Link href="/specialities/orthopaedics" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedics</Link>
+                    <Link href="/specialities/joint-replacement" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Joint Replacement</Link>
+                    <Link href="/specialities/sports-medicine" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Sports Medicine</Link>
+                  </div>
+                  <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
+                    <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                      View all <ChevronRight size={14} />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            )}
-          </li>
+              )}
+            </li>
+            <li className={styles.navItem}
+              style={{ position: "relative" }}
+              onMouseEnter={() => setActiveDropdown("health-checks")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <Link className={styles.navLink} href="/health-checks">
+                Health Checkups<ChevronDown size={14} />
+              </Link>
+              {activeDropdown === "health-checks" && (
+                <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
+                  <div style={{ gridColumn: "span 2" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Health Packages for Women</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <Link href="/specialities/vital-care-(below-40-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 40 years)</Link>
+                      <Link href="/specialities/prime-health-(40-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (40-45 years)</Link>
+                      <Link href="/specialities/enhanced-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (above 45 years)</Link>
+                      <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
+                    </div>
+                  </div>
+                  <div style={{ gridColumn: "span 2" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Health Packages for Men</div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <Link href="/specialities/vital-care-(below-35-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 35 years)</Link>
+                      <Link href="/specialities/prime-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (35-45 years)</Link>
+                      <Link href="/specialities/enhanced-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (35-45 years)</Link>
+                      <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
+                    </div>
+                  </div>
+                  <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
+                    <Link href="/health-checks" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                      View all <ChevronRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </li>
 
           </ul>
         </div>
@@ -347,21 +347,21 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
-              <button 
+              <button
                 onClick={() => {
                   setIsProfileDropdownOpen(!isProfileDropdownOpen);
                   if (isProfileDropdownOpen) setIsMembersExpanded(false);
                 }}
                 className={styles.loginBtnResponsive}
-                style={{ 
-                  cursor: "pointer", 
-                  fontFamily: "inherit", 
-                  padding: "6px 12px 6px 6px", 
-                  display: "flex", 
-                  alignItems: "center", 
+                style={{
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  padding: "6px 12px 6px 6px",
+                  display: "flex",
+                  alignItems: "center",
                   gap: "8px",
-                  background: isProfileDropdownOpen 
-                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)") 
+                  background: isProfileDropdownOpen
+                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)")
                     : (isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)"),
                   color: "var(--nav-fg-color)",
                   backdropFilter: "blur(12px)",
@@ -370,12 +370,12 @@ export default function Navbar() {
                   borderRadius: "100px",
                   transition: "all 0.2s"
                 }}
-                onMouseEnter={(e) => { 
+                onMouseEnter={(e) => {
                   if (!isProfileDropdownOpen) {
                     e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
                   }
                 }}
-                onMouseLeave={(e) => { 
+                onMouseLeave={(e) => {
                   if (!isProfileDropdownOpen) {
                     e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
                   }
@@ -385,7 +385,7 @@ export default function Navbar() {
                 <span style={{ fontWeight: 600, fontSize: "15px" }}>{activeUser.name}</span>
                 <ChevronDown size={16} strokeWidth={2.5} style={{ opacity: 0.7, transform: isProfileDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
               </button>
-              
+
               {isProfileDropdownOpen && (
                 <div style={{
                   position: "absolute",
@@ -409,7 +409,7 @@ export default function Navbar() {
                       {MOCK_FAMILY_MEMBERS.slice(0, isMembersExpanded ? MOCK_FAMILY_MEMBERS.length : 3).map((member) => {
                         const isActive = member.id === activeUserId;
                         return (
-                          <button 
+                          <button
                             key={member.id}
                             onClick={() => {
                               setActiveUserId(member.id);
@@ -443,17 +443,17 @@ export default function Navbar() {
                       })}
                     </div>
                     {MOCK_FAMILY_MEMBERS.length > 3 && (
-                      <button 
+                      <button
                         onClick={() => setIsMembersExpanded(!isMembersExpanded)}
-                        style={{ 
-                          marginTop: "8px", 
-                          padding: "8px", 
-                          width: "100%", 
-                          background: "none", 
-                          border: "none", 
-                          color: "var(--color-primary)", 
-                          fontSize: "13px", 
-                          fontWeight: 600, 
+                        style={{
+                          marginTop: "8px",
+                          padding: "8px",
+                          width: "100%",
+                          background: "none",
+                          border: "none",
+                          color: "var(--color-primary)",
+                          fontSize: "13px",
+                          fontWeight: 600,
                           cursor: "pointer",
                           textAlign: "center"
                         }}
@@ -462,7 +462,7 @@ export default function Navbar() {
                       </button>
                     )}
                   </div>
-                  
+
                   <div style={{ padding: "8px" }}>
                     <Link href="/profile" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, #0f172a)", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
                       <User size={18} style={{ color: "var(--color-text-secondary, #475569)" }} /> My account
@@ -474,15 +474,15 @@ export default function Navbar() {
                       <FileText size={18} style={{ color: "var(--color-text-secondary, #475569)" }} /> Health records
                     </Link>
                   </div>
-                  
+
                   <div style={{ borderTop: "1px solid var(--color-border, #e2e8f0)", padding: "8px" }}>
-                    <button 
+                    <button
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
                         setIsLoggedIn(false); localStorage.removeItem('isLoggedIn');
                       }}
-                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, #ef4444)", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }} 
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"} 
+                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, #ef4444)", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"}
                       onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                     >
                       <LogOut size={18} /> Sign out
@@ -492,11 +492,11 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <button 
+            <button
               className={styles.loginBtnResponsive}
               onClick={() => setIsLoginModalOpen(true)}
-              style={{ 
-                cursor: "pointer", 
+              style={{
+                cursor: "pointer",
                 fontFamily: "inherit",
                 background: isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)",
                 color: "var(--nav-fg-color)",
@@ -509,23 +509,23 @@ export default function Navbar() {
                 fontSize: "14px",
                 transition: "all 0.2s"
               }}
-              onMouseEnter={(e) => { 
+              onMouseEnter={(e) => {
                 e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
               }}
-              onMouseLeave={(e) => { 
+              onMouseLeave={(e) => {
                 e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
               }}
             >
               Login
             </button>
           )}
-          <Link 
-            href="/login" 
-            className={styles.loginIconResponsive} 
-            style={{ 
-              color: "var(--nav-fg-color)", 
-              padding: "8px", 
-              alignItems: "center", 
+          <Link
+            href="/login"
+            className={styles.loginIconResponsive}
+            style={{
+              color: "var(--nav-fg-color)",
+              padding: "8px",
+              alignItems: "center",
               justifyContent: "center",
               transition: "color 0.4s ease"
             }}
@@ -552,7 +552,7 @@ export default function Navbar() {
             <Link href="/health-checks" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Health Checkups <ChevronRight size={16} /></Link>
             <Link href="/specialities" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Treatments & Specialities <ChevronRight size={16} /></Link>
             <Link href="/international-patients" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>International Patients <ChevronRight size={16} /></Link>
-            
+
             <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
               {isLoggedIn ? (
                 <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} style={{ width: "100%", padding: "14px", textAlign: "center", border: "1px solid var(--color-primary, #034EA2)", background: "transparent", color: "var(--color-primary, #034EA2)", borderRadius: "8px", fontWeight: 600, fontSize: "16px", textDecoration: "none", display: "block" }}>My Account</Link>
@@ -571,7 +571,7 @@ export default function Navbar() {
             <button aria-label="Close search" onClick={() => setIsSearchOpen(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "transparent", border: "none", cursor: "pointer", padding: "8px", color: "#666" }}>
               <X size={24} strokeWidth={2.5} />
             </button>
-            
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "12px", alignItems: "end" }}>
               <div style={{ position: "relative" }}>
                 <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "#666", marginBottom: "6px", letterSpacing: "0.05em", textTransform: "uppercase" }}>Search Doctors, Specialities or Hospitals</label>
