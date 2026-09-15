@@ -4,10 +4,9 @@ import { useRef, useEffect } from "react";
 import { NeatGradient } from "@firecms/neat";
 
 /**
- * Animated dark gradient, scoped to just the App Download section. Sits
- * behind AppDownloadBanner's own content, fading in via the parent's
- * darkOpacity so it takes over from the flat WhyNH->Footer handoff plate
- * exactly where that plate finishes turning dark.
+ * Animated light gradient (trial light-mode palette, matching WhyChooseNH's
+ * own light gradient tail so the two sections read as one continuous
+ * background), scoped to just the App Download section.
  */
 export default function AppDownloadNeatBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,11 +17,11 @@ export default function AppDownloadNeatBackground() {
 
     const config = {
       colors: [
-        { color: "#000000", enabled: true },
-        { color: "#001129", enabled: true },
-        { color: "#0F0025", enabled: true },
-        { color: "#290D11", enabled: true },
-        { color: "#001129", enabled: true },
+        { color: "#FCFCFC", enabled: true },
+        { color: "#E0ECFF", enabled: true },
+        { color: "#F7F6F2", enabled: true },
+        { color: "#D6E4FF", enabled: true },
+        { color: "#FCFCFC", enabled: true },
       ],
       speed: 2,
       horizontalPressure: 4,
@@ -39,11 +38,11 @@ export default function AppDownloadNeatBackground() {
       shadows: 2,
       highlights: 2,
       colorBrightness: 1,
-      colorSaturation: -1,
+      colorSaturation: 3,
       wireframe: false,
       antialias: false,
       colorBlending: 7,
-      backgroundColor: "#010101",
+      backgroundColor: "#FCFCFC",
       backgroundAlpha: 1,
       grainScale: 2,
       grainSparsity: 0,

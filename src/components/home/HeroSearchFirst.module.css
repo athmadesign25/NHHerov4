@@ -300,7 +300,7 @@
 .blinkingCursor {
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
   margin-right: 2px;
   animation: cursorBlink 1s step-end infinite;
@@ -314,7 +314,7 @@
 .aiSuggestionText {
   color: rgba(255, 255, 255, 0.54);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -323,7 +323,7 @@
 .typedText {
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 400;
   line-height: normal;
 }
@@ -338,7 +338,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 20px;
+  font-size: 18px;
   color: transparent;
 }
 
@@ -356,15 +356,15 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border-radius: 9999px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 400;
   line-height: normal;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -374,6 +374,37 @@
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.40);
   transform: translateY(-1px);
+}
+
+/* Icon-only bookend buttons (add / voice) flanking the text pills above —
+   tertiary: invisible container at rest (no border, no fill), just the
+   icon — the square footprint is kept only so it still occupies the same
+   height/alignment slot as the bordered pills beside it. A faint hover
+   fill is the only feedback, no border ever appears. */
+.chatIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chatIconBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Voice button sits at the far right edge of the search bar rather than
+   directly trailing the last text pill — pushed there within the same
+   flex row instead of being grouped with the rest of the stack. */
+.chatIconBtnEnd {
+  margin-left: auto;
 }
 
 @property --border-angle {
@@ -1789,7 +1820,7 @@
 }
 
 .metricLabel {
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.3;
 }

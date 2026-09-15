@@ -14,7 +14,7 @@ import {
   useInView,
   useSpring,
 } from "framer-motion";
-import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2 } from "lucide-react";
+import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText, Video, Building2, Plus, Mic } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./HeroSearchFirst.module.css";
 import Lottie from "lottie-react";
@@ -1103,19 +1103,15 @@ export default function HeroSearchFirst() {
                           <div className={styles.chatBottomButtonsRow}>
                             <button
                               type="button"
-                              className={styles.chatQuickBtn}
+                              className={styles.chatIconBtn}
+                              aria-label="More options"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setIsOpen(true);
                                 setHasOpened(true);
-                                setActiveDropdownTab("doctors");
                               }}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M7.34115 12.6667C10.2867 12.6667 12.6745 10.2789 12.6745 7.33333C12.6745 4.38781 10.2867 2 7.34115 2C4.39563 2 2.00781 4.38781 2.00781 7.33333C2.00781 10.2789 4.39563 12.6667 7.34115 12.6667Z" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M13.9995 13.9995L11.1328 11.1328" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                              <span>Find the right doctor</span>
+                              <Plus size={20} strokeWidth={1.75} />
                             </button>
 
                             <button
@@ -1156,7 +1152,20 @@ export default function HeroSearchFirst() {
                                   </clipPath>
                                 </defs>
                               </svg>
-                              <span>Know your health</span>
+                              <span>Describe my symptoms</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className={`${styles.chatIconBtn} ${styles.chatIconBtnEnd}`}
+                              aria-label="Voice search"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsOpen(true);
+                                setHasOpened(true);
+                              }}
+                            >
+                              <Mic size={20} strokeWidth={1.75} />
                             </button>
                           </div>
                         )}

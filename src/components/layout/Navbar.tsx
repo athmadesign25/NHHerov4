@@ -136,11 +136,6 @@ export default function Navbar() {
         top: "0px",
         zIndex: 1000,
         width: "100%",
-        // Extra bottom padding so the backdrop-blur's fade mask (below) has
-        // room to taper off past the actual nav content, instead of eating
-        // into it — that overlap was what made the bar look like it was
-        // dissolving into the page rather than having a clean bottom edge.
-        paddingBottom: "20px",
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
         "--nav-fg-color": isOverLightBackground ? "var(--color-text, #0f172a)" : "#ffffff"
@@ -154,9 +149,8 @@ export default function Navbar() {
           backgroundColor: "transparent",
           backdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
           WebkitBackdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
-          transition: "backdrop-filter 0.4s ease",
-          maskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
+          borderBottom: isNavbarActive ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid rgba(255, 255, 255, 0)",
+          transition: "backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
         }}
       />
@@ -164,8 +158,8 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH_Logo_white_1.png" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>

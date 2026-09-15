@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import FooterRevealWrapper from "@/components/layout/FooterRevealWrapper";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 
@@ -39,8 +39,7 @@ export default function RootLayout({
 
         {/* Layout */}
         <Navbar />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <FooterRevealWrapper>{children}</FooterRevealWrapper>
       </body>
     </html>
   );

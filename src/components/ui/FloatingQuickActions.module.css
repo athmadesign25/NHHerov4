@@ -3,8 +3,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 28px 8px;
+  gap: 10px;
+  padding: 20px 8px;
   color: #0B5DF4;
   text-decoration: none;
   font-size: 12px;
@@ -32,25 +32,18 @@
 .iconWrap {
   width: 30px;
   height: 30px;
-  border-radius: 8px;
-  background: var(--Accent-Blue-Accent-Blue, #3C7DF6);
-  box-shadow: 0 1px 0 1px rgba(255, 255, 255, 0.22) inset;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #ffffff;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.iconWrap svg {
-  color: #ffffff !important;
-  stroke: #ffffff !important;
+  border-radius: 8px;
+  background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
+  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset;
+  transition: transform 0.2s ease;
 }
 
 .link:hover .iconWrap {
   transform: scale(1.1);
-  background: #2b6ee8;
 }
 
 .divider {
@@ -62,35 +55,43 @@
 }
 
 /* Base styles (Desktop) */
+/* Bottom-anchored (not vertically centered) — sits 44px above the global
+   Pulse floating button (GlobalPulseFAB.module.css .fabContainer: bottom
+   24px, .fabButton height 60px, so that button's own top edge is at
+   24+60=84px from the viewport bottom; 44px above that is 84+44=128px). */
 .container {
   position: fixed;
-  top: 50%;
+  bottom: 128px;
   right: 24px;
   z-index: 9000;
-  width: 108px;
+  width: 100px;
   border-radius: 18px;
   border: 1px solid rgba(249, 91, 97, 0.22);
   background: linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%);
   box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(18px); /* increased blur for more glassiness */
+  backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-50%) translateX(50px);
+  transform: translateX(50px);
 }
 
 .visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+  transform: translateX(0);
+}
+
+.visible:hover {
+  transform: scale(1.05);
 }
 
 /* Standalone Fully Rounded Floating Pulse AI Button Wrapper (Bottom Right Corner) */
@@ -272,6 +273,10 @@
 
   .visible {
     transform: translateY(0);
+  }
+
+  .visible:hover {
+    transform: translateY(0) scale(1.03);
   }
 
   .link {
