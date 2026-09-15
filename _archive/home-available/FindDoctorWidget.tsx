@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Search, MapPin, Stethoscope, ChevronRight } from "lucide-react";
+import { Search, Calendar, ChevronRight, MapPin, Stethoscope, Video } from "lucide-react";
 import styles from "./FindDoctorWidget.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 const specialities = [
   "Cardiology", "Neurology", "Oncology", "Orthopaedics",
@@ -34,7 +35,7 @@ export default function FindDoctorWidget() {
           <div className={styles.header}>
             <div className={styles.headerLeft}>
               <div className="section-eyebrow">Find Your Doctor</div>
-              <h2 className={styles.title}>Book an Appointment</h2>
+              <h2 className={styles.title}><TextSweepEffect words={["Book an Appointment"]} sweepMs={1200} /></h2>
               <p className={styles.subtitle}>
                 Search from 3,000+ specialists across 24 hospitals in India.
               </p>

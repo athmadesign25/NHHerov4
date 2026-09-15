@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import styles from "./SpecialitiesGrid.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 const specialities = [
   { name: "Cardiology & Cardiac Surgery", href: "/specialities/cardiology", icon: "/Specialities icons/Cardiology.svg" },
@@ -31,7 +33,7 @@ export default function SpecialitiesGrid() {
         <div style={{ textAlign: "center", marginBottom: "var(--space-7)" }}>
           <div className="section-eyebrow">Our Specialities</div>
           <h2 style={{ fontSize: "clamp(28px, 3.2vw, 44px)", fontWeight: 900, color: "var(--text-primary, #333)", lineHeight: 1.18, letterSpacing: "-0.025em", marginBottom: "8px", paddingTop: "16px" }}>
-            40+ Medical Specialities Under One Roof
+            <TextSweepEffect words={["40+ Medical Specialities Under One Roof"]} sweepMs={1500} />
           </h2>
           <p style={{ fontSize: "16px", color: "var(--text-secondary, #4A5568)", maxWidth: "560px", margin: "0px auto", paddingBottom: "32px" }}>
             From complex cardiac surgeries to advanced cancer care — Narayana Health covers every dimension of your health.
