@@ -5,7 +5,7 @@ import Link from "next/link";
 import LoginModal from "@/components/auth/LoginModal";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check } from "lucide-react";
+import { ChevronDown, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
@@ -343,13 +343,7 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
-            <MapPin size={18} strokeWidth={2.5} />
-            <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <span style={{ fontSize: "14px", fontWeight: 500 }}>Bangalore</span>
-              <ChevronDown size={14} />
-            </span>
-          </div>
+
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
