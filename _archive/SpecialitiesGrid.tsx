@@ -25,7 +25,7 @@ export default function SpecialitiesGrid() {
       aria-label="Medical specialities"
       className="section-alt"
       style={{
-        padding: "120px 0px",
+        padding: "150px 0px",
         background: "transparent"
       }}
     >

@@ -152,6 +152,7 @@ export default function AppDownloadBanner() {
   // Hand rotation and float on scroll to simulate lifting the phone
   const handRotation = useTransform(enterProgress, [0, 1], [30, 0]);
   const handY = useTransform(enterProgress, [0, 1], [60, 0]);
+  const bgOpacity = useTransform(enterProgress, [0.9, 1], [0, 1]);
 
   // Measures the gap between the text unit's bottom and the phone stage's
   // own natural (already-enlarged, bottom-anchored) resting position, so
@@ -273,7 +274,39 @@ export default function AppDownloadBanner() {
           engaging, so the footer appeared to slap on top immediately with
           no pause at all. */}
       <div ref={trackRef} className={styles.stackTrack} style={{ height: "200vh" }}>
-        <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh" }}>
+        <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
+          
+          <motion.div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              opacity: isDesktopFX ? bgOpacity : 1,
+              zIndex: 0
+            }}
+          >
+            <Image
+              src="/House Interior.jpg"
+              alt="House Interior"
+              fill
+              style={{ objectFit: "cover" }}
+              priority
+            />
+            {/* White gradient overlay fading to transparent at the bottom */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                background: "linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+                pointerEvents: "none"
+              }}
+            />
+          </motion.div>
 
           <div className={styles.contentStack}>
           {/* Centered copy: eyebrow, then title a beat later, sequentially */}
