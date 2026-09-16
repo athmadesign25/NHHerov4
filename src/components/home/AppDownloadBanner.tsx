@@ -8,7 +8,7 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
-import { Video, Calendar, FileText, Activity, PersonStanding } from "lucide-react";
+import { Video, Calendar, FileText, Activity, PersonStanding, Microscope } from "lucide-react";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
 import styles from "./AppDownloadBanner.module.css";
@@ -27,35 +27,43 @@ const DIGITAL_TWIN_ID = 0;
 
 const features: Feature[] = [
   {
-    id: DIGITAL_TWIN_ID,
-    title: "See your whole body's health at a glance",
-    icon: PersonStanding,
-    img: "/digital-twin-fullphone.png",
+    id: 0,
+    title: "View detailed test reports",
+    icon: Microscope,
+    img: "/App Screens/Test details.png?v=3",
   },
   {
     id: 1,
-    title: "Video consultations from home",
-    icon: Video,
-    img: "/NHCare Screens/Video Consultation.png",
+    title: "Your health dashboard at a glance",
+    icon: PersonStanding,
+    img: "/App Screens/Home Page.png?v=3",
   },
   {
     id: 2,
-    title: "Book appointments in 60 seconds",
-    icon: Calendar,
-    img: "/NHCare Screens/Book Appointment.png",
+    title: "Access your health records anytime",
+    icon: FileText,
+    img: "/App Screens/Health records.png?v=3",
   },
   {
     id: 3,
-    title: "Access your health records anytime",
-    icon: FileText,
-    img: "/NHCare Screens/Health Records.png",
+    title: "Video consultations from home",
+    icon: Video,
+    img: "/App Screens/Video Consultation.png?v=3",
   },
   {
     id: 4,
     title: "Track vitals and wellness reports",
     icon: Activity,
-    img: "/NHCare Screens/Vital Tracking.png",
+    img: "/App Screens/Vitals tracking.png?v=3",
   },
+];
+
+const POP_OVER_CARDS = [
+  { img: "/App Screens/Pop over cards/Body analysis.png", text: "Get Digital twin health analysis" },
+  { img: "/App Screens/Pop over cards/Dr Card.png", text: "Book appointments in 60 seconds" },
+  { img: "/App Screens/Pop over cards/Trend Card.png", text: "Access your health records anytime" },
+  { img: "/App Screens/Pop over cards/Video block.png", text: "Video consultations from home" },
+  { img: "/App Screens/Pop over cards/Recommend.png", text: "Track vitals and wellness reports" },
 ];
 
 // Digital twin is now just a plain feature image like the other four (a
@@ -98,6 +106,29 @@ const PHONE_APPEAR_SCALE = 1.22;
 // permanent gradient overlay across the full phrase.
 const SHIMMER_POP_DELAY = REVEAL.title + 0.6;
 
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
+const screenVariants = {
+  enter: (direction: number) => {
+    return {
+      x: direction > 0 ? "100%" : "-100%",
+    };
+  },
+  center: {
+    zIndex: 1,
+    x: 0,
+  },
+  exit: (direction: number) => {
+    return {
+      zIndex: 0,
+      x: direction < 0 ? "100%" : "-100%",
+    };
+  }
+};
+
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Three phases instead of a plain matured/not-matured boolean, so scrolling
@@ -113,10 +144,21 @@ type Phase = "pre" | "matured" | "exiting";
 
 export default function AppDownloadBanner() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [phase, setPhase] = useState<Phase>("pre");
   const phaseRef = useRef<Phase>("pre");
   const [isDesktopFX, setIsDesktopFX] = useState(false);
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setActiveIndex((prev) => {
+      let next = prev + newDirection;
+      if (next < 0) next = features.length - 1;
+      if (next >= features.length) next = 0;
+      return next;
+    });
+  };
 
   const trackRef = useRef<HTMLDivElement>(null);
   const topTextBlockRef = useRef<HTMLDivElement>(null);
@@ -249,13 +291,13 @@ export default function AppDownloadBanner() {
     if (phase === "pre") setActiveIndex(0);
   }, [phase]);
 
-  // Auto-play carousel every 4 seconds, only once matured and not hovered.
+  // Auto-play carousel every 3 seconds, only once matured and not hovered.
   useEffect(() => {
     if (isHovered || phase !== "matured") return;
 
     const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % features.length);
-    }, 4000);
+      paginate(1);
+    }, 3000);
 
     return () => clearInterval(timer);
   }, [isHovered, phase, activeIndex]);
@@ -345,24 +387,192 @@ export default function AppDownloadBanner() {
             </h2>
           </div>
 
-          <motion.div
-            style={{
-              position: "relative",
-              rotate: handRotation,
-              y: handY,
-              pointerEvents: "none",
-              marginTop: "-30px",
-              marginBottom: "-45px"
-            }}
-          >
-            <Image
-              src="/Mobile phone in hand.png"
-              width={1019}
-              height={1130}
-              alt="Mobile phone in hand"
-              style={{ width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)" }}
-            />
-          </motion.div>
+          <div className={styles.bottomRow}>
+            {/* Pop-over Card matching active screen on the left */}
+            <div className={styles.trustStackPosition} style={{ marginTop: "-212px", marginLeft: "160px" }}>
+              <motion.div 
+                className={styles.trustStack}
+                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
+                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                style={{ width: "240px", position: "relative", height: "180px" }}
+              >
+                <AnimatePresence mode="popLayout">
+                  {POP_OVER_CARDS[activeIndex] && (
+                    <motion.div
+                      key={activeIndex}
+                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                      transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                      style={{ 
+                        position: "absolute", 
+                        top: 0, 
+                        left: 0, 
+                        width: "100%",
+                        backgroundColor: "#ffffff",
+                        borderRadius: "20px",
+                        padding: "16px",
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
+                        border: "1px solid rgba(0,0,0,0.04)"
+                      }}
+                    >
+                      <Image 
+                        src={POP_OVER_CARDS[activeIndex].img} 
+                        alt={POP_OVER_CARDS[activeIndex].text} 
+                        width={240} 
+                        height={100}
+                        style={{ width: "100%", height: "auto", display: "block" }} 
+                      />
+                      <div style={{ marginTop: "12px", textAlign: "left", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                        {POP_OVER_CARDS[activeIndex].text}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              {/* Connecting Line from Phone to Card */}
+              <AnimatePresence mode="popLayout">
+                {phase === "matured" && (
+                  <motion.svg
+                    key={`line-${activeIndex}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{
+                      position: "absolute",
+                      left: "240px", 
+                      top: "40%", 
+                      width: "160px", 
+                      height: "80px",
+                      overflow: "visible",
+                      pointerEvents: "none",
+                      zIndex: 5
+                    }}
+                    viewBox="0 0 160 80"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <defs>
+                      <linearGradient id="lineGrad" x1="160" y1="80" x2="10" y2="10" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#ffffff" />
+                        <stop offset="15%" stopColor="#FF6B6B" />
+                        <stop offset="100%" stopColor="#3B82F6" />
+                      </linearGradient>
+                    </defs>
+
+                    <motion.path 
+                      d="M 160 80 C 100 80, 50 10, 10 10" 
+                      stroke="url(#lineGrad)" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <motion.div
+              style={{
+                position: "relative",
+                rotate: handRotation,
+                y: handY,
+                pointerEvents: "none",
+                marginTop: "-30px",
+                marginBottom: "-45px"
+              }}
+            >
+              <Image
+                src="/Mobile phone in hand.png"
+                width={1019}
+                height={1130}
+                alt="Mobile phone in hand"
+                style={{ width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)" }}
+              />
+              
+              {/* Auto-playing Screens sandwiched in the middle */}
+              <div style={{
+                position: "absolute",
+                top: "calc(8% + 1px)",      
+                left: "calc(48.5% + 1.5px)",
+                width: "27.5%",
+                height: "58.5%",
+                zIndex: 10,
+                overflow: "hidden",
+                borderRadius: "82px",
+                transform: "rotate(0deg) scale(1.3)",
+                pointerEvents: "auto", 
+              }}>
+                <AnimatePresence initial={false} custom={direction}>
+                  <motion.img
+                    key={activeFeature.id}
+                    src={activeFeature.img}
+                    alt={activeFeature.title}
+                    custom={direction}
+                    variants={screenVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 }
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={1}
+                    onDragEnd={(e, { offset, velocity }) => {
+                      const swipe = swipePower(offset.x, velocity.x);
+                      if (swipe < -swipeConfidenceThreshold) {
+                        paginate(1);
+                      } else if (swipe > swipeConfidenceThreshold) {
+                        paginate(-1);
+                      }
+                    }}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute" }}
+                  />
+                </AnimatePresence>
+              </div>
+
+              {/* The overlay is positioned absolutely on top of the base image, allowing us to sandwich screens between them (e.g. zIndex: 10) */}
+              <Image
+                src="/Mobile phone in hand Over lay.png"
+                width={1019}
+                height={1130}
+                alt="Mobile phone in hand Overlay"
+                style={{ position: "absolute", top: 0, left: 0, width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)", zIndex: 20 }}
+              />
+            </motion.div>
+
+            {/* Store links on the right */}
+            <div className={styles.storesColPosition} style={{ marginTop: "-140px", marginRight: "120px" }}>
+              <motion.div 
+                className={styles.storesCol}
+                style={{ pointerEvents: "auto", zIndex: 30 }}
+                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
+                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <div className={`${styles.storeContainer} ${styles.qrContainer}`}>
+                  <Image src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: "6px" }} className={styles.qrImg} />
+                  <span className={styles.qrLabel}>Scan to install</span>
+                </div>
+                <div className={styles.storeContainer}>
+                  <a href="#" className={styles.storeBadge} tabIndex={0}>
+                    <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
+                  </a>
+                </div>
+                <div className={styles.storeContainer}>
+                  <a href="#" className={styles.storeBadge} tabIndex={0}>
+                    <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
+                  </a>
+                </div>
+              </motion.div>
+            </div>
+          </div>
           </div>
         </div>
       </div>
