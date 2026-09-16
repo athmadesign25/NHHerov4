@@ -67,90 +67,75 @@
   z-index: 1;
 }
 
-/* Keeps the left-column copy legible from the very first frame */
-.scrimLeft {
+/* Always-on decorative wash — same visual result as the Figma "rotate a
+   tall rect -90deg" trick (a diagonal red-to-transparent sweep plus a
+   deep-navy corner glow), applied directly as CSS gradient angles instead
+   of a literal rotated element. */
+.topOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    97deg,
-    rgba(4, 18, 43, 0.95) 0%,
-    rgba(4, 18, 43, 0.88) 30%,
-    rgba(4, 18, 43, 0.46) 56%,
-    rgba(4, 18, 43, 0) 78%
-  );
+  background:
+    linear-gradient(13deg, rgba(255, 54, 57, 0.40) -31.94%, rgba(152, 15, 17, 0) 33.58%),
+    linear-gradient(97deg, rgba(5, 22, 50, 0.80) 19.03%, rgba(6, 24, 56, 0.76) 27.59%, rgba(9, 40, 90, 0.48) 62.01%, rgba(15, 67, 152, 0) 91.02%);
   pointer-events: none;
   z-index: 2;
 }
 
-/* Flat dulling layer — JS drives opacity 0 -> 1 across phase 2 */
-.scrimDull {
+/* Diagonal navy wash that deepens as the card row finishes revealing — JS
+   drives opacity 0 -> 0.7 across phase 2 (see scrimDullRef in the TSX). */
+.bottomOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(4, 18, 43, 0.62);
+  background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
   opacity: 0;
   pointer-events: none;
   z-index: 3;
   will-change: opacity;
 }
 
-/* ─── Grid: wide left column, fixed-width right rail ─────────────────── */
+/* ─── Centered content column ─────────────────────────────────────────── */
 .grid {
   position: relative;
   z-index: 10;
   height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 372px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 80px;
-  max-width: 1320px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 56px;
+  padding: 110px 56px 56px;
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform;
 }
 
-.leftCol {
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: #ffffff;
   will-change: transform;
 }
 
 /* Plain layout containers now — the sequential word/line/item reveal (see
-   HealthPackages.tsx's RevealTitleWords, .subLine and .uspItem motion
-   elements) is driven per-element via Framer Motion's `animate` prop keyed
-   off the `textRevealed` boolean, not by JS setting opacity/transform/
-   filter on these wrapper divs as a whole. */
-.titleGroup,
-.subGroup {
+   HealthPackages.tsx's RevealTitleWords and .uspItem motion elements) is
+   driven per-element via Framer Motion's `animate` prop keyed off the
+   `textRevealed` boolean, not by JS setting opacity/transform/filter on
+   these wrapper divs as a whole. */
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* Eyebrow + dash slide in from above together as one unit, first in the
-   left column's reveal sequence — see the `eyebrowUnit` motion.div in
-   HealthPackages.tsx. */
+   column's reveal sequence — see the `eyebrowUnit` motion.div in
+   HealthPackages.tsx. Uses the global .section-eyebrow as-is (centered,
+   own dash) since this section is centered now, unlike the old two-column
+   layout that needed a left-aligned override. */
 .eyebrowUnit {
   will-change: transform, opacity, filter;
-}
-
-/* Left-aligned, white variant of the project's standard eyebrow-with-dash
-   (see PatientStories' .eyebrowText/.eyebrowDash for the same pattern).
-   The global .section-eyebrow class also draws its own centered ::after
-   dash — hidden here since this variant supplies its own single left-
-   aligned one below instead. */
-.eyebrowOnDark {
-  color: #ffffff !important;
-  margin: 0 0 4px !important;
-  align-items: flex-start !important;
-}
-
-.eyebrowOnDark::after {
-  display: none;
-}
-
-.eyebrowDash {
-  width: 24px;
-  height: 2px;
-  background: var(--color-emergency, #ed1c24);
-  margin: 4px 0 20px;
 }
 
 .title {
@@ -159,104 +144,108 @@
   line-height: 1.12;
   letter-spacing: -0.025em;
   color: #ffffff;
+  text-align: center;
   max-width: none;
-  margin: 0 0 22px;
+  margin: 0;
 }
 
-.sub {
-  font-size: 16px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.78);
-  /* Wide enough that each sentence (each its own .subLine) stays on one
-     line — narrower widths wrapped the first, longer sentence onto two
-     lines, giving three total instead of the intended two. */
-  max-width: 600px;
-  margin: 0 0 32px;
-}
-
-/* Each sentence is its own line, sliding in from above one after another —
-   same "line by line" pattern as CentreOfExcellence's .subtitleLine. */
-.subLine {
-  display: block;
-  will-change: transform, opacity, filter;
-}
-
+/* ─── USP row ──────────────────────────────────────────────────────────── */
 .uspList {
   list-style: none;
-  margin: 0;
+  margin: 44px 0 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 48px;
 }
 
 .uspItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  max-width: 230px;
+}
+
+/* Glassy red icon chip — backdrop-filter + an inset highlight so it reads
+   as a lit glass tile rather than a flat colored square. */
+.uspIconBox {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(244, 54, 54, 0.30);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.uspLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
+  color: #ffffff;
+  text-align: left;
+  line-height: 1.3;
 }
 
-/* Subtle lighter-red glow — a soft drop-shadow "halo" around the icon
-   shape itself rather than a boxy background glow, since these are bare
-   stroke icons with no filled backdrop of their own. */
-.uspIcon {
-  color: var(--color-emergency, #ed1c24);
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 5px rgba(255, 130, 130, 0.65));
-}
-
-/* ─── Right rail ──────────────────────────────────────────────────────── */
-.rightRail {
+/* ─── Bottom stack: label + card row + explore button ─────────────────── */
+.bottomStack {
+  margin-top: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  width: 372px;
+  align-items: center;
 }
 
 .railLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: #e1e1e1;
+  text-align: center;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 0 20px;
   will-change: transform, opacity;
 }
 
+/* Grid (not flex) so the three columns can shrink together below the
+   492px spec width on narrower viewports — flex children with a fixed
+   492px width would just overflow the frame instead of fitting it. */
 .cardStack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(280px, 492px));
+  gap: 22px;
+  margin-bottom: 28px;
+  width: 100%;
+  justify-content: center;
 }
 
-/* Light glass cards over a dark image — the opposite of every other
-   dark-on-photo card pattern on this page, per spec. A dark-to-light
-   gradient (rather than a flat tint) is what makes the flush-left
-   thumbnail below read as part of the same surface instead of a separate
-   inset tile — dark end sits behind/against the image, light end behind
-   the text. */
+/* ─── Package cards ────────────────────────────────────────────────────
+   Three fixed visual variants from the design spec (background gradient /
+   border / shadow only — everything else shared). Image sits absolutely
+   against the right edge with a soft left-edge mask fade so it blends into
+   the card's own gradient instead of showing a hard seam; text content
+   sits on top, inset 34px from the left. */
 .packageCard {
   position: relative;
   display: flex;
-  align-items: stretch;
-  gap: 14px;
-  padding: 0;
-  background: linear-gradient(90deg, rgba(13, 50, 93, 0.40) 0%, rgba(255, 255, 255, 0.28) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 16px;
+  width: 100%;
+  height: 212px;
+  flex-direction: column;
+  align-items: flex-start;
   overflow: hidden;
   text-decoration: none;
   box-sizing: border-box;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  flex-shrink: 0;
+  transform-origin: bottom center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
   will-change: transform, opacity, filter;
-}
-
-.packageCard:hover,
-.packageCard:focus-visible {
-  background: linear-gradient(90deg, rgba(13, 50, 93, 0.52) 0%, rgba(255, 255, 255, 0.36) 100%);
-  border-color: rgba(255, 255, 255, 0.48);
 }
 
 .packageCard:focus-visible {
@@ -264,114 +253,159 @@
   outline-offset: 2px;
 }
 
-/* Flush against the card's own left edge and stretched to its full
-   height (align-items:stretch above), rather than an inset square tile —
-   the card's own overflow:hidden + border-radius clips this to match its
-   corner roundedness exactly; the explicit radius here is belt-and-braces
-   for the <img> itself. The right-edge border reuses the card's own
-   border color, so it reads as one continuous stroke around the card
-   with a seam where the image ends, not a separate bordered tile. */
-.thumb {
-  position: relative;
-  width: 100px;
-  align-self: stretch;
-  border-radius: 16px 0 0 16px;
-  border-right: 1px solid rgba(255, 255, 255, 0.28);
-  overflow: hidden;
-  flex-shrink: 0;
+.packageCardV1 {
+  border-radius: 10px;
+  border: 1px solid #90d2fd;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
-.thumbImage {
-  width: 100%;
+.packageCardV2 {
+  border-radius: 10.235px;
+  border: 1.023px solid #90d2fd;
+  background:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.64);
+}
+
+.packageCardV3 {
+  border-radius: 10px;
+  border: 1px solid #90d2fd;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
+}
+
+/* Grow-from-bottom + a light shimmer sweep + a touch of brightness on
+   hover — the same "lightens up" feeling the old flat-tint cards had,
+   just adapted to a photo+gradient card instead of a flat background. */
+.packageCard:hover,
+.packageCard:focus-visible {
+  transform: scale(1.028);
+  filter: brightness(1.1);
+}
+
+.packageCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.22) 48%, transparent 68%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::before,
+.packageCard:focus-visible::before {
+  transform: translateX(120%);
+}
+
+.packageCardImage {
+  position: absolute;
+  top: 0;
+  right: 0;
   height: 100%;
+  width: 260px;
   object-fit: cover;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
 }
 
-.packageCard:hover .thumbImage {
-  transform: scale(1.08);
+.packageCard:hover .packageCardImage,
+.packageCard:focus-visible .packageCardImage {
+  transform: scale(1.05);
 }
 
-/* Solid white with a dark arrow — was a dark chip with a white arrow,
-   which read as an inverted/dark-mode control sitting on this light
-   card. */
+.packageCardContent {
+  position: relative;
+  z-index: 2;
+  padding: 28px 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.packageCardTitle {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+}
+
+.packageCardFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.packageCardFact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.packageCardFactIcon {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: rgba(239, 145, 145, 0.20);
+}
+
+.packageCardFactText {
+  display: flex;
+  flex-direction: column;
+}
+
+.factBold {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.factLight {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: normal;
+}
+
+/* Glassy circular arrow badge, top-right, revealed on hover. */
 .arrowBadge {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 25px;
-  height: 25px;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0F172A;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transform: scale(0.9);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 3;
 }
 
 .packageCard:hover .arrowBadge,
 .packageCard:focus-visible .arrowBadge {
   opacity: 1;
-}
-
-.cardBody {
-  min-width: 0;
-  flex: 1;
-  padding: 14px 14px 14px 0;
-}
-
-.cardName {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: #ffffff;
-  margin: 0 0 4px;
-}
-
-.cardAudience {
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 10px;
-}
-
-.chipsRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-/* Liquid-glass refraction: a real backdrop-blur (not just a flat tint)
-   plus an inset top highlight to read as a lit, curved glass edge rather
-   than a plain outlined chip. */
-.chip {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.10);
-  border-radius: 999px;
-  padding: 4px 10px;
-  max-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.chipOverflow {
-  font-size: 11px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  padding: 4px 10px;
+  transform: scale(1);
 }
 
 /* Secondary white-outlined button — same pattern as PatientStories'
@@ -435,18 +469,18 @@
     transform: none !important;
   }
 
-  .scrimDull {
-    opacity: 0.35 !important;
+  .bottomOverlay {
+    opacity: 0.5 !important;
   }
 
   .grid {
     height: auto;
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 40px;
     padding: 64px 24px;
   }
 
-  .leftCol {
+  .textBlock {
     transform: none !important;
   }
 
@@ -454,8 +488,29 @@
     font-size: clamp(30px, 8vw, 40px);
   }
 
-  .rightRail {
+  .uspList {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .uspItem {
+    max-width: 320px;
+  }
+
+  .bottomStack {
     width: 100%;
+  }
+
+  .cardStack {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .packageCard {
+    width: 100%;
+    max-width: 492px;
   }
 
   .railLabel,
@@ -463,6 +518,7 @@
   .exploreRow {
     transform: none !important;
     opacity: 1 !important;
+    filter: none !important;
   }
 
   .arrowBadge {
