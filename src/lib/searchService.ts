@@ -10,9 +10,6 @@ export interface ApiDoctor {
     appt_enabled?: boolean;
     walkin_enabled?: boolean;
     vc_enabled?: boolean;
-    no_of_years?: number | string;
-    experience_years?: number | string;
-    experience?: string;
   } | null;
 }
 
@@ -49,7 +46,6 @@ export interface NormalizedDoctor {
   walkinEnabled: boolean;
   vcEnabled: boolean;
   availability: { hospital: string; video: string };
-  experience?: string;
 }
 
 export interface NormalizedSpeciality {
@@ -379,7 +375,6 @@ export function normalizeSearchResponse(raw: RawApiResponse): NormalizedResults 
     apptEnabled: d.metaData?.appt_enabled ?? false,
     walkinEnabled: d.metaData?.walkin_enabled ?? false,
     vcEnabled: d.metaData?.vc_enabled ?? false,
-    experience: (d.metaData?.no_of_years ?? d.metaData?.experience_years ?? d.metaData?.experience)?.toString() || "",
     availability: {
       hospital: "Today 05:30 PM",
       video: "Today 05:30 PM",
@@ -439,24 +434,14 @@ export async function searchHealthcare(
   query: string,
   cityId: number | null,
   signal?: AbortSignal
-): Promise<NormalizedResults | null> {
-  try {
-    const url = new URL("/api/search", window.location.origin);
-    url.searchParams.set("query", query.trim());
-    if (cityId !== null) url.searchParams.set("cityId", String(cityId));
+): Promise<NormalizedResults> {
+  const url = new URL("/api/search", window.location.origin);
+  url.searchParams.set("query", query.trim());
+  if (cityId !== null) url.searchParams.set("cityId", String(cityId));
 
-    const res = await fetch(url.toString(), { signal });
-    if (!res.ok) {
-      console.warn(`Search API error: ${res.status}. Falling back to mock data.`);
-      return null;
-    }
+  const res = await fetch(url.toString(), { signal });
+  if (!res.ok) throw new Error(`Search API error: ${res.status}`);
 
-    const raw: RawApiResponse = await res.json();
-    return normalizeSearchResponse(raw);
-  } catch (err: any) {
-    if (err.name !== "AbortError") {
-      console.warn("Search API fetch failed:", err.message);
-    }
-    return null;
-  }
+  const raw: RawApiResponse = await res.json();
+  return normalizeSearchResponse(raw);
 }

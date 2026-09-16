@@ -964,7 +964,7 @@ function SearchResultsContent() {
         hospital: d.hospital,
         hospitalCount: "",
         city: location,
-        experience: d.experience ? (d.experience.toLowerCase().includes("year") ? d.experience : `${d.experience} Years`) : "",
+        experience: "",
         rating: 0,
         reviews: 0,
         available: d.apptEnabled || d.walkinEnabled ? "Available Today" : "Check Availability",
@@ -1383,7 +1383,7 @@ function SearchResultsContent() {
                         style={{ 
                           display: "flex", 
                           alignItems: "center", 
-                          background: "#F1F5F9", 
+                          background: "#E2E8F0", 
                           borderRadius: 24, 
                           padding: 4, 
                           gap: 4 
@@ -1722,7 +1722,7 @@ function SearchResultsContent() {
                       <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
+                            <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
                               <motion.div whileHover="hover" initial="initial" style={{ width: "100%", height: "100%", position: "relative" }}>
                                 <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                                 <motion.div 
@@ -1752,18 +1752,18 @@ function SearchResultsContent() {
                             </Link>
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ textDecoration: "none" }}>
+                            <Link href={`/doctors/${doc.id}`} style={{ textDecoration: "none" }}>
                               <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", transition: "color 0.15s", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {doc.name}
                               </h3>
                             </Link>
                             <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.speciality}</p>
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: doc.name.length > 22 ? 1 : 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
-                            {doc.experience && (
-                              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
-                                <span style={{ fontSize: 12, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 500 }}>{doc.experience}</span>
-                              </div>
-                            )}
+                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", marginTop: 2, fontWeight: 500 }}>{doc.experience}</p>
+                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 4 }}>
+                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>English</span>
+                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>Hindi</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1806,7 +1806,7 @@ function SearchResultsContent() {
                             <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
                               <PhoneCall size={18} />
                             </a>
-                            <Link href={`/doctors/${doc.id}?n=${encodeURIComponent(doc.name)}`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Link href={`/doctors/${doc.id}/book`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                               Book now
                             </Link>
                           </div>
@@ -2623,7 +2623,7 @@ function SearchResultsContent() {
 
                     <h2 style={{ fontSize: 24, fontWeight: 700, color: "var(--color-text)", marginBottom: selectedAlphabets.length > 0 ? 16 : 24 }}>Specialties</h2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
-                      {filteredSpecialty.filter(s => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).map((spec) => {
+                      {filteredSpecialties.filter((s: string) => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).map((spec: string) => {
                         const iconMap: Record<string, string> = {
                           "Cardiologist": "Cardiology.svg",
                           "Orthopaedician": "Orthopaedics.svg",
@@ -2673,7 +2673,7 @@ function SearchResultsContent() {
                         );
                       })}
                     </div>
-                    {filteredSpecialty.filter(s => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).length === 0 && <EmptyState category="specialties" />}
+                    {filteredSpecialties.filter((s: string) => selectedAlphabets.length === 0 || selectedAlphabets.includes(s.charAt(0).toUpperCase())).length === 0 && <EmptyState category="specialties" /> }
                   </div>
                 </div>
               )}

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import SplitText from "@/components/ui/SplitText";
 import styles from "./PatientStories.module.css";
 
 const initialCards = [
@@ -10,6 +11,7 @@ const initialCards = [
     id: "card-1",
     name: "Sunitha Swami",
     condition: "Knee Replacement Surgery",
+    overview: "Exceptional cardiac care and seamless recovery guidance from the expert doctors.",
     image: "/assets/patient_1.png",
     video: "/0_Vertical_Video_Sofa_720x1280.mp4",
     objectPosition: "center",
@@ -23,6 +25,7 @@ const initialCards = [
     id: "card-2",
     name: "Karthik R",
     condition: "Neurosurgery",
+    overview: "The compassionate care and precision treatment gave our family a second chance at life.",
     image: "/patient_omkar.png",
     video: "/4887321_Young_Cute_1280x720.mp4",
     objectPosition: "center",
@@ -36,6 +39,7 @@ const initialCards = [
     id: "card-3",
     name: "Madhuri Sen",
     condition: "Cardio Surgery",
+    overview: "World-class healthcare facility with a dedicated and caring surgical team.",
     image: "/assets/patient_in_2.png",
     video: "/0_Vertical_Video_Phone_720x1280.mp4",
     objectPosition: "center",
@@ -49,6 +53,7 @@ const initialCards = [
     id: "card-4",
     name: "Priya & Ramesh Kumar",
     condition: "Cardiac Surgery",
+    overview: "Finding the right hospital was critical for us, and Narayana Health gave us full confidence.",
     image: "/assets/patient_in_3.png",
     video: "/0_Man_Person_1280x720.mp4",
     objectPosition: "75% center",
@@ -62,6 +67,7 @@ const initialCards = [
     id: "card-5",
     name: "Anita Desai",
     condition: "Liver Transplant",
+    overview: "Medical excellence and empathy at its best throughout our transplant journey.",
     image: "/assets/patient_in_4.png",
     video: "/0_Woman_Smiling_1280x720.mp4",
     objectPosition: "center",
@@ -75,6 +81,7 @@ const initialCards = [
     id: "card-6",
     name: "Mohammed Al-Farsi",
     condition: "Bone Marrow Transplant",
+    overview: "International patient care desk made our medical travel and treatment completely seamless.",
     image: "/assets/patient_in_1.png",
     video: "/0_Woman_Talking_672x1280.mp4",
     objectPosition: "center",
@@ -142,7 +149,12 @@ function KaraokeCaption({
   if (!isPlaying || !currentSentence) return null;
 
   return (
-    <div className={styles.captionContainer}>
+    <motion.div
+      className={styles.captionContainer}
+      initial={{ opacity: 0, filter: "blur(14px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      transition={{ duration: 0.5, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div className={styles.captionBox}>
         {words.map((word, wIdx) => {
           const isHighlighted = wIdx <= activeWordIndex;
@@ -162,7 +174,7 @@ function KaraokeCaption({
           );
         })}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -170,6 +182,7 @@ function StoryCard({
   card,
   cardRealIndex,
   isActive,
+  isHovered,
   isMuted,
   onToggleMute,
   onMouseEnter,
@@ -178,18 +191,41 @@ function StoryCard({
   card: (typeof initialCards)[0];
   cardRealIndex: number;
   isActive: boolean;
+  isHovered: boolean;
   isMuted: boolean;
   onToggleMute: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showShimmer, setShowShimmer] = useState(false);
+
+  // A card becoming active by default (centered, on entering the section)
+  // doesn't jump straight to its video — it keeps showing the overview like
+  // any other card for a few seconds first. A card becoming active because
+  // it's hovered skips that delay entirely and plays right away, since a
+  // hover is a deliberate request for that card's attention, not a passive
+  // scroll-by. If it stops being active before the delay is up, the timer
+  // is cancelled and it never shows the video at all.
+  const [showVideo, setShowVideo] = useState(false);
+  useEffect(() => {
+    if (!isActive) {
+      setShowVideo(false);
+      return;
+    }
+    if (isHovered) {
+      setShowVideo(true);
+      return;
+    }
+    const timer = setTimeout(() => setShowVideo(true), 3500);
+    return () => clearTimeout(timer);
+  }, [isActive, isHovered]);
 
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
 
-    if (isActive) {
+    if (showVideo) {
       vid.muted = isMuted;
       const playPromise = vid.play();
       if (playPromise !== undefined) {
@@ -200,7 +236,15 @@ function StoryCard({
     } else {
       vid.pause();
     }
-  }, [isActive, isMuted]);
+  }, [showVideo, isMuted]);
+
+  // Shimmer sweep bridges the overview-blur-out -> caption-blur-in handoff
+  useEffect(() => {
+    if (!showVideo) return;
+    setShowShimmer(true);
+    const timer = setTimeout(() => setShowShimmer(false), 700);
+    return () => clearTimeout(timer);
+  }, [showVideo]);
 
   return (
     <article
@@ -208,13 +252,6 @@ function StoryCard({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {/* Inactive Card Slight Dark Dimming Overlay */}
-      <div
-        className={`${styles.cardInactiveOverlay} ${
-          !isActive ? styles.showOverlay : ""
-        }`}
-      />
-
       {/* Top Left Mute/Unmute Button */}
       <button
         type="button"
@@ -291,7 +328,9 @@ function StoryCard({
         )}
       </button>
 
-      {/* Video element (displaying paused video frame when unselected) */}
+      {/* Video element — no poster: the inactive/static state is the video's
+          own paused first frame acting as its thumbnail, not a separate
+          static image asset. */}
       <video
         ref={videoRef}
         src={card.video}
@@ -306,8 +345,64 @@ function StoryCard({
       {/* Bottom Rectangular Overlay Gradient */}
       <div className={styles.bottomOverlay} />
 
-      {/* Ascending Karaoke Word Highlight Captions */}
-      <KaraokeCaption captions={card.captions} isPlaying={isActive} />
+      {/* Dark wash behind the overview unit — same reach/intensity as
+          bottomOverlay, just inverted vertically, since the overview no
+          longer has its own glass panel to lean on for contrast. */}
+      <div className={styles.topOverlay} />
+
+      {/* Shimmer sweep: bridges the overview-card blur-out and caption blur-in */}
+      {showShimmer && <div className={styles.cardShimmerSweep} />}
+
+      {/* Ascending Karaoke Word Highlight Captions (only once the video has
+          actually started, matching the delayed handoff below) */}
+      <KaraokeCaption captions={card.captions} isPlaying={showVideo} />
+
+      {/* Overview unit: bare text/icon (no glass panel), top-aligned with
+          the mute button, left-aligned with the bottom text unit. Shows
+          until the video actually starts (including through the delay on a
+          freshly-active card), not just while inactive. */}
+      <AnimatePresence>
+        {!showVideo && (
+          <motion.div
+            className={styles.overviewBoxTop}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6, filter: "blur(14px)" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <svg
+              width="30"
+              height="26"
+              viewBox="0 0 30 27"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className={styles.overviewQuoteIcon}
+            >
+              <path
+                d="M7.31369 0C5.58723 0.0106787 4.0236 0.495302 2.67403 1.60267C1.17249 2.81709 0.221802 4.58402 0.0362537 6.50626C-0.0142404 7.03065 0.00121999 7.53165 0.0101591 8.05725C0.0901284 12.699 0.667793 17.8595 3.71097 21.5785C6.38016 24.8406 10.384 26.138 14.4281 26.5074C14.4007 25.8493 14.4224 25.0462 14.4226 24.378C14.4274 23.6362 14.4259 22.8945 14.418 22.1531C14.0601 22.0497 13.441 21.9895 13.052 21.9204C8.61229 21.1316 6.1417 18.575 5.21855 14.1507C5.86676 14.2707 6.37387 14.4268 7.05422 14.4387C10.9524 14.5067 14.3481 11.3845 14.4269 7.42204C14.4805 5.49502 13.7659 3.62572 12.4403 2.22602C11.1049 0.818198 9.25397 0.0145443 7.31369 0Z"
+                fill={`url(#patientCardQuoteA_${cardRealIndex})`}
+                fillOpacity="0.55"
+              />
+              <path
+                d="M22.9383 0C21.2436 0.00401054 19.8262 0.424514 18.4499 1.45083C16.9874 2.5414 15.9458 4.26507 15.676 6.07164C15.5266 7.07194 15.5855 8.18196 15.6238 9.19499C15.7794 13.3111 16.4365 17.7993 18.9744 21.176C21.0819 23.9802 24.1714 25.4791 27.5469 26.1676C28.4029 26.3423 29.1633 26.4037 30.0059 26.5216C29.9648 25.9881 29.9932 25.0778 29.993 24.5168C29.9976 23.7258 29.9966 22.9348 29.99 22.1441C29.6032 22.0556 29.0897 22.0119 28.6799 21.9295C27.2612 21.6439 25.9801 21.2598 24.7489 20.4857C22.3601 18.9842 21.4334 16.7765 20.8015 14.1555C21.2119 14.2319 21.5891 14.3327 22.0075 14.3814C26.1367 14.8615 29.9245 11.6192 30.0055 7.40343C30.0557 5.42252 29.3005 3.50591 27.9124 2.09176C26.6492 0.798895 24.7415 0.0183615 22.9383 0Z"
+                fill={`url(#patientCardQuoteB_${cardRealIndex})`}
+                fillOpacity="0.55"
+              />
+              <defs>
+                <linearGradient id={`patientCardQuoteA_${cardRealIndex}`} x1="7.21521" y1="0" x2="7.21521" y2="26.5074" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#ADD6FF" />
+                  <stop offset="1" stopColor="#8FB4D9" />
+                </linearGradient>
+                <linearGradient id={`patientCardQuoteB_${cardRealIndex}`} x1="22.7936" y1="0" x2="22.7936" y2="26.5216" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#ADD6FF" />
+                  <stop offset="1" stopColor="#8FB4D9" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <p className={styles.overviewText}>{card.overview}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Text Info Unit */}
       <div className={styles.textUnit}>
@@ -321,47 +416,10 @@ function StoryCard({
 export default function PatientStories() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Scroll animation: exit scale (1.0 -> 0.90 / 10% shrink when scrolling past) & rounding (0px -> 24px)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const rawScale = useTransform(
-    scrollYProgress,
-    [0, 0.65, 1.0],
-    [1.0, 1.0, 0.90]
-  );
-  const rawBorderRadius = useTransform(
-    scrollYProgress,
-    [0, 0.65, 1.0],
-    [0, 0, 24]
-  );
-
-  const scale = useSpring(rawScale, { stiffness: 140, damping: 28, restDelta: 0.001 });
-  const borderRadius = useSpring(rawBorderRadius, { stiffness: 180, damping: 26, restDelta: 0.01 });
-
-  /**
-   * centerIndex: the realIndex (0–5) of the card currently in center position.
-   * Arrows shift this by ±1 with infinite modular wrap.
-   * The carousel renders 5 slots at fixed pixel positions.
-   * Slot layout (relative to track start):
-   *   slot 0: leftmost visible card (partially in view)
-   *   slot 1: left card
-   *   slot 2: CENTER card (always active / playing)
-   *   slot 3: right card
-   *   slot 4: rightmost card (partially in view)
-   * 
-   * Track translateX keeps slot 2 (center) always centered in viewport.
-   * The center offset from track origin = CARD_STEP * 2 (slot index 2).
-   * Viewport centering is handled by CSS (track starts at negative offset).
-   */
   const [centerIndex, setCenterIndex] = useState(0);
-  // direction: 1 = next (right), -1 = prev (left) — used for slide animation direction
   const [direction, setDirection] = useState(1);
   const [hoveredRealIndex, setHoveredRealIndex] = useState<number | null>(null);
 
-  // Mute state preserved for each of the 6 cards (default muted = true)
   const [mutedStates, setMutedStates] = useState<boolean[]>([
     true, true, true, true, true, true,
   ]);
@@ -370,10 +428,9 @@ export default function PatientStories() {
 
   const handleMouseEnter = (realIndex: number) => {
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    // Only treat as hover if it's NOT already the center slot's card
     hoverTimerRef.current = setTimeout(() => {
       setHoveredRealIndex(realIndex);
-    }, 150);
+    }, 1000);
   };
 
   const handleMouseLeave = () => {
@@ -400,14 +457,6 @@ export default function PatientStories() {
     setCenterIndex((prev) => (prev - 1 + CARDS_COUNT) % CARDS_COUNT);
   };
 
-  /**
-   * Build 5 slots. Slot 2 = centerIndex. Others wrap around it.
-   *   slot 0 = center - 2
-   *   slot 1 = center - 1
-   *   slot 2 = center  (autoplay)
-   *   slot 3 = center + 1
-   *   slot 4 = center + 2
-   */
   const NUM_SLOTS = 5;
   const slots = Array.from({ length: NUM_SLOTS }, (_, slotPos) => {
     const offset = slotPos - 2;
@@ -415,21 +464,12 @@ export default function PatientStories() {
     return { slotPos, realIndex };
   });
 
-  // Center card (slot 2) autoplays. Hovering a different card activates that one instead.
-  // When hover ends, center card resumes immediately.
-
   return (
     <section ref={sectionRef} className={styles.sectionWrap} data-nav-theme="dark">
-      <motion.div
-        className={`section ${styles.section}`}
-        id="patient-stories"
-        data-nav-theme="dark"
-        style={{ scale, borderRadius }}
-      >
+      <div className={styles.section} id="patient-stories">
         {/* Header Container */}
         <div className={`container ${styles.headerContainer}`}>
-          <div className={styles.header}>
-            {/* 1. Eyebrow Unit: Blurs in first */}
+          <div id="patient-stories-title-unit" className={styles.header}>
             <motion.div
               className={styles.eyebrowWrap}
               initial={{ opacity: 0, filter: "blur(14px)", y: 18 }}
@@ -446,21 +486,16 @@ export default function PatientStories() {
               <div className={styles.eyebrowDash} />
             </motion.div>
 
-            {/* 2. Section Title: Blurs in second */}
-            <motion.h2
+            <SplitText
+              text="Lives Changed, Stories Told"
+              tag="h2"
               className={`section-title ${styles.sectionTitle}`}
-              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
-              whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            >
-              Lives Changed, Stories Told
-            </motion.h2>
+              delay={0.25}
+            />
 
-            {/* 3. Section Subtitle: Blurs in third */}
             <motion.p
               className={styles.sectionSubtitle}
-              initial={{ opacity: 0, filter: "blur(16px)", y: 24 }}
+              initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
               whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               viewport={{ once: true, margin: "-30px" }}
               transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
@@ -470,7 +505,7 @@ export default function PatientStories() {
           </div>
         </div>
 
-        {/* 4. Carousel Outer Container: Video Cards blur in cleanly without scale grow in */}
+        {/* Carousel Outer Container */}
         <motion.div
           className={styles.carouselOuter}
           initial={{ opacity: 0, filter: "blur(20px)" }}
@@ -480,30 +515,16 @@ export default function PatientStories() {
         >
           {/* Sliding Track Viewport */}
           <div className={styles.trackViewport}>
-            {/* Edge Fade & Gaussian Blur Overlays restricted strictly to carousel card height (676px) */}
-            <div className={styles.edgeOverlayLeft} />
-            <div className={styles.edgeOverlayRight} />
-
-            {/*
-              Track: 5 cards at fixed positions (slot 0..4).
-              Each card slot sits at: left = slotPos * CARD_STEP
-              The whole track is shifted so that slot 2 (center) is visually centered.
-              Centering offset = -(2 * CARD_STEP) + half_viewport_offset
-              This is handled via CSS in trackViewport / track.
-              Track has no translateX change — cards are always at their fixed slot positions.
-              Arrows change which realIndex maps to which slot, not the track position.
-            */}
             <div className={styles.track}>
               {slots.map(({ slotPos, realIndex }) => {
                 const card = initialCards[realIndex];
                 const isCenterSlot = slotPos === 2;
-                // Center slot autoplays. Hover on a side card activates it instead (pausing center).
                 const isActive =
                   hoveredRealIndex !== null
                     ? realIndex === hoveredRealIndex
                     : isCenterSlot;
+                const isHovered = realIndex === hoveredRealIndex;
                 const isMuted = mutedStates[realIndex];
-                // Slide offset: new cards entering from direction, exiting to opposite
                 const slideOffsetEnter = direction * 48;
                 const slideOffsetExit = direction * -48;
 
@@ -546,6 +567,7 @@ export default function PatientStories() {
                           card={card}
                           cardRealIndex={realIndex}
                           isActive={isActive}
+                          isHovered={isHovered}
                           isMuted={isMuted}
                           onToggleMute={() => toggleMute(realIndex)}
                           onMouseEnter={() => handleMouseEnter(realIndex)}
@@ -559,28 +581,30 @@ export default function PatientStories() {
             </div>
           </div>
 
-          {/* Glass Navigation Arrows at Bottom Center */}
-          <div className={styles.arrowsWrapper}>
-            {/* Left Arrow: moves set left (previous card becomes center) */}
-            <button
-              type="button"
-              className={styles.arrowBtn}
-              onClick={goPrev}
-              aria-label="Previous story"
-            >
-              <ChevronLeft size={24} strokeWidth={2} />
-            </button>
+          {/* Dark edge fades — same solid color as the section's own
+              background, so the carousel's outer edges blend seamlessly into
+              it on both sides — with the nav arrows sitting on top of them,
+              symmetric and edge-hugging on both sides. */}
+          <div className={`${styles.edgeFade} ${styles.edgeFadeLeft}`} aria-hidden />
+          <div className={`${styles.edgeFade} ${styles.edgeFadeRight}`} aria-hidden />
 
-            {/* Right Arrow: moves set right (next card becomes center) */}
-            <button
-              type="button"
-              className={styles.arrowBtn}
-              onClick={goNext}
-              aria-label="Next story"
-            >
-              <ChevronRight size={24} strokeWidth={2} />
-            </button>
-          </div>
+          <button
+            type="button"
+            className={`${styles.arrowBtn} ${styles.arrowBtnLeft}`}
+            onClick={goPrev}
+            aria-label="Previous story"
+          >
+            <ChevronLeft size={22} strokeWidth={2} />
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.arrowBtn} ${styles.arrowBtnRight}`}
+            onClick={goNext}
+            aria-label="Next story"
+          >
+            <ChevronRight size={22} strokeWidth={2} />
+          </button>
 
           {/* Secondary Outlined CTA Button */}
           <div className={styles.ctaWrapper}>
@@ -589,8 +613,8 @@ export default function PatientStories() {
             </a>
           </div>
         </motion.div>
-      </motion.div>
+
+      </div>
     </section>
   );
 }
-

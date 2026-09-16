@@ -51,6 +51,40 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
+    // Real-time theme probe directly under the navbar's center (y = 35px).
+    // Deliberately unconditional — it used to live inside the show/hide
+    // logic below and only ran once a scroll had traveled past a 120px
+    // threshold AND cleared a 12px dead-zone (both tuned for the hide-on-
+    // scroll-down behavior, not for theme accuracy). That meant the very
+    // first ~120px of scroll, and any small/slow scroll movement anywhere
+    // on the page, never re-checked the theme at all — so the navbar could
+    // sit on a dark section still showing dark (low-contrast) text, or
+    // vice versa, until a big enough scroll happened to also pass the
+    // unrelated hide/show gate. Running it on every scroll tick (plus once
+    // on mount) keeps it in sync with whatever is actually under it.
+    const probeTheme = () => {
+      if (typeof document === "undefined") return;
+      const probeX = window.innerWidth / 2;
+      const probeY = 35;
+      const elements = document.elementsFromPoint(probeX, probeY);
+      let detectedTheme = "light";
+
+      for (const el of elements) {
+        if (el.closest("nav")) continue;
+        const themeEl = el.closest("[data-nav-theme]");
+        if (themeEl) {
+          detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
+          break;
+        }
+      }
+
+      const isLight = detectedTheme !== "dark";
+      if (isLight !== isOverLightRef.current) {
+        isOverLightRef.current = isLight;
+        setIsOverLightBackground(isLight);
+      }
+    };
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
@@ -60,9 +94,31 @@ export default function Navbar() {
         setScrolled(false);
       }
 
-      // Always show navbar near the top
-      if (currentScrollY < 120) {
+      probeTheme();
+
+      // On the homepage, synchronize with Hero Phase 1 -> Phase 2 transition boundary
+      let heroThreshold = 120;
+      if (isHomePage) {
+        const heroSection = document.getElementById("hero-section-search-first");
+        const heroWrapper = heroSection?.parentElement;
+        if (heroWrapper) {
+          // Exactly matches the sticky runway where Hero scales 1.0 -> 0.75 (60vh desktop / 60dvh mobile)
+          heroThreshold = heroWrapper.offsetHeight - window.innerHeight;
+        } else {
+          heroThreshold = window.innerHeight * 0.6;
+        }
+      }
+
+      // During Hero Phase 1: Always keep navbar visible
+      if (currentScrollY < heroThreshold) {
         setIsVisible(true);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      // Exact Phase 1 -> Phase 2 boundary crossing: immediately hide navbar as Hero begins upward move
+      if (lastScrollY.current < heroThreshold && currentScrollY >= heroThreshold) {
+        setIsVisible(false);
         lastScrollY.current = currentScrollY;
         return;
       }
@@ -75,34 +131,11 @@ export default function Navbar() {
       }
 
       if (delta > 0) {
-        // Sustained downward scroll
+        // Sustained downward scroll (Phase 2 & rest of page)
         setIsVisible(false);
       } else {
         // Sustained upward scroll
         setIsVisible(true);
-      }
-
-      // Scalable real-time theme probe directly under Navbar center (y = 35px)
-      if (typeof document !== "undefined") {
-        const probeX = window.innerWidth / 2;
-        const probeY = 35;
-        const elements = document.elementsFromPoint(probeX, probeY);
-        let detectedTheme = "light";
-
-        for (const el of elements) {
-          if (el.closest("nav")) continue;
-          const themeEl = el.closest("[data-nav-theme]");
-          if (themeEl) {
-            detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
-            break;
-          }
-        }
-
-        const isLight = detectedTheme !== "dark";
-        if (isLight !== isOverLightRef.current) {
-          isOverLightRef.current = isLight;
-          setIsOverLightBackground(isLight);
-        }
       }
 
       // Update baseline after a meaningful scroll distance
@@ -134,11 +167,10 @@ export default function Navbar() {
           inset: 0,
           zIndex: -1,
           backgroundColor: "transparent",
-          backdropFilter: "blur(20px) saturate(180%)",
-          WebkitBackdropFilter: "blur(20px) saturate(180%)",
-          transition: "backdrop-filter 0.4s ease",
-          maskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black calc(100% - 18px), transparent 100%)",
+          backdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
+          WebkitBackdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
+          borderBottom: isNavbarActive ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid rgba(255, 255, 255, 0)",
+          transition: "backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
         }}
       />
@@ -146,8 +178,8 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH_Logo_white_1.png" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
@@ -492,7 +524,7 @@ export default function Navbar() {
                 WebkitBackdropFilter: "blur(12px)",
                 border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
                 padding: "8px 24px",
-                borderRadius: "100px",
+                borderRadius: "var(--radius-md)",
                 fontWeight: 600,
                 fontSize: "14px",
                 transition: "all 0.2s"

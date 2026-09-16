@@ -82,7 +82,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
         </div>
       </div>
 
-      <div className="container" style={{ paddingTop: "var(--sp-8)", paddingBottom: "var(--sp-8)" }}>
+      <div className="container" style={{ padding: "var(--sp-8) var(--sp-3)" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--sp-8)", marginBottom: "var(--sp-8)" }}>
           {/* Overview */}
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>

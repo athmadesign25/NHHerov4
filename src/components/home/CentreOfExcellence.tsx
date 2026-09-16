@@ -8,8 +8,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import { ChevronRight, ChevronUp } from "lucide-react";
-import WordPullUp from "@/components/ui/word-pull-up";
+import { ChevronRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 
 const SPECIALITIES = [
@@ -222,45 +221,51 @@ const COLUMN_SPECIALITIES = [
   [SPECIALITIES[3], SPECIALITIES[7], SPECIALITIES[11]],
 ];
 
+// Column-level Y parallax ranges: [startY, endY] in px
+const Y_OFFSETS: [number, number][] = [
+  [40,  -120],  // Col 0
+  [-30,  80],   // Col 1
+  [35,  -90],   // Col 2
+  [-40,  105],  // Col 3
+];
+
 function PodiumColumnTrack({
   colIndex,
   items,
   scrollYProgress,
   screenMode,
+  dimOpacity,
+  dimBlur,
 }: {
   colIndex: number;
   items: typeof SPECIALITIES;
   scrollYProgress: import("framer-motion").MotionValue<number>;
   screenMode: "desktop" | "tablet" | "mobile";
+  dimOpacity: import("framer-motion").MotionValue<number>;
+  dimBlur: import("framer-motion").MotionValue<string>;
 }) {
-  const isDesktop = screenMode === "desktop";
-  const isTablet = screenMode === "tablet";
-  const yMultiplier = isDesktop ? 1.0 : isTablet ? 0.45 : 0;
+  const yMultiplier = screenMode === "mobile" ? 0 : 1;
+  const [startY, endY] = Y_OFFSETS[colIndex] ?? [0, 0];
 
-  // Asymmetric continuous parallax rate per column (Odd columns glide faster, Even columns lag gracefully)
-  const yOffsets = [
-    [40 * yMultiplier, -120 * yMultiplier],
-    [-30 * yMultiplier, 80 * yMultiplier],
-    [35 * yMultiplier, -90 * yMultiplier],
-    [-40 * yMultiplier, 105 * yMultiplier],
-  ][colIndex] || [0, 0];
-
-  const y = useTransform(scrollYProgress, [0, 1], yOffsets);
-
-  // Entrance reveal (0 -> 0.15) and photographic exit fade (0.68 -> 0.98) matching Podium
+  // Column entrance opacity: fades in from 0.35 → 1 over the initial progress
+  const colOpacity = useTransform(scrollYProgress, [0, 0.35], [0.35, 1], { clamp: true });
   const opacity = useTransform(
+    [colOpacity, dimOpacity],
+    ([c, d]: number[]) => (c as number) * (d as number)
+  );
+  const y = useTransform(
     scrollYProgress,
-    [0.0, 0.15, 0.68, 0.98],
-    [0.35, 1.0, 1.0, 0.18]
+    [0, 1],
+    [startY * yMultiplier, endY * yMultiplier]
   );
 
   return (
     <motion.div
       className={`${styles.columnTrack} ${styles[`col${colIndex}`]}`}
-      style={{ y, opacity }}
+      style={{ y, opacity, filter: dimBlur }}
     >
-      {items.map((spec, idx) => (
-        <SpecialityCardItem key={idx} spec={spec} />
+      {items.map((spec) => (
+        <SpecialityCardItem key={spec.name} spec={spec} />
       ))}
     </motion.div>
   );
@@ -268,8 +273,9 @@ function PodiumColumnTrack({
 
 export default function CentreOfExcellence() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const titleTrackRef = useRef<HTMLDivElement>(null);
   const gridSectionRef = useRef<HTMLDivElement>(null);
+  const columnsContainerRef = useRef<HTMLDivElement>(null);
+  const viewAllBtnRef = useRef<HTMLAnchorElement>(null);
 
   const [screenMode, setScreenMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
@@ -285,117 +291,171 @@ export default function CentreOfExcellence() {
     return () => window.removeEventListener("resize", updateScreen);
   }, []);
 
-  // 1. Sticky Header Track Scroll Sequence (Editorial Mask Reveal)
-  const { scrollYProgress: titleScrollProgress } = useScroll({
-    target: titleTrackRef,
-    offset: ["start 80%", "end end"],
-  });
-
-  // Eyebrow: enters 0.06 -> 0.22, holds until 0.86, exits 0.86 -> 0.98
-  const eyebrowY = useTransform(titleScrollProgress, [0.06, 0.22, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
-  const eyebrowOpacity = useTransform(titleScrollProgress, [0.06, 0.16, 0.88, 0.98], [0, 1, 1, 0]);
-
-  // Main Heading: enters 0.18 -> 0.42, holds until 0.86, exits 0.86 -> 0.98
-  const titleY = useTransform(titleScrollProgress, [0.18, 0.42, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
-  const titleOpacity = useTransform(titleScrollProgress, [0.18, 0.30, 0.88, 0.98], [0, 1, 1, 0]);
-
-  // Subtitle: enters 0.30 -> 0.56, holds until 0.86, exits 0.86 -> 0.98
-  const subtitleY = useTransform(titleScrollProgress, [0.30, 0.56, 0.86, 0.98], ["110%", "0%", "0%", "-110%"]);
-  const subtitleOpacity = useTransform(titleScrollProgress, [0.30, 0.44, 0.88, 0.98], [0, 1, 1, 0]);
-
-  // Scroll Indicator
-  const indicatorOpacity = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [0, 1, 1, 0]);
-  const indicatorY = useTransform(titleScrollProgress, [0.00, 0.10, 0.82, 0.94], [16, 0, 0, -14]);
-
-  // 2. Continuous Scroll-Driven 4-Column Track Parallax Progression
+  // 1. Continuous Scroll-Driven 4-Column Track Parallax Progression
   const { scrollYProgress: trackProgress } = useScroll({
     target: gridSectionRef,
     offset: ["start 90%", "end 10%"],
   });
 
+  // 2. Seamless bg handoff to Patient Stories: fades in a solid #031224 plate
+  // (rendered behind the grid/CTA via negative z-index, so only empty
+  // background space is affected) starting the instant "View All Specialties"
+  // enters from the bottom of the viewport, and fully resolving to solid
+  // before Patient Stories' own background can surface underneath it.
+  // Measured in raw scroll pixels (not viewport-relative %) because the
+  // buffer between the button and the section boundary is a fixed CSS
+  // distance — a percentage-based range would over/undershoot depending on
+  // viewport height. Fully reversible on scroll-up.
+  const [handoffRange, setHandoffRange] = useState<[number, number]>([0, 1]);
+
+  // Subtle dim (partial opacity + light blur, never a full fade-out) for
+  // the grid cards and the CTA button as the background goes solid —
+  // gated to only start once Patient Stories' own title unit has scrolled
+  // a third of the way up the viewport (measured from the bottom), not
+  // from the moment the button first appears. Ends in step with the
+  // handoff plate reaching fully solid (handoffRange's own end), so
+  // everything settles into its "dark mode" look together.
+  const [dimRange, setDimRange] = useState<[number, number]>([0, 1]);
+
+  useEffect(() => {
+    const SAFETY_PX = 48; // margin so the plate is solid before the boundary hits
+    const MIN_RANGE_PX = 80; // guards against a degenerate/inverted range
+    const MIN_DIM_RANGE_PX = 100; // dim needs at least this much scroll to feel eased, not snapped
+
+    const measure = () => {
+      const btn = viewAllBtnRef.current;
+      const section = gridSectionRef.current;
+      if (!btn || !section) return;
+
+      const vh = window.innerHeight;
+      const btnTop = btn.getBoundingClientRect().top + window.scrollY;
+      const sectionBottom = section.getBoundingClientRect().bottom + window.scrollY;
+
+      const fadeStart = btnTop - vh; // button's top edge touches viewport bottom
+      const boundary = sectionBottom - vh; // section's bottom touches viewport bottom (Patient Stories about to surface)
+      const fadeEnd = Math.max(fadeStart + MIN_RANGE_PX, boundary - SAFETY_PX);
+
+      setHandoffRange([fadeStart, fadeEnd]);
+
+      // Gate the dim on Patient Stories' own title unit reaching a third
+      // of the way up the viewport (from the bottom) — i.e. its top edge
+      // crossing the line at 2/3 of the viewport height. The dim only ever
+      // starts at that exact point; the end is whichever comes later
+      // between the background finishing its handoff (fadeEnd) or a
+      // minimum scroll distance so the transition never snaps instantly.
+      const patientTitleUnit = document.getElementById("patient-stories-title-unit");
+      const titleUnitTop = patientTitleUnit
+        ? patientTitleUnit.getBoundingClientRect().top + window.scrollY
+        : btnTop - vh / 2; // fallback if the element isn't mounted yet
+      const dimStart = titleUnitTop - (vh - vh / 3);
+      const dimEnd = Math.max(fadeEnd, dimStart + MIN_DIM_RANGE_PX);
+      setDimRange([dimStart, dimEnd]);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    const settleTimer = setTimeout(measure, 500);
+    return () => {
+      window.removeEventListener("resize", measure);
+      clearTimeout(settleTimer);
+    };
+  }, []);
+
+  const { scrollY } = useScroll();
+  const handoffOpacity = useTransform(scrollY, handoffRange, [0, 1]);
+
+  // Subtle, partial dim — opacity only eases down to 0.6 and blur only to
+  // 5px, never fully hiding the grid/CTA (see dimRange above for timing).
+  const dimOpacity = useTransform(scrollY, dimRange, [1, 0.6]);
+  const dimBlurPx = useTransform(scrollY, dimRange, [0, 5]);
+  const dimBlur = useTransform(dimBlurPx, (v) => `blur(${v}px)`);
+
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
-      {/* 1. Pinned Sticky Header Scroll Track */}
-      <div ref={titleTrackRef} className={styles.scrollTrack}>
-        <section className={styles.stickySection} id="centre-of-excellence">
-          <div className={styles.centerContent}>
-            <div className={styles.header}>
-              <div className={styles.maskWrap} style={{ marginBottom: "20px" }}>
-                <motion.div
-                  style={{
-                    y: eyebrowY,
-                    opacity: eyebrowOpacity,
-                    color: "#000000",
-                  }}
-                  className="section-eyebrow"
-                >
-                  CENTRES OF EXCELLENCE
-                </motion.div>
-              </div>
+      {/* 1. Title Unit — plain scroll-reveal entrance (whileInView, once),
+          same pattern every other homepage section uses. It's normal
+          in-flow content now, not a pinned/sticky track, so the grid
+          below just follows it directly instead of being held off behind
+          a scroll-through — no "keep scrolling" hint needed either. */}
+      <section className={styles.titleSection} id="centre-of-excellence">
+        <div className={styles.centerContent}>
+          <div className={styles.header}>
+            <motion.div
+              style={{ color: "#000000", marginBottom: "28px" }}
+              className="section-eyebrow"
+              initial={{ opacity: 0, y: 10, filter: "blur(14px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            >
+              CENTRES OF EXCELLENCE
+            </motion.div>
 
-              <motion.div
-                style={{
-                  y: titleY,
-                  opacity: titleOpacity,
+            <h2 className={styles.sectionTitle}>
+              {/* Two groups slide in from above as their own units — first
+                  "40+ Specialities.", then "World-Class Care." Each one is
+                  red while it's still sliding/blurring in, then settles to
+                  the resting dark shade once that motion finishes (color
+                  transitions on a delay so it settles after the slide/blur
+                  completes). */}
+              <motion.span
+                className={styles.titleGroup}
+                initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  opacity: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  y: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  filter: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  color: { duration: 0.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] },
                 }}
               >
-                <WordPullUp
-                  words="40+ Specialities. World-Class Care."
-                  as="h2"
-                  className={styles.sectionTitle}
-                  delayMultiple={0.09}
-                  framerProps={{
-                    hidden: { y: 16, opacity: 0 },
-                    show: {
-                      y: 0,
-                      opacity: 1,
-                      transition: {
-                        duration: 0.55,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                    },
-                  }}
-                />
-              </motion.div>
+                40+ Specialities.
+              </motion.span>{" "}
+              <motion.span
+                className={styles.titleGroup}
+                initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  opacity: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
+                  y: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
+                  filter: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
+                  color: { duration: 0.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] },
+                }}
+              >
+                World-Class Care.
+              </motion.span>
+            </h2>
 
-              <div className={styles.maskWrap}>
-                <motion.p
-                  style={{
-                    y: subtitleY,
-                    opacity: subtitleOpacity,
-                  }}
-                  className={styles.sectionSubtitle}
-                >
-                  Integrated expertise across tertiary and quaternary care,
-                  <br />
-                  delivered through one trusted network.
-                </motion.p>
-              </div>
-            </div>
+            <p className={styles.sectionSubtitle}>
+              <motion.span
+                className={styles.subtitleLine}
+                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              >
+                Integrated expertise across tertiary and quaternary care,
+              </motion.span>
+              <motion.span
+                className={styles.subtitleLine}
+                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                delivered through one trusted network.
+              </motion.span>
+            </p>
           </div>
-
-          {/* Bottom Spaced Keep Scrolling Indicator Unit with Double Blinking Top Arrow */}
-          <motion.div
-            className={styles.scrollIndicatorUnit}
-            style={{
-              opacity: indicatorOpacity,
-              y: indicatorY,
-              x: "-50%",
-            }}
-          >
-            <div className={styles.doubleBlinkingArrows}>
-              <ChevronUp size={18} className={styles.arrowTop} />
-              <ChevronUp size={18} className={styles.arrowBottom} />
-            </div>
-            <span className={styles.scrollUpText}>Keep Scrolling</span>
-          </motion.div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       {/* 2. Editorial 4-Column Staggered Tracks (True Podium.global Architecture) */}
-      <div ref={gridSectionRef} className={styles.gridSection}>
+      <div ref={gridSectionRef} className={styles.gridSection} data-nav-theme="dark">
         <div className={styles.gridAnimatedWrapper}>
-          <div className={styles.columnsContainer}>
+          <div ref={columnsContainerRef} className={styles.columnsContainer}>
             {COLUMN_SPECIALITIES.map((items, colIdx) => (
               <PodiumColumnTrack
                 key={colIdx}
@@ -403,20 +463,34 @@ export default function CentreOfExcellence() {
                 items={items}
                 scrollYProgress={trackProgress}
                 screenMode={screenMode}
+                dimOpacity={dimOpacity}
+                dimBlur={dimBlur}
               />
             ))}
           </div>
 
-          {/* View All Specialties CTA */}
+          {/* Seamless Dark Grid Extension with View All Specialties CTA */}
           <div className={styles.gridBottomStrip}>
-            <a href="/specialities" className={styles.viewAllBtn}>
+            <motion.a
+              href="/specialities"
+              ref={viewAllBtnRef}
+              className={styles.viewAllBtn}
+              style={{ opacity: dimOpacity, filter: dimBlur }}
+            >
               View All Specialties
               <ChevronRight size={16} />
-            </a>
+            </motion.a>
           </div>
+
+          {/* Reversible bg-only handoff to Patient Stories' solid backdrop */}
+          <motion.div
+            className={styles.handoffPlate}
+            style={{ opacity: handoffOpacity }}
+            aria-hidden
+          />
         </div>
       </div>
     </div>
+
   );
 }
-

@@ -3,31 +3,32 @@
   width: 100%;
   background: transparent;
   z-index: 1;
-  overflow-x: clip;
 }
 
-/* ─── Pinned Sticky Track ───────────────────────────── */
-.scrollTrack {
+/* ─── Title Section (plain scroll-reveal, in normal flow) ───────────── */
+.titleSection {
   position: relative;
-  width: 100%;
-  height: 120vh;
   z-index: 2;
-}
-
-.stickySection {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   width: 100%;
-  height: 100vh;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background: transparent;
-  overflow: hidden;
+  padding: 96px 0 56px;
   box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .titleSection {
+    padding: 72px 0 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .titleSection {
+    padding: 56px 0 32px;
+  }
 }
 
 .centerContent {
@@ -57,14 +58,6 @@
   justify-content: center;
 }
 
-.maskWrap {
-  display: block;
-  overflow: hidden;
-  position: relative;
-  padding: 4px 6px;
-  margin: -4px -6px;
-}
-
 .sectionTitle {
   font-size: clamp(28px, 3.4vw, 48px);
   font-weight: 800;
@@ -76,9 +69,9 @@
   white-space: nowrap;
 }
 
-.flashWord {
-  display: inline;
-  will-change: color;
+.titleGroup {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
 @media (max-width: 768px) {
@@ -99,79 +92,19 @@
   opacity: 1;
 }
 
-/* ─── Scroll Progress Indicator Unit (Keep Scrolling & Double Blinking Top Arrow) ─── */
-.scrollIndicatorUnit {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  z-index: 80;
-  pointer-events: none;
-  user-select: none;
-}
-
-.doubleBlinkingArrows {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 24px;
-  margin-bottom: 2px;
-}
-
-.arrowTop,
-.arrowBottom {
-  color: #000000;
-  stroke-width: 2.5px;
-  margin-top: -10px;
-}
-
-.arrowTop:first-child {
-  margin-top: 0;
-}
-
-.arrowTop {
-  animation: blinkArrow 1.2s infinite ease-in-out;
-  animation-delay: 0s;
-}
-
-.arrowBottom {
-  animation: blinkArrow 1.2s infinite ease-in-out;
-  animation-delay: 0.25s;
-}
-
-@keyframes blinkArrow {
-  0%, 100% {
-    opacity: 0.25;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-3px);
-  }
-}
-
-.scrollUpText {
-  color: #000000 !important;
-  text-align: center;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
-  font-weight: 400 !important;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+.subtitleLine {
+  display: block;
+  will-change: transform, opacity, filter;
 }
 
 /* ─── 4-Column Track Architecture (Podium Layout: Full-Bleed End-to-End) ─── */
 .gridSection {
+  --gx-pad: 16px;
   position: relative;
   width: 100%;
   max-width: 100%;
-  margin: -10vh auto 0;
-  padding: 0 16px;
+  margin: 0 auto;
+  padding: 0 var(--gx-pad);
   z-index: 90;
   box-sizing: border-box;
 }
@@ -194,6 +127,27 @@
   box-sizing: border-box;
 }
 
+/* Reversible seamless handoff plate: transparent -> solid #031224 (exactly
+   matching the top color of Patient Stories' background gradient, so there's
+   no visible seam once it surfaces), driven by raw scroll position from the
+   "View All Specialties" button entering from the bottom of the viewport
+   through to just before Patient Stories surfaces. Negative z-index keeps it
+   behind the grid cards and CTA (which are non-positioned/positioned-with-
+   z-index respectively) within this stacking context, so only empty
+   background space changes color — the grid and CTA stay untouched. Bleeds
+   past the section's side padding so the outer margins also turn solid. */
+.handoffPlate {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--gx-pad));
+  right: calc(-1 * var(--gx-pad));
+  z-index: -1;
+  background: #031224;
+  pointer-events: none;
+  will-change: opacity;
+}
+
 .columnTrack {
   flex: 1;
   display: flex;
@@ -203,7 +157,7 @@
   will-change: transform;
 }
 
-/* Base Staggered Layout Offsets (Never aligned horizontally) */
+/* Static column stagger offsets — permanent layout position, not animated */
 .col0 {
   padding-top: 0px;
 }
@@ -225,7 +179,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 0;
+  border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
   background: #090d16;
@@ -429,12 +383,14 @@
   transform: translateX(3px);
 }
 
-/* Clean Transparent Container at Bottom of Grid */
+/* Transparent Extension at Bottom of Grid (handoff plate below provides seamless bg transition).
+   Extra bottom padding gives the handoff plate room to reach full solid opacity
+   before Patient Stories' own background surfaces, avoiding a visible hard edge. */
 .gridBottomStrip {
   position: relative;
   width: 100%;
   background: transparent;
-  padding: 64px 24px 100px;
+  padding: 64px 24px clamp(90px, 10vw, 150px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -449,10 +405,10 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 28px;
-  border-radius: 9999px;
-  border: 1.5px solid var(--color-primary, #034EA2);
-  background: var(--color-primary, #034EA2);
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
@@ -460,20 +416,21 @@
   cursor: pointer;
   text-decoration: none;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .viewAllBtn:hover {
-  background: #023876;
-  border-color: #023876;
+  background: var(--color-primary, #034EA2);
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.35);
+  border-color: var(--color-primary, #034EA2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.4);
 }
 
 @media (max-width: 1024px) {
   .gridSection {
-    margin-top: -6vh;
     padding: 0 12px;
   }
   .columnsContainer {
@@ -486,16 +443,12 @@
   }
   .col0 { padding-top: 0px; }
   .col1 { padding-top: 50px; }
-  .col2 { padding-top: 0px; }
-  .col3 { padding-top: 50px; }
-  .gridBottomStrip {
-    padding: 48px 16px 80px;
-  }
+  .col2 { padding-top: 20px; }
+  .col3 { padding-top: 60px; }
 }
 
 @media (max-width: 640px) {
   .gridSection {
-    margin-top: -4vh;
     padding: 0 8px;
   }
   .columnsContainer {
@@ -509,9 +462,6 @@
   }
   .specialityCard {
     aspect-ratio: 16 / 10;
-    border-radius: 0;
-  }
-  .gridBottomStrip {
-    padding: 36px 12px 64px;
+    border-radius: 8px;
   }
 }

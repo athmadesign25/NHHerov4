@@ -33,21 +33,6 @@ const footerLinks = {
 export default function Footer() {
   return (
     <footer className={styles.footer} data-nav-theme="dark">
-      {/* Emergency Strip */}
-      <div className={styles.emergencyStrip}>
-        <div className="container">
-          <div className={styles.emergencyInner}>
-            <div className={styles.emergencyLeft}>
-              <div className={styles.emergencyDot} />
-              <span className={styles.emergencyLabel}>24/7 Emergency Care Available</span>
-            </div>
-            <a href="tel:18003090309" className={styles.emergencyNumber} id="footer-emergency">
-              <Phone size={16} />
-              1800-309-0309
-            </a>
-          </div>
-        </div>
-      </div>
 
       {/* Main Footer */}
       <div className={styles.main}>

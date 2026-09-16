@@ -1,8 +1,8 @@
 .fabContainer {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999;
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 999999 !important;
   display: flex;
   align-items: flex-end;
   gap: 12px;
@@ -56,26 +56,71 @@
   white-space: nowrap;
 }
 
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes spinBorder {
+  to { --border-angle: 360deg; }
+}
+
 .fabButton {
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
-  box-shadow: 0 8px 32px rgba(30, 58, 138, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
+  box-shadow: -20px 10px 40px 0 rgba(65, 99, 236, 0.22), 10px 10px 30px 0 rgba(170, 48, 64, 0.15), 0 10px 30px 0 rgba(0, 0, 0, 0.20);
+  backdrop-filter: blur(34px);
+  -webkit-backdrop-filter: blur(34px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   pointer-events: auto;
-  border: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.fabButton::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 30px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fabButton::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 30px;
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(4px);
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .fabButton:hover {
   transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(30, 58, 138, 0.4);
+  box-shadow: -25px 14px 45px 0 rgba(65, 99, 236, 0.30), 12px 14px 35px 0 rgba(170, 48, 64, 0.22);
 }
 
 .fabButton:active {

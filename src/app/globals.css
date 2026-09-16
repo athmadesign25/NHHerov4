@@ -137,16 +137,11 @@ ul, ol {
 
 /* ─── CONTAINER ──────────────────────────────────────────────────────────── */
 .container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 250px;
   width: 100%;
-}
-
-@media (max-width: 1024px) {
-  .container {
-    padding: 0 var(--sp-2);
-  }
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -154,6 +149,7 @@ ul, ol {
     padding: 0 16px;
   }
 }
+
 
 @media (max-width: 1024px) {
   .desktop-nav {

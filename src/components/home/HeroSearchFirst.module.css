@@ -1,3 +1,9 @@
+.heroWrapper {
+  height: 160vh;
+  position: relative;
+  background: transparent;
+}
+
 .hero {
   --hero-width: clamp(680px, 56vw, 900px);
   position: sticky;
@@ -139,6 +145,272 @@
   align-items: center;
   gap: 10px;
   padding: 0 var(--sp-2);
+}
+
+/* AI Chat Search Box Container */
+.aiSearchContainer {
+  display: flex;
+  width: 836px;
+  max-width: 100%;
+  height: 176px;
+  padding: 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 auto;
+
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
+  box-shadow: -60px 14px 80px 0 rgba(65, 99, 236, 0.18), 30px 14px 70px 0 rgba(170, 48, 64, 0.10), 0 10px 30px 0 rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(34px);
+  -webkit-backdrop-filter: blur(34px);
+  box-sizing: border-box;
+  position: relative;
+  cursor: text;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aiSearchContainerActive {
+  height: auto;
+  min-height: unset;
+  padding: 24px;
+  justify-content: center;
+}
+
+.fabContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.fabButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
+  box-shadow: -20px 10px 40px 0 rgba(65, 99, 236, 0.22), 10px 10px 30px 0 rgba(170, 48, 64, 0.15), 0 10px 30px 0 rgba(0, 0, 0, 0.20);
+  backdrop-filter: blur(34px);
+  -webkit-backdrop-filter: blur(34px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.fabButton::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 30px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fabButton::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 30px;
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(4px);
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fabButton:hover {
+  transform: scale(1.05);
+  box-shadow: -25px 14px 45px 0 rgba(65, 99, 236, 0.30), 12px 14px 35px 0 rgba(170, 48, 64, 0.22);
+}
+
+.fabPulseAnim {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.aiSearchContainer::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.aiSearchContainer::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 20px;
+  padding: 2px;
+  background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(4px);
+  animation: spinBorder 5s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chatTopInputRow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.chatTextUnit {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.blinkingCursor {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-right: 2px;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.aiSuggestionText {
+  color: rgba(255, 255, 255, 0.54);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.typedText {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.hiddenSearchInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  color: transparent;
+}
+
+.chatBottomButtonsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.chatQuickBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chatQuickBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.40);
+  transform: translateY(-1px);
+}
+
+/* Icon-only bookend buttons (add / voice) flanking the text pills above —
+   tertiary: invisible container at rest (no border, no fill), just the
+   icon — the square footprint is kept only so it still occupies the same
+   height/alignment slot as the bordered pills beside it. A faint hover
+   fill is the only feedback, no border ever appears. */
+.chatIconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chatIconBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Voice button sits at the far right edge of the search bar rather than
+   directly trailing the last text pill — pushed there within the same
+   flex row instead of being grouped with the rest of the stack. */
+.chatIconBtnEnd {
+  margin-left: auto;
 }
 
 @property --border-angle {
@@ -621,12 +893,23 @@
 }
 
 @media (max-width: 768px) {
+  .heroWrapper {
+    height: 160dvh;
+  }
+
   .hero {
     --hero-width: calc(100vw - var(--sp-4));
     min-height: 100dvh;
     height: 100dvh;
-    transform: none !important;
-    border-radius: 0 !important;
+  }
+
+  .heroStack {
+    transform: translateY(0);
+    gap: var(--sp-2);
+  }
+
+  .titleUnit {
+    margin-top: 48px;
   }
 
   .headline {
@@ -1554,7 +1837,7 @@
 }
 
 .metricLabel {
-  font-size: 13px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.3;
 }
