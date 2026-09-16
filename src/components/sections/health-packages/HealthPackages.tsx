@@ -131,11 +131,28 @@ function ArrowGlyph() {
 }
 
 const PHASE1_END = 0.32;
-const PHASE2_START = 0.38;
-const PHASE2_END = 0.92;
-const RAIL_STAGGER = 0.09;
-const RAIL_ITEM_DURATION = 0.2;
 const MOBILE_BREAKPOINT = 900;
+
+// Once the frame has grown past this fraction of its own grow-in (p1),
+// it COMMITS to being fully grown regardless of exact further scroll
+// position — removes the need to scroll precisely to land on "100% grown"
+// for the section to feel fully "stuck". Release back to normal
+// scroll-linked growth only once scrolled back up past a distinctly lower
+// fraction (hysteresis avoids flicker right at one boundary value).
+const GROW_COMMIT_FRACTION = 0.7;
+const GROW_RELEASE_FRACTION = 0.55;
+// How long the snap (frame width/height/radius/scale, on commit or
+// release) takes to visually settle — a real CSS transition, applied only
+// for this one moment, not during normal per-scroll updates.
+const SNAP_TRANSITION_MS = 420;
+
+// Card/label/explore reveal is time-based once "full", not scroll-linked
+// — scrolling further (or stopping) doesn't change how it plays out.
+// Scrolling back up out of "full" reverses it over a fixed, quicker
+// duration instead of unwinding at the same pace it played forward.
+const AUTO_REVEAL_STAGGER_MS = 130;
+const AUTO_REVEAL_ITEM_MS = 500;
+const AUTO_REVERSE_MS = 420;
 
 // Package card entrance: blur + grow into place, no directional slide.
 const CARD_SCALE_FROM = 0.85;
@@ -250,11 +267,10 @@ export default function HealthPackages() {
   const leftColRef = useRef<HTMLDivElement>(null);
   const railItemRefs = useRef<(HTMLElement | null)[]>([]);
   // Background video: only ever plays while the section has actually
-  // appeared on screen, and (on desktop) pauses again the instant the
-  // cards-overlay phase (scrimDull) starts appearing — resuming smoothly
-  // if you scroll back up out of that phase, and simply staying paused
-  // once you've scrolled past the section entirely (p2 stays clamped at 1
-  // there, same as mid-overlay).
+  // appeared on screen, and (on desktop) pauses the instant the auto
+  // card-reveal starts (see applyAutoReveal) — resuming immediately if you
+  // scroll back up out of the "full" state, and simply staying paused for
+  // the rest of the scroll once past that point.
   const hasAppearedRef = useRef(false);
   const isPlayingRef = useRef(false);
   // Left-column text reveal gate — flips true exactly once (ref-guarded,
@@ -265,18 +281,27 @@ export default function HealthPackages() {
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
 
+  // "growing": frame size/radius tracks raw scroll (p1raw) as before.
+  // "full": frame is pinned at its fully-grown end values and the card
+  // reveal plays out on its own timer instead of scroll position — see
+  // GROW_COMMIT_FRACTION/GROW_RELEASE_FRACTION above for how the two sides
+  // switch. hasInitializedRef lets the very first applyState call (which
+  // may already land past the commit point if the page loads mid-scroll)
+  // set state instantly instead of visibly animating on load.
+  const sectionPhaseRef = useRef<"growing" | "full">("growing");
+  const hasInitializedRef = useRef(false);
+  // Current position (ms) within the card-reveal timeline — driven by
+  // startAutoForward/startAutoReverse's own rAF loops, not by scroll.
+  const autoElapsedRef = useRef(0);
+  const autoRafRef = useRef<number | null>(null);
+  const snapTimeoutRef = useRef<number | null>(null);
+
   const packages = PACKAGES_BY_CITY[DETECTED_CITY] ?? [];
   const hasPackages = packages.length > 0;
   const railSlots = hasPackages ? ["label", ...packages.map((p) => p.id), "explore"] : ["explore"];
-
-  // Video pauses once the third card (or the last one, if fewer than
-  // three ever exist) has fully appeared, rather than the instant the
-  // cards-overlay phase begins — matches the old p2<=0 cutoff when there
-  // are no packages at all.
-  const targetCardIdx = hasPackages ? Math.min(3, packages.length) : 0;
-  const thirdCardVisibleP = hasPackages
-    ? PHASE2_START + targetCardIdx * RAIL_STAGGER + RAIL_ITEM_DURATION
-    : PHASE2_START;
+  // Last rail item's own reveal finishes at this elapsed time — the auto
+  // timeline runs from 0 to exactly this many ms.
+  const totalAutoMs = (railSlots.length - 1) * AUTO_REVEAL_STAGGER_MS + AUTO_REVEAL_ITEM_MS;
 
   // Left-column text reveal trigger: fires once the frame/section itself is
   // genuinely visible, not once the right-rail package cards reach some
@@ -297,16 +322,149 @@ export default function HealthPackages() {
     let reduced = mq.matches;
     const isMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
 
+    // Drives the card row + label + explore button + bottom overlay +
+    // text-block parallax purely off elapsed ms within the reveal
+    // timeline — startAutoForward/startAutoReverse below are the only
+    // things that ever change what `elapsedMs` is; scroll position
+    // itself never touches this.
+    const applyAutoReveal = (elapsedMs: number) => {
+      const scrimDull = scrimDullRef.current;
+      const leftCol = leftColRef.current;
+      const bgVideo = bgVideoRef.current;
+      const overallT = clamp01(elapsedMs / totalAutoMs);
+      if (scrimDull) scrimDull.style.opacity = String(overallT * 0.7);
+      if (leftCol) leftCol.style.transform = `translateY(${-34 * overallT}px)`;
+
+      railItemRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const startMs = i * AUTO_REVEAL_STAGGER_MS;
+        const t = clamp01((elapsedMs - startMs) / AUTO_REVEAL_ITEM_MS);
+        const isCard = hasPackages && i >= 1 && i <= packages.length;
+        const isExplore = i === railSlots.length - 1;
+        if (isCard || isExplore) {
+          el.style.transform = `scale(${CARD_SCALE_FROM + (1 - CARD_SCALE_FROM) * t})`;
+          el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
+        } else {
+          el.style.transform = `translateX(${38 * (1 - t)}px)`;
+        }
+        el.style.opacity = String(t);
+      });
+
+      // Video pauses the instant the reveal has genuinely started, resumes
+      // the instant it's fully back to 0 (i.e. reverse has completed).
+      if (bgVideo) {
+        const shouldPlay = hasAppearedRef.current && elapsedMs <= 0;
+        if (shouldPlay !== isPlayingRef.current) {
+          isPlayingRef.current = shouldPlay;
+          if (shouldPlay) bgVideo.play().catch(() => {});
+          else bgVideo.pause();
+        }
+      }
+    };
+
+    // Plays elapsed forward at real wall-clock speed (1:1) from wherever it
+    // currently is up to totalAutoMs, then stops — this is what "auto,
+    // fires once the section is full, not linked to scroll" means: once
+    // triggered, it just runs on its own for totalAutoMs regardless of
+    // whatever the user's scroll position does in the meantime.
+    const startAutoForward = () => {
+      if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
+      const startTime = performance.now() - autoElapsedRef.current;
+      const step = (now: number) => {
+        const elapsed = Math.min(now - startTime, totalAutoMs);
+        autoElapsedRef.current = elapsed;
+        applyAutoReveal(elapsed);
+        if (elapsed < totalAutoMs) {
+          autoRafRef.current = requestAnimationFrame(step);
+        } else {
+          autoRafRef.current = null;
+        }
+      };
+      autoRafRef.current = requestAnimationFrame(step);
+    };
+
+    // Unwinds elapsed back to 0 over a fixed short duration regardless of
+    // how far in the reveal currently is — a quick "close" rather than the
+    // slower forward pace played in reverse.
+    const startAutoReverse = () => {
+      if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
+      const from = autoElapsedRef.current;
+      if (from <= 0) {
+        applyAutoReveal(0);
+        return;
+      }
+      const startTime = performance.now();
+      const step = (now: number) => {
+        const t = clamp01((now - startTime) / AUTO_REVERSE_MS);
+        const elapsed = from * (1 - t);
+        autoElapsedRef.current = elapsed;
+        applyAutoReveal(elapsed);
+        if (t < 1) {
+          autoRafRef.current = requestAnimationFrame(step);
+        } else {
+          autoRafRef.current = null;
+        }
+      };
+      autoRafRef.current = requestAnimationFrame(step);
+    };
+
+    // Real CSS transition applied only for the one "snap" moment (commit
+    // or release), then cleared — so normal per-scroll updates during the
+    // "growing" phase stay instant or, once dependent CSS var is set,
+    // the transition doesn't fight later continuous updates.
+    const enableFrameSnapTransition = () => {
+      const frame = frameRef.current;
+      const grid = gridRef.current;
+      const bgVideo = bgVideoRef.current;
+      const transition = `width ${SNAP_TRANSITION_MS}ms ease, height ${SNAP_TRANSITION_MS}ms ease, border-radius ${SNAP_TRANSITION_MS}ms ease, transform ${SNAP_TRANSITION_MS}ms ease`;
+      if (frame) frame.style.transition = transition;
+      if (grid) grid.style.transition = `transform ${SNAP_TRANSITION_MS}ms ease`;
+      if (bgVideo) bgVideo.style.transition = `transform ${SNAP_TRANSITION_MS}ms ease`;
+      if (snapTimeoutRef.current) window.clearTimeout(snapTimeoutRef.current);
+      snapTimeoutRef.current = window.setTimeout(() => {
+        if (frame) frame.style.transition = "";
+        if (grid) grid.style.transition = "";
+        if (bgVideo) bgVideo.style.transition = "";
+      }, SNAP_TRANSITION_MS + 60);
+    };
+
     const applyState = (p: number, exitP: number) => {
       const frame = frameRef.current;
       const bgVideo = bgVideoRef.current;
-      const scrimDull = scrimDullRef.current;
       const grid = gridRef.current;
-      const leftCol = leftColRef.current;
-      if (!frame || !bgVideo || !scrimDull || !grid || !leftCol) return;
+      if (!frame || !bgVideo || !grid) return;
 
-      const p1 = clamp01(p / PHASE1_END);
+      const p1raw = clamp01(p / PHASE1_END);
       const exitT = clamp01(exitP / EXIT_DURATION);
+
+      if (!hasInitializedRef.current) {
+        // First-ever call (mount): if the page happens to load already
+        // scrolled past the commit point, jump straight to "full" with no
+        // animation instead of visibly snapping/auto-revealing on load.
+        hasInitializedRef.current = true;
+        if (p1raw >= GROW_COMMIT_FRACTION) {
+          sectionPhaseRef.current = "full";
+          autoElapsedRef.current = totalAutoMs;
+        } else {
+          sectionPhaseRef.current = "growing";
+          autoElapsedRef.current = 0;
+        }
+        applyAutoReveal(autoElapsedRef.current);
+      } else {
+        const wasFull = sectionPhaseRef.current === "full";
+        if (!wasFull && p1raw >= GROW_COMMIT_FRACTION) {
+          sectionPhaseRef.current = "full";
+          enableFrameSnapTransition();
+          startAutoForward();
+        } else if (wasFull && p1raw < GROW_RELEASE_FRACTION) {
+          sectionPhaseRef.current = "growing";
+          enableFrameSnapTransition();
+          startAutoReverse();
+        }
+      }
+
+      const isFull = sectionPhaseRef.current === "full";
+      const p1 = isFull ? 1 : p1raw;
 
       // Frame: box grow (width/height/radius) while entering, then a
       // separate scale-down + un-round as it exits — the two never
@@ -326,12 +484,6 @@ export default function HealthPackages() {
       // the section" feel from the previous version.
       grid.style.transform = `scale(${enterScale * exitScale})`;
 
-      const p2 = clamp01((p - PHASE2_START) / (PHASE2_END - PHASE2_START));
-      // Bottom overlay's own target opacity is 0.7 (per design spec), not
-      // fully opaque — reaches that at p2=1 instead of 1.0.
-      scrimDull.style.opacity = String(p2 * 0.7);
-      leftCol.style.transform = `translateY(${-34 * p2}px)`;
-
       // Left-column text reveal: one-shot gate, flips the React state on
       // once the frame is ~78% grown (see TEXT_REVEAL_P1_THRESHOLD above)
       // and never flips back — the Framer Motion word/line/item
@@ -341,38 +493,6 @@ export default function HealthPackages() {
         textRevealedRef.current = true;
         setTextRevealed(true);
       }
-
-      // Video plays once the section has appeared, and pauses again once
-      // the third card has fully appeared (rather than the instant the
-      // cards-overlay phase begins) — resuming on scroll-up, and staying
-      // paused for the rest of the scroll once past that point.
-      const shouldPlay = hasAppearedRef.current && p < thirdCardVisibleP;
-      if (shouldPlay !== isPlayingRef.current) {
-        isPlayingRef.current = shouldPlay;
-        if (shouldPlay) bgVideo.play().catch(() => {});
-        else bgVideo.pause();
-      }
-
-      railItemRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const start = PHASE2_START + i * RAIL_STAGGER;
-        const t = clamp01((p - start) / RAIL_ITEM_DURATION);
-        const isCard = hasPackages && i >= 1 && i <= packages.length;
-        // The trailing "explore all packages" link is always the last rail
-        // slot regardless of package count — it now enters the same way as
-        // the cards above it (blur + grow, no horizontal slide) so the
-        // whole rail reads as one consistent top-to-bottom appearance.
-        const isExplore = i === railSlots.length - 1;
-        if (isCard || isExplore) {
-          // Package cards (and the explore link): blur + grow into place,
-          // one after another — no directional slide.
-          el.style.transform = `scale(${CARD_SCALE_FROM + (1 - CARD_SCALE_FROM) * t})`;
-          el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
-        } else {
-          el.style.transform = `translateX(${38 * (1 - t)}px)`;
-        }
-        el.style.opacity = String(t);
-      });
 
       // Page bg swaps to light once the frame fully covers the viewport —
       // hidden behind the opaque photo, so the switch is never seen, and
@@ -479,6 +599,8 @@ export default function HealthPackages() {
       window.removeEventListener("resize", onResize);
       mq.removeEventListener?.("change", onMotionChange);
       observer?.disconnect();
+      if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
+      if (snapTimeoutRef.current) window.clearTimeout(snapTimeoutRef.current);
     };
   }, [railSlots.length]);
 

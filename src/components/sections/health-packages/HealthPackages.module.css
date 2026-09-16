@@ -131,11 +131,17 @@
 
 /* Eyebrow + dash slide in from above together as one unit, first in the
    column's reveal sequence — see the `eyebrowUnit` motion.div in
-   HealthPackages.tsx. Uses the global .section-eyebrow as-is (centered,
-   own dash) since this section is centered now, unlike the old two-column
-   layout that needed a left-aligned override. */
+   HealthPackages.tsx. Uses the global .section-eyebrow for layout
+   (centered, own dash) since this section is centered now, unlike the old
+   two-column layout that needed a left-aligned override — just recolors
+   the text white for this dark background (the global default is the
+   brand blue, meant for light sections). */
 .eyebrowUnit {
   will-change: transform, opacity, filter;
+}
+
+.eyebrowUnit :global(.section-eyebrow) {
+  color: #ffffff;
 }
 
 .title {
@@ -253,44 +259,80 @@
   outline-offset: 2px;
 }
 
+/* Gradient border (not a solid color) via the standard double-background
+   trick: a transparent border plus two (three, for V2) stacked
+   background-images, the last one clipped to the border box only. */
 .packageCardV1 {
   border-radius: 10px;
-  border: 1px solid #90d2fd;
-  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%);
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%),
+    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
 .packageCardV2 {
   border-radius: 10.235px;
-  border: 1.023px solid #90d2fd;
-  background:
+  border: 1.023px solid transparent;
+  background-image:
     linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
-    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%),
+    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
+  background-origin: border-box;
+  background-clip: padding-box, padding-box, border-box;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.64);
 }
 
 .packageCardV3 {
   border-radius: 10px;
-  border: 1px solid #90d2fd;
-  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%);
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%),
+    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
-/* Grow-from-bottom + a light shimmer sweep + a touch of brightness on
-   hover — the same "lightens up" feeling the old flat-tint cards had,
-   just adapted to a photo+gradient card instead of a flat background. */
+/* Grow-from-bottom + a lighter glassy wash (::after) on hover — bigger and
+   noticeably "lit up", but via a translucent white layer rather than a
+   blanket brightness filter, so it reads as glass catching light instead
+   of the whole photo just getting brighter. !important is load-bearing
+   here: the auto-reveal (see HealthPackages.tsx) sets an inline
+   `transform` on this same element as it blurs+grows in, and an inline
+   style otherwise beats any stylesheet rule regardless of specificity —
+   without it, hover would visibly do nothing once a card had finished
+   revealing. */
 .packageCard:hover,
 .packageCard:focus-visible {
-  transform: scale(1.028);
-  filter: brightness(1.1);
+  transform: scale(1.05) !important;
 }
 
+.packageCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0);
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::after,
+.packageCard:focus-visible::after {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+/* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
+   ever active on the one card actually under the pointer. */
 .packageCard::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.22) 48%, transparent 68%);
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.12) 48%, transparent 66%);
   transform: translateX(-120%);
   transition: transform 0.7s ease;
   pointer-events: none;
