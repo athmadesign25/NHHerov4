@@ -307,15 +307,9 @@ export default function AppDownloadBanner() {
 
   return (
     <section className={styles.section} id="app-download-banner">
-      {/* 300vh (not 200vh): the extra pinned scroll distance this buys is
-          what gives the section a genuine "stay here" dwell once it's
-          fully matured, BEFORE the footer starts rising over it (see
-          FooterRevealWrapper, which anchors that reveal to the document's
-          true end, not to this track's own height) — at 200vh the reveal
-          window actually started before the pin had even finished
-          engaging, so the footer appeared to slap on top immediately with
-          no pause at all. */}
-      <div ref={trackRef} className={styles.stackTrack} style={{ height: "200vh" }}>
+      {/* 120vh: gives the section a brief "stay here" dwell (a single scroll) 
+          before the footer starts smoothly rising over it. */}
+      <div ref={trackRef} className={styles.stackTrack} style={{ height: "120vh" }}>
         <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
           
           <motion.div
