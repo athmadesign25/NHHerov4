@@ -646,7 +646,7 @@ export default function HeroSearchFirst() {
     target: containerRef,
     offset: ["start start", "end start"],
   });
-  const heroBlur = useTransform(heroExitProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
+  const heroBlur = useTransform(heroExitProgress, [0, 1], ["blur(0px)", "blur(8px)"]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById("hero-section")?.nextElementSibling;
@@ -1046,6 +1046,7 @@ export default function HeroSearchFirst() {
                     {!isPulseActive && (
                       <motion.div
                         key="hero-search-container"
+                        layout
                         className={`${styles.aiSearchContainer} ${isOpen ? styles.aiSearchContainerActive : ""}`}
                         onClick={() => {
                           if (!isOpen) {
@@ -1059,7 +1060,7 @@ export default function HeroSearchFirst() {
                         initial={false}
                         animate={
                           isScrolledPastHero
-                            ? { opacity: 0, scale: 0.85, filter: "blur(14px)", pointerEvents: "none" }
+                            ? { opacity: 0, scale: 0.85, filter: "blur(4px)", pointerEvents: "none" }
                             : { opacity: 1, scale: 1, filter: "blur(0px)", pointerEvents: "auto" }
                         }
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -1108,21 +1109,24 @@ export default function HeroSearchFirst() {
                           </div>
                           
                           <div className={styles.pulseAiLogo}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '-6px', marginLeft: '4px', position: 'relative', width: '36px', height: '20px' }}>
-                              <AnimatePresence>
-                                {!isScrolledPastHero && (
-                                  <motion.div 
-                                    layoutId="shared-pulse-transition" 
-                                    style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', width: '36px', height: '20px' }}>
+                              {!isScrolledPastHero && (
+                                <motion.div 
+                                  key="pulse-logo-shared"
+                                  layoutId="shared-pulse-transition" 
+                                  style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                  <motion.div
+                                    initial={{ scale: 2.4 }}
+                                    animate={{ scale: 1 }}
                                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                    style={{ width: '100%', height: '100%' }}
                                   >
-                                    <Lottie animationData={pulseAnimation} style={{ width: "36px", height: "20px" }} loop={true} />
+                                    <Lottie animationData={pulseAnimation} style={{ width: "100%", height: "100%" }} loop={true} />
                                   </motion.div>
-                                )}
-                              </AnimatePresence>
+                                </motion.div>
+                              )}
                             </div>
                             <span>Pulse AI</span>
                           </div>
