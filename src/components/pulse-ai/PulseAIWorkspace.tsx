@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import styles from "./PulseAIWorkspace.module.css";
 import lottie from "lottie-web";
-import PixelRipple from "../home/PixelRipple";
+import PixelRipple from "@/components/ui/effects/PixelRipple";
 
 function LottieAnimation({ animationPath, width = 60, height = 60 }: { animationPath: string; width?: number; height?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);

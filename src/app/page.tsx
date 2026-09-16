@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import { NeatGradient } from "@firecms/neat";
-import HeroSearchFirst from "@/components/home/HeroSearchFirst";
+import Hero from "@/components/home/Hero";
 import CentreOfExcellence from "@/components/home/CentreOfExcellence";
 import WhyChooseNH from "@/components/home/WhyChooseNH";
 import HealthPackages from "@/components/home/HealthPackages";
@@ -184,7 +184,7 @@ export default function HomePage() {
 
         {/* Hero section with floating scaled card */}
         <div data-nav-theme="dark">
-          <HeroSearchFirst />
+          <Hero />
         </div>
 
         {/* CentreOfExcellence section with pinned title sequence & animated grid reveal.

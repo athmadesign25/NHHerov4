@@ -322,3 +322,194 @@ export function getSpecialityDetail(slug: string): SpecialityDetail | null {
 export function getSpecialityMeta(slug: string): SpecialityMeta | null {
   return ALL_SPECIALITIES.find((s) => s.slug === slug) ?? null;
 }
+
+
+export const specialitiesData = [
+  { 
+    name: "Cardiology", 
+    slug: "cardiology",
+    image: "/Specialities icons/Cardiology.svg",
+    keywords: ["heart", "chest pain", "valve", "cardiac", "bypass", "bp", "hypertension", "angioplasty", "artery", "cardio", "palpitation", "cardiologist", "cardiac surgeon", "cardio specialists"] 
+  },
+  { 
+    name: "Neurology", 
+    slug: "neurology",
+    image: "/Specialities icons/Neurology.svg",
+    keywords: ["brain", "nerve", "stroke", "migraine", "headache", "spine", "seizure", "epilepsy", "paralysis", "neuro", "back pain", "neurologist", "neuro surgeon", "neuro specialists"] 
+  },
+  { 
+    name: "Oncology", 
+    slug: "oncology",
+    image: "/Specialities icons/Oncology.svg",
+    keywords: ["cancer", "tumor", "chemotherapy", "radiation", "lump", "biopsy", "oncologist", "cancer specialist", "carcinoma"] 
+  },
+  { 
+    name: "Orthopaedics", 
+    slug: "orthopaedics",
+    image: "/Specialities icons/Orthopaedics.svg",
+    keywords: ["bone", "joint", "fracture", "knee", "hip", "arthritis", "spine", "ortho", "back pain", "orthopedist", "orthopedic surgeon"] 
+  },
+  { 
+    name: "Gastroenterology", 
+    slug: "gastroenterology",
+    image: "/Specialities icons/Gastro.svg",
+    keywords: ["stomach", "digestion", "liver", "acid", "ulcer", "intestine", "gallbladder", "piles", "fistula", "gastro", "gastric", "gastroenterologist"] 
+  },
+  { 
+    name: "Urology", 
+    slug: "urology",
+    image: "/Specialities icons/Urology.svg",
+    keywords: ["kidney stone", "urine", "bladder", "prostate", "uti", "urologist", "urine infection", "dialysis"] 
+  },
+  { 
+    name: "Pulmonology", 
+    slug: "pulmonology",
+    image: "/Specialities icons/Pulmonology.svg",
+    keywords: ["lung", "breathing", "asthma", "tb", "cough", "respiratory", "pulmonologist", "chest specialist"] 
+  },
+  { 
+    name: "Endocrinology", 
+    slug: "endocrinology",
+    image: "/Specialities icons/Diabetology.svg",
+    keywords: ["diabetes", "thyroid", "sugar", "hormone", "pcos", "obesity", "endocrinologist", "sugar specialist"] 
+  },
+  { 
+    name: "Gynecology", 
+    slug: "gynecology",
+    image: "/Specialities icons/Gynaecology.svg",
+    keywords: ["pregnancy", "period", "uterus", "pcos", "women", "maternity", "delivery", "gynecologist", "obgyn"] 
+  },
+  { 
+    name: "Pediatrics", 
+    slug: "pediatrics",
+    image: "/Specialities icons/Paedratic.svg",
+    keywords: ["child", "baby", "vaccination", "infant", "kids", "pediatrician", "child specialist"] 
+  },
+  { 
+    name: "Dermatology", 
+    slug: "dermatology",
+    image: "/Specialities icons/Orthopaedics.svg",
+    keywords: ["skin", "hair", "acne", "rash", "allergy", "pimples", "dermatologist", "skin specialist"] 
+  },
+  { 
+    name: "Ophthalmology", 
+    slug: "ophthalmology",
+    image: "/Specialities icons/Neurology.svg",
+    keywords: ["eye", "vision", "cataract", "glaucoma", "lasik", "ophthalmologist", "eye specialist"] 
+  },
+  { 
+    name: "ENT", 
+    slug: "ent",
+    image: "/Specialities icons/Pulmonology.svg",
+    keywords: ["ear", "nose", "throat", "sinus", "tonsils", "hearing", "ent specialist"] 
+  },
+  { 
+    name: "Psychiatry", 
+    slug: "psychiatry",
+    image: "/Specialities icons/Neurology.svg",
+    keywords: ["mental", "depression", "anxiety", "stress", "sleep", "psychiatrist", "psychologist"] 
+  }
+];
+
+export const popularTags = ["chest pain", "cancer", "surgery", "liver"];
+
+
+export const COE_SPECIALITIES = [
+  {
+    name: "Cardiology & Cardiac Surgery",
+    href: "/specialities/cardiology",
+    icon: "/Specialities icons/Cardiology.svg",
+    img: "/Specialities icons/Cardiology.jpeg",
+    video: "/Specialities icons/Cardiology.mp4",
+    stats: { value: "5K+", label: "Cardiac Surgeries Performed" },
+  },
+  {
+    name: "Cancer Care",
+    href: "/specialities/oncology",
+    icon: "/Specialities icons/Cancercare.svg",
+    img: "/Specialities icons/Cancer Care.jpeg",
+    video: "/Specialities icons/Cancer Care.mp4",
+    stats: { value: "10K+", label: "Oncology Patients Treated" },
+  },
+  {
+    name: "Neurology & Neurosurgery",
+    href: "/specialities/neurology",
+    icon: "/Specialities icons/Neurology.svg",
+    img: "/Specialities icons/Neurology.jpeg",
+    video: "/Specialities icons/Neurology.mp4",
+    stats: { value: "3K+", label: "Neuro Surgeries Performed" },
+  },
+  {
+    name: "Orthopaedics",
+    href: "/specialities/orthopaedics",
+    icon: "/Specialities icons/Orthopaedics.svg",
+    img: "/Specialities icons/Orthopedics.jpeg",
+    video: "/Specialities icons/Orthopedics.mp4",
+    stats: { value: "8K+", label: "Joint Replacements" },
+  },
+  {
+    name: "Nephrology & Transplant",
+    href: "/specialities/nephrology",
+    icon: "/Specialities icons/Nephrology.svg",
+    img: "/Specialities icons/Nephrology.jpeg",
+    video: "/Specialities icons/Nephrology.mp4",
+    stats: { value: "2K+", label: "Kidney Transplants" },
+  },
+  {
+    name: "Gastroenterology",
+    href: "/specialities/gastroenterology",
+    icon: "/Specialities icons/Gastro.svg",
+    img: "/Specialities icons/Gastroenterology.jpeg",
+    video: "/Specialities icons/Gastroenterology.mp4",
+    stats: { value: "15K+", label: "Endoscopies Performed" },
+  },
+  {
+    name: "Pulmonology",
+    href: "/specialities/pulmonology",
+    icon: "/Specialities icons/Cardiology.svg",
+    img: "/Specialities icons/Cardiology.jpeg",
+    video: "/Specialities icons/Cardiology.mp4",
+    stats: { value: "4.5K+", label: "Respiratory Cases" },
+  },
+  {
+    name: "Paediatrics",
+    href: "/specialities/paediatrics",
+    icon: "/Specialities icons/Cancercare.svg",
+    img: "/Specialities icons/Cancer Care.jpeg",
+    video: "/Specialities icons/Cancer Care.mp4",
+    stats: { value: "12K+", label: "Children Treated" },
+  },
+  {
+    name: "General Surgery",
+    href: "/specialities/general-surgery",
+    icon: "/Specialities icons/Neurology.svg",
+    img: "/Specialities icons/Neurology.jpeg",
+    video: "/Specialities icons/Neurology.mp4",
+    stats: { value: "8.5K+", label: "Surgeries Performed" },
+  },
+  {
+    name: "Urology",
+    href: "/specialities/urology",
+    icon: "/Specialities icons/Orthopaedics.svg",
+    img: "/Specialities icons/Orthopedics.jpeg",
+    video: "/Specialities icons/Orthopedics.mp4",
+    stats: { value: "6K+", label: "Urological Procedures" },
+  },
+  {
+    name: "Endocrinology",
+    href: "/specialities/endocrinology",
+    icon: "/Specialities icons/Nephrology.svg",
+    img: "/Specialities icons/Nephrology.jpeg",
+    video: "/Specialities icons/Nephrology.mp4",
+    stats: { value: "5K+", label: "Endocrine Cases" },
+  },
+  {
+    name: "Rheumatology",
+    href: "/specialities/rheumatology",
+    icon: "/Specialities icons/Gastro.svg",
+    img: "/Specialities icons/Gastroenterology.jpeg",
+    video: "/Specialities icons/Gastroenterology.mp4",
+    stats: { value: "3.5K+", label: "Rheumatology Patients" },
+  }
+];
+

@@ -10,105 +10,9 @@ import {
 } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
+import { COE_SPECIALITIES as SPECIALITIES } from "@/data/specialities";
 
-const SPECIALITIES = [
-  {
-    name: "Cardiology & Cardiac Surgery",
-    href: "/specialities/cardiology",
-    icon: "/Specialities icons/Cardiology.svg",
-    img: "/Specialities icons/Cardiology.jpeg",
-    video: "/Specialities icons/Cardiology.mp4",
-    stats: { value: "5K+", label: "Cardiac Surgeries Performed" },
-  },
-  {
-    name: "Cancer Care",
-    href: "/specialities/oncology",
-    icon: "/Specialities icons/Cancercare.svg",
-    img: "/Specialities icons/Cancer Care.jpeg",
-    video: "/Specialities icons/Cancer Care.mp4",
-    stats: { value: "10K+", label: "Oncology Patients Treated" },
-  },
-  {
-    name: "Neurology & Neurosurgery",
-    href: "/specialities/neurology",
-    icon: "/Specialities icons/Neurology.svg",
-    img: "/Specialities icons/Neurology.jpeg",
-    video: "/Specialities icons/Neurology.mp4",
-    stats: { value: "3K+", label: "Neuro Surgeries Performed" },
-  },
-  {
-    name: "Orthopaedics",
-    href: "/specialities/orthopaedics",
-    icon: "/Specialities icons/Orthopaedics.svg",
-    img: "/Specialities icons/Orthopedics.jpeg",
-    video: "/Specialities icons/Orthopedics.mp4",
-    stats: { value: "8K+", label: "Joint Replacements" },
-  },
-  {
-    name: "Nephrology & Transplant",
-    href: "/specialities/nephrology",
-    icon: "/Specialities icons/Nephrology.svg",
-    img: "/Specialities icons/Nephrology.jpeg",
-    video: "/Specialities icons/Nephrology.mp4",
-    stats: { value: "2K+", label: "Kidney Transplants" },
-  },
-  {
-    name: "Gastroenterology",
-    href: "/specialities/gastroenterology",
-    icon: "/Specialities icons/Gastro.svg",
-    img: "/Specialities icons/Gastroenterology.jpeg",
-    video: "/Specialities icons/Gastroenterology.mp4",
-    stats: { value: "15K+", label: "Endoscopies Performed" },
-  },
-  {
-    name: "Pulmonology",
-    href: "/specialities/pulmonology",
-    icon: "/Specialities icons/Cardiology.svg",
-    img: "/Specialities icons/Cardiology.jpeg",
-    video: "/Specialities icons/Cardiology.mp4",
-    stats: { value: "4.5K+", label: "Respiratory Cases" },
-  },
-  {
-    name: "Paediatrics",
-    href: "/specialities/paediatrics",
-    icon: "/Specialities icons/Cancercare.svg",
-    img: "/Specialities icons/Cancer Care.jpeg",
-    video: "/Specialities icons/Cancer Care.mp4",
-    stats: { value: "12K+", label: "Children Treated" },
-  },
-  {
-    name: "General Surgery",
-    href: "/specialities/general-surgery",
-    icon: "/Specialities icons/Neurology.svg",
-    img: "/Specialities icons/Neurology.jpeg",
-    video: "/Specialities icons/Neurology.mp4",
-    stats: { value: "8.5K+", label: "Surgeries Performed" },
-  },
-  {
-    name: "Urology",
-    href: "/specialities/urology",
-    icon: "/Specialities icons/Orthopaedics.svg",
-    img: "/Specialities icons/Orthopedics.jpeg",
-    video: "/Specialities icons/Orthopedics.mp4",
-    stats: { value: "6K+", label: "Urological Procedures" },
-  },
-  {
-    name: "Endocrinology",
-    href: "/specialities/endocrinology",
-    icon: "/Specialities icons/Nephrology.svg",
-    img: "/Specialities icons/Nephrology.jpeg",
-    video: "/Specialities icons/Nephrology.mp4",
-    stats: { value: "5K+", label: "Endocrine Cases" },
-  },
-  {
-    name: "Rheumatology",
-    href: "/specialities/rheumatology",
-    icon: "/Specialities icons/Gastro.svg",
-    img: "/Specialities icons/Gastroenterology.jpeg",
-    video: "/Specialities icons/Gastroenterology.mp4",
-    stats: { value: "3.5K+", label: "Rheumatology Patients" },
-  },
-];
+
 
 const RollingNumber = ({ value, isHovered }: { value: string; isHovered: boolean }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -221,14 +125,6 @@ const COLUMN_SPECIALITIES = [
   [SPECIALITIES[3], SPECIALITIES[7], SPECIALITIES[11]],
 ];
 
-// Column-level Y parallax ranges: [startY, endY] in px
-const Y_OFFSETS: [number, number][] = [
-  [40,  -120],  // Col 0
-  [-30,  80],   // Col 1
-  [35,  -90],   // Col 2
-  [-40,  105],  // Col 3
-];
-
 function PodiumColumnTrack({
   colIndex,
   items,
@@ -244,19 +140,28 @@ function PodiumColumnTrack({
   dimOpacity: import("framer-motion").MotionValue<number>;
   dimBlur: import("framer-motion").MotionValue<string>;
 }) {
-  const yMultiplier = screenMode === "mobile" ? 0 : 1;
-  const [startY, endY] = Y_OFFSETS[colIndex] ?? [0, 0];
+  const isDesktop = screenMode === "desktop";
+  const isTablet = screenMode === "tablet";
+  const yMultiplier = isDesktop ? 1.0 : isTablet ? 0.45 : 0;
 
-  // Column entrance opacity: fades in from 0.35 → 1 over the initial progress
-  const colOpacity = useTransform(scrollYProgress, [0, 0.35], [0.35, 1], { clamp: true });
+  // Asymmetric continuous parallax rate per column (Odd columns glide faster, Even columns lag gracefully)
+  const yOffsets = [
+    [40 * yMultiplier, -120 * yMultiplier],
+    [-30 * yMultiplier, 80 * yMultiplier],
+    [35 * yMultiplier, -90 * yMultiplier],
+    [-40 * yMultiplier, 105 * yMultiplier],
+  ][colIndex] || [0, 0];
+
+  const y = useTransform(scrollYProgress, [0, 1], yOffsets);
+
+  // Entrance reveal only (0 -> 0.15); combined multiplicatively with the
+  // shared `dimOpacity` below (a subtle, partial dim — not a fade to
+  // invisible — that only starts once the CTA has reached screen-center,
+  // see dimRange in the parent). The grid itself never fully disappears.
+  const entranceOpacity = useTransform(scrollYProgress, [0.0, 0.15], [0.35, 1.0]);
   const opacity = useTransform(
-    [colOpacity, dimOpacity],
-    ([c, d]: number[]) => (c as number) * (d as number)
-  );
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [startY * yMultiplier, endY * yMultiplier]
+    [entranceOpacity, dimOpacity],
+    ([entrance, dim]: number[]) => entrance * dim
   );
 
   return (
@@ -264,8 +169,8 @@ function PodiumColumnTrack({
       className={`${styles.columnTrack} ${styles[`col${colIndex}`]}`}
       style={{ y, opacity, filter: dimBlur }}
     >
-      {items.map((spec) => (
-        <SpecialityCardItem key={spec.name} spec={spec} />
+      {items.map((spec, idx) => (
+        <SpecialityCardItem key={idx} spec={spec} />
       ))}
     </motion.div>
   );

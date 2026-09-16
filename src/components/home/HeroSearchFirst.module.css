@@ -1,9 +1,3 @@
-.heroWrapper {
-  height: 160vh;
-  position: relative;
-  background: transparent;
-}
-
 .hero {
   --hero-width: clamp(680px, 56vw, 900px);
   position: sticky;
@@ -893,23 +887,12 @@
 }
 
 @media (max-width: 768px) {
-  .heroWrapper {
-    height: 160dvh;
-  }
-
   .hero {
     --hero-width: calc(100vw - var(--sp-4));
     min-height: 100dvh;
     height: 100dvh;
-  }
-
-  .heroStack {
-    transform: translateY(0);
-    gap: var(--sp-2);
-  }
-
-  .titleUnit {
-    margin-top: 48px;
+    transform: none !important;
+    border-radius: 0 !important;
   }
 
   .headline {

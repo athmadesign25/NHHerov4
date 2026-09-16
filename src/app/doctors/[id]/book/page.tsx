@@ -131,7 +131,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
                       <Languages size={14} />
-                      {doc.languages?.map((l: any) => l.name).join(", ")}
+                      {(doc as any).languages?.map((l: any) => (typeof l === "string" ? l : l.name))?.join(", ") || "English, Hindi"}
                     </div>
                   </div>
                 </div>

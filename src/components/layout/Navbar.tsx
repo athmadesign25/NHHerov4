@@ -96,29 +96,9 @@ export default function Navbar() {
 
       probeTheme();
 
-      // On the homepage, synchronize with Hero Phase 1 -> Phase 2 transition boundary
-      let heroThreshold = 120;
-      if (isHomePage) {
-        const heroSection = document.getElementById("hero-section-search-first");
-        const heroWrapper = heroSection?.parentElement;
-        if (heroWrapper) {
-          // Exactly matches the sticky runway where Hero scales 1.0 -> 0.75 (60vh desktop / 60dvh mobile)
-          heroThreshold = heroWrapper.offsetHeight - window.innerHeight;
-        } else {
-          heroThreshold = window.innerHeight * 0.6;
-        }
-      }
-
-      // During Hero Phase 1: Always keep navbar visible
-      if (currentScrollY < heroThreshold) {
+      // Always show navbar near the top
+      if (currentScrollY < 120) {
         setIsVisible(true);
-        lastScrollY.current = currentScrollY;
-        return;
-      }
-
-      // Exact Phase 1 -> Phase 2 boundary crossing: immediately hide navbar as Hero begins upward move
-      if (lastScrollY.current < heroThreshold && currentScrollY >= heroThreshold) {
-        setIsVisible(false);
         lastScrollY.current = currentScrollY;
         return;
       }
@@ -131,7 +111,7 @@ export default function Navbar() {
       }
 
       if (delta > 0) {
-        // Sustained downward scroll (Phase 2 & rest of page)
+        // Sustained downward scroll
         setIsVisible(false);
       } else {
         // Sustained upward scroll
