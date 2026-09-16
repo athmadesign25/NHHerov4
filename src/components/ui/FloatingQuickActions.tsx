@@ -37,8 +37,9 @@ export default function FloatingQuickActions() {
       const showQuickActions = window.scrollY >= window.innerHeight - 100;
       setIsQuickActionsVisible(showQuickActions);
 
-      // Global Pulse FAB appears immediately right after hero search section blurs out (180px)
-      const showPulseFab = window.scrollY >= 180;
+      // Global Pulse FAB appears exactly when hero search section starts blurring out
+      // HeroSearchFirst container is 130vh, and it triggers at 0.05 progress (0.05 * 130vh = 6.5vh)
+      const showPulseFab = window.scrollY >= (window.innerHeight * 1.3 * 0.05);
       setIsPulseFabVisible(showPulseFab);
 
       if (!showQuickActions || !containerRef.current) return;
@@ -120,33 +121,41 @@ export default function FloatingQuickActions() {
       </div>
 
       {/* Global Pulse Button FAB (Appears right after hero search container disappears) */}
-      <AnimatePresence>
-        {isPulseFabVisible && (
-          <div className={fabStyles.fabContainer}>
-            <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
-              <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
-              <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
-            </div>
+      {isPulseFabVisible && (
+        <div className={fabStyles.fabContainer}>
+          <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
+            <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
+            <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
+          </div>
 
-            <motion.button
+          <motion.button
+            key="floating-pulse-fab-global"
+            type="button"
+            className={fabStyles.fabButton}
+            onClick={() => setIsPulseWorkspaceOpen(true)}
+            aria-label="Open Pulse AI"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div 
+              key="pulse-logo-shared"
               layoutId="shared-pulse-transition"
-              key="floating-pulse-fab-global"
-              type="button"
-              className={fabStyles.fabButton}
-              onClick={() => setIsPulseWorkspaceOpen(true)}
-              aria-label="Open Pulse AI"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '42px', height: '23px' }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className={fabStyles.pulseAnim}>
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{ scale: 2.4 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                style={{ width: '100%', height: '100%' }}
+              >
                 <Lottie animationData={pulseAnimation} loop={true} style={{ width: "100%", height: "100%" }} />
-              </div>
-            </motion.button>
-          </div>
-        )}
-      </AnimatePresence>
+              </motion.div>
+            </motion.div>
+          </motion.button>
+        </div>
+      )}
 
       {/* Pulse AI Workspace Modal */}
       {isPulseWorkspaceOpen && (

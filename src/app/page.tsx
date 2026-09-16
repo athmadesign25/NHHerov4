@@ -173,10 +173,13 @@ function WhyNHToFooterBackground() {
   );
 }
 
+import { LayoutGroup } from "framer-motion";
+
 export default function HomePage() {
   return (
-    <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
-      <FloatingQuickActions />
+    <LayoutGroup>
+      <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
+        <FloatingQuickActions />
 
         {/* Master container with seamless background extending behind Hero, CentreOfExcellence AND PatientStories */}
         <div style={{ position: "relative", width: "100%", background: "transparent", zIndex: 10 }}>
@@ -202,6 +205,7 @@ export default function HomePage() {
       <HealthPackages />
 
       <WhyNHToFooterBackground />
-    </div>
+      </div>
+    </LayoutGroup>
   );
 }
