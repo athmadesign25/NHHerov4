@@ -2,7 +2,7 @@
 
 import React, { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import PulseAIWorkspace from "@/components/pulse-ai/PulseAIWorkspace";
+import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 
 interface HeroPulseEntryProps {
   isPulseActive: boolean;

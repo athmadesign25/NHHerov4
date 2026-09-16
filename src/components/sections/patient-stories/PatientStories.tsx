@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./PatientStories.module.css";
-import { initialCards } from "@/data/stories";
+import { initialCards } from "./patient-stories.data";
 
 const CARDS_COUNT = initialCards.length;
 const CARD_STEP = 572; // 528px card width + 44px gap

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '@/components/home/HeroSearchFirst.module.css';
+import styles from '@/components/sections/hero/Hero.module.css';
 
 interface QuickTagsProps {
   tags: string[];

@@ -2,13 +2,13 @@
 
 import React, { useRef, useEffect } from "react";
 import { NeatGradient } from "@firecms/neat";
-import Hero from "@/components/home/Hero";
-import CentreOfExcellence from "@/components/home/CentreOfExcellence";
-import WhyChooseNH from "@/components/home/WhyChooseNH";
-import HealthPackages from "@/components/home/HealthPackages";
-import PatientStories from "@/components/home/PatientStories";
-import AppDownloadBanner from "@/components/home/AppDownloadBanner";
-import FloatingQuickActions from "@/components/ui/FloatingQuickActions";
+import Hero from "@/components/sections/hero/Hero";
+import CentreOfExcellence from "@/components/sections/centre-of-excellence/CentreOfExcellence";
+import WhyChooseNH from "@/components/sections/why-choose-nh/WhyChooseNH";
+import HealthPackages from "@/components/sections/health-packages/HealthPackages";
+import PatientStories from "@/components/sections/patient-stories/PatientStories";
+import AppDownloadBanner from "@/components/sections/app-download/AppDownloadBanner";
+import FloatingQuickActions from "@/components/layout/FloatingQuickActions";
 
 function GlobalNeatBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

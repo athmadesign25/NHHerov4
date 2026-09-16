@@ -5,8 +5,8 @@ import Link from "next/link";
 import Lottie from "lottie-react";
 import { motion, AnimatePresence } from "framer-motion";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
-import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
-import fabStyles from "../pulse-ai/GlobalPulseFAB.module.css";
+import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import fabStyles from "@/features/pulse-ai/GlobalPulseFAB.module.css";
 import styles from "./FloatingQuickActions.module.css";
 
 export default function FloatingQuickActions() {

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import styles from '@/components/home/HeroSearchFirst.module.css';
-import MetricValueReveal from '@/components/ui/MetricValueReveal';
-import { STAT_GROUPS } from '@/data/stats';
+import styles from '@/components/sections/hero/Hero.module.css';
+import MetricValueReveal from './MetricValueReveal';
+import { STAT_GROUPS } from '../hero-stats.data';
 
 interface HeroStatsProps {
   isOpen: boolean;

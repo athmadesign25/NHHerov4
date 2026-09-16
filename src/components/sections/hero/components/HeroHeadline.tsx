@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import SplitText from '@/components/ui/SplitText';
-import styles from '@/components/home/HeroSearchFirst.module.css';
+import styles from '@/components/sections/hero/Hero.module.css';
 
 interface HeroHeadlineProps {
   isOpen: boolean;

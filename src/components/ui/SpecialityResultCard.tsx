@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../home/HeroSearchFirst.module.css";
+import styles from "./SpecialityResultCard.module.css";
 import HighlightMatch from "./HighlightMatch";
 
 interface SpecialityResultCardProps {

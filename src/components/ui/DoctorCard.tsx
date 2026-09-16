@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../home/HeroSearchFirst.module.css";
+import styles from "./DoctorCard.module.css";
 import HighlightMatch from "./HighlightMatch";
 import { DoctorData } from "@/data/doctors";
 

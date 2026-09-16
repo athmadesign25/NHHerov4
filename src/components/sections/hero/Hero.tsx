@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useScroll, useTransform, motion, useReducedMotion } from "framer-motion";
-import styles from "./HeroSearchFirst.module.css";
-import { useAuthState } from "@/hooks/useAuthState";
-import { useHeroSearch } from "@/hooks/useHeroSearch";
+import styles from "./Hero.module.css";
+import { useAuthState } from "@/features/auth/hooks/useAuthState";
+import { useHeroSearch } from "@/components/sections/hero/hooks/useHeroSearch";
 
-import HeroHeadline from "@/features/home/hero/components/HeroHeadline";
-import HeroStats from "@/features/home/hero/components/HeroStats";
-import HeroSearchBar from "@/features/home/hero/components/HeroSearchBar";
-import HeroPulseEntry from "@/features/home/hero/components/HeroPulseEntry";
+import HeroHeadline from "@/components/sections/hero/components/HeroHeadline";
+import HeroStats from "@/components/sections/hero/components/HeroStats";
+import HeroSearchBar from "@/components/sections/hero/components/HeroSearchBar";
+import HeroPulseEntry from "@/components/sections/hero/components/HeroPulseEntry";
 
 const AI_SUGGESTIONS = [
   "Book Doctors",

@@ -9,11 +9,11 @@ import {
 } from "framer-motion";
 import { MapPin, FlaskConical, Droplets, Shield, Search, ChevronRight , Activity, FileText} from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
-import styles from "./HeroSearchFirst.module.css";
+import styles from "./Hero.module.css";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PixelRipple from "@/components/ui/effects/PixelRipple";
-import PulseAIWorkspace from "../pulse-ai/PulseAIWorkspace";
+import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import { NeatGradient } from "@firecms/neat";
 
 const popularTags = ["chest pain", "cancer", "surgery", "liver"];

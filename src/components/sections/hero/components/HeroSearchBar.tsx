@@ -4,10 +4,10 @@ import React, { SetStateAction, Dispatch } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
 import Lottie from "lottie-react";
-import styles from "@/components/home/HeroSearchFirst.module.css";
+import styles from "@/components/sections/hero/Hero.module.css";
 import pulseAnimation from "../../../../../public/assets/pulse animation.json";
 import searchAnimation from "../../../../../public/assets/AI Searching 2.json";
-import { useHeroSearch } from "@/hooks/useHeroSearch";
+import { useHeroSearch } from "@/components/sections/hero/hooks/useHeroSearch";
 import HeroSearchDropdown from "./HeroSearchDropdown";
 
 const AI_SUGGESTIONS = [

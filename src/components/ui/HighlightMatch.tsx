@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../home/HeroSearchFirst.module.css";
+import styles from "./HighlightMatch.module.css";
 
 export default function HighlightMatch({ text, query }: { text: string; query: string }) {
   if (!query.trim()) return <span>{text}</span>;

@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Search, ChevronRight, Activity, FileText, Video, Building2 } from "lucide-react";
 import Lottie from "lottie-react";
-import styles from "@/components/home/HeroSearchFirst.module.css";
+import styles from "@/components/sections/hero/Hero.module.css";
 import pulseAnimation from "../../../../../public/assets/pulse animation.json";
 import searchAnimation from "../../../../../public/assets/AI Searching 2.json";
 import starAnimation from "../../../../../public/assets/AI Searching 2.json";
@@ -12,9 +12,9 @@ import starAnimation from "../../../../../public/assets/AI Searching 2.json";
 import DoctorCard from "@/components/ui/DoctorCard";
 import SpecialityResultCard from "@/components/ui/SpecialityResultCard";
 import HighlightMatch from "@/components/ui/HighlightMatch";
-import QuickTags from "@/features/home/hero/components/QuickTags";
+import QuickTags from "@/components/sections/hero/components/QuickTags";
 import { popularTags } from "@/data/specialities";
-import { useHeroSearch } from "@/hooks/useHeroSearch";
+import { useHeroSearch } from "@/components/sections/hero/hooks/useHeroSearch";
 
 interface HeroSearchDropdownProps {
   searchProps: ReturnType<typeof useHeroSearch>;

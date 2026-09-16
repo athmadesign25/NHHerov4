@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Play, Stethoscope, Users, Building2, Activity, Clock, CalendarCheck, Search, FileText, User, ChevronDown, MapPin, FlaskConical, Droplets, Shield } from "lucide-react";
 import styles from "./HeroSection.module.css";
 import SplitText from "@/components/ui/SplitText";
-import MagneticButton from "@/components/ui/MagneticButton";
+import MagneticButton from '@/archive/home-available/MagneticButton';
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 
