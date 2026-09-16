@@ -230,6 +230,10 @@
   margin-bottom: 28px;
   width: 100%;
   justify-content: center;
+  /* Shared 3D space for the mouse-follow tilt (see handleCardMouseMove in
+     HealthPackages.tsx) — each card's own transform only needs its
+     rotation, not a repeated perspective(...) function. */
+  perspective: 1000px;
 }
 
 /* ─── Package cards ────────────────────────────────────────────────────
@@ -296,18 +300,24 @@
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
-/* Grow-from-bottom + a lighter glassy wash (::after) on hover — bigger and
-   noticeably "lit up", but via a translucent white layer rather than a
-   blanket brightness filter, so it reads as glass catching light instead
-   of the whole photo just getting brighter. !important is load-bearing
-   here: the auto-reveal (see HealthPackages.tsx) sets an inline
-   `transform` on this same element as it blurs+grows in, and an inline
-   style otherwise beats any stylesheet rule regardless of specificity —
-   without it, hover would visibly do nothing once a card had finished
-   revealing. */
-.packageCard:hover,
+/* Grow + mouse-follow tilt is JS-driven now (handleCardMouseMove/
+   handleCardMouseLeave in HealthPackages.tsx write `transform` directly on
+   :hover/:mousemove), since a continuous tilt needs the live cursor
+   position — plain CSS :hover can't do that. Keyboard focus has no cursor
+   position to follow, so it keeps a plain scale here; !important is still
+   load-bearing for this one rule, since the auto-reveal sets an inline
+   `transform` on this same element as it blurs+grows in, and a plain
+   inline style otherwise beats any stylesheet rule regardless of
+   specificity. While actually hovered, the transition is shortened so the
+   tilt tracks the cursor snappily instead of lagging behind a 350ms ease;
+   the base (slower) transition still applies on mouseleave, for a smooth
+   settle back to neutral. */
 .packageCard:focus-visible {
   transform: scale(1.05) !important;
+}
+
+.packageCard:hover {
+  transition: transform 0.12s ease-out, filter 0.35s ease;
 }
 
 .packageCard::after {

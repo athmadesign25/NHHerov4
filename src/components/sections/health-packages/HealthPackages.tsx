@@ -154,9 +154,16 @@ const AUTO_REVEAL_STAGGER_MS = 130;
 const AUTO_REVEAL_ITEM_MS = 500;
 const AUTO_REVERSE_MS = 420;
 
-// Package card entrance: blur + grow into place, no directional slide.
+// Package card entrance: blur + grow into place, plus a small per-card
+// vertical offset so the three don't all settle from the exact same
+// height — alternating up/down rather than a uniform slide-up.
 const CARD_SCALE_FROM = 0.85;
 const CARD_BLUR_FROM_PX = 14;
+const CARD_ENTRY_Y_OFFSETS_PX = [26, -18, 22];
+
+// Mouse-follow tilt on hover: max rotation in degrees at the card's own
+// edge (cursor at dead center = 0deg). Kept small/subtle per spec.
+const TILT_MAX_DEG = 6;
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -295,6 +302,11 @@ export default function HealthPackages() {
   const autoElapsedRef = useRef(0);
   const autoRafRef = useRef<number | null>(null);
   const snapTimeoutRef = useRef<number | null>(null);
+  // True only once the forward reveal has fully settled (elapsed reached
+  // totalAutoMs) — gates the mouse-follow tilt handlers below so they
+  // never fight the entrance animation's own inline-style writes to the
+  // same element while a card is still mid-reveal.
+  const cardsSettledRef = useRef(false);
 
   const packages = PACKAGES_BY_CITY[DETECTED_CITY] ?? [];
   const hasPackages = packages.length > 0;
@@ -341,7 +353,12 @@ export default function HealthPackages() {
         const t = clamp01((elapsedMs - startMs) / AUTO_REVEAL_ITEM_MS);
         const isCard = hasPackages && i >= 1 && i <= packages.length;
         const isExplore = i === railSlots.length - 1;
-        if (isCard || isExplore) {
+        if (isCard) {
+          const cardIdx = i - 1;
+          const yOffset = CARD_ENTRY_Y_OFFSETS_PX[cardIdx % CARD_ENTRY_Y_OFFSETS_PX.length] * (1 - t);
+          el.style.transform = `translateY(${yOffset.toFixed(2)}px) scale(${CARD_SCALE_FROM + (1 - CARD_SCALE_FROM) * t})`;
+          el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
+        } else if (isExplore) {
           el.style.transform = `scale(${CARD_SCALE_FROM + (1 - CARD_SCALE_FROM) * t})`;
           el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
         } else {
@@ -369,6 +386,7 @@ export default function HealthPackages() {
     // whatever the user's scroll position does in the meantime.
     const startAutoForward = () => {
       if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
+      cardsSettledRef.current = false;
       const startTime = performance.now() - autoElapsedRef.current;
       const step = (now: number) => {
         const elapsed = Math.min(now - startTime, totalAutoMs);
@@ -378,6 +396,7 @@ export default function HealthPackages() {
           autoRafRef.current = requestAnimationFrame(step);
         } else {
           autoRafRef.current = null;
+          cardsSettledRef.current = true;
         }
       };
       autoRafRef.current = requestAnimationFrame(step);
@@ -388,6 +407,7 @@ export default function HealthPackages() {
     // slower forward pace played in reverse.
     const startAutoReverse = () => {
       if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
+      cardsSettledRef.current = false;
       const from = autoElapsedRef.current;
       if (from <= 0) {
         applyAutoReveal(0);
@@ -445,6 +465,7 @@ export default function HealthPackages() {
         if (p1raw >= GROW_COMMIT_FRACTION) {
           sectionPhaseRef.current = "full";
           autoElapsedRef.current = totalAutoMs;
+          cardsSettledRef.current = true;
         } else {
           sectionPhaseRef.current = "growing";
           autoElapsedRef.current = 0;
@@ -604,6 +625,27 @@ export default function HealthPackages() {
     };
   }, [railSlots.length]);
 
+  // Mouse-follow tilt — only once a card has actually settled (see
+  // cardsSettledRef above), so this never races the entrance animation's
+  // own writes to the same element's inline transform. .cardStack itself
+  // carries the shared `perspective` (see CSS), so each card's own
+  // transform only needs the rotation, not a repeated perspective(...).
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!cardsSettledRef.current) return;
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    const rotateY = (px - 0.5) * 2 * TILT_MAX_DEG;
+    const rotateX = -(py - 0.5) * 2 * TILT_MAX_DEG;
+    el.style.transform = `scale(1.05) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg)`;
+  };
+
+  const handleCardMouseLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!cardsSettledRef.current) return;
+    e.currentTarget.style.transform = "scale(1)";
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -693,6 +735,8 @@ export default function HealthPackages() {
                         href={`/health-packages/${pkg.id}`}
                         ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
                         className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]}`}
+                        onMouseMove={handleCardMouseMove}
+                        onMouseLeave={handleCardMouseLeave}
                       >
                         <img src={pkg.image} alt="" className={styles.packageCardImage} />
                         <div className={styles.packageCardContent}>
