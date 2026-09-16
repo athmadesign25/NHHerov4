@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import LoginModal from "@/components/auth/LoginModal";
+import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check } from "lucide-react";
