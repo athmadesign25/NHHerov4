@@ -2,10 +2,96 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import SplitText from "@/components/ui/SplitText";
+import { ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX, Quote } from "lucide-react";
 import styles from "./PatientStories.module.css";
-import { initialCards } from "./patient-stories.data";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
+
+const initialCards = [
+  {
+    id: "card-1",
+    name: "Sunitha Swami",
+    condition: "Knee Replacement Surgery",
+    overview: "Exceptional cardiac care and seamless recovery guidance from the expert doctors.",
+    image: "/assets/patient_1.png",
+    video: "/0_Vertical_Video_Sofa_720x1280.mp4",
+    objectPosition: "center",
+    captions: [
+      "I suffered from knee pain for 5 years.",
+      "The team at Narayana Health changed my life.",
+      "Now I can walk pain-free every day!",
+    ],
+  },
+  {
+    id: "card-2",
+    name: "Karthik R",
+    condition: "Neurosurgery",
+    overview: "The compassionate care and precision treatment gave our family a second chance at life.",
+    image: "/patient_omkar.png",
+    video: "/4887321_Young_Cute_1280x720.mp4",
+    objectPosition: "center",
+    captions: [
+      "gave my family a second chance at life",
+      "The care was exceptional from diagnosis to recovery.",
+      "Every step was handled with utmost precision.",
+    ],
+  },
+  {
+    id: "card-3",
+    name: "Madhuri Sen",
+    condition: "Cardio Surgery",
+    overview: "World-class healthcare facility with a dedicated and caring surgical team.",
+    image: "/assets/patient_in_2.png",
+    video: "/0_Vertical_Video_Phone_720x1280.mp4",
+    objectPosition: "center",
+    captions: [
+      "My cardiac surgery recovery went smoothly.",
+      "The doctors were world-class and caring.",
+      "Thank you Narayana Health for my health!",
+    ],
+  },
+  {
+    id: "card-4",
+    name: "Priya & Ramesh Kumar",
+    condition: "Cardiac Surgery",
+    overview: "Finding the right hospital was critical for us, and Narayana Health gave us full confidence.",
+    image: "/assets/patient_in_3.png",
+    video: "/0_Man_Person_1280x720.mp4",
+    objectPosition: "75% center",
+    captions: [
+      "Finding the right hospital was critical for us.",
+      "Narayana Health gave us complete confidence.",
+      "Their advanced facilities are truly world-class.",
+    ],
+  },
+  {
+    id: "card-5",
+    name: "Anita Desai",
+    condition: "Liver Transplant",
+    overview: "Medical excellence and empathy at its best throughout our transplant journey.",
+    image: "/assets/patient_in_4.png",
+    video: "/0_Woman_Smiling_1280x720.mp4",
+    objectPosition: "center",
+    captions: [
+      "The transplant team guided us at every step.",
+      "Medical excellence and empathy at its best.",
+      "I am enjoying life fully with my family.",
+    ],
+  },
+  {
+    id: "card-6",
+    name: "Mohammed Al-Farsi",
+    condition: "Bone Marrow Transplant",
+    overview: "International patient care desk made our medical travel and treatment completely seamless.",
+    image: "/assets/patient_in_1.png",
+    video: "/0_Woman_Talking_672x1280.mp4",
+    objectPosition: "center",
+    captions: [
+      "I traveled internationally for my care here.",
+      "The patient desk made everything seamless.",
+      "Narayana Health is truly extraordinary.",
+    ],
+  },
+];
 
 const CARDS_COUNT = initialCards.length;
 const CARD_STEP = 572; // 528px card width + 44px gap
@@ -400,12 +486,9 @@ export default function PatientStories() {
               <div className={styles.eyebrowDash} />
             </motion.div>
 
-            <SplitText
-              text="Lives Changed, Stories Told"
-              tag="h2"
-              className={`section-title ${styles.sectionTitle}`}
-              delay={0.25}
-            />
+            <h2 className={`section-title ${styles.sectionTitle}`}>
+              <TextSweepEffect words={["Lives Changed, Stories Told"]} sweepMs={1200} finalColor="#FFFFFF" />
+            </h2>
 
             <motion.p
               className={styles.sectionSubtitle}

@@ -12,6 +12,7 @@ import { ChevronRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 import { COE_SPECIALITIES as SPECIALITIES } from "@/data/specialities";
 
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 
 const RollingNumber = ({ value, isHovered }: { value: string; isHovered: boolean }) => {
@@ -60,7 +61,7 @@ function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
     setIsHovered(true);
     if (videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -297,40 +298,7 @@ export default function CentreOfExcellence() {
             </motion.div>
 
             <h2 className={styles.sectionTitle}>
-              {/* Two groups slide in from above as their own units — first
-                  "40+ Specialities.", then "World-Class Care." Each one is
-                  red while it's still sliding/blurring in, then settles to
-                  the resting dark shade once that motion finishes (color
-                  transitions on a delay so it settles after the slide/blur
-                  completes). */}
-              <motion.span
-                className={styles.titleGroup}
-                initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{
-                  opacity: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                  y: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                  filter: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                  color: { duration: 0.4, delay: 0.45, ease: [0.16, 1, 0.3, 1] },
-                }}
-              >
-                40+ Specialities.
-              </motion.span>{" "}
-              <motion.span
-                className={styles.titleGroup}
-                initial={{ opacity: 0, y: -28, filter: "blur(10px)", color: "#ED1C24" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", color: "#000000" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{
-                  opacity: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
-                  y: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
-                  filter: { duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] },
-                  color: { duration: 0.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] },
-                }}
-              >
-                World-Class Care.
-              </motion.span>
+              <TextSweepEffect words={["40+ Specialties, World-class care"]} className={styles.titleGroup} sweepMs={1200} />
             </h2>
 
             <p className={styles.sectionSubtitle}>

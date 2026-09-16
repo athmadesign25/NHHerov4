@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight } from "lucide-react";
 import styles from "./FeaturedHospitals.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 const hospitals = [
   {
@@ -43,7 +44,9 @@ export default function FeaturedHospitals() {
         <div className={`section-header ${styles.sectionHeader}`}>
           <div>
             <div className="section-eyebrow">Our Facilities</div>
-            <h2 className="section-title">Featured Hospitals</h2>
+            <h2 className="section-title">
+              <TextSweepEffect words={["Featured Hospitals"]} sweepMs={1200} />
+            </h2>
             <p className="section-subtitle">
               State-of-the-art facilities designed for your safety and comfort.
             </p>
