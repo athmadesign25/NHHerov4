@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Search, X, MapPin, ChevronDown } from "lucide-react";
+import React from "react";
+import { Search, X } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { SearchResultsData, NH_LOCATIONS } from "./searchData";
+import { SearchResultsData } from "./searchData";
+import LocationSelector from "./LocationSelector";
 import PrimaryResults from "./PrimaryResults";
 import SecondaryResults from "./SecondaryResults";
 import TertiaryResults from "./TertiaryResults";
@@ -29,64 +30,16 @@ export default function SearchResultsCanvas({
   onSelectSpecialtyTag,
   onAskPulse,
 }: SearchResultsCanvasProps) {
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const locationRef = useRef<HTMLDivElement>(null);
-
-  // Close location menu on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (locationRef.current && !locationRef.current.contains(e.target as Node)) {
-        setIsLocationOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <div className={styles.resultsContainer}>
       {/* Top Header Row: Location Pill + Pulse AI Badge + Close Button */}
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
-          <div ref={locationRef} style={{ position: "relative" }}>
-            <button
-              type="button"
-              className={styles.locationPill}
-              onClick={() => setIsLocationOpen(!isLocationOpen)}
-              aria-expanded={isLocationOpen}
-              aria-label={`Location: ${selectedLocation}`}
-            >
-              <MapPin size={13} className={styles.locationPinIcon} />
-              <span>{selectedLocation}</span>
-              <ChevronDown
-                size={13}
-                style={{
-                  transform: isLocationOpen ? "rotate(180deg)" : "none",
-                  transition: "transform 0.2s",
-                }}
-              />
-            </button>
-
-            {isLocationOpen && (
-              <div className={styles.locationMenu}>
-                {NH_LOCATIONS.map((loc) => (
-                  <button
-                    key={loc}
-                    type="button"
-                    className={`${styles.locationMenuItem} ${
-                      loc === selectedLocation ? styles.locationMenuItemSelected : ""
-                    }`}
-                    onClick={() => {
-                      onSelectLocation(loc);
-                      setIsLocationOpen(false);
-                    }}
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Location Selector */}
+          <LocationSelector
+            selectedLocation={selectedLocation}
+            onSelectLocation={onSelectLocation}
+          />
 
           {/* Pulse AI Badge */}
           <div className={styles.pulseBadge}>

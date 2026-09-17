@@ -529,20 +529,168 @@
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  min-width: 160px;
-  background: rgba(18, 24, 38, 0.94);
-  backdrop-filter: blur(20px);
+  width: 248px;
+  background: rgba(18, 24, 38, 0.95);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
-  padding: 5px;
-  z-index: 100;
+  border-radius: 12px;
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+  padding: 8px;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: locationMenuFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes locationMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.locationCurrentAction {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #00C4FF;
+  background: rgba(0, 196, 255, 0.06);
+  border: 1px solid rgba(0, 196, 255, 0.16);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.locationCurrentAction:hover {
+  background: rgba(0, 196, 255, 0.14);
+  border-color: rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+}
+
+.locationCurrentAction:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.locationNavIcon {
+  color: #00C4FF;
+  flex-shrink: 0;
+}
+
+.locationDetectingSpinner {
+  color: #00C4FF;
+  animation: spinDetecting 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spinDetecting {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.locationStatusNote {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #F87171;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: rgba(239, 68, 68, 0.08);
+  margin-top: 2px;
+}
+
+.locationDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+  width: 100%;
+}
+
+.locationSearchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  margin-bottom: 4px;
+}
+
+.locationSearchWrapper:focus-within {
+  border-color: rgba(0, 196, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.locationSearchIcon {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.locationSearchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12px;
+  color: #FFFFFF;
+  width: 100%;
+}
+
+.locationSearchInput::placeholder {
+  color: #64748B;
+}
+
+.locationScrollList {
+  max-height: 180px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding-right: 2px;
+}
+
+.locationScrollList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.locationScrollList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.locationMenuHeader {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #64748B;
+  padding: 6px 8px 3px;
+  text-transform: uppercase;
+}
+
+.locationSubTag {
+  margin-left: auto;
+  font-size: 10.5px;
+  color: #64748B;
+  font-weight: 400;
 }
 
 .locationMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 7px 10px;
   border-radius: 6px;
   font-size: 12.5px;
@@ -552,6 +700,7 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.15s ease;
+  width: 100%;
 }
 
 .locationMenuItem:hover,

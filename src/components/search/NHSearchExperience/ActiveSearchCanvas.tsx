@@ -2,11 +2,12 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { 
-  Paperclip, Mic, ArrowRight, X, MapPin, ChevronDown, 
+  Paperclip, Mic, ArrowRight, X, 
   User, Heart, Sparkles, CornerDownLeft, Command
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { NH_LOCATIONS, PredictiveState, getPredictiveCompletion } from "./searchData";
+import { PredictiveState, getPredictiveCompletion } from "./searchData";
+import LocationSelector from "./LocationSelector";
 
 interface ActiveSearchCanvasProps {
   query: string;
@@ -30,9 +31,7 @@ export default function ActiveSearchCanvas({
   onSelectActionPill,
 }: ActiveSearchCanvasProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
-  const locationRef = useRef<HTMLDivElement>(null);
 
   // Compute live predictive completion whenever user types
   const prediction: PredictiveState | null = query.trim()
@@ -42,17 +41,6 @@ export default function ActiveSearchCanvas({
   // Auto-focus input when opening
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
-
-  // Close location dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (locationRef.current && !locationRef.current.contains(e.target as Node)) {
-        setIsLocationOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Keyboard handler for Tab completion, arrow navigation, enter submit
@@ -108,46 +96,11 @@ export default function ActiveSearchCanvas({
       {/* Top Header Row: Location Pill + Pulse AI Badge + Close button */}
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
-          {/* Location Selector Pill */}
-          <div ref={locationRef} style={{ position: "relative" }}>
-            <button
-              type="button"
-              className={styles.locationPill}
-              onClick={() => setIsLocationOpen(!isLocationOpen)}
-              aria-expanded={isLocationOpen}
-              aria-label={`Current location: ${selectedLocation}`}
-            >
-              <MapPin size={13} className={styles.locationPinIcon} />
-              <span>{selectedLocation}</span>
-              <ChevronDown
-                size={13}
-                style={{
-                  transform: isLocationOpen ? "rotate(180deg)" : "none",
-                  transition: "transform 0.2s",
-                }}
-              />
-            </button>
-
-            {isLocationOpen && (
-              <div className={styles.locationMenu}>
-                {NH_LOCATIONS.map((loc) => (
-                  <button
-                    key={loc}
-                    type="button"
-                    className={`${styles.locationMenuItem} ${
-                      loc === selectedLocation ? styles.locationMenuItemSelected : ""
-                    }`}
-                    onClick={() => {
-                      onSelectLocation(loc);
-                      setIsLocationOpen(false);
-                    }}
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          {/* Location Selector */}
+          <LocationSelector
+            selectedLocation={selectedLocation}
+            onSelectLocation={onSelectLocation}
+          />
 
           {/* Pulse AI Badge */}
           <div className={styles.pulseBadge}>

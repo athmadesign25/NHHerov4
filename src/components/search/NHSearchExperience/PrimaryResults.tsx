@@ -49,7 +49,7 @@ export default function PrimaryResults({
                 href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
                 className={styles.bookApptBtn}
               >
-                <span>Book</span>
+                <span>{doc.consultationType === "video" ? "Book Video" : "Book"}</span>
                 <ArrowRight size={12} />
               </Link>
             </div>

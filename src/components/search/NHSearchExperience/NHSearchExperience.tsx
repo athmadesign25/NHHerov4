@@ -313,6 +313,17 @@ export default function NHSearchExperience({
     setSearchState("active");
   };
 
+  // Handle location change dynamically from chip
+  const handleSelectLocation = async (newLocation: string) => {
+    setSelectedLocation(newLocation);
+
+    // If currently viewing results, recalculate results immediately while keeping query unchanged
+    if (searchState === "results") {
+      const updated = await getSearchResults(query || "I have chest pain and need a doctor", newLocation);
+      setResultsData(updated);
+    }
+  };
+
   // Close search (Active/Results → Landing)
   const handleClose = () => {
     setSearchState("landing");
@@ -432,7 +443,7 @@ export default function NHSearchExperience({
         <DefaultSearchPrompt
           onActivate={handleActivate}
           selectedLocation={selectedLocation}
-          onSelectLocation={setSelectedLocation}
+          onSelectLocation={handleSelectLocation}
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
           promptOpacity={hasScroll ? promptOpacity : undefined}
@@ -523,7 +534,7 @@ export default function NHSearchExperience({
                     onSubmit={handleSubmit}
                     onClose={handleClose}
                     selectedLocation={selectedLocation}
-                    onSelectLocation={setSelectedLocation}
+                    onSelectLocation={handleSelectLocation}
                     activePill={activePill}
                     onSelectActionPill={handleSelectActionPill}
                   />
@@ -556,7 +567,7 @@ export default function NHSearchExperience({
                     onEditSearch={handleEditSearch}
                     onClose={handleClose}
                     selectedLocation={selectedLocation}
-                    onSelectLocation={setSelectedLocation}
+                    onSelectLocation={handleSelectLocation}
                     onSelectSpecialtyTag={handleSelectSpecialtyTag}
                     onAskPulse={handleAskPulse}
                   />

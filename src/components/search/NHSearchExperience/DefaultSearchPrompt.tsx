@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { motion, MotionValue } from "framer-motion";
-import { Paperclip, Mic, ArrowUp, MapPin, ChevronDown, User, Heart, Search } from "lucide-react";
+import { Paperclip, Mic, ArrowUp, User, Heart, Search } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { NH_LOCATIONS } from "./searchData";
+import LocationSelector from "./LocationSelector";
 
 interface DefaultSearchPromptProps {
   onActivate: () => void;
@@ -31,20 +31,6 @@ export default function DefaultSearchPrompt({
   controlsHeight,
   controlsMarginBottom,
 }: DefaultSearchPromptProps) {
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const locationRef = useRef<HTMLDivElement>(null);
-
-  // Close location menu on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (locationRef.current && !locationRef.current.contains(e.target as Node)) {
-        setIsLocationOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <div className={styles.landingContainer} style={{ height: "100%", justifyContent: "center" }}>
       {/* Top row: Primary Prompt + Pulse AI Identity (aligned to same outer boundary) */}
@@ -145,49 +131,10 @@ export default function DefaultSearchPrompt({
           </button>
 
           {/* Location Context Selector - the ONLY outlined contextual control */}
-          <div className={styles.locationPillWrapper} ref={locationRef} style={{ position: "relative" }}>
-            <button
-              type="button"
-              className={styles.locationPill}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsLocationOpen(!isLocationOpen);
-              }}
-              aria-expanded={isLocationOpen}
-              aria-label={`Select city, current city is ${selectedLocation}`}
-            >
-              <MapPin size={13} className={styles.locationPinIcon} />
-              <span>{selectedLocation}</span>
-              <ChevronDown
-                size={12}
-                style={{
-                  transform: isLocationOpen ? "rotate(180deg)" : "none",
-                  transition: "transform 0.2s",
-                }}
-              />
-            </button>
-
-            {isLocationOpen && (
-              <div className={styles.locationMenu}>
-                {NH_LOCATIONS.map((loc) => (
-                  <button
-                    key={loc}
-                    type="button"
-                    className={`${styles.locationMenuItem} ${
-                      loc === selectedLocation ? styles.locationMenuItemSelected : ""
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectLocation(loc);
-                      setIsLocationOpen(false);
-                    }}
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <LocationSelector
+            selectedLocation={selectedLocation}
+            onSelectLocation={onSelectLocation}
+          />
 
           {/* Quick Action: Find a doctor - lightweight icon + text, no box */}
           <button
