@@ -19,6 +19,12 @@ export default function FloatingQuickActions() {
       const showQuickActions = window.scrollY >= window.innerHeight * 0.38;
       setIsQuickActionsVisible(showQuickActions);
 
+
+      // Global Pulse FAB appears immediately right after hero search section blurs out (180px)
+      const showPulseFab = window.scrollY >= 180;
+      setIsPulseFabVisible(showPulseFab);
+
+
       if (!showQuickActions || !containerRef.current) return;
 
       // Temporarily disable pointer events on container to sample element underneath
@@ -41,7 +47,13 @@ export default function FloatingQuickActions() {
             break;
           }
         }
-        return detectedTheme === "dark";
+        // HealthPackages marks itself data-nav-theme="dark" (same as every
+        // other dark section, for the navbar's own separate probe), but
+        // this component's own text should stay its default blue over it
+        // specifically rather than switching to white like it does over
+        // every other dark section.
+        const isOverPackages = elements.some((el) => el.closest("#health-packages"));
+        return detectedTheme === "dark" && !isOverPackages;
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;
@@ -129,6 +141,41 @@ export default function FloatingQuickActions() {
           <span className={styles.actionLabel}>Pulse AI<br />Search</span>
         </button>
       </div>
+
+
+      {/* Global Pulse Button FAB (Appears right after hero search container disappears) */}
+      <AnimatePresence>
+        {isPulseFabVisible && (
+          <div className={fabStyles.fabContainer}>
+            <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
+              <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
+              <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
+            </div>
+
+            <motion.button
+              key="floating-pulse-fab-global"
+              type="button"
+              className={fabStyles.fabButton}
+              onClick={() => setIsPulseWorkspaceOpen(true)}
+              aria-label="Open Pulse AI"
+              initial={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className={fabStyles.pulseAnim}>
+                <Lottie animationData={pulseAnimation} loop={true} style={{ width: "100%", height: "100%" }} />
+              </div>
+            </motion.button>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Pulse AI Workspace Modal */}
+      {isPulseWorkspaceOpen && (
+        <PulseAIWorkspace onClose={() => setIsPulseWorkspaceOpen(false)} />
+      )}
+
     </>
   );
 }

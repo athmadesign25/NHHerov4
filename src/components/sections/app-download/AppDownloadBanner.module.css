@@ -207,7 +207,6 @@
   border: 1.327px solid rgba(15, 23, 42, 0.10);
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
@@ -272,10 +271,14 @@
 
 .trustStackPosition {
   left: 0;
+  margin-top: -212px;
+  margin-left: 160px;
 }
 
 .storesColPosition {
   right: 0;
+  margin-top: -140px;
+  margin-right: 120px;
 }
 
 /* Left-side trust stack: mirrors the store column's own entrance timing/
@@ -380,10 +383,20 @@
 /* White glassy card, matching .featurePill's own glass treatment above —
    a real backdrop-blur rather than a flat tint, so these read as floating
    glass chips over the phone/background rather than plain white boxes. */
+/* Fixed width (not sized to each one's own content) so the QR card and
+   the two wider badge images all read as one consistent-width stack
+   instead of QR being visibly narrower than the badges beside it;
+   justify-content centers each one's own (narrower) content inside it. */
 .storeContainer {
   display: flex;
   align-items: center;
-  padding: 8px 14px;
+  justify-content: center;
+  width: 156px;
+  box-sizing: border-box;
+  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
+     rectangle) so the card just hugs its content evenly instead of
+     reading as padded out sideways. */
+  padding: 8px;
   border-radius: 12px;
   /* Subtle "white refraction" edge rather than a solid stroke — a soft
      white border with no shadow at all, so the card reads as glass sitting
@@ -391,7 +404,6 @@
   border: 1px solid rgba(100, 120, 150, 0.20);
   background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   transition: all 0.2s ease;
 }
 
@@ -404,16 +416,22 @@
 .qrContainer {
   flex-direction: column;
   gap: 6px;
-  padding: 10px 14px;
+  padding: 8px;
 }
 
 .qrImg {
   filter: invert(1);
 }
 
+/* Was turning near-opaque white on hover (0.75 alpha) — barely
+   distinguishable from the equally-white border, which is why the border
+   effectively vanished. Shifts darker instead (a soft navy tint) while
+   staying translucent glass rather than trending toward solid, and the
+   border darkens right along with it so it stays visible against the
+   now-different background instead of reading as white-on-near-white. */
 .storeContainer:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.22);
 }
 
 .storeBadge {
@@ -482,45 +500,122 @@
    in the TSX) rather than fixed, since it travels between the two. z-index
    is high enough to clear bottomBlock's own content (the phone included)
    since .contentStack's children aren't otherwise positioned/stacked. */
+/* Desktop overrides moved from JS inline styles */
+.handImage {
+  width: 700px;
+  height: auto;
+  object-fit: contain;
+  clip-path: inset(0 0 4% 0);
+}
+
+.handOverlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 700px;
+  height: auto;
+  object-fit: contain;
+  clip-path: inset(0 0 4% 0);
+  z-index: 20;
+}
+
+.phoneWrapper {
+  margin-top: -30px;
+  margin-bottom: -45px;
+}
+
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none !important;
+}
+
 @media (max-width: 1024px) {
-  .contentStack {
-    padding: 32px 24px 40px;
+  .desktopOnly {
+    display: none !important;
   }
+  
+  .mobileOnly {
+    display: block !important;
+  }
+
+  .contentStack {
+    padding: 32px 16px 0px;
+    gap: 32px;
+  }
+  
   .title {
     white-space: normal;
+    font-size: 36px;
+    line-height: 1.1;
   }
-  /* Autoplay-only carousel, no manual controls — the pill already hugs its
-     own content; just cap long feature titles so they don't overflow a
-     narrow viewport. */
-  .pillText {
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 14px;
-  }
-  /* Both side stacks revert to normal flow here (desktop pulls them out
-     of flow via absolute positioning so their width can never drag the
-     phone off-center — not needed once everything just stacks). */
+  
+  /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
     gap: 24px;
+    align-items: center;
+    width: 100%;
   }
-  .trustStackPosition,
+
+  /* Reset phone wrapper constraints */
+  .handImage, .handOverlayImage {
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .phoneWrapper {
+    order: 3;
+    margin-top: 0 !important;
+    margin-bottom: -24px !important;
+    transform: scale(0.95);
+    transform-origin: bottom center;
+  }
+
+  /* Mobile Caption under the phone */
+  .mobileCaption {
+    order: 1;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #334155;
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    min-width: 280px;
+  }
+
+  /* Reset Stores Position */
   .storesColPosition {
+    order: 2;
     position: relative;
     left: auto;
     right: auto;
     top: auto;
     transform: none;
+    margin: 0 !important;
+    width: 100%;
   }
-  .trustStack,
+  
+  /* Place Store Badges side-by-side on mobile */
   .storesCol {
-    align-items: center;
-  }
-  .trustUnit {
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
+    gap: 16px;
   }
-  .phoneCarouselUnit {
-    order: -1;
+  
+  .storeContainer {
+    padding: 6px;
+  }
+  
+  .storeBadge img {
+    height: 32px; /* Slightly smaller for mobile side-by-side */
   }
 }
+

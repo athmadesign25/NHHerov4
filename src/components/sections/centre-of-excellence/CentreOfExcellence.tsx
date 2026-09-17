@@ -8,7 +8,6 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import { ChevronRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 import { COE_SPECIALITIES as SPECIALITIES } from "@/data/specialities";
 
@@ -107,7 +106,8 @@ function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
         )}
         <span className={styles.specialityName}>{spec.name}</span>
         <span className={styles.cardAction}>
-          Explore <ChevronRight size={14} className={styles.actionArrow} />
+          Explore
+          <span className={styles.actionUnderline} aria-hidden />
         </span>
       </div>
     </a>
@@ -143,7 +143,7 @@ function PodiumColumnTrack({
 }) {
   const isDesktop = screenMode === "desktop";
   const isTablet = screenMode === "tablet";
-  const yMultiplier = isDesktop ? 1.0 : isTablet ? 0.45 : 0;
+  const yMultiplier = isDesktop ? 1.0 : 0.45;
 
   // Asymmetric continuous parallax rate per column (Odd columns glide faster, Even columns lag gracefully)
   const yOffsets = [
@@ -203,77 +203,22 @@ export default function CentreOfExcellence() {
     offset: ["start 90%", "end 10%"],
   });
 
-  // 2. Seamless bg handoff to Patient Stories: fades in a solid #031224 plate
-  // (rendered behind the grid/CTA via negative z-index, so only empty
-  // background space is affected) starting the instant "View All Specialties"
-  // enters from the bottom of the viewport, and fully resolving to solid
-  // before Patient Stories' own background can surface underneath it.
-  // Measured in raw scroll pixels (not viewport-relative %) because the
-  // buffer between the button and the section boundary is a fixed CSS
-  // distance — a percentage-based range would over/undershoot depending on
-  // viewport height. Fully reversible on scroll-up.
-  const [handoffRange, setHandoffRange] = useState<[number, number]>([0, 1]);
+  // 2. Seamless bg handoff to Patient Stories:
+  // Fades the background to dark *just before* the button scrolls into view.
+  const { scrollYProgress: handoffProgress } = useScroll({
+    target: gridSectionRef,
+    offset: ["end 130%", "end 100%"],
+  });
+  const handoffOpacity = useTransform(handoffProgress, [0, 1], [0, 1]);
 
-  // Subtle dim (partial opacity + light blur, never a full fade-out) for
-  // the grid cards and the CTA button as the background goes solid —
-  // gated to only start once Patient Stories' own title unit has scrolled
-  // a third of the way up the viewport (measured from the bottom), not
-  // from the moment the button first appears. Ends in step with the
-  // handoff plate reaching fully solid (handoffRange's own end), so
-  // everything settles into its "dark mode" look together.
-  const [dimRange, setDimRange] = useState<[number, number]>([0, 1]);
-
-  useEffect(() => {
-    const SAFETY_PX = 48; // margin so the plate is solid before the boundary hits
-    const MIN_RANGE_PX = 80; // guards against a degenerate/inverted range
-    const MIN_DIM_RANGE_PX = 100; // dim needs at least this much scroll to feel eased, not snapped
-
-    const measure = () => {
-      const btn = viewAllBtnRef.current;
-      const section = gridSectionRef.current;
-      if (!btn || !section) return;
-
-      const vh = window.innerHeight;
-      const btnTop = btn.getBoundingClientRect().top + window.scrollY;
-      const sectionBottom = section.getBoundingClientRect().bottom + window.scrollY;
-
-      const fadeStart = btnTop - vh; // button's top edge touches viewport bottom
-      const boundary = sectionBottom - vh; // section's bottom touches viewport bottom (Patient Stories about to surface)
-      const fadeEnd = Math.max(fadeStart + MIN_RANGE_PX, boundary - SAFETY_PX);
-
-      setHandoffRange([fadeStart, fadeEnd]);
-
-      // Gate the dim on Patient Stories' own title unit reaching a third
-      // of the way up the viewport (from the bottom) — i.e. its top edge
-      // crossing the line at 2/3 of the viewport height. The dim only ever
-      // starts at that exact point; the end is whichever comes later
-      // between the background finishing its handoff (fadeEnd) or a
-      // minimum scroll distance so the transition never snaps instantly.
-      const patientTitleUnit = document.getElementById("patient-stories-title-unit");
-      const titleUnitTop = patientTitleUnit
-        ? patientTitleUnit.getBoundingClientRect().top + window.scrollY
-        : btnTop - vh / 2; // fallback if the element isn't mounted yet
-      const dimStart = titleUnitTop - (vh - vh / 3);
-      const dimEnd = Math.max(fadeEnd, dimStart + MIN_DIM_RANGE_PX);
-      setDimRange([dimStart, dimEnd]);
-    };
-
-    measure();
-    window.addEventListener("resize", measure);
-    const settleTimer = setTimeout(measure, 500);
-    return () => {
-      window.removeEventListener("resize", measure);
-      clearTimeout(settleTimer);
-    };
-  }, []);
-
-  const { scrollY } = useScroll();
-  const handoffOpacity = useTransform(scrollY, handoffRange, [0, 1]);
-
-  // Subtle, partial dim — opacity only eases down to 0.6 and blur only to
-  // 5px, never fully hiding the grid/CTA (see dimRange above for timing).
-  const dimOpacity = useTransform(scrollY, dimRange, [1, 0.6]);
-  const dimBlurPx = useTransform(scrollY, dimRange, [0, 5]);
+  // 3. Grid Blur & Dim:
+  // Starts dimming only after the button has scrolled high up the viewport.
+  const { scrollYProgress: dimProgress } = useScroll({
+    target: gridSectionRef,
+    offset: ["end 70%", "end 30%"],
+  });
+  const dimOpacity = useTransform(dimProgress, [0, 1], [1, 0.6]);
+  const dimBlurPx = useTransform(dimProgress, [0, 1], [0, 5]);
   const dimBlur = useTransform(dimBlurPx, (v) => `blur(${v}px)`);
 
   return (
@@ -329,7 +274,7 @@ export default function CentreOfExcellence() {
       <div ref={gridSectionRef} className={styles.gridSection} data-nav-theme="dark">
         <div className={styles.gridAnimatedWrapper}>
           <div ref={columnsContainerRef} className={styles.columnsContainer}>
-            {COLUMN_SPECIALITIES.map((items, colIdx) => (
+            {(screenMode === "desktop" ? COLUMN_SPECIALITIES : COLUMN_SPECIALITIES.slice(0, 2)).map((items, colIdx) => (
               <PodiumColumnTrack
                 key={colIdx}
                 colIndex={colIdx}
@@ -351,7 +296,6 @@ export default function CentreOfExcellence() {
               style={{ opacity: dimOpacity, filter: dimBlur }}
             >
               View All Specialties
-              <ChevronRight size={16} />
             </motion.a>
           </div>
 

@@ -49,16 +49,19 @@
   height: 100%;
   object-fit: cover;
   transform: scale(1.14);
+  filter: brightness(1.1) saturate(1.1);
   will-change: transform;
 }
 
-/* Subtle vertical vignette, always on */
+/* Subtle vertical vignette, always on. Top stop darkened (from 0.32) so
+   the title/eyebrow read more clearly against the video — already a
+   smooth fade to 0% by 22%, so darkening it doesn't introduce any cut. */
 .scrimBase {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(4, 18, 43, 0.32) 0%,
+    rgba(4, 18, 43, 0.55) 0%,
     rgba(4, 18, 43, 0) 22%,
     rgba(4, 18, 43, 0) 78%,
     rgba(4, 18, 43, 0.42) 100%
@@ -67,196 +70,288 @@
   z-index: 1;
 }
 
-/* Keeps the left-column copy legible from the very first frame */
-.scrimLeft {
+/* Progressive blur behind the title/eyebrow/USP row: several full-bleed
+   backdrop-blur layers, each masked to fade out at a different depth, so
+   the blur is strongest right behind the text and dissolves to nothing
+   well before the cards — no single layer has a hard edge of its own
+   (each one's own mask already fades to transparent), so the composite
+   never reads as a "cut" the way one flat blurred box would. */
+.titleBlur {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    97deg,
-    rgba(4, 18, 43, 0.95) 0%,
-    rgba(4, 18, 43, 0.88) 30%,
-    rgba(4, 18, 43, 0.46) 56%,
-    rgba(4, 18, 43, 0) 78%
-  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.titleBlurLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.titleBlurLayer1 {
+  backdrop-filter: blur(22px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+}
+
+.titleBlurLayer2 {
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+}
+
+.titleBlurLayer3 {
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+}
+
+.titleBlurLayer4 {
+  backdrop-filter: blur(3px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Always-on decorative wash spanning the full frame: a red accent sweep
+   plus a deep-navy corner glow, per the Figma spec. Full height (not
+   confined to a hard-edged band) so each gradient's own long fade-out is
+   what dissolves it to nothing — there's no box boundary of its own to
+   visually "cut" against. Flipped vertically (scaleY): the literal Figma
+   values put the warm glow in the bottom-left corner — mirroring top<->
+   bottom moves it to the top-left instead, without touching which side
+   (left vs right) it sits on. */
+.topOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(13deg, rgba(255, 54, 57, 0.30) -31.94%, rgba(152, 15, 17, 0) 33.58%),
+    linear-gradient(97deg, rgba(5, 22, 50, 0.50) 19.03%, rgba(6, 24, 56, 0.47) 27.59%, rgba(9, 40, 90, 0.30) 62.01%, rgba(15, 67, 152, 0) 91.02%);
+  transform: scaleY(-1);
   pointer-events: none;
   z-index: 2;
 }
 
-/* Flat dulling layer — JS drives opacity 0 -> 1 across phase 2 */
-.scrimDull {
+/* Diagonal navy wash that deepens as the card row finishes revealing — JS
+   drives opacity 0 -> 0.7 across phase 2 (see scrimDullRef in the TSX).
+   Pinned to the BOTTOM half of the frame only — previously this was a
+   full-height `inset: 0`, which let its dark-on-the-left diagonal wash
+   bleed all the way up behind the title/eyebrow as it faded in, reading
+   as a stray "gradient on the left" nowhere near the cards it's actually
+   meant to sit behind.
+
+   Its own top edge is masked to fade in over the first ~40% of the box
+   instead of starting at full strength immediately — since the JS-driven
+   opacity applies uniformly across the whole box, without this the wash
+   would snap from "absent" to "0.7 everywhere" right at this box's top
+   edge (the frame's exact halfway line), reading as a hard horizontal
+   cut. The fade-in makes that boundary dissolve instead of cutting. */
+.bottomOverlay {
   position: absolute;
-  inset: 0;
-  background: rgba(4, 18, 43, 0.62);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
   opacity: 0;
   pointer-events: none;
   z-index: 3;
   will-change: opacity;
 }
 
-/* ─── Grid: wide left column, fixed-width right rail ─────────────────── */
+/* ─── Centered content column ─────────────────────────────────────────── */
 .grid {
   position: relative;
   z-index: 10;
   height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 372px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 80px;
-  max-width: 1320px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 56px;
+  padding: 110px 56px 56px;
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform;
 }
 
-.leftCol {
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: #ffffff;
   will-change: transform;
 }
 
 /* Plain layout containers now — the sequential word/line/item reveal (see
-   HealthPackages.tsx's RevealTitleWords, .subLine and .uspItem motion
-   elements) is driven per-element via Framer Motion's `animate` prop keyed
-   off the `textRevealed` boolean, not by JS setting opacity/transform/
-   filter on these wrapper divs as a whole. */
-.titleGroup,
-.subGroup {
+   HealthPackages.tsx's RevealTitleWords and .uspItem motion elements) is
+   driven per-element via Framer Motion's `animate` prop keyed off the
+   `textRevealed` boolean, not by JS setting opacity/transform/filter on
+   these wrapper divs as a whole. */
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* Eyebrow + dash slide in from above together as one unit, first in the
-   left column's reveal sequence — see the `eyebrowUnit` motion.div in
-   HealthPackages.tsx. */
+   column's reveal sequence — see the `eyebrowUnit` motion.div in
+   HealthPackages.tsx. Uses the global .section-eyebrow for layout
+   (centered, own dash) since this section is centered now, unlike the old
+   two-column layout that needed a left-aligned override — just recolors
+   the text white for this dark background (the global default is the
+   brand blue, meant for light sections). */
 .eyebrowUnit {
   will-change: transform, opacity, filter;
 }
 
-/* Left-aligned, white variant of the project's standard eyebrow-with-dash
-   (see PatientStories' .eyebrowText/.eyebrowDash for the same pattern).
-   The global .section-eyebrow class also draws its own centered ::after
-   dash — hidden here since this variant supplies its own single left-
-   aligned one below instead. */
-.eyebrowOnDark {
-  color: #ffffff !important;
-  margin: 0 0 4px !important;
-  align-items: flex-start !important;
-}
-
-.eyebrowOnDark::after {
-  display: none;
-}
-
-.eyebrowDash {
-  width: 24px;
-  height: 2px;
-  background: var(--color-emergency, #ed1c24);
-  margin: 4px 0 20px;
+.eyebrowUnit :global(.section-eyebrow) {
+  color: #ffffff;
 }
 
 .title {
-  font-size: clamp(34px, 4vw, 54px);
+  font-size: 42px;
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.025em;
   color: #ffffff;
+  text-align: center;
   max-width: none;
-  margin: 0 0 22px;
+  margin: 0;
 }
 
-.sub {
-  font-size: 16px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.78);
-  /* Wide enough that each sentence (each its own .subLine) stays on one
-     line — narrower widths wrapped the first, longer sentence onto two
-     lines, giving three total instead of the intended two. */
-  max-width: 600px;
-  margin: 0 0 32px;
-}
-
-/* Each sentence is its own line, sliding in from above one after another —
-   same "line by line" pattern as CentreOfExcellence's .subtitleLine. */
-.subLine {
-  display: block;
-  will-change: transform, opacity, filter;
-}
-
+/* ─── USP row ──────────────────────────────────────────────────────────── */
 .uspList {
   list-style: none;
-  margin: 0;
+  margin: 44px 0 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 64px;
 }
 
 .uspItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* Glassy red icon chip — backdrop-filter + an inset highlight so it reads
+   as a lit glass tile rather than a flat colored square. */
+.uspIconBox {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(244, 54, 54, 0.30);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
+}
+
+.uspLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
+  color: #ffffff;
+  text-align: left;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
-/* Subtle lighter-red glow — a soft drop-shadow "halo" around the icon
-   shape itself rather than a boxy background glow, since these are bare
-   stroke icons with no filled backdrop of their own. */
-.uspIcon {
-  color: var(--color-emergency, #ed1c24);
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 5px rgba(255, 130, 130, 0.65));
-}
-
-/* ─── Right rail ──────────────────────────────────────────────────────── */
-.rightRail {
+/* ─── Bottom stack: label + card row + explore button ─────────────────── */
+.bottomStack {
+  margin-top: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  width: 372px;
+  align-items: center;
 }
 
 .railLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: #e1e1e1;
+  text-align: center;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 0 20px;
   will-change: transform, opacity;
 }
 
+/* Grid (not flex) so the three columns can shrink together below the
+   spec width on narrower viewports — flex children with a fixed width
+   would just overflow the frame instead of fitting it. Max width is the
+   492px spec value reduced 20% (~394px). */
 .cardStack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(224px, 394px));
+  gap: 22px;
+  margin-bottom: 28px;
+  width: 100%;
+  justify-content: center;
+  /* Shared 3D space for the mouse-follow tilt (see handleCardMouseMove in
+     HealthPackages.tsx) — each card's own transform only needs its
+     rotation, not a repeated perspective(...) function. */
+  perspective: 1000px;
 }
 
-/* Light glass cards over a dark image — the opposite of every other
-   dark-on-photo card pattern on this page, per spec. A dark-to-light
-   gradient (rather than a flat tint) is what makes the flush-left
-   thumbnail below read as part of the same surface instead of a separate
-   inset tile — dark end sits behind/against the image, light end behind
-   the text. */
-.packageCard {
+/* ─── Package cards ────────────────────────────────────────────────────
+   Three fixed visual variants from the design spec (background gradient /
+   border / shadow only — everything else shared). Image sits absolutely
+   against the right edge with a soft left-edge mask fade so it blends into
+   the card's own gradient instead of showing a hard seam; text content
+   sits on top, inset 34px from the left. */
+
+/* The actual CSS grid item — fixed height, so the hover-expanded card
+   below never changes grid row sizing or pushes sibling cards/rows.
+   overflow: visible lets the absolutely positioned card exceed this box. */
+.packageCardSlot {
   position: relative;
+  height: 212px;
+  overflow: visible;
+}
+
+/* Bottom-anchored within its slot (not top-anchored) so that growing
+   `height` on hover pushes this element's own TOP edge upward, reading as
+   "the card extends upward", while its bottom edge never moves. */
+.packageCard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  align-items: stretch;
-  gap: 14px;
-  padding: 0;
-  background: linear-gradient(90deg, rgba(13, 50, 93, 0.40) 0%, rgba(255, 255, 255, 0.28) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 16px;
+  height: 212px;
+  flex-direction: column;
+  align-items: flex-start;
   overflow: hidden;
   text-decoration: none;
   box-sizing: border-box;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transform-origin: bottom center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
+  /* Real frosted glass — without this, the video/frame behind is only
+     dimmed by the gradient's own alpha, not actually blurred, so it reads
+     through too crisply to feel like glass. */
+  backdrop-filter: blur(20px) saturate(1.3);
 }
 
+/* Extends upward to reveal the full test-chip grid (see
+   .packageCardTestChipsWrap) — z-index lifts it above the rail label text
+   it now overlaps, and above sibling cards' own stacking. */
 .packageCard:hover,
 .packageCard:focus-visible {
-  background: linear-gradient(90deg, rgba(13, 50, 93, 0.52) 0%, rgba(255, 255, 255, 0.36) 100%);
-  border-color: rgba(255, 255, 255, 0.48);
+  height: 358px;
+  z-index: 5;
 }
 
 .packageCard:focus-visible {
@@ -264,142 +359,501 @@
   outline-offset: 2px;
 }
 
-/* Flush against the card's own left edge and stretched to its full
-   height (align-items:stretch above), rather than an inset square tile —
-   the card's own overflow:hidden + border-radius clips this to match its
-   corner roundedness exactly; the explicit radius here is belt-and-braces
-   for the <img> itself. The right-edge border reuses the card's own
-   border color, so it reads as one continuous stroke around the card
-   with a seam where the image ends, not a separate bordered tile. */
-.thumb {
-  position: relative;
-  width: 100px;
-  align-self: stretch;
-  border-radius: 16px 0 0 16px;
-  border-right: 1px solid rgba(255, 255, 255, 0.28);
-  overflow: hidden;
-  flex-shrink: 0;
+/* Border color comes entirely from .packageCardBorder (a dedicated
+   element, see below) — no border here at all now. A transparent
+   reserved-footprint border used to live here, but an absolutely
+   positioned child's `inset` is resolved against its containing block's
+   PADDING box, not its border box — so .packageCardBorder's `inset: 0`
+   sat 1px inside this element's true edge, leaving a 1px ring of plain
+   card background visible outside the gradient stroke instead of the
+   stroke sitting flush against the card's actual edge. Background is a
+   single content gradient layer; the previous double-background-layer
+   approach for the gradient border was broken: with the content gradient
+   at 0.60 alpha, the border-gradient layer underneath (clipped to
+   border-box, which covers the full interior too, not just the ring)
+   showed through everywhere, not just at the edge — that's what was
+   washing the cards out lighter than spec'd. */
+.packageCardV1 {
+  border-radius: 10px;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
-.thumbImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.packageCardV2 {
+  border-radius: 10.235px;
+  background:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.64);
 }
 
-.packageCard:hover .thumbImage {
-  transform: scale(1.08);
+.packageCardV3 {
+  border-radius: 10px;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
-/* Solid white with a dark arrow — was a dark chip with a white arrow,
-   which read as an inverted/dark-mode control sitting on this light
-   card. */
-.arrowBadge {
+/* Dedicated gradient-border ring — a separate element (not ::before/
+   ::after, both already used for the shimmer/hover-wash below) using the
+   mask-composite "exclude" trick: two overlapping masks (the full box and
+   an inset copy) cancel out everywhere except the ring itself, so this
+   element's own gradient only ever paints there — no bleed into the
+   card's own content background, unlike the flawed layered-background
+   approach above. */
+.packageCardBorder {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(30deg, rgb(144 210 253 / 57%), rgb(235 137 137 / 36%));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Grow + mouse-follow tilt is JS-driven now (handleCardMouseMove/
+   handleCardMouseLeave in HealthPackages.tsx write `transform` directly on
+   :hover/:mousemove), since a continuous tilt needs the live cursor
+   position — plain CSS :hover can't do that. Keyboard focus has no cursor
+   position to follow, so it keeps a plain scale here; !important is still
+   load-bearing for this one rule, since the auto-reveal sets an inline
+   `transform` on this same element as it blurs+grows in, and a plain
+   inline style otherwise beats any stylesheet rule regardless of
+   specificity. While actually hovered, the transition is shortened so the
+   tilt tracks the cursor snappily instead of lagging behind a 350ms ease;
+   the base (slower) transition still applies on mouseleave, for a smooth
+   settle back to neutral. */
+.packageCard:focus-visible {
+  transform: scale(1.05) !important;
+}
+
+/* `transition` is a single cascading value, not merged per-property — this
+   rule's whole point is to shorten just the transform transition (so tilt
+   tracks the cursor snappily) while hovering, but doing that by re-
+   declaring the shorthand here was silently dropping `height` from the
+   list entirely, since it isn't mentioned here — the expand-on-hover grew
+   with no eased transition at all (it wasn't merging with the base rule's
+   height transition, it was replacing it with nothing). Re-listing height
+   here too, and slower/more eased than the base rule's 0.45s, since the
+   snappy 0.12s that transform gets would otherwise be the only easing
+   compared against and read as too abrupt for something this size. */
+.packageCard:hover {
+  transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0);
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::after,
+.packageCard:focus-visible::after {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+/* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
+   ever active on the one card actually under the pointer. */
+.packageCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.12) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::before,
+.packageCard:focus-visible::before {
+  transform: translateX(120%);
+}
+
+/* Width reduced 20% alongside the card (260px -> 208px) to stay in
+   proportion at the narrower card size. Stuck to the top/right/bottom
+   edges (height: 100% + top/right/bottom implicitly follow the card's own
+   height, so it automatically grows taller in lockstep as the card itself
+   extends on hover — no extra rule needed for that). */
+.packageCardImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 208px;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  mask-image: linear-gradient(to right, transparent 0%, black 40%);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+/* Grows moderately wider on hover (bigger photo, per spec) — stays
+   right-anchored. Kept modest (not e.g. 280px): the widened text column
+   below already claims real room for the 2-per-row chips, and a much
+   wider image would mean more of it sits directly behind those chips —
+   z-index alone doesn't fix legibility there, since the chips are
+   translucent glass, not opaque (confirmed visually: an earlier, wider
+   attempt left the second chip column readable only as a faint ghost
+   over the photo). */
+.packageCard:hover .packageCardImage,
+.packageCard:focus-visible .packageCardImage {
+  width: 230px;
+}
+
+/* max-width stops the text column short of the image (208px wide, and
+   itself left-edge-faded to transparent — see .packageCardImage's mask —
+   so text can run right up to it without a hard seam) — at the narrower
+   20%-reduced card width, an unconstrained title could run wide enough
+   to sit visually on top of the image; capping it just wraps the title
+   onto a second line instead. 200px (slightly less than the image's own
+   208px) keeps every title's wrap to exactly 2 lines instead of 3 — the
+   longest title ("Thyroid Health Package") tips into a cramped 3rd line
+   at a tighter cap, which is tall enough to clip the facts rows below
+   against the card's fixed height. */
+.packageCardContent {
+  position: relative;
+  z-index: 2;
+  max-width: calc(100% - 200px);
+  padding: 28px 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Widened on hover — the 2-per-row test chips (some names run 12-14
+   characters) need more room than the collapsed card's narrow text column
+   ever had to reserve. Still stops short of the (now 230px) image rather
+   than running underneath it — the chips are translucent glass, not
+   opaque, so simply painting above the image in z-order isn't enough on
+   its own to keep a second chip column legible over the photo. */
+.packageCard:hover .packageCardContent,
+.packageCard:focus-visible .packageCardContent {
+  /* Loosened further than the first pass (was 150px reserved) so the
+     2-word test names ("Blood Pressure", "Kidney Function") actually
+     fit in full instead of getting cut short — the chips are opaque
+     enough now (see .testChip) that sitting over more of the image
+     doesn't hurt legibility. */
+  max-width: calc(100% - 90px);
+}
+
+.packageCardTitle {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+}
+
+.packageCardFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.packageCardFact {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+/* Roundedness (8px) and the subtle inset stroke + blur now match
+   .uspIconBox exactly (previously 4px with neither of those, reading as
+   visibly a different, flatter shape than the USP row's icon chips). */
+.packageCardFactIcon {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
   justify-content: center;
-  color: #0F172A;
-  opacity: 0;
-  transition: opacity 0.25s ease;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(239, 145, 145, 0.20);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
 }
 
-.packageCard:hover .arrowBadge,
-.packageCard:focus-visible .arrowBadge {
-  opacity: 1;
+.packageCardFactText {
+  display: flex;
+  flex-direction: column;
 }
 
-.cardBody {
+/* The tests row's icon aligns to the top of its content once that content
+   grows taller than one line (the chip grid on hover) rather than staying
+   vertically centered against the whole expanded block. */
+.packageCardFactTests {
+  align-items: flex-start;
+}
+
+.packageCardTestsSwap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  flex: 1;
-  padding: 14px 14px 14px 0;
 }
 
-.cardName {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: #ffffff;
-  margin: 0 0 4px;
+/* Simple "N tests included" text — visible normally, blurs + collapses
+   away on hover as the chip grid below takes its place. */
+.packageCardTestsSimple {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 40px;
+  opacity: 1;
+  filter: blur(0px);
+  transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, filter 0.3s ease;
 }
 
-.cardAudience {
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 10px;
+.packageCard:hover .packageCardTestsSimple,
+.packageCard:focus-visible .packageCardTestsSimple {
+  max-height: 0;
+  opacity: 0;
+  filter: blur(6px);
 }
 
-.chipsRow {
+/* Individual test-name chips — hidden (a 0fr grid row, an exact zero
+   height rather than a guessed max-height) until hover, then blurs into
+   view at its own natural height, so the card's own growth and this
+   reveal read as one continuous motion instead of two independently
+   approximated animations. */
+.packageCardTestChipsWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  filter: blur(6px);
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease 0.1s, filter 0.4s ease 0.1s;
+}
+
+.packageCard:hover .packageCardTestChipsWrap,
+.packageCard:focus-visible .packageCardTestChipsWrap {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.packageCardTestChipsInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* minmax(0, 1fr), not auto — auto sizes each column to its content's full
+   natural width regardless of the container, so two long test names
+   (e.g. "Blood Pressure" + "Chest X-Ray") made the grid itself wider than
+   its own box and the overflow got clipped by the card's overflow:hidden
+   mid-word. 1fr splits whatever width IS available evenly; minmax(0, ...)
+   lets a column shrink below its content's natural width instead of
+   forcing the grid wider than its container. */
+/* flex-wrap, not a fixed 2-column grid — a rigid grid forces every chip
+   into the same column width regardless of how long its own name is,
+   which either cramps/truncates short names for no reason or overflows
+   for long ones. Each chip just sizes to its own text (up to
+   .testChip's own max-width) and wraps to the next row once it doesn't
+   fit; two short names still land side by side without being forced to
+   share identical widths. */
+.packageCardTestChips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 6px 8px;
 }
 
-/* Liquid-glass refraction: a real backdrop-blur (not just a flat tint)
-   plus an inset top highlight to read as a lit, curved glass edge rather
-   than a plain outlined chip. */
-.chip {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.10);
+.testChip {
+  display: inline-flex;
+  align-items: center;
+  /* flex-start, not center — a centered nowrap text that's wider than its
+     box overflows symmetrically on both sides, so overflow:hidden crops
+     letters off BOTH ends (confirmed: "Blood Pressure" rendered as "lood
+     Pressur"). Left-aligned, the same overflow only ever happens on the
+     right, which is what text-overflow: ellipsis actually assumes. */
+  justify-content: flex-start;
+  /* Hugs its own text tightly — 4px on every side, not the far roomier
+     6px/10px it had before. */
+  padding: 4px;
   border-radius: 999px;
-  padding: 4px 10px;
-  max-width: 140px;
-  white-space: nowrap;
+  /* Sizes to its own text (up to this cap), not a shared column width —
+     a genuinely long (3+ word) name is the only thing that should ever
+     truncate here, not every chip regardless of its own length. */
+  max-width: 160px;
+  /* Floor at "TSH"'s own natural width (12px/500 + 4px padding) so a
+     2-3 letter value like "T3"/"T4" doesn't collapse into a tiny nub
+     next to its 3-letter siblings in the same row. */
+  min-width: 40px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  /* Real frosted glass, not just a faint tint — a couple of these chips
+     sit close to (or slightly under) the enlarged package photo, and a
+     lighter wash there read as a barely-legible ghost over the image. */
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px) saturate(1.4);
 }
 
-.chipOverflow {
-  font-size: 11px;
+.factBold {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.factLight {
+  color: #fff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: normal;
+}
+
+/* "View Details" — replaces the old top-right arrow badge, at the same
+   left/bottom offsets as the content column's own top/left padding
+   (34px/28px). Hidden at rest and fades/lifts in on hover (matching the
+   "Explore" affordance in the speciality grid cards), with its
+   underline additionally sweeping in left-to-right. The card itself is
+   the actual clickable element (see the surrounding <Link>); this is a
+   plain <span>, not a nested anchor (invalid HTML/a11y otherwise). */
+.viewDetailsLink {
+  position: absolute;
+  left: 34px;
+  bottom: 28px;
+  z-index: 3;
+  display: inline-block;
+  color: #ffffff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  padding: 4px 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Secondary white-outlined button — same pattern as PatientStories'
-   .secondaryCtaBtn. transform is scroll-driven (see the JS stagger), so
-   hover only touches background/border/shadow, never transform. */
+.packageCard:hover .viewDetailsLink,
+.packageCard:focus-visible .viewDetailsLink {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.viewDetailsLinkLight {
+  color: #1A1A2E;
+}
+
+.viewDetailsUnderline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  /* currentColor, not a hardcoded value — matches whichever of the two
+     text colors above is active without a separate light-mode override. */
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard:hover .viewDetailsUnderline,
+.packageCard:focus-visible .viewDetailsUnderline {
+  transform: scaleX(1);
+}
+
+/* ─── Light-mode card variant (review toggle only, see HealthPackages.tsx's
+   .modeToggle) ────────────────────────────────────────────────────────────
+   "Apple glass" light-mode translucency — a bright, high-saturation frosted
+   surface instead of the dark navy/maroon gradients, with every text/icon
+   color flipped to read on it. The gradient border ring and shimmer/tilt
+   mechanics are untouched — same element, same technique, just recolored
+   where the color itself would otherwise be illegible on a light surface. */
+.packageCard.packageCardLightMode {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(1.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.10);
+}
+
+.packageCardLightMode .packageCardTitle,
+.packageCardLightMode .factBold {
+  color: #1A1A2E;
+}
+
+.packageCardLightMode .factLight {
+  color: #4A5568;
+}
+
+/* Icon container reuses the exact USP chip treatment (per spec) instead of
+   its own lighter pink tint — same background/shadow/blur in both cases,
+   just no longer specific to this card's own dark-mode design. */
+/* Darker/more saturated than the dark-mode chip's own red — against a
+   white "apple glass" card the same 0.30-alpha wash the dark cards use
+   read as too washed-out/pale to register as a distinct chip. */
+.packageCardLightMode .packageCardFactIcon {
+  background: rgba(200, 30, 30, 0.55);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
+}
+
+.packageCardLightMode .testChip {
+  color: #1A1A2E;
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Hover-wash and shimmer were a white tint over a dark surface — inverted
+   to a dark tint over this light one so the interaction feedback stays
+   visible instead of washing out to near-invisible white-on-white. */
+.packageCardLightMode::after {
+  background: rgba(0, 0, 0, 0);
+}
+
+.packageCardLightMode:hover::after,
+.packageCardLightMode:focus-visible::after {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.packageCardLightMode::before {
+  background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
+}
+
+/* Secondary white-outlined button — unified site-wide with PatientStories'
+   .secondaryCtaBtn and CentreOfExcellence's .viewAllBtn (same padding,
+   radius, border, background, blur, hover lift). This element's own
+   `transform` is also scroll-driven (see the JS stagger further up), so
+   the hover lift needs !important to actually apply once the entrance
+   has finished writing its own inline transform — same fix as
+   .packageCard's hover scale above. */
 .exploreRow {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 13px 16px;
+  padding: 12px 28px;
   margin-top: 4px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #ffffff;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   will-change: transform, opacity;
 }
 
 .exploreRow:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.14);
   border-color: #ffffff;
+  transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
@@ -408,10 +862,55 @@
   outline-offset: 2px;
 }
 
+/* Review-only dark/light card preview toggle (see HealthPackages.tsx) —
+   fixed to the viewport's left edge, vertically centered. Rendered as a
+   direct child of .section rather than anywhere inside .frame/.grid,
+   since both of those set a transform (statically via will-change, or via
+   inline style) and would otherwise become this element's containing
+   block instead of the viewport. */
+.modeToggle {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9000;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.modeToggle:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: #ffffff;
+  transform: translateY(-50%) translateX(2px);
+}
+
 /* ─── Mobile: no sticky pin, single column, static (not scroll-linked) ── */
 @media (max-width: 900px) {
   .section {
     height: auto;
+  }
+
+  /* Vertically-centered-left placement overlaps the (now static-flow,
+     non-sticky) text content on narrow viewports — tucks into the
+     bottom-left corner instead, same as the desktop position's spirit
+     (out of the way, always reachable) without competing with text. */
+  .modeToggle {
+    top: auto;
+    bottom: 16px;
+    transform: none;
+  }
+
+  .modeToggle:hover {
+    transform: translateX(2px);
   }
 
   .stickyViewport {
@@ -435,18 +934,18 @@
     transform: none !important;
   }
 
-  .scrimDull {
-    opacity: 0.35 !important;
+  .bottomOverlay {
+    opacity: 0.5 !important;
   }
 
   .grid {
     height: auto;
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 40px;
     padding: 64px 24px;
   }
 
-  .leftCol {
+  .textBlock {
     transform: none !important;
   }
 
@@ -454,8 +953,45 @@
     font-size: clamp(30px, 8vw, 40px);
   }
 
-  .rightRail {
+  .uspList {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .uspItem {
+    max-width: 320px;
+    white-space: normal;
+  }
+
+  .uspLabel {
+    white-space: normal;
+  }
+
+  .bottomStack {
     width: 100%;
+  }
+
+  .cardStack {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  /* No hover-expand on mobile (touch has no reliable hover state, and the
+     desktop version's absolute/bottom-anchored trick is only needed to
+     keep that expansion from disturbing grid sizing) — back to a plain
+     static block in normal flow, full width, fixed height as before. */
+  .packageCardSlot {
+    height: auto;
+    width: 100%;
+  }
+
+  .packageCard {
+    position: static;
+    width: 100%;
+    max-width: 492px;
+    height: 212px;
   }
 
   .railLabel,
@@ -463,9 +999,6 @@
   .exploreRow {
     transform: none !important;
     opacity: 1 !important;
-  }
-
-  .arrowBadge {
-    opacity: 1 !important;
+    filter: none !important;
   }
 }
