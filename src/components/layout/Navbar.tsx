@@ -141,7 +141,6 @@ export default function Navbar() {
         // room to taper off past the actual nav content, instead of eating
         // into it — that overlap was what made the bar look like it was
         // dissolving into the page rather than having a clean bottom edge.
-        paddingBottom: "20px",
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
         "--nav-fg-color": (isMobileMenuOpen || isOverLightBackground) ? "var(--color-text, #0f172a)" : "#ffffff"
@@ -156,7 +155,7 @@ export default function Navbar() {
           backgroundColor: isMobileMenuOpen
             ? "rgba(255, 255, 255, 0.94)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "rgba(255, 255, 255, 0.82)" : "rgba(8, 15, 28, 0.55)")
+                ? (isOverLightBackground ? "rgba(255, 255, 255, 0.82)" : "rgba(0, 0, 0, 0.35)")
                 : "transparent"),
           backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
@@ -172,9 +171,9 @@ export default function Navbar() {
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+            <div style={{ position: "relative", width: "144px", height: "45px", display: "flex", alignItems: "center" }}>
+              <Image alt="Narayana Health" width={144} height={45} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={144} height={45} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
@@ -352,13 +351,7 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
-            <MapPin size={18} strokeWidth={2.5} />
-            <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <span style={{ fontSize: "14px", fontWeight: 500 }}>Bangalore</span>
-              <ChevronDown size={14} />
-            </span>
-          </div>
+
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
@@ -559,8 +552,8 @@ export default function Navbar() {
               <Image 
                 alt="Narayana Health" 
                 src="/NH-logo.svg" 
-                width={92} 
-                height={29} 
+                width={108} 
+                height={34} 
                 className={styles.mobileLogoImg}
                 style={{ 
                   opacity: (isMobileMenuOpen || isOverLightBackground) ? 1 : 0, 
@@ -571,8 +564,8 @@ export default function Navbar() {
               <Image 
                 alt="Narayana Health" 
                 src="/NH-logo-white.svg" 
-                width={92} 
-                height={29} 
+                width={108} 
+                height={34} 
                 className={styles.mobileLogoImg}
                 style={{ 
                   opacity: (!isMobileMenuOpen && !isOverLightBackground) ? 1 : 0, 
