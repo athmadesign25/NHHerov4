@@ -60,7 +60,7 @@ export default function FloatingQuickActions() {
 
   const handleOpenSearch = () => {
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("nh:open-search"));
+      window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
     }
   };
 
@@ -119,7 +119,7 @@ export default function FloatingQuickActions() {
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
         >
-          <span className={`${styles.iconWrap} ${styles.pulseIconWrap}`}>
+          <span className={styles.iconWrap}>
             <span className={styles.pulseBars} aria-hidden="true">
               <span className={styles.pulseBar1} />
               <span className={styles.pulseBar2} />

@@ -109,42 +109,12 @@
   position: relative;
 }
 
-.pulseIconWrap {
-  background: linear-gradient(149deg, #07152B 0%, #034EA2 100%);
-  border: 1px solid rgba(0, 196, 255, 0.35);
-  box-shadow: 0 0 10px rgba(0, 196, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.pulseIconWrap::after {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle, rgba(0, 196, 255, 0.3) 0%, transparent 70%);
-  animation: pulseAura 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes pulseAura {
-  0%, 100% {
-    opacity: 0.35;
-    transform: scale(0.9);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.12);
-  }
-}
-
 .pulseBars {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2.5px;
   height: 14px;
-  position: relative;
-  z-index: 1;
 }
 
 .pulseBar1 {
@@ -159,7 +129,7 @@
   width: 2.5px;
   height: 14px;
   border-radius: 1.5px;
-  background: #38BDF8;
+  background: #FFFFFF;
   animation: barBreathing 1.8s ease-in-out 0.25s infinite;
 }
 
@@ -174,19 +144,13 @@
 @keyframes barBreathing {
   0%, 100% {
     transform: scaleY(0.65);
-    opacity: 0.8;
+    opacity: 0.85;
   }
   50% {
     transform: scaleY(1.15);
     opacity: 1;
-    filter: drop-shadow(0 0 3px rgba(0, 196, 255, 0.55));
+    filter: drop-shadow(0 0 2.5px rgba(0, 196, 255, 0.6));
   }
-}
-
-.pulseSearchAction:hover .pulseIconWrap {
-  transform: scale(1.08);
-  border-color: rgba(0, 196, 255, 0.6);
-  box-shadow: 0 0 14px rgba(0, 196, 255, 0.38);
 }
 
 .pulseSearchAction:hover .pulseBar1 {

@@ -130,8 +130,12 @@ export default function NHSearchExperience({
 
   // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
   useEffect(() => {
-    const handleTriggerSearch = () => {
-      handleActivate();
+    const handleTriggerSearch = (e: Event) => {
+      const customEvent = e as CustomEvent<{ scrollY?: number }>;
+      const targetScroll = (customEvent.detail && typeof customEvent.detail.scrollY === "number")
+        ? customEvent.detail.scrollY
+        : (window.scrollY || window.pageYOffset || 0);
+      handleActivate(targetScroll);
     };
     window.addEventListener("nh:open-search", handleTriggerSearch);
     return () => window.removeEventListener("nh:open-search", handleTriggerSearch);
@@ -169,8 +173,11 @@ export default function NHSearchExperience({
     };
 
     if (isSearchOpen) {
-      // 1. Record current scroll position
-      savedScrollY.current = window.scrollY || window.pageYOffset || 0;
+      // 1. Record current scroll position (only if not already recorded)
+      const currentScroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      if (currentScroll > 0 && savedScrollY.current === 0) {
+        savedScrollY.current = currentScroll;
+      }
 
       // 2. Stop Lenis smooth scroll
       const lenis = getLenis();
@@ -187,48 +194,47 @@ export default function NHSearchExperience({
       document.documentElement.style.overflow = "hidden";
       document.body.style.touchAction = "none";
 
-      // 4. Intercept wheel and touchmove events to guarantee underlying page remains static
+      // 4. Intercept wheel, touchmove and page-scrolling keys
       const preventBackgroundScroll = (e: WheelEvent | TouchEvent) => {
         const target = e.target as HTMLElement | null;
 
-        // If outside the search experience wrapper, prevent default
-        if (!containerRef.current || !containerRef.current.contains(target)) {
-          if (e.cancelable) e.preventDefault();
-          return;
-        }
+        // Check if event target is inside the portaled active search modal
+        const modalEl = document.getElementById("nh-active-search-modal");
+        if (modalEl && modalEl.contains(target)) {
+          // If inside an intentionally scrollable area within the modal, allow internal scrolling
+          const scrollable = target?.closest(`.${styles.searchShell}, .${styles.resultsRightCol}`) as HTMLElement | null;
+          if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
+            if (e instanceof WheelEvent) {
+              const isScrollingUp = e.deltaY < 0;
+              const isScrollingDown = e.deltaY > 0;
+              const isAtTop = scrollable.scrollTop <= 0;
+              const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
 
-        // If on the backdrop overlay, prevent default
-        if (target && (target.hasAttribute("data-backdrop") || target.getAttribute("data-backdrop") === "true")) {
-          if (e.cancelable) e.preventDefault();
-          return;
-        }
-
-        // Check if inside an intentionally scrollable container within the search modal
-        const scrollable = target?.closest(`.${styles.searchShell}, .${styles.resultsRightCol}`) as HTMLElement | null;
-        if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
-          // If at the top and scrolling up, or at the bottom and scrolling down, prevent overscroll from leaking
-          if (e instanceof WheelEvent) {
-            const isScrollingUp = e.deltaY < 0;
-            const isScrollingDown = e.deltaY > 0;
-            const isAtTop = scrollable.scrollTop <= 0;
-            const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
-
-            if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
-              if (e.cancelable) e.preventDefault();
+              if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
+                if (e.cancelable) e.preventDefault();
+              }
             }
+            return;
           }
-          // Inside scrollable area with room to scroll, allow it
-          return;
         }
 
-        // Inside non-scrollable area of search, prevent default
+        // Outside modal (backdrop or background) — strictly prevent scrolling
         if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+
+      const preventScrollKeys = (e: KeyboardEvent) => {
+        const target = e.target as HTMLElement | null;
+        if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
+        if ([" ", "PageUp", "PageDown", "End", "Home"].includes(e.key)) {
           e.preventDefault();
         }
       };
 
       window.addEventListener("wheel", preventBackgroundScroll, { passive: false });
       window.addEventListener("touchmove", preventBackgroundScroll, { passive: false });
+      window.addEventListener("keydown", preventScrollKeys, { passive: false });
 
       return () => {
         // Restore document styles
@@ -239,6 +245,7 @@ export default function NHSearchExperience({
         // Remove event listeners
         window.removeEventListener("wheel", preventBackgroundScroll);
         window.removeEventListener("touchmove", preventBackgroundScroll);
+        window.removeEventListener("keydown", preventScrollKeys);
 
         // Resume Lenis smooth scroll and restore exact scroll position
         const activeLenis = getLenis();
@@ -247,12 +254,11 @@ export default function NHSearchExperience({
           if (typeof activeLenis.scrollTo === "function") {
             activeLenis.scrollTo(savedScrollY.current, { immediate: true });
           }
-        } else {
-          window.scrollTo({ top: savedScrollY.current, behavior: "instant" as ScrollBehavior });
         }
+        window.scrollTo({ top: savedScrollY.current, behavior: "instant" as ScrollBehavior });
       };
     }
-  }, [searchState]);
+  }, [searchState !== "landing"]);
 
   // Handle Query typing
   const handleQueryChange = useCallback((newQuery: string) => {
@@ -273,7 +279,12 @@ export default function NHSearchExperience({
   };
 
   // Activate search (Landing → Active)
-  const handleActivate = () => {
+  const handleActivate = (customScroll?: number) => {
+    const currentScroll = typeof customScroll === "number"
+      ? customScroll
+      : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
+    savedScrollY.current = currentScroll;
+    setQuery(""); // Always show active empty search state when launched
     setSearchState("active");
     onOpenChange?.(true);
   };
@@ -371,45 +382,10 @@ export default function NHSearchExperience({
           : undefined
       }
     >
-      {/* Dimmed backdrop when in active/results search (soft static blur over frozen page) */}
-      <AnimatePresence>
-        {searchState !== "landing" && (
-          <motion.div
-            key="search-backdrop"
-            data-backdrop="true"
-            data-lenis-prevent="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: "easeOut" }}
-            onClick={handleClose}
-            onWheel={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            onTouchMove={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "rgba(5, 10, 18, 0.28)",
-              backdropFilter: "blur(6px)",
-              WebkitBackdropFilter: "blur(6px)",
-              zIndex: 9991,
-              pointerEvents: "auto",
-              touchAction: "none",
-            }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Unified expanding & morphing search container */}
+      {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
         layout
-        className={`${styles.searchShell} ${stateClass}`}
-        data-lenis-prevent="true"
+        className={`${styles.searchShell} ${styles.stateLanding}`}
         onClick={() => {
           if (isDocked) {
             handleActivate();
@@ -442,28 +418,8 @@ export default function NHSearchExperience({
               }
             : searchState !== "landing"
             ? {
-                position: "fixed",
-                top: (searchState === "results" || searchState === "skeleton")
-                  ? Math.max(28, Math.round(winSize.h * 0.05))
-                  : Math.max(60, Math.round(winSize.h * 0.14)),
-                left: Math.round((winSize.w - Math.min((searchState === "results" || searchState === "skeleton") ? 1080 : 880, winSize.w - 40)) / 2),
-                width: Math.min((searchState === "results" || searchState === "skeleton") ? 1080 : 880, winSize.w - 40),
-                height: "auto",
-                maxHeight: (searchState === "results" || searchState === "skeleton") ? "92vh" : "85vh",
-                overflowY: "auto",
-                overscrollBehavior: "contain",
-                borderRadius: 22,
-                paddingTop: (searchState === "results" || searchState === "skeleton") ? 26 : 24,
-                paddingRight: (searchState === "results" || searchState === "skeleton") ? 32 : 28,
-                paddingBottom: (searchState === "results" || searchState === "skeleton") ? 28 : 24,
-                paddingLeft: (searchState === "results" || searchState === "skeleton") ? 32 : 28,
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0,
-                boxSizing: "border-box",
-                zIndex: 99999,
-                pointerEvents: "auto",
+                display: "none",
+                pointerEvents: "none",
               }
             : undefined
         }
@@ -473,86 +429,144 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        <AnimatePresence mode="popLayout" initial={false}>
-          {searchState === "landing" && (
-            <motion.div
-              key="landing"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-              style={{ height: "100%" }}
-            >
-              <DefaultSearchPrompt
-                onActivate={handleActivate}
-                selectedLocation={selectedLocation}
-                onSelectLocation={setSelectedLocation}
-                onSelectActionPill={handleSelectActionPill}
-                onOpenPulse={() => handleOpenPulse()}
-                promptOpacity={hasScroll ? promptOpacity : undefined}
-                compactLabelOpacity={hasScroll ? compactLabelOpacity : undefined}
-                controlsOpacity={hasScroll ? controlsOpacity : undefined}
-                controlsHeight={hasScroll ? controlsHeight : undefined}
-                controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
-              />
-            </motion.div>
-          )}
-
-          {searchState === "active" && (
-            <motion.div
-              key="active"
-              initial={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <ActiveSearchCanvas
-                query={query}
-                onQueryChange={handleQueryChange}
-                onSubmit={handleSubmit}
-                onClose={handleClose}
-                selectedLocation={selectedLocation}
-                onSelectLocation={setSelectedLocation}
-                activePill={activePill}
-                onSelectActionPill={handleSelectActionPill}
-              />
-            </motion.div>
-          )}
-
-          {searchState === "skeleton" && (
-            <motion.div
-              key="skeleton"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <SkeletonResultsCanvas query={query} />
-            </motion.div>
-          )}
-
-          {searchState === "results" && (
-            <motion.div
-              key="results"
-              initial={{ opacity: 0, y: 10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <SearchResultsCanvas
-                query={query || "I have chest pain and need a doctor"}
-                results={resultsData}
-                onEditSearch={handleEditSearch}
-                onClose={handleClose}
-                selectedLocation={selectedLocation}
-                onSelectLocation={setSelectedLocation}
-                onSelectSpecialtyTag={handleSelectSpecialtyTag}
-                onAskPulse={handleAskPulse}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <DefaultSearchPrompt
+          onActivate={handleActivate}
+          selectedLocation={selectedLocation}
+          onSelectLocation={setSelectedLocation}
+          onSelectActionPill={handleSelectActionPill}
+          onOpenPulse={() => handleOpenPulse()}
+          promptOpacity={hasScroll ? promptOpacity : undefined}
+          compactLabelOpacity={hasScroll ? compactLabelOpacity : undefined}
+          controlsOpacity={hasScroll ? controlsOpacity : undefined}
+          controlsHeight={hasScroll ? controlsHeight : undefined}
+          controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
+        />
       </motion.div>
+
+      {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
+      {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
+      {mounted && searchState !== "landing" && createPortal(
+        <div
+          id="nh-search-overlay-root"
+          data-lenis-prevent="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            paddingTop: (searchState === "results" || searchState === "skeleton")
+              ? "max(20px, 3vh)"
+              : "max(60px, 12vh)",
+            paddingBottom: "24px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
+            boxSizing: "border-box",
+            pointerEvents: "auto",
+          }}
+        >
+          {/* Backdrop with translucent blur and stationary background freeze */}
+          <motion.div
+            key="search-backdrop"
+            data-backdrop="true"
+            data-lenis-prevent="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: "easeOut" }}
+            onClick={handleClose}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(5, 10, 18, 0.45)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              zIndex: 1,
+              touchAction: "none",
+            }}
+          />
+
+          {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
+          <motion.div
+            layout
+            id="nh-active-search-modal"
+            className={`${styles.searchShell} ${stateClass}`}
+            data-lenis-prevent="true"
+            initial={{ opacity: 0, scale: 0.96, y: -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -10 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "relative",
+              zIndex: 2,
+              width: Math.min((searchState === "results" || searchState === "skeleton") ? 1080 : 880, winSize.w - 32),
+              maxHeight: (searchState === "results" || searchState === "skeleton") ? "92vh" : "85vh",
+              overflowY: "auto",
+              overscrollBehavior: "contain",
+              margin: 0,
+              boxSizing: "border-box",
+            }}
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {searchState === "active" && (
+                <motion.div
+                  key="active"
+                  initial={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <ActiveSearchCanvas
+                    query={query}
+                    onQueryChange={handleQueryChange}
+                    onSubmit={handleSubmit}
+                    onClose={handleClose}
+                    selectedLocation={selectedLocation}
+                    onSelectLocation={setSelectedLocation}
+                    activePill={activePill}
+                    onSelectActionPill={handleSelectActionPill}
+                  />
+                </motion.div>
+              )}
+
+              {searchState === "skeleton" && (
+                <motion.div
+                  key="skeleton"
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <SkeletonResultsCanvas query={query} />
+                </motion.div>
+              )}
+
+              {searchState === "results" && (
+                <motion.div
+                  key="results"
+                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <SearchResultsCanvas
+                    query={query || "I have chest pain and need a doctor"}
+                    results={resultsData}
+                    onEditSearch={handleEditSearch}
+                    onClose={handleClose}
+                    selectedLocation={selectedLocation}
+                    onSelectLocation={setSelectedLocation}
+                    onSelectSpecialtyTag={handleSelectSpecialtyTag}
+                    onAskPulse={handleAskPulse}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>,
+        document.body
+      )}
 
       {/* Existing Pulse AI Workspace (When opened while docked in compact size or via Pulse trigger) */}
       {mounted && isPulseWorkspaceOpen && createPortal(
