@@ -68,28 +68,38 @@
   z-index: 1;
 }
 
-/* Always-on decorative wash — same visual result as the Figma "rotate a
-   tall rect -90deg" trick (a diagonal red-to-transparent sweep plus a
-   deep-navy corner glow), applied directly as CSS gradient angles instead
-   of a literal rotated element. */
+/* Always-on decorative wash — a full-width band pinned to the TOP half of
+   the frame only (not the whole height): a red accent sweep plus a
+   deep-navy corner glow, per the Figma spec (both layers — the navy one
+   isn't a stray left-aligned-text leftover after all, it's meant to stay,
+   just confined to the top half rather than bleeding down the whole
+   frame). */
 .topOverlay {
   position: absolute;
-  inset: 0;
-  /* Just the red accent sweep now — the second (97deg, navy, left-to-
-     right) layer was a leftover from when this was .scrimLeft, darkening
-     the left side for the old left-aligned text column. Text is centered
-     now, so that legibility scrim is gone; only the decorative wash
-     stays, and it's a lot less dark/dull overall as a result. */
-  background: linear-gradient(13deg, rgba(255, 54, 57, 0.40) -31.94%, rgba(152, 15, 17, 0) 33.58%);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background:
+    linear-gradient(13deg, rgba(255, 54, 57, 0.30) -31.94%, rgba(152, 15, 17, 0) 33.58%),
+    linear-gradient(97deg, rgba(5, 22, 50, 0.50) 19.03%, rgba(6, 24, 56, 0.47) 27.59%, rgba(9, 40, 90, 0.30) 62.01%, rgba(15, 67, 152, 0) 91.02%);
   pointer-events: none;
   z-index: 2;
 }
 
 /* Diagonal navy wash that deepens as the card row finishes revealing — JS
-   drives opacity 0 -> 0.7 across phase 2 (see scrimDullRef in the TSX). */
+   drives opacity 0 -> 0.7 across phase 2 (see scrimDullRef in the TSX).
+   Pinned to the BOTTOM half of the frame only — previously this was a
+   full-height `inset: 0`, which let its dark-on-the-left diagonal wash
+   bleed all the way up behind the title/eyebrow as it faded in, reading
+   as a stray "gradient on the left" nowhere near the cards it's actually
+   meant to sit behind. */
 .bottomOverlay {
   position: absolute;
-  inset: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
   background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
   opacity: 0;
   pointer-events: none;
