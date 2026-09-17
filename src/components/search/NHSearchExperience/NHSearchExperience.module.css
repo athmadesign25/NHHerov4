@@ -39,6 +39,7 @@
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  overscroll-behavior: contain;
   box-shadow: 
     0 24px 60px -12px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -1322,6 +1323,7 @@
   max-height: 480px;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
   padding-right: 4px;
   min-width: 0;
   width: 100%;

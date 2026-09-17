@@ -144,6 +144,106 @@ export default function NHSearchExperience({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [searchState]);
 
+  // Track previous scroll position to freeze and restore
+  const savedScrollY = useRef(0);
+
+  // Freeze background page scroll when search overlay is open, and restore when closed
+  useEffect(() => {
+    const isSearchOpen = searchState !== "landing";
+
+    const getLenis = () => {
+      if (typeof window === "undefined") return null;
+      return (window as unknown as { __lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).__lenis 
+        || (window as unknown as { lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).lenis 
+        || null;
+    };
+
+    if (isSearchOpen) {
+      // 1. Record current scroll position
+      savedScrollY.current = window.scrollY || window.pageYOffset || 0;
+
+      // 2. Stop Lenis smooth scroll
+      const lenis = getLenis();
+      if (lenis && typeof lenis.stop === "function") {
+        lenis.stop();
+      }
+
+      // 3. Freeze document scroll
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalBodyTouchAction = document.body.style.touchAction;
+
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+
+      // 4. Intercept wheel and touchmove events to guarantee underlying page remains static
+      const preventBackgroundScroll = (e: WheelEvent | TouchEvent) => {
+        const target = e.target as HTMLElement | null;
+
+        // If outside the search experience wrapper, prevent default
+        if (!containerRef.current || !containerRef.current.contains(target)) {
+          if (e.cancelable) e.preventDefault();
+          return;
+        }
+
+        // If on the backdrop overlay, prevent default
+        if (target && (target.hasAttribute("data-backdrop") || target.getAttribute("data-backdrop") === "true")) {
+          if (e.cancelable) e.preventDefault();
+          return;
+        }
+
+        // Check if inside an intentionally scrollable container within the search modal
+        const scrollable = target?.closest(`.${styles.searchShell}, .${styles.resultsRightCol}`) as HTMLElement | null;
+        if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
+          // If at the top and scrolling up, or at the bottom and scrolling down, prevent overscroll from leaking
+          if (e instanceof WheelEvent) {
+            const isScrollingUp = e.deltaY < 0;
+            const isScrollingDown = e.deltaY > 0;
+            const isAtTop = scrollable.scrollTop <= 0;
+            const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
+
+            if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
+              if (e.cancelable) e.preventDefault();
+            }
+          }
+          // Inside scrollable area with room to scroll, allow it
+          return;
+        }
+
+        // Inside non-scrollable area of search, prevent default
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+
+      window.addEventListener("wheel", preventBackgroundScroll, { passive: false });
+      window.addEventListener("touchmove", preventBackgroundScroll, { passive: false });
+
+      return () => {
+        // Restore document styles
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.touchAction = originalBodyTouchAction;
+
+        // Remove event listeners
+        window.removeEventListener("wheel", preventBackgroundScroll);
+        window.removeEventListener("touchmove", preventBackgroundScroll);
+
+        // Resume Lenis smooth scroll and restore exact scroll position
+        const activeLenis = getLenis();
+        if (activeLenis && typeof activeLenis.start === "function") {
+          activeLenis.start();
+          if (typeof activeLenis.scrollTo === "function") {
+            activeLenis.scrollTo(savedScrollY.current, { immediate: true });
+          }
+        } else {
+          window.scrollTo({ top: savedScrollY.current, behavior: "instant" as ScrollBehavior });
+        }
+      };
+    }
+  }, [searchState]);
+
   // Handle Query typing
   const handleQueryChange = useCallback((newQuery: string) => {
     setQuery(newQuery);
@@ -261,24 +361,35 @@ export default function NHSearchExperience({
           : undefined
       }
     >
-      {/* Dimmed backdrop when in active/results search on scroll */}
+      {/* Dimmed backdrop when in active/results search (soft static blur over frozen page) */}
       <AnimatePresence>
-        {hasScroll && searchState !== "landing" && (
+        {searchState !== "landing" && (
           <motion.div
             key="search-backdrop"
+            data-backdrop="true"
+            data-lenis-prevent="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: "easeOut" }}
             onClick={handleClose}
+            onWheel={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
             style={{
               position: "fixed",
               inset: 0,
               background: "rgba(5, 10, 18, 0.28)",
-              backdropFilter: "blur(4px)",
-              WebkitBackdropFilter: "blur(4px)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
               zIndex: 9991,
               pointerEvents: "auto",
+              touchAction: "none",
             }}
           />
         )}
@@ -288,6 +399,7 @@ export default function NHSearchExperience({
       <motion.div
         layout
         className={`${styles.searchShell} ${stateClass}`}
+        data-lenis-prevent="true"
         onClick={() => {
           if (isDocked) {
             handleActivate();
@@ -317,7 +429,7 @@ export default function NHSearchExperience({
                 overflow: "hidden",
                 cursor: "pointer",
               }
-            : searchState !== "landing" && hasScroll
+            : searchState !== "landing"
             ? {
                 position: "fixed",
                 top: (searchState === "results" || searchState === "skeleton")
@@ -328,6 +440,7 @@ export default function NHSearchExperience({
                 height: "auto",
                 maxHeight: (searchState === "results" || searchState === "skeleton") ? "92vh" : "85vh",
                 overflowY: "auto",
+                overscrollBehavior: "contain",
                 borderRadius: 22,
                 paddingTop: (searchState === "results" || searchState === "skeleton") ? 26 : 24,
                 paddingRight: (searchState === "results" || searchState === "skeleton") ? 32 : 28,
