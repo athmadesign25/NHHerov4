@@ -57,17 +57,17 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
           <div className={styles.doctorsGrid}>
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className={styles.skeletonDoctorCard}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 11 }}>
-                  <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 44, height: 44 }} />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 5, flex: 1 }}>
-                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 120, height: 14 }} />
-                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 80, height: 12 }} />
-                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 100, height: 11 }} />
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 48, height: 48, flexShrink: 0 }} />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
+                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "70%", height: 18 }} />
+                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "45%", height: 14, marginTop: 2 }} />
+                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "60%", height: 13, marginTop: 2 }} />
                   </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10, paddingTop: 8, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 70, height: 11 }} />
-                  <div className={`${styles.skeletonPill} ${styles.shimmer}`} style={{ width: 46, height: 22, borderRadius: 5 }} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 85, height: 13 }} />
+                  <div className={`${styles.skeletonPill} ${styles.shimmer}`} style={{ width: 48, height: 22, borderRadius: 5 }} />
                 </div>
               </div>
             ))}
