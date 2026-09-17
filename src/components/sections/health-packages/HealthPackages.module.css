@@ -317,7 +317,10 @@
    overflow: visible lets the absolutely positioned card exceed this box. */
 .packageCardSlot {
   position: relative;
-  height: 212px;
+  /* +28px over the old 212px — reserves room for the permanent
+     bottom-left "View Details" link, which the old top-right arrow
+     badge (hover-only, out of the text column's way) never needed. */
+  height: 240px;
   overflow: visible;
 }
 
@@ -330,7 +333,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  height: 212px;
+  height: 240px;
   flex-direction: column;
   align-items: flex-start;
   overflow: hidden;
@@ -682,6 +685,10 @@
      a genuinely long (3+ word) name is the only thing that should ever
      truncate here, not every chip regardless of its own length. */
   max-width: 160px;
+  /* Floor at "TSH"'s own natural width (12px/500 + 4px padding) so a
+     2-3 letter value like "T3"/"T4" doesn't collapse into a tiny nub
+     next to its 3-letter siblings in the same row. */
+  min-width: 40px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -712,30 +719,46 @@
   line-height: normal;
 }
 
-/* Glassy circular arrow badge, top-right, revealed on hover. */
-.arrowBadge {
+/* "View Details" — replaces the old top-right arrow badge. Always
+   visible (unlike the arrow, which only appeared on hover) at the same
+   left/bottom offsets as the content column's own top/left padding
+   (34px/28px), with only the underline reacting to hover — it grows in
+   left-to-right rather than the label itself fading in. The card itself
+   is the actual clickable element (see the surrounding <Link>); this is
+   a plain <span>, not a nested anchor (invalid HTML/a11y otherwise). */
+.viewDetailsLink {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  left: 34px;
+  bottom: 28px;
   z-index: 3;
+  display: inline-block;
+  color: #ffffff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.packageCard:hover .arrowBadge,
-.packageCard:focus-visible .arrowBadge {
-  opacity: 1;
-  transform: scale(1);
+.viewDetailsLinkLight {
+  color: #1A1A2E;
+}
+
+.viewDetailsUnderline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  /* currentColor, not a hardcoded value — matches whichever of the two
+     text colors above is active without a separate light-mode override. */
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard:hover .viewDetailsUnderline,
+.packageCard:focus-visible .viewDetailsUnderline {
+  transform: scaleX(1);
 }
 
 /* ─── Light-mode card variant (review toggle only, see HealthPackages.tsx's
@@ -793,11 +816,6 @@
 
 .packageCardLightMode::before {
   background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
-}
-
-.packageCardLightMode .arrowBadge {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* Secondary white-outlined button — unified site-wide with PatientStories'
@@ -967,7 +985,7 @@
     position: static;
     width: 100%;
     max-width: 492px;
-    height: 212px;
+    height: 240px;
   }
 
   .railLabel,
@@ -976,9 +994,5 @@
     transform: none !important;
     opacity: 1 !important;
     filter: none !important;
-  }
-
-  .arrowBadge {
-    opacity: 1 !important;
   }
 }

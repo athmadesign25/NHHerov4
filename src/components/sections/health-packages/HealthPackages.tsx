@@ -140,14 +140,6 @@ function FactIconReports({ idSuffix, flat }: { idSuffix: string; flat?: boolean 
   );
 }
 
-function ArrowGlyph({ dark }: { dark?: boolean }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
-      <path d="M16.9992 5.43781V14.2778C16.9992 14.4582 16.9275 14.6311 16.8 14.7586C16.6725 14.8862 16.4995 14.9578 16.3192 14.9578C16.1388 14.9578 15.9659 14.8862 15.8383 14.7586C15.7108 14.6311 15.6392 14.4582 15.6392 14.2778V7.07916L5.92027 16.7989C5.79267 16.9265 5.61961 16.9982 5.43917 16.9982C5.25872 16.9982 5.08566 16.9265 4.95807 16.7989C4.83047 16.6713 4.75879 16.4983 4.75879 16.3178C4.75879 16.1374 4.83047 15.9643 4.95807 15.8367L14.6778 6.11781H7.47917C7.29882 6.11781 7.12586 6.04617 6.99833 5.91864C6.87081 5.79112 6.79917 5.61816 6.79917 5.43781C6.79917 5.25747 6.87081 5.0845 6.99833 4.95698C7.12586 4.82946 7.29882 4.75781 7.47917 4.75781H16.3192C16.4995 4.75781 16.6725 4.82946 16.8 4.95698C16.9275 5.0845 16.9992 5.25747 16.9992 5.43781Z" fill={dark ? "#1A1A2E" : "white"}/>
-    </svg>
-  );
-}
-
 const PHASE1_END = 0.32;
 const MOBILE_BREAKPOINT = 900;
 
@@ -861,8 +853,13 @@ export default function HealthPackages() {
                                 </div>
                               </div>
                             </div>
-                            <span className={styles.arrowBadge} aria-hidden>
-                              <ArrowGlyph dark={isLightMode} />
+                            {/* Plain text, not a nested <a> — the whole
+                                card is already the clickable Link; this is
+                                just a visual affordance, and an anchor
+                                inside an anchor is invalid HTML. */}
+                            <span className={`${styles.viewDetailsLink} ${isLightMode ? styles.viewDetailsLinkLight : ""}`}>
+                              View Details
+                              <span className={styles.viewDetailsUnderline} aria-hidden />
                             </span>
                           </Link>
                         </div>
