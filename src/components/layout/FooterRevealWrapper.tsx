@@ -4,16 +4,35 @@ import { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
 
 // Extra buffer (beyond the footer's own height) before the reveal can
-// engage. AppDownloadBanner's phone artwork has its own long scroll-driven
-// entrance animation that keeps easing into place for a while after the
-// section's CSS sticky pin itself has released, and only truly stops
-// moving a couple hundred px before the page's true scroll end — leaving
-// very little room for the footer's own rise (which needs its full real
-// height, ~550px, to slide up from off-screen) to fit after that without
-// starting to overlap it. Keeping this small pushes the overlay's start as
-// close to that settle point as this trick allows; it can't be reduced to
-// full non-overlap without shortening AppDownloadBanner's own animation.
+// engage. Kept small/tight — see DWELL_GAP below for why this alone can't
+// create separation from AppDownloadBanner.
 const REVEAL_WINDOW = 100;
+
+// A real, NOT-retracted spacer between AppDownloadBanner and the footer's
+// own (fully-retracted, see below) reveal wrapper.
+//
+// The reveal wrapper's engagement point is anchored to the page's true
+// scroll end (it always starts ~(footerHeight + REVEAL_WINDOW + 100vh) px
+// before it — that 100vh term comes from the footer's own sticky `top`
+// formula needing a full viewport of "off-screen" room to rise through).
+// That's a fixed distance from the *end*, entirely independent of
+// AppDownloadBanner — so simply giving AppDownloadBanner a longer sticky
+// pin does NOT push the reveal later; AppDownloadBanner's own release
+// point turns out to *also* sit a near-fixed ~100vh before the true end
+// (releasing a sticky child needs its parent's bottom edge to close the
+// last viewport-height gap), regardless of how long its pin was held
+// before that. Both land close to the same spot no matter how either
+// side is tuned alone, which is exactly the "footer rushes in while
+// AppDownloadBanner is still visibly settling" bug this was built to fix.
+//
+// Inserting real height in between breaks that coincidence: it pushes the
+// true end (and therefore the reveal wrapper's whole engagement window)
+// further away by exactly its own size, while AppDownloadBanner's release
+// point doesn't move at all (nothing after it can affect where it
+// releases). Sized to clear the gap with a bit of margin — see the
+// measurements this was tuned against in the PR/commit history if
+// AppDownloadBanner's own pin duration changes again later.
+const DWELL_GAP = 700;
 
 /**
  * Makes the footer rise up from below and overlay on top of whatever's
@@ -122,6 +141,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       <main id="main-content" style={{ position: "relative" }}>
         {children}
       </main>
+      <div aria-hidden style={{ height: DWELL_GAP }} />
       <div
         style={{
           position: "relative",
