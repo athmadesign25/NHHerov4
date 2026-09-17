@@ -537,7 +537,12 @@
    its own to keep a second chip column legible over the photo. */
 .packageCard:hover .packageCardContent,
 .packageCard:focus-visible .packageCardContent {
-  max-width: calc(100% - 150px);
+  /* Loosened further than the first pass (was 150px reserved) so the
+     2-word test names ("Blood Pressure", "Kidney Function") actually
+     fit in full instead of getting cut short — the chips are opaque
+     enough now (see .testChip) that sitting over more of the image
+     doesn't hurt legibility. */
+  max-width: calc(100% - 90px);
 }
 
 .packageCardTitle {
@@ -647,9 +652,16 @@
    mid-word. 1fr splits whatever width IS available evenly; minmax(0, ...)
    lets a column shrink below its content's natural width instead of
    forcing the grid wider than its container. */
+/* flex-wrap, not a fixed 2-column grid — a rigid grid forces every chip
+   into the same column width regardless of how long its own name is,
+   which either cramps/truncates short names for no reason or overflows
+   for long ones. Each chip just sizes to its own text (up to
+   .testChip's own max-width) and wraps to the next row once it doesn't
+   fit; two short names still land side by side without being forced to
+   share identical widths. */
 .packageCardTestChips {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px 8px;
 }
 
@@ -666,6 +678,10 @@
      6px/10px it had before. */
   padding: 4px;
   border-radius: 999px;
+  /* Sizes to its own text (up to this cap), not a shared column width —
+     a genuinely long (3+ word) name is the only thing that should ever
+     truncate here, not every chip regardless of its own length. */
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
