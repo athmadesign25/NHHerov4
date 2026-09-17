@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
@@ -22,7 +22,14 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activePane, setActivePane] = useState<string>('main');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      setTimeout(() => setActivePane('main'), 300); // Reset pane when drawer closes
+    }
+  }, [isMobileMenuOpen]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -139,7 +146,7 @@ export default function Navbar() {
         width: "100%",
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-        "--nav-fg-color": (isMobileMenuOpen || isOverLightBackground) ? "var(--color-text, #0f172a)" : "#ffffff"
+        "--nav-fg-color": (!isMobileMenuOpen && isOverLightBackground) ? "var(--color-text, #0f172a)" : "#ffffff"
       } as React.CSSProperties}
     >
       <div
@@ -149,14 +156,14 @@ export default function Navbar() {
           inset: 0,
           zIndex: -1,
           backgroundColor: isMobileMenuOpen
-            ? "rgba(255, 255, 255, 0.94)"
+            ? "rgba(15, 23, 42, 0.95)"
             : (isNavbarActive
                 ? (isOverLightBackground ? "rgba(255, 255, 255, 0.82)" : "rgba(8, 15, 28, 0.55)")
                 : "transparent"),
           backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           borderBottom: isMobileMenuOpen
-            ? "1px solid rgba(0, 0, 0, 0.08)"
+            ? "1px solid rgba(255, 255, 255, 0.1)"
             : (isNavbarActive
                 ? (isOverLightBackground ? "1px solid rgba(0, 0, 0, 0.08)" : "1px solid rgba(255, 255, 255, 0.22)")
                 : "1px solid rgba(255, 255, 255, 0)"),
@@ -554,11 +561,11 @@ export default function Navbar() {
               <Image 
                 alt="Narayana Health" 
                 src="/NH-logo.svg" 
-                width={92} 
-                height={29} 
+                width={112} 
+                height={35} 
                 className={styles.mobileLogoImg}
                 style={{ 
-                  opacity: (isMobileMenuOpen || isOverLightBackground) ? 1 : 0, 
+                  opacity: (!isMobileMenuOpen && isOverLightBackground) ? 1 : 0, 
                   transition: "opacity 0.4s ease" 
                 }} 
                 priority 
@@ -566,11 +573,11 @@ export default function Navbar() {
               <Image 
                 alt="Narayana Health" 
                 src="/NH-logo-white.svg" 
-                width={92} 
-                height={29} 
+                width={112} 
+                height={35} 
                 className={styles.mobileLogoImg}
                 style={{ 
-                  opacity: (!isMobileMenuOpen && !isOverLightBackground) ? 1 : 0, 
+                  opacity: (isMobileMenuOpen || !isOverLightBackground) ? 1 : 0, 
                   transition: "opacity 0.4s ease" 
                 }} 
                 priority 
@@ -579,6 +586,22 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.mobileActionGroup}>
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <motion.button 
+                  className={styles.navCityBtn} 
+                  aria-label="Select City"
+                  initial={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
+                  animate={{ opacity: 1, width: "auto", overflow: "visible", padding: "0 4px" }}
+                  exit={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <MapPin size={16} strokeWidth={2.5} />
+                  <span style={{ fontSize: '13px', fontWeight: 600 }}>BLR</span>
+                  <ChevronDown size={14} style={{ opacity: 0.7 }} />
+                </motion.button>
+              )}
+            </AnimatePresence>
             <button 
               type="button"
               onClick={() => setIsSearchOpen(true)}
@@ -603,125 +626,212 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ─── Apple-Level Mobile Menu Overlay ─── */}
+      {/* ─── Premium Dark Mode Mobile Menu (Sliding Panes) ─── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
-            className={styles.appleDrawerOverlay}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className={styles.darkDrawerOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className={styles.appleDrawerScroll}>
-              {/* Secondary Action: Patient Portal Card (Moved to top) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {isLoggedIn ? (
-                  <div className={styles.drawerAccountCard}>
-                    <div className={styles.drawerAccountInfo}>
-                      <img src={activeUser.img} alt={activeUser.name} style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover" }} />
-                      <div>
-                        <div className={styles.drawerAccountTitle}>{activeUser.name} (You)</div>
-                        <div className={styles.drawerAccountSubtitle}>Active Account · View records</div>
-                      </div>
-                    </div>
-                    <Link 
-                      href="/profile" 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={styles.drawerManageBtn}
+            <AnimatePresence mode="wait">
+              
+              {/* --- MAIN PANE --- */}
+              {activePane === 'main' && (
+                <motion.div 
+                  key="main"
+                  className={styles.darkDrawerPane}
+                  initial={{ x: "-20%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "-20%", opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className={styles.darkDrawerScroll}>
+                    
+                    {/* Main Unified Navigation List */}
+                    <motion.div 
+                      className={styles.coreNavList}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      Manage
-                    </Link>
+                      <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <CalendarCheck size={18} color="#94a3b8" />
+                          <span className={styles.coreNavTitle}>Book Visit</span>
+                        </div>
+                        <ChevronRight size={20} className={styles.coreNavChevron} />
+                      </Link>
+
+                      <button onClick={() => setActivePane('search')} className={styles.coreNavLink}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <Search size={18} color="#94a3b8" />
+                          <span className={styles.coreNavTitle}>Find Doctor</span>
+                        </div>
+                        <ChevronRight size={20} className={styles.coreNavChevron} />
+                      </button>
+
+                      {[
+                        { title: "Treatments & Specialities", pane: "specialities", icon: <Stethoscope size={18} color="#94a3b8" /> },
+                        { title: "Health Checkups", pane: "health-checks", icon: <Activity size={18} color="#94a3b8" /> },
+                        { title: "Hospitals & Clinics", href: "/hospitals", icon: <Building2 size={18} color="#94a3b8" /> },
+                        { title: "International Patients", href: "/international-patients", icon: <Globe size={18} color="#94a3b8" /> },
+                      ].map((item) => (
+                        <Fragment key={item.title}>
+                          {item.pane ? (
+                            <button onClick={() => setActivePane(item.pane)} className={styles.coreNavLink}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                {item.icon}
+                                <span className={styles.coreNavTitle}>{item.title}</span>
+                              </div>
+                              <ChevronRight size={20} className={styles.coreNavChevron} />
+                            </button>
+                          ) : (
+                            <Link href={item.href!} onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                {item.icon}
+                                <span className={styles.coreNavTitle}>{item.title}</span>
+                              </div>
+                              <ChevronRight size={20} className={styles.coreNavChevron} />
+                            </Link>
+                          )}
+                        </Fragment>
+                      ))}
+
+                      <a href="tel:18003090309" className={styles.coreNavLink}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                          <Phone size={18} color="#f87171" />
+                          <span className={styles.coreNavTitle} style={{ color: "#f87171" }}>24/7 Emergency (1800 309 0309)</span>
+                        </div>
+                      </a>
+                    </motion.div>
+
+                    {/* Bottom Utility Dock */}
+                    <motion.div 
+                      className={styles.utilityDock}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <button onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} className={styles.utilityRow}>
+                        <div className={styles.utilityIconWrap}><User size={16} /></div>
+                        <span>Login</span>
+                      </button>
+                    </motion.div>
                   </div>
-                ) : (
-                  <div className={styles.drawerAccountCard}>
-                    <div className={styles.drawerAccountInfo}>
-                      <div className={styles.accountIconWell}>
-                        <User size={18} color="var(--color-primary, #034EA2)" />
-                      </div>
-                      <div>
-                        <div className={styles.drawerAccountTitle}>Patient Portal</div>
-                        <div className={styles.drawerAccountSubtitle}>Access appointments & lab records</div>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} 
-                      className={styles.drawerLoginBtn}
-                    >
-                      Sign In
+                </motion.div>
+              )}
+
+              {/* --- SUB-PANE: FIND A DOCTOR (SEARCH) --- */}
+              {activePane === 'search' && (
+                <motion.div 
+                  key="search"
+                  className={styles.darkDrawerPane}
+                  initial={{ x: "100%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "100%", opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className={styles.paneHeader}>
+                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
+                      <ChevronLeft size={22} />
                     </button>
+                    <span className={styles.paneTitle}>Find a Doctor</span>
                   </div>
-                )}
-              </motion.div>
+                  <div className={styles.darkDrawerScroll}>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>Top Specialties</div>
+                      <Link href="/search?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
+                      <Link href="/search?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
+                      <Link href="/search?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
+                      <Link href="/search?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
+                      <Link href="/search?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
+                    </div>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>Surgical Specialists</div>
+                      <Link href="/search?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
+                      <Link href="/search?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
+                      <Link href="/search?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
+                      <Link href="/search?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-              {/* Secondary Actions: Location + 24/7 Helpline */}
-              <motion.div 
-                className={styles.drawerMetaRow}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className={styles.drawerMetaChip}>
-                  <MapPin size={15} color="var(--color-primary, #034EA2)" />
-                  <span>City: <strong>Bangalore</strong></span>
-                  <ChevronDown size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
-                </div>
-                <a href="tel:18003090309" className={styles.drawerHelplineChip}>
-                  <Phone size={14} />
-                  <span>1800 309 0309</span>
-                </a>
-              </motion.div>
+              {/* --- SUB-PANE: SPECIALITIES --- */}
+              {activePane === 'specialities' && (
+                <motion.div 
+                  key="specialities"
+                  className={styles.darkDrawerPane}
+                  initial={{ x: "100%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "100%", opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className={styles.paneHeader}>
+                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
+                      <ChevronLeft size={22} />
+                    </button>
+                    <span className={styles.paneTitle}>Specialities</span>
+                  </div>
+                  <div className={styles.darkDrawerScroll}>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>Heart Care</div>
+                      <Link href="/specialities/cardiology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiology</Link>
+                      <Link href="/specialities/cardiac-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgery</Link>
+                      <Link href="/specialities/vascular-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgery</Link>
+                    </div>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>Brain & Spine</div>
+                      <Link href="/specialities/neurology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurology</Link>
+                      <Link href="/specialities/neurosurgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurosurgery</Link>
+                      <Link href="/specialities/spine-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Spine Surgery</Link>
+                    </div>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>Bones & Joints</div>
+                      <Link href="/specialities/orthopaedics" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedics</Link>
+                      <Link href="/specialities/joint-replacement" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Joint Replacement</Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-              {/* Staggered Navigation Links */}
-              <div className={styles.drawerNavSection}>
-                <div className={styles.drawerSectionLabel}>EXPLORE CARE</div>
-                {[
-                  { title: "Find a Doctor", href: "/search", tag: "3,000+ Specialists" },
-                  { title: "Hospitals & Clinics", href: "/hospitals", tag: "21 Cities" },
-                  { title: "Health Checkups", href: "/health-checks", tag: "Custom Packages" },
-                  { title: "Treatments & Specialities", href: "/specialities", tag: "30+ Depts" },
-                  { title: "International Patients", href: "/international-patients", tag: "Global Care" },
-                ].map((item, idx) => (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.28, delay: 0.11 + idx * 0.035, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <Link 
-                      href={item.href} 
-                      onClick={() => setIsMobileMenuOpen(false)} 
-                      className={styles.drawerNavLink}
-                    >
-                      <div className={styles.navLinkContent}>
-                        <span className={styles.navLinkText}>{item.title}</span>
-                        <span className={styles.navLinkTag}>{item.tag}</span>
-                      </div>
-                      <ChevronRight size={16} className={styles.navChevron} />
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
+              {/* --- SUB-PANE: HEALTH CHECKUPS --- */}
+              {activePane === 'health-checks' && (
+                <motion.div 
+                  key="health-checks"
+                  className={styles.darkDrawerPane}
+                  initial={{ x: "100%", opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "100%", opacity: 0 }}
+                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className={styles.paneHeader}>
+                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
+                      <ChevronLeft size={22} />
+                    </button>
+                    <span className={styles.paneTitle}>Health Checkups</span>
+                  </div>
+                  <div className={styles.darkDrawerScroll}>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>For Women</div>
+                      <Link href="/specialities/vital-care-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 40 years)</Link>
+                      <Link href="/specialities/prime-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (40-45 years)</Link>
+                      <Link href="/specialities/enhanced-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
+                    </div>
+                    <div className={styles.subCategoryGroup}>
+                      <div className={styles.subCategoryLabel}>For Men</div>
+                      <Link href="/specialities/vital-care-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 35 years)</Link>
+                      <Link href="/specialities/prime-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (35-45 years)</Link>
+                      <Link href="/specialities/enhanced-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-              {/* Drawer Bottom CTA */}
-              <motion.div 
-                className={styles.drawerFooter}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.drawerBookBtn}>
-                  Book Hospital Visit
-                </Link>
-                <p className={styles.drawerFootnote}>
-                  Narayana Health · Compassion Backed by Expertise
-                </p>
-              </motion.div>
-            </div>
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

@@ -474,13 +474,12 @@ export default function AppDownloadBanner() {
             </div>
 
             <motion.div
+              className={styles.phoneWrapper}
               style={{
                 position: "relative",
                 rotate: handRotation,
                 y: handY,
                 pointerEvents: "none",
-                marginTop: "-30px",
-                marginBottom: "-45px"
               }}
             >
               <Image
@@ -488,7 +487,7 @@ export default function AppDownloadBanner() {
                 width={1019}
                 height={1130}
                 alt="Mobile phone in hand"
-                style={{ width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)" }}
+                className={styles.handImage}
               />
               
               {/* Auto-playing Screens sandwiched in the middle */}
@@ -539,12 +538,27 @@ export default function AppDownloadBanner() {
                 width={1019}
                 height={1130}
                 alt="Mobile phone in hand Overlay"
-                style={{ position: "absolute", top: 0, left: 0, width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)", zIndex: 20 }}
+                className={styles.handOverlayImage}
               />
             </motion.div>
 
+            {/* Mobile Feature Caption */}
+            <div className={`${styles.mobileCaption} ${styles.mobileOnly}`}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].text}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
             {/* Store links on the right */}
-            <div className={styles.storesColPosition} style={{ marginTop: "-140px", marginRight: "120px" }}>
+            <div className={styles.storesColPosition}>
               <motion.div 
                 className={styles.storesCol}
                 style={{ pointerEvents: "auto", zIndex: 30 }}
@@ -552,20 +566,16 @@ export default function AppDownloadBanner() {
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <div className={`${styles.storeContainer} ${styles.qrContainer}`}>
+                <div className={`${styles.storeContainer} ${styles.qrContainer} ${styles.desktopOnly}`}>
                   <Image src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: "6px" }} className={styles.qrImg} />
                   <span className={styles.qrLabel}>Scan to install</span>
                 </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
-                  </a>
-                </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
-                  </a>
-                </div>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
+                </a>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
+                </a>
               </motion.div>
             </div>
           </div>
