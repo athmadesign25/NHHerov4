@@ -72,13 +72,17 @@
    plus a deep-navy corner glow, per the Figma spec. Full height (not
    confined to a hard-edged band) so each gradient's own long fade-out is
    what dissolves it to nothing — there's no box boundary of its own to
-   visually "cut" against. */
+   visually "cut" against. Flipped vertically (scaleY): the literal Figma
+   values put the warm glow in the bottom-left corner — mirroring top<->
+   bottom moves it to the top-left instead, without touching which side
+   (left vs right) it sits on. */
 .topOverlay {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(13deg, rgba(255, 54, 57, 0.30) -31.94%, rgba(152, 15, 17, 0) 33.58%),
     linear-gradient(97deg, rgba(5, 22, 50, 0.50) 19.03%, rgba(6, 24, 56, 0.47) 27.59%, rgba(9, 40, 90, 0.30) 62.01%, rgba(15, 67, 152, 0) 91.02%);
+  transform: scaleY(-1);
   pointer-events: none;
   z-index: 2;
 }
