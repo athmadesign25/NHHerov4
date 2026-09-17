@@ -3,7 +3,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import styles from "./HealthPackages.module.css";
 
 type PackageCard = {
@@ -163,7 +162,7 @@ const CARD_ENTRY_Y_OFFSETS_PX = [26, -18, 22];
 
 // Mouse-follow tilt on hover: max rotation in degrees at the card's own
 // edge (cursor at dead center = 0deg). Kept small/subtle per spec.
-const TILT_MAX_DEG = 6;
+const TILT_MAX_DEG = 2.5;
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -738,6 +737,7 @@ export default function HealthPackages() {
                         onMouseMove={handleCardMouseMove}
                         onMouseLeave={handleCardMouseLeave}
                       >
+                        <span className={styles.packageCardBorder} aria-hidden />
                         <img src={pkg.image} alt="" className={styles.packageCardImage} />
                         <div className={styles.packageCardContent}>
                           <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
@@ -775,7 +775,6 @@ export default function HealthPackages() {
                     className={styles.exploreRow}
                   >
                     Explore all packages
-                    <ArrowRight size={16} />
                   </Link>
                 </>
               ) : (
@@ -785,7 +784,6 @@ export default function HealthPackages() {
                   className={styles.exploreRow}
                 >
                   Find a check-up near you
-                  <ArrowRight size={16} />
                 </Link>
               )}
             </div>

@@ -383,7 +383,6 @@ export default function CentreOfExcellence() {
               style={{ opacity: dimOpacity, filter: dimBlur }}
             >
               View All Specialties
-              <ChevronRight size={16} />
             </motion.a>
           </div>
 

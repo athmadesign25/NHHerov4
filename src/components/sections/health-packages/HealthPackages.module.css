@@ -263,41 +263,56 @@
   outline-offset: 2px;
 }
 
-/* Gradient border (not a solid color) via the standard double-background
-   trick: a transparent border plus two (three, for V2) stacked
-   background-images, the last one clipped to the border box only. */
+/* Border color now comes entirely from .packageCardBorder (a dedicated
+   element, see below) — a plain transparent border here just reserves
+   its footprint. Background is back to a single content gradient layer;
+   the previous double-background-layer approach for the gradient border
+   was broken: with the content gradient at 0.60 alpha, the border-gradient
+   layer underneath (clipped to border-box, which covers the full
+   interior too, not just the ring) showed through everywhere, not just
+   at the edge — that's what was washing the cards out lighter than
+   spec'd. */
 .packageCardV1 {
   border-radius: 10px;
   border: 1px solid transparent;
-  background-image:
-    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%),
-    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
 .packageCardV2 {
   border-radius: 10.235px;
   border: 1.023px solid transparent;
-  background-image:
+  background:
     linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
-    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%),
-    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
-  background-origin: border-box;
-  background-clip: padding-box, padding-box, border-box;
+    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.64);
 }
 
 .packageCardV3 {
   border-radius: 10px;
   border: 1px solid transparent;
-  background-image:
-    linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%),
-    linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+  background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
+}
+
+/* Dedicated gradient-border ring — a separate element (not ::before/
+   ::after, both already used for the shimmer/hover-wash below) using the
+   mask-composite "exclude" trick: two overlapping masks (the full box and
+   an inset copy) cancel out everywhere except the ring itself, so this
+   element's own gradient only ever paints there — no bleed into the
+   card's own content background, unlike the flawed layered-background
+   approach above. */
+.packageCardBorder {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(30deg, hsla(204, 97%, 78%, 1), hsla(0, 71%, 73%, 1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Grow + mouse-follow tilt is JS-driven now (handleCardMouseMove/
@@ -460,21 +475,25 @@
   transform: scale(1);
 }
 
-/* Secondary white-outlined button — same pattern as PatientStories'
-   .secondaryCtaBtn. transform is scroll-driven (see the JS stagger), so
-   hover only touches background/border/shadow, never transform. */
+/* Secondary white-outlined button — unified site-wide with PatientStories'
+   .secondaryCtaBtn and CentreOfExcellence's .viewAllBtn (same padding,
+   radius, border, background, blur, hover lift). This element's own
+   `transform` is also scroll-driven (see the JS stagger further up), so
+   the hover lift needs !important to actually apply once the entrance
+   has finished writing its own inline transform — same fix as
+   .packageCard's hover scale above. */
 .exploreRow {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 13px 16px;
+  padding: 12px 28px;
   margin-top: 4px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #ffffff;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
@@ -484,8 +503,9 @@
 }
 
 .exploreRow:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.14);
   border-color: #ffffff;
+  transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 

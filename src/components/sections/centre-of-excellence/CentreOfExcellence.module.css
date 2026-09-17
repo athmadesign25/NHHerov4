@@ -398,6 +398,9 @@
   z-index: 5;
 }
 
+/* Unified site-wide with HealthPackages' .exploreRow and PatientStories'
+   .secondaryCtaBtn — same padding, radius, border, background, blur, and
+   hover treatment (a lighter glass wash, not a solid color fill). */
 .viewAllBtn {
   position: relative;
   z-index: 2;
@@ -405,28 +408,27 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
+  padding: 12px 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
 }
 
 .viewAllBtn:hover {
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
-  border-color: var(--color-primary, #034EA2);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
 }
 
 @media (max-width: 1024px) {
