@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { 
   Paperclip, Mic, ArrowRight, X, MapPin, ChevronDown, 
-  User, Stethoscope, Sparkles, CornerDownLeft, Command
+  User, Heart, Sparkles, CornerDownLeft, Command
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { NH_LOCATIONS, PredictiveState, getPredictiveCompletion } from "./searchData";
@@ -117,7 +117,7 @@ export default function ActiveSearchCanvas({
               aria-expanded={isLocationOpen}
               aria-label={`Current location: ${selectedLocation}`}
             >
-              <MapPin size={14} color="#FF6B6B" />
+              <MapPin size={13} className={styles.locationPinIcon} />
               <span>{selectedLocation}</span>
               <ChevronDown
                 size={13}
@@ -173,8 +173,12 @@ export default function ActiveSearchCanvas({
 
       {/* Input Row with Live Predictive Sentence Ghost Overlay */}
       <div className={styles.activeInputRow}>
-        <button type="button" className={styles.iconControlBtn} aria-label="Attach medical records or file">
-          <Paperclip size={20} />
+        <button 
+          type="button" 
+          className={styles.standaloneIconBtn} 
+          aria-label="Attach medical records or file"
+        >
+          <Paperclip size={18} />
         </button>
 
         <div className={styles.inputGhostWrapper}>
@@ -209,8 +213,12 @@ export default function ActiveSearchCanvas({
           )}
         </div>
 
-        <button type="button" className={styles.iconControlBtn} aria-label="Voice search">
-          <Mic size={20} />
+        <button 
+          type="button" 
+          className={styles.standaloneIconBtn} 
+          aria-label="Voice search"
+        >
+          <Mic size={18} />
         </button>
 
         <button
@@ -227,30 +235,30 @@ export default function ActiveSearchCanvas({
             }
           }}
         >
-          <ArrowRight size={18} strokeWidth={2.5} />
+          <ArrowRight size={16} strokeWidth={2.5} />
         </button>
       </div>
 
       {/* Red Horizon Divider Line */}
       <div className={styles.redDivider} />
 
-      {/* Quick Action Filter Pills */}
+      {/* Quick Actions (Unboxed lightweight text + icon directly on the glass) */}
       <div className={styles.activePillsRow}>
         <button
           type="button"
-          className={`${styles.actionPill} ${activePill === "doctor" ? styles.actionPillActive : ""}`}
+          className={`${styles.inlineActionBtn} ${activePill === "doctor" ? styles.inlineActionBtnActive : ""}`}
           onClick={() => onSelectActionPill("doctor")}
         >
-          <User size={14} color="#38BDF8" />
+          <User size={14} className={styles.inlineActionIcon} />
           <span>Find a doctor</span>
         </button>
 
         <button
           type="button"
-          className={`${styles.actionPill} ${activePill === "symptoms" ? styles.actionPillActive : ""}`}
+          className={`${styles.inlineActionBtn} ${activePill === "symptoms" ? styles.inlineActionBtnActive : ""}`}
           onClick={() => onSelectActionPill("symptoms")}
         >
-          <Stethoscope size={14} color="#EC4899" />
+          <Heart size={14} className={styles.inlineActionIcon} />
           <span>Describe my symptoms</span>
         </button>
       </div>
@@ -267,9 +275,13 @@ export default function ActiveSearchCanvas({
       {/* ── LIVE PREDICTIVE SECTION (When user types any character) ── */}
       {prediction && (
         <div className={styles.suggestionsSection}>
+          <div className={styles.suggestionsHeaderRow}>
+            <span className={styles.suggestionsHeader}>Suggested predictions</span>
+          </div>
+
           {prediction.suggestions.length > 0 && (
             <div className={styles.suggestionsList} role="listbox">
-              {prediction.suggestions.slice(0, 2).map((sug, idx) => (
+              {prediction.suggestions.slice(0, 4).map((sug, idx) => (
                 <button
                   key={sug}
                   type="button"
@@ -295,7 +307,7 @@ export default function ActiveSearchCanvas({
 
           {/* Pulse AI Status */}
           <div className={styles.pulseStatusRow}>
-            <Sparkles size={15} className={styles.sparkleIcon} />
+            <span className={styles.sparkleIcon}>✦</span>
             <span>Pulse understands what you&apos;re trying to say</span>
           </div>
         </div>

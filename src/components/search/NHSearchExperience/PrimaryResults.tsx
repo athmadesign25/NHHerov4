@@ -40,19 +40,18 @@ export default function PrimaryResults({
                 <div className={styles.doctorName}>{doc.name}</div>
                 <div className={styles.doctorSpecialty}>{doc.speciality}</div>
                 <div className={styles.doctorHospital}>{doc.hospital}</div>
-                
-                <div className={styles.doctorExpText}>{doc.experience}</div>
-
-                <div className={styles.doctorActionRow}>
-                  <Link
-                    href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
-                    className={styles.bookApptBtn}
-                  >
-                    <span>Book Appointment</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
               </div>
+            </div>
+
+            <div className={styles.doctorCardFooter}>
+              <span className={styles.doctorExpText}>{doc.experience}</span>
+              <Link
+                href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                className={styles.bookApptBtn}
+              >
+                <span>Book</span>
+                <ArrowRight size={12} />
+              </Link>
             </div>
           </div>
         ))}
@@ -65,11 +64,11 @@ export default function PrimaryResults({
           className={styles.viewAllDoctorsTextLink}
         >
           <span>View all doctors</span>
-          <ArrowRight size={15} />
+          <ArrowRight size={13} />
         </Link>
       </div>
 
-      {/* Optional Pulse AI Nudge (Below doctors, non-intrusive) */}
+      {/* Optional Pulse AI Nudge (Below doctors, lightweight horizontal text treatment) */}
       {pulseRecommendationText && (
         <div className={styles.pulseNudgeRow}>
           <span className={styles.pulseNudgeText}>{pulseRecommendationText}</span>
@@ -79,7 +78,7 @@ export default function PrimaryResults({
             onClick={onAskPulse}
           >
             <span>Ask Pulse</span>
-            <ArrowRight size={13} />
+            <ArrowRight size={12} />
           </button>
         </div>
       )}

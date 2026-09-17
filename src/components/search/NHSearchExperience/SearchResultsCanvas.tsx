@@ -56,7 +56,7 @@ export default function SearchResultsCanvas({
               aria-expanded={isLocationOpen}
               aria-label={`Location: ${selectedLocation}`}
             >
-              <MapPin size={14} color="#FF6B6B" />
+              <MapPin size={13} className={styles.locationPinIcon} />
               <span>{selectedLocation}</span>
               <ChevronDown
                 size={13}

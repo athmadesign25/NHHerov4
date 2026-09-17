@@ -30,9 +30,6 @@ export default function SecondaryResults({
             {spec}
           </button>
         ))}
-        <Link href="/specialities" className={styles.viewAllSpecLink}>
-          View all →
-        </Link>
       </div>
     </div>
   );

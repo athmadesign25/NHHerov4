@@ -140,13 +140,13 @@
   max-width: 880px;
   padding: 24px 28px 24px;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(18, 24, 34, 0.48);
-  backdrop-filter: blur(28px) saturate(150%);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 28, 36, 0.30);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 24px 60px -15px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+    0 20px 50px -12px rgba(0, 0, 0, 0.38),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: visible;
 }
@@ -159,42 +159,42 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.4) 0deg,
-    rgba(3, 78, 162, 0.5) 75deg,
-    rgba(237, 28, 36, 0.28) 150deg,
-    rgba(0, 196, 255, 0.12) 220deg,
-    rgba(3, 78, 162, 0.38) 290deg,
-    rgba(0, 196, 255, 0.4) 360deg
+    rgba(0, 196, 255, 0.38) 0deg,
+    rgba(3, 78, 162, 0.48) 75deg,
+    rgba(237, 28, 36, 0.22) 150deg,
+    rgba(0, 196, 255, 0.10) 220deg,
+    rgba(3, 78, 162, 0.32) 290deg,
+    rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: rotateBorderAngle 10s linear infinite;
+  animation: rotateBorderAngle 11s linear infinite;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.5;
+  opacity: 0.38;
 }
 
 .stateActive::after {
   content: "";
   position: absolute;
-  inset: -4px;
-  border-radius: 26px;
+  inset: -3px;
+  border-radius: 25px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.1) 0deg,
-    rgba(3, 78, 162, 0.12) 75deg,
-    rgba(237, 28, 36, 0.06) 150deg,
-    rgba(0, 196, 255, 0.04) 220deg,
-    rgba(3, 78, 162, 0.08) 290deg,
-    rgba(0, 196, 255, 0.1) 360deg
+    rgba(0, 196, 255, 0.08) 0deg,
+    rgba(3, 78, 162, 0.10) 75deg,
+    rgba(237, 28, 36, 0.04) 150deg,
+    rgba(0, 196, 255, 0.02) 220deg,
+    rgba(3, 78, 162, 0.06) 290deg,
+    rgba(0, 196, 255, 0.08) 360deg
   );
-  filter: blur(12px);
-  -webkit-filter: blur(12px);
-  animation: rotateBorderAngle 10s linear infinite;
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  animation: rotateBorderAngle 11s linear infinite;
   pointer-events: none;
   z-index: -1;
-  opacity: 0.4;
+  opacity: 0.26;
 }
 
 .stateResults {
@@ -202,13 +202,13 @@
   max-width: 1080px;
   padding: 26px 32px 28px;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(18, 24, 34, 0.55);
-  backdrop-filter: blur(32px) saturate(150%);
-  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 28, 36, 0.32);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 30px 70px -15px rgba(0, 0, 0, 0.55),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+    0 24px 60px -15px rgba(0, 0, 0, 0.42),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
   position: relative;
   overflow: visible;
 }
@@ -221,42 +221,42 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.35) 0deg,
-    rgba(3, 78, 162, 0.45) 75deg,
+    rgba(0, 196, 255, 0.38) 0deg,
+    rgba(3, 78, 162, 0.48) 75deg,
     rgba(237, 28, 36, 0.22) 150deg,
-    rgba(0, 196, 255, 0.1) 220deg,
+    rgba(0, 196, 255, 0.10) 220deg,
     rgba(3, 78, 162, 0.32) 290deg,
-    rgba(0, 196, 255, 0.35) 360deg
+    rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: rotateBorderAngle 10s linear infinite;
+  animation: rotateBorderAngle 11s linear infinite;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.45;
+  opacity: 0.38;
 }
 
 .stateResults::after {
   content: "";
   position: absolute;
-  inset: -4px;
-  border-radius: 26px;
+  inset: -3px;
+  border-radius: 25px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.08) 0deg,
-    rgba(3, 78, 162, 0.1) 75deg,
-    rgba(237, 28, 36, 0.05) 150deg,
-    rgba(0, 196, 255, 0.03) 220deg,
+    rgba(3, 78, 162, 0.10) 75deg,
+    rgba(237, 28, 36, 0.04) 150deg,
+    rgba(0, 196, 255, 0.02) 220deg,
     rgba(3, 78, 162, 0.06) 290deg,
     rgba(0, 196, 255, 0.08) 360deg
   );
-  filter: blur(12px);
-  -webkit-filter: blur(12px);
-  animation: rotateBorderAngle 10s linear infinite;
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  animation: rotateBorderAngle 11s linear infinite;
   pointer-events: none;
   z-index: -1;
-  opacity: 0.35;
+  opacity: 0.26;
 }
 
 /* ── Top Header Row (Pulse AI badge, Location, Close) ── */
@@ -649,9 +649,9 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: inherit;
-  font-size: 18px;
-  font-weight: 500;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(18px, 1.6vw, 20px);
+  font-weight: 450;
   color: #FFFFFF;
   line-height: 1.4;
   letter-spacing: -0.01em;
@@ -663,7 +663,7 @@
 }
 
 .activeTextInput::placeholder {
-  color: #64748B;
+  color: rgba(255, 255, 255, 0.4);
   font-weight: 400;
 }
 
@@ -677,8 +677,8 @@
   display: flex;
   align-items: center;
   pointer-events: none;
-  font-family: inherit;
-  font-size: 18px;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(18px, 1.6vw, 20px);
   line-height: 1.4;
   letter-spacing: -0.01em;
   z-index: 1;
@@ -696,7 +696,7 @@
 }
 
 .ghostSuffix {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.38);
   font-weight: 400;
   letter-spacing: -0.01em;
   pointer-events: auto;
@@ -713,37 +713,33 @@
   align-items: center;
   margin-left: 10px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: #38BDF8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
   border-radius: 4px;
   padding: 1px 6px;
   letter-spacing: 0.02em;
   user-select: none;
   pointer-events: auto;
   cursor: pointer;
-  animation: tabBadgePulse 2s infinite ease-in-out;
-}
-
-@keyframes tabBadgePulse {
-  0%, 100% {
-    opacity: 0.85;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-    background: rgba(56, 189, 248, 0.22);
-  }
 }
 
 .activePillsRow {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   margin-top: 4px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+}
+
+.inlineActionBtnActive {
+  color: #00C4FF !important;
+  background: rgba(0, 196, 255, 0.08) !important;
+}
+
+.inlineActionBtnActive .inlineActionIcon {
+  color: #00C4FF !important;
 }
 
 /* ── Empty State Canvas (Before Typing) ── */
@@ -767,7 +763,7 @@
 }
 
 .emptyPromptSub {
-  font-size: 13.5px;
+  font-size: 13px;
   color: #64748B;
   font-weight: 400;
   line-height: 1.5;
@@ -811,7 +807,7 @@
 
 /* ── Live Predictions Section ── */
 .suggestionsSection {
-  margin-top: 18px;
+  margin-top: 16px;
   animation: fadeInPredictions 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -830,13 +826,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding: 0 4px;
 }
 
 .suggestionsHeader {
-  font-size: 11px;
-  font-weight: 600;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 11.5px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #64748B;
@@ -856,23 +853,21 @@
 .suggestionsList {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .suggestionItem {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: 10px;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
   background: transparent;
   border: 1px solid transparent;
   text-align: left;
   font-family: inherit;
-  font-size: 15px;
-  color: #CBD5E1;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   width: 100%;
 }
 
@@ -881,17 +876,20 @@
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.08);
   color: #FFFFFF;
-  transform: translateX(2px);
 }
 
 .suggestionArrow {
-  color: #38BDF8;
+  color: #00C4FF;
+  opacity: 0.75;
   flex-shrink: 0;
 }
 
 .suggestionText {
   flex: 1;
-  font-weight: 450;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .pressEnterHint {
@@ -908,26 +906,27 @@
 }
 
 .highlightMatch {
-  font-weight: 700;
+  font-weight: 500;
   color: #FFFFFF;
 }
 
-/* ── Subtle Pulse AI Status ("Intelligently preparing matches…") ── */
+/* ── Subtle Pulse AI Status ── */
 .pulseStatusRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 22px;
-  padding-top: 14px;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 13px;
+  font-size: 12.5px;
   color: #94A3B8;
+  font-weight: 400;
   user-select: none;
 }
 
 .sparkleIcon {
   color: #00C4FF;
-  animation: pulseSparkle 2s ease-in-out infinite;
+  font-size: 13px;
 }
 
 @keyframes pulseSparkle {
@@ -1029,12 +1028,12 @@
   transform: scale(1.03);
 }
 
-/* ── Results Main Split Layout (Dominant Primary ~65% vs Tertiary ~35%) ── */
+/* ── Results Main Split Layout (Weighted 66% Left vs 34% Right) ── */
 .resultsSplitLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr);
-  gap: 32px;
-  margin-top: 24px;
+  grid-template-columns: minmax(0, 66fr) minmax(240px, 34fr);
+  gap: 28px;
+  margin-top: 20px;
   align-items: start;
   width: 100%;
 }
@@ -1052,75 +1051,74 @@
   flex-direction: column;
   align-items: flex-start;
   margin-top: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .resultsCategoryTitle {
-  font-size: 22px;
-  font-weight: 700;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 18px;
+  font-weight: 600;
   color: #FFFFFF;
   margin: 0;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .resultsCategorySub {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 400;
   color: #94A3B8;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 .recommendedSectionLabel {
-  font-size: 11.5px;
-  font-weight: 700;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #64748B;
-  margin-bottom: 12px;
-  height: 20px;
+  margin-bottom: 10px;
+  height: auto;
   display: flex;
   align-items: center;
 }
 
-/* ── Clean Doctor Cards 2-Column Grid ── */
+/* ── Clean Lighter Doctor Cards (2-Column Grid) ── */
 .doctorsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
 .doctorCard {
-  padding: 16px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.2s ease;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.18s ease, border-color 0.18s ease;
   text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 0;
 }
 
 .doctorCard:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 .doctorCardBody {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 11px;
 }
 
 .doctorAvatar {
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
   background: #1e293b;
 }
@@ -1133,140 +1131,144 @@
 }
 
 .doctorName {
-  font-size: 15px;
-  font-weight: 700;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 14.5px;
+  font-weight: 600;
   color: #FFFFFF;
   letter-spacing: -0.01em;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .doctorSpecialty {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: #38BDF8;
-  margin-top: 2px;
+  color: #00C4FF;
+  margin-top: 1px;
 }
 
 .doctorHospital {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #94A3B8;
+  font-weight: 400;
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.doctorExpText {
-  font-size: 12px;
-  color: #CBD5E1;
+.doctorCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 10px;
-  font-weight: 450;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.doctorActionRow {
-  margin-top: 14px;
+.doctorExpText {
+  font-size: 11.5px;
+  color: #94A3B8;
+  font-weight: 400;
+  margin: 0;
 }
 
+/* ── Compact CTA Button ("Book →") ── */
 .bookApptBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 4px;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 11.5px;
+  font-weight: 500;
   color: #FFFFFF;
   background: #034EA2;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 6px 14px;
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 4px 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
   letter-spacing: 0.01em;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.3);
 }
 
 .bookApptBtn:hover {
-  background: #0066FF;
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.5);
-  transform: translateY(-1px);
+  background: #0060DF;
+  transform: translateY(-0.5px);
 }
 
 /* ── Simple Text Action: View all doctors → ── */
 .viewAllDoctorsRow {
   display: flex;
   align-items: center;
-  margin-top: 18px;
+  margin-top: 12px;
 }
 
 .viewAllDoctorsTextLink {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #38BDF8;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #00C4FF;
   text-decoration: none;
   background: transparent;
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: color 0.15s ease;
 }
 
 .viewAllDoctorsTextLink:hover {
-  color: #7DD3FC;
-  transform: translateX(3px);
+  color: #38BDF8;
 }
 
-/* ── Pulse AI Nudge Row (Below Doctors) ── */
+/* ── Pulse AI Nudge Row (Below Doctors, Lightweight Horizontal Text) ── */
 .pulseNudgeRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 24px;
-  padding: 12px 16px;
-  border-radius: 10px;
-  background: rgba(3, 78, 162, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  gap: 14px;
+  margin-top: 16px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
 }
 
 .pulseNudgeText {
-  font-size: 13px;
-  font-weight: 500;
-  color: #CBD5E1;
+  font-size: 12px;
+  font-weight: 400;
+  color: #94A3B8;
 }
 
 .pulseNudgeBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: #034EA2;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  padding: 5px 12px;
-  font-family: inherit;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 12px;
-  font-weight: 600;
-  color: #FFFFFF;
+  font-weight: 500;
+  color: #00C4FF;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: color 0.15s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.25);
 }
 
 .pulseNudgeBtn:hover {
-  background: #0066FF;
-  border-color: rgba(255, 255, 255, 0.35);
-  transform: translateY(-1px);
+  color: #38BDF8;
 }
 
-/* ── Secondary Results: Unboxed, Lightweight ── */
+/* ── Secondary Results: Unboxed Open Section Using Spacing Only ── */
 .relatedSpecialtiesSection {
-  margin-top: 24px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   background: transparent;
   border-left: none;
   border-right: none;
@@ -1275,12 +1277,12 @@
 }
 
 .relatedSectionHeader {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .relatedSectionTitle {
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #64748B;
@@ -1289,55 +1291,38 @@
 .relatedTagsGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-wrap: wrap;
 }
 
 .specPillTag {
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #CBD5E1;
-  font-size: 12.5px;
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  font-weight: 400;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.15s ease;
   user-select: none;
 }
 
 .specPillTag:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
   color: #FFFFFF;
 }
 
-.viewAllSpecLink {
-  color: #38BDF8;
-  font-size: 12.5px;
-  font-weight: 600;
-  margin-left: 6px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.viewAllSpecLink:hover {
-  color: #7DD3FC;
-  text-decoration: underline;
-}
-
-/* ── Tertiary Right Rail: Narrower, Compact List Rows, Independent Scroll ── */
+/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis ── */
 .resultsRightCol {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-height: 520px;
+  gap: 20px;
+  max-height: 480px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 6px;
+  padding-right: 4px;
   min-width: 0;
   width: 100%;
   scrollbar-width: thin;
@@ -1357,10 +1342,6 @@
   border-radius: 9999px;
 }
 
-.resultsRightCol::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
 .tertiarySectionBlock {
   display: flex;
   flex-direction: column;
@@ -1370,63 +1351,62 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
-  height: 20px;
+  margin-bottom: 8px;
+  height: 18px;
 }
 
 .tertiarySectionTitle {
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #64748B;
 }
 
 .viewAllSmallLink {
-  font-size: 11.5px;
-  font-weight: 500;
-  color: #38BDF8;
+  font-size: 11px;
+  font-weight: 450;
+  color: #94A3B8;
   text-decoration: none;
   background: none;
   border: none;
   cursor: pointer;
+  transition: color 0.15s ease;
 }
 
 .viewAllSmallLink:hover {
-  color: #7DD3FC;
-  text-decoration: underline;
+  color: #CBD5E1;
 }
 
 /* ── Compact List Rows for Treatments & Articles ── */
 .tertiaryListRows {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
 }
 
 .tertiaryListRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
   text-decoration: none;
 }
 
 .tertiaryListRow:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(2px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .tertiaryRowLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -1434,11 +1414,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #38BDF8;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
 }
 
@@ -1449,9 +1429,9 @@
 }
 
 .tertiaryRowTitle {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: #E2E8F0;
+  color: rgba(255, 255, 255, 0.88);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1459,19 +1439,21 @@
 
 .tertiaryRowSubtitle {
   font-size: 11px;
+  font-weight: 400;
   color: #64748B;
   margin-top: 1px;
 }
 
 .tertiaryRowArrow {
   color: #475569;
+  opacity: 0.6;
   flex-shrink: 0;
-  transition: transform 0.18s ease, color 0.18s ease;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .tertiaryListRow:hover .tertiaryRowArrow {
   color: #94A3B8;
-  transform: translateX(2px);
+  opacity: 1;
 }
 
 /* ── Skeleton Loading State Styles ── */

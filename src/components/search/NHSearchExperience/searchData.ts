@@ -123,16 +123,20 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
   const clean = typedText.trim().toLowerCase();
   if (!clean) return null;
 
-  // ── SCENARIO A: CARDIOLOGY ('c' -> 'ch' -> 'chest' -> 'chest pain') ──
+  // ── SCENARIO A: CARDIOLOGY ('c' -> 'ch' -> 'chest' -> 'chest pain' -> 'cardio' -> 'cardiologist near me') ──
+  const cardiologySuggestions = [
+    "cardiologist near me",
+    "chest pain and need a doctor",
+    "cardiology consultation in Bangalore",
+    "chest pain specialist near me",
+  ];
+
   if (clean === "c") {
     const target = "cardiologist near me";
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "chest pain and need a doctor",
-        "cardiology consultation near me",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };
@@ -143,10 +147,7 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "cardiologist near me",
-        "chest pain specialist in Bangalore",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };
@@ -157,10 +158,7 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "chest pain and need a cardiologist",
-        "chest pain clinic in Bangalore",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };
@@ -171,10 +169,7 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "I have chest pain and need a doctor",
-        "chest pain doctor near me",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };
@@ -185,10 +180,7 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "cardiologist near me",
-        "cardiology consultation in Bangalore",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };
@@ -199,10 +191,7 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     return {
       fullText: target,
       suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "I have chest pain and need a doctor",
-        "cardiology consultation near me",
-      ],
+      suggestions: cardiologySuggestions,
       intent: "cardiology",
       intentLabel: "Cardiology",
     };

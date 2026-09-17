@@ -274,9 +274,9 @@ export default function NHSearchExperience({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(5, 10, 18, 0.72)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              background: "rgba(5, 10, 18, 0.28)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
               zIndex: 9991,
               pointerEvents: "auto",
             }}

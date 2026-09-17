@@ -18,35 +18,35 @@ export default function TertiaryResults({
   treatments,
   articles,
 }: TertiaryResultsProps) {
-  // Icon renderer for treatments
+  // Icon renderer for treatments (neutral with restrained accents)
   const renderTreatmentIcon = (type: TreatmentItemData["iconType"]) => {
     switch (type) {
       case "heart":
-        return <Heart size={16} />;
+        return <Heart size={14} />;
       case "activity":
-        return <Activity size={16} />;
+        return <Activity size={14} />;
       case "angiography":
-        return <Heart size={16} color="#FF6B6B" />;
+        return <Heart size={14} color="#ED1C24" style={{ opacity: 0.85 }} />;
       case "joint":
-        return <Bone size={16} color="#38BDF8" />;
+        return <Bone size={14} />;
       case "xray":
-        return <Scan size={16} color="#38BDF8" />;
+        return <Scan size={14} />;
       case "stethoscope":
       default:
-        return <Stethoscope size={16} />;
+        return <Stethoscope size={14} />;
     }
   };
 
-  // Icon renderer for articles
+  // Icon renderer for articles (neutral with restrained accents)
   const renderArticleIcon = (type: ArticleItemData["iconType"]) => {
     switch (type) {
       case "emergency":
-        return <AlertCircle size={16} color="#FF6B6B" />;
+        return <AlertCircle size={14} color="#ED1C24" style={{ opacity: 0.85 }} />;
       case "article":
-        return <BookOpen size={16} />;
+        return <BookOpen size={14} />;
       case "document":
       default:
-        return <FileText size={16} />;
+        return <FileText size={14} />;
     }
   };
 
@@ -74,7 +74,7 @@ export default function TertiaryResults({
                   <div className={styles.tertiaryRowSubtitle}>{t.subtitle}</div>
                 </div>
               </div>
-              <ArrowRight size={13} className={styles.tertiaryRowArrow} />
+              <ArrowRight size={12} className={styles.tertiaryRowArrow} />
             </Link>
           ))}
         </div>
@@ -107,7 +107,7 @@ export default function TertiaryResults({
                   </div>
                 </div>
               </div>
-              <ArrowRight size={13} className={styles.tertiaryRowArrow} />
+              <ArrowRight size={12} className={styles.tertiaryRowArrow} />
             </Link>
           ))}
         </div>
