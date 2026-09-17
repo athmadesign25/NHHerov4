@@ -67,7 +67,13 @@ export default function FloatingQuickActions() {
             break;
           }
         }
-        return detectedTheme === "dark";
+        // HealthPackages marks itself data-nav-theme="dark" (same as every
+        // other dark section, for the navbar's own separate probe), but
+        // this component's own text should stay its default blue over it
+        // specifically rather than switching to white like it does over
+        // every other dark section.
+        const isOverPackages = elements.some((el) => el.closest("#health-packages"));
+        return detectedTheme === "dark" && !isOverPackages;
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;
