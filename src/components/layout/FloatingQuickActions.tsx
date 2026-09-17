@@ -20,9 +20,7 @@ export default function FloatingQuickActions() {
       setIsQuickActionsVisible(showQuickActions);
 
 
-      // Global Pulse FAB appears immediately right after hero search section blurs out (180px)
-      const showPulseFab = window.scrollY >= 180;
-      setIsPulseFabVisible(showPulseFab);
+
 
 
       if (!showQuickActions || !containerRef.current) return;
@@ -142,39 +140,6 @@ export default function FloatingQuickActions() {
         </button>
       </div>
 
-
-      {/* Global Pulse Button FAB (Appears right after hero search container disappears) */}
-      <AnimatePresence>
-        {isPulseFabVisible && (
-          <div className={fabStyles.fabContainer}>
-            <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
-              <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
-              <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
-            </div>
-
-            <motion.button
-              key="floating-pulse-fab-global"
-              type="button"
-              className={fabStyles.fabButton}
-              onClick={() => setIsPulseWorkspaceOpen(true)}
-              aria-label="Open Pulse AI"
-              initial={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className={fabStyles.pulseAnim}>
-                <Lottie animationData={pulseAnimation} loop={true} style={{ width: "100%", height: "100%" }} />
-              </div>
-            </motion.button>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Pulse AI Workspace Modal */}
-      {isPulseWorkspaceOpen && (
-        <PulseAIWorkspace onClose={() => setIsPulseWorkspaceOpen(false)} />
-      )}
 
     </>
   );
