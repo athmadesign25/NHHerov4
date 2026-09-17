@@ -91,14 +91,7 @@
   box-sizing: border-box;
 }
 
-@media (max-width: 992px) {
-  .bentoGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 0 8px;
-  }
-}
+/* Old mobile block removed; new unified mobile grid at end of file */
 
 /* Right to Left Fleeting Red Shimmer Sweep Keyframes (Sweeps from 100% to 0%, pure white at start and end) */
 @keyframes redFleetingShimmerRightToLeft {
@@ -130,12 +123,7 @@
   box-sizing: border-box;
 }
 
-@media (max-width: 992px) {
-  .heroCard {
-    height: 520px;
-    min-height: 520px;
-  }
-}
+/* Hero mobile height override removed; handled in unified mobile grid */
 
 .heroBgImage {
   position: absolute;
@@ -409,4 +397,75 @@
   z-index: 1;
   pointer-events: none;
 }
+
+/* ─── True Mobile Bento Grid ───────────────────────────────────────────── */
+@media (max-width: 992px) {
+  .bentoGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: 400px 240px 240px !important;
+    gap: 8px !important;
+    padding: 0 16px !important;
+  }
+
+  .heroCard {
+    grid-column: 1 / span 2 !important;
+    grid-row: 1 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  .cardRow1Equal,
+  .cardRow2Wider,
+  .accreditationsCard {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+    height: 100% !important;
+  }
+
+  .heroHeaderUnit {
+    padding: 24px 24px 0 24px !important;
+  }
+  
+  .heroTitle {
+    font-size: 24px !important;
+  }
+  
+  .heroStatUnit {
+    padding: 0 24px 24px 24px !important;
+  }
+  
+  .heroStatInner {
+    height: auto !important;
+    min-height: 54px !important;
+  }
+  
+  .heroStatValue {
+    font-size: 28px !important;
+  }
+
+  .cardHeaderUnit {
+    padding: 16px 16px 0 16px !important;
+    gap: 4px !important;
+  }
+
+  .cardTitle {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+  }
+
+  .cardSubtitle {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+  
+  .topBlurOverlay {
+    height: 140px !important;
+  }
+  
+  .accreditationsDarkOverlay {
+    height: 180px !important;
+  }
+}
+
 
