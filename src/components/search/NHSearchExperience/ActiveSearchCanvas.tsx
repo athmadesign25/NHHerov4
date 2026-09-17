@@ -1,0 +1,305 @@
+"use client";
+
+import React, { useRef, useEffect, useState } from "react";
+import { 
+  Paperclip, Mic, ArrowRight, X, MapPin, ChevronDown, 
+  User, Stethoscope, Sparkles, CornerDownLeft, Command
+} from "lucide-react";
+import styles from "./NHSearchExperience.module.css";
+import { NH_LOCATIONS, PredictiveState, getPredictiveCompletion } from "./searchData";
+
+interface ActiveSearchCanvasProps {
+  query: string;
+  onQueryChange: (val: string) => void;
+  onSubmit: (query: string) => void;
+  onClose: () => void;
+  selectedLocation: string;
+  onSelectLocation: (loc: string) => void;
+  activePill: string | null;
+  onSelectActionPill: (pill: "doctor" | "symptoms") => void;
+}
+
+export default function ActiveSearchCanvas({
+  query,
+  onQueryChange,
+  onSubmit,
+  onClose,
+  selectedLocation,
+  onSelectLocation,
+  activePill,
+  onSelectActionPill,
+}: ActiveSearchCanvasProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
+  const locationRef = useRef<HTMLDivElement>(null);
+
+  // Compute live predictive completion whenever user types
+  const prediction: PredictiveState | null = query.trim()
+    ? getPredictiveCompletion(query)
+    : null;
+
+  // Auto-focus input when opening
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  // Close location dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (locationRef.current && !locationRef.current.contains(e.target as Node)) {
+        setIsLocationOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Keyboard handler for Tab completion, arrow navigation, enter submit
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab") {
+      // Tab accepts the inline predictive completion
+      if (prediction && prediction.fullText) {
+        e.preventDefault();
+        onQueryChange(prediction.fullText);
+      }
+    } else if (e.key === "ArrowRight" && inputRef.current) {
+      // Right arrow at end of text also accepts prediction
+      const atEnd = inputRef.current.selectionStart === query.length;
+      if (atEnd && prediction && prediction.fullText) {
+        e.preventDefault();
+        onQueryChange(prediction.fullText);
+      }
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (prediction && selectedSugIndex >= 0 && prediction.suggestions[selectedSugIndex]) {
+        onSubmit(prediction.suggestions[selectedSugIndex]);
+      } else if (query.trim()) {
+        onSubmit(query.trim());
+      } else if (prediction && prediction.fullText) {
+        onSubmit(prediction.fullText);
+      }
+    } else if (e.key === "ArrowDown" && prediction) {
+      e.preventDefault();
+      setSelectedSugIndex((prev) =>
+        prev < prediction.suggestions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === "ArrowUp" && prediction) {
+      e.preventDefault();
+      setSelectedSugIndex((prev) =>
+        prev > 0 ? prev - 1 : prediction.suggestions.length - 1
+      );
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      onClose();
+    }
+  };
+
+  /**
+   * Accepts prediction and updates query
+   */
+  const handleAcceptPrediction = (fullText: string) => {
+    onQueryChange(fullText);
+    inputRef.current?.focus();
+  };
+
+  return (
+    <div className={styles.activeContainer}>
+      {/* Top Header Row: Location Pill + Pulse AI Badge + Close button */}
+      <div className={styles.topHeaderRow}>
+        <div className={styles.headerLeftGroup}>
+          {/* Location Selector Pill */}
+          <div ref={locationRef} style={{ position: "relative" }}>
+            <button
+              type="button"
+              className={styles.locationPill}
+              onClick={() => setIsLocationOpen(!isLocationOpen)}
+              aria-expanded={isLocationOpen}
+              aria-label={`Current location: ${selectedLocation}`}
+            >
+              <MapPin size={14} color="#FF6B6B" />
+              <span>{selectedLocation}</span>
+              <ChevronDown
+                size={13}
+                style={{
+                  transform: isLocationOpen ? "rotate(180deg)" : "none",
+                  transition: "transform 0.2s",
+                }}
+              />
+            </button>
+
+            {isLocationOpen && (
+              <div className={styles.locationMenu}>
+                {NH_LOCATIONS.map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    className={`${styles.locationMenuItem} ${
+                      loc === selectedLocation ? styles.locationMenuItemSelected : ""
+                    }`}
+                    onClick={() => {
+                      onSelectLocation(loc);
+                      setIsLocationOpen(false);
+                    }}
+                  >
+                    {loc}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Pulse AI Badge */}
+          <div className={styles.pulseBadge}>
+            <div className={styles.pulseBars} aria-hidden>
+              <span className={styles.pulseBar1} />
+              <span className={styles.pulseBar2} />
+              <span className={styles.pulseBar3} />
+            </div>
+            <span className={styles.pulseText}>Pulse AI</span>
+          </div>
+        </div>
+
+        {/* Close Button */}
+        <button
+          type="button"
+          className={styles.closeBtn}
+          onClick={onClose}
+          aria-label="Close search"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Input Row with Live Predictive Sentence Ghost Overlay */}
+      <div className={styles.activeInputRow}>
+        <button type="button" className={styles.iconControlBtn} aria-label="Attach medical records or file">
+          <Paperclip size={20} />
+        </button>
+
+        <div className={styles.inputGhostWrapper}>
+          {/* Real interactive input */}
+          <input
+            ref={inputRef}
+            type="text"
+            className={styles.activeTextInput}
+            value={query}
+            onChange={(e) => {
+              onQueryChange(e.target.value);
+              setSelectedSugIndex(-1);
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder="Start typing a symptom, condition, specialty or doctor..."
+            aria-label="Search symptoms, conditions or doctors"
+            autoComplete="off"
+            spellCheck="false"
+          />
+
+          {/* Inline ghost predictive sentence overlay */}
+          {prediction && query.length > 0 && (
+            <div
+              className={styles.ghostTextOverlay}
+              onClick={() => handleAcceptPrediction(prediction.fullText)}
+              title="Click or press Tab to complete"
+            >
+              <span className={styles.ghostInvisibleTyped}>{query}</span>
+              <span className={styles.ghostSuffix}>{prediction.suffix}</span>
+              <span className={styles.tabBadge}>Tab ⇥</span>
+            </div>
+          )}
+        </div>
+
+        <button type="button" className={styles.iconControlBtn} aria-label="Voice search">
+          <Mic size={20} />
+        </button>
+
+        <button
+          type="button"
+          className={styles.submitArrowBtn}
+          aria-label="Submit search"
+          onClick={() => {
+            if (prediction && selectedSugIndex >= 0) {
+              onSubmit(prediction.suggestions[selectedSugIndex]);
+            } else if (query.trim()) {
+              onSubmit(query.trim());
+            } else if (prediction) {
+              onSubmit(prediction.fullText);
+            }
+          }}
+        >
+          <ArrowRight size={18} strokeWidth={2.5} />
+        </button>
+      </div>
+
+      {/* Red Horizon Divider Line */}
+      <div className={styles.redDivider} />
+
+      {/* Quick Action Filter Pills */}
+      <div className={styles.activePillsRow}>
+        <button
+          type="button"
+          className={`${styles.actionPill} ${activePill === "doctor" ? styles.actionPillActive : ""}`}
+          onClick={() => onSelectActionPill("doctor")}
+        >
+          <User size={14} color="#38BDF8" />
+          <span>Find a doctor</span>
+        </button>
+
+        <button
+          type="button"
+          className={`${styles.actionPill} ${activePill === "symptoms" ? styles.actionPillActive : ""}`}
+          onClick={() => onSelectActionPill("symptoms")}
+        >
+          <Stethoscope size={14} color="#EC4899" />
+          <span>Describe my symptoms</span>
+        </button>
+      </div>
+
+      {/* ── STATE 2: EMPTY CANVAS (When user has not typed yet) ── */}
+      {!prediction && query.trim().length === 0 && (
+        <div className={styles.emptyCanvasPrompt}>
+          <p className={styles.emptyPromptSub}>
+            Start typing a symptom, condition, specialty, procedure or doctor name.
+          </p>
+        </div>
+      )}
+
+      {/* ── LIVE PREDICTIVE SECTION (When user types any character) ── */}
+      {prediction && (
+        <div className={styles.suggestionsSection}>
+          {prediction.suggestions.length > 0 && (
+            <div className={styles.suggestionsList} role="listbox">
+              {prediction.suggestions.slice(0, 2).map((sug, idx) => (
+                <button
+                  key={sug}
+                  type="button"
+                  className={`${styles.suggestionItem} ${
+                    selectedSugIndex === idx ? styles.suggestionItemActive : ""
+                  }`}
+                  onClick={() => onSubmit(sug)}
+                  onMouseEnter={() => setSelectedSugIndex(idx)}
+                  role="option"
+                  aria-selected={selectedSugIndex === idx}
+                >
+                  <ArrowRight size={14} className={styles.suggestionArrow} />
+                  <span className={styles.suggestionText}>
+                    {sug}
+                  </span>
+                  <span className={styles.pressEnterHint}>
+                    <CornerDownLeft size={12} />
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Pulse AI Status */}
+          <div className={styles.pulseStatusRow}>
+            <Sparkles size={15} className={styles.sparkleIcon} />
+            <span>Pulse understands what you&apos;re trying to say</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

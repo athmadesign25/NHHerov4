@@ -1,0 +1,1782 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Narayana Health Unified Search Experience Styles
+   Matches Reference Assets:
+   01 — Neutral default landing
+   02 — Active search canvas
+   03 — Active search result
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotateBorderAngle {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
+.searchExperienceWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+}
+
+/* ── Main Unified Search Shell ── */
+.searchShell {
+  position: relative;
+  z-index: 55;
+  width: 100%;
+  border-radius: 26px;
+  background: rgba(14, 20, 34, 0.82);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.16);
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── State 01: Default Landing Search Composer ── */
+.stateLanding {
+  width: min(840px, calc(100vw - 48px));
+  max-width: 840px;
+  padding: 20px 24px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(18, 24, 34, 0.38);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: 
+    0 16px 40px -10px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+  position: relative;
+  overflow: visible;
+  transition: box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              background 0.3s ease;
+}
+
+/* Subtle Animated Rotating Gradient Border Perimeter (soft light moving around edge) */
+.stateLanding::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 21px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.5) 0deg,
+    rgba(3, 78, 162, 0.6) 75deg,
+    rgba(237, 28, 36, 0.35) 150deg,
+    rgba(0, 196, 255, 0.15) 220deg,
+    rgba(3, 78, 162, 0.45) 290deg,
+    rgba(0, 196, 255, 0.5) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+/* Soft ambient light around perimeter (not bright neon) */
+.stateLanding::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 24px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.12) 0deg,
+    rgba(3, 78, 162, 0.14) 75deg,
+    rgba(237, 28, 36, 0.08) 150deg,
+    rgba(0, 196, 255, 0.05) 220deg,
+    rgba(3, 78, 162, 0.1) 290deg,
+    rgba(0, 196, 255, 0.12) 360deg
+  );
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.45;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.stateLanding:hover {
+  background: rgba(18, 24, 34, 0.44);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 
+    0 20px 48px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.stateLanding:hover::before {
+  opacity: 0.85;
+}
+
+.stateLanding:hover::after {
+  opacity: 0.7;
+  filter: blur(12px);
+}
+
+.stateActive {
+  width: min(880px, calc(100vw - 48px));
+  max-width: 880px;
+  padding: 24px 28px 24px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(18, 24, 34, 0.48);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  box-shadow: 
+    0 24px 60px -15px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+  position: relative;
+  overflow: visible;
+}
+
+.stateActive::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 23px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.4) 0deg,
+    rgba(3, 78, 162, 0.5) 75deg,
+    rgba(237, 28, 36, 0.28) 150deg,
+    rgba(0, 196, 255, 0.12) 220deg,
+    rgba(3, 78, 162, 0.38) 290deg,
+    rgba(0, 196, 255, 0.4) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+}
+
+.stateActive::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 26px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.1) 0deg,
+    rgba(3, 78, 162, 0.12) 75deg,
+    rgba(237, 28, 36, 0.06) 150deg,
+    rgba(0, 196, 255, 0.04) 220deg,
+    rgba(3, 78, 162, 0.08) 290deg,
+    rgba(0, 196, 255, 0.1) 360deg
+  );
+  filter: blur(12px);
+  -webkit-filter: blur(12px);
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.stateResults {
+  width: min(1080px, calc(100vw - 48px));
+  max-width: 1080px;
+  padding: 26px 32px 28px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(18, 24, 34, 0.55);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 
+    0 30px 70px -15px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
+  position: relative;
+  overflow: visible;
+}
+
+.stateResults::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 23px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.35) 0deg,
+    rgba(3, 78, 162, 0.45) 75deg,
+    rgba(237, 28, 36, 0.22) 150deg,
+    rgba(0, 196, 255, 0.1) 220deg,
+    rgba(3, 78, 162, 0.32) 290deg,
+    rgba(0, 196, 255, 0.35) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.45;
+}
+
+.stateResults::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 26px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.08) 0deg,
+    rgba(3, 78, 162, 0.1) 75deg,
+    rgba(237, 28, 36, 0.05) 150deg,
+    rgba(0, 196, 255, 0.03) 220deg,
+    rgba(3, 78, 162, 0.06) 290deg,
+    rgba(0, 196, 255, 0.08) 360deg
+  );
+  filter: blur(12px);
+  -webkit-filter: blur(12px);
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.35;
+}
+
+/* ── Top Header Row (Pulse AI badge, Location, Close) ── */
+.topHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.headerLeftGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Pulse AI Badge (3 iconic vertical bars) ── */
+.pulseBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  padding: 2px 6px;
+  background: transparent;
+  border: none;
+  transition: opacity 0.2s ease;
+  opacity: 0.85;
+}
+
+.pulseBadge:hover {
+  opacity: 1;
+}
+
+.pulseBars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 11px;
+}
+
+.pulseBar1 {
+  width: 2px;
+  height: 6px;
+  border-radius: 1px;
+  background: #00C4FF;
+}
+
+.pulseBar2 {
+  width: 2px;
+  height: 11px;
+  border-radius: 1px;
+  background: #034EA2;
+}
+
+.pulseBar3 {
+  width: 2px;
+  height: 8px;
+  border-radius: 1px;
+  background: #ED1C24;
+}
+
+.pulseText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #E2E8F0;
+  letter-spacing: 0.01em;
+}
+
+/* ── Close Button (State 02 & 03) ── */
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.closeBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* ── Red Horizon Divider ── */
+.redDivider {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #ED1C24 0%, #FF454D 50%, #ED1C24 100%);
+  border-radius: 2px;
+  margin: 10px 0 16px;
+  box-shadow: 0 0 12px rgba(237, 28, 36, 0.35);
+}
+
+/* ── State 01: Default Landing Elements ── */
+.landingContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.landingInputRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  margin-bottom: 32px;
+  padding: 0;
+}
+
+.landingPlaceholder {
+  font-size: clamp(19px, 1.8vw, 21px);
+  font-weight: 450;
+  color: #F8FAFC;
+  letter-spacing: -0.012em;
+  user-select: none;
+  line-height: 1.3;
+}
+
+.landingBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.bottomControlsLeft {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.bottomControlsRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.bottomPillsGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.iconControlBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 33px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.iconControlBtn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.submitArrowBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 33px;
+  border-radius: 8px;
+  background: #034EA2;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
+}
+
+.submitArrowBtn:hover {
+  background: #0060DF;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 96, 223, 0.4);
+}
+
+.submitArrowBtn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* ── Location Selector Pill (Subtle Context Element) ── */
+.locationPill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 33px;
+  padding: 0 11px;
+  border-radius: 8px;
+  border: 1px solid rgba(237, 28, 36, 0.24);
+  background: rgba(237, 28, 36, 0.06);
+  color: #F8FAFC;
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.locationPill:hover {
+  background: rgba(237, 28, 36, 0.12);
+  border-color: rgba(237, 28, 36, 0.42);
+  transform: translateY(-1px);
+}
+
+.locationPinIcon {
+  color: #ED1C24;
+  opacity: 0.9;
+}
+
+.locationMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 160px;
+  background: rgba(18, 24, 38, 0.94);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  padding: 5px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.locationMenuItem {
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: #CBD5E1;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.locationMenuItem:hover,
+.locationMenuItemSelected {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* ── Action / Filter Buttons ("Find a doctor", "Describe my symptoms") ── */
+.actionBtnDoctor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 33px;
+  padding: 0 11px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+  color: #E2E8F0;
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.actionBtnDoctor:hover {
+  background: rgba(3, 78, 162, 0.16);
+  border-color: rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.actionBtnSymptoms {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 33px;
+  padding: 0 11px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+  color: #E2E8F0;
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.actionBtnSymptoms:hover {
+  background: rgba(236, 72, 153, 0.12);
+  border-color: rgba(236, 72, 153, 0.3);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.actionPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #E2E8F0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.actionPill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #FFFFFF;
+}
+
+.actionPillActive {
+  background: rgba(3, 78, 162, 0.25);
+  border-color: rgba(3, 78, 162, 0.6);
+  color: #FFFFFF;
+}
+
+/* ── State 02: Active Search Elements ── */
+.activeInputRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.inputGhostWrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.activeTextInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  color: #FFFFFF;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  caret-color: #00C4FF;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  margin: 0;
+}
+
+.activeTextInput::placeholder {
+  color: #64748B;
+  font-weight: 400;
+}
+
+/* ── Inline Ghost Predictive Sentence Overlay ── */
+.ghostTextOverlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  z-index: 1;
+  white-space: pre;
+  overflow: hidden;
+  user-select: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ghostInvisibleTyped {
+  color: transparent;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ghostSuffix {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ghostSuffix:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tabBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  letter-spacing: 0.02em;
+  user-select: none;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: tabBadgePulse 2s infinite ease-in-out;
+}
+
+@keyframes tabBadgePulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    background: rgba(56, 189, 248, 0.22);
+  }
+}
+
+.activePillsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+/* ── Empty State Canvas (Before Typing) ── */
+.emptyCanvasPrompt {
+  margin-top: 14px;
+  padding: 6px 0 10px;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInEmpty 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInEmpty {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emptyPromptSub {
+  font-size: 13.5px;
+  color: #64748B;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.genericCategoriesRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.genericExampleChip {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #CBD5E1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.genericExampleChip:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+.genericDot {
+  color: #475569;
+  font-size: 14px;
+  user-select: none;
+}
+
+/* ── Live Predictions Section ── */
+.suggestionsSection {
+  margin-top: 18px;
+  animation: fadeInPredictions 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInPredictions {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.suggestionsHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.suggestionsHeader {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748B;
+}
+
+.intentTagBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #38BDF8;
+  background: rgba(3, 78, 162, 0.22);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 2.5px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.03em;
+}
+
+.suggestionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.suggestionItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  text-align: left;
+  font-family: inherit;
+  font-size: 15px;
+  color: #CBD5E1;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+}
+
+.suggestionItem:hover,
+.suggestionItemActive {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  transform: translateX(2px);
+}
+
+.suggestionArrow {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.suggestionText {
+  flex: 1;
+  font-weight: 450;
+}
+
+.pressEnterHint {
+  display: flex;
+  align-items: center;
+  color: #64748B;
+  opacity: 0.7;
+  margin-left: auto;
+}
+
+.suggestionItem:hover .pressEnterHint {
+  color: #38BDF8;
+  opacity: 1;
+}
+
+.highlightMatch {
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* ── Subtle Pulse AI Status ("Intelligently preparing matches…") ── */
+.pulseStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+  color: #94A3B8;
+  user-select: none;
+}
+
+.sparkleIcon {
+  color: #00C4FF;
+  animation: pulseSparkle 2s ease-in-out infinite;
+}
+
+@keyframes pulseSparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.15) rotate(15deg);
+    opacity: 1;
+    color: #FF5252;
+  }
+}
+
+/* ── State 03: Results Canvas ── */
+.resultsQueryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.resultsQueryLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.resultsQuerySearchIcon {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.resultsQueryText {
+  font-size: 19px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.editSearchBtn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #38BDF8;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.editSearchBtn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #7DD3FC;
+}
+
+/* ── Pulse AI Suggestion Pill / Card in Results ── */
+.pulseAiCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  border-radius: 9999px;
+  background: rgba(3, 78, 162, 0.18);
+  border: 1px solid rgba(0, 196, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.pulseAiCardText {
+  font-size: 12px;
+  font-weight: 500;
+  color: #E2E8F0;
+}
+
+.askPulseBtn {
+  background: #034EA2;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 5px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.askPulseBtn:hover {
+  background: #0066FF;
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.03);
+}
+
+/* ── Results Main Split Layout (Dominant Primary ~65% vs Tertiary ~35%) ── */
+.resultsSplitLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr);
+  gap: 32px;
+  margin-top: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+/* ── Primary Dominant Left Column ── */
+.resultsLeftCol {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+.resultsCategoryHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 4px;
+  margin-bottom: 24px;
+}
+
+.resultsCategoryTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.resultsCategorySub {
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+
+.recommendedSectionLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748B;
+  margin-bottom: 12px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Clean Doctor Cards 2-Column Grid ── */
+.doctorsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.doctorCard {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 0;
+}
+
+.doctorCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.doctorCardBody {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.doctorAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+  background: #1e293b;
+}
+
+.doctorMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.doctorName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.doctorSpecialty {
+  font-size: 13px;
+  font-weight: 500;
+  color: #38BDF8;
+  margin-top: 2px;
+}
+
+.doctorHospital {
+  font-size: 12px;
+  color: #94A3B8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doctorExpText {
+  font-size: 12px;
+  color: #CBD5E1;
+  margin-top: 10px;
+  font-weight: 450;
+}
+
+.doctorActionRow {
+  margin-top: 14px;
+}
+
+.bookApptBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: #034EA2;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.3);
+}
+
+.bookApptBtn:hover {
+  background: #0066FF;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Simple Text Action: View all doctors → ── */
+.viewAllDoctorsRow {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.viewAllDoctorsTextLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #38BDF8;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.viewAllDoctorsTextLink:hover {
+  color: #7DD3FC;
+  transform: translateX(3px);
+}
+
+/* ── Pulse AI Nudge Row (Below Doctors) ── */
+.pulseNudgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(3, 78, 162, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+}
+
+.pulseNudgeText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #CBD5E1;
+}
+
+.pulseNudgeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #034EA2;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.25);
+}
+
+.pulseNudgeBtn:hover {
+  background: #0066FF;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ── Secondary Results: Unboxed, Lightweight ── */
+.relatedSpecialtiesSection {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
+.relatedSectionHeader {
+  margin-bottom: 12px;
+}
+
+.relatedSectionTitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748B;
+}
+
+.relatedTagsGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.specPillTag {
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #CBD5E1;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.specPillTag:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #FFFFFF;
+}
+
+.viewAllSpecLink {
+  color: #38BDF8;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-left: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.viewAllSpecLink:hover {
+  color: #7DD3FC;
+  text-decoration: underline;
+}
+
+/* ── Tertiary Right Rail: Narrower, Compact List Rows, Independent Scroll ── */
+.resultsRightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  min-width: 0;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.resultsRightCol::-webkit-scrollbar {
+  width: 4px;
+}
+
+.resultsRightCol::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resultsRightCol::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+.resultsRightCol::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.tertiarySectionBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionHeadingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  height: 20px;
+}
+
+.tertiarySectionTitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748B;
+}
+
+.viewAllSmallLink {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #38BDF8;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.viewAllSmallLink:hover {
+  color: #7DD3FC;
+  text-decoration: underline;
+}
+
+/* ── Compact List Rows for Treatments & Articles ── */
+.tertiaryListRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tertiaryListRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.tertiaryListRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(2px);
+}
+
+.tertiaryRowLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tertiaryRowIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.tertiaryRowMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tertiaryRowTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #E2E8F0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tertiaryRowSubtitle {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 1px;
+}
+
+.tertiaryRowArrow {
+  color: #475569;
+  flex-shrink: 0;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.tertiaryListRow:hover .tertiaryRowArrow {
+  color: #94A3B8;
+  transform: translateX(2px);
+}
+
+/* ── Skeleton Loading State Styles ── */
+.shimmer {
+  background: linear-gradient(
+    90deg, 
+    rgba(255, 255, 255, 0.04) 25%, 
+    rgba(255, 255, 255, 0.12) 50%, 
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmerPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes shimmerPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeletonPill {
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.skeletonCircle {
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.skeletonBar {
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.skeletonDoctorCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.skeletonSecondaryCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.skeletonLoadingStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #38BDF8;
+  background: rgba(3, 78, 162, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+}
+
+.skeletonPulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38BDF8;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+/* ── Responsive Viewports ── */
+@media (max-width: 1024px) {
+  .stateLanding {
+    width: min(800px, calc(100vw - 32px));
+    max-width: 800px;
+    padding: 18px 20px 16px;
+  }
+
+  .resultsSplitLayout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stateLanding {
+    width: calc(100vw - 32px);
+    max-width: 100vw;
+    padding: 16px 16px 14px;
+    border-radius: 16px;
+  }
+
+  .stateLanding::before {
+    border-radius: 17px;
+  }
+
+  .stateLanding::after {
+    border-radius: 19px;
+  }
+
+  .landingInputRow {
+    margin-bottom: 14px;
+  }
+
+  .landingPlaceholder {
+    font-size: 18px;
+  }
+
+  .landingBottomRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .bottomControlsLeft {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .bottomControlsRight {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .stateActive,
+  .stateResults {
+    max-width: 94vw;
+    padding: 16px;
+  }
+
+  .doctorsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottomPillsGroup {
+    width: 100%;
+  }
+
+  .resultsCategoryHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Compact Transformed Floating Pulse AI / Search Pill (Second Fold & Beyond)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.compactSearchLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.compactPulseSpark {
+  font-size: 13px;
+  color: #00C4FF;
+  animation: pulseGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 2px rgba(0, 196, 255, 0.4));
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(0, 196, 255, 0.9));
+  }
+}
+
+.compactPulseTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #F1F5F9;
+  letter-spacing: -0.01em;
+}
+
+.compactDivider {
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 14px;
+  margin: 0 1px;
+}
+
+.compactSearchText {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: -0.01em;
+}
+
+.compactSearchIcon {
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 2px;
+}
+
+/* Fixed Docked Control (Active in Fold 2+) */
+.floatingPillTrigger {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9990;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background: rgba(18, 24, 34, 0.75);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 10px 30px -5px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(3, 78, 162, 0.22),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.22s ease,
+              border-color 0.22s ease;
+}
+
+.floatingPillTrigger::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(0, 196, 255, 0.6) 0deg,
+    rgba(3, 78, 162, 0.7) 80deg,
+    rgba(237, 28, 36, 0.4) 160deg,
+    rgba(0, 196, 255, 0.25) 230deg,
+    rgba(3, 78, 162, 0.5) 290deg,
+    rgba(0, 196, 255, 0.6) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotateBorderAngle 10s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+
+.floatingPillTrigger:hover {
+  transform: translateY(-2px) scale(1.025);
+  background: rgba(18, 24, 34, 0.88);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 14px 38px -6px rgba(0, 0, 0, 0.55),
+    0 0 24px rgba(0, 196, 255, 0.35),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.floatingPillTrigger:hover::before {
+  opacity: 1;
+}
+
+.floatingPillTrigger:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Floating Search Modal Overlay (When triggered in fold 2+) */
+.floatingSearchOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.floatingSearchBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 18, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.floatingSearchModal {
+  position: relative;
+  z-index: 2;
+  width: min(880px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 24px;
+}
+
+@media (max-width: 640px) {
+  .floatingPillTrigger {
+    bottom: 20px;
+    right: 16px;
+    height: 42px;
+    padding: 0 14px;
+  }
+}
+
