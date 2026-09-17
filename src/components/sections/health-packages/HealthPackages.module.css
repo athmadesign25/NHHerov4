@@ -317,10 +317,7 @@
    overflow: visible lets the absolutely positioned card exceed this box. */
 .packageCardSlot {
   position: relative;
-  /* +28px over the old 212px — reserves room for the permanent
-     bottom-left "View Details" link, which the old top-right arrow
-     badge (hover-only, out of the text column's way) never needed. */
-  height: 240px;
+  height: 212px;
   overflow: visible;
 }
 
@@ -333,7 +330,7 @@
   right: 0;
   bottom: 0;
   display: flex;
-  height: 240px;
+  height: 212px;
   flex-direction: column;
   align-items: flex-start;
   overflow: hidden;
@@ -719,13 +716,13 @@
   line-height: normal;
 }
 
-/* "View Details" — replaces the old top-right arrow badge. Always
-   visible (unlike the arrow, which only appeared on hover) at the same
+/* "View Details" — replaces the old top-right arrow badge, at the same
    left/bottom offsets as the content column's own top/left padding
-   (34px/28px), with only the underline reacting to hover — it grows in
-   left-to-right rather than the label itself fading in. The card itself
-   is the actual clickable element (see the surrounding <Link>); this is
-   a plain <span>, not a nested anchor (invalid HTML/a11y otherwise). */
+   (34px/28px). Hidden at rest and fades/lifts in on hover (matching the
+   "Explore" affordance in the speciality grid cards), with its
+   underline additionally sweeping in left-to-right. The card itself is
+   the actual clickable element (see the surrounding <Link>); this is a
+   plain <span>, not a nested anchor (invalid HTML/a11y otherwise). */
 .viewDetailsLink {
   position: absolute;
   left: 34px;
@@ -736,6 +733,15 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard:hover .viewDetailsLink,
+.packageCard:focus-visible .viewDetailsLink {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .viewDetailsLinkLight {
@@ -985,7 +991,7 @@
     position: static;
     width: 100%;
     max-width: 492px;
-    height: 240px;
+    height: 212px;
   }
 
   .railLabel,
