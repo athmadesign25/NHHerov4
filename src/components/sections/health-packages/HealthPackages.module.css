@@ -337,7 +337,7 @@
   text-decoration: none;
   box-sizing: border-box;
   transform-origin: bottom center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
   /* Real frosted glass — without this, the video/frame behind is only
      dimmed by the gradient's own alpha, not actually blurred, so it reads
@@ -429,8 +429,18 @@
   transform: scale(1.05) !important;
 }
 
+/* `transition` is a single cascading value, not merged per-property — this
+   rule's whole point is to shorten just the transform transition (so tilt
+   tracks the cursor snappily) while hovering, but doing that by re-
+   declaring the shorthand here was silently dropping `height` from the
+   list entirely, since it isn't mentioned here — the expand-on-hover grew
+   with no eased transition at all (it wasn't merging with the base rule's
+   height transition, it was replacing it with nothing). Re-listing height
+   here too, and slower/more eased than the base rule's 0.45s, since the
+   snappy 0.12s that transform gets would otherwise be the only easing
+   compared against and read as too abrupt for something this size. */
 .packageCard:hover {
-  transition: transform 0.12s ease-out, filter 0.35s ease;
+  transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .packageCard::after {
@@ -480,7 +490,7 @@
   object-fit: cover;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
   mask-image: linear-gradient(to right, transparent 0%, black 40%);
-  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
 }
 
@@ -516,7 +526,7 @@
   flex-direction: column;
   gap: 24px;
   box-sizing: border-box;
-  transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Widened on hover — the 2-per-row test chips (some names run 12-14
@@ -551,6 +561,9 @@
   gap: 10px;
 }
 
+/* Roundedness (8px) and the subtle inset stroke + blur now match
+   .uspIconBox exactly (previously 4px with neither of those, reading as
+   visibly a different, flatter shape than the USP row's icon chips). */
 .packageCardFactIcon {
   display: flex;
   width: 34px;
@@ -558,8 +571,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   background: rgba(239, 145, 145, 0.20);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
 }
 
 .packageCardFactText {
@@ -590,7 +605,7 @@
   max-height: 40px;
   opacity: 1;
   filter: blur(0px);
-  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, filter 0.3s ease;
+  transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, filter 0.3s ease;
 }
 
 .packageCard:hover .packageCardTestsSimple,
@@ -610,7 +625,7 @@
   grid-template-rows: 0fr;
   opacity: 0;
   filter: blur(6px);
-  transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease 0.05s, filter 0.35s ease 0.05s;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease 0.1s, filter 0.4s ease 0.1s;
 }
 
 .packageCard:hover .packageCardTestChipsWrap,
@@ -635,8 +650,7 @@
 .packageCardTestChips {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 10px;
-  padding-top: 10px;
+  gap: 6px 8px;
 }
 
 .testChip {
@@ -648,12 +662,14 @@
      Pressur"). Left-aligned, the same overflow only ever happens on the
      right, which is what text-overflow: ellipsis actually assumes. */
   justify-content: flex-start;
-  padding: 6px 10px;
+  /* Hugs its own text tightly — 4px on every side, not the far roomier
+     6px/10px it had before. */
+  padding: 4px;
   border-radius: 999px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   color: #ffffff;
   /* Real frosted glass, not just a faint tint — a couple of these chips
@@ -731,16 +747,19 @@
 /* Icon container reuses the exact USP chip treatment (per spec) instead of
    its own lighter pink tint — same background/shadow/blur in both cases,
    just no longer specific to this card's own dark-mode design. */
+/* Darker/more saturated than the dark-mode chip's own red — against a
+   white "apple glass" card the same 0.30-alpha wash the dark cards use
+   read as too washed-out/pale to register as a distinct chip. */
 .packageCardLightMode .packageCardFactIcon {
-  background: rgba(244, 54, 54, 0.30);
+  background: rgba(200, 30, 30, 0.55);
   box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
   backdrop-filter: blur(6px);
 }
 
 .packageCardLightMode .testChip {
   color: #1A1A2E;
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.55);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 

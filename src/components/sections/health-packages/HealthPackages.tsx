@@ -342,12 +342,11 @@ export default function HealthPackages() {
         el.style.opacity = String(t);
       });
 
-      // Video pauses the instant the reveal has genuinely started, resumes
-      // the instant it's fully back to 0 (i.e. reverse has completed) —
-      // stepPingPong below reads this ref each frame rather than this
-      // calling play()/pause() directly.
+      // Video just keeps playing (ping-ponging, see stepPingPong below)
+      // for as long as the section is on screen — no longer pauses once
+      // the card reveal starts.
       if (bgVideo) {
-        videoShouldPlayRef.current = hasAppearedRef.current && elapsedMs <= 0;
+        videoShouldPlayRef.current = hasAppearedRef.current;
       }
     };
 
@@ -462,7 +461,7 @@ export default function HealthPackages() {
       // whichever value it last had from mount or the last transition,
       // e.g. never noticing hasAppearedRef flipped true while just
       // continuing to scroll within an already-settled phase.
-      videoShouldPlayRef.current = hasAppearedRef.current && autoElapsedRef.current <= 0;
+      videoShouldPlayRef.current = hasAppearedRef.current;
 
       const isFull = sectionPhaseRef.current === "full";
       const p1 = isFull ? 1 : p1raw;
