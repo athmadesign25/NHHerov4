@@ -53,19 +53,63 @@
   will-change: transform;
 }
 
-/* Subtle vertical vignette, always on */
+/* Subtle vertical vignette, always on. Top stop darkened (from 0.32) so
+   the title/eyebrow read more clearly against the video — already a
+   smooth fade to 0% by 22%, so darkening it doesn't introduce any cut. */
 .scrimBase {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(4, 18, 43, 0.32) 0%,
+    rgba(4, 18, 43, 0.55) 0%,
     rgba(4, 18, 43, 0) 22%,
     rgba(4, 18, 43, 0) 78%,
     rgba(4, 18, 43, 0.42) 100%
   );
   pointer-events: none;
   z-index: 1;
+}
+
+/* Progressive blur behind the title/eyebrow/USP row: several full-bleed
+   backdrop-blur layers, each masked to fade out at a different depth, so
+   the blur is strongest right behind the text and dissolves to nothing
+   well before the cards — no single layer has a hard edge of its own
+   (each one's own mask already fades to transparent), so the composite
+   never reads as a "cut" the way one flat blurred box would. */
+.titleBlur {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.titleBlurLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.titleBlurLayer1 {
+  backdrop-filter: blur(22px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 16%, rgba(0, 0, 0, 0) 30%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 16%, rgba(0, 0, 0, 0) 30%);
+}
+
+.titleBlurLayer2 {
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 24%, rgba(0, 0, 0, 0) 38%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 24%, rgba(0, 0, 0, 0) 38%);
+}
+
+.titleBlurLayer3 {
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+}
+
+.titleBlurLayer4 {
+  backdrop-filter: blur(3px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
 }
 
 /* Always-on decorative wash spanning the full frame: a red accent sweep
@@ -93,7 +137,14 @@
    full-height `inset: 0`, which let its dark-on-the-left diagonal wash
    bleed all the way up behind the title/eyebrow as it faded in, reading
    as a stray "gradient on the left" nowhere near the cards it's actually
-   meant to sit behind. */
+   meant to sit behind.
+
+   Its own top edge is masked to fade in over the first ~40% of the box
+   instead of starting at full strength immediately — since the JS-driven
+   opacity applies uniformly across the whole box, without this the wash
+   would snap from "absent" to "0.7 everywhere" right at this box's top
+   edge (the frame's exact halfway line), reading as a hard horizontal
+   cut. The fade-in makes that boundary dissolve instead of cutting. */
 .bottomOverlay {
   position: absolute;
   bottom: 0;
@@ -101,6 +152,8 @@
   right: 0;
   height: 50%;
   background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
   opacity: 0;
   pointer-events: none;
   z-index: 3;
@@ -176,17 +229,18 @@
   padding: 0;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
-  gap: 48px;
+  gap: 64px;
 }
 
 .uspItem {
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 230px;
+  max-width: none;
+  white-space: nowrap;
 }
 
 /* Glassy red icon chip — backdrop-filter + an inset highlight so it reads
@@ -211,10 +265,7 @@
   color: #ffffff;
   text-align: left;
   line-height: 1.3;
-  /* Respects an explicit "\n" (see the "Fast, same-day reports" label,
-     the only one short enough to naturally wrap to one line otherwise) —
-     the other two labels don't contain one, so this is a no-op for them. */
-  white-space: pre-line;
+  white-space: nowrap;
 }
 
 /* ─── Bottom stack: label + card row + explore button ─────────────────── */
@@ -238,11 +289,12 @@
 }
 
 /* Grid (not flex) so the three columns can shrink together below the
-   492px spec width on narrower viewports — flex children with a fixed
-   492px width would just overflow the frame instead of fitting it. */
+   spec width on narrower viewports — flex children with a fixed width
+   would just overflow the frame instead of fitting it. Max width is the
+   492px spec value reduced 20% (~394px). */
 .cardStack {
   display: grid;
-  grid-template-columns: repeat(3, minmax(280px, 492px));
+  grid-template-columns: repeat(3, minmax(224px, 394px));
   gap: 22px;
   margin-bottom: 28px;
   width: 100%;
@@ -389,12 +441,14 @@
   transform: translateX(120%);
 }
 
+/* Width reduced 20% alongside the card (260px -> 208px) to stay in
+   proportion at the narrower card size. */
 .packageCardImage {
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
-  width: 260px;
+  width: 208px;
   object-fit: cover;
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 40%);
   mask-image: linear-gradient(to right, transparent 0%, black 40%);
@@ -407,13 +461,25 @@
   transform: scale(1.05);
 }
 
+/* max-width stops the text column short of the image (208px wide, and
+   itself left-edge-faded to transparent — see .packageCardImage's mask —
+   so text can run right up to it without a hard seam) — at the narrower
+   20%-reduced card width, an unconstrained title could run wide enough
+   to sit visually on top of the image; capping it just wraps the title
+   onto a second line instead. 200px (slightly less than the image's own
+   208px) keeps every title's wrap to exactly 2 lines instead of 3 — the
+   longest title ("Thyroid Health Package") tips into a cramped 3rd line
+   at a tighter cap, which is tall enough to clip the facts rows below
+   against the card's fixed height. */
 .packageCardContent {
   position: relative;
   z-index: 2;
+  max-width: calc(100% - 200px);
   padding: 28px 0 0 34px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  box-sizing: border-box;
 }
 
 .packageCardTitle {
@@ -587,6 +653,11 @@
 
   .uspItem {
     max-width: 320px;
+    white-space: normal;
+  }
+
+  .uspLabel {
+    white-space: normal;
   }
 
   .bottomStack {

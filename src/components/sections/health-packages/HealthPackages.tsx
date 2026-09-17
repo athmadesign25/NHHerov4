@@ -86,7 +86,7 @@ function UspIconReports() {
 const USPS = [
   { icon: UspIconBooking, label: "Quick & easy online booking" },
   { icon: UspIconCare, label: "Complete care from trusted specialists" },
-  { icon: UspIconReports, label: "Fast, same-day\nreports" },
+  { icon: UspIconReports, label: "Fast, same-day reports" },
 ];
 
 // Card fact icons (tests / reports-within) — each card instance renders its
@@ -276,9 +276,19 @@ export default function HealthPackages() {
   // appeared on screen, and (on desktop) pauses the instant the auto
   // card-reveal starts (see applyAutoReveal) — resuming immediately if you
   // scroll back up out of the "full" state, and simply staying paused for
-  // the rest of the scroll once past that point.
+  // the rest of the scroll once past that point. Driven by a manual
+  // ping-pong scrubber (see stepPingPong below) rather than native
+  // play()/pause()/loop, so "should it be advancing right now" lives in
+  // this one ref instead of being inferred from video.paused.
   const hasAppearedRef = useRef(false);
-  const isPlayingRef = useRef(false);
+  const videoShouldPlayRef = useRef(false);
+  // Ping-pong scrub state: +1/-1 direction the currentTime is currently
+  // moving, and the previous rAF timestamp (for computing real elapsed
+  // time between ticks) — null right after a pause so the next resume
+  // doesn't use a stale timestamp to compute one huge jump.
+  const pingPongDirRef = useRef<1 | -1>(1);
+  const pingPongLastTsRef = useRef<number | null>(null);
+  const pingPongRafRef = useRef<number | null>(null);
   // Left-column text reveal gate — flips true exactly once (ref-guarded,
   // same one-shot pattern as hasAppearedRef/isPlayingRef above) the moment
   // the scroll-driven trigger condition below is met, and drives the
@@ -367,14 +377,11 @@ export default function HealthPackages() {
       });
 
       // Video pauses the instant the reveal has genuinely started, resumes
-      // the instant it's fully back to 0 (i.e. reverse has completed).
+      // the instant it's fully back to 0 (i.e. reverse has completed) —
+      // stepPingPong below reads this ref each frame rather than this
+      // calling play()/pause() directly.
       if (bgVideo) {
-        const shouldPlay = hasAppearedRef.current && elapsedMs <= 0;
-        if (shouldPlay !== isPlayingRef.current) {
-          isPlayingRef.current = shouldPlay;
-          if (shouldPlay) bgVideo.play().catch(() => {});
-          else bgVideo.pause();
-        }
+        videoShouldPlayRef.current = hasAppearedRef.current && elapsedMs <= 0;
       }
     };
 
@@ -482,6 +489,14 @@ export default function HealthPackages() {
           startAutoReverse();
         }
       }
+
+      // Re-checked on every scroll tick (not just at the exact moment a
+      // phase transition fires startAutoForward/startAutoReverse's own
+      // per-frame applyAutoReveal calls) — otherwise this stays stuck at
+      // whichever value it last had from mount or the last transition,
+      // e.g. never noticing hasAppearedRef flipped true while just
+      // continuing to scroll within an already-settled phase.
+      videoShouldPlayRef.current = hasAppearedRef.current && autoElapsedRef.current <= 0;
 
       const isFull = sectionPhaseRef.current === "full";
       const p1 = isFull ? 1 : p1raw;
@@ -592,14 +607,7 @@ export default function HealthPackages() {
         ([entry]) => {
           hasAppearedRef.current = entry.isIntersecting;
           if (reduced || isMobile()) {
-            const video = bgVideoRef.current;
-            if (!video) return;
-            const shouldPlay = entry.isIntersecting;
-            if (shouldPlay !== isPlayingRef.current) {
-              isPlayingRef.current = shouldPlay;
-              if (shouldPlay) video.play().catch(() => {});
-              else video.pause();
-            }
+            videoShouldPlayRef.current = entry.isIntersecting;
           } else {
             const { p, exitP } = computeProgress();
             applyState(p, exitP);
@@ -614,6 +622,44 @@ export default function HealthPackages() {
     window.addEventListener("resize", onResize, { passive: true });
     mq.addEventListener?.("change", onMotionChange);
 
+    // Manual ping-pong scrub loop: native <video> has no reliably-supported
+    // way to play smoothly in reverse (negative playbackRate isn't decoded
+    // by any major engine), so instead of relying on native play()/pause()/
+    // loop, this hand-advances currentTime forward at real-time speed and
+    // flips to advancing it backward once it hits either end — a boomerang
+    // loop instead of the native loop's hard restart-to-0. Runs continuously
+    // for the component's lifetime; videoShouldPlayRef (set above, and by
+    // the observer below) is what actually gates whether each tick advances
+    // the time or just holds position, so it composes with the exact same
+    // pause-on-reveal/resume-on-scroll-up rules as the old play()/pause()
+    // calls did.
+    // A tiny inset from the true 0/duration boundary — setting currentTime
+    // to EXACTLY video.duration is a known cross-browser edge case (some
+    // engines snap it back toward 0 instead of holding at the end), so
+    // both turnaround points sit just inside the real ends instead.
+    const PING_PONG_EDGE_INSET_S = 0.05;
+    const stepPingPong = (ts: number) => {
+      const video = bgVideoRef.current;
+      const last = pingPongLastTsRef.current;
+      pingPongLastTsRef.current = ts;
+      if (video && Number.isFinite(video.duration) && video.duration > 0 && videoShouldPlayRef.current && last !== null) {
+        const deltaSec = Math.min((ts - last) / 1000, 0.1);
+        const maxT = Math.max(0, video.duration - PING_PONG_EDGE_INSET_S);
+        const minT = PING_PONG_EDGE_INSET_S;
+        let next = video.currentTime + deltaSec * pingPongDirRef.current;
+        if (next >= maxT) {
+          next = maxT;
+          pingPongDirRef.current = -1;
+        } else if (next <= minT) {
+          next = minT;
+          pingPongDirRef.current = 1;
+        }
+        video.currentTime = next;
+      }
+      pingPongRafRef.current = requestAnimationFrame(stepPingPong);
+    };
+    pingPongRafRef.current = requestAnimationFrame(stepPingPong);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
@@ -621,6 +667,7 @@ export default function HealthPackages() {
       observer?.disconnect();
       if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
       if (snapTimeoutRef.current) window.clearTimeout(snapTimeoutRef.current);
+      if (pingPongRafRef.current) cancelAnimationFrame(pingPongRafRef.current);
     };
   }, [railSlots.length]);
 
@@ -665,16 +712,23 @@ export default function HealthPackages() {
     >
       <div ref={stickyViewportRef} className={styles.stickyViewport}>
         <div ref={frameRef} className={styles.frame}>
+          {/* No `loop` — looping is handled manually via ping-pong scrubbing
+              (see stepPingPong in the effect above), not native playback. */}
           <video
             ref={bgVideoRef}
             className={styles.bgVideo}
-            src="/0_Close_up_Objective_1280x720.mp4"
-            loop
+            src="/5411341_Coll_wavebreak_People_1280x720.mp4"
             muted
             playsInline
             aria-hidden
           />
           <div className={styles.scrimBase} aria-hidden />
+          <div className={styles.titleBlur} aria-hidden>
+            <div className={`${styles.titleBlurLayer} ${styles.titleBlurLayer1}`} />
+            <div className={`${styles.titleBlurLayer} ${styles.titleBlurLayer2}`} />
+            <div className={`${styles.titleBlurLayer} ${styles.titleBlurLayer3}`} />
+            <div className={`${styles.titleBlurLayer} ${styles.titleBlurLayer4}`} />
+          </div>
           <div className={styles.topOverlay} aria-hidden />
           <div ref={scrimDullRef} className={styles.bottomOverlay} aria-hidden />
 
