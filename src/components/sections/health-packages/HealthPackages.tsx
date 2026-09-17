@@ -4,6 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import styles from "./HealthPackages.module.css";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 type PackageCard = {
   id: string;
@@ -12,7 +13,15 @@ type PackageCard = {
   testsCount: number;
   reportsWithin: string;
   variant: 1 | 2 | 3;
+  // A representative sample of included tests (not the full testsCount) —
+  // shown as individual chips on hover, with the remainder summarized as
+  // one "+N more" chip. See TEST_CHIPS_SHOWN below.
+  tests: string[];
 };
+
+// How many individual test-name chips to show before collapsing the rest
+// into a single "+N more" chip — 2 per row x 3 rows, per spec.
+const TEST_CHIPS_SHOWN = 6;
 
 // Mock/demo data, keyed by city — packages (and their contents) genuinely
 // vary per unit, so this is structured as a lookup rather than one fixed
@@ -29,6 +38,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 42,
       reportsWithin: "8 hours",
       variant: 1,
+      tests: ["ECG", "2D Echo", "Lipid Profile", "HbA1c", "Blood Pressure", "Chest X-Ray"],
     },
     {
       id: "thyroid-health",
@@ -37,6 +47,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 15,
       reportsWithin: "2 hours",
       variant: 2,
+      tests: ["TSH", "T3", "T4", "Anti-TPO", "Free T3", "Free T4"],
     },
     {
       id: "diabetes-care",
@@ -45,6 +56,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 9,
       reportsWithin: "06:45 PM",
       variant: 3,
+      tests: ["FBS", "PPBS", "HbA1c", "Lipid Profile", "Kidney Function", "Urine Routine"],
     },
   ],
 };
@@ -91,40 +103,47 @@ const USPS = [
 
 // Card fact icons (tests / reports-within) — each card instance renders its
 // own copy, so gradient ids get a per-card suffix to stay unique in the DOM.
-function FactIconTests({ idSuffix }: { idSuffix: string }) {
+// `flat`, used by the light-mode card variant, swaps the two-tone gradient
+// for a single flat fill matching the USP row's icon color exactly (per
+// spec: "icon can be same color as USP icon") rather than a gradient.
+function FactIconTests({ idSuffix, flat }: { idSuffix: string; flat?: boolean }) {
   const gid = `hp-tests-grad-${idSuffix}`;
   return (
     <svg width="22" height="22" viewBox="0 0 23 23" fill="none" aria-hidden>
-      <path d="M22.4206 7.48364L16.1246 1.18761C16.0466 1.10956 15.954 1.04764 15.8521 1.0054C15.7502 0.963151 15.6409 0.941406 15.5306 0.941406C15.4203 0.941406 15.3111 0.963151 15.2092 1.0054C15.1072 1.04764 15.0147 1.10956 14.9367 1.18761L1.3761 14.7482C0.494999 15.6293 0 16.8243 0 18.0704C0 19.3165 0.494999 20.5115 1.3761 21.3926C2.25721 22.2737 3.45224 22.7687 4.69831 22.7687C5.94438 22.7687 7.13941 22.2737 8.02051 21.3926L19.7616 9.65157L22.0921 8.87506C22.228 8.82988 22.35 8.7507 22.4466 8.64506C22.5433 8.53942 22.6113 8.41082 22.6442 8.27149C22.6771 8.13216 22.6738 7.98673 22.6347 7.84901C22.5956 7.7113 22.5218 7.58589 22.4206 7.48469V7.48364ZM19.0428 8.12059C18.919 8.16168 18.8066 8.23102 18.7143 8.32311L14.5621 12.4753C13.6733 12.7797 12.2798 12.8951 10.4623 11.9507C9.35002 11.3693 8.34476 11.1112 7.46541 11.0346L15.5306 2.96834L20.2726 7.7103L19.0428 8.12059Z" fill={`url(#${gid})`} />
-      <defs>
-        <linearGradient id={gid} x1="11.3333" y1="0.941406" x2="11.3333" y2="22.7687" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FEF5F5" />
-          <stop offset="1" stopColor="#989393" />
-        </linearGradient>
-      </defs>
+      <path d="M22.4206 7.48364L16.1246 1.18761C16.0466 1.10956 15.954 1.04764 15.8521 1.0054C15.7502 0.963151 15.6409 0.941406 15.5306 0.941406C15.4203 0.941406 15.3111 0.963151 15.2092 1.0054C15.1072 1.04764 15.0147 1.10956 14.9367 1.18761L1.3761 14.7482C0.494999 15.6293 0 16.8243 0 18.0704C0 19.3165 0.494999 20.5115 1.3761 21.3926C2.25721 22.2737 3.45224 22.7687 4.69831 22.7687C5.94438 22.7687 7.13941 22.2737 8.02051 21.3926L19.7616 9.65157L22.0921 8.87506C22.228 8.82988 22.35 8.7507 22.4466 8.64506C22.5433 8.53942 22.6113 8.41082 22.6442 8.27149C22.6771 8.13216 22.6738 7.98673 22.6347 7.84901C22.5956 7.7113 22.5218 7.58589 22.4206 7.48469V7.48364ZM19.0428 8.12059C18.919 8.16168 18.8066 8.23102 18.7143 8.32311L14.5621 12.4753C13.6733 12.7797 12.2798 12.8951 10.4623 11.9507C9.35002 11.3693 8.34476 11.1112 7.46541 11.0346L15.5306 2.96834L20.2726 7.7103L19.0428 8.12059Z" fill={flat ? "#FEF5F5" : `url(#${gid})`} />
+      {!flat && (
+        <defs>
+          <linearGradient id={gid} x1="11.3333" y1="0.941406" x2="11.3333" y2="22.7687" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FEF5F5" />
+            <stop offset="1" stopColor="#989393" />
+          </linearGradient>
+        </defs>
+      )}
     </svg>
   );
 }
 
-function FactIconReports({ idSuffix }: { idSuffix: string }) {
+function FactIconReports({ idSuffix, flat }: { idSuffix: string; flat?: boolean }) {
   const gid = `hp-reports-grad-${idSuffix}`;
   return (
     <svg width="22" height="22" viewBox="0 0 23 23" fill="none" aria-hidden>
-      <path d="M20.6677 4.61397L16.3087 0.255C16.2277 0.174068 16.1315 0.109891 16.0256 0.0661378C15.9198 0.022384 15.8064 -8.97825e-05 15.6919 2.69558e-07H6.97393C6.5115 2.69558e-07 6.06802 0.183699 5.74103 0.510686C5.41404 0.837672 5.23034 1.28116 5.23034 1.74359V3.48718H3.48675C3.02433 3.48718 2.58084 3.67088 2.25385 3.99787C1.92686 4.32485 1.74316 4.76834 1.74316 5.23077V20.9231C1.74316 21.3855 1.92686 21.829 2.25385 22.156C2.58084 22.483 3.02433 22.6667 3.48675 22.6667H15.6919C16.1543 22.6667 16.5978 22.483 16.9248 22.156C17.2518 21.829 17.4355 21.3855 17.4355 20.9231V19.1795H19.1791C19.6415 19.1795 20.085 18.9958 20.412 18.6688C20.739 18.3418 20.9227 17.8983 20.9227 17.4359V5.23077C20.9227 5.11625 20.9003 5.00283 20.8565 4.897C20.8128 4.79117 20.7486 4.695 20.6677 4.61397ZM12.2047 18.3077H6.97393C6.74272 18.3077 6.52097 18.2158 6.35748 18.0523C6.19399 17.8889 6.10214 17.6671 6.10214 17.4359C6.10214 17.2047 6.19399 16.9829 6.35748 16.8194C6.52097 16.656 6.74272 16.5641 6.97393 16.5641H12.2047C12.4359 16.5641 12.6577 16.656 12.8212 16.8194C12.9846 16.9829 13.0765 17.2047 13.0765 17.4359C13.0765 17.6671 12.9846 17.8889 12.8212 18.0523C12.6577 18.2158 12.4359 18.3077 12.2047 18.3077ZM12.2047 14.8205H6.97393C6.74272 14.8205 6.52097 14.7287 6.35748 14.5652C6.19399 14.4017 6.10214 14.1799 6.10214 13.9487C6.10214 13.7175 6.19399 13.4958 6.35748 13.3323C6.52097 13.1688 6.74272 13.0769 6.97393 13.0769H12.2047C12.4359 13.0769 12.6577 13.1688 12.8212 13.3323C12.9846 13.4958 13.0765 13.7175 13.0765 13.9487C13.0765 14.1799 12.9846 14.4017 12.8212 14.5652C12.6577 14.7287 12.4359 14.8205 12.2047 14.8205ZM19.1791 17.4359H17.4355V8.71795C17.4356 8.60343 17.4131 8.49001 17.3693 8.38418C17.3256 8.27835 17.2614 8.18218 17.1805 8.10115L12.8215 3.74218C12.7405 3.66125 12.6443 3.59707 12.5385 3.55332C12.4326 3.50956 12.3192 3.48709 12.2047 3.48718H6.97393V1.74359H15.3312L19.1791 5.59147V17.4359Z" fill={`url(#${gid})`} />
-      <defs>
-        <linearGradient id={gid} x1="11.3329" y1="0" x2="11.3329" y2="22.6667" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FEF5F5" />
-          <stop offset="1" stopColor="#989393" />
-        </linearGradient>
-      </defs>
+      <path d="M20.6677 4.61397L16.3087 0.255C16.2277 0.174068 16.1315 0.109891 16.0256 0.0661378C15.9198 0.022384 15.8064 -8.97825e-05 15.6919 2.69558e-07H6.97393C6.5115 2.69558e-07 6.06802 0.183699 5.74103 0.510686C5.41404 0.837672 5.23034 1.28116 5.23034 1.74359V3.48718H3.48675C3.02433 3.48718 2.58084 3.67088 2.25385 3.99787C1.92686 4.32485 1.74316 4.76834 1.74316 5.23077V20.9231C1.74316 21.3855 1.92686 21.829 2.25385 22.156C2.58084 22.483 3.02433 22.6667 3.48675 22.6667H15.6919C16.1543 22.6667 16.5978 22.483 16.9248 22.156C17.2518 21.829 17.4355 21.3855 17.4355 20.9231V19.1795H19.1791C19.6415 19.1795 20.085 18.9958 20.412 18.6688C20.739 18.3418 20.9227 17.8983 20.9227 17.4359V5.23077C20.9227 5.11625 20.9003 5.00283 20.8565 4.897C20.8128 4.79117 20.7486 4.695 20.6677 4.61397ZM12.2047 18.3077H6.97393C6.74272 18.3077 6.52097 18.2158 6.35748 18.0523C6.19399 17.8889 6.10214 17.6671 6.10214 17.4359C6.10214 17.2047 6.19399 16.9829 6.35748 16.8194C6.52097 16.656 6.74272 16.5641 6.97393 16.5641H12.2047C12.4359 16.5641 12.6577 16.656 12.8212 16.8194C12.9846 16.9829 13.0765 17.2047 13.0765 17.4359C13.0765 17.6671 12.9846 17.8889 12.8212 18.0523C12.6577 18.2158 12.4359 18.3077 12.2047 18.3077ZM12.2047 14.8205H6.97393C6.74272 14.8205 6.52097 14.7287 6.35748 14.5652C6.19399 14.4017 6.10214 14.1799 6.10214 13.9487C6.10214 13.7175 6.19399 13.4958 6.35748 13.3323C6.52097 13.1688 6.74272 13.0769 6.97393 13.0769H12.2047C12.4359 13.0769 12.6577 13.1688 12.8212 13.3323C12.9846 13.4958 13.0765 13.7175 13.0765 13.9487C13.0765 14.1799 12.9846 14.4017 12.8212 14.5652C12.6577 14.7287 12.4359 14.8205 12.2047 14.8205ZM19.1791 17.4359H17.4355V8.71795C17.4356 8.60343 17.4131 8.49001 17.3693 8.38418C17.3256 8.27835 17.2614 8.18218 17.1805 8.10115L12.8215 3.74218C12.7405 3.66125 12.6443 3.59707 12.5385 3.55332C12.4326 3.50956 12.3192 3.48709 12.2047 3.48718H6.97393V1.74359H15.3312L19.1791 5.59147V17.4359Z" fill={flat ? "#FEF5F5" : `url(#${gid})`} />
+      {!flat && (
+        <defs>
+          <linearGradient id={gid} x1="11.3329" y1="0" x2="11.3329" y2="22.6667" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FEF5F5" />
+            <stop offset="1" stopColor="#989393" />
+          </linearGradient>
+        </defs>
+      )}
     </svg>
   );
 }
 
-function ArrowGlyph() {
+function ArrowGlyph({ dark }: { dark?: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
-      <path d="M16.9992 5.43781V14.2778C16.9992 14.4582 16.9275 14.6311 16.8 14.7586C16.6725 14.8862 16.4995 14.9578 16.3192 14.9578C16.1388 14.9578 15.9659 14.8862 15.8383 14.7586C15.7108 14.6311 15.6392 14.4582 15.6392 14.2778V7.07916L5.92027 16.7989C5.79267 16.9265 5.61961 16.9982 5.43917 16.9982C5.25872 16.9982 5.08566 16.9265 4.95807 16.7989C4.83047 16.6713 4.75879 16.4983 4.75879 16.3178C4.75879 16.1374 4.83047 15.9643 4.95807 15.8367L14.6778 6.11781H7.47917C7.29882 6.11781 7.12586 6.04617 6.99833 5.91864C6.87081 5.79112 6.79917 5.61816 6.79917 5.43781C6.79917 5.25747 6.87081 5.0845 6.99833 4.95698C7.12586 4.82946 7.29882 4.75781 7.47917 4.75781H16.3192C16.4995 4.75781 16.6725 4.82946 16.8 4.95698C16.9275 5.0845 16.9992 5.25747 16.9992 5.43781Z" fill="white"/>
+      <path d="M16.9992 5.43781V14.2778C16.9992 14.4582 16.9275 14.6311 16.8 14.7586C16.6725 14.8862 16.4995 14.9578 16.3192 14.9578C16.1388 14.9578 15.9659 14.8862 15.8383 14.7586C15.7108 14.6311 15.6392 14.4582 15.6392 14.2778V7.07916L5.92027 16.7989C5.79267 16.9265 5.61961 16.9982 5.43917 16.9982C5.25872 16.9982 5.08566 16.9265 4.95807 16.7989C4.83047 16.6713 4.75879 16.4983 4.75879 16.3178C4.75879 16.1374 4.83047 15.9643 4.95807 15.8367L14.6778 6.11781H7.47917C7.29882 6.11781 7.12586 6.04617 6.99833 5.91864C6.87081 5.79112 6.79917 5.61816 6.79917 5.43781C6.79917 5.25747 6.87081 5.0845 6.99833 4.95698C7.12586 4.82946 7.29882 4.75781 7.47917 4.75781H16.3192C16.4995 4.75781 16.6725 4.82946 16.8 4.95698C16.9275 5.0845 16.9992 5.25747 16.9992 5.43781Z" fill={dark ? "#1A1A2E" : "white"}/>
     </svg>
   );
 }
@@ -167,25 +186,22 @@ const TILT_MAX_DEG = 2.5;
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Centered text reveal: a strict one-by-one sequence — eyebrow, then title
-// (word by word), then each USP item — gated on the `textRevealed` boolean
-// (see the scroll-trigger writeup above applyState) rather than a generic
-// whileInView, since this section is sticky-pinned and a naive viewport
-// check would fire the instant the pinned box exists at all. Each stage's
-// start delay is derived from the one before it finishing (or nearly
-// finishing), so the sequence reads as continuous rather than segmented.
+// (via TextSweepEffect, the same sweep-in treatment used for every other
+// section's title), then each USP item — gated on the `textRevealed`
+// boolean (see the scroll-trigger writeup above applyState) rather than a
+// generic whileInView, since this section is sticky-pinned and a naive
+// viewport check would fire the instant the pinned box exists at all. Each
+// stage's start delay is derived from the one before it finishing (or
+// nearly finishing), so the sequence reads as continuous rather than
+// segmented.
 const TITLE_LINES = ["Making preventive care simple,", "seamless and stress free."];
-const WORD_STEP = 0.06;
-const WORD_DURATION = 0.45;
-const TITLE_WORD_COUNT = TITLE_LINES.join(" ").split(" ").length;
+const TITLE_SWEEP_MS = 1400;
 
 const TEXT_REVEAL_EYEBROW_DELAY = 0;
 const TEXT_REVEAL_TITLE_DELAY = 0.3;
-// Last title word's own extra delay (on top of TEXT_REVEAL_TITLE_DELAY), so
-// the USP row can be timed to start right as the title's word-by-word
-// stagger is wrapping up rather than only after every word's transition has
-// fully finished.
-const TITLE_LAST_WORD_OFFSET = (TITLE_WORD_COUNT - 1) * WORD_STEP;
-const TEXT_REVEAL_USP_BASE_DELAY = TEXT_REVEAL_TITLE_DELAY + TITLE_LAST_WORD_OFFSET + 0.35;
+// USPs start a bit before the title's own sweep fully resolves, so the
+// sequence reads as continuous rather than strictly segmented.
+const TEXT_REVEAL_USP_BASE_DELAY = TEXT_REVEAL_TITLE_DELAY + (TITLE_SWEEP_MS / 1000) * 0.65;
 const TEXT_REVEAL_USP_STAGGER = 0.12;
 
 // Enter/exit scale — restores the previous version's "text grows in with
@@ -206,62 +222,6 @@ const EXIT_DURATION = 0.75;
 const LIGHT_SWITCH_THRESHOLD = 0.98;
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
-
-// Same visual technique as AppDownloadBanner's RevealWords (word wrapped in
-// an overflow-hidden mask, sliding up from below while blurring in) — see
-// that file for the original — adapted here to (a) take an externally
-// driven `active` boolean instead of its own useInView, since the reveal is
-// gated by this section's own scroll-trigger condition, and (b) span
-// multiple design-forced lines (a manual <br/> between them) while keeping
-// one continuous word-stagger order across the whole title.
-function RevealTitleWords({
-  lines,
-  active,
-  startDelay,
-}: {
-  lines: string[];
-  active: boolean;
-  startDelay: number;
-}) {
-  return (
-    <>
-      {lines.map((line, lineIdx) => {
-        const words = line.split(" ");
-        // Word order counts continuously across lines (not reset per line)
-        // so the whole title reads as one uninterrupted stagger — derived
-        // from the preceding lines' own word counts rather than a mutable
-        // counter, since lines/words here are tiny (a handful of words).
-        const priorWordCount = lines.slice(0, lineIdx).reduce((sum, l) => sum + l.split(" ").length, 0);
-        return (
-          <React.Fragment key={lineIdx}>
-            {words.map((word, i) => {
-              const wordDelay = startDelay + (priorWordCount + i) * WORD_STEP;
-              return (
-                <React.Fragment key={i}>
-                  {/* The trailing space between words must live OUTSIDE the
-                      overflow:hidden clipped span — see AppDownloadBanner's
-                      RevealWords for why. */}
-                  <span style={{ display: "inline-block", overflow: "hidden", verticalAlign: "bottom" }}>
-                    <motion.span
-                      style={{ display: "inline-block" }}
-                      initial={{ y: "-110%", opacity: 0, filter: "blur(6px)" }}
-                      animate={active ? { y: "0%", opacity: 1, filter: "blur(0px)" } : {}}
-                      transition={{ duration: WORD_DURATION, delay: wordDelay, ease: EASE }}
-                    >
-                      {word}
-                    </motion.span>
-                  </span>
-                  {i < words.length - 1 ? " " : ""}
-                </React.Fragment>
-              );
-            })}
-            {lineIdx < lines.length - 1 && <br />}
-          </React.Fragment>
-        );
-      })}
-    </>
-  );
-}
 
 export default function HealthPackages() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -299,6 +259,15 @@ export default function HealthPackages() {
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
 
+  // Dark/light card preview toggle — a temporary review-only control (see
+  // the floating button further down), not a permanent product feature.
+  // isLightMode drives which color variant the package cards render in;
+  // sectionVisible mirrors hasAppearedRef into React state purely so the
+  // toggle button itself can mount/unmount (it has no reason to float over
+  // any other section on the page).
+  const [isLightMode, setIsLightMode] = useState(false);
+  const [sectionVisible, setSectionVisible] = useState(false);
+
   // "growing": frame size/radius tracks raw scroll (p1raw) as before.
   // "full": frame is pinned at its fully-grown end values and the card
   // reveal plays out on its own timer instead of scroll position — see
@@ -325,20 +294,6 @@ export default function HealthPackages() {
   // Last rail item's own reveal finishes at this elapsed time — the auto
   // timeline runs from 0 to exactly this many ms.
   const totalAutoMs = (railSlots.length - 1) * AUTO_REVEAL_STAGGER_MS + AUTO_REVEAL_ITEM_MS;
-
-  // Left-column text reveal trigger: fires once the frame/section itself is
-  // genuinely visible, not once the right-rail package cards reach some
-  // point in their own (much later, PHASE2-gated) reveal — waiting on the
-  // cards left a long dead stretch of the fully-formed video playing with
-  // no text at all. Keyed to phase-1 (the frame's own grow-in, see p1
-  // below) reaching 0.78 — comfortably before it's fully filled (p1=1)
-  // rather than waiting for that either, but still past the point
-  // (empirically confirmed via direct DOM inspection in an earlier pass)
-  // where the frame's real width has stabilized enough that the title's
-  // manual 2-line break is no longer at risk of wrapping into 3-4 lines.
-  // Package cards/rail/explore/video below are untouched — they keep their
-  // own separate PHASE2-based timeline entirely.
-  const TEXT_REVEAL_P1_THRESHOLD = 0.78;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -373,7 +328,11 @@ export default function HealthPackages() {
           el.style.transform = `scale(${CARD_SCALE_FROM + (1 - CARD_SCALE_FROM) * t})`;
           el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
         } else {
-          el.style.transform = `translateX(${38 * (1 - t)}px)`;
+          // "Most Booked in {city}" label — a plain blur-in, no motion
+          // (used to slide in via translateX, which read as floating into
+          // frame rather than simply resolving into focus).
+          el.style.transform = "none";
+          el.style.filter = `blur(${CARD_BLUR_FROM_PX * (1 - t)}px)`;
         }
         el.style.opacity = String(t);
       });
@@ -522,11 +481,15 @@ export default function HealthPackages() {
       grid.style.transform = `scale(${enterScale * exitScale})`;
 
       // Left-column text reveal: one-shot gate, flips the React state on
-      // once the frame is ~78% grown (see TEXT_REVEAL_P1_THRESHOLD above)
-      // and never flips back — the Framer Motion word/line/item
-      // choreography below is driven entirely off that boolean, not off p1
-      // directly, so it plays out on its own timeline once triggered.
-      if (!textRevealedRef.current && p1 >= TEXT_REVEAL_P1_THRESHOLD) {
+      // as soon as the section/frame has actually entered the screen
+      // (hasAppearedRef, from the IntersectionObserver below) rather than
+      // waiting for the frame to be almost fully grown — text used to only
+      // show up right as the section committed to "full", which read as
+      // appearing far too late. Never flips back once true — the Framer
+      // Motion word/line/item choreography below is driven entirely off
+      // that boolean, not off p1 or hasAppeared directly, so it plays out
+      // on its own timeline once triggered.
+      if (!textRevealedRef.current && hasAppearedRef.current) {
         textRevealedRef.current = true;
         setTextRevealed(true);
       }
@@ -608,6 +571,7 @@ export default function HealthPackages() {
       observer = new IntersectionObserver(
         ([entry]) => {
           hasAppearedRef.current = entry.isIntersecting;
+          setSectionVisible(entry.isIntersecting);
           if (reduced || isMobile()) {
             videoShouldPlayRef.current = entry.isIntersecting;
           } else {
@@ -773,7 +737,13 @@ export default function HealthPackages() {
                   <div className="section-eyebrow">PREVENTIVE HEALTH PACKAGES</div>
                 </motion.div>
                 <h2 className={styles.title}>
-                  <RevealTitleWords lines={TITLE_LINES} active={textRevealed} startDelay={TEXT_REVEAL_TITLE_DELAY} />
+                  <TextSweepEffect
+                    words={[TITLE_LINES.join(" ")]}
+                    sweepMs={TITLE_SWEEP_MS}
+                    delayMs={TEXT_REVEAL_TITLE_DELAY * 1000}
+                    finalColor="#ffffff"
+                    active={textRevealed}
+                  />
                 </h2>
               </div>
               <ul className={styles.uspList}>
@@ -809,45 +779,77 @@ export default function HealthPackages() {
                   </div>
 
                   <div className={styles.cardStack}>
-                    {packages.map((pkg) => (
-                      <Link
-                        key={pkg.id}
-                        href={`/health-packages/${pkg.id}`}
-                        ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
-                        className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]}`}
-                        onMouseMove={handleCardMouseMove}
-                        onMouseLeave={handleCardMouseLeave}
-                      >
-                        <span className={styles.packageCardBorder} aria-hidden />
-                        <img src={pkg.image} alt="" className={styles.packageCardImage} />
-                        <div className={styles.packageCardContent}>
-                          <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
-                          <div className={styles.packageCardFacts}>
-                            <div className={styles.packageCardFact}>
-                              <span className={styles.packageCardFactIcon}>
-                                <FactIconTests idSuffix={pkg.id} />
-                              </span>
-                              <span className={styles.packageCardFactText}>
-                                <span className={styles.factBold}>{pkg.testsCount} tests</span>
-                                <span className={styles.factLight}>included</span>
-                              </span>
+                    {packages.map((pkg) => {
+                      const overflowCount = pkg.testsCount - TEST_CHIPS_SHOWN;
+                      return (
+                        // Fixed-height slot is the actual grid item (so the
+                        // hover-expanded card's extra height never affects
+                        // grid sizing or pushes siblings); the card itself
+                        // is absolutely positioned within it, bottom-
+                        // anchored, so growing height pushes its own top
+                        // edge up instead of the slot's bottom edge down.
+                        <div key={pkg.id} className={styles.packageCardSlot}>
+                          <Link
+                            href={`/health-packages/${pkg.id}`}
+                            ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
+                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${isLightMode ? styles.packageCardLightMode : ""}`}
+                            onMouseMove={handleCardMouseMove}
+                            onMouseLeave={handleCardMouseLeave}
+                          >
+                            <span className={styles.packageCardBorder} aria-hidden />
+                            <img src={pkg.image} alt="" className={styles.packageCardImage} />
+                            <div className={styles.packageCardContent}>
+                              <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
+                              <div className={styles.packageCardFacts}>
+                                {/* Reports first, tests second (order shifted from the
+                                    original tests-then-reports layout) — this fact row
+                                    stays put on hover while the tests row below it grows
+                                    downward into the individual test-name chips. */}
+                                <div className={styles.packageCardFact}>
+                                  <span className={styles.packageCardFactIcon}>
+                                    <FactIconReports idSuffix={pkg.id} flat={isLightMode} />
+                                  </span>
+                                  <span className={styles.packageCardFactText}>
+                                    <span className={styles.factLight}>Reports within</span>
+                                    <span className={styles.factBold}>{pkg.reportsWithin}</span>
+                                  </span>
+                                </div>
+                                <div className={`${styles.packageCardFact} ${styles.packageCardFactTests}`}>
+                                  <span className={styles.packageCardFactIcon}>
+                                    <FactIconTests idSuffix={pkg.id} flat={isLightMode} />
+                                  </span>
+                                  <div className={styles.packageCardTestsSwap}>
+                                    {/* Simple count — visible normally, blurs out on hover. */}
+                                    <span className={styles.packageCardTestsSimple}>
+                                      <span className={styles.factBold}>{pkg.testsCount} tests</span>
+                                      <span className={styles.factLight}>included</span>
+                                    </span>
+                                    {/* Individual test chips — hidden normally (0fr grid
+                                        row, see CSS), blurs into view on hover at its
+                                        exact natural height. */}
+                                    <div className={styles.packageCardTestChipsWrap}>
+                                      <div className={styles.packageCardTestChipsInner}>
+                                        <div className={styles.packageCardTestChips}>
+                                          {pkg.tests.map((t) => (
+                                            <span key={t} className={styles.testChip}>{t}</span>
+                                          ))}
+                                          {overflowCount > 0 && (
+                                            <span className={styles.testChip}>+{overflowCount} more</span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className={styles.packageCardFact}>
-                              <span className={styles.packageCardFactIcon}>
-                                <FactIconReports idSuffix={pkg.id} />
-                              </span>
-                              <span className={styles.packageCardFactText}>
-                                <span className={styles.factLight}>Reports within</span>
-                                <span className={styles.factBold}>{pkg.reportsWithin}</span>
-                              </span>
-                            </div>
-                          </div>
+                            <span className={styles.arrowBadge} aria-hidden>
+                              <ArrowGlyph dark={isLightMode} />
+                            </span>
+                          </Link>
                         </div>
-                        <span className={styles.arrowBadge} aria-hidden>
-                          <ArrowGlyph />
-                        </span>
-                      </Link>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   <Link
@@ -871,6 +873,24 @@ export default function HealthPackages() {
           </div>
         </div>
       </div>
+
+      {/* Review-only preview toggle — not a real product feature, just a
+          quick way to compare the dark vs. light package-card treatments
+          side by side. Rendered as a direct child of <section> (not
+          inside .frame/.grid, both of which set will-change/transform and
+          would otherwise become this fixed element's containing block
+          instead of the viewport), and only while the section itself is
+          on screen. */}
+      {sectionVisible && (
+        <button
+          type="button"
+          className={styles.modeToggle}
+          onClick={() => setIsLightMode((v) => !v)}
+          aria-label="Toggle package card preview between dark and light mode"
+        >
+          {isLightMode ? "Light cards" : "Dark cards"}
+        </button>
+      )}
     </section>
   );
 }
