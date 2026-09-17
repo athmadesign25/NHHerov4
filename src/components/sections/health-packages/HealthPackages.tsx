@@ -196,12 +196,17 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 // segmented.
 const TITLE_LINES = ["Making preventive care simple,", "seamless and stress free."];
 const TITLE_SWEEP_MS = 1400;
+// How far behind the first line's sweep the second line's own starts —
+// each line is its own TextSweepEffect call (see the JSX below), not one
+// continuous sweep across a forced line break.
+const TITLE_LINE_STAGGER_MS = 150;
 
 const TEXT_REVEAL_EYEBROW_DELAY = 0;
 const TEXT_REVEAL_TITLE_DELAY = 0.3;
 // USPs start a bit before the title's own sweep fully resolves, so the
-// sequence reads as continuous rather than strictly segmented.
-const TEXT_REVEAL_USP_BASE_DELAY = TEXT_REVEAL_TITLE_DELAY + (TITLE_SWEEP_MS / 1000) * 0.65;
+// sequence reads as continuous rather than strictly segmented. Measured
+// from the SECOND line's sweep (the one that finishes last).
+const TEXT_REVEAL_USP_BASE_DELAY = TEXT_REVEAL_TITLE_DELAY + (TITLE_LINE_STAGGER_MS + TITLE_SWEEP_MS * 0.65) / 1000;
 const TEXT_REVEAL_USP_STAGGER = 0.12;
 
 // Enter/exit scale — restores the previous version's "text grows in with
@@ -737,10 +742,24 @@ export default function HealthPackages() {
                   <div className="section-eyebrow">PREVENTIVE HEALTH PACKAGES</div>
                 </motion.div>
                 <h2 className={styles.title}>
+                  {/* TextSweepEffect only ever renders words[0] as one
+                      continuous span — it has no built-in line-break
+                      support — so the forced 2-line split is done by
+                      rendering it twice (one call per line) with a <br />
+                      between, staggering the second line's start slightly
+                      behind the first rather than firing both at once. */}
                   <TextSweepEffect
-                    words={[TITLE_LINES.join(" ")]}
+                    words={[TITLE_LINES[0]]}
                     sweepMs={TITLE_SWEEP_MS}
                     delayMs={TEXT_REVEAL_TITLE_DELAY * 1000}
+                    finalColor="#ffffff"
+                    active={textRevealed}
+                  />
+                  <br />
+                  <TextSweepEffect
+                    words={[TITLE_LINES[1]]}
+                    sweepMs={TITLE_SWEEP_MS}
+                    delayMs={TEXT_REVEAL_TITLE_DELAY * 1000 + TITLE_LINE_STAGGER_MS}
                     finalColor="#ffffff"
                     active={textRevealed}
                   />
