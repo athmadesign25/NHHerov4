@@ -74,6 +74,12 @@
 }
 
 .pulseBars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5px;
+  height: 14px;
+}
 /* Base styles (Desktop) */
 /* Vertically centered on the viewport (right-anchored horizontally) —
    independent of the global Pulse floating button (GlobalPulseFAB's
@@ -195,12 +201,9 @@
   background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   backdrop-filter: blur(34px);
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5px;
-  height: 14px;
 }
 
 .pulseBar1 {
