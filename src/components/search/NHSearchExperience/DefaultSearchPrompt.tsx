@@ -32,7 +32,11 @@ export default function DefaultSearchPrompt({
   controlsMarginBottom,
 }: DefaultSearchPromptProps) {
   return (
-    <div className={styles.landingContainer} style={{ height: "100%", justifyContent: "center" }}>
+    <div 
+      className={styles.landingContainer} 
+      style={{ height: "100%", justifyContent: "center", cursor: "pointer" }}
+      onClick={onActivate}
+    >
       {/* Top row: Primary Prompt + Pulse AI Identity (aligned to same outer boundary) */}
       <motion.div
         className={styles.landingInputRow}

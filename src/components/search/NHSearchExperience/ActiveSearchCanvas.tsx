@@ -66,6 +66,8 @@ export default function ActiveSearchCanvas({
         onSubmit(query.trim());
       } else if (prediction && prediction.fullText) {
         onSubmit(prediction.fullText);
+      } else {
+        onSubmit("Cardiologist near me");
       }
     } else if (e.key === "ArrowDown" && prediction) {
       e.preventDefault();
@@ -185,6 +187,8 @@ export default function ActiveSearchCanvas({
               onSubmit(query.trim());
             } else if (prediction) {
               onSubmit(prediction.fullText);
+            } else {
+              onSubmit("Cardiologist near me");
             }
           }}
         >

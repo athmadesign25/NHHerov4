@@ -350,13 +350,16 @@ export default function NHSearchExperience({
   // Handle click outside to close active/results state
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        searchState !== "landing" &&
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        handleClose();
+      if (searchState === "landing") return;
+      const target = e.target as Node;
+      const modalEl = document.getElementById("nh-active-search-modal");
+      if (modalEl && modalEl.contains(target)) {
+        return; // Click is inside the portaled modal - do not close
       }
+      if (containerRef.current && containerRef.current.contains(target)) {
+        return;
+      }
+      handleClose();
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -398,9 +401,7 @@ export default function NHSearchExperience({
         layout
         className={`${styles.searchShell} ${styles.stateLanding}`}
         onClick={() => {
-          if (isDocked) {
-            handleActivate();
-          }
+          handleActivate();
         }}
         style={
           hasScroll && searchState === "landing"
