@@ -13,7 +13,6 @@ import {
 } from "framer-motion";
 import SplitText from "@/components/ui/SplitText";
 import styles from "./Hero.module.css";
-import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import { NHSearchExperience } from "@/components/search/NHSearchExperience";
 
 const STAT_GROUPS = [
@@ -292,11 +291,6 @@ export default function Hero() {
         anchorRect={anchorRect}
         onOpenPulseAI={() => setIsPulseActive(true)}
       />
-
-      {/* Pulse AI Workspace modal */}
-      {isPulseActive && (
-        <PulseAIWorkspace onClose={() => setIsPulseActive(false)} />
-      )}
     </div>
   );
 }
