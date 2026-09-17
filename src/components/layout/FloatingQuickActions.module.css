@@ -55,13 +55,13 @@
 }
 
 /* Base styles (Desktop) */
-/* Bottom-anchored (not vertically centered) — sits 44px above the global
-   Pulse floating button (GlobalPulseFAB.module.css .fabContainer: bottom
-   24px, .fabButton height 60px, so that button's own top edge is at
-   24+60=84px from the viewport bottom; 44px above that is 84+44=128px). */
+/* Vertically centered on the viewport (right-anchored horizontally) —
+   independent of the global Pulse floating button (GlobalPulseFAB's
+   .fabContainer, fixed at bottom 24px/right 24px), which sits far enough
+   down in the corner that the two never overlap. */
 .container {
   position: fixed;
-  bottom: 128px;
+  top: 50%;
   right: 24px;
   z-index: 9000;
   width: 100px;
@@ -70,7 +70,6 @@
   background: linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%);
   box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -78,20 +77,25 @@
   transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Every transform state below keeps the translateY(-50%) centering term
+   alongside its own enter/exit/hover offset — a plain `transform` on a
+   later rule replaces the whole value rather than adding to it, so the
+   centering has to be repeated in each one rather than living only on
+   .container. */
 .hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(50px);
+  transform: translateY(-50%) translateX(50px);
 }
 
 .visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(0);
+  transform: translateY(-50%) translateX(0);
 }
 
 .visible:hover {
-  transform: scale(1.05);
+  transform: translateY(-50%) scale(1.05);
 }
 
 /* Standalone Fully Rounded Floating Pulse AI Button Wrapper (Bottom Right Corner) */
@@ -133,7 +137,6 @@
   border: 1px solid rgba(225, 216, 216, 0.40);
   background: linear-gradient(180deg, #034EA1 0%, #471F1F 100%);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
   pointer-events: none;
   box-sizing: border-box;
@@ -171,7 +174,6 @@
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   backdrop-filter: blur(34px);
-  -webkit-backdrop-filter: blur(34px);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -210,7 +212,6 @@
   z-index: 999999;
   background: rgba(11, 15, 25, 0.75);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;

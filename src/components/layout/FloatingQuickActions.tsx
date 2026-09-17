@@ -37,9 +37,8 @@ export default function FloatingQuickActions() {
       const showQuickActions = window.scrollY >= window.innerHeight - 100;
       setIsQuickActionsVisible(showQuickActions);
 
-      // Global Pulse FAB appears exactly when hero search section starts blurring out
-      // HeroSearchFirst container is 130vh, and it triggers at 0.05 progress (0.05 * 130vh = 6.5vh)
-      const showPulseFab = window.scrollY >= (window.innerHeight * 1.3 * 0.05);
+      // Global Pulse FAB appears immediately right after hero search section blurs out (180px)
+      const showPulseFab = window.scrollY >= 180;
       setIsPulseFabVisible(showPulseFab);
 
       if (!showQuickActions || !containerRef.current) return;
@@ -69,7 +68,13 @@ export default function FloatingQuickActions() {
             break;
           }
         }
-        return detectedTheme === "dark";
+        // HealthPackages marks itself data-nav-theme="dark" (same as every
+        // other dark section, for the navbar's own separate probe), but
+        // this component's own text should stay its default blue over it
+        // specifically rather than switching to white like it does over
+        // every other dark section.
+        const isOverPackages = elements.some((el) => el.closest("#health-packages"));
+        return detectedTheme === "dark" && !isOverPackages;
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;
@@ -121,41 +126,32 @@ export default function FloatingQuickActions() {
       </div>
 
       {/* Global Pulse Button FAB (Appears right after hero search container disappears) */}
-      {isPulseFabVisible && (
-        <div className={fabStyles.fabContainer}>
-          <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
-            <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
-            <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
-          </div>
+      <AnimatePresence>
+        {isPulseFabVisible && (
+          <div className={fabStyles.fabContainer}>
+            <div className={`${fabStyles.explainerBox} ${showExplainer ? fabStyles.explainerBoxVisible : ""}`}>
+              <div className={fabStyles.explainerTitle}>Ask Pulse AI</div>
+              <div className={fabStyles.explainerSubtitle}>Your smart health assistant</div>
+            </div>
 
-          <motion.button
-            key="floating-pulse-fab-global"
-            type="button"
-            className={fabStyles.fabButton}
-            onClick={() => setIsPulseWorkspaceOpen(true)}
-            aria-label="Open Pulse AI"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div 
-              key="pulse-logo-shared"
-              layoutId="shared-pulse-transition"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '42px', height: '23px' }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            <motion.button
+              key="floating-pulse-fab-global"
+              type="button"
+              className={fabStyles.fabButton}
+              onClick={() => setIsPulseWorkspaceOpen(true)}
+              aria-label="Open Pulse AI"
+              initial={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.5, filter: "blur(12px)" }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
-              <motion.div
-                initial={{ scale: 1 }}
-                animate={{ scale: 2.4 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                style={{ width: '100%', height: '100%' }}
-              >
+              <div className={fabStyles.pulseAnim}>
                 <Lottie animationData={pulseAnimation} loop={true} style={{ width: "100%", height: "100%" }} />
-              </motion.div>
-            </motion.div>
-          </motion.button>
-        </div>
-      )}
+              </div>
+            </motion.button>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Pulse AI Workspace Modal */}
       {isPulseWorkspaceOpen && (

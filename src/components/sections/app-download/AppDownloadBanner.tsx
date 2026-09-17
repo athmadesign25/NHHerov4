@@ -383,7 +383,7 @@ export default function AppDownloadBanner() {
 
           <div className={styles.bottomRow}>
             {/* Pop-over Card matching active screen on the left */}
-            <div className={styles.trustStackPosition} style={{ marginTop: "-212px", marginLeft: "160px" }}>
+            <div className={styles.trustStackPosition} style={{ marginTop: "-171px", marginLeft: "100px" }}>
               <motion.div 
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
@@ -399,28 +399,30 @@ export default function AppDownloadBanner() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -30, scale: 0.95 }}
                       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                      style={{ 
-                        position: "absolute", 
-                        top: 0, 
-                        left: 0, 
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
                         width: "100%",
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "rgba(255, 255, 255, 0.55)",
+                        backdropFilter: "blur(20px) saturate(1.4)",
+                        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                         borderRadius: "20px",
                         padding: "16px",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                        border: "1px solid rgba(0,0,0,0.04)"
+                        border: "1px solid rgba(255,255,255,0.6)"
                       }}
                     >
-                      <Image 
-                        src={POP_OVER_CARDS[activeIndex].img} 
-                        alt={POP_OVER_CARDS[activeIndex].text} 
-                        width={240} 
-                        height={100}
-                        style={{ width: "100%", height: "auto", display: "block" }} 
-                      />
-                      <div style={{ marginTop: "12px", textAlign: "left", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
                         {POP_OVER_CARDS[activeIndex].text}
                       </div>
+                      <Image
+                        src={POP_OVER_CARDS[activeIndex].img}
+                        alt={POP_OVER_CARDS[activeIndex].text}
+                        width={240}
+                        height={100}
+                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>

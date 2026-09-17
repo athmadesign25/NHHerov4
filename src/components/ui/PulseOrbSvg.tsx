@@ -27,6 +27,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="29%" stopColor="rgb(94,136,218)"></stop>
           <stop offset="83%" stopColor="rgb(188,41,181)"></stop>
         </linearGradient>
+        {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
         <mask id="__lottie_element_116_1" maskType="alpha">
           <use href="#__lottie_element_116"></use>
         </mask>
@@ -68,6 +69,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="49%" stopColor="rgb(94,138,194)"></stop>
           <stop offset="82%" stopColor="rgb(188,41,133)"></stop>
         </linearGradient>
+        {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
         <mask id="__lottie_element_131_1" maskType="alpha">
           <use href="#__lottie_element_131"></use>
         </mask>
@@ -154,6 +156,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="29%" stopColor="rgb(222,148,218)"></stop>
           <stop offset="83%" stopColor="rgb(188,41,181)"></stop>
         </linearGradient>
+        {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
         <mask id="__lottie_element_165_1" maskType="alpha">
           <use href="#__lottie_element_165"></use>
         </mask>

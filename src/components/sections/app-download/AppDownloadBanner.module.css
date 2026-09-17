@@ -207,7 +207,6 @@
   border: 1.327px solid rgba(15, 23, 42, 0.10);
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
@@ -380,10 +379,20 @@
 /* White glassy card, matching .featurePill's own glass treatment above —
    a real backdrop-blur rather than a flat tint, so these read as floating
    glass chips over the phone/background rather than plain white boxes. */
+/* Fixed width (not sized to each one's own content) so the QR card and
+   the two wider badge images all read as one consistent-width stack
+   instead of QR being visibly narrower than the badges beside it;
+   justify-content centers each one's own (narrower) content inside it. */
 .storeContainer {
   display: flex;
   align-items: center;
-  padding: 8px 14px;
+  justify-content: center;
+  width: 156px;
+  box-sizing: border-box;
+  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
+     rectangle) so the card just hugs its content evenly instead of
+     reading as padded out sideways. */
+  padding: 8px;
   border-radius: 12px;
   /* Subtle "white refraction" edge rather than a solid stroke — a soft
      white border with no shadow at all, so the card reads as glass sitting
@@ -391,7 +400,6 @@
   border: 1px solid rgba(100, 120, 150, 0.20);
   background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   transition: all 0.2s ease;
 }
 
@@ -404,16 +412,22 @@
 .qrContainer {
   flex-direction: column;
   gap: 6px;
-  padding: 10px 14px;
+  padding: 8px;
 }
 
 .qrImg {
   filter: invert(1);
 }
 
+/* Was turning near-opaque white on hover (0.75 alpha) — barely
+   distinguishable from the equally-white border, which is why the border
+   effectively vanished. Shifts darker instead (a soft navy tint) while
+   staying translucent glass rather than trending toward solid, and the
+   border darkens right along with it so it stays visible against the
+   now-different background instead of reading as white-on-near-white. */
 .storeContainer:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.8);
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.22);
 }
 
 .storeBadge {
