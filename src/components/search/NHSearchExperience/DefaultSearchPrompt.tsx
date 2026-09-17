@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, MotionValue } from "framer-motion";
-import { Paperclip, Mic, ArrowUp, MapPin, ChevronDown, User, Stethoscope, Search } from "lucide-react";
+import { Paperclip, Mic, ArrowUp, MapPin, ChevronDown, User, Heart, Search } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { NH_LOCATIONS } from "./searchData";
 
@@ -47,7 +47,7 @@ export default function DefaultSearchPrompt({
 
   return (
     <div className={styles.landingContainer} style={{ height: "100%", justifyContent: "center" }}>
-      {/* Top row: Primary Prompt + Pulse AI */}
+      {/* Top row: Primary Prompt + Pulse AI Identity (aligned to same outer boundary) */}
       <motion.div
         className={styles.landingInputRow}
         style={{
@@ -62,7 +62,7 @@ export default function DefaultSearchPrompt({
           if (e.key === "Enter" || e.key === " ") onActivate();
         }}
       >
-        {/* Large prompt "How can we help you today?" */}
+        {/* Main prompt: 20-22px, font-weight: 450 */}
         <motion.span 
           className={styles.landingPlaceholder}
           style={promptOpacity ? { opacity: promptOpacity } : undefined}
@@ -91,7 +91,7 @@ export default function DefaultSearchPrompt({
           </motion.div>
         )}
 
-        {/* Hero Pulse AI badge */}
+        {/* Pulse AI: Simple brand/intelligence label (no border, no button box) */}
         <motion.div 
           className={styles.pulseBadge}
           style={promptOpacity ? { opacity: promptOpacity } : undefined}
@@ -105,6 +105,7 @@ export default function DefaultSearchPrompt({
           }}
           role="button"
           tabIndex={0}
+          aria-label="Ask Pulse AI"
         >
           <div className={styles.pulseBars} aria-hidden>
             <span className={styles.pulseBar1} />
@@ -115,7 +116,7 @@ export default function DefaultSearchPrompt({
         </motion.div>
       </motion.div>
 
-      {/* Spacious Lower Interaction Row (collapses and fades during scroll) */}
+      {/* Continuous horizontal interaction row */}
       <motion.div 
         className={styles.landingBottomRow}
         style={controlsOpacity ? {
@@ -125,19 +126,20 @@ export default function DefaultSearchPrompt({
         } : undefined}
       >
         <div className={styles.bottomControlsLeft}>
+          {/* Attachment Icon Button - standalone, no permanent box */}
           <button
             type="button"
-            className={styles.iconControlBtn}
+            className={styles.standaloneIconBtn}
             aria-label="Attach medical records or file"
             onClick={(e) => {
               e.stopPropagation();
               onActivate();
             }}
           >
-            <Paperclip size={18} />
+            <Paperclip size={17} />
           </button>
 
-          {/* Location Selector */}
+          {/* Location Context Selector - the ONLY outlined contextual control */}
           <div className={styles.locationPillWrapper} ref={locationRef} style={{ position: "relative" }}>
             <button
               type="button"
@@ -149,10 +151,10 @@ export default function DefaultSearchPrompt({
               aria-expanded={isLocationOpen}
               aria-label={`Select city, current city is ${selectedLocation}`}
             >
-              <MapPin size={14} className={styles.locationPinIcon} />
+              <MapPin size={13} className={styles.locationPinIcon} />
               <span>{selectedLocation}</span>
               <ChevronDown
-                size={13}
+                size={12}
                 style={{
                   transform: isLocationOpen ? "rotate(180deg)" : "none",
                   transition: "transform 0.2s",
@@ -182,44 +184,45 @@ export default function DefaultSearchPrompt({
             )}
           </div>
 
-          {/* Action Starting Points */}
+          {/* Quick Action: Find a doctor - lightweight icon + text, no box */}
           <button
             type="button"
-            className={styles.actionBtnDoctor}
+            className={styles.inlineActionBtn}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("doctor");
             }}
           >
-            <User size={14} />
+            <User size={14} className={styles.inlineActionIcon} />
             <span>Find a doctor</span>
           </button>
 
+          {/* Quick Action: Describe my symptoms - lightweight icon + text, no box */}
           <button
             type="button"
-            className={styles.actionBtnSymptoms}
+            className={styles.inlineActionBtn}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("symptoms");
             }}
           >
-            <Stethoscope size={14} />
+            <Heart size={14} className={styles.inlineActionIcon} />
             <span>Describe my symptoms</span>
           </button>
         </div>
 
-        {/* Right side controls: Microphone + Primary Submit Arrow */}
+        {/* Right side controls: Microphone (standalone icon) + Primary Submit Arrow (the ONLY filled button) */}
         <div className={styles.bottomControlsRight}>
           <button
             type="button"
-            className={styles.iconControlBtn}
+            className={styles.standaloneIconBtn}
             aria-label="Voice search"
             onClick={(e) => {
               e.stopPropagation();
               onActivate();
             }}
           >
-            <Mic size={18} />
+            <Mic size={17} />
           </button>
 
           <button
@@ -231,7 +234,7 @@ export default function DefaultSearchPrompt({
               onActivate();
             }}
           >
-            <ArrowUp size={18} strokeWidth={2.5} />
+            <ArrowUp size={16} strokeWidth={2.5} />
           </button>
         </div>
       </motion.div>
