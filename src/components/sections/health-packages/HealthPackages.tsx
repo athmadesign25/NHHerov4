@@ -277,17 +277,19 @@ export default function HealthPackages() {
   // card-reveal starts (see applyAutoReveal) — resuming immediately if you
   // scroll back up out of the "full" state, and simply staying paused for
   // the rest of the scroll once past that point. Driven by a manual
-  // ping-pong scrubber (see stepPingPong below) rather than native
-  // play()/pause()/loop, so "should it be advancing right now" lives in
-  // this one ref instead of being inferred from video.paused.
+  // ping-pong scrubber (see stepPingPong below) rather than native loop,
+  // so "should it be advancing right now" lives in this one ref. The
+  // forward leg still uses real play()/pause() (see stepPingPong) — only
+  // the reverse leg has no native equivalent to fall back on.
   const hasAppearedRef = useRef(false);
   const videoShouldPlayRef = useRef(false);
-  // Ping-pong scrub state: +1/-1 direction the currentTime is currently
-  // moving, and the previous rAF timestamp (for computing real elapsed
-  // time between ticks) — null right after a pause so the next resume
-  // doesn't use a stale timestamp to compute one huge jump.
+  // Ping-pong scrub state: +1/-1 direction currently playing, the previous
+  // rAF timestamp (for real elapsed time between ticks, reset to null on
+  // pause so a resume doesn't compute one huge jump), and an accumulator
+  // for throttling the manual reverse-seek rate (see stepPingPong).
   const pingPongDirRef = useRef<1 | -1>(1);
   const pingPongLastTsRef = useRef<number | null>(null);
+  const pingPongReverseAccumRef = useRef(0);
   const pingPongRafRef = useRef<number | null>(null);
   // Left-column text reveal gate — flips true exactly once (ref-guarded,
   // same one-shot pattern as hasAppearedRef/isPlayingRef above) the moment
@@ -622,39 +624,64 @@ export default function HealthPackages() {
     window.addEventListener("resize", onResize, { passive: true });
     mq.addEventListener?.("change", onMotionChange);
 
-    // Manual ping-pong scrub loop: native <video> has no reliably-supported
-    // way to play smoothly in reverse (negative playbackRate isn't decoded
-    // by any major engine), so instead of relying on native play()/pause()/
-    // loop, this hand-advances currentTime forward at real-time speed and
-    // flips to advancing it backward once it hits either end — a boomerang
-    // loop instead of the native loop's hard restart-to-0. Runs continuously
-    // for the component's lifetime; videoShouldPlayRef (set above, and by
-    // the observer below) is what actually gates whether each tick advances
-    // the time or just holds position, so it composes with the exact same
-    // pause-on-reveal/resume-on-scroll-up rules as the old play()/pause()
-    // calls did.
+    // Manual ping-pong loop. Forward uses REAL play() — native decode
+    // paints every frame smoothly, same as any normal <video>. Reverse has
+    // no native equivalent (negative playbackRate isn't decoded by any
+    // major engine), so it falls back to manually walking currentTime
+    // backward — but only ever at a throttled interval, never every rAF
+    // tick: seeking a compressed video re-decodes from the prior keyframe
+    // forward, and re-issuing a new seek before the decoder finishes
+    // painting the last one just cancels it, so a plain per-frame seek
+    // updates the *number* every tick but the *picture* never visibly
+    // changes (confirmed by diffing screenshots — currentTime was
+    // advancing correctly the whole time, the frame on screen wasn't).
+    // Spacing seeks out (see PING_PONG_REVERSE_SEEK_INTERVAL_MS) gives the
+    // decoder time to actually land each one, at the cost of the reverse
+    // leg looking closer to a slideshow than smooth playback.
+    //
+    // videoShouldPlayRef (set above, and by the observer below) gates
+    // whether either leg advances at all or just holds position, so this
+    // composes with the same pause-on-reveal/resume-on-scroll-up rules as
+    // a plain play()/pause() pair would.
+    //
     // A tiny inset from the true 0/duration boundary — setting currentTime
     // to EXACTLY video.duration is a known cross-browser edge case (some
     // engines snap it back toward 0 instead of holding at the end), so
     // both turnaround points sit just inside the real ends instead.
     const PING_PONG_EDGE_INSET_S = 0.05;
+    const PING_PONG_REVERSE_SEEK_INTERVAL_MS = 90;
     const stepPingPong = (ts: number) => {
       const video = bgVideoRef.current;
       const last = pingPongLastTsRef.current;
       pingPongLastTsRef.current = ts;
-      if (video && Number.isFinite(video.duration) && video.duration > 0 && videoShouldPlayRef.current && last !== null) {
-        const deltaSec = Math.min((ts - last) / 1000, 0.1);
+      if (video && Number.isFinite(video.duration) && video.duration > 0 && last !== null) {
+        const deltaMs = Math.min(ts - last, 100);
         const maxT = Math.max(0, video.duration - PING_PONG_EDGE_INSET_S);
         const minT = PING_PONG_EDGE_INSET_S;
-        let next = video.currentTime + deltaSec * pingPongDirRef.current;
-        if (next >= maxT) {
-          next = maxT;
-          pingPongDirRef.current = -1;
-        } else if (next <= minT) {
-          next = minT;
-          pingPongDirRef.current = 1;
+
+        if (!videoShouldPlayRef.current) {
+          if (!video.paused) video.pause();
+        } else if (pingPongDirRef.current === 1) {
+          if (video.paused) video.play().catch(() => {});
+          if (video.currentTime >= maxT) {
+            video.pause();
+            pingPongDirRef.current = -1;
+            pingPongReverseAccumRef.current = 0;
+          }
+        } else {
+          if (!video.paused) video.pause();
+          pingPongReverseAccumRef.current += deltaMs;
+          if (pingPongReverseAccumRef.current >= PING_PONG_REVERSE_SEEK_INTERVAL_MS) {
+            const stepSec = pingPongReverseAccumRef.current / 1000;
+            pingPongReverseAccumRef.current = 0;
+            let next = video.currentTime - stepSec;
+            if (next <= minT) {
+              next = minT;
+              pingPongDirRef.current = 1;
+            }
+            video.currentTime = next;
+          }
         }
-        video.currentTime = next;
       }
       pingPongRafRef.current = requestAnimationFrame(stepPingPong);
     };

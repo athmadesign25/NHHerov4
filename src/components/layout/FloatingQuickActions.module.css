@@ -55,13 +55,13 @@
 }
 
 /* Base styles (Desktop) */
-/* Bottom-anchored (not vertically centered) — sits 44px above the global
-   Pulse floating button (GlobalPulseFAB.module.css .fabContainer: bottom
-   24px, .fabButton height 60px, so that button's own top edge is at
-   24+60=84px from the viewport bottom; 44px above that is 84+44=128px). */
+/* Vertically centered on the viewport (right-anchored horizontally) —
+   independent of the global Pulse floating button (GlobalPulseFAB's
+   .fabContainer, fixed at bottom 24px/right 24px), which sits far enough
+   down in the corner that the two never overlap. */
 .container {
   position: fixed;
-  bottom: 128px;
+  top: 50%;
   right: 24px;
   z-index: 9000;
   width: 100px;
@@ -77,20 +77,25 @@
   transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Every transform state below keeps the translateY(-50%) centering term
+   alongside its own enter/exit/hover offset — a plain `transform` on a
+   later rule replaces the whole value rather than adding to it, so the
+   centering has to be repeated in each one rather than living only on
+   .container. */
 .hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(50px);
+  transform: translateY(-50%) translateX(50px);
 }
 
 .visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateX(0);
+  transform: translateY(-50%) translateX(0);
 }
 
 .visible:hover {
-  transform: scale(1.05);
+  transform: translateY(-50%) scale(1.05);
 }
 
 /* Standalone Fully Rounded Floating Pulse AI Button Wrapper (Bottom Right Corner) */

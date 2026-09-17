@@ -90,26 +90,26 @@
 
 .titleBlurLayer1 {
   backdrop-filter: blur(22px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 16%, rgba(0, 0, 0, 0) 30%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 16%, rgba(0, 0, 0, 0) 30%);
-}
-
-.titleBlurLayer2 {
-  backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 24%, rgba(0, 0, 0, 0) 38%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 24%, rgba(0, 0, 0, 0) 38%);
-}
-
-.titleBlurLayer3 {
-  backdrop-filter: blur(6px);
   -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
   mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
 }
 
-.titleBlurLayer4 {
-  backdrop-filter: blur(3px);
+.titleBlurLayer2 {
+  backdrop-filter: blur(12px);
   -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
   mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+}
+
+.titleBlurLayer3 {
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+}
+
+.titleBlurLayer4 {
+  backdrop-filter: blur(3px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
 }
 
 /* Always-on decorative wash spanning the full frame: a red accent sweep
@@ -336,25 +336,28 @@
   outline-offset: 2px;
 }
 
-/* Border color now comes entirely from .packageCardBorder (a dedicated
-   element, see below) — a plain transparent border here just reserves
-   its footprint. Background is back to a single content gradient layer;
-   the previous double-background-layer approach for the gradient border
-   was broken: with the content gradient at 0.60 alpha, the border-gradient
-   layer underneath (clipped to border-box, which covers the full
-   interior too, not just the ring) showed through everywhere, not just
-   at the edge — that's what was washing the cards out lighter than
-   spec'd. */
+/* Border color comes entirely from .packageCardBorder (a dedicated
+   element, see below) — no border here at all now. A transparent
+   reserved-footprint border used to live here, but an absolutely
+   positioned child's `inset` is resolved against its containing block's
+   PADDING box, not its border box — so .packageCardBorder's `inset: 0`
+   sat 1px inside this element's true edge, leaving a 1px ring of plain
+   card background visible outside the gradient stroke instead of the
+   stroke sitting flush against the card's actual edge. Background is a
+   single content gradient layer; the previous double-background-layer
+   approach for the gradient border was broken: with the content gradient
+   at 0.60 alpha, the border-gradient layer underneath (clipped to
+   border-box, which covers the full interior too, not just the ring)
+   showed through everywhere, not just at the edge — that's what was
+   washing the cards out lighter than spec'd. */
 .packageCardV1 {
   border-radius: 10px;
-  border: 1px solid transparent;
   background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 16, 16, 0.60) 75.63%);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
 
 .packageCardV2 {
   border-radius: 10.235px;
-  border: 1.023px solid transparent;
   background:
     linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
     linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
@@ -363,7 +366,6 @@
 
 .packageCardV3 {
   border-radius: 10px;
-  border: 1px solid transparent;
   background: linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(16, 36, 44, 0.60) 75.63%);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.14);
 }
