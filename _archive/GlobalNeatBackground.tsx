@@ -1,16 +1,25 @@
+/**
+ * GlobalNeatBackground — ARCHIVED
+ *
+ * WebGL NeatGradient canvas that previously painted a shared animated
+ * background behind the Hero, CentreOfExcellence, and PatientStories
+ * sections on the homepage.
+ *
+ * Re-enable by:
+ *  1. Import NeatGradient: import { NeatGradient } from "@firecms/neat";
+ *  2. Import this component into src/app/page.tsx
+ *  3. Render <GlobalNeatBackground /> as the first child of the master
+ *     container wrapper (position: relative, z-index: 0)
+ *
+ * Archived: 2026-08-31
+ */
+
 "use client";
 
 import React, { useRef, useEffect } from "react";
 import { NeatGradient } from "@firecms/neat";
-import Hero from "@/components/sections/hero/Hero";
-import CentreOfExcellence from "@/components/sections/centre-of-excellence/CentreOfExcellence";
-import WhyChooseNH from "@/components/sections/why-choose-nh/WhyChooseNH";
-import HealthPackages from "@/components/sections/health-packages/HealthPackages";
-import PatientStories from "@/components/sections/patient-stories/PatientStories";
-import AppDownloadBanner from "@/components/sections/app-download/AppDownloadBanner";
-import FloatingQuickActions from "@/components/layout/FloatingQuickActions";
 
-function GlobalNeatBackground() {
+export default function GlobalNeatBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gradientRef = useRef<NeatGradient | null>(null);
 
@@ -148,64 +157,8 @@ function GlobalNeatBackground() {
       <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
       {/* Light radial glow at top for Hero */}
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 20%, rgba(247, 246, 242, 0.7) 0%, rgba(247, 246, 242, 0.2) 45%, transparent 80%)", pointerEvents: "none" }} />
-      {/* Bottom dark layer matching top bg of Patient Stories (#061323) seamlessly without red glow, transitioning to #FCFCFC at bottom */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 0%, transparent 90%, #FCFCFC 100%)", pointerEvents: "none" }} />
+      {/* Bottom dark layer matching top bg of Patient Stories (#061323) */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 0%, transparent 48%, #061323 68%, #061323 85%, #FCFCFC 98%)", pointerEvents: "none" }} />
     </div>
-  );
-}
-
-function WhyNHToFooterBackground() {
-  // Shared light bg for WhyChooseNH + AppDownloadBanner — both are light-mode
-  // now, so this stays the same light gradient the whole way through (no
-  // dark crossfade before Footer anymore; Footer's own dark bg starts fresh
-  // right where it begins).
-  return (
-    <div style={{ position: "relative", width: "100%", background: "linear-gradient(180deg, #FCFCFC 50.97%, #E0ECFF 97.06%)" }}>
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div data-nav-theme="light">
-          <WhyChooseNH />
-        </div>
-        <div data-nav-theme="light">
-          <AppDownloadBanner />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-import { LayoutGroup } from "framer-motion";
-
-export default function HomePage() {
-  return (
-    <LayoutGroup>
-      <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
-        <FloatingQuickActions />
-
-        {/* Master container with seamless background extending behind Hero, CentreOfExcellence AND PatientStories */}
-        <div style={{ position: "relative", width: "100%", background: "transparent", zIndex: 10 }}>
-
-        {/* Hero section with floating scaled card */}
-        <div data-nav-theme="dark">
-          <Hero />
-        </div>
-
-        {/* CentreOfExcellence section with pinned title sequence & animated grid reveal.
-            Mostly light (sticky title track); its own handoff-plate tail marks itself
-            dark internally as it turns solid navy ahead of Patient Stories. */}
-        <div data-nav-theme="light">
-          <CentreOfExcellence />
-        </div>
-
-        {/* PatientStories section seamlessly sharing NeatGradient background */}
-        <div data-nav-theme="dark">
-          <PatientStories />
-        </div>
-      </div>
-
-      <HealthPackages />
-
-      <WhyNHToFooterBackground />
-      </div>
-    </LayoutGroup>
   );
 }

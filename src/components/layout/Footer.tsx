@@ -2,33 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Share2, MessageSquare, Link2, Play, Camera } from "lucide-react";
 import styles from "./Footer.module.css";
-
-const footerLinks = {
-  "Patient Care": [
-    { label: "Book Appointment", href: "/doctors" },
-    { label: "Find a Doctor", href: "/doctors" },
-    { label: "Our Specialities", href: "/specialities/cardiology" },
-    { label: "Our Hospitals", href: "/" },
-    { label: "Health Packages", href: "/" },
-    { label: "International Patients", href: "/" },
-  ],
-  "About": [
-    { label: "About Narayana Health", href: "/" },
-    { label: "Leadership", href: "/" },
-    { label: "Awards & Recognition", href: "/" },
-    { label: "Press & Media", href: "/" },
-    { label: "CSR Initiatives", href: "/" },
-    { label: "Careers", href: "/" },
-  ],
-  "Resources": [
-    { label: "Health Blog", href: "/" },
-    { label: "Patient Education", href: "/" },
-    { label: "Telemedicine", href: "/" },
-    { label: "NH App", href: "/" },
-    { label: "Quality & Accreditations", href: "/" },
-    { label: "Feedback", href: "/" },
-  ],
-};
+import { footerLinks } from "@/data/navigation";
 
 export default function Footer() {
   return (

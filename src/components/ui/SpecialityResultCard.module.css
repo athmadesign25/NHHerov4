@@ -1,0 +1,39 @@
+.specCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border-radius: 14px;
+  border: 1px solid #cfd8e5;
+  background: #eef2f7;
+  padding: 12px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.specCard:hover {
+  background: #f7faff;
+  border-color: #0f58b8;
+}
+.specImage {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.specInfo {
+  min-width: 0;
+  flex: 1;
+}
+.specName {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 800;
+  color: #223148;
+}
+.specMatch {
+  font-size: 30px;
+  line-height: 1.25;
+  color: #6a7890;
+  margin-top: 4px;
+}
