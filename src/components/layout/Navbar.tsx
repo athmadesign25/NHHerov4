@@ -4,8 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, ChevronRight, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
@@ -127,35 +128,44 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isNavbarActive = !isHomePage || scrolled;
+  const isNavbarActive = !isHomePage || scrolled || isMobileMenuOpen;
 
   return (
     <nav
       style={{
         position: "fixed",
         top: "0px",
-        zIndex: 1000,
+        zIndex: isMobileMenuOpen ? 10000000 : 1000,
         width: "100%",
         transform: isVisible ? "translateY(0)" : "translateY(-100%)",
         transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-        "--nav-fg-color": isOverLightBackground ? "var(--color-text, #0f172a)" : "#ffffff"
+        "--nav-fg-color": (isMobileMenuOpen || isOverLightBackground) ? "var(--color-text, #0f172a)" : "#ffffff"
       } as React.CSSProperties}
     >
       <div
+        className={styles.navBackdrop}
         style={{
           position: "absolute",
           inset: 0,
           zIndex: -1,
-          backgroundColor: "transparent",
-          backdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
-          WebkitBackdropFilter: isNavbarActive ? "blur(20px) saturate(180%)" : "none",
-          borderBottom: isNavbarActive ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid rgba(255, 255, 255, 0)",
-          transition: "backdrop-filter 0.4s ease, border-color 0.4s ease",
+          backgroundColor: isMobileMenuOpen
+            ? "rgba(255, 255, 255, 0.94)"
+            : (isNavbarActive
+                ? (isOverLightBackground ? "rgba(255, 255, 255, 0.82)" : "rgba(8, 15, 28, 0.55)")
+                : "transparent"),
+          backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
+          WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
+          borderBottom: isMobileMenuOpen
+            ? "1px solid rgba(0, 0, 0, 0.08)"
+            : (isNavbarActive
+                ? (isOverLightBackground ? "1px solid rgba(0, 0, 0, 0.08)" : "1px solid rgba(255, 255, 255, 0.22)")
+                : "1px solid rgba(255, 255, 255, 0)"),
+          transition: "background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
         }}
       />
       <div className={`container ${styles.navContainer}`}>
-        <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
               <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
@@ -336,7 +346,7 @@ export default function Navbar() {
 
           </ul>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
           <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
             <MapPin size={18} strokeWidth={2.5} />
             <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -536,34 +546,185 @@ export default function Navbar() {
             <Menu size={24} />
           </button>
         </div>
-      </div>
 
-      {isMobileMenuOpen && (
-        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100vh", backgroundColor: "#fff", zIndex: 1001, overflowY: "auto", display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", borderBottom: "1px solid #eee" }}>
-            <Image alt="Narayana Health" width={108} height={34} style={{ width: "108px", height: "auto" }} src="/NH-logo.svg" />
-            <button onClick={() => setIsMobileMenuOpen(false)} style={{ background: "none", border: "none", padding: "8px", cursor: "pointer" }}>
-              <X size={24} />
+        {/* ─── Mobile Navbar (<= 1024px): [ NH Logo ] [ Search ] [ Book Appointment ] [ Menu ] ─── */}
+        <div className={styles.mobileNav}>
+          <Link aria-label="Narayana Health Home" href="/" className={styles.mobileLogoLink}>
+            <div className={styles.mobileLogoContainer}>
+              <Image 
+                alt="Narayana Health" 
+                src="/NH-logo.svg" 
+                width={92} 
+                height={29} 
+                className={styles.mobileLogoImg}
+                style={{ 
+                  opacity: (isMobileMenuOpen || isOverLightBackground) ? 1 : 0, 
+                  transition: "opacity 0.4s ease" 
+                }} 
+                priority 
+              />
+              <Image 
+                alt="Narayana Health" 
+                src="/NH-logo-white.svg" 
+                width={92} 
+                height={29} 
+                className={styles.mobileLogoImg}
+                style={{ 
+                  opacity: (!isMobileMenuOpen && !isOverLightBackground) ? 1 : 0, 
+                  transition: "opacity 0.4s ease" 
+                }} 
+                priority 
+              />
+            </div>
+          </Link>
+
+          <div className={styles.mobileActionGroup}>
+            <button 
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className={styles.mobileSearchBtn}
+              aria-label="Search doctors, specialities, or hospitals"
+            >
+              <Search size={20} strokeWidth={2} />
+            </button>
+
+            {/* Apple-Style Morphing 2-Line Animated Hamburger Button */}
+            <button 
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={styles.appleHamburgerBtn}
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <span className={`${styles.hamburgerLine} ${styles.lineTop} ${isMobileMenuOpen ? styles.lineTopOpen : ""}`} />
+              <span className={`${styles.hamburgerLine} ${styles.lineBottom} ${isMobileMenuOpen ? styles.lineBottomOpen : ""}`} />
             </button>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", padding: "16px", gap: "16px" }}>
-            <Link href="/search" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Find a Doctor <ChevronRight size={16} /></Link>
-            <Link href="/hospitals" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Hospitals & Clinics <ChevronRight size={16} /></Link>
-            <Link href="/health-checks" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Health Checkups <ChevronRight size={16} /></Link>
-            <Link href="/specialities" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>Treatments & Specialities <ChevronRight size={16} /></Link>
-            <Link href="/international-patients" onClick={() => setIsMobileMenuOpen(false)} style={{ fontSize: "16px", fontWeight: 600, padding: "12px 0", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>International Patients <ChevronRight size={16} /></Link>
-            
-            <div style={{ marginTop: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
-              {isLoggedIn ? (
-                <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)} style={{ width: "100%", padding: "14px", textAlign: "center", border: "1px solid var(--color-primary, #034EA2)", background: "transparent", color: "var(--color-primary, #034EA2)", borderRadius: "8px", fontWeight: 600, fontSize: "16px", textDecoration: "none", display: "block" }}>My Account</Link>
-              ) : (
-                <button onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} style={{ width: "100%", padding: "14px", textAlign: "center", border: "1px solid var(--color-primary, #034EA2)", background: "transparent", color: "var(--color-primary, #034EA2)", borderRadius: "8px", fontWeight: 600, fontSize: "16px", cursor: "pointer", fontFamily: "inherit" }}>Login / Register</button>
-              )}
-              <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} style={{ width: "100%", padding: "14px", textAlign: "center", background: "var(--color-emergency, #ED1C24)", color: "#fff", borderRadius: "8px", fontWeight: 600 }}>Book Appointment</Link>
-            </div>
-          </div>
         </div>
-      )}
+      </div>
+
+      {/* ─── Apple-Level Mobile Menu Overlay ─── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            className={styles.appleDrawerOverlay}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.appleDrawerScroll}>
+              {/* Secondary Action: Patient Portal Card (Moved to top) */}
+              <motion.div 
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {isLoggedIn ? (
+                  <div className={styles.drawerAccountCard}>
+                    <div className={styles.drawerAccountInfo}>
+                      <img src={activeUser.img} alt={activeUser.name} style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover" }} />
+                      <div>
+                        <div className={styles.drawerAccountTitle}>{activeUser.name} (You)</div>
+                        <div className={styles.drawerAccountSubtitle}>Active Account · View records</div>
+                      </div>
+                    </div>
+                    <Link 
+                      href="/profile" 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={styles.drawerManageBtn}
+                    >
+                      Manage
+                    </Link>
+                  </div>
+                ) : (
+                  <div className={styles.drawerAccountCard}>
+                    <div className={styles.drawerAccountInfo}>
+                      <div className={styles.accountIconWell}>
+                        <User size={18} color="var(--color-primary, #034EA2)" />
+                      </div>
+                      <div>
+                        <div className={styles.drawerAccountTitle}>Patient Portal</div>
+                        <div className={styles.drawerAccountSubtitle}>Access appointments & lab records</div>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} 
+                      className={styles.drawerLoginBtn}
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Secondary Actions: Location + 24/7 Helpline */}
+              <motion.div 
+                className={styles.drawerMetaRow}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={styles.drawerMetaChip}>
+                  <MapPin size={15} color="var(--color-primary, #034EA2)" />
+                  <span>City: <strong>Bangalore</strong></span>
+                  <ChevronDown size={13} style={{ marginLeft: "auto", opacity: 0.6 }} />
+                </div>
+                <a href="tel:18003090309" className={styles.drawerHelplineChip}>
+                  <Phone size={14} />
+                  <span>1800 309 0309</span>
+                </a>
+              </motion.div>
+
+              {/* Staggered Navigation Links */}
+              <div className={styles.drawerNavSection}>
+                <div className={styles.drawerSectionLabel}>EXPLORE CARE</div>
+                {[
+                  { title: "Find a Doctor", href: "/search", tag: "3,000+ Specialists" },
+                  { title: "Hospitals & Clinics", href: "/hospitals", tag: "21 Cities" },
+                  { title: "Health Checkups", href: "/health-checks", tag: "Custom Packages" },
+                  { title: "Treatments & Specialities", href: "/specialities", tag: "30+ Depts" },
+                  { title: "International Patients", href: "/international-patients", tag: "Global Care" },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.28, delay: 0.11 + idx * 0.035, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Link 
+                      href={item.href} 
+                      onClick={() => setIsMobileMenuOpen(false)} 
+                      className={styles.drawerNavLink}
+                    >
+                      <div className={styles.navLinkContent}>
+                        <span className={styles.navLinkText}>{item.title}</span>
+                        <span className={styles.navLinkTag}>{item.tag}</span>
+                      </div>
+                      <ChevronRight size={16} className={styles.navChevron} />
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Drawer Bottom CTA */}
+              <motion.div 
+                className={styles.drawerFooter}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.drawerBookBtn}>
+                  Book Hospital Visit
+                </Link>
+                <p className={styles.drawerFootnote}>
+                  Narayana Health · Compassion Backed by Expertise
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {isSearchOpen && (
         <div style={{ position: "absolute", top: "100%", left: 0, width: "100%", height: "100vh", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "flex-start", paddingTop: "20px" }} onClick={() => setIsSearchOpen(false)}>
