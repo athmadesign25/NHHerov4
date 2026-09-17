@@ -86,7 +86,7 @@ function UspIconReports() {
 const USPS = [
   { icon: UspIconBooking, label: "Quick & easy online booking" },
   { icon: UspIconCare, label: "Complete care from trusted specialists" },
-  { icon: UspIconReports, label: "Fast, same-day reports" },
+  { icon: UspIconReports, label: "Fast, same-day\nreports" },
 ];
 
 // Card fact icons (tests / reports-within) — each card instance renders its

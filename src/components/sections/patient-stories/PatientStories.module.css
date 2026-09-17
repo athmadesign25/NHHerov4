@@ -182,7 +182,6 @@
     rgba(0, 17, 36, 0.5) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
   mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
   pointer-events: none;
@@ -208,7 +207,6 @@
     rgba(0, 17, 36, 0) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
   pointer-events: none;
@@ -306,7 +304,6 @@
   max-width: 70%;
   background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 10px;
   padding: 10px 14px;
@@ -421,7 +418,6 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(3, 18, 36, 0.55);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   color: #ffffff;
   width: 44px;
   height: 44px;
@@ -477,7 +473,6 @@
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   color: #FFFFFF;
   font-family: Inter, sans-serif;
   font-size: 15px;

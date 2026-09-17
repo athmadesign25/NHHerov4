@@ -73,7 +73,6 @@
   background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   box-shadow: -20px 10px 40px 0 rgba(65, 99, 236, 0.22), 10px 10px 30px 0 rgba(170, 48, 64, 0.15), 0 10px 30px 0 rgba(0, 0, 0, 0.20);
   backdrop-filter: blur(34px);
-  -webkit-backdrop-filter: blur(34px);
   display: flex;
   align-items: center;
   justify-content: center;
