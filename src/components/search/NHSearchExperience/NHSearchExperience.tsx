@@ -94,27 +94,28 @@ export default function NHSearchExperience({
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Docked dimensions (Bottom right corner)
-  const endWidth = isMobile ? Math.min(230, winSize.w - 32) : 240;
-  const endHeight = 46;
-  const endTop = winSize.h - 28 - endHeight;
-  const endLeft = isMobile ? Math.round((winSize.w - endWidth) / 2) : winSize.w - 28 - endWidth;
+  // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side)
+  const endWidth = isMobile ? 96 : 100;
+  const endHeight = 74;
+  const endTop = winSize.h - 36 - endHeight;
+  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : winSize.w - 24 - endWidth;
 
-  // Continuous numeric scroll transforms: [0.03, 0.55]
-  const composerTop = useTransform(activeProgress, [0.03, 0.55], [startTop, endTop]);
-  const composerLeft = useTransform(activeProgress, [0.03, 0.55], [startLeft, endLeft]);
-  const composerWidth = useTransform(activeProgress, [0.03, 0.55], [startWidth, endWidth]);
-  const composerHeight = useTransform(activeProgress, [0.03, 0.55], [startHeight, endHeight]);
-  const composerRadius = useTransform(activeProgress, [0.03, 0.55], [20, 24]);
-  const composerPaddingX = useTransform(activeProgress, [0.03, 0.55], [24, 18]);
-  const composerPaddingY = useTransform(activeProgress, [0.03, 0.55], [20, 0]);
+  // Continuous numeric scroll transforms: [0.03, 0.45]
+  const composerTop = useTransform(activeProgress, [0.03, 0.45], [startTop, endTop]);
+  const composerLeft = useTransform(activeProgress, [0.03, 0.45], [startLeft, endLeft]);
+  const composerWidth = useTransform(activeProgress, [0.03, 0.45], [startWidth, endWidth]);
+  const composerHeight = useTransform(activeProgress, [0.03, 0.45], [startHeight, endHeight]);
+  const composerRadius = useTransform(activeProgress, [0.03, 0.45], [20, 18]);
+  const composerPaddingX = useTransform(activeProgress, [0.03, 0.45], [24, 6]);
+  const composerPaddingY = useTransform(activeProgress, [0.03, 0.45], [20, 8]);
+  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, 0]);
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.03, 0.22], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.03, 0.25], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.25], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
-  const compactLabelOpacity = useTransform(activeProgress, [0.18, 0.45], [0, 1]);
+  const controlsOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.03, 0.22], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.22], ["32px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.03, 0.18], [1, 0]);
+  const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -126,6 +127,15 @@ export default function NHSearchExperience({
   const [resultsData, setResultsData] = useState<SearchResultsData>(CARDIOLOGY_RESULTS);
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
+  useEffect(() => {
+    const handleTriggerSearch = () => {
+      handleActivate();
+    };
+    window.addEventListener("nh:open-search", handleTriggerSearch);
+    return () => window.removeEventListener("nh:open-search", handleTriggerSearch);
+  }, []);
 
   // Sync state change with parent (e.g. to dim background video / hide hero title)
   useEffect(() => {
@@ -418,6 +428,7 @@ export default function NHSearchExperience({
                 paddingRight: composerPaddingX,
                 paddingTop: composerPaddingY,
                 paddingBottom: composerPaddingY,
+                opacity: morphShellOpacity,
                 maxWidth: "none",
                 marginTop: 0,
                 marginRight: 0,
@@ -425,7 +436,7 @@ export default function NHSearchExperience({
                 marginLeft: 0,
                 boxSizing: "border-box",
                 zIndex: 9990,
-                pointerEvents: "auto",
+                pointerEvents: isDocked ? "none" : "auto",
                 overflow: "hidden",
                 cursor: "pointer",
               }

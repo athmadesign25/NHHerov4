@@ -70,10 +70,10 @@ export default function DefaultSearchPrompt({
           How can we help you today?
         </motion.span>
 
-        {/* Compact label [ ✦ Pulse AI · Search ⌕ ] cross-fades in during scroll morph */}
+        {/* Compact label transforms into vertical Pulse AI Search action during scroll morph */}
         {compactLabelOpacity && (
           <motion.div
-            className={styles.compactSearchLabel}
+            className={styles.compactPulseSearchItem}
             style={{
               opacity: compactLabelOpacity,
               position: "absolute",
@@ -83,11 +83,16 @@ export default function DefaultSearchPrompt({
               pointerEvents: "none",
             }}
           >
-            <span className={styles.compactPulseSpark}>✦</span>
-            <span className={styles.compactPulseTitle}>Pulse AI</span>
-            <span className={styles.compactDivider}>·</span>
-            <span className={styles.compactSearchText}>Search</span>
-            <Search size={14} className={styles.compactSearchIcon} />
+            <div className={styles.floatingPulseIconWrap}>
+              <div className={styles.pulseBars} aria-hidden>
+                <span className={styles.pulseBar1} />
+                <span className={styles.pulseBar2} />
+                <span className={styles.pulseBar3} />
+              </div>
+            </div>
+            <span className={styles.floatingPulseSearchText}>
+              Pulse AI<br />Search
+            </span>
           </motion.div>
         )}
 

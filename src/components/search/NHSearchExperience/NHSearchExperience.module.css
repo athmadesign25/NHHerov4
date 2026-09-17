@@ -1672,163 +1672,42 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   Compact Transformed Floating Pulse AI / Search Pill (Second Fold & Beyond)
+   Compact Transformed Floating Pulse AI Search State (Scroll Morph Transition)
+   Transitions continuously into the 3rd action of the floating utility dock.
    ═══════════════════════════════════════════════════════════════════════════════ */
-.compactSearchLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  user-select: none;
-  white-space: nowrap;
-}
-
-.compactPulseSpark {
-  font-size: 13px;
-  color: #00C4FF;
-  animation: pulseGlow 2.5s ease-in-out infinite alternate;
-}
-
-@keyframes pulseGlow {
-  0% {
-    opacity: 0.7;
-    filter: drop-shadow(0 0 2px rgba(0, 196, 255, 0.4));
-  }
-  100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 6px rgba(0, 196, 255, 0.9));
-  }
-}
-
-.compactPulseTitle {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #F1F5F9;
-  letter-spacing: -0.01em;
-}
-
-.compactDivider {
-  color: rgba(255, 255, 255, 0.28);
-  font-size: 14px;
-  margin: 0 1px;
-}
-
-.compactSearchText {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.82);
-  letter-spacing: -0.01em;
-}
-
-.compactSearchIcon {
-  color: rgba(255, 255, 255, 0.7);
-  margin-left: 2px;
-}
-
-/* Fixed Docked Control (Active in Fold 2+) */
-.floatingPillTrigger {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 9990;
-  height: 46px;
-  padding: 0 18px;
-  border-radius: 9999px;
-  background: rgba(18, 24, 34, 0.75);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 
-    0 10px 30px -5px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(3, 78, 162, 0.22),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.2);
+.compactPulseSearchItem {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  outline: none;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.22s ease,
-              border-color 0.22s ease;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  user-select: none;
 }
 
-.floatingPillTrigger::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 9999px;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.6) 0deg,
-    rgba(3, 78, 162, 0.7) 80deg,
-    rgba(237, 28, 36, 0.4) 160deg,
-    rgba(0, 196, 255, 0.25) 230deg,
-    rgba(3, 78, 162, 0.5) 290deg,
-    rgba(0, 196, 255, 0.6) 360deg
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: rotateBorderAngle 10s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.7;
-  transition: opacity 0.25s ease;
-}
-
-.floatingPillTrigger:hover {
-  transform: translateY(-2px) scale(1.025);
-  background: rgba(18, 24, 34, 0.88);
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 
-    0 14px 38px -6px rgba(0, 0, 0, 0.55),
-    0 0 24px rgba(0, 196, 255, 0.35),
-    inset 0 1px 2px rgba(255, 255, 255, 0.3);
-}
-
-.floatingPillTrigger:hover::before {
-  opacity: 1;
-}
-
-.floatingPillTrigger:active {
-  transform: translateY(0) scale(0.98);
-}
-
-/* Floating Search Modal Overlay (When triggered in fold 2+) */
-.floatingSearchOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
+.floatingPulseIconWrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(149deg, #07152B 0%, #034EA2 100%);
+  border: 1px solid rgba(0, 196, 255, 0.35);
+  box-shadow: 0 0 10px rgba(0, 196, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-}
-
-.floatingSearchBackdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(5, 10, 18, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.floatingSearchModal {
+  flex-shrink: 0;
   position: relative;
-  z-index: 2;
-  width: min(880px, 95vw);
-  max-height: 90vh;
-  overflow-y: auto;
-  border-radius: 24px;
+  overflow: hidden;
 }
 
-@media (max-width: 640px) {
-  .floatingPillTrigger {
-    bottom: 20px;
-    right: 16px;
-    height: 42px;
-    padding: 0 14px;
-  }
+.floatingPulseSearchText {
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #FFFFFF;
+  text-align: center;
+  letter-spacing: -0.01em;
+  white-space: normal;
 }
 
