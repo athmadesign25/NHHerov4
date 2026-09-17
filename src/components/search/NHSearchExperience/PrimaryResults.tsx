@@ -68,18 +68,50 @@ export default function PrimaryResults({
         </Link>
       </div>
 
-      {/* Optional Pulse AI Nudge (Below doctors, lightweight horizontal text treatment) */}
+      {/* Pulse AI Nudge Box — Signature entry point for clinical questions with animated gradient border */}
       {pulseRecommendationText && (
-        <div className={styles.pulseNudgeRow}>
-          <span className={styles.pulseNudgeText}>{pulseRecommendationText}</span>
-          <button
-            type="button"
-            className={styles.pulseNudgeBtn}
-            onClick={onAskPulse}
-          >
-            <span>Ask Pulse</span>
-            <ArrowRight size={12} />
-          </button>
+        <div 
+          className={styles.pulseNudgeBox} 
+          onClick={onAskPulse}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") onAskPulse?.();
+          }}
+          aria-label="Ask Pulse AI for personalised recommendations and clinical guidance"
+        >
+          <div className={styles.pulseNudgeLeft}>
+            <div className={styles.pulseNudgeIconWrap} aria-hidden>
+              <div className={styles.pulseBars}>
+                <span className={styles.pulseBar1} />
+                <span className={styles.pulseBar2} />
+                <span className={styles.pulseBar3} />
+              </div>
+            </div>
+            <div className={styles.pulseNudgeTextWrap}>
+              <div className={styles.pulseNudgeTitleRow}>
+                <span className={styles.pulseNudgeText}>{pulseRecommendationText}</span>
+                <span className={styles.pulseNudgeBadge}>Pulse AI</span>
+              </div>
+              <div className={styles.pulseNudgeSubtext}>
+                Ask clinical questions, describe symptoms, or get tailored specialist recommendations.
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.pulseNudgeAction}>
+            <button
+              type="button"
+              className={styles.pulseNudgeBtn}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAskPulse?.();
+              }}
+            >
+              <span>Ask Pulse</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
         </div>
       )}
     </div>
