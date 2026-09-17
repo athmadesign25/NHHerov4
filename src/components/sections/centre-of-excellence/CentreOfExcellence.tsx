@@ -8,7 +8,6 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import { ChevronRight } from "lucide-react";
 import styles from "./CentreOfExcellence.module.css";
 import { COE_SPECIALITIES as SPECIALITIES } from "@/data/specialities";
 
@@ -107,7 +106,8 @@ function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
         )}
         <span className={styles.specialityName}>{spec.name}</span>
         <span className={styles.cardAction}>
-          Explore <ChevronRight size={14} className={styles.actionArrow} />
+          Explore
+          <span className={styles.actionUnderline} aria-hidden />
         </span>
       </div>
     </a>
@@ -296,7 +296,6 @@ export default function CentreOfExcellence() {
               style={{ opacity: dimOpacity, filter: dimBlur }}
             >
               View All Specialties
-              <ChevronRight size={16} />
             </motion.a>
           </div>
 
