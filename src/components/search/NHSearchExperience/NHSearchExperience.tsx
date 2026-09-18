@@ -157,17 +157,20 @@ export default function NHSearchExperience({
   const promptOpacity = useTransform(activeProgress, [0.5, 0.75], [1, 0]);
   const compactLabelOpacity = useTransform(activeProgress, [0.75, 1.0], [0, 1]);
 
+  const [skipTransition, setSkipTransition] = useState(false);
+
   useMotionValueEvent(scrollY, "change", () => {
     const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
     const isSquareAchieved = activeProgress.get() >= 0.99;
     setIsDocked(isPastThreshold && isSquareAchieved);
+    setSkipTransition(scrollY.get() >= winSize.h * 1.5);
   });
 
   useMotionValueEvent(activeProgress, "change", (latestProgress) => {
-    // Docking matches the new FloatingQuickActions threshold (after Specialities title reveals)
     const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
     const isSquareAchieved = latestProgress >= 0.99;
     setIsDocked(isPastThreshold && isSquareAchieved);
+    setSkipTransition(scrollY.get() >= winSize.h * 1.5);
   });
 
   // We are now using a state-driven animation for the morphing shell
@@ -455,7 +458,7 @@ export default function NHSearchExperience({
         searchState === "landing" ? styles.stateLanding : styles.stateActive
       } ${isDocked ? styles.dockedShell : ""}`}
       animate={searchState === "landing" ? shellTarget : undefined}
-      transition={{
+      transition={skipTransition ? { duration: 0 } : {
         type: "spring",
         stiffness: 400,
         damping: 35,

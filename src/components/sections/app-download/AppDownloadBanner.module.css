@@ -377,6 +377,7 @@
 .storesCol {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
@@ -415,12 +416,17 @@
    regenerating the source asset. */
 .qrContainer {
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 6px;
   padding: 8px;
 }
 
 .qrImg {
   filter: invert(1);
+  display: block;
+  margin: 0 auto;
 }
 
 /* Was turning near-opaque white on hover (0.75 alpha) — barely
