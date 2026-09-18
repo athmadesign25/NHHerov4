@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   ChevronUp,
@@ -49,7 +49,7 @@ export default function InlinePulseAICard({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize contextual search prompt & Pulse AI recommendations (matching normal Pulse behavior)
+  // Animated flow: 1. User Prompt is sent -> 2. Pulse thinking animation -> 3. Curated result appears
   useEffect(() => {
     if (isExpanded && messages.length === 0) {
       const userPrompt = query.trim()
@@ -57,6 +57,7 @@ export default function InlinePulseAICard({
         : `Cardiologists near me in ${selectedLocation}`;
       const aiResponseText = `I understand you are looking for **${query || "cardiologists"}** in **${selectedLocation}**. Based on your search, here are our recommended specialists:`;
 
+      // Step 1: User search prompt appears first
       setMessages([
         {
           id: "init-user-msg",
@@ -64,14 +65,27 @@ export default function InlinePulseAICard({
           text: userPrompt,
           time: "Just now",
         },
-        {
-          id: "init-ai-msg",
-          sender: "ai",
-          text: aiResponseText,
-          time: "Just now",
-          doctors: doctors.slice(0, 3),
-        },
       ]);
+
+      // Step 2: Pulse begins thinking
+      setIsThinking(true);
+
+      // Step 3: Result appears after thinking animation
+      const timer = setTimeout(() => {
+        setIsThinking(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: "init-ai-msg",
+            sender: "ai",
+            text: aiResponseText,
+            time: "Just now",
+            doctors: doctors.slice(0, 3),
+          },
+        ]);
+      }, 800);
+
+      return () => clearTimeout(timer);
     }
   }, [isExpanded, query, selectedLocation, messages.length, doctors]);
 
@@ -305,113 +319,132 @@ export default function InlinePulseAICard({
 
       {/* Messages Stream */}
       <div className={styles.pulseMessagesStream}>
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={
-              msg.sender === "user"
-                ? styles.pulseUserMessageRow
-                : styles.pulseAiMessageRow
-            }
-          >
-            {msg.sender === "ai" && (
-              <div className={styles.pulseAiAvatar} aria-hidden>
-                <Stethoscope size={13} color="#00C4FF" />
-              </div>
-            )}
-
-            <div
+        <AnimatePresence initial={false}>
+          {messages.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className={
                 msg.sender === "user"
-                  ? styles.pulseUserBubble
-                  : styles.pulseAiBubble
+                  ? styles.pulseUserMessageRow
+                  : styles.pulseAiMessageRow
               }
             >
-              <div className={styles.pulseBubbleText}>
-                {msg.text.split("\n").map((line, idx) => {
-                  if (!line.trim()) return <div key={idx} style={{ height: 6 }} />;
-                  // Bold markdown renderer
-                  const parts = line.split(/(\*\*.*?\*\*)/g);
-                  return (
-                    <p key={idx} style={{ margin: "2px 0" }}>
-                      {parts.map((p, pIdx) => {
-                        if (p.startsWith("**") && p.endsWith("**")) {
-                          return (
-                            <strong key={pIdx} style={{ color: "#38BDF8" }}>
-                              {p.slice(2, -2)}
-                            </strong>
-                          );
-                        }
-                        return p;
-                      })}
-                    </p>
-                  );
-                })}
-              </div>
-
-              {/* Curated Suggested Doctor Cards (Less text, compact for small window) */}
-              {msg.doctors && msg.doctors.length > 0 && (
-                <div className={styles.pulseCuratedDoctorsRow}>
-                  {msg.doctors.map((doc) => (
-                    <div key={doc.id} className={styles.pulseCuratedDoctorCard}>
-                      <div className={styles.pulseCuratedDocTop}>
-                        <img
-                          src={doc.image}
-                          alt={doc.name}
-                          className={styles.pulseCuratedDocAvatar}
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/images/misc/doctor_avatar_male.png";
-                          }}
-                        />
-                        <div className={styles.pulseCuratedDocMeta}>
-                          <div className={styles.pulseCuratedDocName} title={doc.name}>
-                            {doc.name}
-                          </div>
-                          <div className={styles.pulseCuratedDocSpec}>{doc.speciality}</div>
-                          <div className={styles.pulseCuratedDocHosp}>
-                            <MapPin size={10} className={styles.pulseCuratedPinIcon} />
-                            <span>{doc.hospital.replace("Narayana Institute of Cardiac Sciences", "NH Cardiac Sciences")}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles.pulseCuratedDocBottom}>
-                        <span className={styles.pulseCuratedDocSlot}>
-                          <span className={styles.pulseCuratedSlotDot} />
-                          <span>Available Today</span>
-                        </span>
-                        <Link
-                          href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
-                          className={styles.pulseCuratedDocBookBtn}
-                        >
-                          <span>Book</span>
-                          <ArrowRight size={10} />
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
+              {msg.sender === "ai" && (
+                <div className={styles.pulseAiAvatar} aria-hidden>
+                  <Stethoscope size={13} color="#00C4FF" />
                 </div>
               )}
 
-              <span className={styles.pulseBubbleTime}>{msg.time}</span>
-            </div>
-          </div>
-        ))}
+              <div
+                className={
+                  msg.sender === "user"
+                    ? styles.pulseUserBubble
+                    : styles.pulseAiBubble
+                }
+              >
+                <div className={styles.pulseBubbleText}>
+                  {msg.text.split("\n").map((line, idx) => {
+                    if (!line.trim()) return <div key={idx} style={{ height: 6 }} />;
+                    // Bold markdown renderer
+                    const parts = line.split(/(\*\*.*?\*\*)/g);
+                    return (
+                      <p key={idx} style={{ margin: "2px 0" }}>
+                        {parts.map((p, pIdx) => {
+                          if (p.startsWith("**") && p.endsWith("**")) {
+                            return (
+                              <strong key={pIdx} style={{ color: "#38BDF8" }}>
+                                {p.slice(2, -2)}
+                              </strong>
+                            );
+                          }
+                          return p;
+                        })}
+                      </p>
+                    );
+                  })}
+                </div>
 
-        {isThinking && (
-          <div className={styles.pulseAiMessageRow}>
-            <div className={styles.pulseAiAvatar} aria-hidden>
-              <Stethoscope size={13} color="#00C4FF" />
-            </div>
-            <div className={styles.pulseThinkingBubble}>
-              <span className={styles.pulseThinkingDot} />
-              <span className={styles.pulseThinkingDot} />
-              <span className={styles.pulseThinkingDot} />
-              <span style={{ fontSize: 11.5, color: "#94A3B8", marginLeft: 6 }}>
-                Pulse AI is analyzing…
-              </span>
-            </div>
-          </div>
-        )}
+                {/* Curated Suggested Doctor Cards (Minimalist, compact for small window) */}
+                {msg.doctors && msg.doctors.length > 0 && (
+                  <div className={styles.pulseCuratedDoctorsRow}>
+                    {msg.doctors.map((doc, dIdx) => (
+                      <motion.div
+                        key={doc.id}
+                        initial={{ opacity: 0, x: 10, scale: 0.96 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        transition={{ duration: 0.28, delay: dIdx * 0.08, ease: "easeOut" }}
+                        className={styles.pulseCuratedDoctorCard}
+                      >
+                        <div className={styles.pulseCuratedDocTop}>
+                          <img
+                            src={doc.image}
+                            alt={doc.name}
+                            className={styles.pulseCuratedDocAvatar}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "/images/misc/doctor_avatar_male.png";
+                            }}
+                          />
+                          <div className={styles.pulseCuratedDocMeta}>
+                            <div className={styles.pulseCuratedDocName} title={doc.name}>
+                              {doc.name}
+                            </div>
+                            <div className={styles.pulseCuratedDocSpec}>{doc.speciality}</div>
+                            <div className={styles.pulseCuratedDocHosp}>
+                              <MapPin size={10} className={styles.pulseCuratedPinIcon} />
+                              <span>{doc.hospital.replace("Narayana Institute of Cardiac Sciences", "NH Cardiac Sciences")}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.pulseCuratedDocBottom}>
+                          <span className={styles.pulseCuratedDocSlot}>
+                            <span className={styles.pulseCuratedSlotDot} />
+                            <span>Available Today</span>
+                          </span>
+                          <Link
+                            href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                            className={styles.pulseCuratedDocBookBtn}
+                          >
+                            <span>Book</span>
+                            <ArrowRight size={10} />
+                          </Link>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
+                <span className={styles.pulseBubbleTime}>{msg.time}</span>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isThinking && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.97 }}
+              transition={{ duration: 0.22 }}
+              className={styles.pulseAiMessageRow}
+            >
+              <div className={styles.pulseAiAvatar} aria-hidden>
+                <Stethoscope size={13} color="#00C4FF" />
+              </div>
+              <div className={styles.pulseThinkingBubble}>
+                <span className={styles.pulseThinkingDot} />
+                <span className={styles.pulseThinkingDot} />
+                <span className={styles.pulseThinkingDot} />
+                <span style={{ fontSize: 11.5, color: "#94A3B8", marginLeft: 6 }}>
+                  Pulse AI is analyzing specialists…
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div ref={messagesEndRef} />
       </div>
