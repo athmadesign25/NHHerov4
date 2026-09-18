@@ -2,10 +2,24 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Lottie from "lottie-react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
+
+// How long each icon animation rests on its last frame before replaying —
+// loop=true (no gap) read as too busy/distracting for a bar that's always
+// on screen.
+const ICON_REPLAY_DELAY_MS = 3000;
+
+// Restarts `ref`'s animation from frame 0 after ICON_REPLAY_DELAY_MS,
+// tracking the timeout in `timeoutRef` so a later unmount/re-trigger can
+// clear it. Meant to be passed as a Lottie's own `onComplete`.
+function replayAfterDelay(ref: React.RefObject<LottieRefCurrentProps | null>, timeoutRef: React.RefObject<ReturnType<typeof setTimeout> | undefined>) {
+  timeoutRef.current = setTimeout(() => {
+    ref.current?.goToAndPlay(0, true);
+  }, ICON_REPLAY_DELAY_MS);
+}
 
 export default function FloatingQuickActions() {
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
@@ -15,6 +29,18 @@ export default function FloatingQuickActions() {
   const linkRef0 = useRef<HTMLAnchorElement>(null);
   const linkRef1 = useRef<HTMLAnchorElement>(null);
   const linkRef2 = useRef<HTMLButtonElement>(null);
+
+  const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
+  const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
+  const calendarReplayTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const nhAppIconReplayTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(calendarReplayTimeout.current);
+      clearTimeout(nhAppIconReplayTimeout.current);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
@@ -101,9 +127,11 @@ export default function FloatingQuickActions() {
                 icon slot at full size. */}
             <span className={styles.calendarIconClip}>
               <Lottie
+                lottieRef={calendarLottieRef}
                 animationData={calendarCheckAnimation}
-                loop
+                loop={false}
                 autoplay
+                onComplete={() => replayAfterDelay(calendarLottieRef, calendarReplayTimeout)}
                 style={{ width: 35.2, height: 35.2, flexShrink: 0 }}
                 aria-hidden
               />
@@ -122,9 +150,11 @@ export default function FloatingQuickActions() {
         >
           <span className={styles.iconWrap}>
             <Lottie
+              lottieRef={nhAppIconLottieRef}
               animationData={nhAppIconAnimation}
-              loop
+              loop={false}
               autoplay
+              onComplete={() => replayAfterDelay(nhAppIconLottieRef, nhAppIconReplayTimeout)}
               style={{ width: 22, height: 22, flexShrink: 0 }}
               aria-hidden
             />
