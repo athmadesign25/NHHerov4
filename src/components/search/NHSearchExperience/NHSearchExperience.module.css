@@ -1747,7 +1747,7 @@
 }
 
 .pulseMessagesStream {
-  max-height: 250px;
+  max-height: 340px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -1803,7 +1803,7 @@
 }
 
 .pulseAiBubble {
-  max-width: 88%;
+  max-width: 96%;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px 12px 12px 2px;
@@ -2036,6 +2036,245 @@
   color: #64748B;
   line-height: 1.35;
   padding: 0 4px;
+}
+
+/* ── Curated Suggested Doctor Cards inside Inline Pulse AI Bubble ── */
+.pulseCuratedDoctorsRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 10px;
+  padding: 2px 2px 6px;
+  scrollbar-width: thin;
+}
+
+.pulseCuratedDoctorsRow::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pulseCuratedDoctorsRow::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+
+.pulseCuratedDoctorCard {
+  flex: 0 0 220px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.pulseCuratedDoctorCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 196, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.pulseCuratedDocTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.pulseCuratedDocAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.pulseCuratedDocMeta {
+  min-width: 0;
+  flex: 1;
+}
+
+.pulseCuratedDocName {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocSpec {
+  font-size: 10.5px;
+  color: #38BDF8;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocHosp {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  color: #94A3B8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocHosp span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pulseCuratedPinIcon {
+  flex-shrink: 0;
+  color: #94A3B8;
+}
+
+.pulseCuratedDocBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.pulseCuratedDocSlot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #4ADE80;
+  font-weight: 500;
+}
+
+.pulseCuratedSlotDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22C55E;
+}
+
+.pulseCuratedDocBookBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: #034EA2;
+  border: 1px solid rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pulseCuratedDocBookBtn:hover {
+  background: #0060DF;
+  border-color: #38BDF8;
+  transform: translateY(-0.5px);
+}
+
+/* ── Active Pulse Layout & Buried Results Container ── */
+.pulseActiveLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.pulseActiveMain {
+  width: 100%;
+}
+
+.buriedResultsContainer {
+  margin-top: 4px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.buriedResultsContainer:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.buriedResultsToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  color: #CBD5E1;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.buriedResultsToggle:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #FFFFFF;
+}
+
+.buriedToggleLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buriedToggleIcon {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.buriedCountBadge {
+  font-size: 10.5px;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-left: 4px;
+}
+
+.buriedToggleRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94A3B8;
+  font-size: 11.5px;
+}
+
+.buriedChevron {
+  transition: transform 0.2s ease;
+}
+
+.buriedChevronRotated {
+  transform: rotate(180deg);
+}
+
+.buriedResultsContent {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 29, 0.4);
 }
 
 /* ── State: Pulse Attached Mode ── */

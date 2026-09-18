@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -9,20 +10,24 @@ import {
   Paperclip,
   Mic,
   Stethoscope,
+  MapPin,
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
+import { DoctorCardData } from "./searchData";
 
 interface Message {
   id: string;
   sender: "ai" | "user";
   text: string;
   time: string;
+  doctors?: DoctorCardData[];
 }
 
 interface InlinePulseAICardProps {
   pulseRecommendationText: string;
   query: string;
   selectedLocation: string;
+  doctors?: DoctorCardData[];
   isExpanded: boolean;
   onToggleExpand: (expanded: boolean) => void;
 }
@@ -31,6 +36,7 @@ export default function InlinePulseAICard({
   pulseRecommendationText,
   query,
   selectedLocation,
+  doctors = [],
   isExpanded,
   onToggleExpand,
 }: InlinePulseAICardProps) {
@@ -43,21 +49,31 @@ export default function InlinePulseAICard({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize contextual welcome message when first expanded (matching Pulse AI tone)
+  // Initialize contextual search prompt & Pulse AI recommendations (matching normal Pulse behavior)
   useEffect(() => {
     if (isExpanded && messages.length === 0) {
-      const initialText = `I understand you are looking for **${query || "cardiologists"}** in **${selectedLocation}**. Based on your search, we have highlighted our top specialists above.\n\nWe suggest selecting one of the recommended cardiologists below for a direct booking, or let me know if you would like to specify symptoms.`;
+      const userPrompt = query.trim()
+        ? `${query.trim()} in ${selectedLocation}`
+        : `Cardiologists near me in ${selectedLocation}`;
+      const aiResponseText = `I understand you are looking for **${query || "cardiologists"}** in **${selectedLocation}**. Based on your search, here are our recommended specialists:`;
 
       setMessages([
         {
-          id: "welcome-msg",
-          sender: "ai",
-          text: initialText,
+          id: "init-user-msg",
+          sender: "user",
+          text: userPrompt,
           time: "Just now",
+        },
+        {
+          id: "init-ai-msg",
+          sender: "ai",
+          text: aiResponseText,
+          time: "Just now",
+          doctors: doctors.slice(0, 3),
         },
       ]);
     }
-  }, [isExpanded, query, selectedLocation, messages.length]);
+  }, [isExpanded, query, selectedLocation, messages.length, doctors]);
 
   // Scroll to bottom of message thread
   useEffect(() => {
@@ -103,8 +119,9 @@ export default function InlinePulseAICard({
       return {
         id: `ai-${Date.now()}`,
         sender: "ai",
-        text: `Consultation slots are open today with our senior cardiologists in Bangalore. You can tap **Book** on any doctor card above to reserve a time.`,
+        text: `Here are available consultation slots with our senior specialists today:`,
         time: timeStr,
+        doctors: doctors.slice(0, 3),
       };
     }
 
@@ -139,8 +156,9 @@ export default function InlinePulseAICard({
     return {
       id: `ai-${Date.now()}`,
       sender: "ai",
-      text: `Based on your preferences, our specialists in **${selectedLocation}** are available. You can ask about symptoms, tests, or slot availability.`,
+      text: `Based on your query, our specialists in **${selectedLocation}** are available. You can select a doctor below, ask about symptoms, or request specific tests:`,
       time: timeStr,
+      doctors: doctors.slice(0, 2),
     };
   };
 
@@ -330,6 +348,49 @@ export default function InlinePulseAICard({
                   );
                 })}
               </div>
+
+              {/* Curated Suggested Doctor Cards (Less text, compact for small window) */}
+              {msg.doctors && msg.doctors.length > 0 && (
+                <div className={styles.pulseCuratedDoctorsRow}>
+                  {msg.doctors.map((doc) => (
+                    <div key={doc.id} className={styles.pulseCuratedDoctorCard}>
+                      <div className={styles.pulseCuratedDocTop}>
+                        <img
+                          src={doc.image}
+                          alt={doc.name}
+                          className={styles.pulseCuratedDocAvatar}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "/images/misc/doctor_avatar_male.png";
+                          }}
+                        />
+                        <div className={styles.pulseCuratedDocMeta}>
+                          <div className={styles.pulseCuratedDocName} title={doc.name}>
+                            {doc.name}
+                          </div>
+                          <div className={styles.pulseCuratedDocSpec}>{doc.speciality}</div>
+                          <div className={styles.pulseCuratedDocHosp}>
+                            <MapPin size={10} className={styles.pulseCuratedPinIcon} />
+                            <span>{doc.hospital.replace("Narayana Institute of Cardiac Sciences", "NH Cardiac Sciences")}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={styles.pulseCuratedDocBottom}>
+                        <span className={styles.pulseCuratedDocSlot}>
+                          <span className={styles.pulseCuratedSlotDot} />
+                          <span>Available Today</span>
+                        </span>
+                        <Link
+                          href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                          className={styles.pulseCuratedDocBookBtn}
+                        >
+                          <span>Book</span>
+                          <ArrowRight size={10} />
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               <span className={styles.pulseBubbleTime}>{msg.time}</span>
             </div>

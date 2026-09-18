@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Search, X, ArrowRight } from "lucide-react";
+import { Search, X, ArrowRight, Layers, ChevronDown } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { SearchResultsData } from "./searchData";
 import LocationSelector from "./LocationSelector";
@@ -34,6 +34,7 @@ export default function SearchResultsCanvas({
 }: SearchResultsCanvasProps) {
   const [inputValue, setInputValue] = useState(query);
   const [isPulseExpanded, setIsPulseExpanded] = useState(false);
+  const [showBuriedResults, setShowBuriedResults] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Synchronize local input value when incoming query prop changes
@@ -154,33 +155,98 @@ export default function SearchResultsCanvas({
       {/* Red Horizon Divider */}
       <div className={styles.redDivider} />
 
-      {/* 2-Column Weighted Split Layout (Primary: ~65%, Tertiary Right Rail: ~35%) */}
-      <div className={styles.resultsSplitLayout}>
-        {/* ── LEFT COLUMN: Dominant Primary Results & Secondary Related Care ── */}
-        <div className={styles.resultsLeftCol}>
-          {/* PRIMARY: Dominant Doctor Cards & Inline Expanding Pulse AI Assistant */}
-          <PrimaryResults
-            pulseRecommendationText={results.pulseRecommendationText}
-            doctors={results.doctors}
-            selectedLocation={selectedLocation}
-            query={query}
-            isPulseExpanded={isPulseExpanded}
-            onTogglePulseExpand={setIsPulseExpanded}
-          />
+      {/* Layout: When Pulse AI is active, Pulse takes center stage and other results are buried in a collapsible container */}
+      {isPulseExpanded ? (
+        <div className={styles.pulseActiveLayout}>
+          <div className={styles.pulseActiveMain}>
+            <PrimaryResults
+              pulseRecommendationText={results.pulseRecommendationText}
+              doctors={results.doctors}
+              selectedLocation={selectedLocation}
+              query={query}
+              isPulseExpanded={isPulseExpanded}
+              onTogglePulseExpand={setIsPulseExpanded}
+            />
+          </div>
 
-          {/* SECONDARY: Related Specialties & Care */}
-          <SecondaryResults
-            relatedSpecialties={results.relatedSpecialties}
-            onSelectSpecialtyTag={onSelectSpecialtyTag}
+          {/* Buried Standard Directory Results Container */}
+          <div className={styles.buriedResultsContainer}>
+            <button
+              type="button"
+              className={styles.buriedResultsToggle}
+              onClick={() => setShowBuriedResults((prev) => !prev)}
+              aria-expanded={showBuriedResults}
+            >
+              <div className={styles.buriedToggleLeft}>
+                <Layers size={15} className={styles.buriedToggleIcon} />
+                <span>Standard Directory Results & Care Topics</span>
+                <span className={styles.buriedCountBadge}>
+                  {results.doctors.length} doctors • {results.relatedSpecialties.length} specialties
+                </span>
+              </div>
+              <div className={styles.buriedToggleRight}>
+                <span>{showBuriedResults ? "Hide directory results" : "View standard directory results"}</span>
+                <ChevronDown
+                  size={14}
+                  className={`${styles.buriedChevron} ${showBuriedResults ? styles.buriedChevronRotated : ""}`}
+                />
+              </div>
+            </button>
+
+            {showBuriedResults && (
+              <div className={styles.buriedResultsContent}>
+                <div className={styles.resultsSplitLayout}>
+                  <div className={styles.resultsLeftCol}>
+                    <PrimaryResults
+                      pulseRecommendationText=""
+                      doctors={results.doctors}
+                      selectedLocation={selectedLocation}
+                      query={query}
+                      hidePulse={true}
+                    />
+                    <SecondaryResults
+                      relatedSpecialties={results.relatedSpecialties}
+                      onSelectSpecialtyTag={onSelectSpecialtyTag}
+                    />
+                  </div>
+                  <TertiaryResults
+                    treatments={results.treatments}
+                    articles={results.articles}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        /* 2-Column Weighted Split Layout (Primary: ~65%, Tertiary Right Rail: ~35%) */
+        <div className={styles.resultsSplitLayout}>
+          {/* ── LEFT COLUMN: Dominant Primary Results & Secondary Related Care ── */}
+          <div className={styles.resultsLeftCol}>
+            {/* PRIMARY: Dominant Doctor Cards & Inline Expanding Pulse AI Assistant */}
+            <PrimaryResults
+              pulseRecommendationText={results.pulseRecommendationText}
+              doctors={results.doctors}
+              selectedLocation={selectedLocation}
+              query={query}
+              isPulseExpanded={false}
+              onTogglePulseExpand={setIsPulseExpanded}
+            />
+
+            {/* SECONDARY: Related Specialties & Care */}
+            <SecondaryResults
+              relatedSpecialties={results.relatedSpecialties}
+              onSelectSpecialtyTag={onSelectSpecialtyTag}
+            />
+          </div>
+
+          {/* ── RIGHT COLUMN: Tertiary Supporting Results (Vertically aligned with RECOMMENDED DOCTORS) ── */}
+          <TertiaryResults
+            treatments={results.treatments}
+            articles={results.articles}
           />
         </div>
-
-        {/* ── RIGHT COLUMN: Tertiary Supporting Results (Vertically aligned with RECOMMENDED DOCTORS) ── */}
-        <TertiaryResults
-          treatments={results.treatments}
-          articles={results.articles}
-        />
-      </div>
+      )}
     </div>
   );
 }
