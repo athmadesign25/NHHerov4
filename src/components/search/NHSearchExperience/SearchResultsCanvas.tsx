@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Search, X, ArrowRight, Layers, ChevronDown } from "lucide-react";
+import { Search, X, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NHSearchExperience.module.css";
 import { SearchResultsData } from "./searchData";
 import LocationSelector from "./LocationSelector";
 import PrimaryResults from "./PrimaryResults";
-import SecondaryResults from "./SecondaryResults";
 import TertiaryResults from "./TertiaryResults";
+import PulseAIView from "./PulseAIView";
 
 interface SearchResultsCanvasProps {
   query: string;
@@ -34,7 +35,6 @@ export default function SearchResultsCanvas({
 }: SearchResultsCanvasProps) {
   const [inputValue, setInputValue] = useState(query);
   const [isPulseExpanded, setIsPulseExpanded] = useState(false);
-  const [showBuriedResults, setShowBuriedResults] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Synchronize local input value when incoming query prop changes
@@ -80,141 +80,108 @@ export default function SearchResultsCanvas({
         </button>
       </div>
 
-      {/* Query Display Bar: Search Icon + Natural Editable Input + Send/Edit button */}
-      <form className={styles.resultsQueryBar} onSubmit={handleFormSubmit}>
-        <div 
-          className={styles.resultsQueryLeft}
-          onClick={() => inputRef.current?.focus()}
-        >
-          <Search size={22} className={styles.resultsQuerySearchIcon} />
-          <input
-            ref={inputRef}
-            type="text"
-            className={styles.resultsQueryInput}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleFormSubmit();
-              } else if (e.key === "Escape") {
-                if (isEdited) {
-                  e.stopPropagation();
-                  setInputValue(query);
-                }
-              }
-            }}
-            placeholder="Search doctors, specialties, symptoms..."
-            aria-label="Edit search prompt"
-          />
-        </div>
-
-        <div className={styles.resultsQueryActions}>
-          {isEdited && (
-            <button
-              type="submit"
-              className={styles.querySendBtn}
-              title="Search with updated prompt"
-              aria-label="Submit search"
-            >
-              <span>Search</span>
-              <ArrowRight size={14} />
-            </button>
-          )}
-        </div>
-      </form>
-
-      {/* Red Horizon Divider */}
-      <div className={styles.redDivider} />
-
-      {/* Layout: When Pulse AI is active, Pulse takes center stage and other results are buried in a collapsible container */}
-      {isPulseExpanded ? (
-        <div className={styles.pulseActiveLayout}>
-          <div className={styles.pulseActiveMain}>
-            <PrimaryResults
-              pulseRecommendationText={results.pulseRecommendationText}
-              doctors={results.doctors}
-              selectedLocation={selectedLocation}
-              proximityMessage={results.proximityMessage}
+      {/* ── Seamless Horizontal Slide Transition: RESULTS STATE ↔ PULSE STATE ── */}
+      <AnimatePresence mode="wait">
+        {isPulseExpanded ? (
+          /* ── PULSE STATE: Focused Assistant View (Figma Reference) ── */
+          <motion.div
+            key="pulse-view"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 24 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            style={{ width: "100%" }}
+          >
+            <PulseAIView
               query={query}
-              isPulseExpanded={isPulseExpanded}
-              onTogglePulseExpand={setIsPulseExpanded}
+              selectedLocation={selectedLocation}
+              doctors={results.doctors}
+              onBack={() => setIsPulseExpanded(false)}
             />
-          </div>
-
-          {/* Buried Standard Directory Results Container */}
-          <div className={styles.buriedResultsContainer}>
-            <button
-              type="button"
-              className={styles.buriedResultsToggle}
-              onClick={() => setShowBuriedResults((prev) => !prev)}
-              aria-expanded={showBuriedResults}
-            >
-              <div className={styles.buriedToggleLeft}>
-                <Layers size={15} className={styles.buriedToggleIcon} />
-                <span>Standard Directory Results & Care Topics</span>
-                <span className={styles.buriedCountBadge}>
-                  {results.doctors.length} doctors • {results.relatedSpecialties.length} specialties
-                </span>
-              </div>
-              <div className={styles.buriedToggleRight}>
-                <span>{showBuriedResults ? "Hide directory results" : "View standard directory results"}</span>
-                <ChevronDown
-                  size={14}
-                  className={`${styles.buriedChevron} ${showBuriedResults ? styles.buriedChevronRotated : ""}`}
+          </motion.div>
+        ) : (
+          /* ── RESULTS STATE: Standard 2-Column Search Results ── */
+          <motion.div
+            key="standard-results"
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            style={{ width: "100%" }}
+          >
+            {/* Query Display Bar: Search Icon + Natural Editable Input + Send/Edit button */}
+            <form className={styles.resultsQueryBar} onSubmit={handleFormSubmit}>
+              <div 
+                className={styles.resultsQueryLeft}
+                onClick={() => inputRef.current?.focus()}
+              >
+                <Search size={22} className={styles.resultsQuerySearchIcon} />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className={styles.resultsQueryInput}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleFormSubmit();
+                    } else if (e.key === "Escape") {
+                      if (isEdited) {
+                        e.stopPropagation();
+                        setInputValue(query);
+                      }
+                    }
+                  }}
+                  placeholder="Search doctors, specialties, symptoms..."
+                  aria-label="Edit search prompt"
                 />
               </div>
-            </button>
 
-            {showBuriedResults && (
-              <div className={styles.buriedResultsContent}>
-                <div className={styles.resultsSplitLayout}>
-                  <div className={styles.resultsLeftCol}>
-                    <PrimaryResults
-                      pulseRecommendationText=""
-                      doctors={results.doctors}
-                      selectedLocation={selectedLocation}
-                      proximityMessage={results.proximityMessage}
-                      query={query}
-                      hidePulse={true}
-                    />
-                  </div>
-                  <TertiaryResults
-                    treatments={results.treatments}
-                    articles={results.articles}
-                    relatedSpecialties={results.relatedSpecialties}
-                    onSelectSpecialtyTag={onSelectSpecialtyTag}
-                  />
-                </div>
+              <div className={styles.resultsQueryActions}>
+                {isEdited && (
+                  <button
+                    type="submit"
+                    className={styles.querySendBtn}
+                    title="Search with updated prompt"
+                    aria-label="Submit search"
+                  >
+                    <span>Search</span>
+                    <ArrowRight size={14} />
+                  </button>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        /* 2-Column Result Layout: Primary (67-70% width) vs Secondary/Tertiary Editorial (30-33% width) */
-        <div className={styles.resultsSplitLayout}>
-          {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors & Compact Pulse AI Row ── */}
-          <div className={styles.resultsLeftCol}>
-            <PrimaryResults
-              pulseRecommendationText={results.pulseRecommendationText}
-              doctors={results.doctors}
-              selectedLocation={selectedLocation}
-              proximityMessage={results.proximityMessage}
-              query={query}
-              isPulseExpanded={false}
-              onTogglePulseExpand={setIsPulseExpanded}
-            />
-          </div>
+            </form>
 
-          {/* ── RIGHT / SECONDARY COLUMN: Treatments, Articles & Related Specialties ── */}
-          <TertiaryResults
-            treatments={results.treatments}
-            articles={results.articles}
-            relatedSpecialties={results.relatedSpecialties}
-            onSelectSpecialtyTag={onSelectSpecialtyTag}
-          />
-        </div>
-      )}
+            {/* Red Horizon Divider */}
+            <div className={styles.redDivider} />
+
+            {/* 2-Column Result Layout: Primary vs Secondary/Tertiary Editorial */}
+            <div className={styles.resultsSplitLayout}>
+              {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors & Compact Pulse AI Row ── */}
+              <div className={styles.resultsLeftCol}>
+                <PrimaryResults
+                  pulseRecommendationText={results.pulseRecommendationText}
+                  doctors={results.doctors}
+                  selectedLocation={selectedLocation}
+                  proximityMessage={results.proximityMessage}
+                  query={query}
+                  isPulseExpanded={false}
+                  onTogglePulseExpand={setIsPulseExpanded}
+                />
+              </div>
+
+              {/* ── RIGHT / SECONDARY COLUMN: Treatments, Articles & Related Specialties ── */}
+              <TertiaryResults
+                treatments={results.treatments}
+                articles={results.articles}
+                relatedSpecialties={results.relatedSpecialties}
+                onSelectSpecialtyTag={onSelectSpecialtyTag}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

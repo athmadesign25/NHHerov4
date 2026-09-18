@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ArrowRight, Briefcase, Sparkles } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData } from "./searchData";
-import InlinePulseAICard from "./InlinePulseAICard";
 
 interface PrimaryResultsProps {
   pulseRecommendationText: string;
@@ -26,42 +25,17 @@ export default function PrimaryResults({
   proximityMessage,
   query,
   onAskPulse,
-  isPulseExpanded: controlledExpanded,
   onTogglePulseExpand,
   hidePulse = false,
 }: PrimaryResultsProps) {
-  const [internalExpanded, setInternalExpanded] = useState(false);
-
-  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
-
-  const handleToggleExpand = (val: boolean) => {
-    setInternalExpanded(val);
-    onTogglePulseExpand?.(val);
-  };
-
   return (
     <div className={styles.primaryResultsSection}>
-      {/* If Pulse AI is expanded, show Pulse AI front-and-center */}
-      {!hidePulse && pulseRecommendationText && isExpanded && (
-        <InlinePulseAICard
-          pulseRecommendationText={pulseRecommendationText}
-          query={query}
-          selectedLocation={selectedLocation}
-          doctors={doctors}
-          isExpanded={isExpanded}
-          onToggleExpand={handleToggleExpand}
-        />
-      )}
-
-      {/* When Pulse AI is NOT expanded (or standard view), show primary recommended doctors */}
-      {(!isExpanded || hidePulse) && (
-        <>
-          {/* Header: Title */}
-          <div className={styles.primaryHeaderRow}>
-            <span className={styles.sectionEyebrowTitle}>
-              RECOMMENDED DOCTORS
-            </span>
-          </div>
+      {/* Header: Title */}
+      <div className={styles.primaryHeaderRow}>
+        <span className={styles.sectionEyebrowTitle}>
+          RECOMMENDED DOCTORS
+        </span>
+      </div>
 
           {/* 2 × 2 Grid: Prominent Image-Led Doctor Cards */}
           <div className={styles.refDoctorsGrid}>
@@ -124,11 +98,11 @@ export default function PrimaryResults({
           {!hidePulse && pulseRecommendationText && (
             <div
               className={styles.refPulseRow}
-              onClick={() => handleToggleExpand(true)}
+              onClick={() => onTogglePulseExpand?.(true)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") handleToggleExpand(true);
+                if (e.key === "Enter" || e.key === " ") onTogglePulseExpand?.(true);
               }}
               aria-label="Ask Pulse AI for personalised recommendations"
             >
@@ -164,15 +138,13 @@ export default function PrimaryResults({
                 className={styles.refPulseBtn}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleToggleExpand(true);
+                  onTogglePulseExpand?.(true);
                 }}
               >
                 <span>Ask Pulse →</span>
               </button>
             </div>
           )}
-        </>
-      )}
     </div>
   );
 }
