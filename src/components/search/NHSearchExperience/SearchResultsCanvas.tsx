@@ -45,14 +45,6 @@ export default function SearchResultsCanvas({
   // Check if user has modified the prompt
   const isEdited = inputValue.trim() !== query.trim() && inputValue.trim().length > 0;
 
-  const handlePulseTrigger = () => {
-    setIsPulseExpanded(true);
-    setTimeout(() => {
-      const pulseEl = document.querySelector(`.${styles.pulseExpandedCard}`) || document.querySelector(`.${styles.pulseNudgeBox}`);
-      pulseEl?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }, 120);
-  };
-
   const handleFormSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const clean = inputValue.trim();
@@ -67,7 +59,7 @@ export default function SearchResultsCanvas({
 
   return (
     <div className={styles.resultsContainer}>
-      {/* Top Header Row: Location Pill + Pulse AI Badge + Close Button */}
+      {/* Top Header Row: Location Pill + Close Button */}
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
           {/* Location Selector */}
@@ -75,26 +67,6 @@ export default function SearchResultsCanvas({
             selectedLocation={selectedLocation}
             onSelectLocation={onSelectLocation}
           />
-
-          {/* Pulse AI Badge */}
-          <div 
-            className={styles.pulseBadge}
-            onClick={handlePulseTrigger}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") handlePulseTrigger();
-            }}
-            style={{ cursor: "pointer" }}
-            title="Open Pulse AI clinical assistant"
-          >
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
-            <span className={styles.pulseText}>Pulse AI</span>
-          </div>
         </div>
 
         {/* Close Button */}
