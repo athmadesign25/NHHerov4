@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue, useScroll, LayoutGroup } from "framer-motion";
 import { Search, X } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
@@ -79,52 +79,96 @@ export default function NHSearchExperience({
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
 
-  // Motion values for continuous morphing
-  const hasScroll = Boolean(scrollProgress);
-  const defaultProgress = useMotionValue(0);
-  const activeProgress = scrollProgress || defaultProgress;
-
-  useMotionValueEvent(activeProgress, "change", (latest) => {
-    setIsDocked(latest >= 0.50);
-  });
+  // Global scroll, so the handoff can be gated on the same threshold the
+  // floating quick actions use to appear — the shell must not dock onto a
+  // bar that isn't on screen yet.
+  const { scrollY } = useScroll();
 
   // Starting dimensions (Hero anchor)
   const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
   const startHeight = anchorRect?.height || 136;
-  const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
-  const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side for desktop,
-  // and the ENTIRE FloatingQuickActions bottom pill for mobile)
-  const endWidth = isMobile ? winSize.w - 32 : 100;
-  const endHeight = isMobile ? 80 : 74;
-  const endTop = isMobile 
-    ? winSize.h - 16 - endHeight 
-    : winSize.h - 36 - endHeight;
-  const endLeft = isMobile 
-    ? 16 
-    : winSize.w - 24 - endWidth;
+  // Docked dimensions are measured off the real Pulse AI tile in the
+  // floating bar rather than guessed from viewport math, so the shell
+  // lands exactly on it whatever that bar's own padding/size happen to be.
+  const [pulseTarget, setPulseTarget] = useState({
+    width: isMobile ? 96 : 100,
+    height: 91,
+    top: winSize.h / 2 + 46.5,
+    left: winSize.w - 124,
+  });
 
-  // Continuous numeric scroll transforms: [0.03, 0.45]
-  const composerTop = useTransform(activeProgress, [0.03, 0.45], [startTop, endTop]);
-  const composerLeft = useTransform(activeProgress, [0.03, 0.45], [startLeft, endLeft]);
-  const composerWidth = useTransform(activeProgress, [0.03, 0.45], [startWidth, endWidth]);
-  const composerHeight = useTransform(activeProgress, [0.03, 0.45], [startHeight, endHeight]);
-  const composerRadius = useTransform(activeProgress, [0.03, 0.45], [20, 18]);
-  const composerPaddingX = useTransform(activeProgress, [0.03, 0.45], [24, 6]);
-  const composerPaddingY = useTransform(activeProgress, [0.03, 0.45], [20, 8]);
-  // On mobile, the shell stays visible forever because it BECOMES the bottom nav
-  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, isMobile ? 1 : 0]);
-  
-  // The FAB contents (3 buttons) fade in during the final stage of the morph
-  const fabOpacity = useTransform(activeProgress, [0.30, 0.45], [0, 1]);
+  useEffect(() => {
+    const updateTargetRect = () => {
+      const el = document.getElementById("floating-pulse-target");
+      const container = document.querySelector(".global-floating-quick-actions") as HTMLElement | null;
+      if (!el || !container) return;
 
-  // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.03, 0.22], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.22], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.03, 0.18], [1, 0]);
-  const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
+      // The bar is parked off-screen by a transform until it's shown, so
+      // it's briefly forced into its visible position to be measured.
+      const originalTransform = container.style.transform;
+      const originalTransition = container.style.transition;
+      container.style.transition = "none";
+      container.style.transform =
+        window.innerWidth < 900 ? "translateY(0)" : "translateY(-50%) translateX(0)";
+
+      const rect = el.getBoundingClientRect();
+      setPulseTarget({
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        top: Math.round(rect.top),
+        left: Math.round(rect.left),
+      });
+
+      container.style.transform = originalTransform;
+      void container.offsetHeight;
+      container.style.transition = originalTransition;
+    };
+
+    updateTargetRect();
+    window.addEventListener("resize", updateTargetRect);
+    // The bar can mount late / fonts can still be loading on first paint.
+    const to = setTimeout(updateTargetRect, 1000);
+    return () => {
+      window.removeEventListener("resize", updateTargetRect);
+      clearTimeout(to);
+    };
+  }, []);
+
+  const endWidth = pulseTarget.width;
+  const endHeight = pulseTarget.height;
+  const endTop = pulseTarget.top;
+  const endLeft = pulseTarget.left;
+
+  const defaultProgress = useMotionValue(0);
+  const activeProgress = scrollProgress || defaultProgress;
+
+  // Scroll shrinks the composer down to a square in place; only once it's
+  // fully square does it hand off to the floating bar's Pulse tile.
+  const targetSquareSize = 110;
+  const composerWidth = useTransform(activeProgress, [0.5, 1.0], [startWidth, targetSquareSize]);
+  const composerHeight = useTransform(activeProgress, [0.5, 1.0], [startHeight, targetSquareSize]);
+  const composerMarginBottom = useTransform(activeProgress, [0.5, 1.0], ["28px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.5, 0.75], [1, 0]);
+  const compactLabelOpacity = useTransform(activeProgress, [0.75, 1.0], [0, 1]);
+
+  // Past the hero entirely there is nothing to animate between, so the
+  // shell just appears docked instead of flying across the page.
+  const [skipTransition, setSkipTransition] = useState(false);
+
+  const syncDocked = useCallback(() => {
+    const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
+    const isSquareAchieved = activeProgress.get() >= 0.99;
+    setIsDocked(isPastThreshold && isSquareAchieved);
+    setSkipTransition(scrollY.get() >= winSize.h * 1.5);
+  }, [scrollY, winSize.h, activeProgress]);
+
+  useMotionValueEvent(scrollY, "change", syncDocked);
+  useMotionValueEvent(activeProgress, "change", syncDocked);
+
+  const shellTarget = isDocked
+    ? { borderRadius: 18, padding: "8px 6px", opacity: 0 }
+    : { borderRadius: 20, padding: "20px 24px", opacity: 1 };
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -391,19 +435,17 @@ export default function NHSearchExperience({
     <div 
       className={styles.searchExperienceWrapper} 
       ref={containerRef}
-      style={
-        hasScroll
-          ? {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: searchState === "landing" ? "none" : "auto",
-              zIndex: 9990,
-            }
-          : undefined
-      }
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        position: "relative",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: searchState === "landing" ? "none" : "auto",
+        zIndex: 8990,
+      }}
     >
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
@@ -655,7 +697,7 @@ export default function NHSearchExperience({
         />,
         document.body
       )}
-    </div>
+    </motion.div>
   );
 
   return mounted ? createPortal(content, document.body) : content;

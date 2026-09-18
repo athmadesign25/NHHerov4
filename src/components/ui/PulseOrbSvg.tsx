@@ -28,7 +28,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="83%" stopColor="rgb(188,41,181)"></stop>
         </linearGradient>
         {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
-        <mask id=\"__lottie_element_116_1\" maskType=\"alpha\">
+        <mask id="__lottie_element_116_1" maskType="alpha">
           <use href="#__lottie_element_116"></use>
         </mask>
         <g id="__lottie_element_131">
@@ -70,7 +70,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="82%" stopColor="rgb(188,41,133)"></stop>
         </linearGradient>
         {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
-        <mask id=\"__lottie_element_131_1\" maskType=\"alpha\">
+        <mask id="__lottie_element_131_1" maskType="alpha">
           <use href="#__lottie_element_131"></use>
         </mask>
         <g id="__lottie_element_165">
@@ -157,7 +157,7 @@ export function PulseOrbSvg(props: React.SVGProps<SVGSVGElement>) {
           <stop offset="83%" stopColor="rgb(188,41,181)"></stop>
         </linearGradient>
         {/* @ts-expect-error -- maskType is a valid SVG presentation attribute missing from React's mask element typings */}
-        <mask id=\"__lottie_element_165_1\" maskType=\"alpha\">
+        <mask id="__lottie_element_165_1" maskType="alpha">
           <use href="#__lottie_element_165"></use>
         </mask>
         <radialGradient id="__lottie_element_226" spreadMethod="pad" gradientUnits="userSpaceOnUse" cx="703.5005493164062" cy="720.864990234375" r="2616.156414543537" fx="703.5005493164062" fy="720.864990234375">

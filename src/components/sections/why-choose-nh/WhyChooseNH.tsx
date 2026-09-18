@@ -55,9 +55,6 @@ export default function WhyChooseNH() {
   const gridWidth = useTransform(enterProgress, [0, 1], ["90%", "100%"]);
   const gridBlur = useTransform(enterProgress, [0, 0.4], ["blur(12px)", "blur(0px)"]);
 
-  // Max 10px card corner radius -> unrounds to 0px for outer corners touching screen edge
-  const edgeRadius = useTransform(enterProgress, [0.8, 1.0], ["10px", "0px"]);
-
   // Exit: the whole section blurs + fades out only once AppDownloadBanner's
   // own title has scrolled a third of the way up the viewport (from the
   // bottom) — same "title unit crosses the 2/3-viewport line" convention
@@ -161,10 +158,7 @@ export default function WhyChooseNH() {
             {/* ROW 1 & 2 - CARD 1: Clinical Excellence (Column 1 Hero) */}
             <motion.div
               className={styles.heroCard}
-              style={{
-                borderTopLeftRadius: edgeRadius,
-                borderBottomLeftRadius: edgeRadius,
-              }}
+              style={{ transformOrigin: "center" }}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
@@ -228,9 +222,7 @@ export default function WhyChooseNH() {
             {/* ROW 1 - CARD 3: Advanced Technology (Equal width 4 cols) */}
             <motion.div
               className={`${styles.cardRow1Equal} ${styles.cardRow1Col3}`}
-              style={{
-                borderTopRightRadius: edgeRadius,
-              }}
+              style={{ transformOrigin: "center" }}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
@@ -275,9 +267,7 @@ export default function WhyChooseNH() {
             {/* ROW 2 - CARD 5: Comprehensive Care (Smaller/Compact 3 cols) */}
             <motion.div
               className={styles.accreditationsCard}
-              style={{
-                borderBottomRightRadius: edgeRadius,
-              }}
+              style={{ transformOrigin: "center" }}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}

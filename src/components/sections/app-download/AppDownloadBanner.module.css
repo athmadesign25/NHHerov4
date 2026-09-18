@@ -14,11 +14,6 @@
   top: 0;
   width: 100%;
   box-sizing: border-box;
-  /* Set by FooterRevealWrapper as the footer rises up and overlays this
-     still-pinned section from below — dims its content slightly rather
-     than leaving it at full brightness underneath the footer. Defaults
-     to fully opaque everywhere else on the page. */
-  opacity: var(--footer-overlay-fade, 1);
 }
 
 /* Fills the sticky viewport behind the content; opacity is tied to the
@@ -363,12 +358,40 @@
   line-height: normal;
 }
 
-.qrLabel {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+/* Shared by .qrLabel (right) and .trustCaption (left) — same typography
+   for both captions regardless of where each one sits. */
+.captionLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
   color: #0F172A;
-  text-transform: uppercase;
+  text-align: center;
+  line-height: normal;
+}
+
+.qrLabel {
+  composes: captionLabel;
+}
+
+/* Left-side popover's own caption, back inside the card above the image
+   (see POP_OVER_CARDS' `lines` — each caption is pre-broken into exactly
+   two lines at its own natural point via an explicit <br/>, rather than
+   left to auto-wrap at the card's width). */
+.trustCaption {
+  composes: captionLabel;
+}
+
+/* Shared glass treatment for both popover units — the left-side card and
+   the right-side "Scan to install" QR block now read as the same kind of
+   surface. */
+.popoverGlass {
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .storesCol {
@@ -377,58 +400,24 @@
   gap: 12px;
 }
 
-/* White glassy card, matching .featurePill's own glass treatment above —
-   a real backdrop-blur rather than a flat tint, so these read as floating
-   glass chips over the phone/background rather than plain white boxes. */
-/* Fixed width (not sized to each one's own content) so the QR card and
-   the two wider badge images all read as one consistent-width stack
-   instead of QR being visibly narrower than the badges beside it;
-   justify-content centers each one's own (narrower) content inside it. */
-.storeContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 156px;
-  box-sizing: border-box;
-  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
-     rectangle) so the card just hugs its content evenly instead of
-     reading as padded out sideways. */
-  padding: 8px;
-  border-radius: 12px;
-  /* Subtle "white refraction" edge rather than a solid stroke — a soft
-     white border with no shadow at all, so the card reads as glass sitting
-     on the background rather than a panel floating above it. */
-  border: 1px solid rgba(100, 120, 150, 0.20);
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(16px);
-  transition: all 0.2s ease;
-}
-
-/* QR sits stacked (image above label) at the top of the stores column,
-   reusing .storeContainer's own glass/stroke styling for visual
-   consistency with the App Store / Google Play badges below it. The QR
-   image itself is baked white-on-transparent (meant for a dark backdrop),
-   so it's inverted to read as dark-on-transparent here instead of
-   regenerating the source asset. */
-.qrContainer {
+/* Label above, image below, wrapped in .popoverGlass (same card treatment
+   as the left-side popover). Image width still matches the App Store/
+   Google Play badges beside it (140px).
+   !important on display: this also carries .desktopOnly (same element),
+   whose own `display: block` (defined later in this file) would
+   otherwise win the cascade at equal specificity and silently turn this
+   back into a block — collapsing the flex gap to just line-height. */
+.qrStack {
+  display: flex !important;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
+  align-items: center;
+  gap: 12px;
 }
 
 .qrImg {
-  filter: invert(1);
-}
-
-/* Was turning near-opaque white on hover (0.75 alpha) — barely
-   distinguishable from the equally-white border, which is why the border
-   effectively vanished. Shifts darker instead (a soft navy tint) while
-   staying translucent glass rather than trending toward solid, and the
-   border darkens right along with it so it stays visible against the
-   now-different background instead of reading as white-on-near-white. */
-.storeContainer:hover {
-  background: rgba(15, 23, 42, 0.08);
-  border-color: rgba(15, 23, 42, 0.22);
+  width: 140px;
+  height: auto;
+  display: block;
 }
 
 .storeBadge {
@@ -621,10 +610,6 @@
     justify-content: center;
     align-items: center;
     gap: 12px;
-  }
-  
-  .storeContainer {
-    padding: 6px;
   }
   
   .storeBadge img {

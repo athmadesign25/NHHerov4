@@ -955,3 +955,34 @@
 .navItem:hover .navLink svg {
   transform: rotate(180deg);
 }
+
+/* ─── 24/7 Emergency nav button: subtle red glow on hover ─── */
+.emergencyBtn {
+  will-change: filter, transform;
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+.emergencyBtn:hover {
+  filter: drop-shadow(0 0 8px rgba(237, 28, 36, 0.55)) drop-shadow(0 0 2px rgba(237, 28, 36, 0.65));
+  transform: translateY(-1px);
+}
+
+/* Siren icon: fixed red (not the dynamic light/dark color the "24/7
+   Emergency" label beside it uses), blinking with a subtle glow — a
+   slow breathing pulse rather than a hard on/off flash. */
+.emergencyIcon {
+  display: flex;
+  color: #FF3838;
+  animation: emergencySirenBlink 1.8s ease-in-out infinite;
+}
+
+@keyframes emergencySirenBlink {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 2px rgba(255, 56, 56, 0.45));
+  }
+  50% {
+    opacity: 0.72;
+    filter: drop-shadow(0 0 7px rgba(255, 56, 56, 0.85)) drop-shadow(0 0 2px rgba(255, 56, 56, 0.6));
+  }
+}

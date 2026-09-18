@@ -9,6 +9,18 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe } from "lucide-react";
 import styles from "./Navbar.module.css";
 
+// Emergency siren icon (custom, not in lucide-react) for the 24/7 Emergency
+// nav button. Fixed red (see .emergencyIcon) rather than currentColor —
+// unlike the label beside it, this doesn't follow the navbar's dynamic
+// light/dark text color.
+function EmergencyIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 256 256">
+      <path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM134.68,87.89C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0c0-27.4-20.07-51.43-46.68-55.89a8,8,0,1,0-2.64,15.78ZM216,200V176H40v24H216Z"></path>
+    </svg>
+  );
+}
+
 const MOCK_FAMILY_MEMBERS = [
   { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
@@ -354,13 +366,29 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
-            <MapPin size={18} strokeWidth={2.5} />
-            <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <span style={{ fontSize: "14px", fontWeight: 500 }}>Bangalore</span>
-              <ChevronDown size={14} />
+          <Link
+            href="/emergency"
+            className={styles.emergencyBtn}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              cursor: "pointer",
+              padding: "8px",
+              background: "none",
+              border: "none",
+              borderRadius: "8px",
+              textDecoration: "none"
+            }}
+          >
+            <span className={styles.emergencyIcon}>
+              <EmergencyIcon size={18} />
             </span>
-          </div>
+            {/* Matches every other nav label's dynamic light/dark color
+                (same --nav-fg-color the rest of the navbar reads) instead
+                of its own hardcoded red — only the siren icon stays red. */}
+            <span style={{ fontSize: "14px", fontWeight: 600, whiteSpace: "nowrap", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>24/7 Emergency</span>
+          </Link>
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>

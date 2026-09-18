@@ -11,7 +11,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import SplitText from "@/components/ui/SplitText";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./Hero.module.css";
 import { NHSearchExperience } from "@/components/search/NHSearchExperience";
 
@@ -66,6 +66,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroAnchorRef = useRef<HTMLDivElement>(null);
+  const stickySectionRef = useRef<HTMLElement>(null);
 
   // Rotate metric stat group periodically
   useEffect(() => {
@@ -123,26 +124,21 @@ export default function Hero() {
   // Update anchor rectangle on mount & resize
   useEffect(() => {
     const updateRect = () => {
-      const winW = window.innerWidth;
-      const winH = window.innerHeight;
-      const initialWidth = Math.min(840, winW - 48);
+      if (!heroAnchorRef.current || !stickySectionRef.current) return;
+      const anchor = heroAnchorRef.current.getBoundingClientRect();
+      const sticky = stickySectionRef.current.getBoundingClientRect();
 
-      if (heroAnchorRef.current && window.scrollY < 20) {
-        const rect = heroAnchorRef.current.getBoundingClientRect();
-        setAnchorRect({
-          top: Math.round(rect.top),
-          left: Math.round(rect.left),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height || 136),
-        });
-      } else {
-        setAnchorRect({
-          top: Math.round(winH * 0.68 - 28),
-          left: Math.round((winW - initialWidth) / 2),
-          width: initialWidth,
-          height: 136,
-        });
-      }
+      // Measured relative to the sticky section rather than the viewport:
+      // the difference is where the anchor sits once the hero is stuck at
+      // top, which is stable at any scroll position (a raw viewport rect
+      // was whatever the scroll happened to be on load/resize, which is
+      // what left the composer floating in the wrong place on refresh).
+      setAnchorRect({
+        top: Math.round(anchor.top - sticky.top),
+        left: Math.round(anchor.left),
+        width: Math.round(anchor.width),
+        height: Math.round(anchor.height || 136),
+      });
     };
 
     updateRect();
@@ -193,15 +189,19 @@ export default function Hero() {
       }}
     >
       <motion.section
+        ref={stickySectionRef}
         className={styles.hero}
         id="hero-section-search-first"
         data-nav-theme="dark"
         style={{
           scale: heroScale,
           borderRadius: heroRadius,
-          filter: heroBlur,
         }}
       >
+        {/* Backdrop (video + overlay + metrics) carries the exit blur on
+            its own layer — the search composer now lives inside this
+            section, and blurring the section as a whole took it with it. */}
+        <motion.div style={{ position: "absolute", inset: 0, filter: heroBlur }}>
         <video
           ref={videoRef}
           src="/videos/Hero-Video-New.mp4"
@@ -253,12 +253,15 @@ export default function Hero() {
             ))}
           </motion.div>
         </div>
+        </motion.div>
 
         {/* Hero Center Title & Anchor Spacer */}
         <div className={styles.centerWrap}>
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
-            <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-              <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
+            <motion.div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`} style={{ filter: heroBlur }}>
+              <h1 className={styles.headline}>
+                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={1200} finalColor="#ffffff" />
+              </h1>
               <motion.p
                 className={styles.subHeadline}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
@@ -267,30 +270,22 @@ export default function Hero() {
               >
                 Compassion Backed by Expertise
               </motion.p>
-            </div>
+            </motion.div>
 
-            {/* Layout spacer reserving the search composer's position in the hero stack */}
-            <div
-              ref={heroAnchorRef}
-              style={{
-                width: "min(840px, calc(100vw - 48px))",
-                height: 136,
-                pointerEvents: "none",
-                opacity: 0,
-              }}
-              aria-hidden="true"
-            />
+            {/* The composer sits in the hero's own flow (it used to be a
+                fixed-position sibling positioned off a measured rect,
+                which is what had it floating detached from the stack). */}
+            <div ref={heroAnchorRef} style={{ width: "100%", maxWidth: 840, display: "flex", justifyContent: "center", height: 136 }}>
+              <NHSearchExperience
+                onOpenChange={setIsOpen}
+                scrollProgress={smoothProgress}
+                anchorRect={anchorRect}
+                onOpenPulseAI={() => setIsPulseActive(true)}
+              />
+            </div>
           </div>
         </div>
       </motion.section>
-
-      {/* Continuously morphing Search Experience: starts at hero, smoothly scales down to docked pill on scroll */}
-      <NHSearchExperience
-        onOpenChange={setIsOpen}
-        scrollProgress={smoothProgress}
-        anchorRect={anchorRect}
-        onOpenPulseAI={() => setIsPulseActive(true)}
-      />
     </div>
   );
 }
