@@ -162,7 +162,7 @@ function KaraokeCaption({
             <span
               key={`${lineIndex}-${wIdx}`}
               style={{
-                color: isHighlighted ? "#212121" : "#A3A3A3",
+                color: isHighlighted ? "#FFFFFF" : "rgba(255, 255, 255, 0.4)",
                 fontWeight: 600,
                 transition: "color 0.18s ease-in-out",
                 marginRight: wIdx === words.length - 1 ? "0px" : "6px",
@@ -282,10 +282,8 @@ function StoryCard({
       {/* Bottom Rectangular Overlay Gradient */}
       <div className={styles.bottomOverlay} />
 
-      {/* Dark wash behind the overview unit — same reach/intensity as
-          bottomOverlay, just inverted vertically, since the overview no
-          longer has its own glass panel to lean on for contrast. */}
-      <div className={styles.topOverlay} />
+      {/* Dark wash behind the overview unit — removed when video plays so the video is fully visible */}
+      {!showVideo && <div className={styles.topOverlay} />}
 
       {/* Shimmer sweep: bridges the overview-card blur-out and caption blur-in */}
       {showShimmer && <div className={styles.cardShimmerSweep} />}

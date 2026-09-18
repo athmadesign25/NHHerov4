@@ -94,11 +94,16 @@ export default function NHSearchExperience({
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side)
-  const endWidth = isMobile ? 96 : 100;
-  const endHeight = 74;
-  const endTop = winSize.h - 36 - endHeight;
-  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : winSize.w - 24 - endWidth;
+  // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side for desktop,
+  // and the ENTIRE FloatingQuickActions bottom pill for mobile)
+  const endWidth = isMobile ? winSize.w - 32 : 100;
+  const endHeight = isMobile ? 80 : 74;
+  const endTop = isMobile 
+    ? winSize.h - 16 - endHeight 
+    : winSize.h - 36 - endHeight;
+  const endLeft = isMobile 
+    ? 16 
+    : winSize.w - 24 - endWidth;
 
   // Continuous numeric scroll transforms: [0.03, 0.45]
   const composerTop = useTransform(activeProgress, [0.03, 0.45], [startTop, endTop]);
@@ -108,7 +113,11 @@ export default function NHSearchExperience({
   const composerRadius = useTransform(activeProgress, [0.03, 0.45], [20, 18]);
   const composerPaddingX = useTransform(activeProgress, [0.03, 0.45], [24, 6]);
   const composerPaddingY = useTransform(activeProgress, [0.03, 0.45], [20, 8]);
-  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, 0]);
+  // On mobile, the shell stays visible forever because it BECOMES the bottom nav
+  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, isMobile ? 1 : 0]);
+  
+  // The FAB contents (3 buttons) fade in during the final stage of the morph
+  const fabOpacity = useTransform(activeProgress, [0.30, 0.45], [0, 1]);
 
   // Secondary buttons and prompt cross-fades
   const controlsOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
@@ -378,7 +387,7 @@ export default function NHSearchExperience({
       ? styles.stateActive
       : styles.stateResults;
 
-  return (
+  const content = (
     <div 
       className={styles.searchExperienceWrapper} 
       ref={containerRef}
@@ -407,10 +416,12 @@ export default function NHSearchExperience({
           hasScroll && searchState === "landing"
             ? {
                 position: "fixed",
-                top: composerTop,
-                left: composerLeft,
-                width: composerWidth,
-                height: composerHeight,
+                top: (isDocked && isMobile) ? "auto" : composerTop,
+                bottom: (isDocked && isMobile) ? "max(16px, env(safe-area-inset-bottom))" : "auto",
+                left: isDocked ? (isMobile ? "16px" : "auto") : composerLeft,
+                right: isDocked ? (isMobile ? "auto" : "24px") : "auto",
+                width: isDocked ? (isMobile ? "calc(100vw - 32px)" : "100px") : composerWidth,
+                height: isDocked ? (isMobile ? "80px" : "74px") : composerHeight,
                 borderRadius: composerRadius,
                 paddingLeft: composerPaddingX,
                 paddingRight: composerPaddingX,
@@ -424,9 +435,9 @@ export default function NHSearchExperience({
                 marginLeft: 0,
                 boxSizing: "border-box",
                 zIndex: 9990,
-                pointerEvents: isDocked ? "none" : "auto",
+                pointerEvents: (isDocked && !isMobile) ? "none" : "auto",
                 overflow: "hidden",
-                cursor: "pointer",
+                cursor: (isDocked && isMobile) ? "default" : "pointer",
               }
             : searchState !== "landing"
             ? {
@@ -441,6 +452,62 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
+        {isMobile && hasScroll && (
+          <>
+            {/* The 3 Action Buttons that fade in as the search UI fades out */}
+            <motion.div 
+              style={{ opacity: fabOpacity, pointerEvents: isDocked ? "auto" : "none" }}
+              className={styles.mobileFabContent}
+            >
+              <a className={styles.fabLink} href="/find-a-doctor" onClick={(e) => e.stopPropagation()}>
+                <span className={styles.fabIconWrap}>
+                  <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                    <path d="M7.33301 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14.667 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M17.4167 2.75H4.58333C3.57081 2.75 2.75 3.57081 2.75 4.58333V17.4167C2.75 18.4292 3.57081 19.25 4.58333 19.25H17.4167C18.4292 19.25 19.25 18.4292 19.25 17.4167V4.58333C19.25 3.57081 18.4292 2.75 17.4167 2.75Z" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2.75 8.25H19.25" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8.25 13.7493L10.0833 15.5827L13.75 11.916" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span>Book<br/>Appointment</span>
+              </a>
+              <div className={styles.fabDivider} aria-hidden="true" />
+              <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>
+                <span className={styles.fabIconWrap}>
+                  <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                    <path d="M13.6476 0.675781C14.523 0.694168 15.234 0.949481 15.759 1.70794C16.3096 2.50334 16.1902 3.60656 16.2 4.52036C16.2037 4.864 16.2291 5.41718 16.1655 5.74948C16.6706 5.73485 17.1972 5.75994 17.7041 5.75259C18.6999 5.73818 19.6462 5.63224 20.4624 6.35871C20.9549 6.79375 21.2544 7.4067 21.2948 8.06259C21.3678 9.44683 20.3516 10.5283 18.9765 10.5999C18.9009 10.6249 17.8642 10.6007 17.704 10.6007L13.3896 10.6037C12.7865 10.6048 11.8491 10.5704 11.2844 10.6172C11.2837 10.6091 11.283 10.6009 11.2824 10.5928C11.2548 10.2334 11.2769 9.55103 11.2771 9.16305L11.2783 6.349L11.2771 4.16857C11.2765 3.46614 11.2245 2.93537 11.4607 2.25793C11.8231 1.2185 12.5951 0.756891 13.6476 0.675781Z" fill="white" />
+                    <path d="M2.9581 11.3954C3.64255 11.4101 10.4512 11.3552 10.518 11.4164C10.587 11.4796 10.5758 11.6064 10.5786 11.6931C10.5944 12.181 10.5753 12.6713 10.5749 13.1597L10.5781 16.1594L10.5762 17.8892C10.5787 18.3785 10.5971 18.8648 10.5327 19.3508C10.3918 20.4138 9.40064 21.2846 8.33085 21.3157C7.61441 21.4032 6.9007 21.1148 6.4008 20.6032C5.5816 19.7647 5.67598 18.9589 5.67785 17.9001C5.67963 17.3668 5.67798 16.8336 5.67286 16.3003C5.59097 16.2281 5.06187 16.2595 4.91502 16.26L3.53508 16.2649C2.73281 16.2666 2.06055 16.1788 1.41883 15.6349C0.417136 14.786 0.321846 13.2159 1.16404 12.2279C1.65893 11.6474 2.20088 11.4389 2.9581 11.3954Z" fill="white" />
+                    <path d="M7.97633 0.672988C8.71331 0.590763 9.37294 0.911643 9.89173 1.40803C10.626 2.11058 10.5687 2.94732 10.5641 3.88361L10.5627 5.14523C10.5619 6.9409 10.5352 8.81837 10.574 10.6093L3.21885 10.6085C2.54156 10.5873 1.90293 10.4852 1.3926 9.99015C0.879518 9.49245 0.612287 8.94994 0.605623 8.22796C0.598571 7.46381 0.833714 6.95819 1.36194 6.41363C1.64923 6.11747 2.24847 5.87022 2.64006 5.78564C2.9703 5.71431 3.5562 5.7379 3.91387 5.73848L5.69985 5.7373C5.69332 5.70097 5.68837 5.66436 5.68507 5.62758C5.65213 5.25596 5.68021 4.76434 5.68148 4.37657C5.68371 3.69356 5.60428 2.91945 5.84768 2.27754C6.20746 1.32862 6.96564 0.759628 7.97633 0.672988Z" fill="white" />
+                  </svg>
+                </span>
+                <span>Download<br/>NH Care App</span>
+              </a>
+              <div className={styles.fabDivider} aria-hidden="true" />
+              <button
+                type="button"
+                className={styles.fabLink}
+                style={{ border: "none" }}
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent search box from opening
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
+                  }
+                }}
+              >
+                <span className={styles.fabIconWrap}>
+                  {/* Pulse AI bars styling placeholder or simple bars */}
+                  <div style={{ display: "flex", gap: "2px", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
+                    <div style={{ width: "2px", height: "16px", background: "white", borderRadius: "1px" }} />
+                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
+                  </div>
+                </span>
+                <span>Pulse AI<br/>Search</span>
+              </button>
+            </motion.div>
+          </>
+        )}
+
         <DefaultSearchPrompt
           onActivate={handleActivate}
           selectedLocation={selectedLocation}
@@ -590,4 +657,6 @@ export default function NHSearchExperience({
       )}
     </div>
   );
+
+  return mounted ? createPortal(content, document.body) : content;
 }
