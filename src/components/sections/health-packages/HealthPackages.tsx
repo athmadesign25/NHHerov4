@@ -786,12 +786,6 @@ export default function HealthPackages() {
                             <img src={pkg.image} alt="" className={styles.packageCardImage} />
                             <div className={styles.packageCardContent}>
                               <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
-                              {/* Both facts are absolutely positioned inside this
-                                  fixed-height box so the rest -> hover switch (stacked
-                                  pair -> single row) animates as a plain transform
-                                  rather than a flex-direction change, which would
-                                  snap. Tests is the anchor at 0,0 and never moves;
-                                  reports is the one that travels up beside it. */}
                               <div className={styles.packageCardFacts}>
                                 <div className={styles.packageCardFact}>
                                   <span className={styles.packageCardFactIcon}>
@@ -802,7 +796,7 @@ export default function HealthPackages() {
                                     <span className={styles.factLight}>included</span>
                                   </span>
                                 </div>
-                                <div className={`${styles.packageCardFact} ${styles.packageCardFactReports}`}>
+                                <div className={styles.packageCardFact}>
                                   <span className={styles.packageCardFactIcon}>
                                     <FactIconReports />
                                   </span>

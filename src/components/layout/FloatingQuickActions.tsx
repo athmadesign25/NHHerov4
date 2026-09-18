@@ -7,18 +7,26 @@ import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
 
-// How long each icon animation rests on its last frame before replaying —
-// loop=true (no gap) read as too busy/distracting for a bar that's always
-// on screen.
-const ICON_REPLAY_DELAY_MS = 3000;
+// The icons idle on their finished frame and only loop while hovered — a
+// bar that's always on screen shouldn't have two things animating on it
+// unprompted. They still play once on mount (loop={false} + autoplay),
+// which is what leaves them on that finished frame in the first place:
+// seeking there instead would mean resting on frame 0, which for both of
+// these is an empty tile (the calendar's box starts at zero scale, the NH
+// mark's layers start at zero opacity).
+function startIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
+  const item = ref.current?.animationItem;
+  if (!item) return;
+  item.loop = true;
+  ref.current?.goToAndPlay(0, true);
+}
 
-// Restarts `ref`'s animation from frame 0 after ICON_REPLAY_DELAY_MS,
-// tracking the timeout in `timeoutRef` so a later unmount/re-trigger can
-// clear it. Meant to be passed as a Lottie's own `onComplete`.
-function replayAfterDelay(ref: React.RefObject<LottieRefCurrentProps | null>, timeoutRef: React.RefObject<ReturnType<typeof setTimeout> | undefined>) {
-  timeoutRef.current = setTimeout(() => {
-    ref.current?.goToAndPlay(0, true);
-  }, ICON_REPLAY_DELAY_MS);
+// Clearing `loop` lets the pass already in flight finish and settle on the
+// last frame, rather than cutting off mid-draw the way pause() would.
+function stopIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
+  const item = ref.current?.animationItem;
+  if (!item) return;
+  item.loop = false;
 }
 
 export default function FloatingQuickActions() {
@@ -32,15 +40,6 @@ export default function FloatingQuickActions() {
 
   const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
   const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
-  const calendarReplayTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const nhAppIconReplayTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(calendarReplayTimeout.current);
-      clearTimeout(nhAppIconReplayTimeout.current);
-    };
-  }, []);
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
@@ -117,8 +116,10 @@ export default function FloatingQuickActions() {
           ref={linkRef0}
           className={`${styles.link} ${darkLinks[0] ? styles.linkOnDark : ""}`}
           href="/find-a-doctor"
+          onMouseEnter={() => startIconLoop(calendarLottieRef)}
+          onMouseLeave={() => stopIconLoop(calendarLottieRef)}
         >
-          <span className={`${styles.iconWrap} ${darkLinks[0] ? "" : styles.iconArtOnLight}`}>
+          <span className={styles.iconWrap}>
             {/* The animation's own glyph only fills ~18x20 of its 32x32
                 canvas — rendered at the slot's own size it reads visibly
                 smaller than the other two action icons. Scaled up and
@@ -131,7 +132,6 @@ export default function FloatingQuickActions() {
                 animationData={calendarCheckAnimation}
                 loop={false}
                 autoplay
-                onComplete={() => replayAfterDelay(calendarLottieRef, calendarReplayTimeout)}
                 style={{ width: 46, height: 46, flexShrink: 0 }}
                 aria-hidden
               />
@@ -145,14 +145,15 @@ export default function FloatingQuickActions() {
           ref={linkRef1}
           className={`${styles.link} ${darkLinks[1] ? styles.linkOnDark : ""}`}
           href="#app-download-banner"
+          onMouseEnter={() => startIconLoop(nhAppIconLottieRef)}
+          onMouseLeave={() => stopIconLoop(nhAppIconLottieRef)}
         >
-          <span className={`${styles.iconWrap} ${darkLinks[1] ? "" : styles.iconArtOnLight}`}>
+          <span className={styles.iconWrap}>
             <Lottie
               lottieRef={nhAppIconLottieRef}
               animationData={nhAppIconAnimation}
               loop={false}
               autoplay
-              onComplete={() => replayAfterDelay(nhAppIconLottieRef, nhAppIconReplayTimeout)}
               style={{ width: 32, height: 32, flexShrink: 0 }}
               aria-hidden
             />
@@ -168,9 +169,8 @@ export default function FloatingQuickActions() {
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
         >
-          {/* No iconArtOnLight here — this tile paints its own animated
-              background rather than the shared blue glass, and its bars
-              stay lit against that in both themes. */}
+          {/* This tile paints its own animated background rather than the
+              shared blue glass, so it overrides .iconWrap's own fill. */}
           <span className={`${styles.iconWrap} ${styles.pulseIconWrap}`}>
             <span className={styles.gradientLayer} aria-hidden="true" />
             <span className={`${styles.gradientLayer} ${styles.gradientLayerDodge}`} aria-hidden="true" />

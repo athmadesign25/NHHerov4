@@ -346,20 +346,15 @@
      too crisply to feel like glass. */
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(24px) saturate(1.8);
-  /* How far the reports fact travels to the right to land beside the
-     tests fact on hover — see .packageCardFactReports. One tunable here
-     rather than the same magic number repeated across those rules: the
-     tests fact is a fixed 34px icon + 10px gap + at most ~56px of text
-     ("42 tests"/"included"), so this clears it with ~20px to spare. */
-  --fact-row-x: 112px;
 }
 
 /* Extends upward to make room for the divider + perk pills the hover
-   state reveals — z-index lifts it above the rail label text it now
-   overlaps, and above sibling cards' own stacking. */
+   state reveals, on top of the facts' own (unchanged) stacked height —
+   z-index lifts it above the rail label text it now overlaps, and above
+   sibling cards' own stacking. */
 .packageCard:hover,
 .packageCard:focus-visible {
-  height: 308px;
+  height: 360px;
   z-index: 5;
 }
 
@@ -539,42 +534,18 @@
   margin: 0;
 }
 
-/* Fixed-height positioning context for the two facts, which are absolute
-   inside it. A flex column that becomes a flex row on hover would be the
-   obvious markup, but direction/order changes aren't interpolable — the
-   facts would teleport between the two arrangements. Absolute + transform
-   animates the exact same rearrangement smoothly. Height is the one thing
-   that still transitions here: two stacked rows collapsing to one. */
+/* Both facts stay stacked in every state — hover only adds the divider
+   and perks below them, and grows the card to make room. */
 .packageCardFacts {
-  position: relative;
-  height: 80px;
-  transition: height 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.packageCard:hover .packageCardFacts,
-.packageCard:focus-visible .packageCardFacts {
-  height: 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .packageCardFact {
-  position: absolute;
-  top: 0;
-  left: 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Tests is the anchor (no transform, never moves). Reports sits one row
-   below it at rest and travels up-and-right into the same row on hover. */
-.packageCardFactReports {
-  transform: translateY(46px);
-}
-
-.packageCard:hover .packageCardFactReports,
-.packageCard:focus-visible .packageCardFactReports {
-  transform: translateX(var(--fact-row-x));
 }
 
 /* Roundedness (8px) and the subtle inset stroke + blur now match

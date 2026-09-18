@@ -58,21 +58,6 @@
   transition: transform 0.2s ease, background 0.25s ease;
 }
 
-/* Over light page backgrounds the translucent blue reads pale, leaving
-   white Lottie artwork with too little contrast — so the artwork itself
-   flips to the same deep blue the label uses, driven by the same
-   data-nav-theme probe that drives .linkOnDark (see the .tsx). Element
-   selectors aren't hashed by CSS Modules, so this reaches into the
-   SVG lottie-web renders. */
-.iconArtOnLight svg path {
-  fill: #0A2A6B !important;
-  stroke: #0A2A6B !important;
-}
-
-.iconArtOnLight {
-  background: linear-gradient(149deg, rgba(180, 208, 255, 0.55) 0%, rgba(126, 170, 250, 0.62) 100%);
-}
-
 /* Fixed window the oversized calendar Lottie is centered and clipped
    against — its glyph only fills ~18x20 of a 32x32 canvas, so it has to
    render bigger than the slot to sit at the same visual weight as the
@@ -213,7 +198,7 @@
   right: 24px;
   z-index: 9000;
   width: fit-content;
-  padding: 8px 12px;
+  padding: 8px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.42);
   background: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 48%, rgba(255, 255, 255, 0.12) 100%);
@@ -340,7 +325,7 @@
   width: 3.5px;
   height: 12px;
   border-radius: 2px;
-  background: #00C4FF;
+  background: #FFFFFF;
   animation: barBreathing 1.8s ease-in-out infinite;
 }
 
@@ -356,7 +341,7 @@
   width: 3.5px;
   height: 13px;
   border-radius: 2px;
-  background: #ED1C24;
+  background: #FFFFFF;
   animation: barBreathing 1.8s ease-in-out 0.5s infinite;
 }
 
