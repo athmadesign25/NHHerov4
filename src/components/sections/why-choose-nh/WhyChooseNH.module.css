@@ -66,16 +66,24 @@
 
 .sectionSubtitle {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(15px, 1.3vw, 18px);
+  font-size: 18px;
   font-weight: 400;
-  color: #64748B;
+  color: #414141;
   margin: 0;
   line-height: 1.4;
 }
 
-/* Outer Grid Motion Container for Scroll Expansion to Full Page Width */
+/* Outer Grid Motion Container for Scroll Expansion to Full Page Width.
+   Side padding matches CentreOfExcellence's own --gx-pad (16px) so the
+   bento grid keeps the same edge inset as that section's grid, even at
+   its "100%" fully-expanded width (see gridWidth in the .tsx — 100% now
+   resolves against this padded box, not the true viewport edge). Reset
+   to 0 on mobile (below), where .bentoGrid gets its own 16px padding
+   directly instead. */
 .bentoExpandWrapper {
   width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   transform-origin: center center;
@@ -272,7 +280,7 @@
 }
 
 .cardRow2Wider {
-  grid-column: 5 / span 5;
+  grid-column: 5 / span 3;
   grid-row: 2;
   position: relative;
   height: 390px;
@@ -364,7 +372,7 @@
    CARD 5: Comprehensive Care
    ───────────────────────────────────────────────────────────── */
 .accreditationsCard {
-  grid-column: 10 / span 3;
+  grid-column: 8 / span 5;
   grid-row: 2;
   position: relative;
   height: 390px;
@@ -400,6 +408,10 @@
 
 /* ─── True Mobile Bento Grid ───────────────────────────────────────────── */
 @media (max-width: 992px) {
+  .bentoExpandWrapper {
+    padding: 0;
+  }
+
   .bentoGrid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;

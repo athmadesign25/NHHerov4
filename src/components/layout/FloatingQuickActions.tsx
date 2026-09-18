@@ -2,7 +2,32 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
+import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
+
+// The icons idle on their finished frame and only loop while hovered — a
+// bar that's always on screen shouldn't have two things animating on it
+// unprompted. They still play once on mount (loop={false} + autoplay),
+// which is what leaves them on that finished frame in the first place:
+// seeking there instead would mean resting on frame 0, which for both of
+// these is an empty tile (the calendar's box starts at zero scale, the NH
+// mark's layers start at zero opacity).
+function startIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
+  const item = ref.current?.animationItem;
+  if (!item) return;
+  item.loop = true;
+  ref.current?.goToAndPlay(0, true);
+}
+
+// Clearing `loop` lets the pass already in flight finish and settle on the
+// last frame, rather than cutting off mid-draw the way pause() would.
+function stopIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
+  const item = ref.current?.animationItem;
+  if (!item) return;
+  item.loop = false;
+}
 
 export default function FloatingQuickActions() {
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
@@ -12,6 +37,9 @@ export default function FloatingQuickActions() {
   const linkRef0 = useRef<HTMLAnchorElement>(null);
   const linkRef1 = useRef<HTMLAnchorElement>(null);
   const linkRef2 = useRef<HTMLButtonElement>(null);
+
+  const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
+  const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
@@ -88,38 +116,50 @@ export default function FloatingQuickActions() {
           ref={linkRef0}
           className={`${styles.link} ${darkLinks[0] ? styles.linkOnDark : ""}`}
           href="/find-a-doctor"
+          onMouseEnter={() => startIconLoop(calendarLottieRef)}
+          onMouseLeave={() => stopIconLoop(calendarLottieRef)}
         >
           <span className={styles.iconWrap}>
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0 }} aria-hidden>
-              <path d="M7.33301 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M14.667 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M17.4167 2.75H4.58333C3.57081 2.75 2.75 3.57081 2.75 4.58333V17.4167C2.75 18.4292 3.57081 19.25 4.58333 19.25H17.4167C18.4292 19.25 19.25 18.4292 19.25 17.4167V4.58333C19.25 3.57081 18.4292 2.75 17.4167 2.75Z" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M2.75 8.25H19.25" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M8.25 13.7493L10.0833 15.5827L13.75 11.916" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            {/* The animation's own glyph only fills ~18x20 of its 32x32
+                canvas — rendered at the slot's own size it reads visibly
+                smaller than the other two action icons. Scaled up and
+                clipped back down so the glyph itself (not the
+                transparent canvas around it) fills the slot, at a size
+                that still clears the window rather than touching it. */}
+            <span className={styles.calendarIconClip}>
+              <Lottie
+                lottieRef={calendarLottieRef}
+                animationData={calendarCheckAnimation}
+                loop={false}
+                autoplay
+                style={{ width: 46, height: 46, flexShrink: 0 }}
+                aria-hidden
+              />
+            </span>
           </span>
           <span className={styles.actionLabel}>Book<br />Appointment</span>
         </Link>
 
-        <div aria-hidden="true" className={styles.divider} />
-
-        {/* Action 2: Download NH Care App (Secondary utility) */}
+        {/* Action 2: Download NH App (Secondary utility) */}
         <Link
           ref={linkRef1}
           className={`${styles.link} ${darkLinks[1] ? styles.linkOnDark : ""}`}
           href="#app-download-banner"
+          onMouseEnter={() => startIconLoop(nhAppIconLottieRef)}
+          onMouseLeave={() => stopIconLoop(nhAppIconLottieRef)}
         >
           <span className={styles.iconWrap}>
-            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0 }} aria-hidden>
-              <path d="M13.6476 0.675781C14.523 0.694168 15.234 0.949481 15.759 1.70794C16.3096 2.50334 16.1902 3.60656 16.2 4.52036C16.2037 4.864 16.2291 5.41718 16.1655 5.74948C16.6706 5.73485 17.1972 5.75994 17.7041 5.75259C18.6999 5.73818 19.6462 5.63224 20.4624 6.35871C20.9549 6.79375 21.2544 7.4067 21.2948 8.06259C21.3678 9.44683 20.3516 10.5283 18.9765 10.5999C18.9009 10.6249 17.8642 10.6007 17.704 10.6007L13.3896 10.6037C12.7865 10.6048 11.8491 10.5704 11.2844 10.6172C11.2837 10.6091 11.283 10.6009 11.2824 10.5928C11.2548 10.2334 11.2769 9.55103 11.2771 9.16305L11.2783 6.349L11.2771 4.16857C11.2765 3.46614 11.2245 2.93537 11.4607 2.25793C11.8231 1.2185 12.5951 0.756891 13.6476 0.675781Z" fill="white" />
-              <path d="M2.9581 11.3954C3.64255 11.4101 10.4512 11.3552 10.518 11.4164C10.587 11.4796 10.5758 11.6064 10.5786 11.6931C10.5944 12.181 10.5753 12.6713 10.5749 13.1597L10.5781 16.1594L10.5762 17.8892C10.5787 18.3785 10.5971 18.8648 10.5327 19.3508C10.3918 20.4138 9.40064 21.2846 8.33085 21.3157C7.61441 21.4032 6.9007 21.1148 6.4008 20.6032C5.5816 19.7647 5.67598 18.9589 5.67785 17.9001C5.67963 17.3668 5.67798 16.8336 5.67286 16.3003C5.59097 16.2281 5.06187 16.2595 4.91502 16.26L3.53508 16.2649C2.73281 16.2666 2.06055 16.1788 1.41883 15.6349C0.417136 14.786 0.321846 13.2159 1.16404 12.2279C1.65893 11.6474 2.20088 11.4389 2.9581 11.3954Z" fill="white" />
-              <path d="M7.97633 0.672988C8.71331 0.590763 9.37294 0.911643 9.89173 1.40803C10.626 2.11058 10.5687 2.94732 10.5641 3.88361L10.5627 5.14523C10.5619 6.9409 10.5352 8.81837 10.574 10.6093L3.21885 10.6085C2.54156 10.5873 1.90293 10.4852 1.3926 9.99015C0.879518 9.49245 0.612287 8.94994 0.605623 8.22796C0.598571 7.46381 0.833714 6.95819 1.36194 6.41363C1.64923 6.11747 2.24847 5.87022 2.64006 5.78564C2.9703 5.71431 3.5562 5.7379 3.91387 5.73848L5.69985 5.7373C5.69332 5.70097 5.68837 5.66436 5.68507 5.62758C5.65213 5.25596 5.68021 4.76434 5.68148 4.37657C5.68371 3.69356 5.60428 2.91945 5.84768 2.27754C6.20746 1.32862 6.96564 0.759628 7.97633 0.672988Z" fill="white" />
-            </svg>
+            <Lottie
+              lottieRef={nhAppIconLottieRef}
+              animationData={nhAppIconAnimation}
+              loop={false}
+              autoplay
+              style={{ width: 32, height: 32, flexShrink: 0 }}
+              aria-hidden
+            />
           </span>
-          <span className={styles.actionLabel}>Download<br />NH Care App</span>
+          <span className={styles.actionLabel}>Download<br />NH App</span>
         </Link>
-
-        <div aria-hidden="true" className={styles.divider} />
 
         {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
         <button
@@ -130,7 +170,12 @@ export default function FloatingQuickActions() {
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
         >
-          <span className={styles.iconWrap}>
+          {/* This tile paints its own animated background rather than the
+              shared blue glass, so it overrides .iconWrap's own fill. */}
+          <span className={`${styles.iconWrap} ${styles.pulseIconWrap}`}>
+            <span className={styles.gradientLayer} aria-hidden="true" />
+            <span className={`${styles.gradientLayer} ${styles.gradientLayerDodge}`} aria-hidden="true" />
+            <span className={styles.pulseIconLight} aria-hidden="true" />
             <span className={styles.pulseBars} aria-hidden="true">
               <span className={styles.pulseBar1} />
               <span className={styles.pulseBar2} />

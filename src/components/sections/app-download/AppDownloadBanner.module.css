@@ -397,7 +397,7 @@
      rectangle) so the card just hugs its content evenly instead of
      reading as padded out sideways. */
   padding: 8px;
-  border-radius: 12px;
+  border-radius: 10px;
   /* Subtle "white refraction" edge rather than a solid stroke — a soft
      white border with no shadow at all, so the card reads as glass sitting
      on the background rather than a panel floating above it. */

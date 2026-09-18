@@ -307,9 +307,16 @@ export default function AppDownloadBanner() {
 
   return (
     <section className={styles.section} id="app-download-banner">
-      {/* 120vh: gives the section a brief "stay here" dwell (a single scroll) 
-          before the footer starts smoothly rising over it. */}
-      <div ref={trackRef} className={styles.stackTrack} style={{ height: "120vh" }}>
+      {/* 120vh + 700px: gives the section a real, clearly-perceptible "stay
+          here" dwell (not just a sliver of one scroll tick) before the
+          footer starts smoothly rising over it. The dwell is real, added
+          scroll distance (not just visual) — position:sticky above holds
+          this section's content frozen in the viewport for exactly
+          (own height - 100vh) of scroll, so the extra 700px here directly
+          becomes extra hold time, not extra travel for anything inside it
+          (the phone's own entrance is keyed to this track's top position,
+          not its height, so it's unaffected by this). */}
+      <div ref={trackRef} className={styles.stackTrack} style={{ height: "calc(120vh + 700px)" }}>
         <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
           
           <motion.div
