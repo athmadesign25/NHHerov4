@@ -118,13 +118,13 @@ export default function FloatingQuickActions() {
           className={`${styles.link} ${darkLinks[0] ? styles.linkOnDark : ""}`}
           href="/find-a-doctor"
         >
-          <span className={styles.iconWrap}>
-            {/* The animation's own glyph only fills ~12.4x13.8 of its 32x32
-                canvas — rendered at a plain 20x20 it reads visibly smaller
-                than the other two action icons. Scaled up (same ratio as
-                the 20x20 target) and clipped back down to 20x20 so the
-                glyph itself (not the transparent canvas around it) fills
-                the icon slot at full size. */}
+          <span className={`${styles.iconWrap} ${darkLinks[0] ? "" : styles.iconArtOnLight}`}>
+            {/* The animation's own glyph only fills ~18x20 of its 32x32
+                canvas — rendered at the slot's own size it reads visibly
+                smaller than the other two action icons. Scaled up and
+                clipped back down so the glyph itself (not the
+                transparent canvas around it) fills the slot, at a size
+                that still clears the window rather than touching it. */}
             <span className={styles.calendarIconClip}>
               <Lottie
                 lottieRef={calendarLottieRef}
@@ -132,7 +132,7 @@ export default function FloatingQuickActions() {
                 loop={false}
                 autoplay
                 onComplete={() => replayAfterDelay(calendarLottieRef, calendarReplayTimeout)}
-                style={{ width: 32, height: 32, flexShrink: 0 }}
+                style={{ width: 46, height: 46, flexShrink: 0 }}
                 aria-hidden
               />
             </span>
@@ -140,29 +140,25 @@ export default function FloatingQuickActions() {
           <span className={styles.actionLabel}>Book<br />Appointment</span>
         </Link>
 
-        <div aria-hidden="true" className={styles.divider} />
-
-        {/* Action 2: Download NH Care App (Secondary utility) */}
+        {/* Action 2: Download NH App (Secondary utility) */}
         <Link
           ref={linkRef1}
           className={`${styles.link} ${darkLinks[1] ? styles.linkOnDark : ""}`}
           href="#app-download-banner"
         >
-          <span className={styles.iconWrap}>
+          <span className={`${styles.iconWrap} ${darkLinks[1] ? "" : styles.iconArtOnLight}`}>
             <Lottie
               lottieRef={nhAppIconLottieRef}
               animationData={nhAppIconAnimation}
               loop={false}
               autoplay
               onComplete={() => replayAfterDelay(nhAppIconLottieRef, nhAppIconReplayTimeout)}
-              style={{ width: 22, height: 22, flexShrink: 0 }}
+              style={{ width: 32, height: 32, flexShrink: 0 }}
               aria-hidden
             />
           </span>
-          <span className={styles.actionLabel}>Download<br />NH Care App</span>
+          <span className={styles.actionLabel}>Download<br />NH App</span>
         </Link>
-
-        <div aria-hidden="true" className={styles.divider} />
 
         {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
         <button
@@ -172,7 +168,13 @@ export default function FloatingQuickActions() {
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
         >
-          <span className={styles.iconWrap}>
+          {/* No iconArtOnLight here — this tile paints its own animated
+              background rather than the shared blue glass, and its bars
+              stay lit against that in both themes. */}
+          <span className={`${styles.iconWrap} ${styles.pulseIconWrap}`}>
+            <span className={styles.gradientLayer} aria-hidden="true" />
+            <span className={`${styles.gradientLayer} ${styles.gradientLayerDodge}`} aria-hidden="true" />
+            <span className={styles.pulseIconLight} aria-hidden="true" />
             <span className={styles.pulseBars} aria-hidden="true">
               <span className={styles.pulseBar1} />
               <span className={styles.pulseBar2} />

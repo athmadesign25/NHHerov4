@@ -6,13 +6,19 @@
    3. Pulse AI Search (Interactive search utility - Minimized Search)
    ═══════════════════════════════════════════════════════════════════════════════ */
 
+/* Hugs its own content (width: auto against the container's
+   align-items: center) rather than stretching edge-to-edge, so the
+   hover wash reads as a rounded chip around the action instead of a
+   full-width band. */
 .link {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 13px 6px;
+  gap: 6px;
+  padding: 8px 6px;
+  width: auto;
+  border-radius: 14px;
   color: #0B5DF4;
   text-decoration: none;
   background: transparent;
@@ -20,7 +26,6 @@
   cursor: pointer;
   border: none;
   outline: none;
-  width: 100%;
   box-sizing: border-box;
 }
 
@@ -29,28 +34,53 @@
 }
 
 .link:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.14);
 }
 
+/* Glassy blue tile: translucent tint rather than the old flat gradient,
+   with a bright top edge + soft inner splay so it reads as a lit piece
+   of glass sitting in the (already frosted) container. */
 .iconWrap {
-  width: 30px;
-  height: 30px;
+  position: relative;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 8px;
-  background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
-  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset;
-  transition: transform 0.2s ease;
+  border-radius: 10px;
+  background: linear-gradient(149deg, rgba(47, 120, 255, 0.62) 0%, rgba(11, 77, 199, 0.72) 100%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.62),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.20),
+    inset 0 0 16px rgba(255, 255, 255, 0.16),
+    0 4px 12px rgba(11, 77, 199, 0.22);
+  transition: transform 0.2s ease, background 0.25s ease;
 }
 
-/* Fixed 20x20 window that the oversized (32x32) calendar Lottie is
-   centered and clipped against — see the inline comment beside its
-   JSX for why it needs to be rendered bigger than the slot at all. */
+/* Over light page backgrounds the translucent blue reads pale, leaving
+   white Lottie artwork with too little contrast — so the artwork itself
+   flips to the same deep blue the label uses, driven by the same
+   data-nav-theme probe that drives .linkOnDark (see the .tsx). Element
+   selectors aren't hashed by CSS Modules, so this reaches into the
+   SVG lottie-web renders. */
+.iconArtOnLight svg path {
+  fill: #0A2A6B !important;
+  stroke: #0A2A6B !important;
+}
+
+.iconArtOnLight {
+  background: linear-gradient(149deg, rgba(180, 208, 255, 0.55) 0%, rgba(126, 170, 250, 0.62) 100%);
+}
+
+/* Fixed window the oversized calendar Lottie is centered and clipped
+   against — its glyph only fills ~18x20 of a 32x32 canvas, so it has to
+   render bigger than the slot to sit at the same visual weight as the
+   other two icons. Sized so the glyph (46 * 20/32 = 28.75px tall) still
+   clears the window with room to spare rather than touching its edge. */
 .calendarIconClip {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -59,26 +89,19 @@
 }
 
 .link:hover .iconWrap {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .actionLabel {
   font-family: var(--font-inter, "Inter"), -apple-system, sans-serif;
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: normal;
   text-align: center;
-  line-height: 1.25;
+  text-align-last: center;
+  line-height: 1.3;
   color: inherit;
-}
-
-.divider {
-  height: 1px;
-  width: 100%;
-  background: rgba(249, 91, 97, 0.25);
-  margin: 0;
-  flex-shrink: 0;
 }
 
 /* ── Action 3: Pulse AI Search Item ── */
@@ -86,32 +109,126 @@
   position: relative;
 }
 
+/* Pulse AI's tile swaps the shared blue glass for an animated
+   iridescent one: two oversized radial-gradient discs counter-blending
+   (difference + color-dodge) over a red base with a heavy indigo inset,
+   the whole thing desaturated and lifted so it reads as shifting
+   spectral glass rather than literal red/blue. `isolation` keeps those
+   blend modes from reaching the page behind it, and `overflow: clip`
+   keeps the rotating discs inside the 10px radius. Overrides .iconWrap,
+   so it has to stay after it in source order. */
+.pulseIconWrap {
+  overflow: clip;
+  isolation: isolate;
+  background: #f00;
+  box-shadow:
+    inset 0 0 10px 9px #558,
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  /* Lifted far less than the source effect's brightness(1.8) — at this
+     tile size that blew the color-dodge pass out to a flat white lobe
+     over most of the face instead of reading as shifting color. */
+  filter: saturate(0.85) brightness(1.15);
+}
+
+/* Centered by negative margins rather than a translate, so the rotate
+   animation below owns `transform` outright. 260% of the tile is wider
+   than its diagonal, so no corner is ever exposed mid-spin. */
+.gradientLayer {
+  position: absolute;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: 260%;
+  aspect-ratio: 1;
+  margin: -130% 0 0 -130%;
+  background: radial-gradient(
+    ellipse at 65% 180%,
+    #fff, #00f, #fff, #00f, #fff, #00f, #fff, #00f, #fff, #00f, #fff
+  );
+  mix-blend-mode: difference;
+  animation: pulseIconRotate 8s linear infinite;
+}
+
+/* Counter-rotates at a different period so the two passes never settle
+   into a fixed hot spot the way two identical spins would. */
+.gradientLayerDodge {
+  mix-blend-mode: color-dodge;
+  opacity: 0.7;
+  animation-duration: 11s;
+  animation-direction: reverse;
+}
+
+.pulseIconLight {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  width: 80%;
+  height: 14px;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.33);
+  filter: blur(5px);
+  animation: pulseIconGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseIconRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseIconGlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
 .pulseBars {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5px;
-  height: 14px;
+  gap: 3.5px;
+  height: 20px;
+  /* The gradient underneath swings through near-white, so the bars need
+     their own separation from it rather than relying on tile contrast. */
+  filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
 }
 /* Base styles (Desktop) */
 /* Vertically centered on the viewport (right-anchored horizontally) —
    independent of the global Pulse floating button (GlobalPulseFAB's
    .fabContainer, fixed at bottom 24px/right 24px), which sits far enough
    down in the corner that the two never overlap. */
+/* Liquid-glass shell: frost 16px (backdrop blur), depth 34px (the cast
+   shadow's spread away from the surface) and splay 30px (how far the
+   inner specular wash bleeds in from the edges), over a near-neutral
+   tint so whatever's behind supplies the color rather than the old
+   pink-tinted plate. */
 .container {
   position: fixed;
   top: 50%;
   right: 24px;
   z-index: 9000;
-  width: 100px;
-  border-radius: 18px;
-  border: 1px solid rgba(249, 91, 97, 0.22);
-  background: linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%);
-  box-shadow: 0 8px 40px 0 rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(18px);
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 48%, rgba(255, 255, 255, 0.12) 100%);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow:
+    0 12px 34px rgba(5, 20, 45, 0.20),
+    inset 0 1px 1px rgba(255, 255, 255, 0.72),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.28),
+    inset 0 0 30px rgba(255, 255, 255, 0.22);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  gap: 2px;
+  box-sizing: border-box;
   overflow: hidden;
   transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -220,25 +337,25 @@
 }
 
 .pulseBar1 {
-  width: 2.5px;
-  height: 8px;
-  border-radius: 1.5px;
+  width: 3.5px;
+  height: 12px;
+  border-radius: 2px;
   background: #00C4FF;
   animation: barBreathing 1.8s ease-in-out infinite;
 }
 
 .pulseBar2 {
-  width: 2.5px;
-  height: 14px;
-  border-radius: 1.5px;
+  width: 3.5px;
+  height: 20px;
+  border-radius: 2px;
   background: #FFFFFF;
   animation: barBreathing 1.8s ease-in-out 0.25s infinite;
 }
 
 .pulseBar3 {
-  width: 2.5px;
-  height: 9px;
-  border-radius: 1.5px;
+  width: 3.5px;
+  height: 13px;
+  border-radius: 2px;
   background: #ED1C24;
   animation: barBreathing 1.8s ease-in-out 0.5s infinite;
 }
@@ -290,7 +407,8 @@
     left: 16px;
     width: calc(100% - 32px);
     flex-direction: row;
-    border-radius: 18px;
+    align-items: stretch;
+    border-radius: 20px;
   }
 
   .hidden {
@@ -308,12 +426,7 @@
   .link {
     flex: 1;
     flex-direction: row;
-    padding: 12px 8px;
+    padding: 8px;
     gap: 8px;
-  }
-
-  .divider {
-    height: auto;
-    width: 1px;
   }
 }
