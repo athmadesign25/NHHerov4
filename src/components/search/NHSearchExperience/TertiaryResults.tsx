@@ -21,26 +21,26 @@ export default function TertiaryResults({
   relatedSpecialties = [],
   onSelectSpecialtyTag,
 }: TertiaryResultsProps) {
-  // Icon renderer for treatments (neutral with restrained cyan & red accents)
+  // Icon renderer for treatments (mono white with opacity down)
   const renderTreatmentIcon = (type: TreatmentItemData["iconType"]) => {
     switch (type) {
       case "heart":
-        return <Heart size={15} className={styles.editorialIconCyan} />;
+        return <Heart size={16} className={styles.editorialIconMono} />;
       case "activity":
-        return <Activity size={15} className={styles.editorialIconCyan} />;
+        return <Activity size={16} className={styles.editorialIconMono} />;
       case "angiography":
-        return <Heart size={15} className={styles.editorialIconRed} />;
+        return <Heart size={16} className={styles.editorialIconMono} />;
       default:
-        return <Heart size={15} className={styles.editorialIconCyan} />;
+        return <Heart size={16} className={styles.editorialIconMono} />;
     }
   };
 
-  // Icon renderer for articles (clean editorial document / heart icons)
+  // Icon renderer for articles (mono white with opacity down)
   const renderArticleIcon = (type: ArticleItemData["iconType"], index: number) => {
     if (index === 2 || type === "article") {
-      return <Heart size={15} className={styles.editorialIconCyan} />;
+      return <Heart size={16} className={styles.editorialIconMono} />;
     }
-    return <FileText size={15} className={styles.editorialIconCyan} />;
+    return <FileText size={16} className={styles.editorialIconMono} />;
   };
 
   return (
@@ -48,11 +48,7 @@ export default function TertiaryResults({
       {/* 1. Treatments & Procedures Section */}
       <div className={styles.editorialSection}>
         <div className={styles.editorialHeadingRow}>
-          <span className={styles.editorialTitle}>Treatments & procedures</span>
-          <Link href="/treatments" className={styles.editorialViewAll}>
-            <span>View all</span>
-            <ArrowRight size={11} />
-          </Link>
+          <span className={styles.sectionEyebrowTitle}>TREATMENTS & PROCEDURES</span>
         </div>
 
         <div className={styles.editorialList}>
@@ -80,11 +76,7 @@ export default function TertiaryResults({
       {/* 2. Related Articles Section */}
       <div className={styles.editorialSection}>
         <div className={styles.editorialHeadingRow}>
-          <span className={styles.editorialTitle}>Related articles</span>
-          <Link href="/search?tab=articles" className={styles.editorialViewAll}>
-            <span>View all</span>
-            <ArrowRight size={11} />
-          </Link>
+          <span className={styles.sectionEyebrowTitle}>RELATED ARTICLES</span>
         </div>
 
         <div className={styles.editorialList}>
@@ -115,7 +107,7 @@ export default function TertiaryResults({
       {relatedSpecialties.length > 0 && (
         <div className={styles.editorialSection}>
           <div className={styles.editorialHeadingRow}>
-            <span className={styles.editorialTitle}>Related specialties & care</span>
+            <span className={styles.sectionEyebrowTitle}>RELATED SPECIALTIES & CARE</span>
           </div>
 
           <div className={styles.editorialPillsGroup}>

@@ -71,13 +71,13 @@ export default function PrimaryResults({
         <>
           {/* Header: Title + Proximity context */}
           <div className={styles.primaryHeaderRow}>
-            <h2 className={styles.primaryHeading}>
-              Recommended doctors in {selectedLocation}
-            </h2>
+            <span className={styles.sectionEyebrowTitle}>
+              RECOMMENDED DOCTORS IN {selectedLocation.toUpperCase()}
+            </span>
             <div className={styles.primaryProximityNotice}>
-              <MapPin size={13} className={styles.primaryPinIcon} />
+              <MapPin size={12} className={styles.primaryPinIcon} />
               <span>{proximityMessage || `Showing care near ${selectedLocation}`}</span>
-              <Info size={12} className={styles.primaryInfoIcon} />
+              <Info size={11} className={styles.primaryInfoIcon} />
             </div>
           </div>
 
