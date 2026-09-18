@@ -418,7 +418,7 @@ export default function AppDownloadBanner() {
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ width: "240px", position: "relative", height: "180px", marginTop: "8px" }}
+                style={{ width: "240px", position: "relative", height: "180px", marginTop: "12px" }}
               >
                 <AnimatePresence mode="popLayout">
                   {POP_OVER_CARDS[activeIndex] && (

@@ -396,12 +396,16 @@
 
 /* QR sits bare now (label above, image below, no glass card) — matching
    how the App Store/Google Play badges beside it are also just a bare
-   image with no container. Width matches those two badges' own 140px. */
+   image with no container. Width matches those two badges' own 140px.
+   !important on display: this also carries .desktopOnly (same element),
+   whose own `display: block` (defined later in this file) would
+   otherwise win the cascade at equal specificity and silently turn this
+   back into a block — collapsing the flex gap to just line-height. */
 .qrStack {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .qrImg {
