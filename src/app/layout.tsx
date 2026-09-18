@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import FooterRevealWrapper from "@/components/layout/FooterRevealWrapper";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import GlobalPulseFAB from "@/components/pulse-ai/GlobalPulseFAB";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
         {/* Global UI interactions */}
         <SmoothScroll />
         <ScrollProgress />
+        <GlobalPulseFAB />
 
         {/* Layout */}
         <Navbar />
