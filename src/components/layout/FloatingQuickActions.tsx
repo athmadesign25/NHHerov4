@@ -7,26 +7,47 @@ import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
 
-// The icons idle on their finished frame and only loop while hovered — a
-// bar that's always on screen shouldn't have two things animating on it
+// The icons idle on their finished frame and only replay while hovered —
+// a bar that's always on screen shouldn't have two things animating on it
 // unprompted. They still play once on mount (loop={false} + autoplay),
 // which is what leaves them on that finished frame in the first place:
 // seeking there instead would mean resting on frame 0, which for both of
 // these is an empty tile (the calendar's box starts at zero scale, the NH
 // mark's layers start at zero opacity).
-function startIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
-  const item = ref.current?.animationItem;
-  if (!item) return;
-  item.loop = true;
-  ref.current?.goToAndPlay(0, true);
-}
+const HOVER_REPLAY_DELAY_MS = 1500;
 
-// Clearing `loop` lets the pass already in flight finish and settle on the
-// last frame, rather than cutting off mid-draw the way pause() would.
-function stopIconLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
-  const item = ref.current?.animationItem;
-  if (!item) return;
-  item.loop = false;
+// Each hovered play waits this long after finishing before playing again —
+// a paced replay rather than lottie-web's own back-to-back `loop`. Bundles
+// the hover-tracking ref (so a stale completion from after the mouse has
+// already left doesn't schedule a replay) and the pending-timeout ref
+// (cleared on mouse-leave) that a plain loop=true toggle didn't need.
+function useHoverLoop(ref: React.RefObject<LottieRefCurrentProps | null>) {
+  const hoveringRef = useRef(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const onMouseEnter = () => {
+    hoveringRef.current = true;
+    ref.current?.goToAndPlay(0, true);
+  };
+
+  // Doesn't stop the pass already in flight — same "let it settle rather
+  // than cut off mid-draw" reasoning as before — just cancels the next
+  // scheduled one and stops the completion handler from queuing another.
+  const onMouseLeave = () => {
+    hoveringRef.current = false;
+    clearTimeout(timeoutRef.current);
+  };
+
+  // Fires after every play, including the initial mount autoplay — hoveringRef
+  // is false then, so it's a no-op until the first real hover.
+  const onComplete = () => {
+    if (!hoveringRef.current) return;
+    timeoutRef.current = setTimeout(() => {
+      if (hoveringRef.current) ref.current?.goToAndPlay(0, true);
+    }, HOVER_REPLAY_DELAY_MS);
+  };
+
+  return { onMouseEnter, onMouseLeave, onComplete };
 }
 
 export default function FloatingQuickActions() {
@@ -40,6 +61,8 @@ export default function FloatingQuickActions() {
 
   const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
   const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
+  const calendarHover = useHoverLoop(calendarLottieRef);
+  const nhAppIconHover = useHoverLoop(nhAppIconLottieRef);
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
@@ -116,8 +139,8 @@ export default function FloatingQuickActions() {
           ref={linkRef0}
           className={`${styles.link} ${darkLinks[0] ? styles.linkOnDark : ""}`}
           href="/find-a-doctor"
-          onMouseEnter={() => startIconLoop(calendarLottieRef)}
-          onMouseLeave={() => stopIconLoop(calendarLottieRef)}
+          onMouseEnter={calendarHover.onMouseEnter}
+          onMouseLeave={calendarHover.onMouseLeave}
         >
           <span className={styles.iconWrap}>
             {/* The animation's own glyph only fills ~18x20 of its 32x32
@@ -132,6 +155,7 @@ export default function FloatingQuickActions() {
                 animationData={calendarCheckAnimation}
                 loop={false}
                 autoplay
+                onComplete={calendarHover.onComplete}
                 style={{ width: 46, height: 46, flexShrink: 0 }}
                 aria-hidden
               />
@@ -145,8 +169,8 @@ export default function FloatingQuickActions() {
           ref={linkRef1}
           className={`${styles.link} ${darkLinks[1] ? styles.linkOnDark : ""}`}
           href="#app-download-banner"
-          onMouseEnter={() => startIconLoop(nhAppIconLottieRef)}
-          onMouseLeave={() => stopIconLoop(nhAppIconLottieRef)}
+          onMouseEnter={nhAppIconHover.onMouseEnter}
+          onMouseLeave={nhAppIconHover.onMouseLeave}
         >
           <span className={styles.iconWrap}>
             <Lottie
@@ -154,6 +178,7 @@ export default function FloatingQuickActions() {
               animationData={nhAppIconAnimation}
               loop={false}
               autoplay
+              onComplete={nhAppIconHover.onComplete}
               style={{ width: 32, height: 32, flexShrink: 0 }}
               aria-hidden
             />
