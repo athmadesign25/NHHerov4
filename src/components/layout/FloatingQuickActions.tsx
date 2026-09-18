@@ -2,17 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import Lottie from "lottie-react";
 import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
-
-// Both icon animations replay from the start on this cadence (they each
-// play once on mount via their own `autoplay`, then sit on their last
-// frame until the next tick) rather than looping continuously — a
-// resting icon that occasionally "blinks" to life reads as a deliberate
-// bit of life, not a busy, distracting animation.
-const ICON_REPLAY_INTERVAL_MS = 10000;
 
 export default function FloatingQuickActions() {
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
@@ -22,18 +15,6 @@ export default function FloatingQuickActions() {
   const linkRef0 = useRef<HTMLAnchorElement>(null);
   const linkRef1 = useRef<HTMLAnchorElement>(null);
   const linkRef2 = useRef<HTMLButtonElement>(null);
-
-  const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
-  const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
-
-  useEffect(() => {
-    const replay = () => {
-      calendarLottieRef.current?.goToAndPlay(0, true);
-      nhAppIconLottieRef.current?.goToAndPlay(0, true);
-    };
-    const interval = setInterval(replay, ICON_REPLAY_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
@@ -112,14 +93,21 @@ export default function FloatingQuickActions() {
           href="/find-a-doctor"
         >
           <span className={styles.iconWrap}>
-            <Lottie
-              lottieRef={calendarLottieRef}
-              animationData={calendarCheckAnimation}
-              loop={false}
-              autoplay
-              style={{ width: 22, height: 22, flexShrink: 0 }}
-              aria-hidden
-            />
+            {/* The animation's own glyph only fills ~12.4x13.8 of its 32x32
+                canvas — rendered at a plain 22x22 it reads visibly smaller
+                than the other two action icons. Scaled up by the same
+                22/13.8 ratio and clipped back down to 22x22 so the glyph
+                itself (not the transparent canvas around it) fills the
+                icon slot at full size. */}
+            <span className={styles.calendarIconClip}>
+              <Lottie
+                animationData={calendarCheckAnimation}
+                loop
+                autoplay
+                style={{ width: 35.2, height: 35.2, flexShrink: 0 }}
+                aria-hidden
+              />
+            </span>
           </span>
           <span className={styles.actionLabel}>Book<br />Appointment</span>
         </Link>
@@ -134,9 +122,8 @@ export default function FloatingQuickActions() {
         >
           <span className={styles.iconWrap}>
             <Lottie
-              lottieRef={nhAppIconLottieRef}
               animationData={nhAppIconAnimation}
-              loop={false}
+              loop
               autoplay
               style={{ width: 22, height: 22, flexShrink: 0 }}
               aria-hidden

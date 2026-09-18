@@ -45,6 +45,19 @@
   transition: transform 0.2s ease;
 }
 
+/* Fixed 22x22 window that the oversized (35.2x35.2) calendar Lottie is
+   centered and clipped against — see the inline comment beside its
+   JSX for why it needs to be rendered bigger than the slot at all. */
+.calendarIconClip {
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .link:hover .iconWrap {
   transform: scale(1.08);
 }
