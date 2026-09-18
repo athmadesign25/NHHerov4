@@ -120,11 +120,11 @@ export default function FloatingQuickActions() {
         >
           <span className={styles.iconWrap}>
             {/* The animation's own glyph only fills ~12.4x13.8 of its 32x32
-                canvas — rendered at a plain 22x22 it reads visibly smaller
-                than the other two action icons. Scaled up by the same
-                22/13.8 ratio and clipped back down to 22x22 so the glyph
-                itself (not the transparent canvas around it) fills the
-                icon slot at full size. */}
+                canvas — rendered at a plain 20x20 it reads visibly smaller
+                than the other two action icons. Scaled up (same ratio as
+                the 20x20 target) and clipped back down to 20x20 so the
+                glyph itself (not the transparent canvas around it) fills
+                the icon slot at full size. */}
             <span className={styles.calendarIconClip}>
               <Lottie
                 lottieRef={calendarLottieRef}
@@ -132,7 +132,7 @@ export default function FloatingQuickActions() {
                 loop={false}
                 autoplay
                 onComplete={() => replayAfterDelay(calendarLottieRef, calendarReplayTimeout)}
-                style={{ width: 35.2, height: 35.2, flexShrink: 0 }}
+                style={{ width: 32, height: 32, flexShrink: 0 }}
                 aria-hidden
               />
             </span>
