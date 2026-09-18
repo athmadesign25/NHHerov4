@@ -155,6 +155,7 @@
   gap: 16px;
   box-sizing: border-box;
   will-change: transform;
+  min-width: 0;
 }
 
 /* Base Staggered Layout Offsets (Never aligned horizontally) */
@@ -442,37 +443,70 @@
 
 @media (max-width: 1024px) {
   .gridSection {
-    padding: 0 12px;
+    padding: 0 16px;
   }
   .columnsContainer {
     flex-wrap: wrap;
+    gap: 16px;
+  }
+  .columnTrack {
+    flex: 0 0 calc(50% - 8px);
+    gap: 16px;
+  }
+  /* 2-column stagger logic */
+  .col0 { padding-top: 0px; }
+  .col1 { padding-top: 60px; }
+  .col2 { padding-top: 0px; }
+  .col3 { padding-top: 60px; }
+
+  /* Force hover states on touch devices so text is always readable */
+  .specialityCard .cardOverlay {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.3) 60%,
+      rgba(0, 0, 0, 0) 100%
+    ) !important;
+  }
+  
+  .specialityCard .metricValue {
+    color: #FFFFFF !important;
+  }
+  
+  .specialityCard .metricLabel {
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+  
+  .specialityCard .cardAction {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* Disable hover transform on card image for mobile */
+  .specialityCard:active .cardImage {
+    transform: scale(1.02);
+  }
+}
+
+@media (max-width: 640px) {
+  .gridSection {
+    padding: 0 12px;
+  }
+  .columnsContainer {
     gap: 12px;
   }
   .columnTrack {
     flex: 0 0 calc(50% - 6px);
     gap: 12px;
   }
+  /* Tighter stagger on smaller screens */
   .col0 { padding-top: 0px; }
-  .col1 { padding-top: 50px; }
+  .col1 { padding-top: 40px; }
   .col2 { padding-top: 0px; }
-  .col3 { padding-top: 50px; }
-}
-
-@media (max-width: 640px) {
-  .gridSection {
-    padding: 0 8px;
-  }
-  .columnsContainer {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .columnTrack {
-    flex: 1 1 100%;
-    gap: 10px;
-    padding-top: 0 !important;
-  }
+  .col3 { padding-top: 40px; }
+  
   .specialityCard {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 5;
     border-radius: 8px;
   }
 }
