@@ -4,6 +4,7 @@ import React from "react";
 import { motion, MotionValue } from "framer-motion";
 import { Paperclip, Mic, ArrowUp, User, Heart, Search } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
+import floatingStyles from "../../layout/FloatingQuickActions.module.css";
 import LocationSelector from "./LocationSelector";
 
 interface DefaultSearchPromptProps {
@@ -73,13 +74,19 @@ export default function DefaultSearchPrompt({
               pointerEvents: "none",
             }}
           >
-            <div className={styles.floatingPulseIconWrap}>
-              <div className={styles.pulseBars} aria-hidden>
-                <span className={styles.pulseBar1} />
-                <span className={styles.pulseBar2} />
-                <span className={styles.pulseBar3} />
-              </div>
-            </div>
+            <span 
+              className={`${floatingStyles.iconWrap} ${floatingStyles.pulseIconWrap}`}
+              style={{ width: 30, height: 30 }}
+            >
+              <span className={floatingStyles.gradientLayer} aria-hidden />
+              <span className={`${floatingStyles.gradientLayer} ${floatingStyles.gradientLayerDodge}`} aria-hidden />
+              <span className={floatingStyles.pulseIconLight} aria-hidden />
+              <span className={floatingStyles.pulseBars} style={{ transform: "scale(0.70)" }} aria-hidden>
+                <span className={floatingStyles.pulseBar1} />
+                <span className={floatingStyles.pulseBar2} />
+                <span className={floatingStyles.pulseBar3} />
+              </span>
+            </span>
             <span className={styles.floatingPulseSearchText}>
               Pulse AI<br />Search
             </span>
@@ -102,11 +109,11 @@ export default function DefaultSearchPrompt({
           tabIndex={0}
           aria-label="Ask Pulse AI"
         >
-          <div className={styles.pulseBars} aria-hidden>
-            <span className={styles.pulseBar1} />
-            <span className={styles.pulseBar2} />
-            <span className={styles.pulseBar3} />
-          </div>
+          <span className={floatingStyles.pulseBars} style={{ transform: "scale(0.70)" }} aria-hidden>
+            <span className={floatingStyles.pulseBar1} />
+            <span className={floatingStyles.pulseBar2} />
+            <span className={floatingStyles.pulseBar3} />
+          </span>
           <span className={styles.pulseText}>Pulse AI</span>
         </motion.div>
       </motion.div>

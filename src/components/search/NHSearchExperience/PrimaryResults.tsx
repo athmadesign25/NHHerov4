@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Calendar, Award } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
+import floatingStyles from "../../layout/FloatingQuickActions.module.css";
 import { DoctorCardData } from "./searchData";
 
 interface PrimaryResultsProps {
@@ -82,11 +83,11 @@ export default function PrimaryResults({
         >
           <div className={styles.pulseNudgeLeft}>
             <div className={styles.pulseNudgeIconWrap} aria-hidden>
-              <div className={styles.pulseBars}>
-                <span className={styles.pulseBar1} />
-                <span className={styles.pulseBar2} />
-                <span className={styles.pulseBar3} />
-              </div>
+              <span className={floatingStyles.pulseBars} style={{ transform: "scale(0.70)" }}>
+                <span className={floatingStyles.pulseBar1} />
+                <span className={floatingStyles.pulseBar2} />
+                <span className={floatingStyles.pulseBar3} />
+              </span>
             </div>
             <div className={styles.pulseNudgeTextWrap}>
               <div className={styles.pulseNudgeTitleRow}>

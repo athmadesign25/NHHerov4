@@ -490,6 +490,15 @@
   box-shadow: 0 3px 10px rgba(0, 96, 223, 0.4);
 }
 
+.submitArrowBtn svg {
+  transform: rotate(90deg);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.submitArrowBtn:hover svg {
+  transform: rotate(0deg);
+}
+
 .submitArrowBtn:active {
   transform: scale(0.97);
 }
@@ -521,7 +530,7 @@
 }
 
 .locationPinIcon {
-  color: #ED1C24;
+  color: #FFFFFF;
   opacity: 0.9;
 }
 

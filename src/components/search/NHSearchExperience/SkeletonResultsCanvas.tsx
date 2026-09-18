@@ -2,6 +2,7 @@
 
 import React from "react";
 import styles from "./NHSearchExperience.module.css";
+import floatingStyles from "../../layout/FloatingQuickActions.module.css";
 
 interface SkeletonResultsCanvasProps {
   query: string;
@@ -15,11 +16,11 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
         <div className={styles.headerLeftGroup}>
           <div className={`${styles.skeletonPill} ${styles.shimmer}`} />
           <div className={styles.pulseBadge}>
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
+            <span className={floatingStyles.pulseBars} style={{ transform: "scale(0.70)" }} aria-hidden>
+              <span className={floatingStyles.pulseBar1} />
+              <span className={floatingStyles.pulseBar2} />
+              <span className={floatingStyles.pulseBar3} />
+            </span>
             <span className={styles.pulseText}>Pulse AI</span>
           </div>
         </div>

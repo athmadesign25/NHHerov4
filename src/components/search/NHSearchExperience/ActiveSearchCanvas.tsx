@@ -6,6 +6,7 @@ import {
   User, Heart, Sparkles, CornerDownLeft, Command
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
+import floatingStyles from "../../layout/FloatingQuickActions.module.css";
 import { PredictiveState, getPredictiveCompletion } from "./searchData";
 import LocationSelector from "./LocationSelector";
 
@@ -106,11 +107,11 @@ export default function ActiveSearchCanvas({
 
           {/* Pulse AI Badge */}
           <div className={styles.pulseBadge}>
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
+            <span className={floatingStyles.pulseBars} style={{ transform: "scale(0.70)" }} aria-hidden>
+              <span className={floatingStyles.pulseBar1} />
+              <span className={floatingStyles.pulseBar2} />
+              <span className={floatingStyles.pulseBar3} />
+            </span>
             <span className={styles.pulseText}>Pulse AI</span>
           </div>
         </div>

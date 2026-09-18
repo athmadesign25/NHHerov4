@@ -157,8 +157,8 @@ export default function NHSearchExperience({
   const promptOpacity = useTransform(activeProgress, [0.5, 0.75], [1, 0]);
   const compactLabelOpacity = useTransform(activeProgress, [0.75, 1.0], [0, 1]);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const isPastThreshold = latest >= winSize.h * 0.38;
+  useMotionValueEvent(scrollY, "change", () => {
+    const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
     const isSquareAchieved = activeProgress.get() >= 0.99;
     setIsDocked(isPastThreshold && isSquareAchieved);
   });
@@ -457,9 +457,10 @@ export default function NHSearchExperience({
       animate={searchState === "landing" ? shellTarget : undefined}
       transition={{
         type: "spring",
-        stiffness: 250,
-        damping: 25,
+        stiffness: 400,
+        damping: 35,
         mass: 1,
+        opacity: { duration: 0.1, delay: 0, ease: "easeOut" }
       }}
       style={{
         position: isDocked ? "fixed" : "relative",
@@ -470,7 +471,7 @@ export default function NHSearchExperience({
         }),
         maxWidth: "none",
         boxSizing: "border-box",
-        zIndex: 9990,
+        zIndex: 8990,
         pointerEvents: isDocked ? "none" : "auto",
         overflow: "hidden",
         width: isDocked ? endWidth : composerWidth,
@@ -522,7 +523,7 @@ export default function NHSearchExperience({
         display: "flex",
         justifyContent: "center",
         pointerEvents: searchState === "landing" ? "none" : "auto",
-        zIndex: 9990,
+        zIndex: 8990,
       }}
     >
       <LayoutGroup>
