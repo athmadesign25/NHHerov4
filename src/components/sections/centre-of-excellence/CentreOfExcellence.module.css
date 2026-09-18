@@ -81,9 +81,9 @@
 }
 
 .sectionSubtitle {
-  font-size: clamp(16px, 1.3vw, 20px);
+  font-size: 18px;
   font-weight: 400 !important;
-  color: #000000 !important;
+  color: #414141 !important;
   line-height: 1.65;
   max-width: 720px;
   margin: 0 auto;

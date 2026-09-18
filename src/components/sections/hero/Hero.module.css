@@ -112,8 +112,8 @@
 }
 
 .subHeadline {
-  font-size: var(--font-size-lg);
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 18px;
+  color: #F1F1F1;
   line-height: 1.4;
   margin-top: 0;
 }
@@ -982,10 +982,6 @@
 
   .headline {
     font-size: clamp(30px, 8vw, 40px);
-  }
-
-  .subHeadline {
-    font-size: clamp(15px, 3.8vw, 19px);
   }
 
   .searchWrap {
