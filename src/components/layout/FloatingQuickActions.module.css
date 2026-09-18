@@ -109,6 +109,22 @@
   position: relative;
 }
 
+.pulseLottieContainer {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pulseLottieContainer > div,
+.pulseLottieContainer svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .pulseBars {
   display: flex;
   align-items: center;

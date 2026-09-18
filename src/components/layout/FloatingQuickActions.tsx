@@ -2,11 +2,18 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../public/assets/pulse animation.json";
 import styles from "./FloatingQuickActions.module.css";
 
 export default function FloatingQuickActions() {
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
   const [darkLinks, setDarkLinks] = useState<boolean[]>([false, false, false]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const linkRef0 = useRef<HTMLAnchorElement>(null);
@@ -120,11 +127,17 @@ export default function FloatingQuickActions() {
           aria-label="Pulse AI Search"
         >
           <span className={styles.iconWrap}>
-            <span className={styles.pulseBars} aria-hidden="true">
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </span>
+            {isMounted ? (
+              <div className={styles.pulseLottieContainer} aria-hidden="true">
+                <Lottie animationData={pulseAnimation} loop={true} />
+              </div>
+            ) : (
+              <span className={styles.pulseBars} aria-hidden="true">
+                <span className={styles.pulseBar1} />
+                <span className={styles.pulseBar2} />
+                <span className={styles.pulseBar3} />
+              </span>
+            )}
           </span>
           <span className={styles.actionLabel}>Pulse AI<br />Search</span>
         </button>
