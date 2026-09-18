@@ -21,12 +21,39 @@ export default function LocationSelector({
   className = "",
 }: LocationSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Check available viewport space to open upward if near screen bottom
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      if (spaceBelow < 280 && rect.top > spaceBelow) {
+        setOpenUpward(true);
+      } else {
+        setOpenUpward(false);
+      }
+    }
+  }, [isOpen]);
+
+  // Close dropdown on page scroll
+  useEffect(() => {
+    function handleScroll() {
+      if (isOpen) {
+        setIsOpen(false);
+        setSearchTerm("");
+        setStatusMessage(null);
+      }
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isOpen]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -135,7 +162,7 @@ export default function LocationSelector({
     <div 
       ref={containerRef} 
       className={`${styles.locationPillWrapper} ${className}`} 
-      style={{ position: "relative" }}
+      style={{ position: "relative", zIndex: isOpen ? 200 : "auto" }}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Location Chip */}
@@ -164,7 +191,7 @@ export default function LocationSelector({
       {/* Compact Glass Dropdown */}
       {isOpen && (
         <div 
-          className={styles.locationMenu} 
+          className={`${styles.locationMenu} ${openUpward ? styles.locationMenuUpward : ""}`} 
           role="dialog" 
           aria-label="Location selector"
           onClick={(e) => e.stopPropagation()}

@@ -117,6 +117,8 @@ export default function NHSearchExperience({
   const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.22], ["32px", "0px"]);
   const promptOpacity = useTransform(activeProgress, [0.03, 0.18], [1, 0]);
   const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
+  const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+  const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -443,7 +445,7 @@ export default function NHSearchExperience({
                 boxSizing: "border-box",
                 zIndex: 9990,
                 pointerEvents: isDocked ? "none" : "auto",
-                overflow: "hidden",
+                overflow: composerOverflow,
                 cursor: "pointer",
               }
             : searchState !== "landing"
@@ -470,6 +472,7 @@ export default function NHSearchExperience({
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
+          controlsOverflow={hasScroll ? controlsOverflow : undefined}
         />
       </motion.div>
 

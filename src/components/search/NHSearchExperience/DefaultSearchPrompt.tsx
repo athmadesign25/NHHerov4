@@ -17,6 +17,7 @@ interface DefaultSearchPromptProps {
   controlsOpacity?: MotionValue<number>;
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
+  controlsOverflow?: MotionValue<"hidden" | "visible">;
 }
 
 export default function DefaultSearchPrompt({
@@ -30,6 +31,7 @@ export default function DefaultSearchPrompt({
   controlsOpacity,
   controlsHeight,
   controlsMarginBottom,
+  controlsOverflow,
 }: DefaultSearchPromptProps) {
   return (
     <div 
@@ -117,7 +119,7 @@ export default function DefaultSearchPrompt({
         style={controlsOpacity ? {
           opacity: controlsOpacity,
           height: controlsHeight,
-          overflow: "hidden",
+          overflow: controlsOverflow || "visible",
         } : undefined}
       >
         <div className={styles.bottomControlsLeft}>
