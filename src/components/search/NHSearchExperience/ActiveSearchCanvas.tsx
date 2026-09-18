@@ -103,16 +103,6 @@ export default function ActiveSearchCanvas({
             selectedLocation={selectedLocation}
             onSelectLocation={onSelectLocation}
           />
-
-          {/* Pulse AI Badge */}
-          <div className={styles.pulseBadge}>
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
-            <span className={styles.pulseText}>Pulse AI</span>
-          </div>
         </div>
 
         {/* Close Button */}

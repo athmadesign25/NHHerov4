@@ -88,29 +88,6 @@ export default function DefaultSearchPrompt({
           </motion.div>
         )}
 
-        {/* Pulse AI: Simple brand/intelligence label (no border, no button box) */}
-        <motion.div 
-          className={styles.pulseBadge}
-          style={promptOpacity ? { opacity: promptOpacity } : undefined}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onOpenPulse) {
-              onOpenPulse();
-            } else {
-              onActivate();
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          aria-label="Ask Pulse AI"
-        >
-          <div className={styles.pulseBars} aria-hidden>
-            <span className={styles.pulseBar1} />
-            <span className={styles.pulseBar2} />
-            <span className={styles.pulseBar3} />
-          </div>
-          <span className={styles.pulseText}>Pulse AI</span>
-        </motion.div>
       </motion.div>
 
       {/* Continuous horizontal interaction row */}
