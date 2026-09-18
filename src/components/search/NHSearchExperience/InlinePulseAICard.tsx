@@ -48,10 +48,12 @@ export default function InlinePulseAICard({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasInitializedRef = useRef(false);
 
-  // Animated flow: 1. User Prompt is sent -> 2. Pulse thinking animation -> 3. Curated result appears
+  // Animated flow: 1. User Prompt is sent -> 2. Pulse thinking animation (1 sec) -> 3. Curated result appears
   useEffect(() => {
-    if (isExpanded && messages.length === 0) {
+    if (isExpanded && !hasInitializedRef.current) {
+      hasInitializedRef.current = true;
       const userPrompt = query.trim()
         ? `${query.trim()} in ${selectedLocation}`
         : `Cardiologists near me in ${selectedLocation}`;
@@ -70,7 +72,7 @@ export default function InlinePulseAICard({
       // Step 2: Pulse begins thinking
       setIsThinking(true);
 
-      // Step 3: Result appears after thinking animation
+      // Step 3: Result appears after exactly 1 sec analysis
       const timer = setTimeout(() => {
         setIsThinking(false);
         setMessages((prev) => [
@@ -83,11 +85,11 @@ export default function InlinePulseAICard({
             doctors: doctors.slice(0, 3),
           },
         ]);
-      }, 800);
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [isExpanded, query, selectedLocation, messages.length, doctors]);
+  }, [isExpanded, query, selectedLocation, doctors]);
 
   // Scroll to bottom of message thread
   useEffect(() => {
@@ -191,12 +193,12 @@ export default function InlinePulseAICard({
     setInputValue("");
     setIsThinking(true);
 
-    // Realistic AI thinking delay (500ms)
+    // Exactly 1 second analysis delay
     setTimeout(() => {
       const aiResponse = generateClinicalResponse(promptText);
       setMessages((prev) => [...prev, aiResponse]);
       setIsThinking(false);
-    }, 500);
+    }, 1000);
   };
 
   const handleAttachClick = () => {
