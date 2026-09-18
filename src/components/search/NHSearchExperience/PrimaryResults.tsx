@@ -87,35 +87,35 @@ export default function PrimaryResults({
               const isFav = favorites.has(doc.id);
               return (
                 <div key={doc.id} className={styles.refDoctorCard}>
-                  {/* Photo area with subtle gradient overlay + Favourite Heart */}
-                  <div className={styles.refDocPhotoWrap}>
-                    <img
-                      src={doc.image}
-                      alt={doc.name}
-                      className={styles.refDocPhoto}
-                    />
-                    <div className={styles.refDocPhotoGradient} />
-                    
-                    {/* Favourite / Heart Icon Button */}
-                    <button
-                      type="button"
-                      className={styles.refDocFavBtn}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        toggleFavorite(doc.id);
-                      }}
-                      aria-label={`Save ${doc.name} to favourites`}
-                    >
-                      <Heart
-                        size={15}
-                        className={isFav ? styles.refHeartFilled : styles.refHeartOutline}
-                      />
-                    </button>
-                  </div>
+                  {/* Full background doctor photo spanning entire card */}
+                  <img
+                    src={doc.image}
+                    alt={doc.name}
+                    className={styles.refDocFullImage}
+                  />
 
-                  {/* Doctor Information */}
-                  <div className={styles.refDocMeta}>
+                  {/* Gradient overlay darkening smoothly towards the bottom */}
+                  <div className={styles.refDocFullGradient} />
+
+                  {/* Favourite / Heart Icon Button (Top-right) */}
+                  <button
+                    type="button"
+                    className={styles.refDocFavBtn}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleFavorite(doc.id);
+                    }}
+                    aria-label={`Save ${doc.name} to favourites`}
+                  >
+                    <Heart
+                      size={15}
+                      className={isFav ? styles.refHeartFilled : styles.refHeartOutline}
+                    />
+                  </button>
+
+                  {/* Doctor Information directly over the gradient overlay at the bottom */}
+                  <div className={styles.refDocOverlayContent}>
                     <h3 className={styles.refDocName} title={doc.name}>
                       {doc.name}
                     </h3>
@@ -132,7 +132,7 @@ export default function PrimaryResults({
                       <span>{doc.experience}</span>
                     </div>
 
-                    {/* Compact Book CTA */}
+                    {/* Book CTA Button */}
                     <Link
                       href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
                       className={styles.refBookBtn}
