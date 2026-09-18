@@ -275,10 +275,10 @@
   }
 }
 
-/* Caption Container (~44px above text unit, 48px space from card sides) */
+/* Caption Container (~21px above text unit, 48px space from card sides) */
 .captionContainer {
   position: absolute;
-  bottom: 124px;
+  bottom: 90px;
   left: 48px;
   right: 48px;
   display: flex;
@@ -288,16 +288,18 @@
   pointer-events: none;
 }
 
-/* Sharp-edged caption box with single-line non-wrapping text */
+/* Dark glass caption box, wrapping onto a second line when it needs to */
 .captionBox {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  background: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 0px;
+  flex-wrap: wrap;
+  white-space: normal;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   text-align: center;
   max-width: 100%;
@@ -539,7 +541,7 @@
     border-radius: 6px;
   }
   .captionContainer {
-    bottom: 100px;
+    bottom: 76px;
     left: 20px;
     right: 20px;
   }
