@@ -33,6 +33,7 @@ export default function SearchResultsCanvas({
   onAskPulse,
 }: SearchResultsCanvasProps) {
   const [inputValue, setInputValue] = useState(query);
+  const [isPulseExpanded, setIsPulseExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Synchronize local input value when incoming query prop changes
@@ -42,6 +43,14 @@ export default function SearchResultsCanvas({
 
   // Check if user has modified the prompt
   const isEdited = inputValue.trim() !== query.trim() && inputValue.trim().length > 0;
+
+  const handlePulseTrigger = () => {
+    setIsPulseExpanded(true);
+    setTimeout(() => {
+      const pulseEl = document.querySelector(`.${styles.pulseExpandedCard}`) || document.querySelector(`.${styles.pulseNudgeBox}`);
+      pulseEl?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 120);
+  };
 
   const handleFormSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -69,11 +78,11 @@ export default function SearchResultsCanvas({
           {/* Pulse AI Badge */}
           <div 
             className={styles.pulseBadge}
-            onClick={onAskPulse}
+            onClick={handlePulseTrigger}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") onAskPulse?.();
+              if (e.key === "Enter" || e.key === " ") handlePulseTrigger();
             }}
             style={{ cursor: "pointer" }}
             title="Open Pulse AI clinical assistant"
@@ -149,13 +158,14 @@ export default function SearchResultsCanvas({
       <div className={styles.resultsSplitLayout}>
         {/* ── LEFT COLUMN: Dominant Primary Results & Secondary Related Care ── */}
         <div className={styles.resultsLeftCol}>
-          {/* PRIMARY: Dominant Doctor Cards */}
+          {/* PRIMARY: Dominant Doctor Cards & Inline Expanding Pulse AI Assistant */}
           <PrimaryResults
             pulseRecommendationText={results.pulseRecommendationText}
             doctors={results.doctors}
             selectedLocation={selectedLocation}
             query={query}
-            onAskPulse={onAskPulse}
+            isPulseExpanded={isPulseExpanded}
+            onTogglePulseExpand={setIsPulseExpanded}
           />
 
           {/* SECONDARY: Related Specialties & Care */}

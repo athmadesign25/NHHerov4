@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Calendar, Award } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData } from "./searchData";
+import InlinePulseAICard from "./InlinePulseAICard";
 
 interface PrimaryResultsProps {
   pulseRecommendationText: string;
@@ -12,6 +13,8 @@ interface PrimaryResultsProps {
   selectedLocation: string;
   query: string;
   onAskPulse?: () => void;
+  isPulseExpanded?: boolean;
+  onTogglePulseExpand?: (expanded: boolean) => void;
 }
 
 export default function PrimaryResults({
@@ -20,7 +23,16 @@ export default function PrimaryResults({
   selectedLocation,
   query,
   onAskPulse,
+  isPulseExpanded: controlledExpanded,
+  onTogglePulseExpand,
 }: PrimaryResultsProps) {
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+
+  const handleToggleExpand = (val: boolean) => {
+    setInternalExpanded(val);
+    onTogglePulseExpand?.(val);
+  };
   return (
     <div className={styles.primaryResultsSection}>
       {/* RECOMMENDED DOCTORS label directly above the doctor cards */}
@@ -68,51 +80,15 @@ export default function PrimaryResults({
         </Link>
       </div>
 
-      {/* Pulse AI Nudge Box — Signature entry point for clinical questions with animated gradient border */}
+      {/* Pulse AI Nudge Box / In-Place Expanding Clinical Assistant */}
       {pulseRecommendationText && (
-        <div 
-          className={styles.pulseNudgeBox} 
-          onClick={onAskPulse}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") onAskPulse?.();
-          }}
-          aria-label="Ask Pulse AI for personalised recommendations and clinical guidance"
-        >
-          <div className={styles.pulseNudgeLeft}>
-            <div className={styles.pulseNudgeIconWrap} aria-hidden>
-              <div className={styles.pulseBars}>
-                <span className={styles.pulseBar1} />
-                <span className={styles.pulseBar2} />
-                <span className={styles.pulseBar3} />
-              </div>
-            </div>
-            <div className={styles.pulseNudgeTextWrap}>
-              <div className={styles.pulseNudgeTitleRow}>
-                <span className={styles.pulseNudgeText}>{pulseRecommendationText}</span>
-                <span className={styles.pulseNudgeBadge}>Pulse AI</span>
-              </div>
-              <div className={styles.pulseNudgeSubtext}>
-                Ask clinical questions, describe symptoms, or get tailored specialist recommendations.
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.pulseNudgeAction}>
-            <button
-              type="button"
-              className={styles.pulseNudgeBtn}
-              onClick={(e) => {
-                e.stopPropagation();
-                onAskPulse?.();
-              }}
-            >
-              <span>Ask Pulse</span>
-              <ArrowRight size={13} />
-            </button>
-          </div>
-        </div>
+        <InlinePulseAICard
+          pulseRecommendationText={pulseRecommendationText}
+          query={query}
+          selectedLocation={selectedLocation}
+          isExpanded={isExpanded}
+          onToggleExpand={handleToggleExpand}
+        />
       )}
     </div>
   );
