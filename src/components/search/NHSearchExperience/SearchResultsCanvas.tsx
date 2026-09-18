@@ -59,7 +59,7 @@ export default function SearchResultsCanvas({
 
   return (
     <div className={styles.resultsContainer}>
-      {/* Top Header Row: Location Pill + Pulse AI badge + Close Button */}
+      {/* Top Header Row: Location Pill + Close Button */}
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
           {/* Location Selector */}
@@ -67,21 +67,6 @@ export default function SearchResultsCanvas({
             selectedLocation={selectedLocation}
             onSelectLocation={onSelectLocation}
           />
-          {/* Pulse AI Brand Pill */}
-          <button
-            type="button"
-            className={styles.headerPulseBadge}
-            onClick={() => onAskPulse?.()}
-            title="Ask Pulse AI"
-            aria-label="Pulse AI Assistant"
-          >
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
-            <span className={styles.pulseBadgeText}>Pulse AI</span>
-          </button>
         </div>
 
         {/* Close Button */}

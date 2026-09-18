@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Heart, Briefcase, MapPin, Info, Sparkles } from "lucide-react";
+import { ArrowRight, Briefcase, Sparkles } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData } from "./searchData";
 import InlinePulseAICard from "./InlinePulseAICard";
@@ -31,25 +31,12 @@ export default function PrimaryResults({
   hidePulse = false,
 }: PrimaryResultsProps) {
   const [internalExpanded, setInternalExpanded] = useState(false);
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
 
   const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
 
   const handleToggleExpand = (val: boolean) => {
     setInternalExpanded(val);
     onTogglePulseExpand?.(val);
-  };
-
-  const toggleFavorite = (docId: string) => {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      if (next.has(docId)) {
-        next.delete(docId);
-      } else {
-        next.add(docId);
-      }
-      return next;
-    });
   };
 
   return (
@@ -69,22 +56,16 @@ export default function PrimaryResults({
       {/* When Pulse AI is NOT expanded (or standard view), show primary recommended doctors */}
       {(!isExpanded || hidePulse) && (
         <>
-          {/* Header: Title + Proximity context */}
+          {/* Header: Title */}
           <div className={styles.primaryHeaderRow}>
             <span className={styles.sectionEyebrowTitle}>
-              RECOMMENDED DOCTORS IN {selectedLocation.toUpperCase()}
+              RECOMMENDED DOCTORS
             </span>
-            <div className={styles.primaryProximityNotice}>
-              <MapPin size={12} className={styles.primaryPinIcon} />
-              <span>{proximityMessage || `Showing care near ${selectedLocation}`}</span>
-              <Info size={11} className={styles.primaryInfoIcon} />
-            </div>
           </div>
 
           {/* 2 × 2 Grid: Prominent Image-Led Doctor Cards */}
           <div className={styles.refDoctorsGrid}>
             {doctors.slice(0, 4).map((doc) => {
-              const isFav = favorites.has(doc.id);
               return (
                 <div key={doc.id} className={styles.refDoctorCard}>
                   {/* Full background doctor photo spanning entire card */}
@@ -96,23 +77,6 @@ export default function PrimaryResults({
 
                   {/* Gradient overlay darkening smoothly towards the bottom */}
                   <div className={styles.refDocFullGradient} />
-
-                  {/* Favourite / Heart Icon Button (Top-right) */}
-                  <button
-                    type="button"
-                    className={styles.refDocFavBtn}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleFavorite(doc.id);
-                    }}
-                    aria-label={`Save ${doc.name} to favourites`}
-                  >
-                    <Heart
-                      size={15}
-                      className={isFav ? styles.refHeartFilled : styles.refHeartOutline}
-                    />
-                  </button>
 
                   {/* Doctor Information directly over the gradient overlay at the bottom */}
                   <div className={styles.refDocOverlayContent}>
@@ -156,7 +120,7 @@ export default function PrimaryResults({
             </Link>
           </div>
 
-          {/* Compact Pulse AI Recommendation Row */}
+          {/* Larger Horizontal Pulse AI Recommendation Row matching Figma */}
           {!hidePulse && pulseRecommendationText && (
             <div
               className={styles.refPulseRow}
@@ -170,7 +134,17 @@ export default function PrimaryResults({
             >
               <div className={styles.refPulseLeft}>
                 <div className={styles.refPulseIconBox} aria-hidden>
-                  <Sparkles size={16} className={styles.refSparkleIcon} />
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="2.8" fill="#FFFFFF" />
+                    <circle cx="18.5" cy="8.5" r="1.8" fill="#FFFFFF" />
+                    <circle cx="5.5" cy="8.5" r="1.8" fill="#FFFFFF" />
+                    <circle cx="18.5" cy="15.5" r="1.8" fill="#FFFFFF" />
+                    <circle cx="5.5" cy="15.5" r="1.8" fill="#FFFFFF" />
+                    <line x1="9.6" y1="10.4" x2="7" y2="9.4" />
+                    <line x1="14.4" y1="10.4" x2="17" y2="9.4" />
+                    <line x1="9.6" y1="13.6" x2="7" y2="14.6" />
+                    <line x1="14.4" y1="13.6" x2="17" y2="14.6" />
+                  </svg>
                 </div>
                 <div className={styles.refPulseTextWrap}>
                   <div className={styles.refPulseTitleLine}>

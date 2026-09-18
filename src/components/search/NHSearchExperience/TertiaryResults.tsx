@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { 
-  ArrowRight, Heart, Activity, FileText, ChevronRight 
+  ArrowRight, Heart, Activity, FileText, ChevronRight, BookOpen, AlertCircle, Shield 
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { TreatmentItemData, ArticleItemData } from "./searchData";
@@ -35,12 +35,15 @@ export default function TertiaryResults({
     }
   };
 
-  // Icon renderer for articles (mono white with opacity down)
+  // Icon renderer for articles (matching Figma: BookOpen, AlertCircle, Shield)
   const renderArticleIcon = (type: ArticleItemData["iconType"], index: number) => {
-    if (index === 2 || type === "article") {
-      return <Heart size={16} className={styles.editorialIconMono} />;
+    if (index === 0) {
+      return <BookOpen size={15} className={styles.editorialIconMono} />;
     }
-    return <FileText size={16} className={styles.editorialIconMono} />;
+    if (index === 1) {
+      return <AlertCircle size={15} className={styles.editorialIconMono} />;
+    }
+    return <Shield size={15} className={styles.editorialIconMono} />;
   };
 
   return (
@@ -71,6 +74,14 @@ export default function TertiaryResults({
             </Link>
           ))}
         </div>
+
+        {/* Subtle View more link */}
+        <Link
+          href="/treatments"
+          className={styles.editorialViewMoreLink}
+        >
+          <span>View more →</span>
+        </Link>
       </div>
 
       {/* 2. Related Articles Section */}
@@ -101,6 +112,14 @@ export default function TertiaryResults({
             </Link>
           ))}
         </div>
+
+        {/* Subtle View more link */}
+        <Link
+          href="/articles"
+          className={styles.editorialViewMoreLink}
+        >
+          <span>View more →</span>
+        </Link>
       </div>
 
       {/* 3. Related Specialties & Care Section */}
