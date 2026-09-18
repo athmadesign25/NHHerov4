@@ -383,7 +383,7 @@ export default function AppDownloadBanner() {
 
           <div className={styles.bottomRow}>
             {/* Pop-over Card matching active screen on the left */}
-            <div className={styles.trustStackPosition} style={{ marginTop: "-171px", marginLeft: "100px" }}>
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
               <motion.div 
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
