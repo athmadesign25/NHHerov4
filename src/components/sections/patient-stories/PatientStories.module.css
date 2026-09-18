@@ -15,7 +15,11 @@
   position: relative;
   background: #031224;
   overflow: hidden;
-  padding: 125px 0 125px;
+  /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
+     below 1024px, where the mobile swipe carousel's own full-bleed trick
+     (.mobileCarouselContainer) needs an unpadded ancestor to work. */
+  padding: 125px 16px 125px;
+  box-sizing: border-box;
   min-height: 900px;
   display: flex;
   flex-direction: column;
@@ -104,7 +108,7 @@
   gap: 10px;
   flex-shrink: 0;
   position: relative;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.35);
   background: #001124;
@@ -512,6 +516,10 @@
 @media (max-width: 1023px) {
   .desktopOnly {
     display: none !important;
+  }
+  .section {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 @media (min-width: 1024px) {

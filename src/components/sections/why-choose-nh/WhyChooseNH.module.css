@@ -73,9 +73,17 @@
   line-height: 1.4;
 }
 
-/* Outer Grid Motion Container for Scroll Expansion to Full Page Width */
+/* Outer Grid Motion Container for Scroll Expansion to Full Page Width.
+   Side padding matches CentreOfExcellence's own --gx-pad (16px) so the
+   bento grid keeps the same edge inset as that section's grid, even at
+   its "100%" fully-expanded width (see gridWidth in the .tsx — 100% now
+   resolves against this padded box, not the true viewport edge). Reset
+   to 0 on mobile (below), where .bentoGrid gets its own 16px padding
+   directly instead. */
 .bentoExpandWrapper {
   width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   transform-origin: center center;
@@ -400,6 +408,10 @@
 
 /* ─── True Mobile Bento Grid ───────────────────────────────────────────── */
 @media (max-width: 992px) {
+  .bentoExpandWrapper {
+    padding: 0;
+  }
+
   .bentoGrid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;

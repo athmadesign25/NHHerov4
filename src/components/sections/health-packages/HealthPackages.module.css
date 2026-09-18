@@ -380,7 +380,7 @@
 }
 
 .packageCardV2 {
-  border-radius: 10.235px;
+  border-radius: 10px;
   background:
     linear-gradient(0deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.10) 100%),
     linear-gradient(113deg, rgba(12, 19, 40, 0.60) 35.39%, rgba(44, 33, 16, 0.60) 75.63%);
