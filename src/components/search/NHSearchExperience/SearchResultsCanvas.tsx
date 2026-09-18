@@ -128,7 +128,7 @@ export default function SearchResultsCanvas({
         </div>
 
         <div className={styles.resultsQueryActions}>
-          {isEdited ? (
+          {isEdited && (
             <button
               type="submit"
               className={styles.querySendBtn}
@@ -138,30 +138,12 @@ export default function SearchResultsCanvas({
               <span>Search</span>
               <ArrowRight size={14} />
             </button>
-          ) : (
-            <button
-              type="button"
-              className={styles.editSearchBtn}
-              onClick={() => {
-                inputRef.current?.focus();
-                inputRef.current?.select();
-              }}
-              title="Click to edit prompt"
-            >
-              EDIT SEARCH
-            </button>
           )}
         </div>
       </form>
 
       {/* Red Horizon Divider */}
       <div className={styles.redDivider} />
-
-      {/* Main Search Result Heading (Above Split Layout) */}
-      <div className={styles.resultsCategoryHeader}>
-        <h2 className={styles.resultsCategoryTitle}>{results.categoryTitle}</h2>
-        <div className={styles.resultsCategorySub}>{results.matchCountText}</div>
-      </div>
 
       {/* 2-Column Weighted Split Layout (Primary: ~65%, Tertiary Right Rail: ~35%) */}
       <div className={styles.resultsSplitLayout}>

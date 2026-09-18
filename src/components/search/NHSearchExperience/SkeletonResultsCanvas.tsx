@@ -41,12 +41,6 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
       {/* Red Horizon Divider */}
       <div className={styles.redDivider} />
 
-      {/* Main Search Result Heading Skeleton */}
-      <div className={styles.resultsCategoryHeader}>
-        <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 240, height: 22 }} />
-        <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 140, height: 14, marginTop: 4 }} />
-      </div>
-
       {/* Two Column Skeleton Grid */}
       <div className={styles.resultsSplitLayout}>
         {/* Left Column Skeleton */}
