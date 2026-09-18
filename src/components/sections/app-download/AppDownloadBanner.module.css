@@ -361,16 +361,14 @@
   line-height: normal;
 }
 
-/* Shared by .qrLabel (right) and .trustCaption (left) — one-line label
-   sitting 8px above whatever visual it captions, both top-aligned with
-   each other. */
+/* Shared by .qrLabel (right) and .trustCaption (left) — same typography
+   for both captions regardless of where each one sits. */
 .captionLabel {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #0F172A;
   text-align: center;
-  white-space: nowrap;
   line-height: normal;
 }
 
@@ -378,14 +376,25 @@
   composes: captionLabel;
 }
 
-/* Left-side popover's own caption — see .trustStackPosition's JSX for
-   why it moved out of the card. Fixed to the card's own 240px width so
-   it centers the same way the card itself does, with `overflow: visible`
-   (inherited; nothing here clips) letting the one-line text spill past
-   that width symmetrically on longer captions instead of wrapping. */
+/* Left-side popover's own caption, back inside the card above the image
+   (see POP_OVER_CARDS' `lines` — each caption is pre-broken into exactly
+   two lines at its own natural point via an explicit <br/>, rather than
+   left to auto-wrap at the card's width). */
 .trustCaption {
   composes: captionLabel;
-  width: 240px;
+}
+
+/* Shared glass treatment for both popover units — the left-side card and
+   the right-side "Scan to install" QR block now read as the same kind of
+   surface. */
+.popoverGlass {
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .storesCol {
@@ -394,9 +403,9 @@
   gap: 12px;
 }
 
-/* QR sits bare now (label above, image below, no glass card) — matching
-   how the App Store/Google Play badges beside it are also just a bare
-   image with no container. Width matches those two badges' own 140px.
+/* Label above, image below, wrapped in .popoverGlass (same card treatment
+   as the left-side popover). Image width still matches the App Store/
+   Google Play badges beside it (140px).
    !important on display: this also carries .desktopOnly (same element),
    whose own `display: block` (defined later in this file) would
    otherwise win the cascade at equal specificity and silently turn this

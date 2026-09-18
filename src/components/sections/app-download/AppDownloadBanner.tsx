@@ -58,12 +58,16 @@ const features: Feature[] = [
   },
 ];
 
+// `lines` is each caption pre-broken at its own natural point (rather
+// than a single string left to auto-wrap) — the card is a fixed 240px
+// wide, and letting the browser choose the break tended to land
+// mid-phrase ("Get Digital twin health" / "analysis").
 const POP_OVER_CARDS = [
-  { img: "/App Screens/Pop over cards/Body analysis.png", text: "Get Digital twin health analysis" },
-  { img: "/App Screens/Pop over cards/Dr Card.png", text: "Book appointments in 60 seconds" },
-  { img: "/App Screens/Pop over cards/Trend Card.png", text: "Access your health records anytime" },
-  { img: "/App Screens/Pop over cards/Video block.png", text: "Video consultations from home" },
-  { img: "/App Screens/Pop over cards/Recommend.png", text: "Track vitals and wellness reports" },
+  { img: "/App Screens/Pop over cards/Body analysis.png", lines: ["Get Digital twin", "health analysis"] },
+  { img: "/App Screens/Pop over cards/Dr Card.png", lines: ["Book appointments", "in 60 seconds"] },
+  { img: "/App Screens/Pop over cards/Trend Card.png", lines: ["Access your health", "records anytime"] },
+  { img: "/App Screens/Pop over cards/Video block.png", lines: ["Video consultations", "from home"] },
+  { img: "/App Screens/Pop over cards/Recommend.png", lines: ["Track vitals and", "wellness reports"] },
 ];
 
 // Digital twin is now just a plain feature image like the other four (a
@@ -390,36 +394,20 @@ export default function AppDownloadBanner() {
 
           <div className={styles.bottomRow}>
             {/* Pop-over Card matching active screen on the left */}
-            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-166px", marginLeft: "100px" }}>
-              {/* Caption lives above the popover now (was centered inside
-                  it) — same 8px-gap-above-the-visual convention as the QR
-                  stack's own label, and top-aligned with it: both are now
-                  just a one-line label sitting above whatever it's
-                  captioning. Its own AnimatePresence (separate from the
-                  card's below) blurs it in/out on every activeIndex swap
-                  independent of the card's timing. */}
-              <AnimatePresence mode="wait">
-                {POP_OVER_CARDS[activeIndex] && (
-                  <motion.div
-                    key={`caption-${activeIndex}`}
-                    className={styles.trustCaption}
-                    initial={{ opacity: 0, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, filter: "blur(6px)" }}
-                    transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-                  >
-                    {POP_OVER_CARDS[activeIndex].text}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
               <motion.div
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ width: "240px", position: "relative", height: "180px", marginTop: "12px" }}
+                style={{ width: "240px", position: "relative", height: "180px" }}
               >
+                {/* Caption is back inside the card (title, then a 12px
+                    gap, then the image) — pre-broken into two lines (see
+                    POP_OVER_CARDS) rather than left to auto-wrap. One
+                    AnimatePresence for the whole card again, so title and
+                    image blur in/out together as a single unit instead of
+                    two independently-timed pieces. */}
                 <AnimatePresence mode="popLayout">
                   {POP_OVER_CARDS[activeIndex] && (
                     <motion.div
@@ -428,26 +416,20 @@ export default function AppDownloadBanner() {
                       animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                       exit={{ opacity: 0, y: -30, scale: 0.95, filter: "blur(10px)" }}
                       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        backgroundColor: "rgba(255, 255, 255, 0.55)",
-                        backdropFilter: "blur(20px) saturate(1.4)",
-                        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-                        borderRadius: "20px",
-                        padding: "16px",
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                        border: "1px solid rgba(255,255,255,0.6)"
-                      }}
+                      className={styles.popoverGlass}
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%" }}
                     >
+                      <div className={styles.trustCaption}>
+                        {POP_OVER_CARDS[activeIndex].lines[0]}
+                        <br />
+                        {POP_OVER_CARDS[activeIndex].lines[1]}
+                      </div>
                       <Image
                         src={POP_OVER_CARDS[activeIndex].img}
-                        alt={POP_OVER_CARDS[activeIndex].text}
+                        alt={POP_OVER_CARDS[activeIndex].lines.join(" ")}
                         width={240}
                         height={100}
-                        style={{ width: "100%", height: "auto", display: "block" }}
+                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
                       />
                     </motion.div>
                   )}
@@ -578,7 +560,7 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].text}
+                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].lines.join(" ")}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -592,7 +574,7 @@ export default function AppDownloadBanner() {
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <div className={`${styles.qrStack} ${styles.desktopOnly}`}>
+                <div className={`${styles.qrStack} ${styles.desktopOnly} ${styles.popoverGlass}`}>
                   <span className={styles.qrLabel}>Scan to install</span>
                   <Image src="/app-download-QR.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
                 </div>
