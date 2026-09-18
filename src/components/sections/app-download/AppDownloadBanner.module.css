@@ -17,11 +17,6 @@
   top: 0;
   width: 100%;
   box-sizing: border-box;
-  /* Set by FooterRevealWrapper as the footer rises up and overlays this
-     still-pinned section from below — dims its content slightly rather
-     than leaving it at full brightness underneath the footer. Defaults
-     to fully opaque everywhere else on the page. */
-  opacity: var(--footer-overlay-fade, 1);
 }
 
 /* Fills the sticky viewport behind the content; opacity is tied to the
@@ -366,12 +361,31 @@
   line-height: normal;
 }
 
-.qrLabel {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+/* Shared by .qrLabel (right) and .trustCaption (left) — one-line label
+   sitting 8px above whatever visual it captions, both top-aligned with
+   each other. */
+.captionLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
   color: #0F172A;
-  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  line-height: normal;
+}
+
+.qrLabel {
+  composes: captionLabel;
+}
+
+/* Left-side popover's own caption — see .trustStackPosition's JSX for
+   why it moved out of the card. Fixed to the card's own 240px width so
+   it centers the same way the card itself does, with `overflow: visible`
+   (inherited; nothing here clips) letting the one-line text spill past
+   that width symmetrically on longer captions instead of wrapping. */
+.trustCaption {
+  composes: captionLabel;
+  width: 240px;
 }
 
 .storesCol {
@@ -380,58 +394,20 @@
   gap: 12px;
 }
 
-/* White glassy card, matching .featurePill's own glass treatment above —
-   a real backdrop-blur rather than a flat tint, so these read as floating
-   glass chips over the phone/background rather than plain white boxes. */
-/* Fixed width (not sized to each one's own content) so the QR card and
-   the two wider badge images all read as one consistent-width stack
-   instead of QR being visibly narrower than the badges beside it;
-   justify-content centers each one's own (narrower) content inside it. */
-.storeContainer {
+/* QR sits bare now (label above, image below, no glass card) — matching
+   how the App Store/Google Play badges beside it are also just a bare
+   image with no container. Width matches those two badges' own 140px. */
+.qrStack {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 156px;
-  box-sizing: border-box;
-  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
-     rectangle) so the card just hugs its content evenly instead of
-     reading as padded out sideways. */
-  padding: 8px;
-  border-radius: 10px;
-  /* Subtle "white refraction" edge rather than a solid stroke — a soft
-     white border with no shadow at all, so the card reads as glass sitting
-     on the background rather than a panel floating above it. */
-  border: 1px solid rgba(100, 120, 150, 0.20);
-  background: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(16px);
-  transition: all 0.2s ease;
-}
-
-/* QR sits stacked (image above label) at the top of the stores column,
-   reusing .storeContainer's own glass/stroke styling for visual
-   consistency with the App Store / Google Play badges below it. The QR
-   image itself is baked white-on-transparent (meant for a dark backdrop),
-   so it's inverted to read as dark-on-transparent here instead of
-   regenerating the source asset. */
-.qrContainer {
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
+  align-items: center;
+  gap: 8px;
 }
 
 .qrImg {
-  filter: invert(1);
-}
-
-/* Was turning near-opaque white on hover (0.75 alpha) — barely
-   distinguishable from the equally-white border, which is why the border
-   effectively vanished. Shifts darker instead (a soft navy tint) while
-   staying translucent glass rather than trending toward solid, and the
-   border darkens right along with it so it stays visible against the
-   now-different background instead of reading as white-on-near-white. */
-.storeContainer:hover {
-  background: rgba(15, 23, 42, 0.08);
-  border-color: rgba(15, 23, 42, 0.22);
+  width: 140px;
+  height: auto;
+  display: block;
 }
 
 .storeBadge {
@@ -608,10 +584,6 @@
     justify-content: center;
     align-items: center;
     gap: 16px;
-  }
-  
-  .storeContainer {
-    padding: 6px;
   }
   
   .storeBadge img {

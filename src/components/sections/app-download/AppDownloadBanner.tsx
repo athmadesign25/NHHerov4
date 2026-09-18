@@ -390,21 +390,43 @@ export default function AppDownloadBanner() {
 
           <div className={styles.bottomRow}>
             {/* Pop-over Card matching active screen on the left */}
-            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
-              <motion.div 
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-166px", marginLeft: "100px" }}>
+              {/* Caption lives above the popover now (was centered inside
+                  it) — same 8px-gap-above-the-visual convention as the QR
+                  stack's own label, and top-aligned with it: both are now
+                  just a one-line label sitting above whatever it's
+                  captioning. Its own AnimatePresence (separate from the
+                  card's below) blurs it in/out on every activeIndex swap
+                  independent of the card's timing. */}
+              <AnimatePresence mode="wait">
+                {POP_OVER_CARDS[activeIndex] && (
+                  <motion.div
+                    key={`caption-${activeIndex}`}
+                    className={styles.trustCaption}
+                    initial={{ opacity: 0, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, filter: "blur(6px)" }}
+                    transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                  >
+                    {POP_OVER_CARDS[activeIndex].text}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.div
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ width: "240px", position: "relative", height: "180px" }}
+                style={{ width: "240px", position: "relative", height: "180px", marginTop: "8px" }}
               >
                 <AnimatePresence mode="popLayout">
                   {POP_OVER_CARDS[activeIndex] && (
                     <motion.div
                       key={activeIndex}
-                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(10px)" }}
+                      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, y: -30, scale: 0.95, filter: "blur(10px)" }}
                       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
                       style={{
                         position: "absolute",
@@ -420,15 +442,12 @@ export default function AppDownloadBanner() {
                         border: "1px solid rgba(255,255,255,0.6)"
                       }}
                     >
-                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
-                        {POP_OVER_CARDS[activeIndex].text}
-                      </div>
                       <Image
                         src={POP_OVER_CARDS[activeIndex].img}
                         alt={POP_OVER_CARDS[activeIndex].text}
                         width={240}
                         height={100}
-                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
+                        style={{ width: "100%", height: "auto", display: "block" }}
                       />
                     </motion.div>
                   )}
@@ -573,9 +592,9 @@ export default function AppDownloadBanner() {
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <div className={`${styles.storeContainer} ${styles.qrContainer} ${styles.desktopOnly}`}>
-                  <Image src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: "6px" }} className={styles.qrImg} />
+                <div className={`${styles.qrStack} ${styles.desktopOnly}`}>
                   <span className={styles.qrLabel}>Scan to install</span>
+                  <Image src="/qr-download.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
                 </div>
                 <a href="#" className={styles.storeBadge} tabIndex={0}>
                   <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
