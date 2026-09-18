@@ -11,7 +11,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import SplitText from "@/components/ui/SplitText";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./Hero.module.css";
 import { NHSearchExperience } from "@/components/search/NHSearchExperience";
 
@@ -66,6 +66,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroAnchorRef = useRef<HTMLDivElement>(null);
+  const stickySectionRef = useRef<HTMLElement>(null);
 
   // Rotate metric stat group periodically
   useEffect(() => {
@@ -97,8 +98,8 @@ export default function Hero() {
   });
 
   // Scale down and round border radius on scroll
-  const heroScale = useTransform(smoothProgress, [0, 1], [1, 0.85]);
-  const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
+  const heroScale = useTransform(smoothProgress, [0.5, 1.0], [1, 0.85]);
+  const heroRadius = useTransform(smoothProgress, [0.5, 1.0], ["0px", "16px"]);
 
   // Blurs out across exit travel as next section approaches
   const { scrollYProgress: heroExitProgress } = useScroll({
@@ -123,26 +124,18 @@ export default function Hero() {
   // Update anchor rectangle on mount & resize
   useEffect(() => {
     const updateRect = () => {
-      const winW = window.innerWidth;
-      const winH = window.innerHeight;
-      const initialWidth = Math.min(840, winW - 48);
-
-      if (heroAnchorRef.current && window.scrollY < 20) {
-        const rect = heroAnchorRef.current.getBoundingClientRect();
-        setAnchorRect({
-          top: Math.round(rect.top),
-          left: Math.round(rect.left),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height || 136),
-        });
-      } else {
-        setAnchorRect({
-          top: Math.round(winH * 0.68 - 28),
-          left: Math.round((winW - initialWidth) / 2),
-          width: initialWidth,
-          height: 136,
-        });
-      }
+      if (!heroAnchorRef.current || !stickySectionRef.current) return;
+      const anchor = heroAnchorRef.current.getBoundingClientRect();
+      const sticky = stickySectionRef.current.getBoundingClientRect();
+      
+      setAnchorRect({
+        // By taking the difference, we get the exact coordinate the anchor WOULD be at if the hero was stuck at top: 0
+        // This is perfectly stable regardless of scroll position on refresh or resize.
+        top: Math.round(anchor.top - sticky.top),
+        left: Math.round(anchor.left),
+        width: Math.round(anchor.width),
+        height: Math.round(anchor.height || 136),
+      });
     };
 
     updateRect();
@@ -193,15 +186,16 @@ export default function Hero() {
       }}
     >
       <motion.section
+        ref={stickySectionRef}
         className={styles.hero}
         id="hero-section-search-first"
         data-nav-theme="dark"
         style={{
           scale: heroScale,
           borderRadius: heroRadius,
-          filter: heroBlur,
         }}
       >
+        <motion.div style={{ position: "absolute", inset: 0, filter: heroBlur }}>
         <video
           ref={videoRef}
           src="/videos/Hero-Video-New.mp4"
@@ -253,12 +247,15 @@ export default function Hero() {
             ))}
           </motion.div>
         </div>
+        </motion.div>
 
         {/* Hero Center Title & Anchor Spacer */}
         <div className={styles.centerWrap}>
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
-            <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-              <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
+            <motion.div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`} style={{ filter: heroBlur }}>
+              <h1 className={styles.headline}>
+                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={1200} finalColor="#ffffff" />
+              </h1>
               <motion.p
                 className={styles.subHeadline}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
@@ -267,30 +264,20 @@ export default function Hero() {
               >
                 Compassion Backed by Expertise
               </motion.p>
-            </div>
+            </motion.div>
 
-            {/* Layout spacer reserving the search composer's position in the hero stack */}
-            <div
-              ref={heroAnchorRef}
-              style={{
-                width: "min(840px, calc(100vw - 48px))",
-                height: 136,
-                pointerEvents: "none",
-                opacity: 0,
-              }}
-              aria-hidden="true"
-            />
+            {/* Search Experience is now directly in the DOM flow to perfectly link with title/subtext */}
+            <div ref={heroAnchorRef} style={{ width: "100%", maxWidth: 840, display: "flex", justifyContent: "center", height: 136 }}>
+              <NHSearchExperience
+                onOpenChange={setIsOpen}
+                scrollProgress={smoothProgress}
+                anchorRect={anchorRect}
+                onOpenPulseAI={() => setIsPulseActive(true)}
+              />
+            </div>
           </div>
         </div>
       </motion.section>
-
-      {/* Continuously morphing Search Experience: starts at hero, smoothly scales down to docked pill on scroll */}
-      <NHSearchExperience
-        onOpenChange={setIsOpen}
-        scrollProgress={smoothProgress}
-        anchorRect={anchorRect}
-        onOpenPulseAI={() => setIsPulseActive(true)}
-      />
     </div>
   );
 }

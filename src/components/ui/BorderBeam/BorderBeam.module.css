@@ -1,0 +1,19 @@
+.borderBeamWrapper {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: var(--border-beam-width) solid transparent;
+  
+  /* Mask trick to show only the border */
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 0;
+}
+
+.borderBeamInner {
+  position: absolute;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(to left, var(--color-from), var(--color-to), transparent);
+}

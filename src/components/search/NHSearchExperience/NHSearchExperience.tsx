@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue, useScroll, LayoutGroup } from "framer-motion";
 import { Search, X } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
+import { BorderBeam } from "@/components/ui/BorderBeam/BorderBeam";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
 import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
@@ -79,14 +80,9 @@ export default function NHSearchExperience({
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
 
-  // Motion values for continuous morphing
-  const hasScroll = Boolean(scrollProgress);
-  const defaultProgress = useMotionValue(0);
-  const activeProgress = scrollProgress || defaultProgress;
-
-  useMotionValueEvent(activeProgress, "change", (latest) => {
-    setIsDocked(latest >= 0.50);
-  });
+  // Use global scroll to precisely sync with FloatingQuickActions visibility,
+  // but wait until the square morph (activeProgress >= 0.99) is achieved.
+  const { scrollY } = useScroll();
 
   // Starting dimensions (Hero anchor)
   const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
@@ -95,27 +91,100 @@ export default function NHSearchExperience({
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
   // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side)
-  const endWidth = isMobile ? 96 : 100;
-  const endHeight = 74;
-  const endTop = winSize.h - 36 - endHeight;
-  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : winSize.w - 24 - endWidth;
+  const [pulseTarget, setPulseTarget] = useState({
+    width: isMobile ? 96 : 100,
+    height: 91,
+    top: winSize.h / 2 + 46.5,
+    left: winSize.w - 124,
+  });
 
-  // Continuous numeric scroll transforms: [0.03, 0.45]
-  const composerTop = useTransform(activeProgress, [0.03, 0.45], [startTop, endTop]);
-  const composerLeft = useTransform(activeProgress, [0.03, 0.45], [startLeft, endLeft]);
-  const composerWidth = useTransform(activeProgress, [0.03, 0.45], [startWidth, endWidth]);
-  const composerHeight = useTransform(activeProgress, [0.03, 0.45], [startHeight, endHeight]);
-  const composerRadius = useTransform(activeProgress, [0.03, 0.45], [20, 18]);
-  const composerPaddingX = useTransform(activeProgress, [0.03, 0.45], [24, 6]);
-  const composerPaddingY = useTransform(activeProgress, [0.03, 0.45], [20, 8]);
-  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, 0]);
+  useEffect(() => {
+    const updateTargetRect = () => {
+      const el = document.getElementById("floating-pulse-target");
+      const container = document.querySelector(".global-floating-quick-actions") as HTMLElement;
+      if (el && container) {
+        // Temporarily reset transform to force layout measurement in 'visible' state
+        const originalTransform = container.style.transform;
+        const originalTransition = container.style.transition;
+        
+        container.style.transition = "none";
+        
+        if (window.innerWidth < 900) {
+          container.style.transform = "translateY(0)";
+        } else {
+          container.style.transform = "translateY(-50%) translateX(0)";
+        }
+        
+        const rect = el.getBoundingClientRect();
+        
+        setPulseTarget({
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          top: Math.round(rect.top),
+          left: Math.round(rect.left),
+        });
 
-  // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.03, 0.22], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.22], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.03, 0.18], [1, 0]);
-  const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
+        // Restore
+        container.style.transform = originalTransform;
+        // Force reflow before restoring transition to prevent glitch
+        void container.offsetHeight; 
+        container.style.transition = originalTransition;
+      }
+    };
+
+    updateTargetRect();
+    window.addEventListener("resize", updateTargetRect);
+    
+    // Quick actions might mount late or fonts might load
+    const to = setTimeout(updateTargetRect, 1000);
+    return () => {
+      window.removeEventListener("resize", updateTargetRect);
+      clearTimeout(to);
+    };
+  }, []);
+
+  const endWidth = pulseTarget.width;
+  const endHeight = pulseTarget.height;
+  const endTop = pulseTarget.top;
+  const endLeft = pulseTarget.left;
+
+  const defaultProgress = useMotionValue(0);
+  const activeProgress = scrollProgress || defaultProgress;
+  const targetSquareSize = 110;
+  const composerWidth = useTransform(activeProgress, [0.5, 1.0], [startWidth, targetSquareSize]);
+  const composerHeight = useTransform(activeProgress, [0.5, 1.0], [startHeight, targetSquareSize]);
+  const composerMarginBottom = useTransform(activeProgress, [0.5, 1.0], ["28px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.5, 0.75], [1, 0]);
+  const compactLabelOpacity = useTransform(activeProgress, [0.75, 1.0], [0, 1]);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const isPastThreshold = latest >= winSize.h * 0.38;
+    const isSquareAchieved = activeProgress.get() >= 0.99;
+    setIsDocked(isPastThreshold && isSquareAchieved);
+  });
+
+  useMotionValueEvent(activeProgress, "change", (latestProgress) => {
+    // Docking matches the new FloatingQuickActions threshold (after Specialities title reveals)
+    const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
+    const isSquareAchieved = latestProgress >= 0.99;
+    setIsDocked(isPastThreshold && isSquareAchieved);
+  });
+
+  // We are now using a state-driven animation for the morphing shell
+  // so we compute the target values directly based on `isDocked`.
+  const shellTarget = isDocked
+    ? {
+        borderRadius: 18,
+        padding: "8px 6px",
+        opacity: 0,
+      }
+    : {
+        borderRadius: 20,
+        padding: "20px 24px",
+        opacity: 1,
+      };
+
+  // Secondary buttons fade out when docked (now handled by promptOpacity)
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -378,82 +447,87 @@ export default function NHSearchExperience({
       ? styles.stateActive
       : styles.stateResults;
 
+  const searchShellContent = (
+    <motion.div
+      layoutId="search-composer"
+      layout="position"
+      className={`${styles.searchShell} ${
+        searchState === "landing" ? styles.stateLanding : styles.stateActive
+      } ${isDocked ? styles.dockedShell : ""}`}
+      animate={searchState === "landing" ? shellTarget : undefined}
+      transition={{
+        type: "spring",
+        stiffness: 250,
+        damping: 25,
+        mass: 1,
+      }}
+      style={{
+        position: isDocked ? "fixed" : "relative",
+        margin: isDocked ? "0" : "0 auto",
+        ...(isDocked && {
+          top: endTop,
+          left: endLeft,
+        }),
+        maxWidth: "none",
+        boxSizing: "border-box",
+        zIndex: 9990,
+        pointerEvents: isDocked ? "none" : "auto",
+        overflow: "hidden",
+        width: isDocked ? endWidth : composerWidth,
+        height: isDocked ? endHeight : composerHeight,
+        cursor: searchState === "landing" ? "pointer" : "default",
+        ...((searchState !== "landing") && {
+          width: "100%",
+          height: "auto",
+          minHeight: "400px",
+        })
+      }}
+      onClick={() => {
+        if (searchState === "landing" && !isDocked) handleActivate();
+      }}
+    >
+      {searchState === "landing" && !isDocked && (
+        <BorderBeam size={150} duration={10} colorFrom="#FF3B30" colorTo="#2F78FF" />
+      )}
+      <DefaultSearchPrompt
+        onActivate={handleActivate}
+        selectedLocation={selectedLocation}
+        onSelectLocation={setSelectedLocation}
+        onSelectActionPill={setActivePill}
+        onOpenPulse={() => {
+          if (onOpenPulseAI) {
+            onOpenPulseAI(pulseInitialQuery);
+          } else {
+            handleActivate();
+          }
+        }}
+        promptOpacity={promptOpacity}
+        compactLabelOpacity={compactLabelOpacity}
+        controlsOpacity={promptOpacity}
+        controlsMarginBottom={composerMarginBottom}
+      />
+    </motion.div>
+  );
+
   return (
-    <div 
+    <motion.div 
       className={styles.searchExperienceWrapper} 
       ref={containerRef}
-      style={
-        hasScroll
-          ? {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: searchState === "landing" ? "none" : "auto",
-              zIndex: 9990,
-            }
-          : undefined
-      }
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        position: "relative",
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: searchState === "landing" ? "none" : "auto",
+        zIndex: 9990,
+      }}
     >
-      {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
-      <motion.div
-        layout
-        className={`${styles.searchShell} ${styles.stateLanding}`}
-        onClick={() => {
-          handleActivate();
-        }}
-        style={
-          hasScroll && searchState === "landing"
-            ? {
-                position: "fixed",
-                top: composerTop,
-                left: composerLeft,
-                width: composerWidth,
-                height: composerHeight,
-                borderRadius: composerRadius,
-                paddingLeft: composerPaddingX,
-                paddingRight: composerPaddingX,
-                paddingTop: composerPaddingY,
-                paddingBottom: composerPaddingY,
-                opacity: morphShellOpacity,
-                maxWidth: "none",
-                marginTop: 0,
-                marginRight: 0,
-                marginBottom: 0,
-                marginLeft: 0,
-                boxSizing: "border-box",
-                zIndex: 9990,
-                pointerEvents: isDocked ? "none" : "auto",
-                overflow: "hidden",
-                cursor: "pointer",
-              }
-            : searchState !== "landing"
-            ? {
-                display: "none",
-                pointerEvents: "none",
-              }
-            : undefined
-        }
-        transition={{
-          layout: { duration: prefersReducedMotion ? 0.1 : 0.42, ease: [0.16, 1, 0.3, 1] },
-          duration: prefersReducedMotion ? 0.1 : 0.35,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-      >
-        <DefaultSearchPrompt
-          onActivate={handleActivate}
-          selectedLocation={selectedLocation}
-          onSelectLocation={handleSelectLocation}
-          onSelectActionPill={handleSelectActionPill}
-          onOpenPulse={() => handleOpenPulse()}
-          promptOpacity={hasScroll ? promptOpacity : undefined}
-          compactLabelOpacity={hasScroll ? compactLabelOpacity : undefined}
-          controlsOpacity={hasScroll ? controlsOpacity : undefined}
-          controlsHeight={hasScroll ? controlsHeight : undefined}
-          controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
-        />
-      </motion.div>
+      <LayoutGroup>
+        {isDocked && mounted ? createPortal(searchShellContent, document.body) : searchShellContent}
+      </LayoutGroup>
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
@@ -588,6 +662,6 @@ export default function NHSearchExperience({
         />,
         document.body
       )}
-    </div>
+    </motion.div>
   );
 }

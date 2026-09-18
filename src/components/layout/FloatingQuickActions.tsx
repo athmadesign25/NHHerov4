@@ -15,8 +15,8 @@ export default function FloatingQuickActions() {
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
-      // Quick Health Actions Bar appears as the user scrolls past hero (at ~38% scroll)
-      const showQuickActions = window.scrollY >= window.innerHeight * 0.38;
+      // Quick Health Actions Bar appears as the user scrolls past hero and Specialities title reveals
+      const showQuickActions = window.scrollY >= window.innerHeight * 0.65;
       setIsQuickActionsVisible(showQuickActions);
 
 
@@ -81,7 +81,7 @@ export default function FloatingQuickActions() {
         ref={containerRef}
         role="region"
         aria-label="Quick actions and search"
-        className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden}`}
+        className={`${styles.container} global-floating-quick-actions ${isQuickActionsVisible ? styles.visible : styles.hidden}`}
       >
         {/* Action 1: Book Appointment (Primary utility) */}
         <Link
@@ -123,6 +123,7 @@ export default function FloatingQuickActions() {
 
         {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
         <button
+          id="floating-pulse-target"
           ref={linkRef2}
           type="button"
           className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
