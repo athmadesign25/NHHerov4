@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Calendar, Award } from "lucide-react";
+import { ArrowRight, Heart, Briefcase, MapPin, Info, Sparkles } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData } from "./searchData";
 import InlinePulseAICard from "./InlinePulseAICard";
@@ -11,6 +11,7 @@ interface PrimaryResultsProps {
   pulseRecommendationText: string;
   doctors: DoctorCardData[];
   selectedLocation: string;
+  proximityMessage?: string;
   query: string;
   onAskPulse?: () => void;
   isPulseExpanded?: boolean;
@@ -22,6 +23,7 @@ export default function PrimaryResults({
   pulseRecommendationText,
   doctors,
   selectedLocation,
+  proximityMessage,
   query,
   onAskPulse,
   isPulseExpanded: controlledExpanded,
@@ -29,11 +31,25 @@ export default function PrimaryResults({
   hidePulse = false,
 }: PrimaryResultsProps) {
   const [internalExpanded, setInternalExpanded] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
   const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
 
   const handleToggleExpand = (val: boolean) => {
     setInternalExpanded(val);
     onTogglePulseExpand?.(val);
+  };
+
+  const toggleFavorite = (docId: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(docId)) {
+        next.delete(docId);
+      } else {
+        next.add(docId);
+      }
+      return next;
+    });
   };
 
   return (
@@ -50,66 +66,140 @@ export default function PrimaryResults({
         />
       )}
 
-      {/* When Pulse AI is NOT expanded (or in standard view), show standard recommended doctors */}
+      {/* When Pulse AI is NOT expanded (or standard view), show primary recommended doctors */}
       {(!isExpanded || hidePulse) && (
         <>
-          <div className={styles.recommendedSectionLabel}>RECOMMENDED DOCTORS</div>
-
-          {/* Clean Doctor Cards 2-Column Grid */}
-          <div className={styles.doctorsGrid}>
-            {doctors.slice(0, 4).map((doc) => (
-              <div key={doc.id} className={styles.doctorCard}>
-                <div className={styles.doctorCardBody}>
-                  <img
-                    src={doc.image}
-                    alt={doc.name}
-                    className={styles.doctorAvatar}
-                  />
-                  <div className={styles.doctorMeta}>
-                    <div className={styles.doctorName}>{doc.name}</div>
-                    <div className={styles.doctorSpecialty}>{doc.speciality}</div>
-                    <div className={styles.doctorHospital}>{doc.hospital}</div>
-                  </div>
-                </div>
-
-                <div className={styles.doctorCardFooter}>
-                  <span className={styles.doctorExpText}>{doc.experience}</span>
-                  <Link
-                    href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
-                    className={styles.bookApptBtn}
-                  >
-                    <span>{doc.consultationType === "video" ? "Book Video" : "Book"}</span>
-                    <ArrowRight size={12} />
-                  </Link>
-                </div>
-              </div>
-            ))}
+          {/* Header: Title + Proximity context */}
+          <div className={styles.primaryHeaderRow}>
+            <h2 className={styles.primaryHeading}>
+              Recommended doctors in {selectedLocation}
+            </h2>
+            <div className={styles.primaryProximityNotice}>
+              <MapPin size={13} className={styles.primaryPinIcon} />
+              <span>{proximityMessage || `Showing care near ${selectedLocation}`}</span>
+              <Info size={12} className={styles.primaryInfoIcon} />
+            </div>
           </div>
 
-          {/* Clean Text Link for View All Doctors */}
-          <div className={styles.viewAllDoctorsRow}>
+          {/* 2 × 2 Grid: Prominent Image-Led Doctor Cards */}
+          <div className={styles.refDoctorsGrid}>
+            {doctors.slice(0, 4).map((doc) => {
+              const isFav = favorites.has(doc.id);
+              return (
+                <div key={doc.id} className={styles.refDoctorCard}>
+                  {/* Photo area with subtle gradient overlay + Favourite Heart */}
+                  <div className={styles.refDocPhotoWrap}>
+                    <img
+                      src={doc.image}
+                      alt={doc.name}
+                      className={styles.refDocPhoto}
+                    />
+                    <div className={styles.refDocPhotoGradient} />
+                    
+                    {/* Favourite / Heart Icon Button */}
+                    <button
+                      type="button"
+                      className={styles.refDocFavBtn}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleFavorite(doc.id);
+                      }}
+                      aria-label={`Save ${doc.name} to favourites`}
+                    >
+                      <Heart
+                        size={15}
+                        className={isFav ? styles.refHeartFilled : styles.refHeartOutline}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Doctor Information */}
+                  <div className={styles.refDocMeta}>
+                    <h3 className={styles.refDocName} title={doc.name}>
+                      {doc.name}
+                    </h3>
+                    <div className={styles.refDocSpecialty} title={doc.speciality}>
+                      {doc.speciality}
+                    </div>
+                    <div className={styles.refDocHospital} title={doc.hospital}>
+                      {doc.hospital}
+                    </div>
+
+                    {/* Experience Info */}
+                    <div className={styles.refDocExpRow}>
+                      <Briefcase size={12} className={styles.refDocExpIcon} />
+                      <span>{doc.experience}</span>
+                    </div>
+
+                    {/* Compact Book CTA */}
+                    <Link
+                      href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                      className={styles.refBookBtn}
+                    >
+                      <span>Book →</span>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Clean View all doctors Link */}
+          <div className={styles.refViewAllRow}>
             <Link
               href={`/doctors?q=${encodeURIComponent(query)}&city=${encodeURIComponent(selectedLocation)}`}
-              className={styles.viewAllDoctorsTextLink}
+              className={styles.refViewAllLink}
             >
               <span>View all doctors</span>
               <ArrowRight size={13} />
             </Link>
           </div>
-        </>
-      )}
 
-      {/* When Pulse AI is collapsed, show the compact nudge bar at the bottom */}
-      {!hidePulse && pulseRecommendationText && !isExpanded && (
-        <InlinePulseAICard
-          pulseRecommendationText={pulseRecommendationText}
-          query={query}
-          selectedLocation={selectedLocation}
-          doctors={doctors}
-          isExpanded={false}
-          onToggleExpand={handleToggleExpand}
-        />
+          {/* Compact Pulse AI Recommendation Row */}
+          {!hidePulse && pulseRecommendationText && (
+            <div
+              className={styles.refPulseRow}
+              onClick={() => handleToggleExpand(true)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleToggleExpand(true);
+              }}
+              aria-label="Ask Pulse AI for personalised recommendations"
+            >
+              <div className={styles.refPulseLeft}>
+                <div className={styles.refPulseIconBox} aria-hidden>
+                  <Sparkles size={16} className={styles.refSparkleIcon} />
+                </div>
+                <div className={styles.refPulseTextWrap}>
+                  <div className={styles.refPulseTitleLine}>
+                    <span className={styles.refPulseTitle}>
+                      Want a more personalised recommendation?
+                    </span>
+                    <span className={styles.refPulseBadge}>PULSE AI</span>
+                  </div>
+                  <p className={styles.refPulseSubtext}>
+                    Ask clinical questions, describe symptoms, or get tailored specialist recommendations.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className={styles.refPulseBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleExpand(true);
+                }}
+              >
+                <span>Ask Pulse →</span>
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
 }
+

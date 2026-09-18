@@ -59,7 +59,7 @@ export default function SearchResultsCanvas({
 
   return (
     <div className={styles.resultsContainer}>
-      {/* Top Header Row: Location Pill + Close Button */}
+      {/* Top Header Row: Location Pill + Pulse AI badge + Close Button */}
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
           {/* Location Selector */}
@@ -67,6 +67,21 @@ export default function SearchResultsCanvas({
             selectedLocation={selectedLocation}
             onSelectLocation={onSelectLocation}
           />
+          {/* Pulse AI Brand Pill */}
+          <button
+            type="button"
+            className={styles.headerPulseBadge}
+            onClick={() => onAskPulse?.()}
+            title="Ask Pulse AI"
+            aria-label="Pulse AI Assistant"
+          >
+            <div className={styles.pulseBars} aria-hidden>
+              <span className={styles.pulseBar1} />
+              <span className={styles.pulseBar2} />
+              <span className={styles.pulseBar3} />
+            </div>
+            <span className={styles.pulseBadgeText}>Pulse AI</span>
+          </button>
         </div>
 
         {/* Close Button */}
@@ -135,6 +150,7 @@ export default function SearchResultsCanvas({
               pulseRecommendationText={results.pulseRecommendationText}
               doctors={results.doctors}
               selectedLocation={selectedLocation}
+              proximityMessage={results.proximityMessage}
               query={query}
               isPulseExpanded={isPulseExpanded}
               onTogglePulseExpand={setIsPulseExpanded}
@@ -173,17 +189,16 @@ export default function SearchResultsCanvas({
                       pulseRecommendationText=""
                       doctors={results.doctors}
                       selectedLocation={selectedLocation}
+                      proximityMessage={results.proximityMessage}
                       query={query}
                       hidePulse={true}
-                    />
-                    <SecondaryResults
-                      relatedSpecialties={results.relatedSpecialties}
-                      onSelectSpecialtyTag={onSelectSpecialtyTag}
                     />
                   </div>
                   <TertiaryResults
                     treatments={results.treatments}
                     articles={results.articles}
+                    relatedSpecialties={results.relatedSpecialties}
+                    onSelectSpecialtyTag={onSelectSpecialtyTag}
                   />
                 </div>
               </div>
@@ -191,34 +206,31 @@ export default function SearchResultsCanvas({
           </div>
         </div>
       ) : (
-        /* 2-Column Weighted Split Layout (Primary: ~65%, Tertiary Right Rail: ~35%) */
+        /* 2-Column Result Layout: Primary (67-70% width) vs Secondary/Tertiary Editorial (30-33% width) */
         <div className={styles.resultsSplitLayout}>
-          {/* ── LEFT COLUMN: Dominant Primary Results & Secondary Related Care ── */}
+          {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors & Compact Pulse AI Row ── */}
           <div className={styles.resultsLeftCol}>
-            {/* PRIMARY: Dominant Doctor Cards & Inline Expanding Pulse AI Assistant */}
             <PrimaryResults
               pulseRecommendationText={results.pulseRecommendationText}
               doctors={results.doctors}
               selectedLocation={selectedLocation}
+              proximityMessage={results.proximityMessage}
               query={query}
               isPulseExpanded={false}
               onTogglePulseExpand={setIsPulseExpanded}
             />
-
-            {/* SECONDARY: Related Specialties & Care */}
-            <SecondaryResults
-              relatedSpecialties={results.relatedSpecialties}
-              onSelectSpecialtyTag={onSelectSpecialtyTag}
-            />
           </div>
 
-          {/* ── RIGHT COLUMN: Tertiary Supporting Results (Vertically aligned with RECOMMENDED DOCTORS) ── */}
+          {/* ── RIGHT / SECONDARY COLUMN: Treatments, Articles & Related Specialties ── */}
           <TertiaryResults
             treatments={results.treatments}
             articles={results.articles}
+            relatedSpecialties={results.relatedSpecialties}
+            onSelectSpecialtyTag={onSelectSpecialtyTag}
           />
         </div>
       )}
     </div>
   );
 }
+

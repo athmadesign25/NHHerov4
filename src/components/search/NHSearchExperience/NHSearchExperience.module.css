@@ -272,7 +272,33 @@
 .headerLeftGroup {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.headerPulseBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.headerPulseBadge:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-0.5px);
+}
+
+.pulseBadgeText {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 /* ── Pulse AI Identity (clean brand intelligence label, no button box) ── */
@@ -1280,12 +1306,12 @@
   transform: scale(1.03);
 }
 
-/* ── Results Main Split Layout (Weighted 66% Left vs 34% Right) ── */
+/* ── Results Main Split Layout (Weighted 67% Left vs 33% Right) ── */
 .resultsSplitLayout {
   display: grid;
-  grid-template-columns: minmax(0, 66fr) minmax(240px, 34fr);
-  gap: 28px;
-  margin-top: 20px;
+  grid-template-columns: minmax(0, 67fr) minmax(280px, 33fr);
+  gap: clamp(24px, 3vw, 36px);
+  margin-top: 18px;
   align-items: start;
   width: 100%;
 }
@@ -1298,247 +1324,367 @@
   width: 100%;
 }
 
-.resultsCategoryHeader {
+.primaryResultsSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-top: 4px;
-  margin-bottom: 18px;
-}
-
-.resultsCategoryTitle {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 18px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.resultsCategorySub {
-  font-size: 13px;
-  font-weight: 400;
-  color: #94A3B8;
-  margin-top: 3px;
-}
-
-.recommendedSectionLabel {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748B;
-  margin-bottom: 10px;
-  height: auto;
-  display: flex;
-  align-items: center;
-}
-
-/* ── Clean Lighter Doctor Cards (2-Column Grid) ── */
-.doctorsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
   width: 100%;
 }
 
-.doctorCard {
+/* ── Left Column Header Row ── */
+.primaryHeaderRow {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.18s ease, border-color 0.18s ease;
-  text-decoration: none;
-  min-width: 0;
-  height: 160px;
-  min-height: 160px;
-  max-height: 160px;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.primaryHeading {
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(18px, 2.2vw, 21px);
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.primaryProximityNotice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #94A3B8;
+}
+
+.primaryPinIcon {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.primaryInfoIcon {
+  color: #64748B;
+  flex-shrink: 0;
+  margin-left: 2px;
+}
+
+/* ── Reference Doctor Cards (2 × 2 Grid) ── */
+.refDoctorsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+.refDoctorCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: rgba(18, 26, 43, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease,
+              box-shadow 0.22s ease;
   box-sizing: border-box;
 }
 
-.doctorCard:hover {
-  background: rgba(255, 255, 255, 0.055);
-  border-color: rgba(255, 255, 255, 0.12);
+.refDoctorCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.55);
 }
 
-.doctorCardBody {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  min-width: 0;
+/* Upper Doctor Photo Area */
+.refDocPhotoWrap {
+  position: relative;
+  width: 100%;
+  height: 195px;
+  background: #141c2b;
+  overflow: hidden;
 }
 
-.doctorAvatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.refDocPhoto {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  flex-shrink: 0;
-  background: #1e293b;
+  object-position: top center;
+  display: block;
+  transition: transform 0.35s ease;
 }
 
-.doctorMeta {
+.refDoctorCard:hover .refDocPhoto {
+  transform: scale(1.02);
+}
+
+/* Bottom Image Gradient Scrim */
+.refDocPhotoGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(14, 21, 35, 1) 0%, rgba(14, 21, 35, 0.55) 45%, rgba(14, 21, 35, 0) 100%);
+  pointer-events: none;
+}
+
+/* Top-right Favourite / Heart Button */
+.refDocFavBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  padding: 0;
+}
+
+.refDocFavBtn:hover {
+  background: rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+
+.refHeartFilled {
+  fill: #ED1C24;
+  color: #ED1C24;
+}
+
+.refHeartOutline {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Doctor Information Area */
+.refDocMeta {
+  padding: 10px 14px 14px;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   flex: 1;
+  min-width: 0;
 }
 
-/* Fixed 2-line name slot so all cards align vertically */
-.doctorName {
+.refDocName {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: 600;
   color: #FFFFFF;
-  letter-spacing: -0.015em;
-  line-height: 21.5px;
-  height: 43px;
-  min-height: 43px;
-  max-height: 43px;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-word;
-  margin: 0;
+  height: 39px;
 }
 
-/* Specialty: ~14-15px, Narayana Health blue, medium, fixed position */
-.doctorSpecialty {
-  font-size: 14px;
+.refDocSpecialty {
+  font-size: 13px;
   font-weight: 500;
-  line-height: 19px;
-  height: 19px;
-  min-height: 19px;
-  max-height: 19px;
-  color: #00C4FF;
+  color: #38BDF8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 3px;
-}
-
-/* Hospital: ~13-14px, muted neutral, ONE LINE ONLY with ellipsis */
-.doctorHospital {
-  font-size: 13.5px;
-  color: #94A3B8;
-  font-weight: 400;
-  line-height: 18px;
-  height: 18px;
-  min-height: 18px;
-  max-height: 18px;
   margin-top: 2px;
+}
+
+.refDocHospital {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #94A3B8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
-/* Subtle divider and bottom row */
-.doctorCardFooter {
+.refDocExpRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  min-width: 0;
-}
-
-.doctorExpText {
-  font-size: 13px;
-  color: #94A3B8;
-  font-weight: 400;
-  margin: 0;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ── Compact CTA Button ("Book →") ── */
-.bookApptBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  gap: 6px;
   font-size: 12px;
-  font-weight: 500;
-  color: #FFFFFF;
-  background: #034EA2;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 4px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  line-height: 1.2;
+  font-weight: 400;
+  color: #94A3B8;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.refDocExpIcon {
+  color: #94A3B8;
   flex-shrink: 0;
 }
 
-.bookApptBtn:hover {
+/* Full-width Book Button */
+.refBookBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #034EA2;
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9.5px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.16s ease;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.35);
+}
+
+.refBookBtn:hover {
   background: #0060DF;
   transform: translateY(-0.5px);
 }
 
-/* ── Simple Text Action: View all doctors → ── */
-.viewAllDoctorsRow {
+/* Below Doctor Grid Link */
+.refViewAllRow {
   display: flex;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 14px;
+  margin-bottom: 14px;
 }
 
-.viewAllDoctorsTextLink {
+.refViewAllLink {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12.5px;
+  gap: 5px;
+  font-size: 13px;
   font-weight: 500;
-  color: #00C4FF;
+  color: #38BDF8;
   text-decoration: none;
-  background: transparent;
-  border: none;
-  padding: 0;
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
-.viewAllDoctorsTextLink:hover {
-  color: #38BDF8;
+.refViewAllLink:hover {
+  color: #7DD3FC;
 }
 
-/* ── Pulse AI Recommendation Box (Signature Clinical Entry with Animated Gradient Border) ── */
-/* ── Pulse AI Recommendation Box (Toned down, subtle, elegant glass entry) ── */
-.pulseNudgeBox {
-  position: relative;
+/* Compact Pulse AI Recommendation Row */
+.refPulseRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 16px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 196, 255, 0.16);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  margin-top: 2px;
 }
 
-.pulseNudgeBox:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.055);
-  border-color: rgba(0, 196, 255, 0.35);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+.refPulseRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-0.5px);
+}
+
+.refPulseLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.refPulseIconBox {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #034EA2 0%, #00C4FF 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.refSparkleIcon {
+  color: #FFFFFF;
+}
+
+.refPulseTextWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.refPulseTitleLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.refPulseTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.refPulseBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #A5B4FC;
+  background: rgba(99, 102, 241, 0.16);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.refPulseSubtext {
+  font-size: 11.5px;
+  color: #94A3B8;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.refPulseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.refPulseBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 .pulseNudgeLeft {
@@ -2360,147 +2506,173 @@
   color: #FFFFFF;
 }
 
-/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis ── */
+/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis (Editorial Sidebar) ── */
 .resultsRightCol {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-height: 480px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  padding-right: 4px;
+  gap: 28px;
   min-width: 0;
   width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-.resultsRightCol::-webkit-scrollbar {
-  width: 4px;
-}
-
-.resultsRightCol::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.resultsRightCol::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 9999px;
-}
-
-.tertiarySectionBlock {
+.editorialSection {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.sectionHeadingRow {
+.editorialHeadingRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
-  height: 18px;
+  margin-bottom: 12px;
+  min-height: 24px;
 }
 
-.tertiarySectionTitle {
-  font-size: 11px;
+.editorialTitle {
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.editorialViewAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748B;
-}
-
-.viewAllSmallLink {
-  font-size: 11px;
-  font-weight: 450;
-  color: #94A3B8;
+  color: #38BDF8;
   text-decoration: none;
-  background: none;
-  border: none;
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
-.viewAllSmallLink:hover {
-  color: #CBD5E1;
+.editorialViewAll:hover {
+  color: #7DD3FC;
 }
 
-/* ── Compact List Rows for Treatments & Articles ── */
-.tertiaryListRows {
+.editorialList {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  width: 100%;
 }
 
-.tertiaryListRow {
+.editorialItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
-  border-radius: 6px;
-  background: transparent;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.15s ease;
 }
 
-.tertiaryListRow:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.06);
+.editorialItem:hover {
+  background: rgba(255, 255, 255, 0.035);
 }
 
-.tertiaryRowLeft {
+.editorialItem:last-child {
+  border-bottom: none;
+}
+
+.editorialItemLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   min-width: 0;
 }
 
-.tertiaryRowIcon {
+.editorialIconBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.5);
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
 }
 
-.tertiaryRowMeta {
+.editorialIconCyan {
+  color: #38BDF8;
+  opacity: 0.9;
+}
+
+.editorialIconRed {
+  color: #ED1C24;
+  opacity: 0.95;
+}
+
+.editorialMeta {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.tertiaryRowTitle {
-  font-size: 12.5px;
+.editorialItemTitle {
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 13.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.tertiaryRowSubtitle {
-  font-size: 11px;
+.editorialItemSub {
+  font-size: 11.5px;
   font-weight: 400;
-  color: #64748B;
-  margin-top: 1px;
-}
-
-.tertiaryRowArrow {
-  color: #475569;
-  opacity: 0.6;
-  flex-shrink: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
-}
-
-.tertiaryListRow:hover .tertiaryRowArrow {
   color: #94A3B8;
-  opacity: 1;
+  margin-top: 1.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editorialChevron {
+  color: #64748B;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.editorialItem:hover .editorialChevron {
+  color: #94A3B8;
+  transform: translateX(2px);
+}
+
+/* Related Specialties Pills */
+.editorialPillsGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.editorialPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.editorialPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  transform: translateY(-0.5px);
 }
 
 /* ── Skeleton Loading State Styles ── */
@@ -2663,7 +2835,8 @@
     padding: 16px;
   }
 
-  .doctorsGrid {
+  .doctorsGrid,
+  .refDoctorsGrid {
     grid-template-columns: 1fr;
   }
 
