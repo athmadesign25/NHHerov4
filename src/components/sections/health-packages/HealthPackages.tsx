@@ -243,6 +243,11 @@ export default function HealthPackages() {
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
 
+  // Fades the "Most Booked in ..." label while the center card specifically
+  // is hovered, not any card — the label sits right above it, so only that
+  // one card visually competes with it.
+  const [centerCardHovered, setCenterCardHovered] = useState(false);
+
   // "growing": frame size/radius tracks raw scroll (p1raw) as before.
   // "full": frame is pinned at its fully-grown end values and the card
   // reveal plays out on its own timer instead of scroll position — see
@@ -760,13 +765,14 @@ export default function HealthPackages() {
                 <>
                   <div
                     ref={(el) => { railItemRefs.current[railSlots.indexOf("label")] = el; }}
-                    className={styles.railLabel}
+                    className={`${styles.railLabel} ${centerCardHovered ? styles.railLabelFaded : ""}`}
                   >
                     Most Booked in {DETECTED_CITY}
                   </div>
 
                   <div className={styles.cardStack}>
-                    {packages.map((pkg) => {
+                    {packages.map((pkg, pkgIndex) => {
+                      const isCenterCard = pkgIndex === Math.floor(packages.length / 2);
                       return (
                         // Fixed-height slot is the actual grid item (so the
                         // hover-expanded card's extra height never affects
@@ -780,7 +786,11 @@ export default function HealthPackages() {
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
                             className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]}`}
                             onMouseMove={handleCardMouseMove}
-                            onMouseLeave={handleCardMouseLeave}
+                            onMouseEnter={isCenterCard ? () => setCenterCardHovered(true) : undefined}
+                            onMouseLeave={(e) => {
+                              handleCardMouseLeave(e);
+                              if (isCenterCard) setCenterCardHovered(false);
+                            }}
                           >
                             <span className={styles.packageCardBorder} aria-hidden />
                             <img src={pkg.image} alt="" className={styles.packageCardImage} />
@@ -801,8 +811,8 @@ export default function HealthPackages() {
                                     <FactIconReports />
                                   </span>
                                   <span className={styles.packageCardFactText}>
-                                    <span className={styles.factLight}>Reports within</span>
                                     <span className={styles.factBold}>{pkg.reportsWithin}</span>
+                                    <span className={styles.factLight}>Reports within</span>
                                   </span>
                                 </div>
                               </div>

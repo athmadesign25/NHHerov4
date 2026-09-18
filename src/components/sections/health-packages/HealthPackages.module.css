@@ -286,6 +286,14 @@
   line-height: normal;
   margin: 0 0 20px;
   will-change: transform, opacity;
+  transition: opacity 0.3s ease;
+}
+
+/* !important: the entrance reveal (see HealthPackages.tsx's
+   applyAutoReveal) freezes an inline opacity on this element once
+   settled, which would otherwise always win over this class. */
+.railLabelFaded {
+  opacity: 0 !important;
 }
 
 /* Grid (not flex) so the three columns can shrink together below the
@@ -682,7 +690,7 @@
 }
 
 .factLight {
-  color: #4A5568;
+  color: #000000;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 300;
