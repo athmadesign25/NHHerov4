@@ -1,9 +1,6 @@
-/* No card here — content sits directly on the shared page background.
-   Sticky-scroll pin lives inside .stackTrack/.stickyViewport below; this
-   outer section must stay overflow:visible or the sticky pin breaks. */
 .section {
   position: relative;
-  background: #FFFFFF;
+  background: transparent;
   width: 100%;
   box-sizing: border-box;
 }
@@ -530,9 +527,20 @@
     display: block !important;
   }
 
+  /* Override desktop sticky inline constraints to allow natural document flow */
+  .stackTrack {
+    height: auto !important;
+  }
+  
+  .stickyViewport {
+    position: relative !important;
+    height: auto !important;
+  }
+
   .contentStack {
-    padding: 32px 16px 0px;
-    gap: 32px;
+    padding: 48px 16px 0px;
+    gap: 48px; /* Big premium breathing room below title */
+    justify-content: flex-start !important;
   }
   
   .title {
@@ -544,7 +552,7 @@
   /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
-    gap: 24px;
+    gap: 32px; /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
   }
@@ -559,29 +567,34 @@
     order: 3;
     margin-top: 0 !important;
     margin-bottom: -24px !important;
+    /* Framer Motion overrides CSS transform inline, so we use 'left' to optically center */
+    left: -12%;
     transform: scale(0.95);
     transform-origin: bottom center;
   }
 
-  /* Mobile Caption under the phone */
+  /* Mobile Caption as a sleek floating pill */
   .mobileCaption {
-    order: 1;
+    order: 2;
+    position: relative;
+    z-index: 20;
     text-align: center;
-    font-size: 16px;
-    font-weight: 500;
-    color: #334155;
-    padding: 16px 24px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.8);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    min-width: 280px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    min-width: auto;
+    margin-bottom: -24px; /* Slight overlap over the phone */
   }
 
-  /* Reset Stores Position */
+  /* Reset Stores Position & bring to top */
   .storesColPosition {
-    order: 2;
+    order: 1;
     position: relative;
     left: auto;
     right: auto;
@@ -591,16 +604,17 @@
     width: 100%;
   }
   
-  /* Place Store Badges side-by-side on mobile */
+  /* Place Store Badges side-by-side perfectly tight */
   .storesCol {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
   }
   
   .storeBadge img {
-    height: 32px; /* Slightly smaller for mobile side-by-side */
+    height: 40px; 
+    width: auto;
   }
 }
 

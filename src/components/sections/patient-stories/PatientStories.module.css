@@ -24,6 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: -2px; /* Close any sub-pixel rendering gaps from the previous section */
 }
 
 .headerContainer {
@@ -136,7 +137,7 @@
 }
 
 .mobileCarouselItem {
-  flex: 0 0 85%;
+  flex: 0 0 82%;
   scroll-snap-align: center;
   position: relative;
 }
@@ -312,13 +313,13 @@
 /* Text Info Unit Container */
 .textUnit {
   display: flex;
-  width: calc(100% - 68px);
+  width: calc(100% - 48px);
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
   position: absolute;
-  left: 34px;
-  bottom: 34px;
+  left: 24px;
+  bottom: 24px;
   z-index: 5;
 }
 
@@ -343,14 +344,15 @@
 .overviewBoxTop {
   position: absolute;
   top: 24px;
-  left: 34px;
+  left: 24px;
   z-index: 8;
-  width: calc(100% - 68px);
-  max-width: calc(100% - 68px);
+  width: calc(100% - 48px);
+  max-width: calc(100% - 48px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   box-sizing: border-box;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .overviewQuoteIcon {
@@ -377,23 +379,25 @@
 .patientName {
   color: #FFF;
   font-family: Inter, sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: normal;
   letter-spacing: normal;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .patientSubtext {
   align-self: stretch;
-  color: #C0C0C0;
+  color: #E0E0E0;
   font-family: Inter, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin: 4px 0 0 0;
+  margin: 2px 0 0 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Dark edge fades: same solid color as the section's own background
@@ -491,11 +495,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px 28px;
+  gap: 8px;
+  padding: 12px 24px;
   border-radius: 8px;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   color: #FFFFFF;
   font-family: Inter, sans-serif;
@@ -545,6 +549,9 @@
     left: 20px;
     right: 20px;
   }
+  .ctaWrapper {
+    margin-top: 8px;
+  }
   .captionBox {
     font-size: 14px;
     padding: 8px 14px;
@@ -567,19 +574,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-top: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 .navDot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
 .navDotActive {
-  width: 24px;
-  border-radius: 4px;
+  width: 18px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.9);
 }

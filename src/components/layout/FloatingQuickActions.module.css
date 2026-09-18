@@ -386,6 +386,7 @@
 /* ── Responsive styles (Mobile & Tablet) ── */
 @media (max-width: 900px) {
   .container {
+    display: none !important; /* Replaced entirely by the morphing NHSearchExperience on mobile */
     top: auto; /* Fixes height stretching bug */
     bottom: max(16px, env(safe-area-inset-bottom));
     right: 16px;
