@@ -594,7 +594,7 @@ export default function AppDownloadBanner() {
               >
                 <div className={`${styles.qrStack} ${styles.desktopOnly}`}>
                   <span className={styles.qrLabel}>Scan to install</span>
-                  <Image src="/qr-download.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
+                  <Image src="/app-download-QR.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
                 </div>
                 <a href="#" className={styles.storeBadge} tabIndex={0}>
                   <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
