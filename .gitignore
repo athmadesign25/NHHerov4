@@ -39,6 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.node-portable
+nh-hero-search-pulse-package/
+
 nahid-homepage-wip-v4.bundle
 clean_push_with_identity/
 clean_push_with_identity/
