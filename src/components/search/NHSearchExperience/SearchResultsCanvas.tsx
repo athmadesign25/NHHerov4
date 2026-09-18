@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Search, X } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Search, X, ArrowRight } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { SearchResultsData } from "./searchData";
 import LocationSelector from "./LocationSelector";
@@ -13,6 +13,7 @@ interface SearchResultsCanvasProps {
   query: string;
   results: SearchResultsData;
   onEditSearch: () => void;
+  onSubmit?: (newQuery: string) => void;
   onClose: () => void;
   selectedLocation: string;
   onSelectLocation: (loc: string) => void;
@@ -24,12 +25,36 @@ export default function SearchResultsCanvas({
   query,
   results,
   onEditSearch,
+  onSubmit,
   onClose,
   selectedLocation,
   onSelectLocation,
   onSelectSpecialtyTag,
   onAskPulse,
 }: SearchResultsCanvasProps) {
+  const [inputValue, setInputValue] = useState(query);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Synchronize local input value when incoming query prop changes
+  useEffect(() => {
+    setInputValue(query);
+  }, [query]);
+
+  // Check if user has modified the prompt
+  const isEdited = inputValue.trim() !== query.trim() && inputValue.trim().length > 0;
+
+  const handleFormSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const clean = inputValue.trim();
+    if (clean) {
+      if (onSubmit) {
+        onSubmit(clean);
+      } else {
+        onEditSearch();
+      }
+    }
+  };
+
   return (
     <div className={styles.resultsContainer}>
       {/* Top Header Row: Location Pill + Pulse AI Badge + Close Button */}
@@ -42,7 +67,17 @@ export default function SearchResultsCanvas({
           />
 
           {/* Pulse AI Badge */}
-          <div className={styles.pulseBadge}>
+          <div 
+            className={styles.pulseBadge}
+            onClick={onAskPulse}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") onAskPulse?.();
+            }}
+            style={{ cursor: "pointer" }}
+            title="Open Pulse AI clinical assistant"
+          >
             <div className={styles.pulseBars} aria-hidden>
               <span className={styles.pulseBar1} />
               <span className={styles.pulseBar2} />
@@ -63,21 +98,61 @@ export default function SearchResultsCanvas({
         </button>
       </div>
 
-      {/* Query Display Bar: Search Icon + Query + EDIT SEARCH button */}
-      <div className={styles.resultsQueryBar}>
-        <div className={styles.resultsQueryLeft}>
+      {/* Query Display Bar: Search Icon + Natural Editable Input + Send/Edit button */}
+      <form className={styles.resultsQueryBar} onSubmit={handleFormSubmit}>
+        <div 
+          className={styles.resultsQueryLeft}
+          onClick={() => inputRef.current?.focus()}
+        >
           <Search size={22} className={styles.resultsQuerySearchIcon} />
-          <span className={styles.resultsQueryText}>{query}</span>
+          <input
+            ref={inputRef}
+            type="text"
+            className={styles.resultsQueryInput}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleFormSubmit();
+              } else if (e.key === "Escape") {
+                if (isEdited) {
+                  e.stopPropagation();
+                  setInputValue(query);
+                }
+              }
+            }}
+            placeholder="Search doctors, specialties, symptoms..."
+            aria-label="Edit search prompt"
+          />
         </div>
 
-        <button
-          type="button"
-          className={styles.editSearchBtn}
-          onClick={onEditSearch}
-        >
-          EDIT SEARCH
-        </button>
-      </div>
+        <div className={styles.resultsQueryActions}>
+          {isEdited ? (
+            <button
+              type="submit"
+              className={styles.querySendBtn}
+              title="Search with updated prompt"
+              aria-label="Submit search"
+            >
+              <span>Search</span>
+              <ArrowRight size={14} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.editSearchBtn}
+              onClick={() => {
+                inputRef.current?.focus();
+                inputRef.current?.select();
+              }}
+              title="Click to edit prompt"
+            >
+              EDIT SEARCH
+            </button>
+          )}
+        </div>
+      </form>
 
       {/* Red Horizon Divider */}
       <div className={styles.redDivider} />

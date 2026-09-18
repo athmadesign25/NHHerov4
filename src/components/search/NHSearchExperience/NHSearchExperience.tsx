@@ -22,8 +22,9 @@ import {
  * - 'active': Expanded canvas (State 2) — empty waiting to type OR live predictive sentence completion
  * - 'skeleton': Short 600-900ms AI inference loading simulation showing doctor/category skeletons
  * - 'results': Full search results canvas with doctors, treatments, articles, and tags
+ * - 'pulse': Attached Pulse AI window with navigation back to search results
  */
-export type SearchState = "landing" | "active" | "skeleton" | "results";
+export type SearchState = "landing" | "active" | "skeleton" | "results" | "pulse";
 
 export interface AnchorRect {
   top: number;
@@ -147,11 +148,15 @@ export default function NHSearchExperience({
     onOpenChange?.(isExpanded);
   }, [searchState, onOpenChange]);
 
-  // Handle global keyboard Escape to return to landing
+  // Handle global keyboard Escape to return to landing (or back to results if in pulse)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && searchState !== "landing") {
-        handleClose();
+        if (searchState === "pulse") {
+          setSearchState("results");
+        } else {
+          handleClose();
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -365,9 +370,18 @@ export default function NHSearchExperience({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [searchState]);
 
-  // Handle Ask Pulse CTA
+  // Handle Ask Pulse CTA: Smoothly transitions into the attached Pulse AI window
   const handleAskPulse = () => {
-    handleOpenPulse(query || "I have chest pain and need clinical guidance");
+    const q = query && query.trim().length > 0 
+      ? query.trim() 
+      : "I have chest pain and need clinical guidance";
+    setPulseInitialQuery(q);
+    setSearchState("pulse");
+  };
+
+  // Back from Pulse to Results stage (preserves search query, location, and doctor matches)
+  const handleBackToResults = () => {
+    setSearchState("results");
   };
 
   // Class mapping based on state:
@@ -376,6 +390,10 @@ export default function NHSearchExperience({
       ? styles.stateLanding
       : searchState === "active"
       ? styles.stateActive
+      : searchState === "results"
+      ? styles.stateResults
+      : searchState === "pulse"
+      ? styles.statePulse
       : styles.stateResults;
 
   return (
@@ -468,7 +486,7 @@ export default function NHSearchExperience({
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "center",
-            paddingTop: (searchState === "results" || searchState === "skeleton")
+            paddingTop: (searchState === "results" || searchState === "skeleton" || searchState === "pulse")
               ? "max(20px, 3vh)"
               : "max(60px, 12vh)",
             paddingBottom: "24px",
@@ -512,9 +530,17 @@ export default function NHSearchExperience({
             style={{
               position: "relative",
               zIndex: 2,
-              width: Math.min((searchState === "results" || searchState === "skeleton") ? 1080 : 880, winSize.w - 32),
-              maxHeight: (searchState === "results" || searchState === "skeleton") ? "92vh" : "85vh",
-              overflowY: "auto",
+              width: Math.min(
+                (searchState === "results" || searchState === "skeleton") 
+                  ? 1080 
+                  : searchState === "pulse" 
+                  ? 1000 
+                  : 880, 
+                winSize.w - 32
+              ),
+              maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
+              height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
+              overflowY: searchState === "pulse" ? "hidden" : "auto",
               overscrollBehavior: "contain",
               margin: 0,
               boxSizing: "border-box",
@@ -566,11 +592,31 @@ export default function NHSearchExperience({
                     query={query || "I have chest pain and need a doctor"}
                     results={resultsData}
                     onEditSearch={handleEditSearch}
+                    onSubmit={handleSubmit}
                     onClose={handleClose}
                     selectedLocation={selectedLocation}
                     onSelectLocation={handleSelectLocation}
                     onSelectSpecialtyTag={handleSelectSpecialtyTag}
                     onAskPulse={handleAskPulse}
+                  />
+                </motion.div>
+              )}
+
+              {searchState === "pulse" && (
+                <motion.div
+                  key="pulse"
+                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98, y: 10 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}
+                >
+                  <PulseAIWorkspace
+                    embedded
+                    onBack={handleBackToResults}
+                    backLabel="Back to search results"
+                    onClose={handleClose}
+                    initialQuery={pulseInitialQuery}
                   />
                 </motion.div>
               )}
