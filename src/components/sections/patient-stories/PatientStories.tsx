@@ -9,7 +9,7 @@ import TextSweepEffect from "@/components/ui/TextSweepEffect";
 const initialCards = [
   {
     id: "card-1",
-    name: "Sunitha Swami",
+    name: "Prakash Bajaj",
     condition: "Knee Replacement Surgery",
     overview: "Exceptional cardiac care and seamless recovery guidance from the expert doctors.",
     image: "/assets/patient_1.png",
@@ -23,7 +23,7 @@ const initialCards = [
   },
   {
     id: "card-2",
-    name: "Karthik R",
+    name: "Sunita Goyal",
     condition: "Neurosurgery",
     overview: "The compassionate care and precision treatment gave our family a second chance at life.",
     image: "/patient_omkar.png",
@@ -51,7 +51,7 @@ const initialCards = [
   },
   {
     id: "card-4",
-    name: "Priya & Ramesh Kumar",
+    name: "Mohammed Al-Farsi",
     condition: "Cardiac Surgery",
     overview: "Finding the right hospital was critical for us, and Narayana Health gave us full confidence.",
     image: "/assets/patient_in_3.png",
@@ -79,7 +79,7 @@ const initialCards = [
   },
   {
     id: "card-6",
-    name: "Mohammed Al-Farsi",
+    name: "Priya & Ramesh Kumar",
     condition: "Bone Marrow Transplant",
     overview: "International patient care desk made our medical travel and treatment completely seamless.",
     image: "/assets/patient_in_1.png",
