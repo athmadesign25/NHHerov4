@@ -269,13 +269,8 @@
 }
 
 /* ─── Bottom stack: label + card row + explore button ─────────────────── */
-/* A fixed gap under the USP row rather than margin-top: auto — the auto
-   pushed this whole unit to the bottom of the frame, leaving ~150px of
-   dead space above it. 20px laid out, not 54: the text block above rides
-   34px upward on the reveal (a transform, so it never changes layout),
-   which is what makes the settled gap the 54px intended. */
 .bottomStack {
-  margin-top: 20px;
+  margin-top: auto;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -492,8 +487,10 @@
   height: 100%;
   width: 208px;
   object-fit: cover;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 55%);
-  mask-image: linear-gradient(to right, transparent 0%, black 55%);
+  /* The fade only has to stop the artwork butting hard against the text
+     column — at 55% it was washing out over half of every image. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 22%);
+  mask-image: linear-gradient(to right, transparent 0%, black 22%);
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
 }
