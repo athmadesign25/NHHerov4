@@ -1410,34 +1410,35 @@
   box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
 }
 
-/* Full background photo covering 100% of the card - NO section cut */
+/* Full background photo covering 100% of the card - Zoomed in on face, positioned slightly above center */
 .refDocFullImage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 18%;
+  transform: scale(1.35);
+  transform-origin: center 25%;
   display: block;
   transition: transform 0.35s ease;
 }
 
 .refDoctorCard:hover .refDocFullImage {
-  transform: scale(1.03);
+  transform: scale(1.40);
 }
 
-/* Full card bottom-to-top dark gradient scrim overlay */
+/* Subtle dark gradient film overlay focused only at the bottom for crisp text readability without darkening face */
 .refDocFullGradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(8, 13, 23, 0.98) 0%,
-    rgba(8, 13, 23, 0.90) 26%,
-    rgba(8, 13, 23, 0.60) 46%,
-    rgba(8, 13, 23, 0.18) 62%,
-    rgba(0, 0, 0, 0) 78%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(6, 11, 20, 0.86) 0%,
+    rgba(6, 11, 20, 0.65) 24%,
+    rgba(6, 11, 20, 0.32) 42%,
+    rgba(6, 11, 20, 0.06) 55%,
+    rgba(0, 0, 0, 0) 68%
   );
   pointer-events: none;
   z-index: 1;
@@ -1544,6 +1545,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .refDocHospital {
@@ -1555,6 +1557,7 @@
   text-overflow: ellipsis;
   margin-top: 1px;
   margin-bottom: 10px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Full-width Book Button */
