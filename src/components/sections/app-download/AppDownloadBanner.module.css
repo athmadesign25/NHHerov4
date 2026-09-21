@@ -633,16 +633,19 @@
      nothing to read against — the lift comes from a lit top edge, a soft
      drop shadow and a brighter rim, with the blue wash over the top. */
   border: 1px solid rgba(255, 255, 255, 0.85);
+  /* A denser white under a heavier blur — frosted rather than a thin wash,
+     which is what left it looking flat. Depth comes from the inset rim
+     rather than a pronounced cast shadow. */
   background:
     linear-gradient(135deg, rgba(47, 120, 255, 0.16) 0%, rgba(47, 120, 255, 0.05) 46%, rgba(47, 120, 255, 0) 74%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.48) 100%);
-  backdrop-filter: blur(22px) saturate(1.7);
-  -webkit-backdrop-filter: blur(22px) saturate(1.7);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.70) 100%);
+  backdrop-filter: blur(32px) saturate(1.9);
+  -webkit-backdrop-filter: blur(32px) saturate(1.9);
   box-shadow:
-    0 10px 28px rgba(15, 23, 42, 0.10),
-    0 2px 6px rgba(15, 23, 42, 0.05),
+    0 4px 12px rgba(15, 23, 42, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.40);
+    inset 0 -1px 1px rgba(15, 23, 42, 0.05),
+    inset 0 0 20px rgba(255, 255, 255, 0.55);
   white-space: nowrap;
 }
 

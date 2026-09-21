@@ -158,7 +158,7 @@ export default function FloatingQuickActions() {
                 loop={false}
                 autoplay
                 onComplete={calendarHover.onComplete}
-                style={{ width: 46, height: 46, flexShrink: 0 }}
+                style={{ width: 42, height: 42, flexShrink: 0 }}
                 aria-hidden
               />
             </span>
@@ -181,7 +181,7 @@ export default function FloatingQuickActions() {
               loop={false}
               autoplay
               onComplete={nhAppIconHover.onComplete}
-              style={{ width: 32, height: 32, flexShrink: 0 }}
+              style={{ width: 29, height: 29, flexShrink: 0 }}
               aria-hidden
             />
           </span>

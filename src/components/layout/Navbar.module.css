@@ -1027,3 +1027,32 @@
     filter: drop-shadow(0 0 7px rgba(255, 56, 56, 0.85)) drop-shadow(0 0 2px rgba(255, 56, 56, 0.6));
   }
 }
+
+/* ─── City picker (desktop) ───
+   Tertiary next to the emergency button: plain text and icon on the
+   navbar's own dynamic colour, no surface of its own. Only present once
+   the hero search — which otherwise owns the location — has docked. */
+.navLocationBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--nav-fg-color, #FFFFFF);
+  overflow: hidden;
+  white-space: nowrap;
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.navLocationBtn:hover {
+  opacity: 0.75;
+}
+
+.navLocationName {
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+}

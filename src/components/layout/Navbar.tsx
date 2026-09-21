@@ -67,6 +67,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
+  // The hero search carries the location picker; once it has handed off to
+  // the floating bar there is nowhere left to see or change it, so the
+  // navbar picks it up. Same threshold the floating bar appears on.
+  const [searchDocked, setSearchDocked] = useState(false);
   const isOverLightRef = useRef(false);
   const lastScrollY = useRef(0);
 
@@ -107,6 +111,7 @@ export default function Navbar() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      setSearchDocked(currentScrollY >= window.innerHeight * 0.65);
 
       if (currentScrollY > 20) {
         setScrolled(true);
@@ -366,6 +371,24 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
+          <AnimatePresence>
+            {searchDocked && (
+              <motion.button
+                type="button"
+                className={styles.navLocationBtn}
+                aria-label="Change city"
+                initial={{ opacity: 0, width: 0, marginRight: -12 }}
+                animate={{ opacity: 1, width: "auto", marginRight: 0 }}
+                exit={{ opacity: 0, width: 0, marginRight: -12 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <MapPin size={16} strokeWidth={2} />
+                <span className={styles.navLocationName}>Bangalore</span>
+                <ChevronDown size={14} style={{ opacity: 0.7 }} />
+              </motion.button>
+            )}
+          </AnimatePresence>
+
           <Link
             href="/emergency"
             className={`${styles.emergencyBtn} ${isOverLightBackground ? styles.emergencyBtnOnLight : ""}`}
