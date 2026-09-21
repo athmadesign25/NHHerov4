@@ -13,6 +13,10 @@ type PackageCard = {
   testsCount: number;
   reportsWithin: string;
   variant: 1 | 2 | 3;
+  // Direction 2 only: who the package is for, shown as a subtitle under
+  // the title ("35+ years · Women").
+  ageBand: string;
+  audience: string;
 };
 
 // Revealed on card hover, below the divider. Shared across every package
@@ -38,6 +42,8 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 42,
       reportsWithin: "8 hours",
       variant: 1,
+      ageBand: "35+ years",
+      audience: "Everyone",
     },
     {
       id: "thyroid-health",
@@ -46,6 +52,8 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 15,
       reportsWithin: "2 hours",
       variant: 2,
+      ageBand: "25+ years",
+      audience: "Women",
     },
     {
       id: "diabetes-care",
@@ -54,6 +62,8 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       testsCount: 9,
       reportsWithin: "06:45 PM",
       variant: 3,
+      ageBand: "40+ years",
+      audience: "Everyone",
     },
   ],
 };
@@ -247,6 +257,12 @@ export default function HealthPackages() {
   // is hovered, not any card — the label sits right above it, so only that
   // one card visually competes with it.
   const [centerCardHovered, setCenterCardHovered] = useState(false);
+
+  // Two card treatments kept side by side for review (see the floating
+  // toggle rendered below). 1 is the original grow-on-hover card; 2 is the
+  // fixed-height card with a shimmer sweep and an audience subtitle.
+  const [cardDirection, setCardDirection] = useState<1 | 2>(1);
+  const isDirTwo = cardDirection === 2;
 
   // "growing": frame size/radius tracks raw scroll (p1raw) as before.
   // "full": frame is pinned at its fully-grown end values and the card
@@ -679,6 +695,23 @@ export default function HealthPackages() {
       // whichever section comes next instead — no dynamic toggle needed.
       data-nav-theme="dark"
     >
+      {/* Review-only switch between the two card treatments — parked on
+          the left so it never sits over the cards themselves. */}
+      <div className={styles.directionToggle}>
+        <span className={styles.directionToggleLabel}>Cards</span>
+        {([1, 2] as const).map((dir) => (
+          <button
+            key={dir}
+            type="button"
+            className={`${styles.directionToggleBtn} ${cardDirection === dir ? styles.directionToggleBtnActive : ""}`}
+            onClick={() => setCardDirection(dir)}
+            aria-pressed={cardDirection === dir}
+          >
+            D{dir}
+          </button>
+        ))}
+      </div>
+
       <div ref={stickyViewportRef} className={styles.stickyViewport}>
         <div ref={frameRef} className={styles.frame}>
           {/* No `loop` — looping is handled manually via ping-pong scrubbing
@@ -770,7 +803,7 @@ export default function HealthPackages() {
                     Most Booked in {DETECTED_CITY}
                   </div>
 
-                  <div className={styles.cardStack}>
+                  <div className={`${styles.cardStack} ${isDirTwo ? styles.cardStackDir2 : ""}`}>
                     {packages.map((pkg, pkgIndex) => {
                       const isCenterCard = pkgIndex === Math.floor(packages.length / 2);
                       return (
@@ -780,11 +813,11 @@ export default function HealthPackages() {
                         // is absolutely positioned within it, bottom-
                         // anchored, so growing height pushes its own top
                         // edge up instead of the slot's bottom edge down.
-                        <div key={pkg.id} className={styles.packageCardSlot}>
+                        <div key={pkg.id} className={`${styles.packageCardSlot} ${isDirTwo ? styles.packageCardSlotDir2 : ""}`}>
                           <Link
                             href={`/health-packages/${pkg.id}`}
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
-                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]}`}
+                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${isDirTwo ? styles.packageCardDir2 : ""}`}
                             onMouseMove={handleCardMouseMove}
                             onMouseEnter={isCenterCard ? () => setCenterCardHovered(true) : undefined}
                             onMouseLeave={(e) => {
@@ -793,9 +826,15 @@ export default function HealthPackages() {
                             }}
                           >
                             <span className={styles.packageCardBorder} aria-hidden />
+                            {isDirTwo && <span className={styles.packageCardShimmer} aria-hidden />}
                             <img src={pkg.image} alt="" className={styles.packageCardImage} />
                             <div className={styles.packageCardContent}>
                               <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
+                              {isDirTwo && (
+                                <p className={styles.packageCardAudience}>
+                                  {pkg.ageBand} · {pkg.audience}
+                                </p>
+                              )}
                               <div className={styles.packageCardFacts}>
                                 <div className={styles.packageCardFact}>
                                   <span className={styles.packageCardFactIcon}>
@@ -820,7 +859,10 @@ export default function HealthPackages() {
                                   gives it an exact zero height at rest (no guessed
                                   max-height), and the 24px above the divider is the
                                   content column's own gap rather than a second margin
-                                  that would double up with it. */}
+                                  that would double up with it. Direction 2 drops them
+                                  entirely — its card never grows, so there is nowhere
+                                  for them to go. */}
+                              {!isDirTwo && (
                               <div className={styles.packageCardExtras}>
                                 <div className={styles.packageCardExtrasInner}>
                                   <div className={styles.packageCardPerks}>
@@ -839,6 +881,7 @@ export default function HealthPackages() {
                                   </div>
                                 </div>
                               </div>
+                              )}
                             </div>
                             {/* Plain text, not a nested <a> — the whole
                                 card is already the clickable Link; this is

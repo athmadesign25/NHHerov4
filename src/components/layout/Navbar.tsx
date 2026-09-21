@@ -369,25 +369,14 @@ export default function Navbar() {
           <Link
             href="/emergency"
             className={styles.emergencyBtn}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              cursor: "pointer",
-              padding: "8px",
-              background: "none",
-              border: "none",
-              borderRadius: "8px",
-              textDecoration: "none"
-            }}
           >
             <span className={styles.emergencyIcon}>
               <EmergencyIcon size={18} />
             </span>
-            {/* Matches every other nav label's dynamic light/dark color
-                (same --nav-fg-color the rest of the navbar reads) instead
-                of its own hardcoded red — only the siren icon stays red. */}
-            <span style={{ fontSize: "14px", fontWeight: 600, whiteSpace: "nowrap", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>24/7 Emergency</span>
+            {/* White on the red glass, so it no longer tracks the navbar's
+                light/dark label color — the button carries its own surface
+                now and reads the same over either background. */}
+            <span className={styles.emergencyLabelText}>24/7 Emergency</span>
           </Link>
 
           {isLoggedIn ? (

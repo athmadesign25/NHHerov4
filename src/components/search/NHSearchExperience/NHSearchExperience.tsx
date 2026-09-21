@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue, useScroll, LayoutGroup } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue, useScroll } from "framer-motion";
 import { Search, X } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
@@ -152,23 +152,69 @@ export default function NHSearchExperience({
   const promptOpacity = useTransform(activeProgress, [0.5, 0.75], [1, 0]);
   const compactLabelOpacity = useTransform(activeProgress, [0.75, 1.0], [0, 1]);
 
-  // Past the hero entirely there is nothing to animate between, so the
-  // shell just appears docked instead of flying across the page.
-  const [skipTransition, setSkipTransition] = useState(false);
+  // ── Dock travel ──────────────────────────────────────────────────────
+  // The trip to the floating bar is driven straight off scroll position
+  // rather than a spring fired by a state flip. Two reasons it has to be:
+  // the hero is `position: sticky` AND carries a scale transform, so it is
+  // the containing block for any fixed-position descendant — the shell
+  // only gets true viewport coordinates once it is portaled out to the
+  // body, and animating a layout across that portal swap is what made the
+  // travel jump through the middle of the screen or snap to the right.
+  // Scroll-linked interpolation between two measured points has no such
+  // race: every frame's position is a pure function of scrollY.
+  const DOCK_START = winSize.h * 0.35;
+  const DOCK_END = winSize.h * 0.65;
+
+  // The shell's own viewport rect while it is still in the hero's flow,
+  // kept current so the travel can start from exactly where it is at the
+  // moment it leaves the flow (rather than a computed guess, which would
+  // show up as a jump: the hero is mid-scale at that point).
+  const shellRef = useRef<HTMLDivElement>(null);
+  const flowRectRef = useRef({ top: 0, left: 0, width: targetSquareSize, height: targetSquareSize });
+  const [dockOrigin, setDockOrigin] = useState({ top: 0, left: 0, width: targetSquareSize, height: targetSquareSize });
+
+  const dockProgress = useTransform(scrollY, [DOCK_START, DOCK_END], [0, 1], { clamp: true });
+  const dockTop = useTransform(dockProgress, [0, 1], [dockOrigin.top, endTop]);
+  const dockLeft = useTransform(dockProgress, [0, 1], [dockOrigin.left, endLeft]);
+  // Size travels from the measured origin too — the shrink is spring-driven
+  // and may not have quite landed on the square when the handoff happens,
+  // so reading it back is what keeps the switch seamless.
+  const dockWidth = useTransform(dockProgress, [0, 1], [dockOrigin.width, endWidth]);
+  const dockHeight = useTransform(dockProgress, [0, 1], [dockOrigin.height, endHeight]);
+  // Gone by the time the bar itself has faded in, so the two are never
+  // both on screen.
+  const dockOpacity = useTransform(dockProgress, [0.75, 1], [1, 0]);
 
   const syncDocked = useCallback(() => {
-    const isPastThreshold = scrollY.get() >= winSize.h * 0.65;
-    const isSquareAchieved = activeProgress.get() >= 0.99;
-    setIsDocked(isPastThreshold && isSquareAchieved);
-    setSkipTransition(scrollY.get() >= winSize.h * 1.5);
-  }, [scrollY, winSize.h, activeProgress]);
+    const y = scrollY.get();
+    const shouldDock = y >= DOCK_START;
+
+    setIsDocked((wasDocked) => {
+      if (shouldDock && !wasDocked) {
+        // Leaving the flow: pin the travel's starting point to wherever
+        // the shell physically is right now.
+        setDockOrigin({ ...flowRectRef.current });
+      }
+      return shouldDock;
+    });
+  }, [scrollY, DOCK_START]);
 
   useMotionValueEvent(scrollY, "change", syncDocked);
-  useMotionValueEvent(activeProgress, "change", syncDocked);
 
-  const shellTarget = isDocked
-    ? { borderRadius: 18, padding: "8px 6px", opacity: 0 }
-    : { borderRadius: 20, padding: "20px 24px", opacity: 1 };
+  // Tracked while in flow only — once docked the element is driven by the
+  // motion values above, so reading it back would feed itself.
+  useMotionValueEvent(scrollY, "change", () => {
+    if (isDocked || !shellRef.current) return;
+    const rect = shellRef.current.getBoundingClientRect();
+    flowRectRef.current = {
+      top: Math.round(rect.top),
+      left: Math.round(rect.left),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height),
+    };
+  });
+
+  const shellTarget = { borderRadius: 20, padding: "20px 24px" };
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -431,35 +477,28 @@ export default function NHSearchExperience({
       ? styles.stateActive
       : styles.stateResults;
 
-  // Built once and either rendered in place (in the hero's flow) or
-  // portaled to the body when docked, so the same element animates across
-  // the handoff instead of one unmounting and another appearing.
+  // One element throughout: in the hero's flow while it shrinks, then
+  // portaled to the body and flown to the bar on scroll-linked motion
+  // values. No layout animation — see the dock travel notes above.
   const searchShellContent = (
     <motion.div
-      layoutId="search-composer"
-      layout="position"
+      ref={shellRef}
       className={`${styles.searchShell} ${
         searchState === "landing" ? styles.stateLanding : styles.stateActive
       }`}
       animate={searchState === "landing" ? shellTarget : undefined}
-      transition={skipTransition ? { duration: 0 } : {
-        type: "spring",
-        stiffness: 400,
-        damping: 35,
-        mass: 1,
-        opacity: { duration: 0.1, delay: 0, ease: "easeOut" },
-      }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       style={{
         position: isDocked ? "fixed" : "relative",
         margin: isDocked ? "0" : "0 auto",
-        ...(isDocked && { top: endTop, left: endLeft }),
+        ...(isDocked && { top: dockTop, left: dockLeft, opacity: dockOpacity }),
         maxWidth: "none",
         boxSizing: "border-box",
         zIndex: 8990,
         pointerEvents: isDocked ? "none" : "auto",
         overflow: "hidden",
-        width: isDocked ? endWidth : composerWidth,
-        height: isDocked ? endHeight : composerHeight,
+        width: isDocked ? dockWidth : composerWidth,
+        height: isDocked ? dockHeight : composerHeight,
         cursor: searchState === "landing" ? "pointer" : "default",
         ...(searchState !== "landing" && {
           width: "100%",
@@ -501,9 +540,7 @@ export default function NHSearchExperience({
         zIndex: 8990,
       }}
     >
-      <LayoutGroup>
-        {isDocked && mounted ? createPortal(searchShellContent, document.body) : searchShellContent}
-      </LayoutGroup>
+      {isDocked && mounted ? createPortal(searchShellContent, document.body) : searchShellContent}
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}

@@ -878,3 +878,164 @@
     filter: none !important;
   }
 }
+
+/* ═══ Direction 2 card treatment ═══════════════════════════════════════
+   A fixed-height card: it never grows on hover, so "View Details" has to
+   already have room at the bottom in the resting state. The hover read
+   comes from a shimmer sweep and a small image bump instead of the height
+   change (and the perk pills are gone with it — see HealthPackages.tsx). */
+.packageCardSlotDir2 {
+  height: 300px;
+}
+
+.packageCardDir2,
+.packageCardDir2:hover,
+.packageCardDir2:focus-visible {
+  height: 300px;
+}
+
+/* Wider columns than direction 1 — the titles run on one line here, so
+   they need the room. */
+.cardStackDir2 {
+  grid-template-columns: repeat(3, minmax(260px, 430px));
+}
+
+/* One line, never wrapping. The content column also stops reserving room
+   for a 2-line title, so the subtitle sits directly beneath it. */
+.packageCardDir2 .packageCardTitle {
+  white-space: nowrap;
+  font-size: 19px;
+}
+
+.packageCardDir2 .packageCardContent {
+  max-width: calc(100% - 150px);
+  gap: 20px;
+}
+
+.packageCardAudience {
+  margin: 6px 0 0;
+  color: #5A6472;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* Only a small bump — the direction 1 card's image appeared to grow a lot
+   simply because the card itself got taller under it. */
+.packageCardDir2 .packageCardImage {
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCardDir2:hover .packageCardImage,
+.packageCardDir2:focus-visible .packageCardImage {
+  width: 228px;
+}
+
+/* White shimmer sweep across the card on hover — replaces the height
+   growth as the hover affordance. Sits above the surface but below the
+   content, and is only painted while hovered so it never runs at rest. */
+.packageCardShimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.packageCardShimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 55%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-18deg);
+}
+
+.packageCardDir2:hover .packageCardShimmer,
+.packageCardDir2:focus-visible .packageCardShimmer {
+  opacity: 1;
+}
+
+.packageCardDir2:hover .packageCardShimmer::after,
+.packageCardDir2:focus-visible .packageCardShimmer::after {
+  animation: packageCardShimmerSweep 0.9s cubic-bezier(0.32, 0.72, 0.4, 1);
+}
+
+@keyframes packageCardShimmerSweep {
+  from {
+    left: -60%;
+  }
+  to {
+    left: 120%;
+  }
+}
+
+/* ─── Direction toggle (review aid) ─── */
+/* Bottom-left rather than vertically centered: direction 2's card row is
+   wide enough to run under a mid-height toggle. */
+.directionToggle {
+  position: fixed;
+  left: 16px;
+  bottom: 96px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.directionToggleLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.directionToggleBtn {
+  width: 34px;
+  padding: 6px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.directionToggleBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.directionToggleBtnActive {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #0B1B33;
+}
+
+@media (max-width: 1024px) {
+  .directionToggle {
+    display: none;
+  }
+}

@@ -49,12 +49,17 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 10px;
-  background: linear-gradient(149deg, rgba(47, 120, 255, 0.62) 0%, rgba(11, 77, 199, 0.72) 100%);
+  /* Deeper, more saturated blue than the earlier wash — the tile should
+     read as blue glass in its own right rather than a faint tint picking
+     up whatever is behind the bar. */
+  background: linear-gradient(149deg, rgba(37, 110, 255, 0.86) 0%, rgba(6, 58, 168, 0.94) 100%);
+  backdrop-filter: blur(12px) saturate(1.6);
+  -webkit-backdrop-filter: blur(12px) saturate(1.6);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.62),
     inset 0 -1px 2px rgba(255, 255, 255, 0.20),
-    inset 0 0 16px rgba(255, 255, 255, 0.16),
-    0 4px 12px rgba(11, 77, 199, 0.22);
+    inset 0 0 16px rgba(120, 180, 255, 0.28),
+    0 4px 14px rgba(8, 62, 180, 0.34);
   transition: transform 0.2s ease, background 0.25s ease;
 }
 

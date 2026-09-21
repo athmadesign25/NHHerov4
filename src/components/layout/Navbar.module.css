@@ -956,23 +956,45 @@
   transform: rotate(180deg);
 }
 
-/* ─── 24/7 Emergency nav button: subtle red glow on hover ─── */
+/* ─── 24/7 Emergency: red glass secondary button ───
+   Carries its own surface rather than sitting bare on the navbar, so it
+   reads identically over the light and dark sections instead of flipping
+   with --nav-fg-color the way the plain nav labels do. */
 .emergencyBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: rgba(237, 28, 36, 0.18);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid rgba(255, 56, 56, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
   will-change: filter, transform;
-  transition: filter 0.25s ease, transform 0.25s ease;
+  transition: filter 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
 .emergencyBtn:hover {
+  background: rgba(237, 28, 36, 0.28);
   filter: drop-shadow(0 0 8px rgba(237, 28, 36, 0.55)) drop-shadow(0 0 2px rgba(237, 28, 36, 0.65));
   transform: translateY(-1px);
 }
 
-/* Siren icon: fixed red (not the dynamic light/dark color the "24/7
-   Emergency" label beside it uses), blinking with a subtle glow — a
-   slow breathing pulse rather than a hard on/off flash. */
+.emergencyLabelText {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #FFFFFF;
+}
+
+/* Siren icon: white like the label, still breathing on a slow pulse with
+   a red glow picked up from the button's own surface. */
 .emergencyIcon {
   display: flex;
-  color: #FF3838;
+  color: #FFFFFF;
   animation: emergencySirenBlink 1.8s ease-in-out infinite;
 }
 
