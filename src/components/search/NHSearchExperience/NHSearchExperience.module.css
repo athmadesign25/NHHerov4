@@ -4388,85 +4388,181 @@
   color: #64748B !important;
 }
 
-/* ── Soft Diffused Outline Gradient Glow Spill Outside around Popup Card ── */
+/* ── Soft Feathered Random Diffused Motion Glow Behind Popup Card ── */
 .modalWithAmbientWrap {
   position: relative;
   display: flex;
   justifyContent: center;
   align-items: flex-start;
   box-sizing: border-box;
-  border-radius: 24px;
 }
 
-/* Inner diffused glow spill radiating softly outside the card rim */
-.activeModalGlowSpill {
+.cardFeatheredGlowWrap {
   position: absolute;
-  inset: -6px -8px;
-  border-radius: 28px;
-  padding: 8px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,
-    rgba(255, 46, 147, 0.90) 55deg,
-    rgba(139, 92, 246, 0.90) 115deg,
-    rgba(3, 78, 162, 0.95) 175deg,
-    rgba(0, 196, 255, 0.95) 235deg,
-    rgba(37, 99, 235, 0.95) 295deg,
-    rgba(237, 28, 36, 0.95) 360deg
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  filter: blur(18px) saturate(160%);
-  -webkit-filter: blur(18px) saturate(160%);
-  animation: rotateBorderAngle 6s linear infinite;
+  inset: -45px -55px;
   pointer-events: none;
+  overflow: visible;
   z-index: 1;
-  box-sizing: border-box;
+  transition: opacity 0.4s ease;
 }
 
-/* Outer wider diffused soft bloom melting into the blurred backdrop */
-.activeModalGlowSpillWide {
-  position: absolute;
-  inset: -16px -20px;
-  border-radius: 36px;
-  padding: 14px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.90) 0deg,
-    rgba(255, 46, 147, 0.85) 55deg,
-    rgba(139, 92, 246, 0.85) 115deg,
-    rgba(3, 78, 162, 0.90) 175deg,
-    rgba(0, 196, 255, 0.90) 235deg,
-    rgba(37, 99, 235, 0.90) 295deg,
-    rgba(237, 28, 36, 0.90) 360deg
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  filter: blur(32px) saturate(145%);
-  -webkit-filter: blur(32px) saturate(145%);
-  animation: rotateBorderAngle 6s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-  box-sizing: border-box;
-}
-
-.glowSpillWhite {
-  opacity: 0.50;
+.featherWhite {
+  opacity: 0.55;
   mix-blend-mode: normal;
 }
 
-.glowSpillDark {
-  opacity: 0.60;
+.featherDark {
+  opacity: 0.65;
   mix-blend-mode: screen;
 }
 
+/* Central soft diffuse gradient wash directly behind card */
+.featherMeshWash {
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(139, 92, 246, 0.45) 0%,
+    rgba(6, 182, 212, 0.40) 35%,
+    rgba(236, 72, 153, 0.35) 60%,
+    transparent 80%
+  );
+  filter: blur(50px);
+  -webkit-filter: blur(50px);
+  animation: featherWashBreath 8s ease-in-out infinite alternate;
+}
+
+/* Base diffused light lobe: high blur, soft falloff, zero sharp edges */
+.featherLobe {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  -webkit-filter: blur(55px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+/* Lobe 1: Electric Cyan (Top Left & Top Edge random drift) */
+.featherLobeCyan {
+  width: 320px;
+  height: 240px;
+  top: -30px;
+  left: 5%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.85) 0%, rgba(56, 189, 248, 0.40) 45%, transparent 75%);
+  animation: featherFloatCyan 6s ease-in-out infinite alternate;
+}
+
+/* Lobe 2: Pulse Violet / Purple (Top Right & Right Edge random drift) */
+.featherLobePurple {
+  width: 340px;
+  height: 260px;
+  top: -25px;
+  right: 5%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.90) 0%, rgba(168, 85, 247, 0.45) 45%, transparent 75%);
+  animation: featherFloatPurple 7s ease-in-out infinite alternate;
+}
+
+/* Lobe 3: NH Blue / Royal Azure (Bottom Right & Bottom Edge random drift) */
+.featherLobeBlue {
+  width: 340px;
+  height: 250px;
+  bottom: -30px;
+  right: 8%;
+  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(3, 78, 162, 0.40) 45%, transparent 75%);
+  animation: featherFloatBlue 6.5s ease-in-out infinite alternate;
+}
+
+/* Lobe 4: Pulse Pink / Coral (Bottom Left & Left Edge random drift) */
+.featherLobePink {
+  width: 300px;
+  height: 240px;
+  bottom: -25px;
+  left: 8%;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(237, 28, 36, 0.38) 45%, transparent 75%);
+  animation: featherFloatPink 7.5s ease-in-out infinite alternate;
+}
+
+/* Random Organic Floating Motion Keyframes */
+@keyframes featherWashBreath {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+@keyframes featherFloatCyan {
+  0% {
+    transform: translate(0px, 0px) scale(0.95);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(70px, 20px) scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-30px, 40px) scale(0.92);
+    opacity: 0.8;
+  }
+}
+
+@keyframes featherFloatPurple {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-65px, 25px) scale(0.90);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(35px, -20px) scale(1.15);
+    opacity: 0.85;
+  }
+}
+
+@keyframes featherFloatBlue {
+  0% {
+    transform: translate(0px, 0px) scale(0.92);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-50px, -30px) scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(40px, -40px) scale(0.95);
+    opacity: 0.75;
+  }
+}
+
+@keyframes featherFloatPink {
+  0% {
+    transform: translate(0px, 0px) scale(1.12);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(50px, -25px) scale(0.92);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-35px, 25px) scale(1.18);
+    opacity: 0.8;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .activeModalGlowSpill,
-  .activeModalGlowSpillWide {
+  .featherLobe,
+  .featherMeshWash {
     animation: none !important;
   }
 }

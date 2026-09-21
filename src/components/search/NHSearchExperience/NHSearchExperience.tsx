@@ -747,11 +747,14 @@ export default function NHSearchExperience({
               zIndex: 2,
             }}
           >
-            {/* ── Soft Diffused Outline Gradient Glow Spill Outside ── */}
-            <div className={`${styles.activeModalGlowSpillWide} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
-            <div className={`${styles.activeModalGlowSpill} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
-
-            {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
+            {/* ── Soft Feathered Random Diffused Motion Glow Behind Card ── */}
+            <div className={`${styles.cardFeatheredGlowWrap} ${searchTheme === "white" ? styles.featherWhite : styles.featherDark}`} aria-hidden="true">
+              <div className={styles.featherMeshWash} />
+              <div className={`${styles.featherLobe} ${styles.featherLobeCyan}`} />
+              <div className={`${styles.featherLobe} ${styles.featherLobePurple}`} />
+              <div className={`${styles.featherLobe} ${styles.featherLobeBlue}`} />
+              <div className={`${styles.featherLobe} ${styles.featherLobePink}`} />
+            </div>
             <motion.div
               layout
               id="nh-active-search-modal"
