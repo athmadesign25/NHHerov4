@@ -11,6 +11,7 @@ import {
 import styles from "./CentreOfExcellence.module.css";
 import { COE_SPECIALITIES as SPECIALITIES } from "@/data/specialities";
 
+import { ArrowRight } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 
@@ -104,7 +105,10 @@ function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
             <div className={styles.metricLabel}>{spec.stats.label}</div>
           </div>
         )}
-        <span className={styles.specialityName}>{spec.name}</span>
+        <div className={styles.specialityNameRow}>
+          <span className={styles.specialityName}>{spec.name}</span>
+          <ArrowRight className={styles.nameArrow} size={16} strokeWidth={2.5} />
+        </div>
         <span className={styles.cardAction}>
           Explore
           <span className={styles.actionUnderline} aria-hidden />

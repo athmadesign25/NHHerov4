@@ -56,7 +56,7 @@ const features: Feature[] = [
 // see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
 // composited onto phone-base.png at runtime — so it needs no special
 // sizing/positioning constants of its own anymore.
-const MATURITY_THRESHOLD = 0.94;
+const MATURITY_THRESHOLD = 0.85;
 
 // Design-provided paths (single stroke, 24x24) rather than lucide
 // equivalents — none of the three match closely enough.
@@ -203,28 +203,29 @@ export default function AppDownloadBanner() {
   // scrolling into view, then shrinks smoothly to the resting size over the
   // remaining scroll distance — rather than shrinking continuously from the
   // very first pixel of scroll.
-  const phoneScale = useTransform(enterProgress, [0, 0.4, 1], [PHONE_APPEAR_SCALE, PHONE_APPEAR_SCALE, 1]);
+  const phoneScale = useTransform(enterProgress, [0, 0.4, 0.85], [PHONE_APPEAR_SCALE, PHONE_APPEAR_SCALE, 1]);
 
   // No fade/blur on entry anymore — the phone is fully opaque and sharp
   // from the moment it appears; the "entrance" reads entirely through
   // motion instead: it starts big, sitting just under the text unit (see
   // entryOffsetY below), and travels down into its normal carousel slot as
-  // phoneScale shrinks it back to size — same [0, 0.4, 1] shape as
+  // phoneScale shrinks it back to size — same [0, 0.4, 0.85] shape as
   // phoneScale so both finish their travel together.
-  const phoneEntryY = useTransform(enterProgress, [0, 0.4, 1], [entryOffsetY, entryOffsetY, 0]);
+  const phoneEntryY = useTransform(enterProgress, [0, 0.4, 0.85], [entryOffsetY, entryOffsetY, 0]);
 
   // Hand rotation and float on scroll to simulate lifting the phone
-  const handRotation = useTransform(enterProgress, [0, 1], [30, 0]);
-  const handRiseY = useTransform(enterProgress, [0, 1], [60, 0]);
+  // Rise finishes at 0.85 (mweb timing, from nahid_work) and the settle
+  // drop picks up right after it — the two no longer overlap, so the phone
+  // lifts, lands, then walks down into its resting spot.
+  const handRotation = useTransform(enterProgress, [0, 0.85], [30, 0]);
+  const handRiseY = useTransform(enterProgress, [0, 0.85], [60, 0]);
 
-  // The last stretch of the entrance also walks the phone down by
+  // The last stretch of the entrance walks the phone down by
   // PHONE_SETTLE_DROP, which is what opens the band the feature pill then
   // fades into (see PHONE_SETTLE_DROP for how that number is arrived at).
-  // Layered on top of the rise rather than folded into it so the existing
-  // lift reads exactly as before, just followed by a short settle.
   const phoneSettleDrop = useTransform(enterProgress, [0.86, 1], [0, PHONE_SETTLE_DROP]);
   const handY = useTransform([handRiseY, phoneSettleDrop], ([rise, drop]: number[]) => rise + drop);
-  const bgOpacity = useTransform(enterProgress, [0.9, 1], [0, 1]);
+  const bgOpacity = useTransform(enterProgress, [0.75, 0.85], [0, 1]);
 
   // Measures the gap between the text unit's bottom and the phone stage's
   // own natural (already-enlarged, bottom-anchored) resting position, so
@@ -357,7 +358,9 @@ export default function AppDownloadBanner() {
               width: "100%",
               height: "100%",
               opacity: isDesktopFX ? bgOpacity : 1,
-              zIndex: 0
+              zIndex: 0,
+              maskImage: "linear-gradient(to bottom, transparent 0%, transparent 30%, black 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, transparent 30%, black 100%)",
             }}
           >
             <Image
@@ -366,18 +369,6 @@ export default function AppDownloadBanner() {
               fill
               style={{ objectFit: "cover" }}
               priority
-            />
-            {/* White gradient overlay fading to transparent at the bottom */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: "linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 30%, rgba(255, 255, 255, 0) 100%)",
-                pointerEvents: "none"
-              }}
             />
           </motion.div>
 
