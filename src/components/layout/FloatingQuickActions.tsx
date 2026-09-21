@@ -26,6 +26,10 @@ export default function FloatingQuickActions() {
       const showQuickActions = window.scrollY >= window.innerHeight * 0.38;
       setIsQuickActionsVisible(showQuickActions);
 
+
+
+
+
       if (!showQuickActions || !containerRef.current) return;
 
       // Temporarily disable pointer events on container to sample element underneath
@@ -48,7 +52,13 @@ export default function FloatingQuickActions() {
             break;
           }
         }
-        return detectedTheme === "dark";
+        // HealthPackages marks itself data-nav-theme="dark" (same as every
+        // other dark section, for the navbar's own separate probe), but
+        // this component's own text should stay its default blue over it
+        // specifically rather than switching to white like it does over
+        // every other dark section.
+        const isOverPackages = elements.some((el) => el.closest("#health-packages"));
+        return detectedTheme === "dark" && !isOverPackages;
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;
@@ -142,6 +152,8 @@ export default function FloatingQuickActions() {
           <span className={styles.actionLabel}>Pulse AI<br />Search</span>
         </button>
       </div>
+
+
     </>
   );
 }

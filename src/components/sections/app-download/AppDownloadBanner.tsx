@@ -71,7 +71,7 @@ const POP_OVER_CARDS = [
 // see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
 // composited onto phone-base.png at runtime — so it needs no special
 // sizing/positioning constants of its own anymore.
-const MATURITY_THRESHOLD = 0.94;
+const MATURITY_THRESHOLD = 0.85;
 
 const TRUST_STACK = [
   { icon: "/trust-heart-icon-new.png", label: "India's Most Trusted", subtext: "Hospital App" },
@@ -181,20 +181,20 @@ export default function AppDownloadBanner() {
   // scrolling into view, then shrinks smoothly to the resting size over the
   // remaining scroll distance — rather than shrinking continuously from the
   // very first pixel of scroll.
-  const phoneScale = useTransform(enterProgress, [0, 0.4, 1], [PHONE_APPEAR_SCALE, PHONE_APPEAR_SCALE, 1]);
+  const phoneScale = useTransform(enterProgress, [0, 0.4, 0.85], [PHONE_APPEAR_SCALE, PHONE_APPEAR_SCALE, 1]);
 
   // No fade/blur on entry anymore — the phone is fully opaque and sharp
   // from the moment it appears; the "entrance" reads entirely through
   // motion instead: it starts big, sitting just under the text unit (see
   // entryOffsetY below), and travels down into its normal carousel slot as
-  // phoneScale shrinks it back to size — same [0, 0.4, 1] shape as
+  // phoneScale shrinks it back to size — same [0, 0.4, 0.85] shape as
   // phoneScale so both finish their travel together.
-  const phoneEntryY = useTransform(enterProgress, [0, 0.4, 1], [entryOffsetY, entryOffsetY, 0]);
+  const phoneEntryY = useTransform(enterProgress, [0, 0.4, 0.85], [entryOffsetY, entryOffsetY, 0]);
 
   // Hand rotation and float on scroll to simulate lifting the phone
-  const handRotation = useTransform(enterProgress, [0, 1], [30, 0]);
-  const handY = useTransform(enterProgress, [0, 1], [60, 0]);
-  const bgOpacity = useTransform(enterProgress, [0.9, 1], [0, 1]);
+  const handRotation = useTransform(enterProgress, [0, 0.85], [30, 0]);
+  const handY = useTransform(enterProgress, [0, 0.85], [60, 0]);
+  const bgOpacity = useTransform(enterProgress, [0.75, 0.85], [0, 1]);
 
   // Measures the gap between the text unit's bottom and the phone stage's
   // own natural (already-enlarged, bottom-anchored) resting position, so
@@ -320,7 +320,9 @@ export default function AppDownloadBanner() {
               width: "100%",
               height: "100%",
               opacity: isDesktopFX ? bgOpacity : 1,
-              zIndex: 0
+              zIndex: 0,
+              maskImage: "linear-gradient(to bottom, transparent 0%, transparent 50%, black 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, transparent 50%, black 100%)",
             }}
           >
             <Image
@@ -329,18 +331,6 @@ export default function AppDownloadBanner() {
               fill
               style={{ objectFit: "cover" }}
               priority
-            />
-            {/* White gradient overlay fading to transparent at the bottom */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: "linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
-                pointerEvents: "none"
-              }}
             />
           </motion.div>
 
@@ -383,7 +373,7 @@ export default function AppDownloadBanner() {
 
           <div className={styles.bottomRow}>
             {/* Pop-over Card matching active screen on the left */}
-            <div className={styles.trustStackPosition} style={{ marginTop: "-212px", marginLeft: "160px" }}>
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
               <motion.div 
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
@@ -399,28 +389,30 @@ export default function AppDownloadBanner() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -30, scale: 0.95 }}
                       transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                      style={{ 
-                        position: "absolute", 
-                        top: 0, 
-                        left: 0, 
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
                         width: "100%",
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "rgba(255, 255, 255, 0.55)",
+                        backdropFilter: "blur(20px) saturate(1.4)",
+                        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                         borderRadius: "20px",
                         padding: "16px",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                        border: "1px solid rgba(0,0,0,0.04)"
+                        border: "1px solid rgba(255,255,255,0.6)"
                       }}
                     >
-                      <Image 
-                        src={POP_OVER_CARDS[activeIndex].img} 
-                        alt={POP_OVER_CARDS[activeIndex].text} 
-                        width={240} 
-                        height={100}
-                        style={{ width: "100%", height: "auto", display: "block" }} 
-                      />
-                      <div style={{ marginTop: "12px", textAlign: "left", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
                         {POP_OVER_CARDS[activeIndex].text}
                       </div>
+                      <Image
+                        src={POP_OVER_CARDS[activeIndex].img}
+                        alt={POP_OVER_CARDS[activeIndex].text}
+                        width={240}
+                        height={100}
+                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -472,13 +464,12 @@ export default function AppDownloadBanner() {
             </div>
 
             <motion.div
+              className={styles.phoneWrapper}
               style={{
                 position: "relative",
                 rotate: handRotation,
                 y: handY,
                 pointerEvents: "none",
-                marginTop: "-30px",
-                marginBottom: "-45px"
               }}
             >
               <Image
@@ -486,7 +477,7 @@ export default function AppDownloadBanner() {
                 width={1019}
                 height={1130}
                 alt="Mobile phone in hand"
-                style={{ width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)" }}
+                className={styles.handImage}
               />
               
               {/* Auto-playing Screens sandwiched in the middle */}
@@ -537,12 +528,27 @@ export default function AppDownloadBanner() {
                 width={1019}
                 height={1130}
                 alt="Mobile phone in hand Overlay"
-                style={{ position: "absolute", top: 0, left: 0, width: "700px", height: "auto", objectFit: "contain", clipPath: "inset(0 0 45px 0)", zIndex: 20 }}
+                className={styles.handOverlayImage}
               />
             </motion.div>
 
+            {/* Mobile Feature Caption */}
+            <div className={`${styles.mobileCaption} ${styles.mobileOnly}`}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].text}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
             {/* Store links on the right */}
-            <div className={styles.storesColPosition} style={{ marginTop: "-140px", marginRight: "120px" }}>
+            <div className={styles.storesColPosition}>
               <motion.div 
                 className={styles.storesCol}
                 style={{ pointerEvents: "auto", zIndex: 30 }}
@@ -550,20 +556,16 @@ export default function AppDownloadBanner() {
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <div className={`${styles.storeContainer} ${styles.qrContainer}`}>
+                <div className={`${styles.storeContainer} ${styles.qrContainer} ${styles.desktopOnly}`}>
                   <Image src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: "6px" }} className={styles.qrImg} />
                   <span className={styles.qrLabel}>Scan to install</span>
                 </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
-                  </a>
-                </div>
-                <div className={styles.storeContainer}>
-                  <a href="#" className={styles.storeBadge} tabIndex={0}>
-                    <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
-                  </a>
-                </div>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
+                </a>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
+                </a>
               </motion.div>
             </div>
           </div>

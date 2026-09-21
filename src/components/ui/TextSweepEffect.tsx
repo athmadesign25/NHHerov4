@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-const SWEEP_EASE: [number, number, number, number] = [0.2, 0, 0.3, 0.3];
+const SWEEP_EASE = [0.2, 0, 0.3, 0.3] as const;
 const FADE_MS = 250;
 const GAP_MS = 70;
 

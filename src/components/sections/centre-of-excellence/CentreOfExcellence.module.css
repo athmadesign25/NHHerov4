@@ -146,6 +146,8 @@
   background: #031224;
   pointer-events: none;
   will-change: opacity;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 150px);
+  mask-image: linear-gradient(to bottom, transparent 0px, black 150px);
 }
 
 .columnTrack {
@@ -155,6 +157,7 @@
   gap: 16px;
   box-sizing: border-box;
   will-change: transform;
+  min-width: 0;
 }
 
 /* Base Staggered Layout Offsets (Never aligned horizontally) */
@@ -233,12 +236,10 @@
 .cardOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.72) 0%,
-    rgba(0, 0, 0, 0.20) 60%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.20) 60%,
+      rgba(0, 0, 0, 0) 100%);
   z-index: 3;
   transition: background 0.35s ease, opacity 0.35s ease;
   pointer-events: none;
@@ -252,14 +253,12 @@
   left: -100%;
   width: 65%;
   height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.28) 50%,
-    rgba(255, 255, 255, 0.04) 75%,
-    transparent 100%
-  );
+  background: linear-gradient(115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.28) 50%,
+      rgba(255, 255, 255, 0.04) 75%,
+      transparent 100%);
   transform: skewX(-20deg);
   z-index: 5;
   pointer-events: none;
@@ -275,6 +274,7 @@
     left: -100%;
     opacity: 0.9;
   }
+
   100% {
     left: 175%;
     opacity: 0;
@@ -343,6 +343,18 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
+.specialityNameRow {
+  display: flex;
+  align-items: flex-end;
+  /* Align to the bottom of the text if it wraps */
+  justify-content: space-between;
+  /* Push arrow to the far right consistently */
+  align-self: stretch;
+  /* Force row to span the full width of the card */
+  gap: 8px;
+  width: 100%;
+}
+
 .specialityName {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(18px, 1.8vw, 22px);
@@ -353,14 +365,27 @@
   transition: transform 0.3s ease;
 }
 
+.nameArrow {
+  color: #FFFFFF;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none;
+  /* Hidden on desktop by default */
+  flex-shrink: 0;
+  /* Prevents the arrow from squishing when text is long */
+  margin-bottom: 2px;
+  /* Slight visual adjustment to match baseline */
+}
+
 .specialityCard:hover .specialityName {
   transform: translateY(-2px);
 }
 
 .cardAction {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -375,12 +400,22 @@
   transform: translateY(0);
 }
 
-.actionArrow {
-  transition: transform 0.25s ease;
+/* Underline sweeps in left-to-right on hover, same affordance as
+   HealthPackages' "View Details" link, replacing the old chevron. */
+.actionUnderline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.specialityCard:hover .actionArrow {
-  transform: translateX(3px);
+.specialityCard:hover .actionUnderline {
+  transform: scaleX(1);
 }
 
 /* Transparent Extension at Bottom of Grid (handoff plate below provides seamless bg transition).
@@ -398,6 +433,9 @@
   z-index: 5;
 }
 
+/* Unified site-wide with HealthPackages' .exploreRow and PatientStories'
+   .secondaryCtaBtn — same padding, radius, border, background, blur, and
+   hover treatment (a lighter glass wash, not a solid color fill). */
 .viewAllBtn {
   position: relative;
   z-index: 2;
@@ -405,63 +443,127 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 24px;
+  padding: 12px 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
 }
 
 .viewAllBtn:hover {
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
-  border-color: var(--color-primary, #034EA2);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
 }
 
 @media (max-width: 1024px) {
   .gridSection {
-    padding: 0 12px;
+    padding: 0 16px;
   }
+
   .columnsContainer {
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 16px;
   }
+
   .columnTrack {
-    flex: 0 0 calc(50% - 6px);
-    gap: 12px;
+    flex: 0 0 calc(50% - 8px);
+    gap: 16px;
   }
-  .col0 { padding-top: 0px; }
-  .col1 { padding-top: 50px; }
-  .col2 { padding-top: 0px; }
-  .col3 { padding-top: 50px; }
+
+  /* 2-column stagger logic */
+  .col0 {
+    padding-top: 0px;
+  }
+
+  .col1 {
+    padding-top: 60px;
+  }
+
+  .col2 {
+    padding-top: 0px;
+  }
+
+  .col3 {
+    padding-top: 60px;
+  }
+
+  /* Hide stats and Explore text on mobile to reduce clutter */
+  .cardStats {
+    display: none !important;
+  }
+
+  .cardAction {
+    display: none !important;
+  }
+
+  /* Show the clean arrow next to the name on mobile */
+  .nameArrow {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+
+  /* Reduce overlay darkness since there is less text */
+  .specialityCard .cardOverlay {
+    background: linear-gradient(to top,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0) 100%) !important;
+  }
+
+  /* Disable hover transform on card image for mobile */
+  .specialityCard:active .cardImage {
+    transform: scale(1.02);
+  }
 }
 
 @media (max-width: 640px) {
   .gridSection {
-    padding: 0 8px;
+    padding: 0 12px;
   }
+
   .columnsContainer {
-    flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
+
   .columnTrack {
-    flex: 1 1 100%;
-    gap: 10px;
-    padding-top: 0 !important;
+    flex: 0 0 calc(50% - 6px);
+    gap: 12px;
   }
+
+  /* Tighter stagger on smaller screens */
+  .col0 {
+    padding-top: 0px;
+  }
+
+  .col1 {
+    padding-top: 40px;
+  }
+
+  .col2 {
+    padding-top: 0px;
+  }
+
+  .col3 {
+    padding-top: 40px;
+  }
+
   .specialityCard {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 5;
     border-radius: 8px;
+  }
+
+  .cardTextWrap {
+    padding: 12px;
   }
 }

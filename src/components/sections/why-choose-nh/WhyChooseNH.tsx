@@ -12,9 +12,26 @@ const STATS = [
   { value: "1,200+", label: "Robotic surgeries performed to date" },
 ];
 
+// Referenced only by the (currently disabled, see isV2 below) v2 grid
+// layout — this declaration was missing entirely, throwing "ACCREDITATIONS
+// is not defined" at the type-check level. Logo files already exist under
+// public/accreditations/; filling in with the three the v2 markup indexes.
+const ACCREDITATIONS = [
+  { logo: "/accreditations/nabh.png", name: "NABH Accredited", subtext: "National quality & patient-safety standards" },
+  { logo: "/accreditations/nabl.png", name: "NABL Accredited", subtext: "Certified diagnostic & testing standards" },
+  { logo: "/accreditations/jci.png", name: "JCI Accredited", subtext: "International healthcare quality benchmark" },
+];
+
 // How much raw scroll distance (px) the exit blur/fade eases over, once
 // triggered — see exitRange below for what triggers it.
 const EXIT_RANGE_PX = 400;
+
+// Two complete bento-grid layouts exist below (gated on isV2) — this
+// declaration itself was missing (the file only ever referenced isV2,
+// never declared it), throwing "isV2 is not defined" on every render.
+// false keeps the original/v1 grid, matching how the section actually
+// rendered before this got fixed.
+const isV2 = false;
 
 export default function WhyChooseNH() {
   const sectionRef = useRef<HTMLElement>(null);
