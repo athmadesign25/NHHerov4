@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { 
-  ArrowRight, Heart, Activity, FileText, ChevronRight, BookOpen, AlertCircle, Shield 
+  Heart, Activity, ChevronRight, BookOpen, AlertCircle, Shield 
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { TreatmentItemData, ArticleItemData } from "./searchData";
@@ -21,7 +21,7 @@ export default function TertiaryResults({
   relatedSpecialties = [],
   onSelectSpecialtyTag,
 }: TertiaryResultsProps) {
-  // Icon renderer for treatments (mono white with opacity down)
+  // Icon renderer for treatments (mono with subtle opacity)
   const renderTreatmentIcon = (type: TreatmentItemData["iconType"]) => {
     switch (type) {
       case "heart":
@@ -75,12 +75,12 @@ export default function TertiaryResults({
           ))}
         </div>
 
-        {/* Subtle View more link */}
+        {/* View all link matching design */}
         <Link
           href="/treatments"
           className={styles.editorialViewMoreLink}
         >
-          <span>View more →</span>
+          <span>View all →</span>
         </Link>
       </div>
 
@@ -104,7 +104,7 @@ export default function TertiaryResults({
                 <div className={styles.editorialMeta}>
                   <div className={styles.editorialItemTitle}>{art.title}</div>
                   <div className={styles.editorialItemSub}>
-                    {art.readTime} · {art.category}
+                    {art.readTime} • {art.category}
                   </div>
                 </div>
               </div>
@@ -113,12 +113,12 @@ export default function TertiaryResults({
           ))}
         </div>
 
-        {/* Subtle View more link */}
+        {/* View all link matching design */}
         <Link
           href="/articles"
           className={styles.editorialViewMoreLink}
         >
-          <span>View more →</span>
+          <span>View all →</span>
         </Link>
       </div>
 
@@ -146,4 +146,3 @@ export default function TertiaryResults({
     </div>
   );
 }
-

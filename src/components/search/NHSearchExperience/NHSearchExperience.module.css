@@ -2506,11 +2506,8 @@
 .relatedSpecialtiesSection {
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border: none;
   background: transparent;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
   border-radius: 0;
 }
 
@@ -2586,8 +2583,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 4px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 9px 4px;
+  border-bottom: none;
   text-decoration: none;
   border-radius: 6px;
   transition: background 0.15s ease;
@@ -3981,10 +3978,10 @@
   color: #0F172A !important;
 }
 
-/* Right column Editorial / Tertiary items (White Mode) */
+/* Right column Editorial / Tertiary items (White Mode - Clean unboxed without row/section lines) */
 .themeWhite .editorialItem,
 [data-search-theme="white"] .editorialItem {
-  border-bottom: 1px solid #F1F5F9 !important;
+  border-bottom: none !important;
 }
 
 .themeWhite .editorialItem:hover,
@@ -4024,12 +4021,12 @@
 
 .themeWhite .editorialViewMoreLink,
 [data-search-theme="white"] .editorialViewMoreLink {
-  color: #0B5DF4 !important;
+  color: #64748B !important;
 }
 
 .themeWhite .editorialViewMoreLink:hover,
 [data-search-theme="white"] .editorialViewMoreLink:hover {
-  color: #0446B8 !important;
+  color: #0F172A !important;
 }
 
 .themeWhite .editorialPill,
