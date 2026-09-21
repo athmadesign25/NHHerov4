@@ -19,14 +19,6 @@ type PackageCard = {
   audience: string;
 };
 
-// Revealed on card hover, below the divider. Shared across every package
-// rather than living on PackageCard — these are the same two promises on
-// all of them, not per-package content.
-const CARD_PERKS: { id: string; lead: string; rest: string; tail?: string }[] = [
-  { id: "no-fasting", lead: "No fasting", rest: " Required" },
-  { id: "free-consult", lead: "Free", rest: " doctor ", tail: "consultation" },
-];
-
 // Mock/demo data, keyed by city — packages (and their contents) genuinely
 // vary per unit, so this is structured as a lookup rather than one fixed
 // list. Only Bangalore is populated for now; any other/undetected city
@@ -38,7 +30,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
     {
       id: "healthy-heart",
       name: "Healthy Heart Package",
-      image: "/health-packages/heart.png",
+      image: "/healthy-heart-package-2.png",
       testsCount: 42,
       reportsWithin: "8 hours",
       variant: 1,
@@ -46,23 +38,23 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       audience: "Everyone",
     },
     {
-      id: "thyroid-health",
-      name: "Thyroid Health Package",
-      image: "/health-packages/thyroid.png",
-      testsCount: 15,
-      reportsWithin: "2 hours",
-      variant: 2,
-      ageBand: "25+ years",
-      audience: "Women",
-    },
-    {
       id: "diabetes-care",
       name: "Diabetes Package",
       image: "/health-packages/diabetes.png",
       testsCount: 9,
       reportsWithin: "06:45 PM",
-      variant: 3,
+      variant: 2,
       ageBand: "40+ years",
+      audience: "Everyone",
+    },
+    {
+      id: "bone-health",
+      name: "Bone Health Package",
+      image: "/bone-health-package.png",
+      testsCount: 15,
+      reportsWithin: "2 hours",
+      variant: 3,
+      ageBand: "45+ years",
       audience: "Everyone",
     },
   ],
@@ -131,14 +123,6 @@ function FactIconReports() {
 }
 
 // Check glyph inside each hover-revealed perk pill's green disc.
-function PerkCheckIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 17 17" fill="none" aria-hidden>
-      <path d="M12.8439 4.75391L6.39111 11.2067L3.45801 8.27363" stroke="#FEF5F5" strokeWidth="2.34648" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 const PHASE1_END = 0.32;
 const MOBILE_BREAKPOINT = 900;
 
@@ -255,12 +239,6 @@ export default function HealthPackages() {
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
 
-  // Two card treatments kept side by side for review (see the toggle
-  // rendered below). 1 (the default) is the fixed-height card with a
-  // shimmer sweep and an audience subtitle; 2 is the original card that
-  // grows on hover to reveal its perk pills.
-  const [cardDirection, setCardDirection] = useState<1 | 2>(1);
-  const isCompact = cardDirection === 1;
 
   // "growing": frame size/radius tracks raw scroll (p1raw) as before.
   // "full": frame is pinned at its fully-grown end values and the card
@@ -694,24 +672,7 @@ export default function HealthPackages() {
       data-nav-theme="dark"
     >
       <div ref={stickyViewportRef} className={styles.stickyViewport}>
-        {/* Review-only switch between the two card treatments. Lives inside
-            the sticky viewport so it is on screen only while this section
-            is pinned, rather than following the whole page. */}
-        <div className={styles.directionToggle}>
-          <span className={styles.directionToggleLabel}>Cards</span>
-          {([1, 2] as const).map((dir) => (
-            <button
-              key={dir}
-              type="button"
-              className={`${styles.directionToggleBtn} ${cardDirection === dir ? styles.directionToggleBtnActive : ""}`}
-              onClick={() => setCardDirection(dir)}
-              aria-pressed={cardDirection === dir}
-            >
-              D{dir}
-            </button>
-          ))}
-        </div>
-        <div ref={frameRef} className={styles.frame}>
+          <div ref={frameRef} className={styles.frame}>
           {/* No `loop` — looping is handled manually via ping-pong scrubbing
               (see stepPingPong in the effect above), not native playback. */}
           <video
@@ -805,7 +766,7 @@ export default function HealthPackages() {
                     Most Booked in {DETECTED_CITY}
                   </div>
 
-                  <div className={`${styles.cardStack} ${isCompact ? styles.cardStackCompact : ""}`}>
+                  <div className={`${styles.cardStack} ${styles.cardStackCompact}`}>
                     {packages.map((pkg) => {
                       return (
                         // Fixed-height slot is the actual grid item (so the
@@ -814,24 +775,22 @@ export default function HealthPackages() {
                         // is absolutely positioned within it, bottom-
                         // anchored, so growing height pushes its own top
                         // edge up instead of the slot's bottom edge down.
-                        <div key={pkg.id} className={`${styles.packageCardSlot} ${isCompact ? styles.packageCardSlotCompact : ""}`}>
+                        <div key={pkg.id} className={`${styles.packageCardSlot} ${styles.packageCardSlotCompact}`}>
                           <Link
                             href={`/health-packages/${pkg.id}`}
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
-                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${isCompact ? styles.packageCardCompact : ""}`}
+                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${styles.packageCardCompact}`}
                             onMouseMove={handleCardMouseMove}
                             onMouseLeave={handleCardMouseLeave}
                           >
                             <span className={styles.packageCardBorder} aria-hidden />
-                            {isCompact && <span className={styles.packageCardShimmer} aria-hidden />}
+                            <span className={styles.packageCardShimmer} aria-hidden />
                             <img src={pkg.image} alt="" className={styles.packageCardImage} />
                             <div className={styles.packageCardContent}>
                               <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
-                              {isCompact && (
-                                <p className={styles.packageCardAudience}>
-                                  {pkg.ageBand} · {pkg.audience}
-                                </p>
-                              )}
+                              <p className={styles.packageCardAudience}>
+                                {pkg.ageBand} · {pkg.audience}
+                              </p>
                               <div className={styles.packageCardFacts}>
                                 <div className={styles.packageCardFact}>
                                   <span className={styles.packageCardFactIcon}>
@@ -852,33 +811,6 @@ export default function HealthPackages() {
                                   </span>
                                 </div>
                               </div>
-                              {/* Divider + perks, revealed on hover. 0fr -> 1fr grid row
-                                  gives it an exact zero height at rest (no guessed
-                                  max-height), and the 24px above the divider is the
-                                  content column's own gap rather than a second margin
-                                  that would double up with it. The compact card drops
-                                  them entirely — it never grows, so there is nowhere
-                                  for them to go. */}
-                              {!isCompact && (
-                              <div className={styles.packageCardExtras}>
-                                <div className={styles.packageCardExtrasInner}>
-                                  <div className={styles.packageCardPerks}>
-                                    {CARD_PERKS.map((perk) => (
-                                      <span key={perk.id} className={styles.perkPill}>
-                                        <span className={styles.perkIcon}>
-                                          <PerkCheckIcon />
-                                        </span>
-                                        <span className={styles.perkText}>
-                                          <strong className={styles.perkStrong}>{perk.lead}</strong>
-                                          {perk.rest}
-                                          {perk.tail && <strong className={styles.perkStrong}>{perk.tail}</strong>}
-                                        </span>
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                              )}
                             </div>
                             {/* Plain text, not a nested <a> — the whole
                                 card is already the clickable Link; this is

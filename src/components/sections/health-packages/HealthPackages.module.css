@@ -269,8 +269,13 @@
 }
 
 /* ─── Bottom stack: label + card row + explore button ─────────────────── */
+/* A fixed gap under the USP row rather than margin-top: auto — the auto
+   pushed this whole unit to the bottom of the frame, leaving ~150px of
+   dead space above it. 20px laid out, not 54: the text block above rides
+   34px upward on the reveal (a transform, so it never changes layout),
+   which is what makes the settled gap the 54px intended. */
 .bottomStack {
-  margin-top: auto;
+  margin-top: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -877,13 +882,13 @@
    comes from a shimmer sweep and a small image bump instead of the height
    change (and the perk pills are gone with it — see HealthPackages.tsx). */
 .packageCardSlotCompact {
-  height: 268px;
+  height: 248px;
 }
 
 .packageCardCompact,
 .packageCardCompact:hover,
 .packageCardCompact:focus-visible {
-  height: 268px;
+  height: 248px;
 }
 
 /* Wider columns than direction 1 — the titles run on one line here, so
