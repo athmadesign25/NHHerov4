@@ -97,11 +97,10 @@
   height: 14px;
 }
 /* Base styles (Desktop) */
-/* Vertically centered on the viewport (right-anchored horizontally)
-   Top anchored at calc(50vh - 151px) so Buttons 1 & 2 never shift when Button 3 docks */
+/* Position anchored to align Button 3 directly with the compact search horizontal glide path */
 .container {
   position: fixed;
-  top: calc(50vh - 151px);
+  top: var(--fab-target-top, calc(50vh - 151px));
   right: 24px;
   z-index: 9000;
   width: 100px;

@@ -100,11 +100,12 @@ export default function NHSearchExperience({
   const squareTopInPlace = Math.round(startTop + (startHeight - compactHeight) / 2);
 
   // Exact vertical alignment with 3rd button position in side panel:
-  // Desktop sidebar: top calc(50vh - 151px).
-  // Button 3 slot starts at 50vh + 51px.
+  // Since FAB container is positioned at (squareTopInPlace - 202px),
+  // Button 3 is at (squareTopInPlace - 202px + 202px) = squareTopInPlace!
+  // It NEVER moves up or down — pure horizontal motion straight to the right!
   const targetButton3Top = isMobile 
     ? Math.round(winSize.h - 36 - compactHeight) 
-    : Math.round(winSize.h * 0.5 + 51);
+    : squareTopInPlace;
 
   // Horizontal position of 3rd button in side panel (right 24px, width 100px):
   // left = winW - 24 - 100 = winW - 124px
@@ -112,51 +113,60 @@ export default function NHSearchExperience({
     ? Math.round(winSize.w - 16 - compactWidth)
     : (winSize.w - 124);
 
+  // Broadcast fab-target-top so FloatingQuickActions places Button 3 at exact squareTopInPlace
+  useEffect(() => {
+    if (typeof window !== "undefined" && squareTopInPlace > 0) {
+      const fabTop = squareTopInPlace - 202;
+      document.documentElement.style.setProperty("--fab-target-top", `${fabTop}px`);
+      document.documentElement.style.setProperty("--compact-search-top", `${squareTopInPlace}px`);
+      window.dispatchEvent(new CustomEvent("nh:search-pos-update", { detail: { fabTop, squareTopInPlace } }));
+    }
+  }, [squareTopInPlace]);
+
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
-    const docked = latest >= 0.86;
+    const docked = latest >= 0.84;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
   });
 
-  // 6-Stage Choreography:
+  // Choreography:
   // Phase 1 [0.02 - 0.14]: Search bar shrinks in place to 100x100 glassmorphic card at center (squareLeft, squareTopInPlace)
-  // Phase 2 [0.14 - 0.52]: WAITS at center position with dark glassmorphism while hero scales & side panel appears with 2 buttons
-  // Phase 3 [0.52 - 0.68]: VERTICAL MOVE: moves up to targetButton3Top, staying at squareLeft
-  // Phase 4 [0.68 - 0.86]: HORIZONTAL MOVE: glides across to targetButton3Left, adapting visual background & text color to side button style
-  // Phase 5 [0.86 - 0.92]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
+  // Phase 2 [0.14 - 0.54]: WAITS at center position with dark glassmorphism while hero scales & side panel appears with 2 buttons
+  // Phase 3 [0.54 - 0.84]: HORIZONTAL GLIDE: glides straight across horizontally to targetButton3Left at constant squareTopInPlace
+  // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top, targetButton3Top]
+    [0.02, 0.14, 0.84],
+    [startTop, squareTopInPlace, targetButton3Top]
   );
 
   const composerLeft = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startLeft, squareLeft, squareLeft, squareLeft, targetButton3Left]
+    [0.02, 0.14, 0.54, 0.84],
+    [startLeft, squareLeft, squareLeft, targetButton3Left]
   );
 
   const composerWidth = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startWidth, compactWidth, compactWidth, compactWidth, compactWidth]
+    [0.02, 0.14, 0.84],
+    [startWidth, compactWidth, compactWidth]
   );
 
   const composerHeight = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startHeight, compactHeight, compactHeight, compactHeight, compactHeight]
+    [0.02, 0.14, 0.84],
+    [startHeight, compactHeight, compactHeight]
   );
 
   const composerRadius = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.52, 0.68, 0.86],
-    [20, compactRadius, compactRadius, compactRadius, compactRadius]
+    [0.02, 0.14, 0.84],
+    [20, compactRadius, compactRadius]
   );
 
   const composerPaddingX = useTransform(
@@ -171,38 +181,38 @@ export default function NHSearchExperience({
     [20, 0]
   );
 
-  // Water droplet squash & stretch during horizontal motion
+  // Water droplet squash & stretch during horizontal motion [0.54 -> 0.84]
   const dropletScaleX = useTransform(
     activeProgress,
-    [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
-    [1.0, 1.0, 1.15, 1.08, 0.94, 1.0]
+    [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
+    [1.0, 1.0, 1.15, 1.08, 0.95, 1.0]
   );
 
   const dropletScaleY = useTransform(
     activeProgress,
-    [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
-    [1.0, 1.0, 0.88, 0.94, 1.08, 1.0]
+    [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
+    [1.0, 1.0, 0.88, 0.94, 1.06, 1.0]
   );
 
   // Background layers adaptation:
   // 1) Dark glassmorphism layer (same like main search box)
   const darkGlassOpacity = useTransform(
     activeProgress, 
-    [0.0, 0.02, 0.68, 0.86], 
+    [0.0, 0.02, 0.54, 0.84], 
     [1, 1, 1, 0]
   );
 
-  // 2) Side button frosted glass layer (adapts during horizontal movement 0.68 -> 0.86)
+  // 2) Side button frosted glass layer (adapts during horizontal movement 0.54 -> 0.84)
   const sideButtonBgOpacity = useTransform(
     activeProgress, 
-    [0.68, 0.86], 
+    [0.54, 0.84], 
     [0, 1]
   );
 
   // Text color adaptation: white in dark glassmorphism -> blue in side button style
   const textColor = useTransform(
     activeProgress,
-    [0.68, 0.86],
+    [0.54, 0.84],
     ["#FFFFFF", "#0B5DF4"]
   );
 
@@ -219,7 +229,7 @@ export default function NHSearchExperience({
   const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [0.20, 0.20, 0]);
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(activeProgress, [0.86, 0.90], [1, 0]);
+  const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 

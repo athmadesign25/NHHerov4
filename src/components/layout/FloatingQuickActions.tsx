@@ -11,9 +11,37 @@ export default function FloatingQuickActions() {
   const [isSearchDocked, setIsSearchDocked] = useState(false);
   const [darkLinks, setDarkLinks] = useState<boolean[]>([false, false, false]);
   const [isMounted, setIsMounted] = useState(false);
+  const [containerTop, setContainerTop] = useState<number | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const updatePosition = (e?: Event) => {
+      const customDetail = (e as CustomEvent)?.detail;
+      if (customDetail && typeof customDetail.fabTop === "number") {
+        setContainerTop(customDetail.fabTop);
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        const cssVal = getComputedStyle(document.documentElement).getPropertyValue("--fab-target-top");
+        if (cssVal && cssVal.trim()) {
+          const parsed = parseFloat(cssVal);
+          if (!isNaN(parsed) && parsed > 0) {
+            setContainerTop(parsed);
+            return;
+          }
+        }
+        const winH = window.innerHeight;
+        const defaultStartTop = Math.round(winH * 0.68 - 28);
+        const defaultSquareTop = Math.round(defaultStartTop + (136 - 100) / 2);
+        setContainerTop(defaultSquareTop - 202);
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("nh:search-pos-update", updatePosition);
 
     const handleDock = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -22,7 +50,12 @@ export default function FloatingQuickActions() {
       }
     };
     window.addEventListener("nh:search-docked", handleDock);
-    return () => window.removeEventListener("nh:search-docked", handleDock);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("nh:search-pos-update", updatePosition);
+      window.removeEventListener("nh:search-docked", handleDock);
+    };
   }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,8 +65,8 @@ export default function FloatingQuickActions() {
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
-      // Quick Health Actions Bar appears as the user scrolls past hero (at ~40% scroll, showing 2 buttons)
-      const showQuickActions = window.scrollY >= window.innerHeight * 0.40;
+      // Quick Health Actions Bar appears as the user scrolls past hero (at ~35% scroll, showing 2 buttons)
+      const showQuickActions = window.scrollY >= window.innerHeight * 0.35;
       setIsQuickActionsVisible(showQuickActions);
 
 
@@ -99,6 +132,7 @@ export default function FloatingQuickActions() {
         role="region"
         aria-label="Quick actions and search"
         className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden} ${isSearchDocked ? styles.dockedThreeButtons : styles.dockedTwoButtons}`}
+        style={containerTop !== null ? { top: `${containerTop}px` } : undefined}
       >
         {/* Action 1: Book Appointment (Primary utility) */}
         <Link
