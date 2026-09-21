@@ -3499,61 +3499,74 @@
 .themeWhite.stateLanding,
 .themeWhite .stateLanding,
 [data-search-theme="white"] .stateLanding {
-  background: rgba(255, 255, 255, 0.88) !important;
+  /* Let Layer 1 handle the frosted glass background without double-stacking */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Fallback for when position fixed morph is not active */
+.themeWhite.stateLanding:not([style*="position: fixed"]),
+[data-search-theme="white"] .stateLanding:not([style*="position: fixed"]) {
+  background: rgba(255, 255, 255, 0.55) !important;
   backdrop-filter: blur(24px) saturate(140%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
   box-shadow: 
     0 16px 40px -10px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(0, 0, 0, 0.03),
-    inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+    inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
 }
 
-.themeWhite.stateLanding:hover,
-.themeWhite .stateLanding:hover,
-[data-search-theme="white"] .stateLanding:hover {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(203, 213, 225, 0.95) !important;
-  box-shadow: 
-    0 20px 48px -10px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.04),
-    inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+.themeWhite.stateLanding::before,
+.themeWhite .stateLanding::before,
+[data-search-theme="white"] .stateLanding::before {
+  display: none !important;
+}
+
+.themeWhite .animatedBorderOutline,
+[data-search-theme="white"] .animatedBorderOutline {
+  display: none !important;
 }
 
 .themeWhite .landingPlaceholder,
 [data-search-theme="white"] .landingPlaceholder {
-  color: #1E293B !important;
+  color: #0F172A !important;
+  font-weight: 550 !important;
+  text-shadow: none !important;
 }
 
 .themeWhite .floatingPulseSearchText,
 [data-search-theme="white"] .floatingPulseSearchText {
-  color: #1E293B !important;
+  color: #0F172A !important;
 }
 
 .themeWhite .standaloneIconBtn,
 [data-search-theme="white"] .standaloneIconBtn {
-  color: #64748B !important;
+  color: #334155 !important;
 }
 
 .themeWhite .standaloneIconBtn:hover,
 [data-search-theme="white"] .standaloneIconBtn:hover {
   color: #0F172A !important;
+  background: rgba(15, 23, 42, 0.08) !important;
 }
 
 .themeWhite .inlineActionBtn,
 [data-search-theme="white"] .inlineActionBtn {
-  color: #475569 !important;
+  color: #334155 !important;
+  font-weight: 500 !important;
 }
 
 .themeWhite .inlineActionBtn:hover,
 [data-search-theme="white"] .inlineActionBtn:hover {
-  background: rgba(11, 93, 244, 0.06) !important;
+  background: rgba(11, 93, 244, 0.08) !important;
   color: #0B5DF4 !important;
 }
 
 .themeWhite .inlineActionIcon,
 [data-search-theme="white"] .inlineActionIcon {
-  color: #64748B !important;
+  color: #475569 !important;
 }
 
 .themeWhite .inlineActionBtn:hover .inlineActionIcon,
@@ -3563,19 +3576,23 @@
 
 .themeWhite .locationPill,
 [data-search-theme="white"] .locationPill {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
   color: #0F172A !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 .themeWhite .locationPill:hover,
 [data-search-theme="white"] .locationPill:hover {
-  background: #E2E8F0 !important;
+  background: #FFFFFF !important;
+  border-color: #94A3B8 !important;
 }
 
 .themeWhite .locationPinIcon,
 [data-search-theme="white"] .locationPinIcon {
   color: #0B5DF4 !important;
+  opacity: 1 !important;
 }
 
 .themeWhite .locationMenu,

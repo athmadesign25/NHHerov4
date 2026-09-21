@@ -14,6 +14,7 @@ interface DefaultSearchPromptProps {
   onSelectLocation: (loc: string) => void;
   onSelectActionPill: (action: "doctor" | "symptoms") => void;
   onOpenPulse?: () => void;
+  searchTheme?: "dark" | "white";
   promptOpacity?: MotionValue<number>;
   minimizedSearchOpacity?: MotionValue<number>;
   textColor?: MotionValue<string>;
@@ -32,6 +33,7 @@ export default function DefaultSearchPrompt({
   onSelectLocation,
   onSelectActionPill,
   onOpenPulse,
+  searchTheme = "dark",
   promptOpacity,
   minimizedSearchOpacity,
   textColor,
@@ -43,10 +45,12 @@ export default function DefaultSearchPrompt({
   controlsMarginBottom,
   controlsOverflow,
 }: DefaultSearchPromptProps) {
+  const isWhite = searchTheme === "white";
+
   return (
     <div 
       className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "center", cursor: "pointer", position: "relative", overflow: "hidden" }}
+      style={{ height: "100%", justifyContent: "center", cursor: "pointer", position: "relative", overflow: "hidden", zIndex: 5 }}
       onClick={onActivate}
     >
       {/* Top row: Primary Prompt (aligned to same outer boundary) */}
@@ -65,8 +69,11 @@ export default function DefaultSearchPrompt({
           if (e.key === "Enter" || e.key === " ") onActivate();
         }}
       >
-        {/* Main prompt: 20-22px, font-weight: 450 */}
-        <span className={styles.landingPlaceholder}>
+        {/* Main prompt: 20-22px, font-weight: 550 in white mode */}
+        <span 
+          className={styles.landingPlaceholder}
+          style={isWhite ? { color: "#0F172A", fontWeight: 550, textShadow: "none" } : undefined}
+        >
           How can we help you today?
         </span>
       </motion.div>
@@ -121,6 +128,7 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.standaloneIconBtn}
+            style={isWhite ? { color: "#334155" } : undefined}
             aria-label="Attach medical records or file"
             onClick={(e) => {
               e.stopPropagation();
@@ -140,12 +148,13 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.inlineActionBtn}
+            style={isWhite ? { color: "#334155", fontWeight: 500 } : undefined}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("doctor");
             }}
           >
-            <User size={14} className={styles.inlineActionIcon} />
+            <User size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "#475569" } : undefined} />
             <span>Find a doctor</span>
           </button>
 
@@ -153,12 +162,13 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.inlineActionBtn}
+            style={isWhite ? { color: "#334155", fontWeight: 500 } : undefined}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("symptoms");
             }}
           >
-            <Heart size={14} className={styles.inlineActionIcon} />
+            <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "#475569" } : undefined} />
             <span>Describe my symptoms</span>
           </button>
         </div>
@@ -168,6 +178,7 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.standaloneIconBtn}
+            style={isWhite ? { color: "#334155" } : undefined}
             aria-label="Voice search"
             onClick={(e) => {
               e.stopPropagation();

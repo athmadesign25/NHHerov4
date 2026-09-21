@@ -616,12 +616,12 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.88)" : "rgba(22, 28, 36, 0.28)",
-              backdropFilter: "blur(24px) saturate(125%)",
-              WebkitBackdropFilter: "blur(24px) saturate(125%)",
-              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.70)" : "1px solid rgba(255, 255, 255, 0.14)",
+              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.55)" : "rgba(22, 28, 36, 0.28)",
+              backdropFilter: "blur(24px) saturate(140%)",
+              WebkitBackdropFilter: "blur(24px) saturate(140%)",
+              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.14)",
               boxShadow: searchTheme === "white"
-                ? "0 16px 40px -10px rgba(0, 0, 0, 0.10), inset 0 1px 2px rgba(255, 255, 255, 0.80)"
+                ? "0 16px 40px -10px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95)"
                 : "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
               opacity: darkGlassOpacity,
               pointerEvents: "none",
@@ -630,12 +630,12 @@ export default function NHSearchExperience({
           />
         )}
 
-        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity) */}
+        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity, hidden in white mode) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             className={styles.animatedBorderOutline}
             style={{
-              opacity: gradientBorderOpacity,
+              opacity: searchTheme === "white" ? 0 : gradientBorderOpacity,
             }}
             aria-hidden="true"
           />
@@ -666,6 +666,7 @@ export default function NHSearchExperience({
           onSelectLocation={handleSelectLocation}
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
+          searchTheme={searchTheme}
           promptOpacity={hasScroll ? promptOpacity : undefined}
           minimizedSearchOpacity={hasScroll ? minimizedSearchOpacity : undefined}
           textColor={hasScroll ? textColor : undefined}
@@ -712,9 +713,15 @@ export default function NHSearchExperience({
             style={{
               position: "fixed",
               inset: 0,
-              background: searchTheme === "white" ? "rgba(15, 23, 42, 0.32)" : "rgba(5, 10, 18, 0.45)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              background: searchTheme === "white" 
+                ? "rgba(255, 255, 255, 0.55)" 
+                : "rgba(5, 10, 18, 0.45)",
+              backdropFilter: searchTheme === "white" 
+                ? "blur(20px) saturate(140%)" 
+                : "blur(14px)",
+              WebkitBackdropFilter: searchTheme === "white" 
+                ? "blur(20px) saturate(140%)" 
+                : "blur(14px)",
               zIndex: 1,
               touchAction: "none",
             }}
