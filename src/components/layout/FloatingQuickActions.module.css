@@ -22,6 +22,9 @@
      side of the highlight. */
   padding: 10px 0;
   width: 86px;
+  /* The bar is shorter than its own content while the third slot is still
+     closed; without this the tiles would squeeze instead of being clipped. */
+  flex-shrink: 0;
   border-radius: 14px;
   color: #0B5DF4;
   text-decoration: none;

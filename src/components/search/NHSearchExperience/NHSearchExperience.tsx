@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform
 import { Search, X } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
+import { searchDockProgress } from "./dockProgress";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
 import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
@@ -104,13 +105,19 @@ export default function NHSearchExperience({
       const container = document.querySelector(".global-floating-quick-actions") as HTMLElement | null;
       if (!el || !container) return;
 
-      // The bar is parked off-screen by a transform until it's shown, so
-      // it's briefly forced into its visible position to be measured.
+      // The bar is parked off-screen by a transform until it's shown, and
+      // sits short-and-raised until its third slot opens — both are forced
+      // to their final state here, so what gets measured is where the tile
+      // ends up rather than where it currently is.
       const originalTransform = container.style.transform;
       const originalTransition = container.style.transition;
+      const originalMarginTop = container.style.marginTop;
+      const originalHeight = container.style.height;
       container.style.transition = "none";
       container.style.transform =
         window.innerWidth < 900 ? "translateY(0)" : "translateY(-50%) translateX(0)";
+      container.style.marginTop = "0px";
+      container.style.height = "auto";
 
       const rect = el.getBoundingClientRect();
       setPulseTarget({
@@ -121,6 +128,8 @@ export default function NHSearchExperience({
       });
 
       container.style.transform = originalTransform;
+      container.style.marginTop = originalMarginTop;
+      container.style.height = originalHeight;
       void container.offsetHeight;
       container.style.transition = originalTransition;
     };
@@ -162,8 +171,12 @@ export default function NHSearchExperience({
   // travel jump through the middle of the screen or snap to the right.
   // Scroll-linked interpolation between two measured points has no such
   // race: every frame's position is a pure function of scrollY.
+  // The trip is deliberately long: at the old 0.3vh the whole journey was
+  // over inside a single wheel flick, so it read as a snap rather than a
+  // movement. Spread across 0.65vh it tracks the scroll at a rate the eye
+  // can follow.
   const DOCK_START = winSize.h * 0.35;
-  const DOCK_END = winSize.h * 0.65;
+  const DOCK_END = winSize.h * 1.0;
 
   // The shell's own viewport rect while it is still in the hero's flow,
   // kept current so the travel can start from exactly where it is at the
@@ -181,16 +194,32 @@ export default function NHSearchExperience({
   // so reading it back is what keeps the switch seamless.
   const dockWidth = useTransform(dockProgress, [0, 1], [dockOrigin.width, endWidth]);
   const dockHeight = useTransform(dockProgress, [0, 1], [dockOrigin.height, endHeight]);
-  // Gone by the time the bar itself has faded in, so the two are never
-  // both on screen.
-  const dockOpacity = useTransform(dockProgress, [0.75, 1], [1, 0]);
+  // Held solid until the bar's own slot has opened underneath it, then
+  // swapped over a window narrow enough to read as one object rather than
+  // a cross-fade — the long fade is what made the old handoff ghostly.
+  const dockOpacity = useTransform(dockProgress, [0.94, 1], [1, 0]);
+
+  // Published for the floating bar, which opens its third slot against it.
+  useMotionValueEvent(dockProgress, "change", (v) => searchDockProgress.set(v));
+
+  // Sheds the composer's own glass as it enters the slot (see .shellAbsorbing).
+  const [absorbing, setAbsorbing] = useState(false);
+  // 0.9, not earlier: before that the composer is still crossing open page,
+  // where a card stripped of its own fill leaves the white label floating on
+  // white. By 0.9 it already overlaps the bar, so the shed happens against
+  // the bar's own surface.
+  useMotionValueEvent(dockProgress, "change", (v) => setAbsorbing(v >= 0.9));
 
   // Below 900px the floating quick-actions bar is display:none — the shell
   // IS the bar there. So mobile has no pulse tile to travel to: it docks
   // in place as a full-width bottom bar whose contents become the three
   // quick actions (fading in as the search prompt fades out).
   const dockedMobile = isDocked && isMobile;
-  const fabOpacity = useTransform(dockProgress, [0.5, 1], [0, 1]);
+  // Tighter than the desktop travel: mobile docks in place at the bottom
+  // rather than crossing the screen, so its actions should be usable almost
+  // as soon as the bar is there — not held back by a range that exists for
+  // the desktop journey.
+  const fabOpacity = useTransform(dockProgress, [0.05, 0.3], [0, 1]);
 
   const syncDocked = useCallback(() => {
     const y = scrollY.get();
@@ -492,7 +521,7 @@ export default function NHSearchExperience({
       ref={shellRef}
       className={`${styles.searchShell} ${
         searchState === "landing" ? styles.stateLanding : styles.stateActive
-      }`}
+      } ${absorbing ? styles.shellAbsorbing : ""}`}
       animate={searchState === "landing" ? shellTarget : undefined}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       style={{

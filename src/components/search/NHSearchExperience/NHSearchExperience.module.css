@@ -2089,3 +2089,27 @@
   background-color: rgba(255, 255, 255, 0.12);
   margin: 12px 0;
 }
+
+/* ─── Absorption into the floating bar ───
+   Over the last stretch of its trip the composer sheds its own glass —
+   border, shadow and both pseudo-element layers — so what actually slides
+   into the bar's opening slot is the Pulse tile and its label alone. With
+   the chrome left on, a dark card lands on top of a light bar and the two
+   read as separate objects however well their geometry lines up. */
+.shellAbsorbing {
+  /* The fill and blur live on .searchShell itself, the stroke and glass
+     highlights on .stateLanding and its two pseudo layers — all of it has
+     to go, or a dark plate still lands on the bar. */
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.shellAbsorbing::before,
+.shellAbsorbing::after {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
