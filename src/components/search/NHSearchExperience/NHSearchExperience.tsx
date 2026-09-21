@@ -728,38 +728,13 @@ export default function NHSearchExperience({
             }}
           />
 
-          {/* ── Living Pulse AI Ambient Gradient Motion Canvas (Google Gemini style) ── */}
-          <motion.div
-            key="search-ambient-canvas"
-            className={`${styles.ambientGeminiCanvas} ${searchTheme === "white" ? styles.ambientGeminiWhite : styles.ambientGeminiDark}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.4, ease: "easeInOut" }}
-            aria-hidden="true"
-          >
-            <div className={`${styles.geminiOrb} ${styles.geminiOrbCyan}`} />
-            <div className={`${styles.geminiOrb} ${styles.geminiOrbPurple}`} />
-            <div className={`${styles.geminiOrb} ${styles.geminiOrbBlue}`} />
-            <div className={`${styles.geminiOrb} ${styles.geminiOrbRose}`} />
-            <div className={`${styles.geminiOrb} ${styles.geminiOrbCenter}`} />
-            <div className={styles.geminiHarmonizeOverlay} />
-          </motion.div>
-
-          {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
-          <motion.div
-            layout
-            id="nh-active-search-modal"
-            className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
-            data-search-theme={searchTheme}
-            data-lenis-prevent="true"
-            initial={{ opacity: 0, scale: 0.96, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -10 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+          {/* Modal Wrapper holding the Card and its Ambient Glow Around Effect */}
+          <div
+            className={styles.modalWithAmbientWrap}
             style={{
               position: "relative",
-              zIndex: 2,
+              display: "flex",
+              justifyContent: "center",
               width: Math.min(
                 (searchState === "results" || searchState === "skeleton") 
                   ? 1080 
@@ -769,13 +744,48 @@ export default function NHSearchExperience({
                 winSize.w - 32
               ),
               maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
-              height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
-              overflowY: searchState === "pulse" ? "hidden" : "auto",
-              overscrollBehavior: "contain",
-              margin: 0,
-              boxSizing: "border-box",
+              zIndex: 2,
             }}
           >
+            {/* ── Living Pulse AI Ambient Glow Around Effect (Subtle, 50% lower opacity, hugging popup card) ── */}
+            <motion.div
+              key="search-card-ambient-glow"
+              className={`${styles.cardAmbientGlow} ${searchTheme === "white" ? styles.cardAmbientGlowWhite : styles.cardAmbientGlowDark}`}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: prefersReducedMotion ? 0.1 : 0.35, ease: "easeOut" }}
+              aria-hidden="true"
+            >
+              <div className={`${styles.glowOrb} ${styles.glowOrbCyan}`} />
+              <div className={`${styles.glowOrb} ${styles.glowOrbPurple}`} />
+              <div className={`${styles.glowOrb} ${styles.glowOrbBlue}`} />
+              <div className={`${styles.glowOrb} ${styles.glowOrbRose}`} />
+            </motion.div>
+
+            {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
+            <motion.div
+              layout
+              id="nh-active-search-modal"
+              className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
+              data-search-theme={searchTheme}
+              data-lenis-prevent="true"
+              initial={{ opacity: 0, scale: 0.96, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: -10 }}
+              transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: "relative",
+                zIndex: 2,
+                width: "100%",
+                maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
+                height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
+                overflowY: searchState === "pulse" ? "hidden" : "auto",
+                overscrollBehavior: "contain",
+                margin: 0,
+                boxSizing: "border-box",
+              }}
+            >
             <AnimatePresence mode="popLayout" initial={false}>
               {searchState === "active" && (
                 <motion.div
@@ -851,9 +861,10 @@ export default function NHSearchExperience({
               )}
             </AnimatePresence>
           </motion.div>
-        </div>,
-        document.body
-      )}
+        </div>
+      </div>,
+      document.body
+    )}
 
       {/* Existing Pulse AI Workspace (When opened while docked in compact size or via Pulse trigger) */}
       {mounted && isPulseWorkspaceOpen && createPortal(
