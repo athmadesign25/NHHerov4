@@ -3607,11 +3607,190 @@
 .themeWhite .activeTextInput,
 [data-search-theme="white"] .activeTextInput {
   color: #0F172A !important;
+  caret-color: #0B5DF4 !important;
 }
 
 .themeWhite .activeTextInput::placeholder,
 [data-search-theme="white"] .activeTextInput::placeholder {
+  color: #64748B !important;
+}
+
+/* Standalone Icon Buttons (Paperclip attachment & Microphone) */
+.themeWhite .standaloneIconBtn,
+[data-search-theme="white"] .standaloneIconBtn {
+  color: #475569 !important;
+  background: transparent !important;
+}
+
+.themeWhite .standaloneIconBtn:hover,
+[data-search-theme="white"] .standaloneIconBtn:hover {
+  color: #0F172A !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+
+.themeWhite .standaloneIconBtn:focus-visible,
+[data-search-theme="white"] .standaloneIconBtn:focus-visible {
+  color: #0F172A !important;
+  background: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Submit Arrow Button */
+.themeWhite .submitArrowBtn,
+[data-search-theme="white"] .submitArrowBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .submitArrowBtn:hover,
+[data-search-theme="white"] .submitArrowBtn:hover {
+  background: #0446B8 !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+/* Quick Actions ("Find a doctor", "Describe my symptoms") */
+.themeWhite .inlineActionBtn,
+[data-search-theme="white"] .inlineActionBtn {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+.themeWhite .inlineActionBtn:hover,
+[data-search-theme="white"] .inlineActionBtn:hover {
+  background: rgba(11, 93, 244, 0.08) !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionIcon,
+[data-search-theme="white"] .inlineActionIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .inlineActionBtn:hover .inlineActionIcon,
+[data-search-theme="white"] .inlineActionBtn:hover .inlineActionIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionBtnActive,
+[data-search-theme="white"] .inlineActionBtnActive {
+  background: rgba(11, 93, 244, 0.10) !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionBtnActive .inlineActionIcon,
+[data-search-theme="white"] .inlineActionBtnActive .inlineActionIcon {
+  color: #0B5DF4 !important;
+}
+
+/* Location Selector (White Mode) */
+.themeWhite .locationPill,
+[data-search-theme="white"] .locationPill {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid rgba(203, 213, 225, 0.8) !important;
+  color: #1E293B !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.themeWhite .locationPill:hover,
+[data-search-theme="white"] .locationPill:hover {
+  background: #FFFFFF !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+.themeWhite .locationPinIcon,
+[data-search-theme="white"] .locationPinIcon {
+  color: #0B5DF4 !important;
+  opacity: 1 !important;
+}
+
+.themeWhite .locationMenu,
+[data-search-theme="white"] .locationMenu {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .locationMenuItem,
+[data-search-theme="white"] .locationMenuItem {
+  color: #1E293B !important;
+}
+
+.themeWhite .locationMenuItem:hover,
+[data-search-theme="white"] .locationMenuItem:hover {
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .locationMenuItemSelected,
+[data-search-theme="white"] .locationMenuItemSelected {
+  background: #EFF6FF !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationCurrentAction,
+[data-search-theme="white"] .locationCurrentAction {
+  color: #0B5DF4 !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+}
+
+.themeWhite .locationCurrentAction:hover,
+[data-search-theme="white"] .locationCurrentAction:hover {
+  background: #DBEAFE !important;
+}
+
+.themeWhite .locationNavIcon,
+[data-search-theme="white"] .locationNavIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationDetectingSpinner,
+[data-search-theme="white"] .locationDetectingSpinner {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationSearchWrapper,
+[data-search-theme="white"] .locationSearchWrapper {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+.themeWhite .locationSearchWrapper:focus-within,
+[data-search-theme="white"] .locationSearchWrapper:focus-within {
+  border-color: #3B82F6 !important;
+  background: #FFFFFF !important;
+}
+
+.themeWhite .locationSearchInput,
+[data-search-theme="white"] .locationSearchInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .locationSearchInput::placeholder,
+[data-search-theme="white"] .locationSearchInput::placeholder {
   color: #94A3B8 !important;
+}
+
+.themeWhite .locationSearchIcon,
+[data-search-theme="white"] .locationSearchIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .locationMenuHeader,
+[data-search-theme="white"] .locationMenuHeader {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .locationDivider,
+[data-search-theme="white"] .locationDivider {
+  background: #E2E8F0 !important;
+}
+
+.themeWhite .locationScrollList::-webkit-scrollbar-thumb,
+[data-search-theme="white"] .locationScrollList::-webkit-scrollbar-thumb {
+  background: #CBD5E1 !important;
 }
 
 .themeWhite .ghostSuffix,
@@ -3630,7 +3809,7 @@
 [data-search-theme="white"] .closeBtn {
   background: #F1F5F9 !important;
   border: 1px solid #E2E8F0 !important;
-  color: #64748B !important;
+  color: #475569 !important;
 }
 
 .themeWhite .closeBtn:hover,
@@ -3642,6 +3821,37 @@
 .themeWhite .emptyPromptSub,
 [data-search-theme="white"] .emptyPromptSub {
   color: #64748B !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+/* Guard: ensure hero landing prompt always retains its dark mode look */
+.stateLanding .standaloneIconBtn,
+.themeWhite .stateLanding .standaloneIconBtn,
+[data-search-theme="white"] .stateLanding .standaloneIconBtn {
+  color: rgba(255, 255, 255, 0.6) !important;
+  background: transparent !important;
+}
+
+.stateLanding .standaloneIconBtn:hover,
+.themeWhite .stateLanding .standaloneIconBtn:hover,
+[data-search-theme="white"] .stateLanding .standaloneIconBtn:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.stateLanding .locationPill,
+.themeWhite .stateLanding .locationPill,
+[data-search-theme="white"] .stateLanding .locationPill {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.stateLanding .locationPinIcon,
+.themeWhite .stateLanding .locationPinIcon,
+[data-search-theme="white"] .stateLanding .locationPinIcon {
+  color: #FFFFFF !important;
 }
 
 .themeWhite .suggestionsHeader,
@@ -3725,11 +3935,12 @@
   border: none !important;
   outline: none !important;
   font-weight: 500 !important;
+  caret-color: #0B5DF4 !important;
 }
 
 .themeWhite .resultsQueryInput::placeholder,
 [data-search-theme="white"] .resultsQueryInput::placeholder {
-  color: #94A3B8 !important;
+  color: #64748B !important;
 }
 
 .themeWhite .querySendBtn,
@@ -3740,6 +3951,13 @@
 
 .themeWhite .sectionEyebrowTitle,
 [data-search-theme="white"] .sectionEyebrowTitle {
+  color: #475569 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.07em !important;
+}
+
+.themeWhite .primaryProximityNotice,
+[data-search-theme="white"] .primaryProximityNotice {
   color: #64748B !important;
 }
 
