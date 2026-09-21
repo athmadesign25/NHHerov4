@@ -416,7 +416,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .storeBadge img {
@@ -663,10 +664,23 @@
 }
 
 /* ─── Left value stack ─── */
+/* Each value sits on its own card, in the same glass family as the QR card
+   opposite so the two columns read as a pair. The red is pulled back from
+   the QR card's: these are three stacked cards against that one, so the
+   same tint would compound down the column. */
 .valueUnit {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 10%) 100%),
+    rgb(255 255 255 / 40%);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border: 1px solid rgba(252, 80, 83, 0.08);
 }
 
 .valueIconTile {
