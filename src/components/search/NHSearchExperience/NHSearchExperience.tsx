@@ -558,8 +558,8 @@ export default function NHSearchExperience({
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
         layout
-        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
-        data-search-theme={searchTheme}
+        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${styles.themeDark}`}
+        data-search-theme="dark"
         onClick={() => {
           handleActivate();
         }}
@@ -609,7 +609,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Layer 1: Dark / White glass background layer */}
+        {/* Layer 1: Dark glass background layer */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -617,13 +617,11 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.28)" : "rgba(22, 28, 36, 0.28)",
+              background: "rgba(22, 28, 36, 0.28)",
               backdropFilter: "blur(24px) saturate(140%)",
               WebkitBackdropFilter: "blur(24px) saturate(140%)",
-              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.35)" : "1px solid rgba(255, 255, 255, 0.14)",
-              boxShadow: searchTheme === "white"
-                ? "0 16px 40px -10px rgba(0, 0, 0, 0.05), inset 0 1px 1.5px rgba(255, 255, 255, 0.50)"
-                : "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
+              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
               opacity: darkGlassOpacity,
               pointerEvents: "none",
               zIndex: 1,
@@ -667,7 +665,7 @@ export default function NHSearchExperience({
           onSelectLocation={handleSelectLocation}
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
-          searchTheme={searchTheme}
+          searchTheme="dark"
           promptOpacity={hasScroll ? promptOpacity : undefined}
           minimizedSearchOpacity={hasScroll ? minimizedSearchOpacity : undefined}
           textColor={hasScroll ? textColor : undefined}
