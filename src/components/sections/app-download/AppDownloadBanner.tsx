@@ -361,8 +361,8 @@ export default function AppDownloadBanner() {
             }}
           >
             <Image
-              src="/House Interior.jpg"
-              alt="House Interior"
+              src="/img-bg-app.png"
+              alt=""
               fill
               style={{ objectFit: "cover" }}
               priority
