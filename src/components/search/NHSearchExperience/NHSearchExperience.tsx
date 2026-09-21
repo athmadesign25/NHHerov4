@@ -616,12 +616,12 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.55)" : "rgba(22, 28, 36, 0.28)",
+              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.28)" : "rgba(22, 28, 36, 0.28)",
               backdropFilter: "blur(24px) saturate(140%)",
               WebkitBackdropFilter: "blur(24px) saturate(140%)",
-              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.14)",
+              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.35)" : "1px solid rgba(255, 255, 255, 0.14)",
               boxShadow: searchTheme === "white"
-                ? "0 16px 40px -10px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.95)"
+                ? "0 16px 40px -10px rgba(0, 0, 0, 0.05), inset 0 1px 1.5px rgba(255, 255, 255, 0.50)"
                 : "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
               opacity: darkGlassOpacity,
               pointerEvents: "none",
@@ -630,12 +630,12 @@ export default function NHSearchExperience({
           />
         )}
 
-        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity, hidden in white mode) */}
+        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity, 1px thickness in both modes) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             className={styles.animatedBorderOutline}
             style={{
-              opacity: searchTheme === "white" ? 0 : gradientBorderOpacity,
+              opacity: gradientBorderOpacity,
             }}
             aria-hidden="true"
           />
