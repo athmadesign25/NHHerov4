@@ -253,16 +253,12 @@ export default function HealthPackages() {
   const textRevealedRef = useRef(false);
   const [textRevealed, setTextRevealed] = useState(false);
 
-  // Fades the "Most Booked in ..." label while the center card specifically
-  // is hovered, not any card — the label sits right above it, so only that
-  // one card visually competes with it.
-  const [centerCardHovered, setCenterCardHovered] = useState(false);
-
-  // Two card treatments kept side by side for review (see the floating
-  // toggle rendered below). 1 is the original grow-on-hover card; 2 is the
-  // fixed-height card with a shimmer sweep and an audience subtitle.
+  // Two card treatments kept side by side for review (see the toggle
+  // rendered below). 1 (the default) is the fixed-height card with a
+  // shimmer sweep and an audience subtitle; 2 is the original card that
+  // grows on hover to reveal its perk pills.
   const [cardDirection, setCardDirection] = useState<1 | 2>(1);
-  const isDirTwo = cardDirection === 2;
+  const isCompact = cardDirection === 1;
 
   // "growing": frame size/radius tracks raw scroll (p1raw) as before.
   // "full": frame is pinned at its fully-grown end values and the card
@@ -695,24 +691,24 @@ export default function HealthPackages() {
       // whichever section comes next instead — no dynamic toggle needed.
       data-nav-theme="dark"
     >
-      {/* Review-only switch between the two card treatments — parked on
-          the left so it never sits over the cards themselves. */}
-      <div className={styles.directionToggle}>
-        <span className={styles.directionToggleLabel}>Cards</span>
-        {([1, 2] as const).map((dir) => (
-          <button
-            key={dir}
-            type="button"
-            className={`${styles.directionToggleBtn} ${cardDirection === dir ? styles.directionToggleBtnActive : ""}`}
-            onClick={() => setCardDirection(dir)}
-            aria-pressed={cardDirection === dir}
-          >
-            D{dir}
-          </button>
-        ))}
-      </div>
-
       <div ref={stickyViewportRef} className={styles.stickyViewport}>
+        {/* Review-only switch between the two card treatments. Lives inside
+            the sticky viewport so it is on screen only while this section
+            is pinned, rather than following the whole page. */}
+        <div className={styles.directionToggle}>
+          <span className={styles.directionToggleLabel}>Cards</span>
+          {([1, 2] as const).map((dir) => (
+            <button
+              key={dir}
+              type="button"
+              className={`${styles.directionToggleBtn} ${cardDirection === dir ? styles.directionToggleBtnActive : ""}`}
+              onClick={() => setCardDirection(dir)}
+              aria-pressed={cardDirection === dir}
+            >
+              D{dir}
+            </button>
+          ))}
+        </div>
         <div ref={frameRef} className={styles.frame}>
           {/* No `loop` — looping is handled manually via ping-pong scrubbing
               (see stepPingPong in the effect above), not native playback. */}
@@ -798,14 +794,13 @@ export default function HealthPackages() {
                 <>
                   <div
                     ref={(el) => { railItemRefs.current[railSlots.indexOf("label")] = el; }}
-                    className={`${styles.railLabel} ${centerCardHovered ? styles.railLabelFaded : ""}`}
+                    className={styles.railLabel}
                   >
                     Most Booked in {DETECTED_CITY}
                   </div>
 
-                  <div className={`${styles.cardStack} ${isDirTwo ? styles.cardStackDir2 : ""}`}>
-                    {packages.map((pkg, pkgIndex) => {
-                      const isCenterCard = pkgIndex === Math.floor(packages.length / 2);
+                  <div className={`${styles.cardStack} ${isCompact ? styles.cardStackCompact : ""}`}>
+                    {packages.map((pkg) => {
                       return (
                         // Fixed-height slot is the actual grid item (so the
                         // hover-expanded card's extra height never affects
@@ -813,24 +808,20 @@ export default function HealthPackages() {
                         // is absolutely positioned within it, bottom-
                         // anchored, so growing height pushes its own top
                         // edge up instead of the slot's bottom edge down.
-                        <div key={pkg.id} className={`${styles.packageCardSlot} ${isDirTwo ? styles.packageCardSlotDir2 : ""}`}>
+                        <div key={pkg.id} className={`${styles.packageCardSlot} ${isCompact ? styles.packageCardSlotCompact : ""}`}>
                           <Link
                             href={`/health-packages/${pkg.id}`}
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
-                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${isDirTwo ? styles.packageCardDir2 : ""}`}
+                            className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${isCompact ? styles.packageCardCompact : ""}`}
                             onMouseMove={handleCardMouseMove}
-                            onMouseEnter={isCenterCard ? () => setCenterCardHovered(true) : undefined}
-                            onMouseLeave={(e) => {
-                              handleCardMouseLeave(e);
-                              if (isCenterCard) setCenterCardHovered(false);
-                            }}
+                            onMouseLeave={handleCardMouseLeave}
                           >
                             <span className={styles.packageCardBorder} aria-hidden />
-                            {isDirTwo && <span className={styles.packageCardShimmer} aria-hidden />}
+                            {isCompact && <span className={styles.packageCardShimmer} aria-hidden />}
                             <img src={pkg.image} alt="" className={styles.packageCardImage} />
                             <div className={styles.packageCardContent}>
                               <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
-                              {isDirTwo && (
+                              {isCompact && (
                                 <p className={styles.packageCardAudience}>
                                   {pkg.ageBand} · {pkg.audience}
                                 </p>
@@ -859,10 +850,10 @@ export default function HealthPackages() {
                                   gives it an exact zero height at rest (no guessed
                                   max-height), and the 24px above the divider is the
                                   content column's own gap rather than a second margin
-                                  that would double up with it. Direction 2 drops them
-                                  entirely — its card never grows, so there is nowhere
+                                  that would double up with it. The compact card drops
+                                  them entirely — it never grows, so there is nowhere
                                   for them to go. */}
-                              {!isDirTwo && (
+                              {!isCompact && (
                               <div className={styles.packageCardExtras}>
                                 <div className={styles.packageCardExtrasInner}>
                                   <div className={styles.packageCardPerks}>

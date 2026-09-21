@@ -286,14 +286,6 @@
   line-height: normal;
   margin: 0 0 20px;
   will-change: transform, opacity;
-  transition: opacity 0.3s ease;
-}
-
-/* !important: the entrance reveal (see HealthPackages.tsx's
-   applyAutoReveal) freezes an inline opacity on this element once
-   settled, which would otherwise always win over this class. */
-.railLabelFaded {
-  opacity: 0 !important;
 }
 
 /* Grid (not flex) so the three columns can shrink together below the
@@ -879,41 +871,44 @@
   }
 }
 
-/* ═══ Direction 2 card treatment ═══════════════════════════════════════
+/* ═══ Compact card treatment (direction 1) ═══════════════════════════════════════
    A fixed-height card: it never grows on hover, so "View Details" has to
    already have room at the bottom in the resting state. The hover read
    comes from a shimmer sweep and a small image bump instead of the height
    change (and the perk pills are gone with it — see HealthPackages.tsx). */
-.packageCardSlotDir2 {
-  height: 300px;
+.packageCardSlotCompact {
+  height: 282px;
 }
 
-.packageCardDir2,
-.packageCardDir2:hover,
-.packageCardDir2:focus-visible {
-  height: 300px;
+.packageCardCompact,
+.packageCardCompact:hover,
+.packageCardCompact:focus-visible {
+  height: 282px;
 }
 
 /* Wider columns than direction 1 — the titles run on one line here, so
    they need the room. */
-.cardStackDir2 {
+.cardStackCompact {
   grid-template-columns: repeat(3, minmax(260px, 430px));
 }
 
 /* One line, never wrapping. The content column also stops reserving room
    for a 2-line title, so the subtitle sits directly beneath it. */
-.packageCardDir2 .packageCardTitle {
+.packageCardCompact .packageCardTitle {
   white-space: nowrap;
   font-size: 19px;
 }
 
-.packageCardDir2 .packageCardContent {
+.packageCardCompact .packageCardContent {
   max-width: calc(100% - 150px);
   gap: 20px;
 }
 
+/* Pulled back up against the title: the content column's own gap would
+   otherwise sit this equidistant between the title above and the facts
+   below, reading as though it belonged to the facts. */
 .packageCardAudience {
-  margin: 6px 0 0;
+  margin: calc(6px - 20px) 0 0;
   color: #5A6472;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
@@ -924,12 +919,12 @@
 
 /* Only a small bump — the direction 1 card's image appeared to grow a lot
    simply because the card itself got taller under it. */
-.packageCardDir2 .packageCardImage {
+.packageCardCompact .packageCardImage {
   transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.packageCardDir2:hover .packageCardImage,
-.packageCardDir2:focus-visible .packageCardImage {
+.packageCardCompact:hover .packageCardImage,
+.packageCardCompact:focus-visible .packageCardImage {
   width: 228px;
 }
 
@@ -962,13 +957,13 @@
   transform: skewX(-18deg);
 }
 
-.packageCardDir2:hover .packageCardShimmer,
-.packageCardDir2:focus-visible .packageCardShimmer {
+.packageCardCompact:hover .packageCardShimmer,
+.packageCardCompact:focus-visible .packageCardShimmer {
   opacity: 1;
 }
 
-.packageCardDir2:hover .packageCardShimmer::after,
-.packageCardDir2:focus-visible .packageCardShimmer::after {
+.packageCardCompact:hover .packageCardShimmer::after,
+.packageCardCompact:focus-visible .packageCardShimmer::after {
   animation: packageCardShimmerSweep 0.9s cubic-bezier(0.32, 0.72, 0.4, 1);
 }
 
@@ -982,12 +977,13 @@
 }
 
 /* ─── Direction toggle (review aid) ─── */
-/* Bottom-left rather than vertically centered: direction 2's card row is
-   wide enough to run under a mid-height toggle. */
+/* Absolute inside .stickyViewport (not fixed to the page) so it shows up
+   exactly while this section is pinned. Bottom-left: the compact card row
+   is wide enough to run under a mid-height toggle. */
 .directionToggle {
-  position: fixed;
+  position: absolute;
   left: 16px;
-  bottom: 96px;
+  bottom: 88px;
   z-index: 40;
   display: flex;
   align-items: center;

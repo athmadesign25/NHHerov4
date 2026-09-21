@@ -965,7 +965,12 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  padding: 8px 14px;
+  /* Height (and radius) matched to the Login button sitting beside it —
+     its own 18px icon is taller than Login's text line, so equal padding
+     would not have produced equal buttons. */
+  height: 35px;
+  box-sizing: border-box;
+  padding: 0 14px;
   border-radius: 10px;
   text-decoration: none;
   background: rgba(237, 28, 36, 0.18);
