@@ -158,16 +158,13 @@ export default function SearchResultsCanvas({
 
             {/* 2-Column Result Layout: Primary vs Secondary/Tertiary Editorial */}
             <div className={styles.resultsSplitLayout}>
-              {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors & Compact Pulse AI Row ── */}
+              {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors ── */}
               <div className={styles.resultsLeftCol}>
                 <PrimaryResults
-                  pulseRecommendationText={results.pulseRecommendationText}
                   doctors={results.doctors}
                   selectedLocation={selectedLocation}
                   proximityMessage={results.proximityMessage}
                   query={query}
-                  isPulseExpanded={false}
-                  onTogglePulseExpand={setIsPulseExpanded}
                 />
               </div>
 
@@ -179,6 +176,58 @@ export default function SearchResultsCanvas({
                 onSelectSpecialtyTag={onSelectSpecialtyTag}
               />
             </div>
+
+            {/* ── FULL SIZE Ask Pulse Banner at Bottom (Spanning 100% Width) ── */}
+            {results.pulseRecommendationText && (
+              <div
+                className={styles.refPulseRow}
+                onClick={() => setIsPulseExpanded(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setIsPulseExpanded(true);
+                }}
+                aria-label="Ask Pulse AI for personalised recommendations"
+              >
+                <div className={styles.refPulseLeft}>
+                  <div className={styles.refPulseIconBox} aria-hidden>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="2.8" fill="currentColor" />
+                      <circle cx="18.5" cy="8.5" r="1.8" fill="currentColor" />
+                      <circle cx="5.5" cy="8.5" r="1.8" fill="currentColor" />
+                      <circle cx="18.5" cy="15.5" r="1.8" fill="currentColor" />
+                      <circle cx="5.5" cy="15.5" r="1.8" fill="currentColor" />
+                      <line x1="9.6" y1="10.4" x2="7" y2="9.4" />
+                      <line x1="14.4" y1="10.4" x2="17" y2="9.4" />
+                      <line x1="9.6" y1="13.6" x2="7" y2="14.6" />
+                      <line x1="14.4" y1="13.6" x2="17" y2="14.6" />
+                    </svg>
+                  </div>
+                  <div className={styles.refPulseTextWrap}>
+                    <div className={styles.refPulseTitleLine}>
+                      <span className={styles.refPulseTitle}>
+                        Want a more personalised recommendation?
+                      </span>
+                      <span className={styles.refPulseBadge}>PULSE AI</span>
+                    </div>
+                    <p className={styles.refPulseSubtext}>
+                      Ask clinical questions, describe symptoms, or get tailored specialist recommendations.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={styles.refPulseBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsPulseExpanded(true);
+                  }}
+                >
+                  <span>Ask Pulse</span>
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

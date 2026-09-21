@@ -1481,15 +1481,43 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* Top-left Experience Badge on Doctor Photo */
+.refDocExpBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  padding: 3px 8.5px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.40);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.refDocExpBadgeIcon {
+  color: rgba(255, 255, 255, 0.88);
+  flex-shrink: 0;
+}
+
 /* Doctor Information Area positioned over the gradient overlay */
 .refDocOverlayContent {
   position: relative;
   z-index: 2;
   margin-top: auto;
-  padding: 14px 15px 15px;
+  padding: 12px 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1.5px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -1503,46 +1531,31 @@
   line-height: 1.25;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .refDocSpecialty {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #3B82F6;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 2px;
-}
-
-.refDocHospital {
   font-size: 12px;
-  font-weight: 400;
-  color: #94A3B8;
+  font-weight: 500;
+  color: #FFFFFF;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
 }
 
-.refDocExpRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
+.refDocHospital {
+  font-size: 11px;
   font-weight: 400;
-  color: #94A3B8;
-  margin-top: 6px;
-  margin-bottom: 11px;
-}
-
-.refDocExpIcon {
-  color: #94A3B8;
-  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+  margin-bottom: 10px;
 }
 
 /* Full-width Book Button */
@@ -1551,24 +1564,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  background: #2563EB;
+  background: #1D68FE;
   color: #FFFFFF;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
-  padding: 8.5px 12px;
-  border-radius: 8px;
+  padding: 8.5px 0;
+  border-radius: 10px;
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.16s ease, transform 0.16s ease;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+  transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 2px 8px rgba(29, 104, 254, 0.35);
 }
 
 .refBookBtn:hover {
-  background: #1D4ED8;
-  transform: translateY(-0.5px);
+  background: #1557E0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 104, 254, 0.45);
 }
 
 /* Below Doctor Grid Link */
@@ -1616,7 +1629,7 @@
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  margin-top: 12px;
+  margin-top: 20px;
 }
 
 .refPulseRow:hover {
@@ -3827,17 +3840,23 @@
   color: #64748B !important;
 }
 
+.themeWhite .redDivider,
+[data-search-theme="white"] .redDivider {
+  background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 50%, #3B82F6 100%) !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.25) !important;
+}
+
 .themeWhite .refDoctorCard,
 [data-search-theme="white"] .refDoctorCard {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: #0B111E !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
 }
 
 .themeWhite .refDoctorCard:hover,
 [data-search-theme="white"] .refDoctorCard:hover {
-  border-color: #CBD5E1 !important;
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.14) !important;
 }
 
 .themeWhite .refDocName,
@@ -3847,33 +3866,24 @@
 
 .themeWhite .refDocSpecialty,
 [data-search-theme="white"] .refDocSpecialty {
-  color: #38BDF8 !important;
+  color: #FFFFFF !important;
 }
 
 .themeWhite .refDocHospital,
 [data-search-theme="white"] .refDocHospital {
-  color: rgba(255, 255, 255, 0.8) !important;
-}
-
-.themeWhite .refDocExpRow,
-[data-search-theme="white"] .refDocExpRow {
-  color: rgba(255, 255, 255, 0.75) !important;
-}
-
-.themeWhite .refDocExpIcon,
-[data-search-theme="white"] .refDocExpIcon {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: rgba(255, 255, 255, 0.78) !important;
 }
 
 .themeWhite .refBookBtn,
 [data-search-theme="white"] .refBookBtn {
-  background: #0B5DF4 !important;
+  background: #1D68FE !important;
   color: #FFFFFF !important;
+  border-radius: 10px !important;
 }
 
 .themeWhite .refBookBtn:hover,
 [data-search-theme="white"] .refBookBtn:hover {
-  background: #0446B8 !important;
+  background: #1557E0 !important;
 }
 
 .themeWhite .refViewAllLink,
@@ -3886,26 +3896,30 @@
   color: #0446B8 !important;
 }
 
-/* Results Pulse Recommendation Row (White Mode) */
+/* Results Pulse Recommendation Row (White Mode - Full width bottom matching Figma) */
 .themeWhite .refPulseRow,
 [data-search-theme="white"] .refPulseRow {
-  background: linear-gradient(135deg, rgba(254, 242, 244, 0.85) 0%, rgba(240, 249, 255, 0.90) 100%) !important;
-  border: 1px solid rgba(254, 205, 211, 0.7) !important;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+  background: linear-gradient(90deg, rgba(254, 242, 244, 0.85) 0%, rgba(240, 249, 255, 0.90) 100%) !important;
+  border: 1px solid rgba(226, 232, 240, 0.85) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04) !important;
+  margin-top: 20px !important;
+  width: 100% !important;
 }
 
 .themeWhite .refPulseRow:hover,
 [data-search-theme="white"] .refPulseRow:hover {
-  background: linear-gradient(135deg, rgba(254, 242, 244, 0.95) 0%, rgba(240, 249, 255, 0.98) 100%) !important;
-  border-color: rgba(244, 63, 94, 0.4) !important;
+  background: linear-gradient(90deg, rgba(254, 242, 244, 0.95) 0%, rgba(240, 249, 255, 0.98) 100%) !important;
+  border-color: rgba(203, 213, 225, 1) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06) !important;
 }
 
 .themeWhite .refPulseIconBox,
 [data-search-theme="white"] .refPulseIconBox {
   background: #FFFFFF !important;
-  border: 1px solid rgba(254, 205, 211, 0.6) !important;
+  border: 1px solid rgba(254, 205, 211, 0.7) !important;
   color: #E11D48 !important;
-  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.18) !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.15) !important;
 }
 
 .themeWhite .refPulseTitle,
@@ -3922,18 +3936,25 @@
 
 .themeWhite .refPulseSubtext,
 [data-search-theme="white"] .refPulseSubtext {
-  color: #475569 !important;
+  color: #64748B !important;
 }
 
 .themeWhite .refPulseBtn,
 [data-search-theme="white"] .refPulseBtn {
-  background: #0B5DF4 !important;
-  color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  color: #0F172A !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
 }
 
 .themeWhite .refPulseBtn:hover,
 [data-search-theme="white"] .refPulseBtn:hover {
-  background: #0446B8 !important;
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
 }
 
 /* Right column Editorial / Tertiary items (White Mode) */
