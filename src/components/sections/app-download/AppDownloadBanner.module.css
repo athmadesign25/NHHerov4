@@ -383,6 +383,7 @@
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-radius: 10px;
   padding: 16px;
+  border: 1px solid rgba(252, 80, 83, 0.12);
 }
 
 .storesCol {

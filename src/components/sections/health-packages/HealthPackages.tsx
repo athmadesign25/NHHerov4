@@ -102,10 +102,12 @@ function UspIconReports() {
   );
 }
 
+// Each label is pre-broken into its own two lines rather than left to
+// auto-wrap, so every one breaks at its own natural phrase boundary.
 const USPS = [
-  { icon: UspIconBooking, label: "Quick & easy online booking" },
-  { icon: UspIconCare, label: "Complete care from trusted specialists" },
-  { icon: UspIconReports, label: "Fast, same-day reports" },
+  { icon: UspIconBooking, lines: ["Quick & easy", "online booking"] },
+  { icon: UspIconCare, lines: ["Complete care from", "trusted specialists"] },
+  { icon: UspIconReports, lines: ["Fast, same-day", "reports"] },
 ];
 
 // Card fact icons (tests / reports-within). Flat fill matching the USP
@@ -770,7 +772,7 @@ export default function HealthPackages() {
               <ul className={styles.uspList}>
                 {USPS.map((usp, uspIdx) => (
                   <motion.li
-                    key={usp.label}
+                    key={usp.lines[0]}
                     className={styles.uspItem}
                     initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
                     animate={textRevealed ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
@@ -783,7 +785,11 @@ export default function HealthPackages() {
                     <span className={styles.uspIconBox}>
                       <usp.icon />
                     </span>
-                    <span className={styles.uspLabel}>{usp.label}</span>
+                    <span className={styles.uspLabel}>
+                      {usp.lines[0]}
+                      <br />
+                      {usp.lines[1]}
+                    </span>
                   </motion.li>
                 ))}
               </ul>
