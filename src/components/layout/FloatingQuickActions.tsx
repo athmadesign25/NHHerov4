@@ -8,11 +8,21 @@ import styles from "./FloatingQuickActions.module.css";
 
 export default function FloatingQuickActions() {
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
+  const [isSearchDocked, setIsSearchDocked] = useState(false);
   const [darkLinks, setDarkLinks] = useState<boolean[]>([false, false, false]);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const handleDock = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail && typeof detail.isDocked === "boolean") {
+        setIsSearchDocked(detail.isDocked);
+      }
+    };
+    window.addEventListener("nh:search-docked", handleDock);
+    return () => window.removeEventListener("nh:search-docked", handleDock);
   }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,9 +32,12 @@ export default function FloatingQuickActions() {
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
-      // Quick Health Actions Bar appears as the user scrolls past hero (at ~38% scroll)
-      const showQuickActions = window.scrollY >= window.innerHeight * 0.38;
+      // Quick Health Actions Bar appears as the user scrolls past hero (at ~32% scroll)
+      const showQuickActions = window.scrollY >= window.innerHeight * 0.32;
       setIsQuickActionsVisible(showQuickActions);
+      if (window.scrollY >= window.innerHeight * 0.58) {
+        setIsSearchDocked(true);
+      }
 
 
 
@@ -126,7 +139,14 @@ export default function FloatingQuickActions() {
           <span className={styles.actionLabel}>Download<br />NH Care App</span>
         </Link>
 
-        <div aria-hidden="true" className={styles.divider} />
+        <div 
+          aria-hidden="true" 
+          className={styles.divider}
+          style={{
+            opacity: isSearchDocked ? 1 : 0,
+            transition: "opacity 0.2s ease",
+          }}
+        />
 
         {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
         <button
@@ -135,6 +155,11 @@ export default function FloatingQuickActions() {
           className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
+          style={{
+            opacity: isSearchDocked ? 1 : 0,
+            pointerEvents: isSearchDocked ? "auto" : "none",
+            transition: "opacity 0.2s ease",
+          }}
         >
           <span className={styles.iconWrap}>
             {isMounted ? (

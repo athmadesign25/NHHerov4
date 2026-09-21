@@ -85,37 +85,95 @@ export default function NHSearchExperience({
   const defaultProgress = useMotionValue(0);
   const activeProgress = scrollProgress || defaultProgress;
 
-  useMotionValueEvent(activeProgress, "change", (latest) => {
-    setIsDocked(latest >= 0.50);
-  });
-
   // Starting dimensions (Hero anchor)
   const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
   const startHeight = anchorRect?.height || 136;
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Docked dimensions (matches Item 3 of the vertical floating utility group on the right side)
+  // Square box dimensions in Phase 1 & 2
+  const squareSize = 56;
+  const squareLeft = Math.round((winSize.w - squareSize) / 2);
+  const squareTopInPlace = Math.round(startTop + (startHeight - squareSize) / 2);
+  // Mid top: tracks up as hero scales down and moves up
+  const midTop = Math.round(winSize.h * 0.36);
+
+  // Docked dimensions (3rd button in FloatingQuickActions on right side)
   const endWidth = isMobile ? 96 : 100;
   const endHeight = 74;
-  const endTop = winSize.h - 36 - endHeight;
-  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : winSize.w - 24 - endWidth;
+  // In FloatingQuickActions: top: 50% (translateY(-50%)), container height ~224px.
+  // Button 3 top = winH * 0.5 - 112 + 75 + 75 = winH * 0.5 + 38px
+  const endTop = isMobile ? (winSize.h - 36 - endHeight) : Math.round(winSize.h * 0.5 + 38);
+  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : (winSize.w - 24 - endWidth);
 
-  // Continuous numeric scroll transforms: [0.03, 0.45]
-  const composerTop = useTransform(activeProgress, [0.03, 0.45], [startTop, endTop]);
-  const composerLeft = useTransform(activeProgress, [0.03, 0.45], [startLeft, endLeft]);
-  const composerWidth = useTransform(activeProgress, [0.03, 0.45], [startWidth, endWidth]);
-  const composerHeight = useTransform(activeProgress, [0.03, 0.45], [startHeight, endHeight]);
-  const composerRadius = useTransform(activeProgress, [0.03, 0.45], [20, 18]);
-  const composerPaddingX = useTransform(activeProgress, [0.03, 0.45], [24, 6]);
-  const composerPaddingY = useTransform(activeProgress, [0.03, 0.45], [20, 8]);
-  const morphShellOpacity = useTransform(activeProgress, [0.42, 0.50], [1, 0]);
+  useMotionValueEvent(activeProgress, "change", (latest) => {
+    const docked = latest >= 0.64;
+    setIsDocked(docked);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
+    }
+  });
+
+  // 3-Stage Choreography:
+  // Phase 1 [0.02, 0.22]: Search bar shrinks in place to a 56px square box
+  // Phase 2 [0.22, 0.44]: Hero scales down and moves up, square moves up with hero
+  // Phase 3 [0.44, 0.66]: Side bar FAB appears, square moves right & morphs into 3rd button
+  const composerTop = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [startTop, squareTopInPlace, midTop, endTop]
+  );
+
+  const composerLeft = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [startLeft, squareLeft, squareLeft, endLeft]
+  );
+
+  const composerWidth = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [startWidth, squareSize, squareSize, endWidth]
+  );
+
+  const composerHeight = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [startHeight, squareSize, squareSize, endHeight]
+  );
+
+  const composerRadius = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [20, 16, 16, 18]
+  );
+
+  const composerPaddingX = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [24, 0, 0, 6]
+  );
+
+  const composerPaddingY = useTransform(
+    activeProgress,
+    [0.02, 0.22, 0.44, 0.66],
+    [20, 0, 0, 12]
+  );
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.03, 0.20], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.03, 0.22], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.03, 0.22], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.03, 0.18], [1, 0]);
+  const controlsOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.02, 0.12], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.12], ["32px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
+
+  // Square pulse icon appears as prompt fades out, stays visible all the way through
+  const squareIconOpacity = useTransform(activeProgress, [0.05, 0.14], [0, 1]);
+
+  // Label "Pulse AI Search" under the icon only fades in during Phase 3 when expanding to 100px wide
+  const fabLabelOpacity = useTransform(activeProgress, [0.48, 0.64], [0, 1]);
+
+  // At the end of Phase 3 (when fully docked), morphShellOpacity fades out into the static FAB button
+  const morphShellOpacity = useTransform(activeProgress, [0.65, 0.70], [1, 0]);
   const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
@@ -438,6 +496,9 @@ export default function NHSearchExperience({
                 paddingBottom: composerPaddingY,
                 opacity: morphShellOpacity,
                 maxWidth: "none",
+                minWidth: 0,
+                minHeight: 0,
+                transition: "none",
                 marginTop: 0,
                 marginRight: 0,
                 marginBottom: 0,
@@ -445,7 +506,7 @@ export default function NHSearchExperience({
                 boxSizing: "border-box",
                 zIndex: 9990,
                 pointerEvents: isDocked ? "none" : "auto",
-                overflow: composerOverflow,
+                overflow: "hidden",
                 cursor: "pointer",
               }
             : searchState !== "landing"
@@ -469,6 +530,8 @@ export default function NHSearchExperience({
           onOpenPulse={() => handleOpenPulse()}
           promptOpacity={hasScroll ? promptOpacity : undefined}
           compactLabelOpacity={hasScroll ? compactLabelOpacity : undefined}
+          squareIconOpacity={hasScroll ? squareIconOpacity : undefined}
+          fabLabelOpacity={hasScroll ? fabLabelOpacity : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}

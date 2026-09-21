@@ -74,7 +74,7 @@
   content: "";
   position: absolute;
   inset: -1px;
-  border-radius: 21px;
+  border-radius: inherit;
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
@@ -100,7 +100,7 @@
   content: "";
   position: absolute;
   inset: -2px;
-  border-radius: 22px;
+  border-radius: inherit;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.08) 0deg,
@@ -2874,6 +2874,17 @@
    Compact Transformed Floating Pulse AI Search State (Scroll Morph Transition)
    Transitions continuously into the 3rd action of the floating utility dock.
    ═══════════════════════════════════════════════════════════════════════════════ */
+.squareBoxContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  pointer-events: none;
+}
+
 .compactPulseSearchItem {
   display: flex;
   flex-direction: column;
@@ -2888,15 +2899,15 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: linear-gradient(149deg, #07152B 0%, #034EA2 100%);
-  border: 1px solid rgba(0, 196, 255, 0.35);
-  box-shadow: 0 0 10px rgba(0, 196, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
+  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset, 0 0 12px rgba(0, 196, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s ease;
 }
 
 .floatingPulseSearchText {

@@ -14,6 +14,8 @@ interface DefaultSearchPromptProps {
   onOpenPulse?: () => void;
   promptOpacity?: MotionValue<number>;
   compactLabelOpacity?: MotionValue<number>;
+  squareIconOpacity?: MotionValue<number>;
+  fabLabelOpacity?: MotionValue<number>;
   controlsOpacity?: MotionValue<number>;
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
@@ -28,6 +30,8 @@ export default function DefaultSearchPrompt({
   onOpenPulse,
   promptOpacity,
   compactLabelOpacity,
+  squareIconOpacity,
+  fabLabelOpacity,
   controlsOpacity,
   controlsHeight,
   controlsMarginBottom,
@@ -36,16 +40,17 @@ export default function DefaultSearchPrompt({
   return (
     <div 
       className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "center", cursor: "pointer" }}
+      style={{ height: "100%", justifyContent: "center", cursor: "pointer", position: "relative", overflow: "hidden" }}
       onClick={onActivate}
     >
-      {/* Top row: Primary Prompt + Pulse AI Identity (aligned to same outer boundary) */}
+      {/* Top row: Primary Prompt (aligned to same outer boundary) */}
       <motion.div
         className={styles.landingInputRow}
         style={{
           ...(controlsMarginBottom ? { marginBottom: controlsMarginBottom } : {}),
           position: "relative",
           alignItems: "center",
+          opacity: promptOpacity,
         }}
         onClick={onActivate}
         role="button"
@@ -55,40 +60,47 @@ export default function DefaultSearchPrompt({
         }}
       >
         {/* Main prompt: 20-22px, font-weight: 450 */}
-        <motion.span 
-          className={styles.landingPlaceholder}
-          style={promptOpacity ? { opacity: promptOpacity } : undefined}
-        >
+        <span className={styles.landingPlaceholder}>
           How can we help you today?
-        </motion.span>
-
-        {/* Compact label transforms into vertical Pulse AI Search action during scroll morph */}
-        {compactLabelOpacity && (
-          <motion.div
-            className={styles.compactPulseSearchItem}
-            style={{
-              opacity: compactLabelOpacity,
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }}
-          >
-            <div className={styles.floatingPulseIconWrap}>
-              <div className={styles.pulseBars} aria-hidden>
-                <span className={styles.pulseBar1} />
-                <span className={styles.pulseBar2} />
-                <span className={styles.pulseBar3} />
-              </div>
-            </div>
-            <span className={styles.floatingPulseSearchText}>
-              Pulse AI<br />Search
-            </span>
-          </motion.div>
-        )}
-
+        </span>
       </motion.div>
+
+      {/* ── Square Box Content (Phase 1 & 2) -> Morphs to 3rd FAB button (Phase 3) ── */}
+      {squareIconOpacity && (
+        <motion.div
+          className={styles.squareBoxContent}
+          style={{
+            opacity: squareIconOpacity,
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            pointerEvents: "none",
+            userSelect: "none",
+          }}
+        >
+          <div className={styles.floatingPulseIconWrap}>
+            <div className={styles.pulseBars} aria-hidden>
+              <span className={styles.pulseBar1} />
+              <span className={styles.pulseBar2} />
+              <span className={styles.pulseBar3} />
+            </div>
+          </div>
+          {fabLabelOpacity && (
+            <motion.span
+              className={styles.floatingPulseSearchText}
+              style={{
+                opacity: fabLabelOpacity,
+                marginTop: 4,
+              }}
+            >
+              Pulse AI<br />Search
+            </motion.span>
+          )}
+        </motion.div>
+      )}
 
       {/* Continuous horizontal interaction row */}
       <motion.div 
