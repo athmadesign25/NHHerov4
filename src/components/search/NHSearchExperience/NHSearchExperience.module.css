@@ -1392,7 +1392,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 18px;
+  border-radius: 8px;
   background: #0B111E;
   border: none;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
@@ -1515,26 +1515,49 @@
   z-index: 2;
   margin-top: auto;
   padding: 12px 14px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5px;
   width: 100%;
   box-sizing: border-box;
 }
 
+.refDocBottomFlex {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.refDocTextCol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .refDocName {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 15.5px;
+  font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  letter-spacing: -0.015em;
+  line-height: 1.22;
   margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+}
+
+.refDocNameSingleLine {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.refDocNameMultiLine {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .refDocSpecialty {
@@ -1548,19 +1571,73 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
+/* Experience in text layer */
+.refDocExpRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.refDocExpIcon {
+  color: rgba(255, 255, 255, 0.82);
+  flex-shrink: 0;
+}
+
 .refDocHospital {
   font-size: 11px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.78);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 1px;
-  margin-bottom: 10px;
+  line-height: 1.35;
+  margin-top: 2px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Full-width Book Button */
+.refDocHospitalSingleLine {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.refDocHospitalTwoLines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* White Book Button with radius 8 at bottom right */
+.refBookBtnWhite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  color: #0B5DF4;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+  align-self: flex-end;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  white-space: nowrap;
+}
+
+.refBookBtnWhite:hover {
+  background: #F3F7FC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* Fallback full-width Book Button */
 .refBookBtn {
   width: 100%;
   display: flex;
@@ -3870,6 +3947,7 @@
 .themeWhite .refDoctorCard,
 [data-search-theme="white"] .refDoctorCard {
   background: #0B111E !important;
+  border-radius: 8px !important;
   border: none !important;
   box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12) !important;
 }
@@ -3890,9 +3968,27 @@
   color: #FFFFFF !important;
 }
 
+.themeWhite .refDocExpRow,
+[data-search-theme="white"] .refDocExpRow {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
 .themeWhite .refDocHospital,
 [data-search-theme="white"] .refDocHospital {
   color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.themeWhite .refBookBtnWhite,
+[data-search-theme="white"] .refBookBtnWhite {
+  background: #FFFFFF !important;
+  color: #0B5DF4 !important;
+  border-radius: 8px !important;
+}
+
+.themeWhite .refBookBtnWhite:hover,
+[data-search-theme="white"] .refBookBtnWhite:hover {
+  background: #F3F7FC !important;
+  color: #0B5DF4 !important;
 }
 
 .themeWhite .refBookBtn,

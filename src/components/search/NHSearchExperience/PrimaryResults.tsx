@@ -18,9 +18,10 @@ interface PrimaryResultsProps {
   hidePulse?: boolean;
 }
 
-function formatExperience(exp: string): string {
-  if (!exp) return "10+ yrs";
-  return exp.replace(/years?(\s+experience)?/gi, "yrs").trim();
+function formatExperienceText(exp: string): string {
+  if (!exp) return "10+ yrs of experience";
+  const cleaned = exp.replace(/years?(\s+experience)?/gi, "yrs").trim();
+  return `${cleaned} of experience`;
 }
 
 export default function PrimaryResults({
@@ -37,17 +38,15 @@ export default function PrimaryResults({
         </span>
       </div>
 
-      {/* 2 × 2 Grid: Prominent Image-Led Doctor Cards */}
+      {/* 2 × 2 Grid: Doctor Cards with radius 8 and bottom action */}
       <div className={styles.refDoctorsGrid}>
         {doctors.slice(0, 4).map((doc) => {
+          // If name is long (> 18 chars), name wraps to 2 lines and hospital truncates to 1 line
+          // If name is short, name is 1 line and hospital can wrap to 2 lines
+          const isLongName = doc.name.length > 18;
+
           return (
             <div key={doc.id} className={styles.refDoctorCard}>
-              {/* Top-left Experience Badge */}
-              <div className={styles.refDocExpBadge}>
-                <Briefcase size={11} className={styles.refDocExpBadgeIcon} />
-                <span>{formatExperience(doc.experience)}</span>
-              </div>
-
               {/* Full background doctor photo spanning entire card */}
               <img
                 src={doc.image}
@@ -60,23 +59,41 @@ export default function PrimaryResults({
 
               {/* Doctor Information directly over the gradient overlay at the bottom */}
               <div className={styles.refDocOverlayContent}>
-                <h3 className={styles.refDocName} title={doc.name}>
-                  {doc.name}
-                </h3>
-                <div className={styles.refDocSpecialty} title={doc.speciality}>
-                  {doc.speciality}
-                </div>
-                <div className={styles.refDocHospital} title={doc.hospital}>
-                  {doc.hospital}
-                </div>
+                <div className={styles.refDocBottomFlex}>
+                  {/* Left Column: Name, Specialty, Experience, Hospital */}
+                  <div className={styles.refDocTextCol}>
+                    <h3 
+                      className={`${styles.refDocName} ${isLongName ? styles.refDocNameMultiLine : styles.refDocNameSingleLine}`} 
+                      title={doc.name}
+                    >
+                      {doc.name}
+                    </h3>
 
-                {/* Book CTA Button */}
-                <Link
-                  href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
-                  className={styles.refBookBtn}
-                >
-                  <span>Book</span>
-                </Link>
+                    <div className={styles.refDocSpecialty} title={doc.speciality}>
+                      {doc.speciality}
+                    </div>
+
+                    <div className={styles.refDocExpRow}>
+                      <Briefcase size={12} className={styles.refDocExpIcon} />
+                      <span>{formatExperienceText(doc.experience)}</span>
+                    </div>
+
+                    <div 
+                      className={`${styles.refDocHospital} ${isLongName ? styles.refDocHospitalSingleLine : styles.refDocHospitalTwoLines}`} 
+                      title={doc.hospital}
+                    >
+                      {doc.hospital}
+                    </div>
+                  </div>
+
+                  {/* Right Side: White Book Button with radius 8 */}
+                  <Link
+                    href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                    className={styles.refBookBtnWhite}
+                  >
+                    Book
+                  </Link>
+                </div>
               </div>
             </div>
           );
