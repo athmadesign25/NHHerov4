@@ -3,6 +3,8 @@
 import React from "react";
 import { motion, MotionValue } from "framer-motion";
 import { Paperclip, Mic, ArrowUp, User, Heart, Search } from "lucide-react";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
 
@@ -13,6 +15,8 @@ interface DefaultSearchPromptProps {
   onSelectActionPill: (action: "doctor" | "symptoms") => void;
   onOpenPulse?: () => void;
   promptOpacity?: MotionValue<number>;
+  minimizedSearchOpacity?: MotionValue<number>;
+  textColor?: MotionValue<string>;
   compactLabelOpacity?: MotionValue<number>;
   squareIconOpacity?: MotionValue<number>;
   fabLabelOpacity?: MotionValue<number>;
@@ -29,6 +33,8 @@ export default function DefaultSearchPrompt({
   onSelectActionPill,
   onOpenPulse,
   promptOpacity,
+  minimizedSearchOpacity,
+  textColor,
   compactLabelOpacity,
   squareIconOpacity,
   fabLabelOpacity,
@@ -65,26 +71,39 @@ export default function DefaultSearchPrompt({
         </span>
       </motion.div>
 
-      {/* ── Square Box Content: Pulse animated bars directly centered inside the blue square badge ── */}
-      {squareIconOpacity && (
+      {/* ── Minimized Search Content: Pulse Lottie animation with text below ── */}
+      {minimizedSearchOpacity && (
         <motion.div
           className={styles.squareBoxContent}
           style={{
-            opacity: squareIconOpacity,
+            opacity: minimizedSearchOpacity,
             position: "absolute",
             inset: 0,
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
+            gap: 7,
+            padding: "13px 6px",
             pointerEvents: "none",
             userSelect: "none",
+            boxSizing: "border-box",
           }}
         >
-          <div className={styles.pulseBars} aria-hidden>
-            <span className={styles.pulseBar1} />
-            <span className={styles.pulseBar2} />
-            <span className={styles.pulseBar3} />
+          <div className={styles.floatingPulseIconWrap}>
+            <div className={styles.pulseLottieContainer} aria-hidden="true">
+              <Lottie animationData={pulseAnimation} loop={true} />
+            </div>
           </div>
+          <motion.span
+            className={styles.floatingPulseSearchText}
+            style={{
+              color: textColor || "#FFFFFF",
+              marginTop: 1,
+            }}
+          >
+            Pulse AI<br />Search
+          </motion.span>
         </motion.div>
       )}
 

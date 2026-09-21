@@ -91,26 +91,26 @@ export default function NHSearchExperience({
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Square badge size (Phase 1 & 2): 38px with 10px border-radius, matches the sidebar's .iconWrap
-  const squareSize = 38;
-  const squareLeft = Math.round((winSize.w - squareSize) / 2);
-  const squareTopInPlace = Math.round(startTop + (startHeight - squareSize) / 2);
+  // Minimized search card size (100px x 100px, matches sidebar 3rd button)
+  const compactWidth = 100;
+  const compactHeight = 100;
+  const compactRadius = 18;
+
+  const squareLeft = Math.round((winSize.w - compactWidth) / 2);
+  const squareTopInPlace = Math.round(startTop + (startHeight - compactHeight) / 2);
 
   // Exact vertical alignment with 3rd button position in side panel:
   // Desktop sidebar: top calc(50vh - 151px).
   // Button 3 slot starts at 50vh + 51px.
-  // Button 3 padding-top = 13px.
-  // 3rd icon top = 50vh + 51px + 13px = 50vh + 64px.
   const targetButton3Top = isMobile 
-    ? Math.round(winSize.h - 36 - squareSize) 
-    : Math.round(winSize.h * 0.5 + 64);
+    ? Math.round(winSize.h - 36 - compactHeight) 
+    : Math.round(winSize.h * 0.5 + 51);
 
-  // Horizontal position of 3rd button icon in side panel:
-  // Sidebar: right: 24px, width: 100px -> horizontal center = winW - 74px.
-  // Icon centered in 100px: left = (winW - 74px) - (squareSize / 2) = winW - 74 - 19 = winW - 93px.
+  // Horizontal position of 3rd button in side panel (right 24px, width 100px):
+  // left = winW - 24 - 100 = winW - 124px
   const targetButton3Left = isMobile
-    ? Math.round(winSize.w - 16 - squareSize)
-    : Math.round(winSize.w - 74 - (squareSize / 2));
+    ? Math.round(winSize.w - 16 - compactWidth)
+    : (winSize.w - 124);
 
   const [isMorphing, setIsMorphing] = useState(false);
 
@@ -124,10 +124,10 @@ export default function NHSearchExperience({
   });
 
   // 6-Stage Choreography:
-  // Phase 1 [0.02 - 0.14]: In-place shrink to 38px blue squircle badge at center (squareLeft, squareTopInPlace)
-  // Phase 2 [0.14 - 0.52]: WAITS at center position (squareLeft, squareTopInPlace) while hero scales & side panel appears with 2 buttons
+  // Phase 1 [0.02 - 0.14]: Search bar shrinks in place to 100x100 glassmorphic card at center (squareLeft, squareTopInPlace)
+  // Phase 2 [0.14 - 0.52]: WAITS at center position with dark glassmorphism while hero scales & side panel appears with 2 buttons
   // Phase 3 [0.52 - 0.68]: VERTICAL MOVE: moves up to targetButton3Top, staying at squareLeft
-  // Phase 4 [0.68 - 0.86]: HORIZONTAL MOVE: glides across from squareLeft to targetButton3Left with droplet squash/stretch
+  // Phase 4 [0.68 - 0.86]: HORIZONTAL MOVE: glides across to targetButton3Left, adapting visual background & text color to side button style
   // Phase 5 [0.86 - 0.92]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
     activeProgress,
@@ -144,19 +144,19 @@ export default function NHSearchExperience({
   const composerWidth = useTransform(
     activeProgress,
     [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startWidth, squareSize, squareSize, squareSize, squareSize]
+    [startWidth, compactWidth, compactWidth, compactWidth, compactWidth]
   );
 
   const composerHeight = useTransform(
     activeProgress,
     [0.02, 0.14, 0.52, 0.68, 0.86],
-    [startHeight, squareSize, squareSize, squareSize, squareSize]
+    [startHeight, compactHeight, compactHeight, compactHeight, compactHeight]
   );
 
   const composerRadius = useTransform(
     activeProgress,
     [0.02, 0.14, 0.52, 0.68, 0.86],
-    [20, 10, 10, 10, 10]
+    [20, compactRadius, compactRadius, compactRadius, compactRadius]
   );
 
   const composerPaddingX = useTransform(
@@ -175,18 +175,36 @@ export default function NHSearchExperience({
   const dropletScaleX = useTransform(
     activeProgress,
     [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
-    [1.0, 1.0, 1.20, 1.10, 0.92, 1.0]
+    [1.0, 1.0, 1.15, 1.08, 0.94, 1.0]
   );
 
   const dropletScaleY = useTransform(
     activeProgress,
     [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
-    [1.0, 1.0, 0.85, 0.92, 1.10, 1.0]
+    [1.0, 1.0, 0.88, 0.94, 1.08, 1.0]
   );
 
-  // Background layers cross-fade
-  const landingBgOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
-  const squareBgOpacity = useTransform(activeProgress, [0.03, 0.12], [0, 1]);
+  // Background layers adaptation:
+  // 1) Dark glassmorphism layer (same like main search box)
+  const darkGlassOpacity = useTransform(
+    activeProgress, 
+    [0.0, 0.02, 0.68, 0.86], 
+    [1, 1, 1, 0]
+  );
+
+  // 2) Side button frosted glass layer (adapts during horizontal movement 0.68 -> 0.86)
+  const sideButtonBgOpacity = useTransform(
+    activeProgress, 
+    [0.68, 0.86], 
+    [0, 1]
+  );
+
+  // Text color adaptation: white in dark glassmorphism -> blue in side button style
+  const textColor = useTransform(
+    activeProgress,
+    [0.68, 0.86],
+    ["#FFFFFF", "#0B5DF4"]
+  );
 
   // Secondary buttons and prompt cross-fades
   const controlsOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
@@ -194,11 +212,11 @@ export default function NHSearchExperience({
   const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.09], ["32px", "0px"]);
   const promptOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
 
-  // Square pulse icon appears as prompt fades out, stays visible all the way through
-  const squareIconOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
+  // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
+  const minimizedSearchOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(activeProgress, [0.85, 0.89], [1, 0]);
+  const morphShellOpacity = useTransform(activeProgress, [0.86, 0.90], [1, 0]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
@@ -551,7 +569,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Dark glass background layer for landing search bar */}
+        {/* Layer 1: Dark glass background layer (same like search main box) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -562,15 +580,15 @@ export default function NHSearchExperience({
               background: "rgba(22, 28, 36, 0.28)",
               backdropFilter: "blur(24px) saturate(125%)",
               WebkitBackdropFilter: "blur(24px) saturate(125%)",
-              border: "1px solid rgba(255, 255, 255, 0.12)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
               boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
-              opacity: landingBgOpacity,
+              opacity: darkGlassOpacity,
               pointerEvents: "none",
             }}
           />
         )}
 
-        {/* Vibrant Blue Square Badge layer matching sidebar icon */}
+        {/* Layer 2: Side buttons visual style (adapts during horizontal motion) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -578,9 +596,12 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: "linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%)",
-              boxShadow: "0 1px 2px 0 rgba(255, 255, 255, 0.20) inset, 0 4px 14px rgba(11, 77, 199, 0.45)",
-              opacity: squareBgOpacity,
+              background: "linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%)",
+              backdropFilter: "blur(18px)",
+              WebkitBackdropFilter: "blur(18px)",
+              border: "1px solid rgba(249, 91, 97, 0.22)",
+              boxShadow: "0 8px 40px 0 rgba(0, 0, 0, 0.18)",
+              opacity: sideButtonBgOpacity,
               pointerEvents: "none",
             }}
           />
@@ -593,7 +614,8 @@ export default function NHSearchExperience({
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
           promptOpacity={hasScroll ? promptOpacity : undefined}
-          squareIconOpacity={hasScroll ? squareIconOpacity : undefined}
+          minimizedSearchOpacity={hasScroll ? minimizedSearchOpacity : undefined}
+          textColor={hasScroll ? textColor : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
