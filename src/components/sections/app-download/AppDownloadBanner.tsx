@@ -8,7 +8,7 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
-import { Video, Calendar, FileText, Activity, PersonStanding, Microscope } from "lucide-react";
+import { Video, Calendar, FileText, Activity, LayoutDashboard, Microscope } from "lucide-react";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
 import styles from "./AppDownloadBanner.module.css";
@@ -35,7 +35,7 @@ const features: Feature[] = [
   {
     id: 1,
     title: "Your health dashboard at a glance",
-    icon: PersonStanding,
+    icon: LayoutDashboard,
     img: "/App Screens/Home Page.png?v=3",
   },
   {
@@ -58,18 +58,6 @@ const features: Feature[] = [
   },
 ];
 
-// `lines` is each caption pre-broken at its own natural point (rather
-// than a single string left to auto-wrap) — the card is a fixed 240px
-// wide, and letting the browser choose the break tended to land
-// mid-phrase ("Get Digital twin health" / "analysis").
-const POP_OVER_CARDS = [
-  { img: "/App Screens/Pop over cards/Body analysis.png", lines: ["Get Digital twin", "health analysis"] },
-  { img: "/App Screens/Pop over cards/Dr Card.png", lines: ["Book appointments", "in 60 seconds"] },
-  { img: "/App Screens/Pop over cards/Trend Card.png", lines: ["Access your health", "records anytime"] },
-  { img: "/App Screens/Pop over cards/Video block.png", lines: ["Video consultations", "from home"] },
-  { img: "/App Screens/Pop over cards/Recommend.png", lines: ["Track vitals and", "wellness reports"] },
-];
-
 // Digital twin is now just a plain feature image like the other four (a
 // complete phone mockup at the same 726x1200 native size as the rest —
 // see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
@@ -77,10 +65,38 @@ const POP_OVER_CARDS = [
 // sizing/positioning constants of its own anymore.
 const MATURITY_THRESHOLD = 0.94;
 
+// Design-provided paths (single stroke, 24x24) rather than lucide
+// equivalents — none of the three match closely enough.
+function ValueIconTrust() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12.409 5.8239L9.586 8.5859C9.21106 8.96096 9.00043 9.46957 9.00043 9.9999C9.00043 10.5302 9.21106 11.0388 9.586 11.4139C9.96106 11.7888 10.4697 11.9995 11 11.9995C11.5303 11.9995 12.0389 11.7888 12.414 11.4139L14.124 9.7039C14.3478 9.48 14.6135 9.30239 14.906 9.18121C15.1985 9.06003 15.5119 8.99766 15.8285 8.99766C16.1451 8.99766 16.4585 9.06003 16.751 9.18121C17.0435 9.30239 17.3092 9.48 17.533 9.7039L19.414 11.5859C19.7889 11.961 19.9996 12.4696 19.9996 12.9999C19.9996 13.5302 19.7889 14.0388 19.414 14.4139C21 12.8279 22 11.4999 22 9.4999C22 8.3871 21.6624 7.30048 21.0319 6.38356C20.4013 5.46664 19.5075 4.76256 18.4684 4.3643C17.4293 3.96604 16.2938 3.89234 15.212 4.15294C14.1301 4.41354 13.1528 4.99618 12.409 5.8239ZM19.414 14.4139C19.2168 14.6112 18.9826 14.7676 18.7249 14.8744C18.4672 14.9812 18.191 15.0361 17.912 15.0361C17.633 15.0361 17.3568 14.9812 17.0991 14.8744C16.8414 14.7676 16.6072 14.6112 16.41 14.4139C16.6235 14.607 16.7956 14.8415 16.9157 15.1032C17.0358 15.3648 17.1015 15.6482 17.1087 15.936C17.116 16.2238 17.0646 16.5101 16.9578 16.7774C16.851 17.0448 16.6909 17.2876 16.4873 17.4912C16.2837 17.6948 16.0409 17.8549 15.7735 17.9617C15.5062 18.0685 15.2199 18.1199 14.9321 18.1126C14.6443 18.1054 14.3609 18.0397 14.0993 17.9196C13.8376 17.7995 13.6031 17.6274 13.41 17.4139C13.6074 17.6105 13.7641 17.8441 13.8712 18.1014C13.9782 18.3586 14.0335 18.6344 14.0339 18.9131C14.0342 19.1917 13.9797 19.4677 13.8733 19.7252C13.767 19.9827 13.6109 20.2167 13.414 20.4139C13.224 20.604 12.9976 20.7538 12.7484 20.8544C12.4991 20.9551 12.2322 21.0044 11.9635 20.9996C11.6947 20.9947 11.4297 20.9358 11.1843 20.8262C10.9389 20.7166 10.718 20.5587 10.535 20.3619L5 14.9999C3.5 13.4999 2 11.7999 2 9.4999C2.00022 8.38719 2.33794 7.30071 2.96856 6.38395C3.59917 5.46718 4.49303 4.76325 5.53208 4.36512C6.57112 3.96699 7.7065 3.89337 8.78826 4.154C9.87002 4.41463 10.8473 4.99724 11.591 5.8249C11.7022 5.92823 11.8484 5.98559 12.0002 5.9854C12.152 5.98522 12.2981 5.92751 12.409 5.8239" stroke="#FEF5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function ValueIconDownloads() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 17V3" stroke="#FEF5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 11L12 17L18 11" stroke="#FEF5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M19 21H5" stroke="#FEF5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function ValueIconRating() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M11.5248 2.29489C11.5687 2.20635 11.6364 2.13183 11.7203 2.07972C11.8042 2.02761 11.9011 2 11.9998 2C12.0986 2 12.1955 2.02761 12.2794 2.07972C12.3633 2.13183 12.431 2.20635 12.4748 2.29489L14.7848 6.97389C14.937 7.28186 15.1617 7.5483 15.4395 7.75035C15.7173 7.95239 16.04 8.08401 16.3798 8.13389L21.5458 8.88989C21.6437 8.90408 21.7357 8.94537 21.8113 9.00909C21.887 9.07282 21.9433 9.15644 21.9739 9.2505C22.0045 9.34456 22.0081 9.4453 21.9844 9.54133C21.9607 9.63736 21.9107 9.72485 21.8398 9.79389L18.1038 13.4319C17.8575 13.672 17.6731 13.9684 17.5667 14.2955C17.4602 14.6227 17.4349 14.9708 17.4928 15.3099L18.3748 20.4499C18.3921 20.5477 18.3816 20.6485 18.3443 20.7406C18.3071 20.8327 18.2448 20.9125 18.1644 20.9709C18.084 21.0293 17.9888 21.0639 17.8897 21.0708C17.7906 21.0777 17.6915 21.0566 17.6038 21.0099L12.9858 18.5819C12.6816 18.4221 12.343 18.3386 11.9993 18.3386C11.6557 18.3386 11.3171 18.4221 11.0128 18.5819L6.39585 21.0099C6.30818 21.0563 6.20924 21.0772 6.1103 21.0701C6.01135 21.0631 5.91636 21.0285 5.83614 20.9701C5.75592 20.9118 5.69368 20.8321 5.6565 20.7401C5.61933 20.6482 5.6087 20.5476 5.62585 20.4499L6.50685 15.3109C6.56504 14.9716 6.53983 14.6233 6.43338 14.2959C6.32694 13.9686 6.14245 13.672 5.89585 13.4319L2.15985 9.79489C2.08844 9.72593 2.03784 9.63829 2.01381 9.54197C1.98978 9.44565 1.99328 9.34451 2.02393 9.25008C2.05457 9.15566 2.11111 9.07174 2.18712 9.00788C2.26313 8.94402 2.35555 8.90279 2.45385 8.88889L7.61885 8.13389C7.9591 8.08439 8.28224 7.95295 8.56043 7.75088C8.83863 7.54881 9.06355 7.28216 9.21585 6.97389L11.5248 2.29489Z" stroke="#FEF5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
 const TRUST_STACK = [
-  { icon: "/trust-heart-icon-new.png", label: "India's Most Trusted", subtext: "Hospital App" },
-  { icon: "/downloads-count-icon-new.png", label: "2.2M+", subtext: "Downloads" },
-  { icon: "/rating-star-icon-new.png", label: "4.8", subtext: "Rating" },
+  { Icon: ValueIconTrust, label: "India's Most Trusted", subtext: "Hospital App" },
+  { Icon: ValueIconDownloads, label: "2.2M+", subtext: "Downloads" },
+  { Icon: ValueIconRating, label: "4.8", subtext: "Rating" },
 ];
 
 const BASE_WIDTH = 310;
@@ -104,6 +120,14 @@ const REVEAL = {
 // and shrinks," with no separate y-offset needed (one was tried and pushed
 // the enlarged phone up far enough to overlap the title above it).
 const PHONE_APPEAR_SCALE = 1.22;
+
+// How much further down the phone walks at the very end of its entrance,
+// to clear room for the feature pill above it. The resting layout leaves
+// ~59px between the title's baseline box and the phone's own visible top
+// edge; the pill needs its 50px height plus breathing room on both sides
+// (~106px all in), so the phone gives up the difference. It is spent on
+// the hand's already-cropped bottom edge, not on anything readable.
+const PHONE_SETTLE_DROP = 48;
 
 // Once the whole word-reveal for "Always With You." has visually finished
 // (title's own inView delay + its per-word stagger + duration), fade in the
@@ -197,7 +221,15 @@ export default function AppDownloadBanner() {
 
   // Hand rotation and float on scroll to simulate lifting the phone
   const handRotation = useTransform(enterProgress, [0, 1], [30, 0]);
-  const handY = useTransform(enterProgress, [0, 1], [60, 0]);
+  const handRiseY = useTransform(enterProgress, [0, 1], [60, 0]);
+
+  // The last stretch of the entrance also walks the phone down by
+  // PHONE_SETTLE_DROP, which is what opens the band the feature pill then
+  // fades into (see PHONE_SETTLE_DROP for how that number is arrived at).
+  // Layered on top of the rise rather than folded into it so the existing
+  // lift reads exactly as before, just followed by a short settle.
+  const phoneSettleDrop = useTransform(enterProgress, [0.86, 1], [0, PHONE_SETTLE_DROP]);
+  const handY = useTransform([handRiseY, phoneSettleDrop], ([rise, drop]: number[]) => rise + drop);
   const bgOpacity = useTransform(enterProgress, [0.9, 1], [0, 1]);
 
   // Measures the gap between the text unit's bottom and the phone stage's
@@ -213,6 +245,7 @@ export default function AppDownloadBanner() {
       const phoneRect = phoneEl.getBoundingClientRect();
       const desiredTop = textRect.bottom + 24;
       setEntryOffsetY(desiredTop - phoneRect.top);
+
     };
     // Double rAF: waits for the phoneScale motion value's own initial style
     // write (applied outside React's render) to land before measuring, so
@@ -390,95 +423,60 @@ export default function AppDownloadBanner() {
                 </span>
               </motion.span>
             </h2>
+
+            {/* Feature pill: held back through the whole entrance (the phone
+                is still travelling through the space it occupies) and faded
+                in only once the phone has finished settling into place. */}
+            <motion.div
+              className={`${styles.featurePill} ${styles.desktopOnly}`}
+              initial={false}
+              animate={
+                phoneSettled && phase !== "pre"
+                  ? { opacity: 1, y: 0, filter: "blur(0px)" }
+                  : { opacity: 0, y: 8, filter: "blur(6px)" }
+              }
+              transition={{ duration: 0.45, ease: EASE }}
+              aria-hidden={!phoneSettled}
+            >
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={activeFeature.id}
+                  className={styles.featurePillInner}
+                  initial={{ opacity: 0, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(6px)" }}
+                  transition={{ duration: 0.3, ease: EASE }}
+                >
+                  <IconComponent size={30} strokeWidth={1.75} className={styles.featurePillIcon} />
+                  <span className={styles.featurePillText}>{activeFeature.title}</span>
+                </motion.span>
+              </AnimatePresence>
+            </motion.div>
           </div>
 
           <div className={styles.bottomRow}>
-            {/* Pop-over Card matching active screen on the left */}
-            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
+            {/* Value stack on the left — replaces the per-screen pop-over
+                cards, which competed with the feature pill above the phone
+                for the same "what does the app do" job. */}
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginLeft: "100px" }}>
               <motion.div
                 className={styles.trustStack}
                 initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
                 animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                style={{ width: "240px", position: "relative", height: "180px" }}
               >
-                {/* Caption is back inside the card (title, then a 12px
-                    gap, then the image) — pre-broken into two lines (see
-                    POP_OVER_CARDS) rather than left to auto-wrap. One
-                    AnimatePresence for the whole card again, so title and
-                    image blur in/out together as a single unit instead of
-                    two independently-timed pieces. */}
-                <AnimatePresence mode="popLayout">
-                  {POP_OVER_CARDS[activeIndex] && (
-                    <motion.div
-                      key={activeIndex}
-                      initial={{ opacity: 0, y: 30, scale: 0.95, filter: "blur(10px)" }}
-                      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, y: -30, scale: 0.95, filter: "blur(10px)" }}
-                      transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                      className={styles.popoverGlass}
-                      style={{ position: "absolute", top: 0, left: 0, width: "100%" }}
-                    >
-                      <div className={styles.trustCaption}>
-                        {POP_OVER_CARDS[activeIndex].lines[0]}
-                        <br />
-                        {POP_OVER_CARDS[activeIndex].lines[1]}
-                      </div>
-                      <Image
-                        src={POP_OVER_CARDS[activeIndex].img}
-                        alt={POP_OVER_CARDS[activeIndex].lines.join(" ")}
-                        width={240}
-                        height={100}
-                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {TRUST_STACK.map(({ Icon, label, subtext }) => (
+                  <div key={label} className={styles.valueUnit}>
+                    <span className={styles.valueIconTile}>
+                      <Icon />
+                    </span>
+                    <span className={styles.valueText}>
+                      <span className={styles.valueLabel}>{label}</span>
+                      <span className={styles.valueSubtext}>{subtext}</span>
+                    </span>
+                  </div>
+                ))}
               </motion.div>
-
-              {/* Connecting Line from Phone to Card */}
-              <AnimatePresence mode="popLayout">
-                {phase === "matured" && (
-                  <motion.svg
-                    key={`line-${activeIndex}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    style={{
-                      position: "absolute",
-                      left: "240px", 
-                      top: "40%", 
-                      width: "160px", 
-                      height: "80px",
-                      overflow: "visible",
-                      pointerEvents: "none",
-                      zIndex: 5
-                    }}
-                    viewBox="0 0 160 80"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <defs>
-                      <linearGradient id="lineGrad" x1="160" y1="80" x2="10" y2="10" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#ffffff" />
-                        <stop offset="15%" stopColor="#FF6B6B" />
-                        <stop offset="100%" stopColor="#3B82F6" />
-                      </linearGradient>
-                    </defs>
-
-                    <motion.path 
-                      d="M 160 80 C 100 80, 50 10, 10 10" 
-                      stroke="url(#lineGrad)" 
-                      strokeWidth="1.5" 
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                    />
-                  </motion.svg>
-                )}
-              </AnimatePresence>
             </div>
 
             <motion.div
@@ -560,7 +558,7 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].lines.join(" ")}
+                  {activeFeature.title}
                 </motion.div>
               </AnimatePresence>
             </div>
