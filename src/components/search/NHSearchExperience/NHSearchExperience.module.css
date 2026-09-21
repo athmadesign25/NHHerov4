@@ -4388,188 +4388,113 @@
   color: #64748B !important;
 }
 
-/* ── Living Pulse AI Ambient Glow Around Effect (Centered around the Popup Card) ── */
-@property --glow-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-@keyframes rotateGlowAngle {
-  0% {
-    --glow-angle: 0deg;
-    transform: rotate(0deg);
-  }
-  100% {
-    --glow-angle: 360deg;
-    transform: rotate(360deg);
-  }
-}
-
+/* ── Outline Gradient Motion with Glow Spill Outside around Popup Card ── */
 .modalWithAmbientWrap {
   position: relative;
   display: flex;
   justifyContent: center;
   align-items: flex-start;
   box-sizing: border-box;
+  border-radius: 24px;
 }
 
-.cardAmbientGlow {
+/* Sharp outline gradient running right along the card edge */
+.activeModalOutlineBorder {
   position: absolute;
-  inset: -20px -26px;
-  border-radius: 34px;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
+    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: rotateBorderAngle 6s linear infinite;
   pointer-events: none;
-  overflow: visible;
-  z-index: 1;
-  transition: opacity 0.35s ease;
+  z-index: 5;
+  opacity: 0.70;
+  box-sizing: border-box;
 }
 
-.cardAmbientGlowWhite {
-  opacity: 0.62; /* Clear, vibrant, beautiful halo glow around the card */
+/* Focused glow spill layer radiating just outside the outline */
+.activeModalGlowSpill {
+  position: absolute;
+  inset: -4px;
+  border-radius: 28px;
+  padding: 5px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.95) 0deg,
+    rgba(255, 46, 147, 0.90) 55deg,
+    rgba(139, 92, 246, 0.90) 115deg,
+    rgba(3, 78, 162, 0.95) 175deg,
+    rgba(0, 196, 255, 0.95) 235deg,
+    rgba(37, 99, 235, 0.95) 295deg,
+    rgba(237, 28, 36, 0.95) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(12px) saturate(170%);
+  -webkit-filter: blur(12px) saturate(170%);
+  animation: rotateBorderAngle 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Wider diffuse soft glow spill blooming into the background */
+.activeModalGlowSpillWide {
+  position: absolute;
+  inset: -12px;
+  border-radius: 36px;
+  padding: 10px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.90) 0deg,
+    rgba(255, 46, 147, 0.85) 55deg,
+    rgba(139, 92, 246, 0.85) 115deg,
+    rgba(3, 78, 162, 0.90) 175deg,
+    rgba(0, 196, 255, 0.90) 235deg,
+    rgba(37, 99, 235, 0.90) 295deg,
+    rgba(237, 28, 36, 0.90) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: blur(24px) saturate(150%);
+  -webkit-filter: blur(24px) saturate(150%);
+  animation: rotateBorderAngle 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.glowSpillWhite {
+  opacity: 0.55;
   mix-blend-mode: normal;
 }
 
-.cardAmbientGlowDark {
+.glowSpillDark {
   opacity: 0.65;
   mix-blend-mode: screen;
 }
 
-/* Continuously rotating vivid conic aura stream right along the card border */
-.glowConicRing {
-  position: absolute;
-  inset: -14px -18px;
-  border-radius: 34px;
-  background: conic-gradient(
-    from var(--glow-angle, 0deg),
-    #06B6D4 0deg,
-    #3B82F6 70deg,
-    #8B5CF6 140deg,
-    #EC4899 210deg,
-    #ED1C24 275deg,
-    #06B6D4 360deg
-  );
-  filter: blur(28px);
-  -webkit-filter: blur(28px);
-  animation: rotateGlowAngle 6s linear infinite;
-  opacity: 0.72;
-  will-change: transform;
-}
-
-/* Base Orb Styling: concentrated around card perimeter with smooth blur */
-.glowOrb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(48px);
-  -webkit-filter: blur(48px);
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  pointer-events: none;
-}
-
-/* Orb 1: Cyan / Turquoise (Top Left border glow) */
-.glowOrbCyan {
-  width: 360px;
-  height: 360px;
-  top: -60px;
-  left: -40px;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.85) 0%, rgba(56, 189, 248, 0.45) 42%, transparent 70%);
-  animation: glowFloatCyan 5.5s ease-in-out infinite alternate;
-}
-
-/* Orb 2: Pulse Violet / Royal Purple (Top Right border glow) */
-.glowOrbPurple {
-  width: 380px;
-  height: 380px;
-  top: -70px;
-  right: -50px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.88) 0%, rgba(168, 85, 247, 0.48) 42%, transparent 72%);
-  animation: glowFloatPurple 6.5s ease-in-out infinite alternate;
-}
-
-/* Orb 3: NH Electric Blue (Bottom Right border glow) */
-.glowOrbBlue {
-  width: 380px;
-  height: 380px;
-  bottom: -70px;
-  right: -40px;
-  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(3, 78, 162, 0.45) 42%, transparent 70%);
-  animation: glowFloatBlue 6s ease-in-out infinite alternate;
-}
-
-/* Orb 4: Pulse Rose / Coral (Bottom Left border glow) */
-.glowOrbRose {
-  width: 340px;
-  height: 340px;
-  bottom: -50px;
-  left: -40px;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.82) 0%, rgba(237, 28, 36, 0.42) 42%, transparent 70%);
-  animation: glowFloatRose 7s ease-in-out infinite alternate;
-}
-
-/* ── Keyframe Animations along the Card Perimeter ── */
-@keyframes glowFloatCyan {
-  0% {
-    transform: translate(0px, 0px) scale(0.95);
-    opacity: 0.7;
-  }
-  50% {
-    transform: translate(65px, 35px) scale(1.18);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-30px, 50px) scale(0.90);
-    opacity: 0.75;
-  }
-}
-
-@keyframes glowFloatPurple {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-    opacity: 0.75;
-  }
-  50% {
-    transform: translate(-70px, 40px) scale(0.90);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(40px, -30px) scale(1.18);
-    opacity: 0.8;
-  }
-}
-
-@keyframes glowFloatBlue {
-  0% {
-    transform: translate(0px, 0px) scale(0.92);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translate(-55px, -40px) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(45px, -50px) scale(0.95);
-    opacity: 0.7;
-  }
-}
-
-@keyframes glowFloatRose {
-  0% {
-    transform: translate(0px, 0px) scale(1.15);
-    opacity: 0.7;
-  }
-  50% {
-    transform: translate(50px, -35px) scale(0.90);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-40px, 35px) scale(1.2);
-    opacity: 0.8;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .glowOrb,
-  .glowConicRing {
+  .activeModalOutlineBorder,
+  .activeModalGlowSpill,
+  .activeModalGlowSpillWide {
     animation: none !important;
   }
 }

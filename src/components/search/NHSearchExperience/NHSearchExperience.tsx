@@ -747,22 +747,10 @@ export default function NHSearchExperience({
               zIndex: 2,
             }}
           >
-            {/* ── Living Pulse AI Ambient Glow Around Effect (Active & Alive) ── */}
-            <motion.div
-              key="search-card-ambient-glow"
-              className={`${styles.cardAmbientGlow} ${searchTheme === "white" ? styles.cardAmbientGlowWhite : styles.cardAmbientGlowDark}`}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: prefersReducedMotion ? 0.1 : 0.35, ease: "easeOut" }}
-              aria-hidden="true"
-            >
-              <div className={styles.glowConicRing} />
-              <div className={`${styles.glowOrb} ${styles.glowOrbCyan}`} />
-              <div className={`${styles.glowOrb} ${styles.glowOrbPurple}`} />
-              <div className={`${styles.glowOrb} ${styles.glowOrbBlue}`} />
-              <div className={`${styles.glowOrb} ${styles.glowOrbRose}`} />
-            </motion.div>
+            {/* ── Outline Gradient Motion with Glow Spill Outside ── */}
+            <div className={`${styles.activeModalGlowSpillWide} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
+            <div className={`${styles.activeModalGlowSpill} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
+            <div className={styles.activeModalOutlineBorder} aria-hidden="true" />
 
             {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
             <motion.div
