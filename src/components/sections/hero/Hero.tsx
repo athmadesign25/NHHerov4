@@ -97,8 +97,8 @@ export default function Hero() {
   });
 
   // Scale down and round border radius on scroll
-  const heroScale = useTransform(smoothProgress, [0, 1], [1, 0.85]);
-  const heroRadius = useTransform(smoothProgress, [0, 1], ["0px", "16px"]);
+  const heroScale = useTransform(smoothProgress, [0, 0.6], [1, 0.88]);
+  const heroRadius = useTransform(smoothProgress, [0, 0.6], ["0px", "20px"]);
 
   // Blurs out across exit travel as next section approaches
   const { scrollYProgress: heroExitProgress } = useScroll({
@@ -186,7 +186,7 @@ export default function Hero() {
     <div
       ref={containerRef}
       style={{
-        height: "130vh",
+        height: "200vh",
         position: "relative",
         zIndex: isPulseActive ? 9999 : 1,
         background: "transparent",

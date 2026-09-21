@@ -32,8 +32,8 @@ export default function FloatingQuickActions() {
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
-      // Quick Health Actions Bar appears as the user scrolls past hero (at ~32% scroll)
-      const showQuickActions = window.scrollY >= window.innerHeight * 0.32;
+      // Quick Health Actions Bar appears as the user scrolls past hero (at ~40% scroll, showing 2 buttons)
+      const showQuickActions = window.scrollY >= window.innerHeight * 0.40;
       setIsQuickActionsVisible(showQuickActions);
 
 
@@ -137,7 +137,12 @@ export default function FloatingQuickActions() {
         </Link>
 
         {/* Action 3: Pulse AI Search (Merges into 3rd position as liquid droplet) */}
-        <div className={`${styles.thirdActionSlot} ${isSearchDocked ? styles.slotExpanded : styles.slotCollapsed}`}>
+        <div 
+          className={`${styles.thirdActionSlot} ${isSearchDocked ? styles.slotExpanded : styles.slotCollapsed}`}
+          style={{
+            display: isSearchDocked ? "flex" : "none",
+          }}
+        >
           <div aria-hidden="true" className={styles.divider} />
           <button
             ref={linkRef2}

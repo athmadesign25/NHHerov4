@@ -91,112 +91,114 @@ export default function NHSearchExperience({
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Square badge size (Phase 1 & 2): 34px with 8px border-radius, matches the sidebar's .iconWrap
-  const squareSize = 34;
+  // Square badge size (Phase 1 & 2): 38px with 10px border-radius, matches the sidebar's .iconWrap
+  const squareSize = 38;
   const squareLeft = Math.round((winSize.w - squareSize) / 2);
   const squareTopInPlace = Math.round(startTop + (startHeight - squareSize) / 2);
 
   // Exact vertical alignment with 3rd button position in side panel:
-  // Side panel top: calc(50vh - 114px). Button 3 starts at 50vh + 38px.
-  // Center of icon inside Button 3: 50vh + 66px.
-  // Square top to align centers: 50vh + 66px - 17px = 50vh + 49px.
+  // Desktop sidebar: top calc(50vh - 151px).
+  // Button 3 slot starts at 50vh + 51px.
+  // Button 3 padding-top = 13px.
+  // 3rd icon top = 50vh + 51px + 13px = 50vh + 64px.
   const targetButton3Top = isMobile 
     ? Math.round(winSize.h - 36 - squareSize) 
-    : Math.round(winSize.h * 0.5 + 49);
+    : Math.round(winSize.h * 0.5 + 64);
 
-  // Horizontal position of 3rd button icon in side panel (centered in 100px width at right: 24px):
-  // left = winW - 124px + (100 - squareSize) / 2
+  // Horizontal position of 3rd button icon in side panel:
+  // Sidebar: right: 24px, width: 100px -> horizontal center = winW - 74px.
+  // Icon centered in 100px: left = (winW - 74px) - (squareSize / 2) = winW - 74 - 19 = winW - 93px.
   const targetButton3Left = isMobile
     ? Math.round(winSize.w - 16 - squareSize)
-    : Math.round(winSize.w - 124 + (100 - squareSize) / 2);
+    : Math.round(winSize.w - 74 - (squareSize / 2));
 
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
-    const docked = latest >= 0.67;
+    const docked = latest >= 0.86;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
   });
 
-  // 5-Stage Choreography:
-  // Phase 1 [0.02 - 0.16]: In-place shrink to 34px blue square badge at center (squareLeft, squareTopInPlace)
-  // Phase 2 [0.16 - 0.44]: Locked at center position (squareLeft, squareTopInPlace) while hero scales & scrolls
-  // Phase 3 [0.44 - 0.54]: Side panel enters with 2 buttons; central square moves up to targetButton3Top, stays at squareLeft
-  // Phase 4 [0.54 - 0.68]: Square moves horizontally to targetButton3Left with droplet squash/stretch
-  // Phase 5 [0.68 - 0.72]: Water droplet merges into 3rd slot, side panel expands to 3 buttons
+  // 6-Stage Choreography:
+  // Phase 1 [0.02 - 0.14]: In-place shrink to 38px blue squircle badge at center (squareLeft, squareTopInPlace)
+  // Phase 2 [0.14 - 0.52]: WAITS at center position (squareLeft, squareTopInPlace) while hero scales & side panel appears with 2 buttons
+  // Phase 3 [0.52 - 0.68]: VERTICAL MOVE: moves up to targetButton3Top, staying at squareLeft
+  // Phase 4 [0.68 - 0.86]: HORIZONTAL MOVE: glides across from squareLeft to targetButton3Left with droplet squash/stretch
+  // Phase 5 [0.86 - 0.92]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
     activeProgress,
-    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [0.02, 0.14, 0.52, 0.68, 0.86],
     [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top, targetButton3Top]
   );
 
   const composerLeft = useTransform(
     activeProgress,
-    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [0.02, 0.14, 0.52, 0.68, 0.86],
     [startLeft, squareLeft, squareLeft, squareLeft, targetButton3Left]
   );
 
   const composerWidth = useTransform(
     activeProgress,
-    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [0.02, 0.14, 0.52, 0.68, 0.86],
     [startWidth, squareSize, squareSize, squareSize, squareSize]
   );
 
   const composerHeight = useTransform(
     activeProgress,
-    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [0.02, 0.14, 0.52, 0.68, 0.86],
     [startHeight, squareSize, squareSize, squareSize, squareSize]
   );
 
   const composerRadius = useTransform(
     activeProgress,
-    [0.02, 0.16, 0.44, 0.54, 0.68],
-    [20, 8, 8, 8, 8]
+    [0.02, 0.14, 0.52, 0.68, 0.86],
+    [20, 10, 10, 10, 10]
   );
 
   const composerPaddingX = useTransform(
     activeProgress,
-    [0.02, 0.16],
+    [0.02, 0.14],
     [24, 0]
   );
 
   const composerPaddingY = useTransform(
     activeProgress,
-    [0.02, 0.16],
+    [0.02, 0.14],
     [20, 0]
   );
 
-  // Water droplet elongation along horizontal motion
+  // Water droplet squash & stretch during horizontal motion
   const dropletScaleX = useTransform(
     activeProgress,
-    [0.0, 0.54, 0.60, 0.65, 0.68, 0.72],
-    [1.0, 1.0, 1.24, 1.12, 0.90, 1.0]
+    [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
+    [1.0, 1.0, 1.20, 1.10, 0.92, 1.0]
   );
 
   const dropletScaleY = useTransform(
     activeProgress,
-    [0.0, 0.54, 0.60, 0.65, 0.68, 0.72],
-    [1.0, 1.0, 0.82, 0.90, 1.12, 1.0]
+    [0.0, 0.68, 0.74, 0.82, 0.86, 0.90],
+    [1.0, 1.0, 0.85, 0.92, 1.10, 1.0]
   );
 
   // Background layers cross-fade
-  const landingBgOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
-  const squareBgOpacity = useTransform(activeProgress, [0.04, 0.14], [0, 1]);
+  const landingBgOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
+  const squareBgOpacity = useTransform(activeProgress, [0.03, 0.12], [0, 1]);
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.02, 0.09], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.02, 0.11], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.11], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.02, 0.09], [1, 0]);
+  const controlsOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.02, 0.09], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.09], ["32px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
 
   // Square pulse icon appears as prompt fades out, stays visible all the way through
-  const squareIconOpacity = useTransform(activeProgress, [0.05, 0.14], [0, 1]);
+  const squareIconOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(activeProgress, [0.67, 0.71], [1, 0]);
+  const morphShellOpacity = useTransform(activeProgress, [0.85, 0.89], [1, 0]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 

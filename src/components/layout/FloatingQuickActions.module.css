@@ -33,13 +33,13 @@
 }
 
 .iconWrap {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 10px;
   background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
   box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset;
   transition: transform 0.2s ease;
@@ -74,8 +74,8 @@
 }
 
 .pulseLottieContainer {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,10 +98,10 @@
 }
 /* Base styles (Desktop) */
 /* Vertically centered on the viewport (right-anchored horizontally)
-   Top anchored at calc(50vh - 114px) so Buttons 1 & 2 never shift when Button 3 docks */
+   Top anchored at calc(50vh - 151px) so Buttons 1 & 2 never shift when Button 3 docks */
 .container {
   position: fixed;
-  top: calc(50vh - 114px);
+  top: calc(50vh - 151px);
   right: 24px;
   z-index: 9000;
   width: 100px;
@@ -115,20 +115,20 @@
   align-items: stretch;
   overflow: hidden;
   transform-origin: center right;
-  transition: opacity 0.4s ease, 
+  transition: opacity 0.35s ease, 
               transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-              height 0.38s cubic-bezier(0.16, 1, 0.3, 1), 
-              max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+              height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dockedTwoButtons {
-  height: 152px;
-  max-height: 152px;
+  height: 201px;
+  max-height: 201px;
 }
 
 .dockedThreeButtons {
-  height: 228px;
-  max-height: 228px;
+  height: 302px;
+  max-height: 302px;
 }
 
 /* Action 3 Slot: fluidly collapsible until search droplet merges */
@@ -137,7 +137,7 @@
   flex-direction: column;
   width: 100%;
   overflow: hidden;
-  transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 
 .slotCollapsed {
@@ -147,7 +147,7 @@
 }
 
 .slotExpanded {
-  max-height: 80px;
+  max-height: 101px;
   opacity: 1;
   pointer-events: auto;
 }
