@@ -74,7 +74,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.75px;
+  padding: 1.5px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
@@ -92,42 +92,18 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.40;
+  opacity: 0.20;
   box-sizing: border-box;
   transition: opacity 0.35s ease;
 }
 
-/* Subtle Ambient Gradient Glow around perimeter */
-.animatedBorderGlow {
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.70) 0deg,
-    rgba(255, 46, 147, 0.65) 55deg,
-    rgba(139, 92, 246, 0.65) 115deg,
-    rgba(3, 78, 162, 0.70) 175deg,
-    rgba(0, 196, 255, 0.68) 235deg,
-    rgba(255, 255, 255, 0.70) 295deg,
-    rgba(237, 28, 36, 0.70) 360deg
-  );
-  filter: blur(10px);
-  -webkit-filter: blur(10px);
-  animation: rotateBorderAngle 7.5s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.22;
-  transition: opacity 0.35s ease, filter 0.35s ease;
-}
-
-/* Fallback pseudo-elements when JS layers are not rendered */
+/* Fallback pseudo-element when JS layers are not rendered */
 .stateLanding::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.75px;
+  padding: 1.5px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(237, 28, 36, 0.95) 0deg,
@@ -145,38 +121,13 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.40;
+  opacity: 0.20;
   transition: opacity 0.35s ease;
   box-sizing: border-box;
 }
 
-.stateLanding::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.70) 0deg,
-    rgba(255, 46, 147, 0.65) 55deg,
-    rgba(139, 92, 246, 0.65) 115deg,
-    rgba(3, 78, 162, 0.70) 175deg,
-    rgba(0, 196, 255, 0.68) 235deg,
-    rgba(255, 255, 255, 0.70) 295deg,
-    rgba(237, 28, 36, 0.70) 360deg
-  );
-  filter: blur(10px);
-  -webkit-filter: blur(10px);
-  animation: rotateBorderAngle 7.5s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.22;
-  transition: opacity 0.35s ease, filter 0.35s ease;
-}
-
 /* While morphing to square and floating dock, hide static pseudo-elements */
-.searchShellMorphing::before,
-.searchShellMorphing::after {
+.searchShellMorphing::before {
   display: none !important;
   opacity: 0 !important;
 }
@@ -191,13 +142,7 @@
 
 .stateLanding:hover .animatedBorderOutline,
 .stateLanding:hover::before {
-  opacity: 0.55;
-}
-
-.stateLanding:hover .animatedBorderGlow,
-.stateLanding:hover::after {
   opacity: 0.32;
-  filter: blur(10px);
 }
 
 .stateActive {

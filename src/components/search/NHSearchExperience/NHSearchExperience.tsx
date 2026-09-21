@@ -215,9 +215,8 @@ export default function NHSearchExperience({
   // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
   const minimizedSearchOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
 
-  // Moving gradient border around landing search bar edges (~40% opacity, fades smoothly on scroll compress)
-  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [0.40, 0.40, 0]);
-  const gradientGlowOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [0.22, 0.22, 0]);
+  // Moving gradient border around landing search bar edges (20% opacity, fades smoothly on scroll compress)
+  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [0.20, 0.20, 0]);
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
   const morphShellOpacity = useTransform(activeProgress, [0.86, 0.90], [1, 0]);
@@ -573,18 +572,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Ambient Motion Gradient Glow (NH Red, Pink, Purple, Blue, Cyan, White) */}
-        {hasScroll && searchState === "landing" && (
-          <motion.div
-            className={styles.animatedBorderGlow}
-            style={{
-              opacity: gradientGlowOpacity,
-            }}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Layer 1: Dark glass background layer (same like search main box) */}
+        {/* Layer 1: Dark glass background layer (exact existing fill) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -595,7 +583,7 @@ export default function NHSearchExperience({
               background: "rgba(22, 28, 36, 0.28)",
               backdropFilter: "blur(24px) saturate(125%)",
               WebkitBackdropFilter: "blur(24px) saturate(125%)",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
               boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
               opacity: darkGlassOpacity,
               pointerEvents: "none",
@@ -604,7 +592,7 @@ export default function NHSearchExperience({
           />
         )}
 
-        {/* Layer 1.5: Animated Motion Gradient Border Outline (edges has motion gradient at ~40% opacity) */}
+        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity) */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             className={styles.animatedBorderOutline}
