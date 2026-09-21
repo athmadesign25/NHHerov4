@@ -1394,20 +1394,19 @@
   justify-content: flex-end;
   border-radius: 18px;
   background: #0B111E;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
   overflow: hidden;
   height: 310px;
   min-height: 310px;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.22s ease,
               box-shadow 0.22s ease;
   box-sizing: border-box;
 }
 
 .refDoctorCard:hover {
   transform: translateY(-3px);
-  border-color: rgba(255, 255, 255, 0.22);
+  border: none;
   box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
 }
 
@@ -3810,18 +3809,24 @@
 
 .themeWhite .resultsQueryBar,
 [data-search-theme="white"] .resultsQueryBar {
-  background: #F8FAFC !important;
-  border: 1px solid #E2E8F0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
 .themeWhite .resultsQuerySearchIcon,
 [data-search-theme="white"] .resultsQuerySearchIcon {
-  color: #64748B !important;
+  color: #3B82F6 !important;
 }
 
 .themeWhite .resultsQueryInput,
 [data-search-theme="white"] .resultsQueryInput {
   color: #0F172A !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-weight: 500 !important;
 }
 
 .themeWhite .resultsQueryInput::placeholder,
@@ -3842,21 +3847,24 @@
 
 .themeWhite .redDivider,
 [data-search-theme="white"] .redDivider {
-  background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 50%, #3B82F6 100%) !important;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.25) !important;
+  background: #3B82F6 !important;
+  box-shadow: none !important;
+  height: 2px !important;
+  margin: 8px 0 20px !important;
+  opacity: 1 !important;
 }
 
 .themeWhite .refDoctorCard,
 [data-search-theme="white"] .refDoctorCard {
   background: #0B111E !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
+  border: none !important;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12) !important;
 }
 
 .themeWhite .refDoctorCard:hover,
 [data-search-theme="white"] .refDoctorCard:hover {
-  border-color: rgba(0, 0, 0, 0.16) !important;
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.14) !important;
+  border: none !important;
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.20) !important;
 }
 
 .themeWhite .refDocName,
