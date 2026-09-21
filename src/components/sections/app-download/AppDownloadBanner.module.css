@@ -268,7 +268,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 16px;
 }
 
 .trustUnit {
@@ -367,20 +367,21 @@
 /* Shared glass treatment for both popover units — the left-side card and
    the right-side "Scan to install" QR block now read as the same kind of
    surface. */
+/* The QR card (the only thing still wearing this — the pop-over cards it
+   was shared with are gone). */
 .popoverGlass {
-  background-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border-radius: 20px;
+  background-color: rgba(247, 250, 255, 0.40);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border-radius: 10px;
   padding: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .storesCol {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 /* Label above, image below, wrapped in .popoverGlass (same card treatment
@@ -397,8 +398,11 @@
   gap: 12px;
 }
 
+/* 106 + the card's own 16px padding either side + its 1px border lands the
+   card at exactly the 140px the store badges below it are, so the column
+   has one clean edge rather than a card overhanging the badges. */
 .qrImg {
-  width: 140px;
+  width: 106px;
   height: auto;
   display: block;
 }
@@ -606,7 +610,8 @@
   pointer-events: none;
 }
 
-/* The pill itself. */
+/* The pill itself. The blue is a very light wash falling from the top-left
+   corner, layered over the neutral glass fill rather than replacing it. */
 .featurePillInner {
   display: inline-flex;
   padding: 10px 16px;
@@ -614,24 +619,19 @@
   gap: 10px;
   border-radius: 40px;
   border: 1px solid rgba(209, 209, 209, 0.10);
-  background: rgba(193, 193, 193, 0.10);
+  background:
+    linear-gradient(135deg, rgba(47, 120, 255, 0.10) 0%, rgba(47, 120, 255, 0.03) 42%, rgba(47, 120, 255, 0) 70%),
+    rgba(193, 193, 193, 0.10);
   backdrop-filter: blur(18px) saturate(1.4);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
   white-space: nowrap;
 }
 
-.featurePillIcon {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  color: rgba(0, 0, 0, 0.94);
-}
-
 .featurePillText {
   color: rgba(0, 0, 0, 0.94);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -660,7 +660,8 @@
 .valueText {
   display: flex;
   flex-direction: column;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .valueLabel {

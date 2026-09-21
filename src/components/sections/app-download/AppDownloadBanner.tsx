@@ -8,7 +8,6 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
-import { Video, Calendar, FileText, Activity, LayoutDashboard, Microscope } from "lucide-react";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
 import styles from "./AppDownloadBanner.module.css";
@@ -17,7 +16,6 @@ import TextSweepEffect from "@/components/ui/TextSweepEffect";
 type Feature = {
   id: number;
   title: string;
-  icon: typeof Video;
   img: string;
 };
 
@@ -29,31 +27,26 @@ const features: Feature[] = [
   {
     id: 0,
     title: "View detailed test reports",
-    icon: Microscope,
     img: "/App Screens/Test details.png?v=3",
   },
   {
     id: 1,
     title: "Your health dashboard at a glance",
-    icon: LayoutDashboard,
     img: "/App Screens/Home Page.png?v=3",
   },
   {
     id: 2,
     title: "Access your health records anytime",
-    icon: FileText,
     img: "/App Screens/Health records.png?v=3",
   },
   {
     id: 3,
     title: "Video consultations from home",
-    icon: Video,
     img: "/App Screens/Video Consultation.png?v=3",
   },
   {
     id: 4,
     title: "Track vitals and wellness reports",
-    icon: Activity,
     img: "/App Screens/Vitals tracking.png?v=3",
   },
 ];
@@ -340,7 +333,6 @@ export default function AppDownloadBanner() {
   }, [isHovered, phase, activeIndex]);
 
   const activeFeature = features[activeIndex];
-  const IconComponent = activeFeature.icon;
 
   return (
     <section className={styles.section} id="app-download-banner">
@@ -447,7 +439,6 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0, filter: "blur(6px)" }}
                   transition={{ duration: 0.3, ease: EASE }}
                 >
-                  <IconComponent size={30} strokeWidth={1.75} className={styles.featurePillIcon} />
                   <span className={styles.featurePillText}>{activeFeature.title}</span>
                 </motion.span>
               </AnimatePresence>
@@ -485,6 +476,14 @@ export default function AppDownloadBanner() {
                 position: "relative",
                 rotate: handRotation,
                 y: handY,
+                // The phone itself sits ~86px right-of-center within the
+                // hand image's own frame (the hand is centered, but the
+                // phone it's holding isn't) — shift the whole unit left by
+                // that same amount so the phone (not the image canvas)
+                // lands centered on the page. Applied here, alongside the
+                // existing rotate/y motion values, so it rides through
+                // every scroll-driven entrance/exit transform unchanged.
+                x: -86,
                 pointerEvents: "none",
               }}
             >
@@ -573,8 +572,8 @@ export default function AppDownloadBanner() {
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
                 <div className={`${styles.qrStack} ${styles.desktopOnly} ${styles.popoverGlass}`}>
-                  <span className={styles.qrLabel}>Scan to install</span>
                   <Image src="/app-download-QR.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
+                  <span className={styles.qrLabel}>Scan to install</span>
                 </div>
                 <a href="#" className={styles.storeBadge} tabIndex={0}>
                   <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
