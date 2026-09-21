@@ -6,7 +6,7 @@ import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const MOCK_FAMILY_MEMBERS = [
@@ -24,6 +24,29 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePane, setActivePane] = useState<string>('main');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  // Search theme state ("dark" | "white") for stakeholder simulation
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nh_search_theme') as "dark" | "white" | null;
+      if (saved === 'white' || saved === 'dark') {
+        setSearchTheme(saved);
+        document.documentElement.setAttribute('data-search-theme', saved);
+      }
+    }
+  }, []);
+
+  const handleToggleSearchTheme = () => {
+    const nextTheme = searchTheme === 'dark' ? 'white' : 'dark';
+    setSearchTheme(nextTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nh_search_theme', nextTheme);
+      document.documentElement.setAttribute('data-search-theme', nextTheme);
+      window.dispatchEvent(new CustomEvent('nh:search-theme-change', { detail: { theme: nextTheme } }));
+    }
+  };
   
   useEffect(() => {
     if (!isMobileMenuOpen) {
@@ -361,6 +384,24 @@ export default function Navbar() {
               <ChevronDown size={14} />
             </span>
           </div>
+
+          {/* Search Theme Toggle (Dark / White Mode simulation for stakeholders) */}
+          <button
+            type="button"
+            onClick={handleToggleSearchTheme}
+            className={styles.searchThemeToggle}
+            title={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
+            aria-label={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
+          >
+            <span className={`${styles.themeTogglePill} ${searchTheme === "white" ? styles.themeWhiteActive : styles.themeDarkActive}`}>
+              <span className={styles.themeToggleThumb}>
+                {searchTheme === "dark" ? <Moon size={12} strokeWidth={2.5} /> : <Sun size={12} strokeWidth={2.5} />}
+              </span>
+              <span className={styles.themeToggleLabel}>
+                {searchTheme === "dark" ? "Dark" : "White"}
+              </span>
+            </span>
+          </button>
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>

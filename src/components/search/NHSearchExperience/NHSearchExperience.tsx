@@ -9,6 +9,7 @@ import DefaultSearchPrompt from "./DefaultSearchPrompt";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
 import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
+import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import { 
   getSearchResults, 
@@ -61,6 +62,29 @@ export default function NHSearchExperience({
   // SSR-safety for window calculations
   const [mounted, setMounted] = useState(false);
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
+
+  // Search Experience Theme: "dark" (default) or "white" (simulated Figma experience)
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+
+  useEffect(() => {
+    // Check initial search theme from localStorage or data-search-theme attribute
+    if (typeof window !== "undefined") {
+      const savedTheme = localStorage.getItem("nh_search_theme") as "dark" | "white" | null;
+      const docAttr = document.documentElement.getAttribute("data-search-theme") as "dark" | "white" | null;
+      if (savedTheme === "white" || docAttr === "white") {
+        setSearchTheme("white");
+      }
+    }
+
+    const handleThemeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ theme: "dark" | "white" }>;
+      if (customEvent.detail?.theme) {
+        setSearchTheme(customEvent.detail.theme);
+      }
+    };
+    window.addEventListener("nh:search-theme-change", handleThemeChange);
+    return () => window.removeEventListener("nh:search-theme-change", handleThemeChange);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -209,11 +233,11 @@ export default function NHSearchExperience({
     [0, 1]
   );
 
-  // Text color adaptation: white in dark glassmorphism -> blue in side button style
+  // Text color adaptation: white/dark in glassmorphism -> blue in side button style
   const textColor = useTransform(
     activeProgress,
     [0.54, 0.84],
-    ["#FFFFFF", "#0B5DF4"]
+    [searchTheme === "white" ? "#1E293B" : "#FFFFFF", "#0B5DF4"]
   );
 
   // Secondary buttons and prompt cross-fades
@@ -513,7 +537,8 @@ export default function NHSearchExperience({
 
   return (
     <div 
-      className={styles.searchExperienceWrapper} 
+      className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`} 
+      data-search-theme={searchTheme}
       ref={containerRef}
       style={
         hasScroll
@@ -532,7 +557,8 @@ export default function NHSearchExperience({
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
         layout
-        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""}`}
+        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
+        data-search-theme={searchTheme}
         onClick={() => {
           handleActivate();
         }}
@@ -582,7 +608,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Layer 1: Dark glass background layer (exact existing fill) */}
+        {/* Layer 1: Dark / White glass background layer */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -590,11 +616,13 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: "rgba(22, 28, 36, 0.28)",
+              background: searchTheme === "white" ? "rgba(255, 255, 255, 0.88)" : "rgba(22, 28, 36, 0.28)",
               backdropFilter: "blur(24px) saturate(125%)",
               WebkitBackdropFilter: "blur(24px) saturate(125%)",
-              border: "1px solid rgba(255, 255, 255, 0.14)",
-              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
+              border: searchTheme === "white" ? "1px solid rgba(255, 255, 255, 0.70)" : "1px solid rgba(255, 255, 255, 0.14)",
+              boxShadow: searchTheme === "white"
+                ? "0 16px 40px -10px rgba(0, 0, 0, 0.10), inset 0 1px 2px rgba(255, 255, 255, 0.80)"
+                : "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
               opacity: darkGlassOpacity,
               pointerEvents: "none",
               zIndex: 1,
@@ -684,7 +712,7 @@ export default function NHSearchExperience({
             style={{
               position: "fixed",
               inset: 0,
-              background: "rgba(5, 10, 18, 0.45)",
+              background: searchTheme === "white" ? "rgba(15, 23, 42, 0.32)" : "rgba(5, 10, 18, 0.45)",
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)",
               zIndex: 1,
@@ -696,7 +724,8 @@ export default function NHSearchExperience({
           <motion.div
             layout
             id="nh-active-search-modal"
-            className={`${styles.searchShell} ${stateClass}`}
+            className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
+            data-search-theme={searchTheme}
             data-lenis-prevent="true"
             initial={{ opacity: 0, scale: 0.96, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -786,12 +815,11 @@ export default function NHSearchExperience({
                   transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                   style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}
                 >
-                  <PulseAIWorkspace
-                    embedded
+                  <PulseAIView
+                    query={pulseInitialQuery || query}
+                    selectedLocation={selectedLocation}
+                    doctors={resultsData.doctors}
                     onBack={handleBackToResults}
-                    backLabel="Back to search results"
-                    onClose={handleClose}
-                    initialQuery={pulseInitialQuery}
                   />
                 </motion.div>
               )}

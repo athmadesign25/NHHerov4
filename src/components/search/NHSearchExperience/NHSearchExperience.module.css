@@ -3491,3 +3491,749 @@
   transform: scale(1.05);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   WHITE MODE SEARCH EXPERIENCE (FIGMA ACCURATE STYLING)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Landing Search Composer (White Mode) ── */
+.themeWhite.stateLanding,
+.themeWhite .stateLanding,
+[data-search-theme="white"] .stateLanding {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 
+    0 16px 40px -10px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.03),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+}
+
+.themeWhite.stateLanding:hover,
+.themeWhite .stateLanding:hover,
+[data-search-theme="white"] .stateLanding:hover {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(203, 213, 225, 0.95) !important;
+  box-shadow: 
+    0 20px 48px -10px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.04),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+}
+
+.themeWhite .landingPlaceholder,
+[data-search-theme="white"] .landingPlaceholder {
+  color: #1E293B !important;
+}
+
+.themeWhite .floatingPulseSearchText,
+[data-search-theme="white"] .floatingPulseSearchText {
+  color: #1E293B !important;
+}
+
+.themeWhite .standaloneIconBtn,
+[data-search-theme="white"] .standaloneIconBtn {
+  color: #64748B !important;
+}
+
+.themeWhite .standaloneIconBtn:hover,
+[data-search-theme="white"] .standaloneIconBtn:hover {
+  color: #0F172A !important;
+}
+
+.themeWhite .inlineActionBtn,
+[data-search-theme="white"] .inlineActionBtn {
+  color: #475569 !important;
+}
+
+.themeWhite .inlineActionBtn:hover,
+[data-search-theme="white"] .inlineActionBtn:hover {
+  background: rgba(11, 93, 244, 0.06) !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionIcon,
+[data-search-theme="white"] .inlineActionIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .inlineActionBtn:hover .inlineActionIcon,
+[data-search-theme="white"] .inlineActionBtn:hover .inlineActionIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationPill,
+[data-search-theme="white"] .locationPill {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .locationPill:hover,
+[data-search-theme="white"] .locationPill:hover {
+  background: #E2E8F0 !important;
+}
+
+.themeWhite .locationPinIcon,
+[data-search-theme="white"] .locationPinIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationMenu,
+[data-search-theme="white"] .locationMenu {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .locationMenuItem,
+[data-search-theme="white"] .locationMenuItem {
+  color: #1E293B !important;
+}
+
+.themeWhite .locationMenuItem:hover,
+[data-search-theme="white"] .locationMenuItem:hover {
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .locationMenuItemSelected,
+[data-search-theme="white"] .locationMenuItemSelected {
+  background: #EFF6FF !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationCurrentAction,
+[data-search-theme="white"] .locationCurrentAction {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationCurrentAction:hover,
+[data-search-theme="white"] .locationCurrentAction:hover {
+  background: #EFF6FF !important;
+}
+
+.themeWhite .locationNavIcon,
+[data-search-theme="white"] .locationNavIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationSearchWrapper,
+[data-search-theme="white"] .locationSearchWrapper {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.themeWhite .locationSearchInput,
+[data-search-theme="white"] .locationSearchInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .locationSearchInput::placeholder,
+[data-search-theme="white"] .locationSearchInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .locationSearchIcon,
+[data-search-theme="white"] .locationSearchIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .locationMenuHeader,
+[data-search-theme="white"] .locationMenuHeader {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .locationDivider,
+[data-search-theme="white"] .locationDivider {
+  background: #E2E8F0 !important;
+}
+
+.themeWhite .submitArrowBtn,
+[data-search-theme="white"] .submitArrowBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .submitArrowBtn:hover,
+[data-search-theme="white"] .submitArrowBtn:hover {
+  background: #0446B8 !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+/* ── 2. Active Search Canvas (White Mode) ── */
+.themeWhite.stateActive,
+.themeWhite .stateActive,
+[data-search-theme="white"] .stateActive {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+.themeWhite.stateActive::before,
+.themeWhite.stateActive::after,
+.themeWhite .stateActive::before,
+.themeWhite .stateActive::after,
+[data-search-theme="white"] .stateActive::before,
+[data-search-theme="white"] .stateActive::after {
+  display: none !important;
+}
+
+.themeWhite .activeTextInput,
+[data-search-theme="white"] .activeTextInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .activeTextInput::placeholder,
+[data-search-theme="white"] .activeTextInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .ghostSuffix,
+[data-search-theme="white"] .ghostSuffix {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .tabBadge,
+[data-search-theme="white"] .tabBadge {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.themeWhite .closeBtn,
+[data-search-theme="white"] .closeBtn {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.themeWhite .closeBtn:hover,
+[data-search-theme="white"] .closeBtn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .emptyPromptSub,
+[data-search-theme="white"] .emptyPromptSub {
+  color: #64748B !important;
+}
+
+.themeWhite .suggestionsHeader,
+[data-search-theme="white"] .suggestionsHeader {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .suggestionItem,
+[data-search-theme="white"] .suggestionItem {
+  color: #1E293B !important;
+}
+
+.themeWhite .suggestionItem:hover,
+.themeWhite .suggestionItemActive,
+[data-search-theme="white"] .suggestionItem:hover,
+[data-search-theme="white"] .suggestionItemActive {
+  background: #F8FAFC !important;
+}
+
+.themeWhite .suggestionArrow,
+[data-search-theme="white"] .suggestionArrow {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .suggestionText,
+[data-search-theme="white"] .suggestionText {
+  color: #1E293B !important;
+}
+
+.themeWhite .pressEnterHint,
+[data-search-theme="white"] .pressEnterHint {
+  color: #94A3B8 !important;
+  background: #F1F5F9 !important;
+}
+
+.themeWhite .pulseStatusRow,
+[data-search-theme="white"] .pulseStatusRow {
+  color: #64748B !important;
+}
+
+.themeWhite .sparkleIcon,
+[data-search-theme="white"] .sparkleIcon {
+  color: #EC4899 !important;
+}
+
+/* ── 3. Search Results Canvas (White Mode) ── */
+.themeWhite.stateResults,
+.themeWhite .stateResults,
+[data-search-theme="white"] .stateResults {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.14) !important;
+}
+
+.themeWhite.stateResults::before,
+.themeWhite.stateResults::after,
+.themeWhite .stateResults::before,
+.themeWhite .stateResults::after,
+[data-search-theme="white"] .stateResults::before,
+[data-search-theme="white"] .stateResults::after {
+  display: none !important;
+}
+
+.themeWhite .resultsQueryBar,
+[data-search-theme="white"] .resultsQueryBar {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.themeWhite .resultsQuerySearchIcon,
+[data-search-theme="white"] .resultsQuerySearchIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .resultsQueryInput,
+[data-search-theme="white"] .resultsQueryInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .resultsQueryInput::placeholder,
+[data-search-theme="white"] .resultsQueryInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .querySendBtn,
+[data-search-theme="white"] .querySendBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .sectionEyebrowTitle,
+[data-search-theme="white"] .sectionEyebrowTitle {
+  color: #64748B !important;
+}
+
+.themeWhite .refDoctorCard,
+[data-search-theme="white"] .refDoctorCard {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+.themeWhite .refDoctorCard:hover,
+[data-search-theme="white"] .refDoctorCard:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .refDocName,
+[data-search-theme="white"] .refDocName {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .refDocSpecialty,
+[data-search-theme="white"] .refDocSpecialty {
+  color: #38BDF8 !important;
+}
+
+.themeWhite .refDocHospital,
+[data-search-theme="white"] .refDocHospital {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.themeWhite .refDocExpRow,
+[data-search-theme="white"] .refDocExpRow {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .refDocExpIcon,
+[data-search-theme="white"] .refDocExpIcon {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .refBookBtn,
+[data-search-theme="white"] .refBookBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .refBookBtn:hover,
+[data-search-theme="white"] .refBookBtn:hover {
+  background: #0446B8 !important;
+}
+
+.themeWhite .refViewAllLink,
+[data-search-theme="white"] .refViewAllLink {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .refViewAllLink:hover,
+[data-search-theme="white"] .refViewAllLink:hover {
+  color: #0446B8 !important;
+}
+
+/* Results Pulse Recommendation Row (White Mode) */
+.themeWhite .refPulseRow,
+[data-search-theme="white"] .refPulseRow {
+  background: linear-gradient(135deg, rgba(254, 242, 244, 0.85) 0%, rgba(240, 249, 255, 0.90) 100%) !important;
+  border: 1px solid rgba(254, 205, 211, 0.7) !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .refPulseRow:hover,
+[data-search-theme="white"] .refPulseRow:hover {
+  background: linear-gradient(135deg, rgba(254, 242, 244, 0.95) 0%, rgba(240, 249, 255, 0.98) 100%) !important;
+  border-color: rgba(244, 63, 94, 0.4) !important;
+}
+
+.themeWhite .refPulseIconBox,
+[data-search-theme="white"] .refPulseIconBox {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(254, 205, 211, 0.6) !important;
+  color: #E11D48 !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.18) !important;
+}
+
+.themeWhite .refPulseTitle,
+[data-search-theme="white"] .refPulseTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .refPulseBadge,
+[data-search-theme="white"] .refPulseBadge {
+  background: rgba(225, 29, 72, 0.12) !important;
+  color: #E11D48 !important;
+  border: 1px solid rgba(225, 29, 72, 0.25) !important;
+}
+
+.themeWhite .refPulseSubtext,
+[data-search-theme="white"] .refPulseSubtext {
+  color: #475569 !important;
+}
+
+.themeWhite .refPulseBtn,
+[data-search-theme="white"] .refPulseBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .refPulseBtn:hover,
+[data-search-theme="white"] .refPulseBtn:hover {
+  background: #0446B8 !important;
+}
+
+/* Right column Editorial / Tertiary items (White Mode) */
+.themeWhite .editorialItem,
+[data-search-theme="white"] .editorialItem {
+  border-bottom: 1px solid #F1F5F9 !important;
+}
+
+.themeWhite .editorialItem:hover,
+[data-search-theme="white"] .editorialItem:hover {
+  background: #F8FAFC !important;
+}
+
+.themeWhite .editorialIconMono,
+[data-search-theme="white"] .editorialIconMono {
+  color: #64748B !important;
+}
+
+.themeWhite .editorialItem:hover .editorialIconMono,
+[data-search-theme="white"] .editorialItem:hover .editorialIconMono {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .editorialItemTitle,
+[data-search-theme="white"] .editorialItemTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .editorialItemSub,
+[data-search-theme="white"] .editorialItemSub {
+  color: #64748B !important;
+}
+
+.themeWhite .editorialChevron,
+[data-search-theme="white"] .editorialChevron {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .editorialItem:hover .editorialChevron,
+[data-search-theme="white"] .editorialItem:hover .editorialChevron {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .editorialViewMoreLink,
+[data-search-theme="white"] .editorialViewMoreLink {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .editorialViewMoreLink:hover,
+[data-search-theme="white"] .editorialViewMoreLink:hover {
+  color: #0446B8 !important;
+}
+
+.themeWhite .editorialPill,
+[data-search-theme="white"] .editorialPill {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+.themeWhite .editorialPill:hover,
+[data-search-theme="white"] .editorialPill:hover {
+  background: #EFF6FF !important;
+  border-color: #93C5FD !important;
+  color: #0B5DF4 !important;
+}
+
+/* ── 4. Pulse AI View (Screenshot 1 Match in White Mode) ── */
+.themeWhite.statePulse,
+.themeWhite .statePulse,
+[data-search-theme="white"] .statePulse {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.themeWhite .pulseViewContainer,
+[data-search-theme="white"] .pulseViewContainer {
+  background: linear-gradient(135deg, rgba(255, 241, 242, 0.70) 0%, rgba(240, 249, 255, 0.75) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.08), 0 0 32px -4px rgba(244, 63, 94, 0.05) !important;
+}
+
+.themeWhite .pulseBackBtn,
+[data-search-theme="white"] .pulseBackBtn {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseBackBtn:hover,
+[data-search-theme="white"] .pulseBackBtn:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+.themeWhite .pulseHeaderIconBox,
+[data-search-theme="white"] .pulseHeaderIconBox {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(254, 205, 211, 0.6) !important;
+  color: #E11D48 !important;
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.16) !important;
+}
+
+.themeWhite .pulseHeaderTitle,
+[data-search-theme="white"] .pulseHeaderTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseLiveBadge,
+[data-search-theme="white"] .pulseLiveBadge {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  color: #15803D !important;
+}
+
+.themeWhite .pulseLiveDot,
+[data-search-theme="white"] .pulseLiveDot {
+  background: #16A34A !important;
+  box-shadow: 0 0 6px #16A34A !important;
+}
+
+.themeWhite .pulseUserQueryBubble,
+[data-search-theme="white"] .pulseUserQueryBubble {
+  background: #0047AB !important;
+  box-shadow: 0 4px 14px rgba(0, 71, 171, 0.28) !important;
+}
+
+.themeWhite .pulseQueryText,
+[data-search-theme="white"] .pulseQueryText {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseQueryTime,
+[data-search-theme="white"] .pulseQueryTime {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseResponseGlyph,
+[data-search-theme="white"] .pulseResponseGlyph {
+  background: rgba(244, 63, 94, 0.10) !important;
+  border: 1px solid rgba(244, 63, 94, 0.25) !important;
+}
+
+.themeWhite .pulseResponseText,
+[data-search-theme="white"] .pulseResponseText {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseThinkingPill,
+[data-search-theme="white"] .pulseThinkingPill {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #475569 !important;
+}
+
+.themeWhite .pulseDoctorCard,
+[data-search-theme="white"] .pulseDoctorCard {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+.themeWhite .pulseDoctorCard:hover,
+[data-search-theme="white"] .pulseDoctorCard:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .pulseDocGradient,
+[data-search-theme="white"] .pulseDocGradient {
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(15, 23, 42, 0.85) 30%,
+    rgba(15, 23, 42, 0.45) 55%,
+    rgba(15, 23, 42, 0.1) 75%,
+    transparent 100%
+  ) !important;
+}
+
+.themeWhite .pulseDocName,
+[data-search-theme="white"] .pulseDocName {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseDocSpecialty,
+[data-search-theme="white"] .pulseDocSpecialty {
+  color: #38BDF8 !important;
+}
+
+.themeWhite .pulseDocHospital,
+[data-search-theme="white"] .pulseDocHospital {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.themeWhite .pulseDocExpRow,
+[data-search-theme="white"] .pulseDocExpRow {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseDocExpIcon,
+[data-search-theme="white"] .pulseDocExpIcon {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseBookBtn,
+[data-search-theme="white"] .pulseBookBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseBookBtn:hover,
+[data-search-theme="white"] .pulseBookBtn:hover {
+  background: #0446B8 !important;
+}
+
+.themeWhite .pulseChip,
+[data-search-theme="white"] .pulseChip {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.themeWhite .pulseChip:hover,
+[data-search-theme="white"] .pulseChip:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseChipActive,
+[data-search-theme="white"] .pulseChipActive {
+  background: #EFF6FF !important;
+  border-color: #3B82F6 !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+.themeWhite .pulseInputBar,
+[data-search-theme="white"] .pulseInputBar {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseInputBar:focus-within,
+[data-search-theme="white"] .pulseInputBar:focus-within {
+  border-color: #93C5FD !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.themeWhite .pulseInputAttachBtn,
+[data-search-theme="white"] .pulseInputAttachBtn {
+  color: #64748B !important;
+}
+
+.themeWhite .pulseInputAttachBtn:hover,
+[data-search-theme="white"] .pulseInputAttachBtn:hover {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTextInput,
+[data-search-theme="white"] .pulseTextInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTextInput::placeholder,
+[data-search-theme="white"] .pulseTextInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .pulseMicBtn,
+[data-search-theme="white"] .pulseMicBtn {
+  color: #64748B !important;
+}
+
+.themeWhite .pulseMicBtn:hover,
+[data-search-theme="white"] .pulseMicBtn:hover {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .pulseSendBtn,
+[data-search-theme="white"] .pulseSendBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(11, 93, 244, 0.3) !important;
+}
+
+.themeWhite .pulseSendBtn:hover,
+[data-search-theme="white"] .pulseSendBtn:hover {
+  background: #0446B8 !important;
+}
+
+/* Diagnostic test cards in White Mode */
+.themeWhite .pulseTestCard,
+[data-search-theme="white"] .pulseTestCard {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseTestTitle,
+[data-search-theme="white"] .pulseTestTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTestDesc,
+[data-search-theme="white"] .pulseTestDesc {
+  color: #64748B !important;
+}
+
+

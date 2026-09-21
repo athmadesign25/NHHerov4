@@ -108,12 +108,12 @@ export default function PrimaryResults({
             >
               <div className={styles.refPulseLeft}>
                 <div className={styles.refPulseIconBox} aria-hidden>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="2.8" fill="#FFFFFF" />
-                    <circle cx="18.5" cy="8.5" r="1.8" fill="#FFFFFF" />
-                    <circle cx="5.5" cy="8.5" r="1.8" fill="#FFFFFF" />
-                    <circle cx="18.5" cy="15.5" r="1.8" fill="#FFFFFF" />
-                    <circle cx="5.5" cy="15.5" r="1.8" fill="#FFFFFF" />
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="2.8" fill="currentColor" />
+                    <circle cx="18.5" cy="8.5" r="1.8" fill="currentColor" />
+                    <circle cx="5.5" cy="8.5" r="1.8" fill="currentColor" />
+                    <circle cx="18.5" cy="15.5" r="1.8" fill="currentColor" />
+                    <circle cx="5.5" cy="15.5" r="1.8" fill="currentColor" />
                     <line x1="9.6" y1="10.4" x2="7" y2="9.4" />
                     <line x1="14.4" y1="10.4" x2="17" y2="9.4" />
                     <line x1="9.6" y1="13.6" x2="7" y2="14.6" />
