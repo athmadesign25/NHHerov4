@@ -69,33 +69,87 @@
               background 0.3s ease;
 }
 
-/* Subtle Animated Rotating Gradient Border Perimeter (soft light moving around edge) */
-.stateLanding::before {
-  content: "";
+/* Moving Motion Gradient Border Outline (NH Red, Pulse Pink, Purple, NH Blue, Pulse Cyan, White) */
+.animatedBorderOutline {
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: 1.75px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.38) 0deg,
-    rgba(3, 78, 162, 0.48) 75deg,
-    rgba(237, 28, 36, 0.22) 150deg,
-    rgba(0, 196, 255, 0.10) 220deg,
-    rgba(3, 78, 162, 0.32) 290deg,
-    rgba(0, 196, 255, 0.38) 360deg
+    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.92) 235deg,    /* Pulse Cyan */
+    rgba(255, 255, 255, 0.95) 295deg,  /* Pure White */
+    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: rotateBorderAngle 11s linear infinite;
+  animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
-  z-index: 2;
-  opacity: 0.36;
-  transition: opacity 0.3s ease;
+  z-index: 4;
+  opacity: 0.40;
+  box-sizing: border-box;
+  transition: opacity 0.35s ease;
 }
 
-/* Soft ambient light around perimeter (not bright neon) */
+/* Subtle Ambient Gradient Glow around perimeter */
+.animatedBorderGlow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.70) 0deg,
+    rgba(255, 46, 147, 0.65) 55deg,
+    rgba(139, 92, 246, 0.65) 115deg,
+    rgba(3, 78, 162, 0.70) 175deg,
+    rgba(0, 196, 255, 0.68) 235deg,
+    rgba(255, 255, 255, 0.70) 295deg,
+    rgba(237, 28, 36, 0.70) 360deg
+  );
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  animation: rotateBorderAngle 7.5s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.22;
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+/* Fallback pseudo-elements when JS layers are not rendered */
+.stateLanding::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.75px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.95) 0deg,
+    rgba(255, 46, 147, 0.90) 55deg,
+    rgba(139, 92, 246, 0.90) 115deg,
+    rgba(3, 78, 162, 0.95) 175deg,
+    rgba(0, 196, 255, 0.92) 235deg,
+    rgba(255, 255, 255, 0.95) 295deg,
+    rgba(237, 28, 36, 0.95) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: rotateBorderAngle 7.5s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.40;
+  transition: opacity 0.35s ease;
+  box-sizing: border-box;
+}
+
 .stateLanding::after {
   content: "";
   position: absolute;
@@ -103,23 +157,24 @@
   border-radius: inherit;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.08) 0deg,
-    rgba(3, 78, 162, 0.10) 75deg,
-    rgba(237, 28, 36, 0.04) 150deg,
-    rgba(0, 196, 255, 0.02) 220deg,
-    rgba(3, 78, 162, 0.06) 290deg,
-    rgba(0, 196, 255, 0.08) 360deg
+    rgba(237, 28, 36, 0.70) 0deg,
+    rgba(255, 46, 147, 0.65) 55deg,
+    rgba(139, 92, 246, 0.65) 115deg,
+    rgba(3, 78, 162, 0.70) 175deg,
+    rgba(0, 196, 255, 0.68) 235deg,
+    rgba(255, 255, 255, 0.70) 295deg,
+    rgba(237, 28, 36, 0.70) 360deg
   );
-  filter: blur(8px);
-  -webkit-filter: blur(8px);
-  animation: rotateBorderAngle 11s linear infinite;
+  filter: blur(10px);
+  -webkit-filter: blur(10px);
+  animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
-  z-index: -1;
-  opacity: 0.28;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  z-index: 0;
+  opacity: 0.22;
+  transition: opacity 0.35s ease, filter 0.35s ease;
 }
 
-/* While morphing to square and floating dock, hide pseudo-elements completely */
+/* While morphing to square and floating dock, hide static pseudo-elements */
 .searchShellMorphing::before,
 .searchShellMorphing::after {
   display: none !important;
@@ -134,12 +189,14 @@
     inset 0 1px 2px rgba(255, 255, 255, 0.16);
 }
 
+.stateLanding:hover .animatedBorderOutline,
 .stateLanding:hover::before {
-  opacity: 0.58;
+  opacity: 0.55;
 }
 
+.stateLanding:hover .animatedBorderGlow,
 .stateLanding:hover::after {
-  opacity: 0.44;
+  opacity: 0.32;
   filter: blur(10px);
 }
 
