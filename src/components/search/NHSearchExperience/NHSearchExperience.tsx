@@ -747,7 +747,7 @@ export default function NHSearchExperience({
               zIndex: 2,
             }}
           >
-            {/* ── Living Pulse AI Ambient Glow Around Effect (Subtle, 50% lower opacity, hugging popup card) ── */}
+            {/* ── Living Pulse AI Ambient Glow Around Effect (Active & Alive) ── */}
             <motion.div
               key="search-card-ambient-glow"
               className={`${styles.cardAmbientGlow} ${searchTheme === "white" ? styles.cardAmbientGlowWhite : styles.cardAmbientGlowDark}`}
@@ -757,6 +757,7 @@ export default function NHSearchExperience({
               transition={{ duration: prefersReducedMotion ? 0.1 : 0.35, ease: "easeOut" }}
               aria-hidden="true"
             >
+              <div className={styles.glowConicRing} />
               <div className={`${styles.glowOrb} ${styles.glowOrbCyan}`} />
               <div className={`${styles.glowOrb} ${styles.glowOrbPurple}`} />
               <div className={`${styles.glowOrb} ${styles.glowOrbBlue}`} />
