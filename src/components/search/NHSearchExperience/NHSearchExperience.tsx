@@ -715,8 +715,8 @@ export default function NHSearchExperience({
               position: "fixed",
               inset: 0,
               background: searchTheme === "white" 
-                ? "rgba(255, 255, 255, 0.55)" 
-                : "rgba(5, 10, 18, 0.45)",
+                ? "rgba(255, 255, 255, 0.52)" 
+                : "rgba(5, 10, 18, 0.50)",
               backdropFilter: searchTheme === "white" 
                 ? "blur(20px) saturate(140%)" 
                 : "blur(14px)",
@@ -727,6 +727,24 @@ export default function NHSearchExperience({
               touchAction: "none",
             }}
           />
+
+          {/* ── Living Pulse AI Ambient Gradient Motion Canvas (Google Gemini style) ── */}
+          <motion.div
+            key="search-ambient-canvas"
+            className={`${styles.ambientGeminiCanvas} ${searchTheme === "white" ? styles.ambientGeminiWhite : styles.ambientGeminiDark}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.4, ease: "easeInOut" }}
+            aria-hidden="true"
+          >
+            <div className={`${styles.geminiOrb} ${styles.geminiOrbCyan}`} />
+            <div className={`${styles.geminiOrb} ${styles.geminiOrbPurple}`} />
+            <div className={`${styles.geminiOrb} ${styles.geminiOrbBlue}`} />
+            <div className={`${styles.geminiOrb} ${styles.geminiOrbRose}`} />
+            <div className={`${styles.geminiOrb} ${styles.geminiOrbCenter}`} />
+            <div className={styles.geminiHarmonizeOverlay} />
+          </motion.div>
 
           {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
           <motion.div
