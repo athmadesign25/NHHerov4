@@ -416,12 +416,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 140px;
   opacity: 0.8;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  overflow: hidden;
+  border-radius: 12px;
 }
 
 .storeBadge img {
-  height: 38px;
+  width: 100%;
+  height: auto;
   object-fit: contain;
 }
 
@@ -644,10 +648,10 @@
   align-items: center;
   gap: 10px;
   border-radius: 40px;
-  border: 1px solid rgba(206, 223, 253, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   /* No shadow at all now, so the blur is the only thing separating it from
      the white behind — kept heavy for that reason. */
-  background: linear-gradient(95deg, rgba(217, 233, 255, 0.20) -8.77%, rgba(96, 170, 250, 0.20) 156.37%);
+  background: rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
   white-space: nowrap;
@@ -677,9 +681,9 @@
   border-radius: 10px;
   background:
     linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 10%) 100%),
-    rgb(255 255 255 / 40%);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+    rgb(255 255 255 / 55%);
+  backdrop-filter: blur(36px) saturate(1.7);
+  -webkit-backdrop-filter: blur(36px) saturate(1.7);
   border: 1px solid rgba(252, 80, 83, 0.08);
 }
 

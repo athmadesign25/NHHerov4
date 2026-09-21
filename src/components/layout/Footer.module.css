@@ -68,7 +68,7 @@
    the app-download section is still on screen at the end of the page.
    Sized to leave roughly a quarter of it visible. */
 .main {
-  padding: var(--sp-16) 0;
+  padding: 220px 0;
 }
 
 .grid {

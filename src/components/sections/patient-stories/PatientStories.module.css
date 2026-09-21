@@ -18,7 +18,7 @@
   /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
      below 1024px, where the mobile swipe carousel's own full-bleed trick
      (.mobileCarouselContainer) needs an unpadded ancestor to work. */
-  padding: 125px 16px 125px;
+  padding: 44px 16px 64px;
   box-sizing: border-box;
   min-height: 900px;
   display: flex;

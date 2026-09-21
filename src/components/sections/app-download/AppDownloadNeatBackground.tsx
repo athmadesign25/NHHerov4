@@ -17,11 +17,11 @@ export default function AppDownloadNeatBackground() {
 
     const config = {
       colors: [
-        { color: "#FCFCFC", enabled: true },
+        { color: "#EDF1F5", enabled: true },
         { color: "#E0ECFF", enabled: true },
         { color: "#F7F6F2", enabled: true },
         { color: "#D6E4FF", enabled: true },
-        { color: "#FCFCFC", enabled: true },
+        { color: "#EDF1F5", enabled: true },
       ],
       speed: 2,
       horizontalPressure: 4,

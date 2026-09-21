@@ -364,7 +364,7 @@ export default function AppDownloadBanner() {
             }}
           >
             <Image
-              src="/img-bg-app.png"
+              src="/img-bg-app-2.png"
               alt=""
               fill
               style={{ objectFit: "cover" }}
@@ -568,10 +568,10 @@ export default function AppDownloadBanner() {
                   <span className={styles.qrLabel}>Scan to install</span>
                 </div>
                 <a href="#" className={styles.storeBadge} tabIndex={0}>
-                  <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
+                  <Image width={140} height={46} alt="Download on the App Store" src="/App store.svg" />
                 </a>
                 <a href="#" className={styles.storeBadge} tabIndex={0}>
-                  <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
+                  <Image width={140} height={46} alt="Get it on Google Play" src="/Google play.svg" />
                 </a>
               </motion.div>
             </div>
