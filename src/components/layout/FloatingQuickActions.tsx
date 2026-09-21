@@ -131,6 +131,45 @@ export default function FloatingQuickActions() {
       const prevPointerEvents = containerRef.current.style.pointerEvents;
       containerRef.current.style.pointerEvents = "none";
 
+      // Section-level overrides are decided from what the bar's own box
+      // actually overlaps, not from a single sampled point: a section can
+      // be behind the bar long before anything in it is, and it is the
+      // content arriving under the labels that matters, not the section's
+      // own top edge.
+      const barRect = containerRef.current.getBoundingClientRect();
+      const overlapsBar = (el: Element) => {
+        const r = el.getBoundingClientRect();
+        return (
+          r.right > barRect.left &&
+          r.left < barRect.right &&
+          r.bottom > barRect.top &&
+          r.top < barRect.bottom
+        );
+      };
+
+      // Entry happens while the hero is still behind the bar. The hero is
+      // marked dark for the navbar's sake, but the bar arrives over its
+      // pale lower half, so its labels stay blue there.
+      const hero = document.querySelector("#hero-section-search-first");
+      const overHero = Boolean(hero && overlapsBar(hero));
+
+      // Specialities: the grid section is dark from its first pixel, but
+      // most of that is empty backdrop. The labels only need to go white
+      // once a speciality image is genuinely behind them.
+      const grid = document.querySelector('[class*="gridSection"]');
+      const overGrid = Boolean(grid && overlapsBar(grid));
+      const overGridImage =
+        overGrid && Array.from(grid!.querySelectorAll("img")).some(overlapsBar);
+
+      // Packages: dark like every other section, so the labels are white
+      // through it — until a card has grown far enough to sit under the
+      // bar, where white would be reading against the card's light glass.
+      const packages = document.querySelector("#health-packages");
+      const overPackages = Boolean(packages && overlapsBar(packages));
+      const packageCardAtBar =
+        overPackages &&
+        Array.from(packages!.querySelectorAll('a[class*="packageCard"]')).some(overlapsBar);
+
       const linkRefs = [linkRef0, linkRef1, linkRef2];
       const newDarkState = linkRefs.map((ref) => {
         if (!ref.current) return false;
@@ -147,13 +186,12 @@ export default function FloatingQuickActions() {
             break;
           }
         }
-        // HealthPackages marks itself data-nav-theme="dark" (same as every
-        // other dark section, for the navbar's own separate probe), but
-        // this component's own text should stay its default blue over it
-        // specifically rather than switching to white like it does over
-        // every other dark section.
-        const isOverPackages = elements.some((el) => el.closest("#health-packages"));
-        return detectedTheme === "dark" && !isOverPackages;
+
+        let isDark = detectedTheme === "dark";
+        if (overGrid) isDark = overGridImage;
+        if (overPackages) isDark = !packageCardAtBar;
+        if (overHero) isDark = false;
+        return isDark;
       });
 
       containerRef.current.style.pointerEvents = prevPointerEvents;
