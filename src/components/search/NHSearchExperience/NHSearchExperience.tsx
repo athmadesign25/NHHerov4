@@ -91,90 +91,112 @@ export default function NHSearchExperience({
   const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Square box dimensions in Phase 1 & 2
-  const squareSize = 56;
+  // Square badge size (Phase 1 & 2): 34px with 8px border-radius, matches the sidebar's .iconWrap
+  const squareSize = 34;
   const squareLeft = Math.round((winSize.w - squareSize) / 2);
   const squareTopInPlace = Math.round(startTop + (startHeight - squareSize) / 2);
-  // Mid top: tracks up as hero scales down and moves up
-  const midTop = Math.round(winSize.h * 0.36);
 
-  // Docked dimensions (3rd button in FloatingQuickActions on right side)
-  const endWidth = isMobile ? 96 : 100;
-  const endHeight = 74;
-  // In FloatingQuickActions: top: 50% (translateY(-50%)), container height ~224px.
-  // Button 3 top = winH * 0.5 - 112 + 75 + 75 = winH * 0.5 + 38px
-  const endTop = isMobile ? (winSize.h - 36 - endHeight) : Math.round(winSize.h * 0.5 + 38);
-  const endLeft = isMobile ? Math.round(winSize.w - 16 - endWidth) : (winSize.w - 24 - endWidth);
+  // Exact vertical alignment with 3rd button position in side panel:
+  // Side panel top: calc(50vh - 114px). Button 3 starts at 50vh + 38px.
+  // Center of icon inside Button 3: 50vh + 66px.
+  // Square top to align centers: 50vh + 66px - 17px = 50vh + 49px.
+  const targetButton3Top = isMobile 
+    ? Math.round(winSize.h - 36 - squareSize) 
+    : Math.round(winSize.h * 0.5 + 49);
+
+  // Horizontal position of 3rd button icon in side panel (centered in 100px width at right: 24px):
+  // left = winW - 124px + (100 - squareSize) / 2
+  const targetButton3Left = isMobile
+    ? Math.round(winSize.w - 16 - squareSize)
+    : Math.round(winSize.w - 124 + (100 - squareSize) / 2);
+
+  const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
-    const docked = latest >= 0.64;
+    setIsMorphing(latest > 0.02);
+    const docked = latest >= 0.67;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
   });
 
-  // 3-Stage Choreography:
-  // Phase 1 [0.02, 0.22]: Search bar shrinks in place to a 56px square box
-  // Phase 2 [0.22, 0.44]: Hero scales down and moves up, square moves up with hero
-  // Phase 3 [0.44, 0.66]: Side bar FAB appears, square moves right & morphs into 3rd button
+  // 5-Stage Choreography:
+  // Phase 1 [0.02 - 0.16]: In-place shrink to 34px blue square badge at center (squareLeft, squareTopInPlace)
+  // Phase 2 [0.16 - 0.44]: Locked at center position (squareLeft, squareTopInPlace) while hero scales & scrolls
+  // Phase 3 [0.44 - 0.54]: Side panel enters with 2 buttons; central square moves up to targetButton3Top, stays at squareLeft
+  // Phase 4 [0.54 - 0.68]: Square moves horizontally to targetButton3Left with droplet squash/stretch
+  // Phase 5 [0.68 - 0.72]: Water droplet merges into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [startTop, squareTopInPlace, midTop, endTop]
+    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top, targetButton3Top]
   );
 
   const composerLeft = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [startLeft, squareLeft, squareLeft, endLeft]
+    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [startLeft, squareLeft, squareLeft, squareLeft, targetButton3Left]
   );
 
   const composerWidth = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [startWidth, squareSize, squareSize, endWidth]
+    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [startWidth, squareSize, squareSize, squareSize, squareSize]
   );
 
   const composerHeight = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [startHeight, squareSize, squareSize, endHeight]
+    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [startHeight, squareSize, squareSize, squareSize, squareSize]
   );
 
   const composerRadius = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [20, 16, 16, 18]
+    [0.02, 0.16, 0.44, 0.54, 0.68],
+    [20, 8, 8, 8, 8]
   );
 
   const composerPaddingX = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [24, 0, 0, 6]
+    [0.02, 0.16],
+    [24, 0]
   );
 
   const composerPaddingY = useTransform(
     activeProgress,
-    [0.02, 0.22, 0.44, 0.66],
-    [20, 0, 0, 12]
+    [0.02, 0.16],
+    [20, 0]
   );
 
+  // Water droplet elongation along horizontal motion
+  const dropletScaleX = useTransform(
+    activeProgress,
+    [0.0, 0.54, 0.60, 0.65, 0.68, 0.72],
+    [1.0, 1.0, 1.24, 1.12, 0.90, 1.0]
+  );
+
+  const dropletScaleY = useTransform(
+    activeProgress,
+    [0.0, 0.54, 0.60, 0.65, 0.68, 0.72],
+    [1.0, 1.0, 0.82, 0.90, 1.12, 1.0]
+  );
+
+  // Background layers cross-fade
+  const landingBgOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
+  const squareBgOpacity = useTransform(activeProgress, [0.04, 0.14], [0, 1]);
+
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.02, 0.12], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.12], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.02, 0.10], [1, 0]);
+  const controlsOpacity = useTransform(activeProgress, [0.02, 0.09], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.02, 0.11], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.11], ["32px", "0px"]);
+  const promptOpacity = useTransform(activeProgress, [0.02, 0.09], [1, 0]);
 
   // Square pulse icon appears as prompt fades out, stays visible all the way through
   const squareIconOpacity = useTransform(activeProgress, [0.05, 0.14], [0, 1]);
 
-  // Label "Pulse AI Search" under the icon only fades in during Phase 3 when expanding to 100px wide
-  const fabLabelOpacity = useTransform(activeProgress, [0.48, 0.64], [0, 1]);
-
-  // At the end of Phase 3 (when fully docked), morphShellOpacity fades out into the static FAB button
-  const morphShellOpacity = useTransform(activeProgress, [0.65, 0.70], [1, 0]);
-  const compactLabelOpacity = useTransform(activeProgress, [0.16, 0.40], [0, 1]);
+  // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
+  const morphShellOpacity = useTransform(activeProgress, [0.67, 0.71], [1, 0]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
@@ -477,7 +499,7 @@ export default function NHSearchExperience({
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
         layout
-        className={`${styles.searchShell} ${styles.stateLanding}`}
+        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""}`}
         onClick={() => {
           handleActivate();
         }}
@@ -490,6 +512,8 @@ export default function NHSearchExperience({
                 width: composerWidth,
                 height: composerHeight,
                 borderRadius: composerRadius,
+                scaleX: dropletScaleX,
+                scaleY: dropletScaleY,
                 paddingLeft: composerPaddingX,
                 paddingRight: composerPaddingX,
                 paddingTop: composerPaddingY,
@@ -508,6 +532,9 @@ export default function NHSearchExperience({
                 pointerEvents: isDocked ? "none" : "auto",
                 overflow: "hidden",
                 cursor: "pointer",
+                background: "transparent",
+                border: "none",
+                boxShadow: "none",
               }
             : searchState !== "landing"
             ? {
@@ -522,6 +549,41 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
+        {/* Dark glass background layer for landing search bar */}
+        {hasScroll && searchState === "landing" && (
+          <motion.div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "inherit",
+              background: "rgba(22, 28, 36, 0.28)",
+              backdropFilter: "blur(24px) saturate(125%)",
+              WebkitBackdropFilter: "blur(24px) saturate(125%)",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
+              opacity: landingBgOpacity,
+              pointerEvents: "none",
+            }}
+          />
+        )}
+
+        {/* Vibrant Blue Square Badge layer matching sidebar icon */}
+        {hasScroll && searchState === "landing" && (
+          <motion.div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "inherit",
+              background: "linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%)",
+              boxShadow: "0 1px 2px 0 rgba(255, 255, 255, 0.20) inset, 0 4px 14px rgba(11, 77, 199, 0.45)",
+              opacity: squareBgOpacity,
+              pointerEvents: "none",
+            }}
+          />
+        )}
+
         <DefaultSearchPrompt
           onActivate={handleActivate}
           selectedLocation={selectedLocation}
@@ -529,9 +591,7 @@ export default function NHSearchExperience({
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
           promptOpacity={hasScroll ? promptOpacity : undefined}
-          compactLabelOpacity={hasScroll ? compactLabelOpacity : undefined}
           squareIconOpacity={hasScroll ? squareIconOpacity : undefined}
-          fabLabelOpacity={hasScroll ? fabLabelOpacity : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}

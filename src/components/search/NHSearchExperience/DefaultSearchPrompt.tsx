@@ -65,7 +65,7 @@ export default function DefaultSearchPrompt({
         </span>
       </motion.div>
 
-      {/* ── Square Box Content (Phase 1 & 2) -> Morphs to 3rd FAB button (Phase 3) ── */}
+      {/* ── Square Box Content: Pulse animated bars directly centered inside the blue square badge ── */}
       {squareIconOpacity && (
         <motion.div
           className={styles.squareBoxContent}
@@ -74,31 +74,17 @@ export default function DefaultSearchPrompt({
             position: "absolute",
             inset: 0,
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             pointerEvents: "none",
             userSelect: "none",
           }}
         >
-          <div className={styles.floatingPulseIconWrap}>
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
+          <div className={styles.pulseBars} aria-hidden>
+            <span className={styles.pulseBar1} />
+            <span className={styles.pulseBar2} />
+            <span className={styles.pulseBar3} />
           </div>
-          {fabLabelOpacity && (
-            <motion.span
-              className={styles.floatingPulseSearchText}
-              style={{
-                opacity: fabLabelOpacity,
-                marginTop: 4,
-              }}
-            >
-              Pulse AI<br />Search
-            </motion.span>
-          )}
         </motion.div>
       )}
 

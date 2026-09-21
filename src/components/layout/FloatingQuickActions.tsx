@@ -35,9 +35,6 @@ export default function FloatingQuickActions() {
       // Quick Health Actions Bar appears as the user scrolls past hero (at ~32% scroll)
       const showQuickActions = window.scrollY >= window.innerHeight * 0.32;
       setIsQuickActionsVisible(showQuickActions);
-      if (window.scrollY >= window.innerHeight * 0.58) {
-        setIsSearchDocked(true);
-      }
 
 
 
@@ -101,7 +98,7 @@ export default function FloatingQuickActions() {
         ref={containerRef}
         role="region"
         aria-label="Quick actions and search"
-        className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden}`}
+        className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden} ${isSearchDocked ? styles.dockedThreeButtons : styles.dockedTwoButtons}`}
       >
         {/* Action 1: Book Appointment (Primary utility) */}
         <Link
@@ -139,43 +136,32 @@ export default function FloatingQuickActions() {
           <span className={styles.actionLabel}>Download<br />NH Care App</span>
         </Link>
 
-        <div 
-          aria-hidden="true" 
-          className={styles.divider}
-          style={{
-            opacity: isSearchDocked ? 1 : 0,
-            transition: "opacity 0.2s ease",
-          }}
-        />
-
-        {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
-        <button
-          ref={linkRef2}
-          type="button"
-          className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
-          onClick={handleOpenSearch}
-          aria-label="Pulse AI Search"
-          style={{
-            opacity: isSearchDocked ? 1 : 0,
-            pointerEvents: isSearchDocked ? "auto" : "none",
-            transition: "opacity 0.2s ease",
-          }}
-        >
-          <span className={styles.iconWrap}>
-            {isMounted ? (
-              <div className={styles.pulseLottieContainer} aria-hidden="true">
-                <Lottie animationData={pulseAnimation} loop={true} />
-              </div>
-            ) : (
-              <span className={styles.pulseBars} aria-hidden="true">
-                <span className={styles.pulseBar1} />
-                <span className={styles.pulseBar2} />
-                <span className={styles.pulseBar3} />
-              </span>
-            )}
-          </span>
-          <span className={styles.actionLabel}>Pulse AI<br />Search</span>
-        </button>
+        {/* Action 3: Pulse AI Search (Merges into 3rd position as liquid droplet) */}
+        <div className={`${styles.thirdActionSlot} ${isSearchDocked ? styles.slotExpanded : styles.slotCollapsed}`}>
+          <div aria-hidden="true" className={styles.divider} />
+          <button
+            ref={linkRef2}
+            type="button"
+            className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
+            onClick={handleOpenSearch}
+            aria-label="Pulse AI Search"
+          >
+            <span className={styles.iconWrap}>
+              {isMounted ? (
+                <div className={styles.pulseLottieContainer} aria-hidden="true">
+                  <Lottie animationData={pulseAnimation} loop={true} />
+                </div>
+              ) : (
+                <span className={styles.pulseBars} aria-hidden="true">
+                  <span className={styles.pulseBar1} />
+                  <span className={styles.pulseBar2} />
+                  <span className={styles.pulseBar3} />
+                </span>
+              )}
+            </span>
+            <span className={styles.actionLabel}>Pulse AI<br />Search</span>
+          </button>
+        </div>
       </div>
 
 

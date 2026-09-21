@@ -97,13 +97,11 @@
   height: 14px;
 }
 /* Base styles (Desktop) */
-/* Vertically centered on the viewport (right-anchored horizontally) —
-   independent of the global Pulse floating button (GlobalPulseFAB's
-   .fabContainer, fixed at bottom 24px/right 24px), which sits far enough
-   down in the corner that the two never overlap. */
+/* Vertically centered on the viewport (right-anchored horizontally)
+   Top anchored at calc(50vh - 114px) so Buttons 1 & 2 never shift when Button 3 docks */
 .container {
   position: fixed;
-  top: 50%;
+  top: calc(50vh - 114px);
   right: 24px;
   z-index: 9000;
   width: 100px;
@@ -116,28 +114,58 @@
   flex-direction: column;
   align-items: stretch;
   overflow: hidden;
-  transition: opacity 0.4s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center right;
+  transition: opacity 0.4s ease, 
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.38s cubic-bezier(0.16, 1, 0.3, 1), 
+              max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Every transform state below keeps the translateY(-50%) centering term
-   alongside its own enter/exit/hover offset — a plain `transform` on a
-   later rule replaces the whole value rather than adding to it, so the
-   centering has to be repeated in each one rather than living only on
-   .container. */
+.dockedTwoButtons {
+  height: 152px;
+  max-height: 152px;
+}
+
+.dockedThreeButtons {
+  height: 228px;
+  max-height: 228px;
+}
+
+/* Action 3 Slot: fluidly collapsible until search droplet merges */
+.thirdActionSlot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.slotCollapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slotExpanded {
+  max-height: 80px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-50%) translateX(50px);
+  transform: translateX(50px);
 }
 
 .visible {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(-50%) translateX(0);
+  transform: translateX(0);
 }
 
 .visible:hover {
-  transform: translateY(-50%) scale(1.05);
+  transform: scale(1.03);
 }
 
 /* Standalone Fully Rounded Floating Pulse AI Button Wrapper (Bottom Right Corner) */
