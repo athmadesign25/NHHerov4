@@ -249,8 +249,9 @@ export default function NHSearchExperience({
   // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
   const minimizedSearchOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
 
-  // Moving gradient border around landing search bar edges (20% opacity, fades smoothly on scroll compress)
-  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [0.20, 0.20, 0]);
+  // Moving gradient border around landing search bar edges (vibrant 0.65 on white, 0.25 on dark, fades smoothly on scroll compress)
+  const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
+  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [landingBorderOpacity, landingBorderOpacity, 0]);
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
   const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);

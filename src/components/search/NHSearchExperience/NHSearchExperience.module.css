@@ -81,8 +81,8 @@
     rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
     rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
     rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
-    rgba(0, 196, 255, 0.92) 235deg,    /* Pulse Cyan */
-    rgba(255, 255, 255, 0.95) 295deg,  /* Pure White */
+    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
     rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -92,7 +92,7 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.20;
+  opacity: 0.25;
   box-sizing: border-box;
   transition: opacity 0.35s ease;
 }
@@ -110,8 +110,8 @@
     rgba(255, 46, 147, 0.90) 55deg,
     rgba(139, 92, 246, 0.90) 115deg,
     rgba(3, 78, 162, 0.95) 175deg,
-    rgba(0, 196, 255, 0.92) 235deg,
-    rgba(255, 255, 255, 0.95) 295deg,
+    rgba(0, 196, 255, 0.95) 235deg,
+    rgba(37, 99, 235, 0.95) 295deg,
     rgba(237, 28, 36, 0.95) 360deg
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -121,7 +121,7 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.20;
+  opacity: 0.25;
   transition: opacity 0.35s ease;
   box-sizing: border-box;
 }
@@ -3529,13 +3529,26 @@
     inset 0 1px 1.5px rgba(255, 255, 255, 0.50) !important;
 }
 
+.themeWhite .animatedBorderOutline,
+[data-search-theme="white"] .animatedBorderOutline {
+  display: block !important;
+  opacity: 0.65;
+}
+
 .themeWhite.stateLanding::before,
 .themeWhite .stateLanding::before,
 [data-search-theme="white"] .stateLanding::before {
-  display: none !important;
+  display: block !important;
+  opacity: 0.65 !important;
+  z-index: 4 !important;
 }
 
-/* Gradient outline is displayed in white mode to match dark mode signature style */
+.themeWhite .stateLanding:hover .animatedBorderOutline,
+.themeWhite .stateLanding:hover::before,
+[data-search-theme="white"] .stateLanding:hover .animatedBorderOutline,
+[data-search-theme="white"] .stateLanding:hover::before {
+  opacity: 0.85 !important;
+}
 
 .themeWhite .landingPlaceholder,
 [data-search-theme="white"] .landingPlaceholder {
