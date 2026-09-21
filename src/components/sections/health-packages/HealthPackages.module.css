@@ -877,13 +877,13 @@
    comes from a shimmer sweep and a small image bump instead of the height
    change (and the perk pills are gone with it — see HealthPackages.tsx). */
 .packageCardSlotCompact {
-  height: 282px;
+  height: 268px;
 }
 
 .packageCardCompact,
 .packageCardCompact:hover,
 .packageCardCompact:focus-visible {
-  height: 282px;
+  height: 268px;
 }
 
 /* Wider columns than direction 1 — the titles run on one line here, so
@@ -909,7 +909,7 @@
    below, reading as though it belonged to the facts. */
 .packageCardAudience {
   margin: calc(6px - 20px) 0 0;
-  color: #5A6472;
+  color: #3D4653;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 400;
