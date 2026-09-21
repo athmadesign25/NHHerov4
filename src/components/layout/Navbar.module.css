@@ -1008,24 +1008,23 @@
   color: #ED1C24;
 }
 
-/* Siren icon: white like the label, still breathing on a slow pulse with
-   a red glow picked up from the button's own surface. */
+/* Hover deepens the red fill, which leaves the red label with nothing to
+   read against — so label and siren flip to white for that state only. */
+.emergencyBtnOnLight:hover {
+  background: rgba(237, 28, 36, 0.92);
+  border-color: rgba(237, 28, 36, 0.92);
+}
+
+.emergencyBtnOnLight:hover .emergencyLabelText,
+.emergencyBtnOnLight:hover .emergencyIcon {
+  color: #FFFFFF;
+}
+
+/* Siren icon: takes the label's colour in both themes. */
 .emergencyIcon {
   display: flex;
   color: #FFFFFF;
   transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: emergencySirenBlink 1.8s ease-in-out infinite;
-}
-
-@keyframes emergencySirenBlink {
-  0%, 100% {
-    opacity: 1;
-    filter: drop-shadow(0 0 2px rgba(255, 56, 56, 0.45));
-  }
-  50% {
-    opacity: 0.72;
-    filter: drop-shadow(0 0 7px rgba(255, 56, 56, 0.85)) drop-shadow(0 0 2px rgba(255, 56, 56, 0.6));
-  }
 }
 
 /* ─── City picker (desktop) ───

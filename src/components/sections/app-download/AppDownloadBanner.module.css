@@ -377,13 +377,12 @@
      so the two sides read as one family — kept low enough that the card
      still reads as neutral glass at a glance. */
   background:
-    linear-gradient(180deg, rgba(252, 80, 83, 0.07) 0%, rgba(252, 80, 83, 0.03) 100%),
-    rgba(247, 250, 255, 0.40);
+    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 23%) 100%),
+    rgb(255 255 255 / 40%);
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-radius: 10px;
   padding: 16px;
-  border: 1px solid rgba(252, 80, 83, 0.16);
 }
 
 .storesCol {
@@ -674,7 +673,7 @@
   align-items: center;
   flex-shrink: 0;
   border-radius: 10px;
-  background: linear-gradient(180deg, #FF8787 0%, #FC5053 100%);
+  background: linear-gradient(180deg, #ef4e4e 0%, #fa8c8e 100%);
   box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
 }
 
