@@ -117,10 +117,11 @@ const PHONE_APPEAR_SCALE = 1.22;
 // How much further down the phone walks at the very end of its entrance,
 // to clear room for the feature pill above it. The resting layout leaves
 // ~59px between the title's baseline box and the phone's own visible top
-// edge; the pill needs its 50px height plus breathing room on both sides
-// (~106px all in), so the phone gives up the difference. It is spent on
+// edge; the pill needs its own height plus a generous gap to the title and
+// a tight one to the phone (~127px all in), so the phone gives up the
+// difference. It is spent on
 // the hand's already-cropped bottom edge, not on anything readable.
-const PHONE_SETTLE_DROP = 48;
+const PHONE_SETTLE_DROP = 68;
 
 // Once the whole word-reveal for "Always With You." has visually finished
 // (title's own inView delay + its per-word stagger + duration), fade in the

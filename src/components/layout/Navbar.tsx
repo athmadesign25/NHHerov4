@@ -368,14 +368,14 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
           <Link
             href="/emergency"
-            className={styles.emergencyBtn}
+            className={`${styles.emergencyBtn} ${isOverLightBackground ? styles.emergencyBtnOnLight : ""}`}
           >
             <span className={styles.emergencyIcon}>
               <EmergencyIcon size={18} />
             </span>
-            {/* White on the red glass, so it no longer tracks the navbar's
-                light/dark label color — the button carries its own surface
-                now and reads the same over either background. */}
+            {/* Red over light sections, white over dark — flipping on the
+                same signal the rest of the navbar's labels use, since white
+                on the pale red glass has nothing to sit against there. */}
             <span className={styles.emergencyLabelText}>24/7 Emergency</span>
           </Link>
 

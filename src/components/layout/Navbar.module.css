@@ -993,6 +993,19 @@
   font-weight: 600;
   white-space: nowrap;
   color: #FFFFFF;
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Over light sections the glass has no dark backdrop to hold white text,
+   so label and siren both take the brand red instead. */
+.emergencyBtnOnLight {
+  background: rgba(237, 28, 36, 0.10);
+  border-color: rgba(237, 28, 36, 0.55);
+}
+
+.emergencyBtnOnLight .emergencyLabelText,
+.emergencyBtnOnLight .emergencyIcon {
+  color: #ED1C24;
 }
 
 /* Siren icon: white like the label, still breathing on a slow pulse with
@@ -1000,6 +1013,7 @@
 .emergencyIcon {
   display: flex;
   color: #FFFFFF;
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   animation: emergencySirenBlink 1.8s ease-in-out infinite;
 }
 
