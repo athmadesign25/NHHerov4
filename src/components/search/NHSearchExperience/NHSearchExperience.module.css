@@ -4388,7 +4388,7 @@
   color: #64748B !important;
 }
 
-/* ── Outline Gradient Motion with Glow Spill Outside around Popup Card ── */
+/* ── Soft Diffused Outline Gradient Glow Spill Outside around Popup Card ── */
 .modalWithAmbientWrap {
   position: relative;
   display: flex;
@@ -4398,39 +4398,12 @@
   border-radius: 24px;
 }
 
-/* Sharp outline gradient running right along the card edge */
-.activeModalOutlineBorder {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
-    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
-    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
-    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
-    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
-    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
-    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  animation: rotateBorderAngle 6s linear infinite;
-  pointer-events: none;
-  z-index: 5;
-  opacity: 0.70;
-  box-sizing: border-box;
-}
-
-/* Focused glow spill layer radiating just outside the outline */
+/* Inner diffused glow spill radiating softly outside the card rim */
 .activeModalGlowSpill {
   position: absolute;
-  inset: -4px;
+  inset: -6px -8px;
   border-radius: 28px;
-  padding: 5px;
+  padding: 8px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(237, 28, 36, 0.95) 0deg,
@@ -4445,20 +4418,20 @@
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  filter: blur(12px) saturate(170%);
-  -webkit-filter: blur(12px) saturate(170%);
+  filter: blur(18px) saturate(160%);
+  -webkit-filter: blur(18px) saturate(160%);
   animation: rotateBorderAngle 6s linear infinite;
   pointer-events: none;
   z-index: 1;
   box-sizing: border-box;
 }
 
-/* Wider diffuse soft glow spill blooming into the background */
+/* Outer wider diffused soft bloom melting into the blurred backdrop */
 .activeModalGlowSpillWide {
   position: absolute;
-  inset: -12px;
+  inset: -16px -20px;
   border-radius: 36px;
-  padding: 10px;
+  padding: 14px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(237, 28, 36, 0.90) 0deg,
@@ -4473,8 +4446,8 @@
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  filter: blur(24px) saturate(150%);
-  -webkit-filter: blur(24px) saturate(150%);
+  filter: blur(32px) saturate(145%);
+  -webkit-filter: blur(32px) saturate(145%);
   animation: rotateBorderAngle 6s linear infinite;
   pointer-events: none;
   z-index: 1;
@@ -4482,17 +4455,16 @@
 }
 
 .glowSpillWhite {
-  opacity: 0.55;
+  opacity: 0.50;
   mix-blend-mode: normal;
 }
 
 .glowSpillDark {
-  opacity: 0.65;
+  opacity: 0.60;
   mix-blend-mode: screen;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .activeModalOutlineBorder,
   .activeModalGlowSpill,
   .activeModalGlowSpillWide {
     animation: none !important;

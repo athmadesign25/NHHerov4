@@ -747,10 +747,9 @@ export default function NHSearchExperience({
               zIndex: 2,
             }}
           >
-            {/* ── Outline Gradient Motion with Glow Spill Outside ── */}
+            {/* ── Soft Diffused Outline Gradient Glow Spill Outside ── */}
             <div className={`${styles.activeModalGlowSpillWide} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
             <div className={`${styles.activeModalGlowSpill} ${searchTheme === "white" ? styles.glowSpillWhite : styles.glowSpillDark}`} aria-hidden="true" />
-            <div className={styles.activeModalOutlineBorder} aria-hidden="true" />
 
             {/* Active Search Modal Container: viewport-centered, never hero-anchored */}
             <motion.div
