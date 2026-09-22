@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, animate, MotionValue } from "framer-motion";
 import { Search, X } from "lucide-react";
 import Lottie from "lottie-react";
 import calendarCheckAnimation from "../../../../public/assets/calendar-check.json";
@@ -321,6 +321,56 @@ export default function NHSearchExperience({
   const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
   const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [landingBorderOpacity, landingBorderOpacity, 0]);
 
+  // ─── Hero entrance ───
+  // The composer used to be painted at full strength from the first frame,
+  // before the headline above it had resolved — which left it sitting on an
+  // otherwise empty hero looking stranded rather than like part of the
+  // stack. It now holds off until the headline has read, then rises into
+  // its place under it.
+  //
+  // The hold is most of the headline's own sweep: TextSweepEffect eases
+  // hard out of the gate (cubic-bezier 0.2, 0, 0.3, 0.3), so by this point
+  // the line has essentially arrived and the rest of its 2.6s is polish —
+  // waiting for the literal end of the sweep would leave the hero empty
+  // long enough to read as a stall instead of a sequence.
+  const ENTRANCE_HOLD_MS = 1100;
+  const ENTRANCE_MS = 700;
+
+  // Only the hero instance waits: everything else (the page-level search)
+  // has no hero above it to come after.
+  const entranceProgress = useMotionValue(hasScroll ? 0 : 1);
+
+  useEffect(() => {
+    if (!hasScroll) return;
+    // Loaded already scrolled (a refresh mid-page, or a restored position):
+    // the headline is not on screen to be waited for, and holding here
+    // would mean holding the docked tile back too.
+    if (typeof window !== "undefined" && window.scrollY > 40) {
+      entranceProgress.set(1);
+      return;
+    }
+    if (prefersReducedMotion) {
+      entranceProgress.set(1);
+      return;
+    }
+    const controls = animate(entranceProgress, 1, {
+      duration: ENTRANCE_MS / 1000,
+      delay: ENTRANCE_HOLD_MS / 1000,
+      ease: [0.16, 1, 0.3, 1],
+    });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasScroll, prefersReducedMotion]);
+
+  const entranceOpacity = useTransform(entranceProgress, [0, 1], [0, 1]);
+  // Rises into place rather than dropping in, so it reads as arriving under
+  // the headline rather than falling past it.
+  const entranceY = useTransform(entranceProgress, [0, 1], [22, 0]);
+  const entranceFilter = useTransform(
+    entranceProgress,
+    (v) => `blur(${((1 - v) * 10).toFixed(2)}px)`
+  );
+
   // Published for the floating bar, which opens its own third slot against
   // it — the bar grows downward as the composer arrives, so the composer is
   // absorbed into an opening space rather than dissolved on top of a tile
@@ -329,6 +379,12 @@ export default function NHSearchExperience({
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
   const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);
+  // Multiplied, not chosen between: the entrance and the dock own different
+  // ends of the same scroll and either one reaching 0 has to win.
+  const shellOpacity = useTransform(
+    [morphShellOpacity, entranceOpacity] as MotionValue<number>[],
+    ([morph, entrance]: number[]) => morph * entrance
+  );
   // Declared here because main references it without ever defining it: the
   // mobile quick actions come up exactly as the composer's own chrome goes.
   const fabOpacity = useTransform(activeProgress, [0.84, 0.88], [0, 1]);
@@ -668,7 +724,9 @@ export default function NHSearchExperience({
                 paddingBottom: composerPaddingY,
                 // The docked desktop shell dissolves into the bar beside
                 // it; the docked mobile shell is the bar, so it stays.
-                opacity: dockedMobile ? 1 : morphShellOpacity,
+                opacity: dockedMobile ? 1 : shellOpacity,
+                y: entranceY,
+                filter: entranceFilter,
                 maxWidth: "none",
                 minWidth: 0,
                 minHeight: 0,
