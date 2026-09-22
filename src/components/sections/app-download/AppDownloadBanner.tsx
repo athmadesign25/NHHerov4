@@ -463,6 +463,8 @@ export default function AppDownloadBanner() {
               </AnimatePresence>
             </div>
 
+            {/* Middle Phone + Floating Hand Stage wrapped in a Mask Container */}
+            <div className={styles.phoneMaskWrapper}>
             <motion.div
               className={styles.phoneWrapper}
               style={{
@@ -531,6 +533,7 @@ export default function AppDownloadBanner() {
                 className={styles.handOverlayImage}
               />
             </motion.div>
+          </div>
 
             {/* Mobile Feature Caption */}
             <div className={`${styles.mobileCaption} ${styles.mobileOnly}`}>
