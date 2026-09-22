@@ -25,7 +25,15 @@
   align-items: center;
   justify-content: center;
   background: #031224;
-  transition: background 0.6s ease;
+  /* No CSS transition here on purpose. HealthPackages.tsx drives this
+     background's light/dark swap itself, on two different schedules: an
+     instant flip on exit (the frame is already uncovering, so the switch
+     has to be there before the gap is), and a flip delayed until the
+     frame's own grow-transition finishes on entry (so it's hidden behind
+     the now-opaque photo). A CSS transition here animated every write
+     regardless of which schedule the JS intended — most visibly on exit,
+     where "instant" became a ~600ms fade, letting this light background
+     show through the shrinking frame's edge as a white flicker. */
 }
 
 /* JS drives width/height/border-radius (phase 1 grow-in) and transform:

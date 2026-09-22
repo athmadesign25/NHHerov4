@@ -198,7 +198,21 @@ const TEXT_REVEAL_USP_STAGGER = 0.12;
 const ENTER_SCALE_FROM = 0.84;
 const EXIT_SCALE_TO = 0.9;
 const EXIT_RADIUS_PX = 20;
-const EXIT_DURATION = 0.75;
+// .stickyViewport can only stay pinned at top:0 while the section's own
+// bottom edge is still at least one viewport height below the top — CSS
+// position:sticky enforces that natively, not this component. Below that
+// (the section's final 1vh of scroll) the browser starts releasing it for
+// real, whether this animation is ready or not. Triggering the shrink
+// only in that same native-release 1vh (the old EXIT_TRIGGER_VH of 1)
+// crammed the whole thing into less scroll than a single fast wheel flick
+// covers — reported as a jittery, flashed-on white reveal, since the
+// frame was still visually full-size right up until release forced it
+// away. Starting the countdown a full extra viewport-height earlier, while
+// the section is still comfortably pinned, means the frame is already
+// well into its shrink by the time native release begins, so the two
+// hand off instead of colliding.
+const EXIT_TRIGGER_VH = 2.2;
+const EXIT_DURATION = 1;
 
 // Threshold (on phase-1 progress) past which the frame is fully grown and
 // covers the whole viewport — the page bg swaps to light exactly then, so
@@ -535,7 +549,8 @@ export default function HealthPackages() {
       const vh = window.innerHeight;
       const total = rect.height - vh;
       const p = total <= 0 ? 0 : clamp01(-rect.top / total);
-      const exitP = clamp01((vh - rect.bottom) / vh);
+      const exitWindow = vh * EXIT_TRIGGER_VH;
+      const exitP = clamp01((exitWindow - rect.bottom) / exitWindow);
       return { p, exitP };
     };
 
