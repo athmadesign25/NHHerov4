@@ -399,6 +399,29 @@ export default function HealthPackages() {
       }, SNAP_TRANSITION_MS + 60);
     };
 
+    // Undoes an in-flight enableFrameSnapTransition() immediately, rather
+    // than waiting for its timeout. Clearing `transition` mid-flight
+    // doesn't freeze the element where it currently is — the engine snaps
+    // it straight to whatever value was last specified for that property
+    // and stops there. That is exactly what release needs: the frame's
+    // width/height is about to start following raw scroll 1:1 again
+    // (every subsequent tick writes a new value), and any transition still
+    // attached would retarget on every one of those writes for the rest of
+    // the window — that retargeting, not the one clean snap, is what read
+    // as jitter and the white sliver at the frame's edge.
+    const clearFrameSnapTransition = () => {
+      const frame = frameRef.current;
+      const grid = gridRef.current;
+      const bgVideo = bgVideoRef.current;
+      if (snapTimeoutRef.current) {
+        window.clearTimeout(snapTimeoutRef.current);
+        snapTimeoutRef.current = null;
+      }
+      if (frame) frame.style.transition = "";
+      if (grid) grid.style.transition = "";
+      if (bgVideo) bgVideo.style.transition = "";
+    };
+
     const applyState = (p: number, exitP: number) => {
       const frame = frameRef.current;
       const bgVideo = bgVideoRef.current;
@@ -431,7 +454,7 @@ export default function HealthPackages() {
           startAutoForward();
         } else if (wasFull && p1raw < GROW_RELEASE_FRACTION) {
           sectionPhaseRef.current = "growing";
-          enableFrameSnapTransition();
+          clearFrameSnapTransition();
           startAutoReverse();
         }
       }
