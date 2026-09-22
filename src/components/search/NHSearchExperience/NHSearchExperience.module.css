@@ -92,7 +92,7 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.25;
+  opacity: 0.6;
   box-sizing: border-box;
   transition: opacity 0.35s ease;
 }
@@ -121,7 +121,7 @@
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.25;
+  opacity: 0.6;
   transition: opacity 0.35s ease;
   box-sizing: border-box;
 }
@@ -142,7 +142,7 @@
 
 .stateLanding:hover .animatedBorderOutline,
 .stateLanding:hover::before {
-  opacity: 0.32;
+  opacity: 0.85;
 }
 
 .stateActive {
