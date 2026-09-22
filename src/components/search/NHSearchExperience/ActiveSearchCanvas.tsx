@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { 
-  Paperclip, Mic, ArrowRight, X, 
+  Paperclip, Mic, ArrowRight, ArrowUp, X, 
   User, Heart, Sparkles, CornerDownLeft, Command
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
@@ -227,7 +227,7 @@ export default function ActiveSearchCanvas({
             }
           }}
         >
-          <ArrowRight size={16} strokeWidth={2.5} />
+          <ArrowUp size={16} strokeWidth={2.5} />
         </button>
       </div>
 
