@@ -464,7 +464,7 @@
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
   padding: 0;
@@ -473,12 +473,12 @@
 
 .standaloneIconBtn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .standaloneIconBtn:focus-visible {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.16);
   outline: none;
 }
 
@@ -780,10 +780,10 @@
   border-radius: 6px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.90);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
-  font-weight: 400;
+  font-weight: 450;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
   user-select: none;
@@ -791,17 +791,17 @@
 
 .inlineActionBtn:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.10);
 }
 
 .inlineActionBtn:focus-visible {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.14);
   outline: none;
 }
 
 .inlineActionIcon {
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.82);
   transition: color 0.2s ease;
 }
 
