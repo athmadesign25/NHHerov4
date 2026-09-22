@@ -4013,7 +4013,38 @@
   100% { transform: translate(-50%, 0); }
 }
 
+/* ── Embedded Mode in Search Experience ── */
+.embeddedWorkspaceWrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  overflow: hidden;
+  border-radius: inherit;
+}
 
+.backToResultsBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1;
+}
 
-
+.backToResultsBtn:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #034EA2;
+  transform: translateX(-1px);
+}
 

@@ -35,11 +35,10 @@
   z-index: 55;
   width: 100%;
   border-radius: 26px;
-  background: rgba(14, 20, 34, 0.60);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 1px solid rgba(255, 255, 255, 0.20); /* Crisp inner top edge light reflection */
+  background: rgba(14, 20, 34, 0.82);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   overscroll-behavior: contain;
   box-shadow: 
     0 24px 60px -12px rgba(0, 0, 0, 0.6),
@@ -57,6 +56,9 @@
   padding: 20px 24px 18px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 28, 36, 0.28);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
     0 16px 40px -10px rgba(0, 0, 0, 0.35),
     inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
@@ -67,54 +69,67 @@
               background 0.3s ease;
 }
 
-/* Subtle Animated Rotating Gradient Border Perimeter (soft light moving around edge) */
-.stateLanding::before {
-  content: "";
+/* Moving Motion Gradient Border Outline (NH Red, Pulse Pink, Purple, NH Blue, Pulse Cyan, White) */
+.animatedBorderOutline {
   position: absolute;
-  inset: -1px;
-  border-radius: 21px;
+  inset: 0;
+  border-radius: inherit;
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.38) 0deg,
-    rgba(3, 78, 162, 0.48) 75deg,
-    rgba(237, 28, 36, 0.22) 150deg,
-    rgba(0, 196, 255, 0.10) 220deg,
-    rgba(3, 78, 162, 0.32) 290deg,
-    rgba(0, 196, 255, 0.38) 360deg
+    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
+    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: rotateBorderAngle 11s linear infinite;
+  animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
-  z-index: 2;
-  opacity: 0.36;
-  transition: opacity 0.3s ease;
+  z-index: 4;
+  opacity: 0.25;
+  box-sizing: border-box;
+  transition: opacity 0.35s ease;
 }
 
-/* Soft ambient light around perimeter (not bright neon) */
-.stateLanding::after {
+/* Fallback pseudo-element when JS layers are not rendered */
+.stateLanding::before {
   content: "";
   position: absolute;
-  inset: -2px;
-  border-radius: 22px;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.08) 0deg,
-    rgba(3, 78, 162, 0.10) 75deg,
-    rgba(237, 28, 36, 0.04) 150deg,
-    rgba(0, 196, 255, 0.02) 220deg,
-    rgba(3, 78, 162, 0.06) 290deg,
-    rgba(0, 196, 255, 0.08) 360deg
+    rgba(237, 28, 36, 0.95) 0deg,
+    rgba(255, 46, 147, 0.90) 55deg,
+    rgba(139, 92, 246, 0.90) 115deg,
+    rgba(3, 78, 162, 0.95) 175deg,
+    rgba(0, 196, 255, 0.95) 235deg,
+    rgba(37, 99, 235, 0.95) 295deg,
+    rgba(237, 28, 36, 0.95) 360deg
   );
-  filter: blur(8px);
-  -webkit-filter: blur(8px);
-  animation: rotateBorderAngle 11s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
-  z-index: -1;
-  opacity: 0.28;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  z-index: 4;
+  opacity: 0.25;
+  transition: opacity 0.35s ease;
+  box-sizing: border-box;
+}
+
+/* While morphing to square and floating dock, hide static pseudo-elements */
+.searchShellMorphing::before {
+  display: none !important;
+  opacity: 0 !important;
 }
 
 .stateLanding:hover {
@@ -125,13 +140,9 @@
     inset 0 1px 2px rgba(255, 255, 255, 0.16);
 }
 
+.stateLanding:hover .animatedBorderOutline,
 .stateLanding:hover::before {
-  opacity: 0.58;
-}
-
-.stateLanding:hover::after {
-  opacity: 0.44;
-  filter: blur(10px);
+  opacity: 0.32;
 }
 
 .stateActive {
@@ -166,6 +177,7 @@
     rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: rotateBorderAngle 11s linear infinite;
@@ -228,6 +240,7 @@
     rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: rotateBorderAngle 11s linear infinite;
@@ -270,7 +283,33 @@
 .headerLeftGroup {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+}
+
+.headerPulseBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.headerPulseBadge:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-0.5px);
+}
+
+.pulseBadgeText {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 /* ── Pulse AI Identity (clean brand intelligence label, no button box) ── */
@@ -519,8 +558,13 @@
 }
 
 .locationPinIcon {
-  color: #ED1C24;
-  opacity: 0.9;
+  color: #FFFFFF;
+  opacity: 0.85;
+}
+
+.locationPillWrapper {
+  position: relative;
+  display: inline-flex;
 }
 
 .locationMenu {
@@ -542,12 +586,30 @@
   flex-direction: column;
   gap: 3px;
   animation: locationMenuFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.locationMenuUpward {
+  top: auto;
+  bottom: calc(100% + 6px);
+  animation: locationMenuFadeInUp 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes locationMenuFadeIn {
   from {
     opacity: 0;
     transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes locationMenuFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -1096,6 +1158,8 @@
   justify-content: space-between;
   width: 100%;
   gap: 16px;
+  margin: 0;
+  padding: 0;
 }
 
 .resultsQueryLeft {
@@ -1103,11 +1167,18 @@
   align-items: center;
   gap: 12px;
   flex: 1;
+  min-width: 0;
+  cursor: text;
 }
 
 .resultsQuerySearchIcon {
   color: #94A3B8;
   flex-shrink: 0;
+  transition: color 0.18s ease;
+}
+
+.resultsQueryLeft:focus-within .resultsQuerySearchIcon {
+  color: #00C4FF;
 }
 
 .resultsQueryText {
@@ -1115,6 +1186,76 @@
   font-weight: 600;
   color: #FFFFFF;
   letter-spacing: -0.01em;
+}
+
+.resultsQueryInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 19px;
+  font-weight: 550;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  padding: 4px 0;
+  width: 100%;
+  caret-color: #00C4FF;
+}
+
+.resultsQueryInput::placeholder {
+  color: #64748B;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.resultsQueryInput::selection {
+  background: rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+}
+
+.resultsQueryActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.querySendBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #034EA2;
+  border: 1px solid rgba(0, 196, 255, 0.45);
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(3, 78, 162, 0.35), 0 0 12px rgba(0, 196, 255, 0.2);
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  animation: sendBtnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.querySendBtn:hover {
+  background: #0060DF;
+  transform: translateY(-0.5px);
+  box-shadow: 0 4px 14px rgba(0, 96, 223, 0.45), 0 0 16px rgba(0, 196, 255, 0.35);
+}
+
+@keyframes sendBtnFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
 }
 
 .editSearchBtn {
@@ -1176,12 +1317,12 @@
   transform: scale(1.03);
 }
 
-/* ── Results Main Split Layout (Weighted 66% Left vs 34% Right) ── */
+/* ── Results Main Split Layout (Weighted 67% Left vs 33% Right) ── */
 .resultsSplitLayout {
   display: grid;
-  grid-template-columns: minmax(0, 66fr) minmax(240px, 34fr);
-  gap: 28px;
-  margin-top: 20px;
+  grid-template-columns: minmax(0, 67fr) minmax(280px, 33fr);
+  gap: clamp(24px, 3vw, 36px);
+  margin-top: 18px;
   align-items: start;
   width: 100%;
 }
@@ -1194,336 +1335,503 @@
   width: 100%;
 }
 
-.resultsCategoryHeader {
+.primaryResultsSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-top: 4px;
-  margin-bottom: 18px;
-}
-
-.resultsCategoryTitle {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 18px;
-  font-weight: 600;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-.resultsCategorySub {
-  font-size: 13px;
-  font-weight: 400;
-  color: #94A3B8;
-  margin-top: 3px;
-}
-
-.recommendedSectionLabel {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748B;
-  margin-bottom: 10px;
-  height: auto;
-  display: flex;
-  align-items: center;
-}
-
-/* ── Clean Lighter Doctor Cards (2-Column Grid) ── */
-.doctorsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
   width: 100%;
 }
 
-.doctorCard {
+/* ── Left Column Header Row ── */
+.primaryHeaderRow {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background 0.18s ease, border-color 0.18s ease;
-  text-decoration: none;
-  min-width: 0;
-  height: 160px;
-  min-height: 160px;
-  max-height: 160px;
-  box-sizing: border-box;
-}
-
-.doctorCard:hover {
-  background: rgba(255, 255, 255, 0.055);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.doctorCardBody {
-  display: flex;
   align-items: flex-start;
-  gap: 12px;
-  min-width: 0;
+  gap: 3px;
+  margin-bottom: 12px;
 }
 
-.doctorAvatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  flex-shrink: 0;
-  background: #1e293b;
-}
-
-.doctorMeta {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  flex: 1;
-}
-
-/* Fixed 2-line name slot so all cards align vertically */
-.doctorName {
+.sectionEyebrowTitle {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 17px;
+  font-size: 11px;
   font-weight: 600;
-  color: #FFFFFF;
-  letter-spacing: -0.015em;
-  line-height: 21.5px;
-  height: 43px;
-  min-height: 43px;
-  max-height: 43px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #7E8B9B;
   margin: 0;
+  line-height: 1.3;
 }
 
-/* Specialty: ~14-15px, Narayana Health blue, medium, fixed position */
-.doctorSpecialty {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 19px;
-  height: 19px;
-  min-height: 19px;
-  max-height: 19px;
-  color: #00C4FF;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 3px;
-}
-
-/* Hospital: ~13-14px, muted neutral, ONE LINE ONLY with ellipsis */
-.doctorHospital {
-  font-size: 13.5px;
-  color: #94A3B8;
-  font-weight: 400;
-  line-height: 18px;
-  height: 18px;
-  min-height: 18px;
-  max-height: 18px;
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Subtle divider and bottom row */
-.doctorCardFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  min-width: 0;
-}
-
-.doctorExpText {
-  font-size: 13px;
-  color: #94A3B8;
-  font-weight: 400;
-  margin: 0;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ── Compact CTA Button ("Book →") ── */
-.bookApptBtn {
+.primaryProximityNotice {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 12px;
-  font-weight: 500;
-  color: #FFFFFF;
-  background: #034EA2;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 4px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  line-height: 1.2;
+  font-weight: 400;
+  color: #94A3B8;
+}
+
+.primaryPinIcon {
+  color: #38BDF8;
   flex-shrink: 0;
 }
 
-.bookApptBtn:hover {
-  background: #0060DF;
-  transform: translateY(-0.5px);
+.primaryInfoIcon {
+  color: #64748B;
+  flex-shrink: 0;
+  margin-left: 2px;
 }
 
-/* ── Simple Text Action: View all doctors → ── */
-.viewAllDoctorsRow {
+/* ── Reference Doctor Cards (2 × 2 Grid - Compact Height) ── */
+.refDoctorsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.refDoctorCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 8px;
+  background: #0B111E;
+  border: none;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  height: 310px;
+  min-height: 310px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s ease;
+  box-sizing: border-box;
+}
+
+.refDoctorCard:hover {
+  transform: translateY(-3px);
+  border: none;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
+}
+
+/* Full background photo covering 100% of the card - Zoomed in on face, positioned slightly above center */
+.refDocFullImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  transform: scale(1.35);
+  transform-origin: center 25%;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.refDoctorCard:hover .refDocFullImage {
+  transform: scale(1.40);
+}
+
+/* Subtle dark gradient film overlay focused only at the bottom for crisp text readability without darkening face */
+.refDocFullGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 11, 20, 0.86) 0%,
+    rgba(6, 11, 20, 0.65) 24%,
+    rgba(6, 11, 20, 0.32) 42%,
+    rgba(6, 11, 20, 0.06) 55%,
+    rgba(0, 0, 0, 0) 68%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Top-right Favourite / Heart Button */
+.refDocFavBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   display: flex;
   align-items: center;
-  margin-top: 12px;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  padding: 0;
 }
 
-.viewAllDoctorsTextLink {
+.refDocFavBtn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+
+.refHeartFilled {
+  fill: #ED1C24;
+  color: #ED1C24;
+}
+
+.refHeartOutline {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Top-left Experience Badge on Doctor Photo */
+.refDocExpBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  padding: 3px 8.5px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.40);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.refDocExpBadgeIcon {
+  color: rgba(255, 255, 255, 0.88);
+  flex-shrink: 0;
+}
+
+/* Doctor Information Area positioned over the gradient overlay */
+.refDocOverlayContent {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding: 12px 14px 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.refDocBottomFlex {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.refDocTextCol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.refDocName {
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.015em;
+  line-height: 1.22;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+}
+
+.refDocNameSingleLine {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.refDocNameMultiLine {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.refDocSpecialty {
+  font-size: 12px;
+  font-weight: 500;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Experience in text layer */
+.refDocExpRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.refDocExpIcon {
+  color: rgba(255, 255, 255, 0.82);
+  flex-shrink: 0;
+}
+
+.refDocHospital {
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.35;
+  margin-top: 2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.refDocHospitalSingleLine {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.refDocHospitalTwoLines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* White Book Button with radius 8 at bottom right */
+.refBookBtnWhite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  color: #0B5DF4;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+  align-self: flex-end;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  white-space: nowrap;
+}
+
+.refBookBtnWhite:hover {
+  background: #F3F7FC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* Fallback full-width Book Button */
+.refBookBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1D68FE;
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8.5px 0;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 2px 8px rgba(29, 104, 254, 0.35);
+}
+
+.refBookBtn:hover {
+  background: #1557E0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 104, 254, 0.45);
+}
+
+/* Below Doctor Grid Link */
+.refViewAllRow {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.refViewAllLink {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   font-size: 12.5px;
   font-weight: 500;
-  color: #00C4FF;
+  color: #38BDF8;
   text-decoration: none;
-  background: transparent;
-  border: none;
-  padding: 0;
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
-.viewAllDoctorsTextLink:hover {
-  color: #38BDF8;
+.refViewAllLink:hover {
+  color: #7DD3FC;
 }
 
-/* ── Pulse AI Recommendation Box (Signature Clinical Entry with Animated Gradient Border) ── */
-.pulseNudgeBox {
-  position: relative;
+/* Larger Horizontal Pulse AI Recommendation / Interpreter Card (Figma reference) */
+.refPulseRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 18px;
-  padding: 13px 18px;
-  border-radius: 14px;
-  background: linear-gradient(
-    135deg,
-    rgba(10, 22, 42, 0.75) 0%,
-    rgba(4, 34, 78, 0.55) 50%,
-    rgba(8, 18, 34, 0.75) 100%
-  );
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
-  border: 1px solid rgba(0, 196, 255, 0.22);
-  box-shadow: 
-    0 8px 24px -4px rgba(0, 0, 0, 0.45),
-    0 0 16px -2px rgba(0, 196, 255, 0.14),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.16);
-  cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-}
-
-/* Conic gradient perimeter border animation */
-.pulseNudgeBox::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 15px;
-  padding: 1px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.55) 0deg,
-    rgba(3, 78, 162, 0.65) 75deg,
-    rgba(237, 28, 36, 0.35) 150deg,
-    rgba(0, 196, 255, 0.18) 220deg,
-    rgba(3, 78, 162, 0.45) 290deg,
-    rgba(0, 196, 255, 0.55) 360deg
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: rotateBorderAngle 11s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.75;
-  transition: opacity 0.3s ease;
-}
-
-/* Ambient glowing perimeter aura */
-.pulseNudgeBox::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
+  padding: 16px 20px;
   border-radius: 16px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.18) 0deg,
-    rgba(3, 78, 162, 0.22) 75deg,
-    rgba(237, 28, 36, 0.08) 150deg,
-    rgba(0, 196, 255, 0.04) 220deg,
-    rgba(3, 78, 162, 0.14) 290deg,
-    rgba(0, 196, 255, 0.18) 360deg
-  );
-  filter: blur(10px);
-  -webkit-filter: blur(10px);
-  animation: rotateBorderAngle 11s linear infinite;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.4;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  background: 
+    linear-gradient(105deg, rgba(217, 70, 239, 0.08) 0%, rgba(147, 51, 234, 0.05) 25%, rgba(14, 165, 233, 0.06) 70%, rgba(6, 182, 212, 0.10) 100%) padding-box,
+    linear-gradient(rgba(13, 20, 36, 0.72), rgba(13, 20, 36, 0.72)) padding-box,
+    linear-gradient(105deg, rgba(217, 70, 239, 0.38) 0%, rgba(168, 85, 247, 0.22) 30%, rgba(56, 189, 248, 0.22) 70%, rgba(6, 182, 212, 0.38) 100%) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  margin-top: 20px;
 }
 
-.pulseNudgeBox:hover {
-  transform: translateY(-1.5px);
-  border-color: rgba(0, 196, 255, 0.45);
-  box-shadow: 
-    0 12px 32px -4px rgba(0, 0, 0, 0.55),
-    0 0 24px 0 rgba(0, 196, 255, 0.24),
-    inset 0 1px 2px rgba(255, 255, 255, 0.22);
+.refPulseRow:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5), 0 0 20px -2px rgba(6, 182, 212, 0.12);
+  background: 
+    linear-gradient(105deg, rgba(217, 70, 239, 0.12) 0%, rgba(147, 51, 234, 0.08) 25%, rgba(14, 165, 233, 0.09) 70%, rgba(6, 182, 212, 0.14) 100%) padding-box,
+    linear-gradient(rgba(13, 20, 36, 0.78), rgba(13, 20, 36, 0.78)) padding-box,
+    linear-gradient(105deg, rgba(217, 70, 239, 0.55) 0%, rgba(168, 85, 247, 0.35) 30%, rgba(56, 189, 248, 0.35) 70%, rgba(6, 182, 212, 0.55) 100%) border-box;
 }
 
-.pulseNudgeBox:hover::before {
-  opacity: 1;
+.refPulseLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
 }
 
-.pulseNudgeBox:hover::after {
-  opacity: 0.65;
-  filter: blur(12px);
+.refPulseIconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.refSparkleIcon {
+  color: #FFFFFF;
+}
+
+.refPulseTextWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.refPulseTitleLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.refPulseTitle {
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.refPulseBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #E9D5FF;
+  background: rgba(168, 85, 247, 0.22);
+  border: 1px solid rgba(192, 132, 252, 0.38);
+  padding: 2px 7px;
+  border-radius: 9999px;
+}
+
+.refPulseSubtext {
+  font-size: 12px;
+  color: #8E9AA8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.refPulseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.refPulseBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(1px);
 }
 
 .pulseNudgeLeft {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 12px;
   flex: 1;
   min-width: 0;
   position: relative;
-  z-index: 3;
+  z-index: 2;
 }
 
 .pulseNudgeIconWrap {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(149deg, #07152B 0%, #034EA2 100%);
-  border: 1px solid rgba(0, 196, 255, 0.4);
-  box-shadow: 
-    0 0 12px rgba(0, 196, 255, 0.28),
-    inset 0 1px 2px rgba(255, 255, 255, 0.22);
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1533,35 +1841,35 @@
 .pulseNudgeTextWrap {
   display: flex;
   flex-direction: column;
-  gap: 2.5px;
+  gap: 2px;
   min-width: 0;
 }
 
 .pulseNudgeTitleRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-wrap: wrap;
 }
 
 .pulseNudgeText {
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 13.5px;
-  font-weight: 550;
-  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 500;
+  color: #F1F5F9;
   letter-spacing: -0.01em;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .pulseNudgeBadge {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #00C4FF;
-  background: rgba(0, 196, 255, 0.12);
-  border: 1px solid rgba(0, 196, 255, 0.28);
-  padding: 1.5px 6.5px;
+  color: #38BDF8;
+  background: rgba(0, 196, 255, 0.08);
+  border: 1px solid rgba(0, 196, 255, 0.2);
+  padding: 1px 5.5px;
   border-radius: 4px;
 }
 
@@ -1575,31 +1883,688 @@
 .pulseNudgeAction {
   flex-shrink: 0;
   position: relative;
-  z-index: 3;
+  z-index: 2;
 }
 
 .pulseNudgeBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #00C4FF 0%, #0072CE 100%);
-  color: #FFFFFF;
+  gap: 5px;
+  padding: 6px 13px;
+  border-radius: 6px;
+  background: rgba(0, 196, 255, 0.1);
+  border: 1px solid rgba(0, 196, 255, 0.28);
+  color: #00C4FF;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 12.5px;
-  font-weight: 600;
-  border: none;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0, 196, 255, 0.35);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  transition: all 0.18s ease;
 }
 
 .pulseNudgeBtn:hover {
-  transform: scale(1.04);
-  box-shadow: 0 4px 16px rgba(0, 196, 255, 0.55);
-  filter: brightness(1.08);
+  background: rgba(0, 196, 255, 0.18);
+  border-color: rgba(0, 196, 255, 0.45);
+  color: #38BDF8;
+  transform: translateY(-0.5px);
+}
+
+/* ── Expanded Inline Pulse AI Workspace Card ── */
+.pulseExpandedCard {
+  margin-top: 16px;
+  border-radius: 16px;
+  background: radial-gradient(130% 120% at 15% 0%, rgba(3, 78, 162, 0.32) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(0, 196, 255, 0.28);
+  box-shadow: 
+    0 24px 64px -16px rgba(0, 0, 0, 0.7),
+    0 0 45px rgba(3, 78, 162, 0.22),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.15);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pulseExpandedHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pulseExpandedHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulseExpandedTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulseExpandedTitle {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.pulseExpandedLiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1.5px 6px;
+  border-radius: 9999px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ADE80;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.pulseExpandedLiveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 6px #22C55E;
+}
+
+.pulseExpandedSubtitle {
+  font-size: 11.5px;
+  color: #94A3B8;
+  margin: 2px 0 0;
+  line-height: 1.3;
+}
+
+.pulseExpandedMinimizeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #CBD5E1;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pulseExpandedMinimizeBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.pulseUploadToast {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(0, 196, 255, 0.12);
+  border: 1px solid rgba(0, 196, 255, 0.3);
+  color: #38BDF8;
+  font-size: 11.5px;
+  animation: sendBtnFadeIn 0.2s ease;
+}
+
+.pulseMessagesStream {
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.pulseMessagesStream::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pulseMessagesStream::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.pulseUserMessageRow {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.pulseAiMessageRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+
+.pulseAiAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(0, 196, 255, 0.28), rgba(3, 78, 162, 0.15));
+  border: 1px solid rgba(0, 196, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pulseUserBubble {
+  max-width: 80%;
+  background: linear-gradient(135deg, #034EA2 0%, #0284C7 100%);
+  border: none;
+  border-radius: 14px 14px 2px 14px;
+  padding: 9px 14px;
+  color: #FFFFFF;
+  font-size: 12.5px;
+  line-height: 1.4;
+  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.35);
+}
+
+.pulseAiBubble {
+  max-width: 96%;
+  background: transparent;
+  border: none;
+  padding: 2px 2px;
+  color: #E2E8F0;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.pulseAiBubbleUrgent {
+  background: rgba(237, 28, 36, 0.08);
+  border-color: rgba(237, 28, 36, 0.32);
+}
+
+.pulseBubbleText {
+  margin: 0;
+}
+
+.pulseBubbleActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pulseContextActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(0, 196, 255, 0.12);
+  border: 1px solid rgba(0, 196, 255, 0.3);
+  color: #38BDF8;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pulseContextActionBtn:hover {
+  background: rgba(0, 196, 255, 0.22);
+  color: #FFFFFF;
+  border-color: rgba(0, 196, 255, 0.45);
+}
+
+.pulseEmergencyActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(237, 28, 36, 0.18);
+  border: 1px solid rgba(237, 28, 36, 0.4);
+  color: #FFA3A6;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pulseEmergencyActionBtn:hover {
+  background: #ED1C24;
+  color: #FFFFFF;
+}
+
+.pulseBubbleTime {
+  font-size: 10px;
+  color: #64748B;
+  margin-top: 4px;
+  display: block;
+}
+
+.pulseThinkingBubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pulseThinkingDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00C4FF;
+  animation: pulseDotBlink 1.2s infinite ease-in-out;
+}
+
+.pulseThinkingDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.pulseThinkingDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulseDotBlink {
+  0%, 80%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.pulseQuickChipsRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 0 4px;
+  scrollbar-width: none;
+}
+
+.pulseQuickChipsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.pulseQuickChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.pulseQuickChip:hover {
+  background: rgba(0, 196, 255, 0.12);
+  border-color: rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+}
+
+.pulseComposerForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pulseComposerForm:focus-within {
+  border-color: rgba(0, 196, 255, 0.45);
+  box-shadow: 0 0 14px rgba(0, 196, 255, 0.16);
+}
+
+.pulseComposerAttachBtn,
+.pulseComposerMicBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.pulseComposerAttachBtn:hover,
+.pulseComposerMicBtn:hover {
+  color: #00C4FF;
+}
+
+.pulseComposerMicActive {
+  color: #ED1C24 !important;
+}
+
+.pulseComposerInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12.5px;
+  color: #FFFFFF;
+}
+
+.pulseComposerInput::placeholder {
+  color: #64748B;
+}
+
+.pulseComposerSendBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #034EA2;
+  border: 1px solid rgba(0, 196, 255, 0.4);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pulseComposerSendBtn:hover:not(:disabled) {
+  background: #0060DF;
+  transform: scale(1.05);
+}
+
+.pulseComposerSendBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pulseDisclaimerRow {
+  font-size: 10px;
+  color: #64748B;
+  line-height: 1.35;
+  padding: 0 4px;
+}
+
+/* ── Curated Suggested Doctor Cards inside Inline Pulse AI Bubble ── */
+.pulseCuratedDoctorsRow {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 10px;
+  padding: 2px 2px 6px;
+  scrollbar-width: thin;
+}
+
+.pulseCuratedDoctorsRow::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pulseCuratedDoctorsRow::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+
+.pulseCuratedDoctorCard {
+  flex: 0 0 224px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.22s ease;
+}
+
+.pulseCuratedDoctorCard:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(0, 196, 255, 0.35);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.45);
+  transform: translateY(-1.5px);
+}
+
+.pulseCuratedDocTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pulseCuratedDocAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(0, 196, 255, 0.25);
+}
+
+.pulseCuratedDocMeta {
+  min-width: 0;
+  flex: 1;
+}
+
+.pulseCuratedDocName {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocSpec {
+  font-size: 10.5px;
+  color: #38BDF8;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocHosp {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 9.5px;
+  color: #94A3B8;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseCuratedDocHosp span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pulseCuratedPinIcon {
+  flex-shrink: 0;
+  color: #94A3B8;
+}
+
+.pulseCuratedDocBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.pulseCuratedDocSlot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #4ADE80;
+  font-weight: 500;
+}
+
+.pulseCuratedSlotDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22C55E;
+}
+
+.pulseCuratedDocBookBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #034EA2 0%, #0284C7 100%);
+  border: 1px solid rgba(0, 196, 255, 0.35);
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s ease;
+}
+
+.pulseCuratedDocBookBtn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-0.5px);
+}
+
+/* ── Active Pulse Layout & Buried Results Container ── */
+.pulseActiveLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.pulseActiveMain {
+  width: 100%;
+}
+
+.buriedResultsContainer {
+  margin-top: 4px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.buriedResultsContainer:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.buriedResultsToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  color: #CBD5E1;
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.buriedResultsToggle:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #FFFFFF;
+}
+
+.buriedToggleLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buriedToggleIcon {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.buriedCountBadge {
+  font-size: 10.5px;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-left: 4px;
+}
+
+.buriedToggleRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #94A3B8;
+  font-size: 11.5px;
+}
+
+.buriedChevron {
+  transition: transform 0.2s ease;
+}
+
+.buriedChevronRotated {
+  transform: rotate(180deg);
+}
+
+.buriedResultsContent {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 29, 0.4);
+}
+
+/* ── State: Pulse Attached Mode ── */
+.statePulse {
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.6);
+  padding: 0 !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #1e293b;
 }
 
 @media (max-width: 640px) {
@@ -1624,11 +2589,8 @@
 .relatedSpecialtiesSection {
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border: none;
   background: transparent;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
   border-radius: 0;
 }
 
@@ -1670,147 +2632,171 @@
   color: #FFFFFF;
 }
 
-/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis ── */
+/* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis (Editorial Sidebar) ── */
 .resultsRightCol {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-height: 480px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  padding-right: 4px;
+  gap: 56px;
   min-width: 0;
   width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-.resultsRightCol::-webkit-scrollbar {
-  width: 4px;
-}
-
-.resultsRightCol::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.resultsRightCol::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 9999px;
-}
-
-.tertiarySectionBlock {
+.editorialSection {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.sectionHeadingRow {
+.editorialHeadingRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
-  height: 18px;
+  margin-bottom: 12px;
+  min-height: 18px;
 }
 
-.tertiarySectionTitle {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748B;
+.editorialList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.viewAllSmallLink {
-  font-size: 11px;
-  font-weight: 450;
-  color: #94A3B8;
+.editorialItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 4px;
+  border-bottom: none;
   text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.viewAllSmallLink:hover {
-  color: #CBD5E1;
-}
-
-/* ── Compact List Rows for Treatments & Articles ── */
-.tertiaryListRows {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.tertiaryListRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 8px;
   border-radius: 6px;
-  background: transparent;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  text-decoration: none;
+  transition: background 0.15s ease;
 }
 
-.tertiaryListRow:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.06);
+.editorialItem:hover {
+  background: rgba(255, 255, 255, 0.035);
 }
 
-.tertiaryRowLeft {
+.editorialItem:last-child {
+  border-bottom: none;
+}
+
+.editorialItemLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   min-width: 0;
 }
 
-.tertiaryRowIcon {
+.editorialIconBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.5);
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
 }
 
-.tertiaryRowMeta {
+.editorialIconMono {
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.15s ease;
+}
+
+.editorialItem:hover .editorialIconMono {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.editorialMeta {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.tertiaryRowTitle {
-  font-size: 12.5px;
+.editorialItemTitle {
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 13.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.88);
+  color: #FFFFFF;
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.tertiaryRowSubtitle {
-  font-size: 11px;
+.editorialItemSub {
+  font-size: 11.5px;
   font-weight: 400;
-  color: #64748B;
-  margin-top: 1px;
+  color: #7E8B9B;
+  margin-top: 1.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.tertiaryRowArrow {
-  color: #475569;
-  opacity: 0.6;
+.editorialChevron {
+  color: rgba(255, 255, 255, 0.32);
   flex-shrink: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition: transform 0.15s ease, color 0.15s ease;
 }
 
-.tertiaryListRow:hover .tertiaryRowArrow {
-  color: #94A3B8;
-  opacity: 1;
+.editorialItem:hover .editorialChevron {
+  color: rgba(255, 255, 255, 0.7);
+  transform: translateX(2px);
+}
+
+/* Subtle View more link at the bottom of editorial sections */
+.editorialViewMoreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 2px 2px;
+  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  color: #7E8B9B;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.18s ease;
+  width: fit-content;
+}
+
+.editorialViewMoreLink:hover {
+  color: #FFFFFF;
+}
+
+/* Related Specialties Pills */
+.editorialPillsGroup {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.editorialPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+  font-family: var(--font-inter, "Inter", sans-serif);
+  font-size: 11.5px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.editorialPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  transform: translateY(-0.5px);
 }
 
 /* ── Skeleton Loading State Styles ── */
@@ -1973,7 +2959,8 @@
     padding: 16px;
   }
 
-  .doctorsGrid {
+  .doctorsGrid,
+  .refDoctorsGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1991,6 +2978,17 @@
    Compact Transformed Floating Pulse AI Search State (Scroll Morph Transition)
    Transitions continuously into the 3rd action of the floating utility dock.
    ═══════════════════════════════════════════════════════════════════════════════ */
+.squareBoxContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  pointer-events: none;
+}
+
 .compactPulseSearchItem {
   display: flex;
   flex-direction: column;
@@ -2002,18 +3000,34 @@
 }
 
 .floatingPulseIconWrap {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: linear-gradient(149deg, #07152B 0%, #034EA2 100%);
-  border: 1px solid rgba(0, 196, 255, 0.35);
-  box-shadow: 0 0 10px rgba(0, 196, 255, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
+  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.pulseLottieContainer {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pulseLottieContainer > div,
+.pulseLottieContainer svg {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .floatingPulseSearchText {
@@ -2027,89 +3041,1562 @@
   white-space: normal;
 }
 
-
-/* Mobile Morphing FAB Styles */
-.mobileFabContent {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0;
-}
-
-/* Same styles as FloatingQuickActions */
-.fabLink {
-  flex: 1;
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PULSE AI FOCUSED ASSISTANT VIEW (FIGMA REFERENCE)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.pulseViewContainer {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 13px 6px;
-  color: #fff;
-  text-decoration: none;
-  background: transparent;
+  gap: 16px;
   width: 100%;
   box-sizing: border-box;
-  font-size: 11px;
-  text-align: center;
+  border-radius: 18px;
+  position: relative;
+  background: 
+    linear-gradient(115deg, rgba(217, 70, 239, 0.07) 0%, rgba(15, 23, 42, 0.72) 40%, rgba(6, 182, 212, 0.08) 100%) padding-box,
+    linear-gradient(rgba(10, 16, 28, 0.8), rgba(10, 16, 28, 0.8)) padding-box,
+    linear-gradient(115deg, rgba(217, 70, 239, 0.38) 0%, rgba(147, 51, 234, 0.22) 30%, rgba(56, 189, 248, 0.22) 70%, rgba(6, 182, 212, 0.38) 100%) border-box;
+  border: 1px solid transparent;
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.55), 0 0 32px -4px rgba(217, 70, 239, 0.08);
+  padding: 22px 24px;
+}
+
+.pulseTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.pulseHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulseBackBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.pulseBackBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-2px);
+}
+
+.pulseHeaderIconBox {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #EF4444 0%, #A855F7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.pulseHeaderTitle {
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.pulseLiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #22C55E;
+  background: rgba(34, 197, 94, 0.14);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.pulseLiveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 6px #22C55E;
+}
+
+.pulseUserQueryBubble {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  background: #2563EB;
+  border-radius: 12px;
+  padding: 8px 14px;
+  max-width: 340px;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.pulseQueryText {
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12.5px;
   font-weight: 500;
-  line-height: 1.1;
-  transition: opacity 0.15s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-tap-highlight-color: transparent;
+  color: #FFFFFF;
+  line-height: 1.3;
 }
 
-.fabLink:active {
-  transform: scale(0.94);
-  opacity: 0.8;
+.pulseQueryTime {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.65);
 }
 
-.fabLink:active .fabIconWrap {
-  background: rgba(255, 255, 255, 0.25);
+.pulseResponseHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
 }
 
-.fabIconWrap {
-  width: 30px;
-  height: 30px;
+.pulseResponseGlyph {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(244, 63, 94, 0.14);
+  border: 1px solid rgba(244, 63, 94, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.pulseResponseText {
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+}
+
+.pulseThinkingPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  color: #CBD5E1;
+}
+
+.pulseThinkingDots {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.pulseThinkingDots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #F43F5E;
+  animation: pulseDotBounce 1.2s infinite ease-in-out both;
+}
+
+.pulseThinkingDots span:nth-child(1) { animation-delay: -0.32s; }
+.pulseThinkingDots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pulseDotBounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.pulseCardsContainer {
+  width: 100%;
+  min-height: 230px;
+}
+
+.pulseDoctorGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.pulseDoctorCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 14px;
+  background: #0B111E;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 18px -3px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  height: 225px;
+  min-height: 225px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.pulseDoctorCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.6);
+}
+
+.pulseDocImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.pulseDocGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(8, 13, 23, 0.98) 0%,
+    rgba(8, 13, 23, 0.90) 28%,
+    rgba(8, 13, 23, 0.55) 50%,
+    rgba(8, 13, 23, 0.12) 65%,
+    rgba(0, 0, 0, 0) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pulseDocOverlay {
+  position: relative;
+  z-index: 2;
+  padding: 10px 11px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pulseDocName {
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 1.25;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseDocSpecialty {
+  font-size: 11px;
+  font-weight: 500;
+  color: #3B82F6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseDocHospital {
+  font-size: 10.5px;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulseDocExpRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #94A3B8;
+  margin-top: 3px;
+  margin-bottom: 7px;
+}
+
+.pulseDocExpIcon {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.pulseBookBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2563EB;
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5.5px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.pulseBookBtn:hover {
+  background: #1D4ED8;
+  transform: translateY(-1px);
+}
+
+.pulseDocFavBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.18s ease;
+}
+
+.pulseDocFavBtn:hover {
+  background: rgba(0, 0, 0, 0.65);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.08);
+}
+
+.pulseEmptyAnalysisArea {
+  height: 225px;
+  width: 100%;
+}
+
+.pulseLoadingGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.pulseCardSkeleton {
+  height: 225px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: pulseSkeletonShimmer 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseSkeletonShimmer {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+.pulseTestsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.pulseTestCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 225px;
+  box-sizing: border-box;
+}
+
+.pulseTestIcon {
+  color: #38BDF8;
+  margin-bottom: 4px;
+}
+
+.pulseTestTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.pulseTestDesc {
+  font-size: 11px;
+  color: #94A3B8;
+  line-height: 1.35;
+  margin: 0;
+  flex: 1;
+}
+
+.pulseTestBadge {
+  font-size: 10px;
+  font-weight: 600;
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.pulseChipsRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.pulseChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.pulseChip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+.pulseChipActive {
+  background: rgba(217, 70, 239, 0.12);
+  border-color: rgba(217, 70, 239, 0.4);
+  color: #F0ABFC;
+  box-shadow: 0 0 12px rgba(217, 70, 239, 0.2);
+}
+
+.pulseInputBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 6px 10px 6px 14px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pulseInputBar:focus-within {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.pulseInputAttachBtn {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+
+.pulseInputAttachBtn:hover {
+  color: #FFFFFF;
+}
+
+.pulseTextInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.pulseTextInput::placeholder {
+  color: #64748B;
+}
+
+.pulseMicBtn {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+
+.pulseMicBtn:hover,
+.pulseMicBtnActive {
+  color: #38BDF8;
+}
+
+.pulseSendBtn {
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
-  transition: background 0.15s ease;
+  background: #2563EB;
+  border: none;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.fabDivider {
-  height: auto;
-  width: 1px;
-  background-color: rgba(255, 255, 255, 0.12);
-  margin: 12px 0;
+.pulseSendBtn:hover {
+  background: #1D4ED8;
+  transform: scale(1.05);
 }
 
-/* ─── Absorption into the floating bar ───
-   Over the last stretch of its trip the composer sheds its own glass —
-   border, shadow and both pseudo-element layers — so what actually slides
-   into the bar's opening slot is the Pulse tile and its label alone. With
-   the chrome left on, a dark card lands on top of a light bar and the two
-   read as separate objects however well their geometry lines up. */
-.shellAbsorbing {
-  /* The fill and blur live on .searchShell itself, the stroke and glass
-     highlights on .stateLanding and its two pseudo layers — all of it has
-     to go, or a dark plate still lands on the bar. */
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-color: transparent !important;
+/* ═══════════════════════════════════════════════════════════════════════════════
+   WHITE MODE SEARCH EXPERIENCE (FIGMA ACCURATE STYLING)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 2. Active Search Canvas (White Mode) ── */
+.themeWhite.stateActive,
+.themeWhite .stateActive,
+[data-search-theme="white"] .stateActive {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 
+    0 24px 60px -12px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+.themeWhite.stateActive::before,
+.themeWhite.stateActive::after,
+.themeWhite .stateActive::before,
+.themeWhite .stateActive::after,
+[data-search-theme="white"] .stateActive::before,
+[data-search-theme="white"] .stateActive::after {
+  display: none !important;
+}
+
+.themeWhite .activeTextInput,
+[data-search-theme="white"] .activeTextInput {
+  color: #0F172A !important;
+  caret-color: #0B5DF4 !important;
+}
+
+.themeWhite .activeTextInput::placeholder,
+[data-search-theme="white"] .activeTextInput::placeholder {
+  color: #64748B !important;
+}
+
+/* Standalone Icon Buttons (Paperclip attachment & Microphone) */
+.themeWhite .standaloneIconBtn,
+[data-search-theme="white"] .standaloneIconBtn {
+  color: #475569 !important;
+  background: transparent !important;
+}
+
+.themeWhite .standaloneIconBtn:hover,
+[data-search-theme="white"] .standaloneIconBtn:hover {
+  color: #0F172A !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+
+.themeWhite .standaloneIconBtn:focus-visible,
+[data-search-theme="white"] .standaloneIconBtn:focus-visible {
+  color: #0F172A !important;
+  background: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Submit Arrow Button */
+.themeWhite .submitArrowBtn,
+[data-search-theme="white"] .submitArrowBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .submitArrowBtn:hover,
+[data-search-theme="white"] .submitArrowBtn:hover {
+  background: #0446B8 !important;
+  transform: translateY(-1px) scale(1.04) !important;
+}
+
+/* Quick Actions ("Find a doctor", "Describe my symptoms") */
+.themeWhite .inlineActionBtn,
+[data-search-theme="white"] .inlineActionBtn {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+.themeWhite .inlineActionBtn:hover,
+[data-search-theme="white"] .inlineActionBtn:hover {
+  background: rgba(11, 93, 244, 0.08) !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionIcon,
+[data-search-theme="white"] .inlineActionIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .inlineActionBtn:hover .inlineActionIcon,
+[data-search-theme="white"] .inlineActionBtn:hover .inlineActionIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionBtnActive,
+[data-search-theme="white"] .inlineActionBtnActive {
+  background: rgba(11, 93, 244, 0.10) !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .inlineActionBtnActive .inlineActionIcon,
+[data-search-theme="white"] .inlineActionBtnActive .inlineActionIcon {
+  color: #0B5DF4 !important;
+}
+
+/* Location Selector (White Mode) */
+.themeWhite .locationPill,
+[data-search-theme="white"] .locationPill {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border: 1px solid rgba(203, 213, 225, 0.8) !important;
+  color: #1E293B !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.themeWhite .locationPill:hover,
+[data-search-theme="white"] .locationPill:hover {
+  background: #FFFFFF !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+}
+
+.themeWhite .locationPinIcon,
+[data-search-theme="white"] .locationPinIcon {
+  color: #0B5DF4 !important;
+  opacity: 1 !important;
+}
+
+.themeWhite .locationMenu,
+[data-search-theme="white"] .locationMenu {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .locationMenuItem,
+[data-search-theme="white"] .locationMenuItem {
+  color: #1E293B !important;
+}
+
+.themeWhite .locationMenuItem:hover,
+[data-search-theme="white"] .locationMenuItem:hover {
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .locationMenuItemSelected,
+[data-search-theme="white"] .locationMenuItemSelected {
+  background: #EFF6FF !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationCurrentAction,
+[data-search-theme="white"] .locationCurrentAction {
+  color: #0B5DF4 !important;
+  background: #EFF6FF !important;
+  border: 1px solid #BFDBFE !important;
+}
+
+.themeWhite .locationCurrentAction:hover,
+[data-search-theme="white"] .locationCurrentAction:hover {
+  background: #DBEAFE !important;
+}
+
+.themeWhite .locationNavIcon,
+[data-search-theme="white"] .locationNavIcon {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationDetectingSpinner,
+[data-search-theme="white"] .locationDetectingSpinner {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .locationSearchWrapper,
+[data-search-theme="white"] .locationSearchWrapper {
+  background: #F1F5F9 !important;
+  border: 1px solid #CBD5E1 !important;
+}
+
+.themeWhite .locationSearchWrapper:focus-within,
+[data-search-theme="white"] .locationSearchWrapper:focus-within {
+  border-color: #3B82F6 !important;
+  background: #FFFFFF !important;
+}
+
+.themeWhite .locationSearchInput,
+[data-search-theme="white"] .locationSearchInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .locationSearchInput::placeholder,
+[data-search-theme="white"] .locationSearchInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .locationSearchIcon,
+[data-search-theme="white"] .locationSearchIcon {
+  color: #64748B !important;
+}
+
+.themeWhite .locationMenuHeader,
+[data-search-theme="white"] .locationMenuHeader {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .locationDivider,
+[data-search-theme="white"] .locationDivider {
+  background: #E2E8F0 !important;
+}
+
+.themeWhite .locationScrollList::-webkit-scrollbar-thumb,
+[data-search-theme="white"] .locationScrollList::-webkit-scrollbar-thumb {
+  background: #CBD5E1 !important;
+}
+
+.themeWhite .ghostSuffix,
+[data-search-theme="white"] .ghostSuffix {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .tabBadge,
+[data-search-theme="white"] .tabBadge {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.themeWhite .closeBtn,
+[data-search-theme="white"] .closeBtn {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #475569 !important;
+}
+
+.themeWhite .closeBtn:hover,
+[data-search-theme="white"] .closeBtn:hover {
+  background: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .emptyPromptSub,
+[data-search-theme="white"] .emptyPromptSub {
+  color: #64748B !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+/* Guard: ensure hero landing prompt always retains its dark mode look */
+.stateLanding .standaloneIconBtn,
+.themeWhite .stateLanding .standaloneIconBtn,
+[data-search-theme="white"] .stateLanding .standaloneIconBtn {
+  color: rgba(255, 255, 255, 0.6) !important;
+  background: transparent !important;
+}
+
+.stateLanding .standaloneIconBtn:hover,
+.themeWhite .stateLanding .standaloneIconBtn:hover,
+[data-search-theme="white"] .stateLanding .standaloneIconBtn:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.stateLanding .locationPill,
+.themeWhite .stateLanding .locationPill,
+[data-search-theme="white"] .stateLanding .locationPill {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.stateLanding .locationPinIcon,
+.themeWhite .stateLanding .locationPinIcon,
+[data-search-theme="white"] .stateLanding .locationPinIcon {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .suggestionsHeader,
+[data-search-theme="white"] .suggestionsHeader {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .suggestionItem,
+[data-search-theme="white"] .suggestionItem {
+  color: #1E293B !important;
+}
+
+.themeWhite .suggestionItem:hover,
+.themeWhite .suggestionItemActive,
+[data-search-theme="white"] .suggestionItem:hover,
+[data-search-theme="white"] .suggestionItemActive {
+  background: #F8FAFC !important;
+}
+
+.themeWhite .suggestionArrow,
+[data-search-theme="white"] .suggestionArrow {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .suggestionText,
+[data-search-theme="white"] .suggestionText {
+  color: #1E293B !important;
+}
+
+.themeWhite .pressEnterHint,
+[data-search-theme="white"] .pressEnterHint {
+  color: #94A3B8 !important;
+  background: #F1F5F9 !important;
+}
+
+.themeWhite .pulseStatusRow,
+[data-search-theme="white"] .pulseStatusRow {
+  color: #64748B !important;
+}
+
+.themeWhite .sparkleIcon,
+[data-search-theme="white"] .sparkleIcon {
+  color: #EC4899 !important;
+}
+
+/* ── 3. Search Results Canvas (White Mode) ── */
+.themeWhite.stateResults,
+.themeWhite .stateResults,
+[data-search-theme="white"] .stateResults {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.14) !important;
+}
+
+.themeWhite.stateResults::before,
+.themeWhite.stateResults::after,
+.themeWhite .stateResults::before,
+.themeWhite .stateResults::after,
+[data-search-theme="white"] .stateResults::before,
+[data-search-theme="white"] .stateResults::after {
+  display: none !important;
+}
+
+.themeWhite .resultsQueryBar,
+[data-search-theme="white"] .resultsQueryBar {
+  background: transparent !important;
+  border: none !important;
   box-shadow: none !important;
-  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  padding: 0 !important;
 }
 
-.shellAbsorbing::before,
-.shellAbsorbing::after {
-  opacity: 0;
-  transition: opacity 0.25s ease;
+.themeWhite .resultsQuerySearchIcon,
+[data-search-theme="white"] .resultsQuerySearchIcon {
+  color: #3B82F6 !important;
 }
+
+.themeWhite .resultsQueryInput,
+[data-search-theme="white"] .resultsQueryInput {
+  color: #0F172A !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-weight: 500 !important;
+  caret-color: #0B5DF4 !important;
+}
+
+.themeWhite .resultsQueryInput::placeholder,
+[data-search-theme="white"] .resultsQueryInput::placeholder {
+  color: #64748B !important;
+}
+
+.themeWhite .querySendBtn,
+[data-search-theme="white"] .querySendBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .sectionEyebrowTitle,
+[data-search-theme="white"] .sectionEyebrowTitle {
+  color: #475569 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.07em !important;
+}
+
+.themeWhite .primaryProximityNotice,
+[data-search-theme="white"] .primaryProximityNotice {
+  color: #64748B !important;
+}
+
+.themeWhite .redDivider,
+[data-search-theme="white"] .redDivider {
+  background: #3B82F6 !important;
+  box-shadow: none !important;
+  height: 2px !important;
+  margin: 8px 0 20px !important;
+  opacity: 1 !important;
+}
+
+.themeWhite .refDoctorCard,
+[data-search-theme="white"] .refDoctorCard {
+  background: #0B111E !important;
+  border-radius: 8px !important;
+  border: none !important;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .refDoctorCard:hover,
+[data-search-theme="white"] .refDoctorCard:hover {
+  border: none !important;
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.20) !important;
+}
+
+.themeWhite .refDocName,
+[data-search-theme="white"] .refDocName {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .refDocSpecialty,
+[data-search-theme="white"] .refDocSpecialty {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .refDocExpRow,
+[data-search-theme="white"] .refDocExpRow {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.themeWhite .refDocHospital,
+[data-search-theme="white"] .refDocHospital {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.themeWhite .refBookBtnWhite,
+[data-search-theme="white"] .refBookBtnWhite {
+  background: #FFFFFF !important;
+  color: #0B5DF4 !important;
+  border-radius: 8px !important;
+}
+
+.themeWhite .refBookBtnWhite:hover,
+[data-search-theme="white"] .refBookBtnWhite:hover {
+  background: #F3F7FC !important;
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .refBookBtn,
+[data-search-theme="white"] .refBookBtn {
+  background: #1D68FE !important;
+  color: #FFFFFF !important;
+  border-radius: 10px !important;
+}
+
+.themeWhite .refBookBtn:hover,
+[data-search-theme="white"] .refBookBtn:hover {
+  background: #1557E0 !important;
+}
+
+.themeWhite .refViewAllLink,
+[data-search-theme="white"] .refViewAllLink {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .refViewAllLink:hover,
+[data-search-theme="white"] .refViewAllLink:hover {
+  color: #0446B8 !important;
+}
+
+/* Results Pulse Recommendation Row (White Mode - Full width bottom matching Figma) */
+.themeWhite .refPulseRow,
+[data-search-theme="white"] .refPulseRow {
+  background: linear-gradient(90deg, rgba(254, 242, 244, 0.85) 0%, rgba(240, 249, 255, 0.90) 100%) !important;
+  border: 1px solid rgba(226, 232, 240, 0.85) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04) !important;
+  margin-top: 20px !important;
+  width: 100% !important;
+}
+
+.themeWhite .refPulseRow:hover,
+[data-search-theme="white"] .refPulseRow:hover {
+  background: linear-gradient(90deg, rgba(254, 242, 244, 0.95) 0%, rgba(240, 249, 255, 0.98) 100%) !important;
+  border-color: rgba(203, 213, 225, 1) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06) !important;
+}
+
+.themeWhite .refPulseIconBox,
+[data-search-theme="white"] .refPulseIconBox {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(254, 205, 211, 0.7) !important;
+  color: #E11D48 !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.15) !important;
+}
+
+.themeWhite .refPulseTitle,
+[data-search-theme="white"] .refPulseTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .refPulseBadge,
+[data-search-theme="white"] .refPulseBadge {
+  background: rgba(225, 29, 72, 0.12) !important;
+  color: #E11D48 !important;
+  border: 1px solid rgba(225, 29, 72, 0.25) !important;
+}
+
+.themeWhite .refPulseSubtext,
+[data-search-theme="white"] .refPulseSubtext {
+  color: #64748B !important;
+}
+
+.themeWhite .refPulseBtn,
+[data-search-theme="white"] .refPulseBtn {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  color: #0F172A !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.themeWhite .refPulseBtn:hover,
+[data-search-theme="white"] .refPulseBtn:hover {
+  background: #F8FAFC !important;
+  border-color: #94A3B8 !important;
+  color: #0F172A !important;
+}
+
+/* Right column Editorial / Tertiary items (White Mode - Clean unboxed without row/section lines) */
+.themeWhite .editorialItem,
+[data-search-theme="white"] .editorialItem {
+  border-bottom: none !important;
+}
+
+.themeWhite .editorialItem:hover,
+[data-search-theme="white"] .editorialItem:hover {
+  background: #F8FAFC !important;
+}
+
+.themeWhite .editorialIconMono,
+[data-search-theme="white"] .editorialIconMono {
+  color: #64748B !important;
+}
+
+.themeWhite .editorialItem:hover .editorialIconMono,
+[data-search-theme="white"] .editorialItem:hover .editorialIconMono {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .editorialItemTitle,
+[data-search-theme="white"] .editorialItemTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .editorialItemSub,
+[data-search-theme="white"] .editorialItemSub {
+  color: #64748B !important;
+}
+
+.themeWhite .editorialChevron,
+[data-search-theme="white"] .editorialChevron {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .editorialItem:hover .editorialChevron,
+[data-search-theme="white"] .editorialItem:hover .editorialChevron {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .editorialViewMoreLink,
+[data-search-theme="white"] .editorialViewMoreLink {
+  color: #64748B !important;
+}
+
+.themeWhite .editorialViewMoreLink:hover,
+[data-search-theme="white"] .editorialViewMoreLink:hover {
+  color: #0F172A !important;
+}
+
+.themeWhite .editorialPill,
+[data-search-theme="white"] .editorialPill {
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+.themeWhite .editorialPill:hover,
+[data-search-theme="white"] .editorialPill:hover {
+  background: #EFF6FF !important;
+  border-color: #93C5FD !important;
+  color: #0B5DF4 !important;
+}
+
+/* ── 4. Pulse AI View (Screenshot 1 Match in White Mode) ── */
+.themeWhite.statePulse,
+.themeWhite .statePulse,
+[data-search-theme="white"] .statePulse {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.themeWhite .pulseViewContainer,
+[data-search-theme="white"] .pulseViewContainer {
+  background: linear-gradient(135deg, rgba(255, 241, 242, 0.70) 0%, rgba(240, 249, 255, 0.75) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(24px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.08), 0 0 32px -4px rgba(244, 63, 94, 0.05) !important;
+}
+
+.themeWhite .pulseBackBtn,
+[data-search-theme="white"] .pulseBackBtn {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseBackBtn:hover,
+[data-search-theme="white"] .pulseBackBtn:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+.themeWhite .pulseHeaderIconBox,
+[data-search-theme="white"] .pulseHeaderIconBox {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(254, 205, 211, 0.6) !important;
+  color: #E11D48 !important;
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.16) !important;
+}
+
+.themeWhite .pulseHeaderTitle,
+[data-search-theme="white"] .pulseHeaderTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseLiveBadge,
+[data-search-theme="white"] .pulseLiveBadge {
+  background: rgba(34, 197, 94, 0.12) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  color: #15803D !important;
+}
+
+.themeWhite .pulseLiveDot,
+[data-search-theme="white"] .pulseLiveDot {
+  background: #16A34A !important;
+  box-shadow: 0 0 6px #16A34A !important;
+}
+
+.themeWhite .pulseUserQueryBubble,
+[data-search-theme="white"] .pulseUserQueryBubble {
+  background: #0047AB !important;
+  box-shadow: 0 4px 14px rgba(0, 71, 171, 0.28) !important;
+}
+
+.themeWhite .pulseQueryText,
+[data-search-theme="white"] .pulseQueryText {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseQueryTime,
+[data-search-theme="white"] .pulseQueryTime {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseResponseGlyph,
+[data-search-theme="white"] .pulseResponseGlyph {
+  background: rgba(244, 63, 94, 0.10) !important;
+  border: 1px solid rgba(244, 63, 94, 0.25) !important;
+}
+
+.themeWhite .pulseResponseText,
+[data-search-theme="white"] .pulseResponseText {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseThinkingPill,
+[data-search-theme="white"] .pulseThinkingPill {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #475569 !important;
+}
+
+.themeWhite .pulseDoctorCard,
+[data-search-theme="white"] .pulseDoctorCard {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
+}
+
+.themeWhite .pulseDoctorCard:hover,
+[data-search-theme="white"] .pulseDoctorCard:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.themeWhite .pulseDocGradient,
+[data-search-theme="white"] .pulseDocGradient {
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(15, 23, 42, 0.85) 30%,
+    rgba(15, 23, 42, 0.45) 55%,
+    rgba(15, 23, 42, 0.1) 75%,
+    transparent 100%
+  ) !important;
+}
+
+.themeWhite .pulseDocName,
+[data-search-theme="white"] .pulseDocName {
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseDocSpecialty,
+[data-search-theme="white"] .pulseDocSpecialty {
+  color: #38BDF8 !important;
+}
+
+.themeWhite .pulseDocHospital,
+[data-search-theme="white"] .pulseDocHospital {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.themeWhite .pulseDocExpRow,
+[data-search-theme="white"] .pulseDocExpRow {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseDocExpIcon,
+[data-search-theme="white"] .pulseDocExpIcon {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.themeWhite .pulseBookBtn,
+[data-search-theme="white"] .pulseBookBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+}
+
+.themeWhite .pulseBookBtn:hover,
+[data-search-theme="white"] .pulseBookBtn:hover {
+  background: #0446B8 !important;
+}
+
+.themeWhite .pulseChip,
+[data-search-theme="white"] .pulseChip {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #334155 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+.themeWhite .pulseChip:hover,
+[data-search-theme="white"] .pulseChip:hover {
+  background: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseChipActive,
+[data-search-theme="white"] .pulseChipActive {
+  background: #EFF6FF !important;
+  border-color: #3B82F6 !important;
+  color: #1D4ED8 !important;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+.themeWhite .pulseInputBar,
+[data-search-theme="white"] .pulseInputBar {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseInputBar:focus-within,
+[data-search-theme="white"] .pulseInputBar:focus-within {
+  border-color: #93C5FD !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.themeWhite .pulseInputAttachBtn,
+[data-search-theme="white"] .pulseInputAttachBtn {
+  color: #64748B !important;
+}
+
+.themeWhite .pulseInputAttachBtn:hover,
+[data-search-theme="white"] .pulseInputAttachBtn:hover {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTextInput,
+[data-search-theme="white"] .pulseTextInput {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTextInput::placeholder,
+[data-search-theme="white"] .pulseTextInput::placeholder {
+  color: #94A3B8 !important;
+}
+
+.themeWhite .pulseMicBtn,
+[data-search-theme="white"] .pulseMicBtn {
+  color: #64748B !important;
+}
+
+.themeWhite .pulseMicBtn:hover,
+[data-search-theme="white"] .pulseMicBtn:hover {
+  color: #0B5DF4 !important;
+}
+
+.themeWhite .pulseSendBtn,
+[data-search-theme="white"] .pulseSendBtn {
+  background: #0B5DF4 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(11, 93, 244, 0.3) !important;
+}
+
+.themeWhite .pulseSendBtn:hover,
+[data-search-theme="white"] .pulseSendBtn:hover {
+  background: #0446B8 !important;
+}
+
+/* Diagnostic test cards in White Mode */
+.themeWhite .pulseTestCard,
+[data-search-theme="white"] .pulseTestCard {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.themeWhite .pulseTestTitle,
+[data-search-theme="white"] .pulseTestTitle {
+  color: #0F172A !important;
+}
+
+.themeWhite .pulseTestDesc,
+[data-search-theme="white"] .pulseTestDesc {
+  color: #64748B !important;
+}
+
+/* ── Soft Feathered Random Diffused Motion Glow Behind Popup Card ── */
+.modalWithAmbientWrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.cardFeatheredGlowWrap {
+  position: absolute;
+  inset: -45px -55px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.featherWhite {
+  opacity: 0.55;
+  mix-blend-mode: normal;
+}
+
+.featherDark {
+  opacity: 0.65;
+  mix-blend-mode: screen;
+}
+
+/* Central soft diffuse gradient wash directly behind card */
+.featherMeshWash {
+  position: absolute;
+  inset: 0;
+  border-radius: 40px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(139, 92, 246, 0.45) 0%,
+    rgba(6, 182, 212, 0.40) 35%,
+    rgba(236, 72, 153, 0.35) 60%,
+    transparent 80%
+  );
+  filter: blur(50px);
+  -webkit-filter: blur(50px);
+  animation: featherWashBreath 8s ease-in-out infinite alternate;
+}
+
+/* Base diffused light lobe: high blur, soft falloff, zero sharp edges */
+.featherLobe {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  -webkit-filter: blur(55px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+/* Lobe 1: Electric Cyan (Top Left & Top Edge random drift) */
+.featherLobeCyan {
+  width: 320px;
+  height: 240px;
+  top: -30px;
+  left: 5%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.85) 0%, rgba(56, 189, 248, 0.40) 45%, transparent 75%);
+  animation: featherFloatCyan 6s ease-in-out infinite alternate;
+}
+
+/* Lobe 2: Pulse Violet / Purple (Top Right & Right Edge random drift) */
+.featherLobePurple {
+  width: 340px;
+  height: 260px;
+  top: -25px;
+  right: 5%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.90) 0%, rgba(168, 85, 247, 0.45) 45%, transparent 75%);
+  animation: featherFloatPurple 7s ease-in-out infinite alternate;
+}
+
+/* Lobe 3: NH Blue / Royal Azure (Bottom Right & Bottom Edge random drift) */
+.featherLobeBlue {
+  width: 340px;
+  height: 250px;
+  bottom: -30px;
+  right: 8%;
+  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(3, 78, 162, 0.40) 45%, transparent 75%);
+  animation: featherFloatBlue 6.5s ease-in-out infinite alternate;
+}
+
+/* Lobe 4: Pulse Pink / Coral (Bottom Left & Left Edge random drift) */
+.featherLobePink {
+  width: 300px;
+  height: 240px;
+  bottom: -25px;
+  left: 8%;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(237, 28, 36, 0.38) 45%, transparent 75%);
+  animation: featherFloatPink 7.5s ease-in-out infinite alternate;
+}
+
+/* Random Organic Floating Motion Keyframes */
+@keyframes featherWashBreath {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+@keyframes featherFloatCyan {
+  0% {
+    transform: translate(0px, 0px) scale(0.95);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(70px, 20px) scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-30px, 40px) scale(0.92);
+    opacity: 0.8;
+  }
+}
+
+@keyframes featherFloatPurple {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-65px, 25px) scale(0.90);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(35px, -20px) scale(1.15);
+    opacity: 0.85;
+  }
+}
+
+@keyframes featherFloatBlue {
+  0% {
+    transform: translate(0px, 0px) scale(0.92);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(-50px, -30px) scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(40px, -40px) scale(0.95);
+    opacity: 0.75;
+  }
+}
+
+@keyframes featherFloatPink {
+  0% {
+    transform: translate(0px, 0px) scale(1.12);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(50px, -25px) scale(0.92);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-35px, 25px) scale(1.18);
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featherLobe,
+  .featherMeshWash {
+    animation: none !important;
+  }
+}
+
+

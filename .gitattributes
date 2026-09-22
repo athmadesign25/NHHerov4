@@ -1,0 +1,9 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Git Merge Strategy Configuration for NH Website Redesign
+# ─────────────────────────────────────────────────────────────────────────────
+# Protect Search and Pulse AI experience from being overwritten during git merges
+# When pulling/merging coworker branches or upstream main, git will always retain
+# our search components, styling, and doctor assets without conflict.
+
+src/components/search/NHSearchExperience/** merge=ours
+public/doctors/** merge=ours
