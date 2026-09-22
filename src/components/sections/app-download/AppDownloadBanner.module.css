@@ -405,10 +405,13 @@
 /* App Store + Google Play badges stacked vertically beside the QR block,
    rather than below the whole storesCol — reads as one compact unit next
    to "Scan to install" instead of a tall single-file column. */
+/* Stretch, not centre: the two badges divide the stack's own height, which
+   is the QR card's, so the column reads as two equal-height elements
+   rather than a tall card beside a pair of small pills. */
 .storeBadgeStack {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: stretch;
   gap: 12px;
 }
 
@@ -435,15 +438,28 @@
   display: block;
 }
 
+/* The artwork is ~3:1, so it cannot simply be scaled to half the QR card's
+   height without becoming far wider than the card. It is boxed instead, on
+   the same glass the card uses, with the badge centred inside. */
 .storeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
+  flex: 1;
+  width: 140px;
+  box-sizing: border-box;
+  padding: 0 10px;
   opacity: 0.8;
+  background:
+    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 23%) 100%),
+    rgb(255 255 255 / 40%);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border: 1px solid rgba(252, 80, 83, 0.12);
   transition: transform 0.2s ease, opacity 0.2s ease;
   overflow: hidden;
-  border-radius: 12px;}
+  border-radius: 10px;
+}
 
 /* Store badge framing from main (PR #13) — mweb only, per the desktop
    column keeping its own sizing and opacity. */
