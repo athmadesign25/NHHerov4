@@ -618,7 +618,7 @@ export default function Navbar() {
                 height={35} 
                 className={styles.mobileLogoImg}
                 style={{ 
-                  opacity: (!isMobileMenuOpen && isOverLightBackground) ? 1 : 0, 
+                  opacity: (!isMobileMenuOpen && (!scrolled || isOverLightBackground)) ? 1 : 0, 
                   transition: "opacity 0.4s ease" 
                 }} 
                 priority 
@@ -630,7 +630,7 @@ export default function Navbar() {
                 height={35} 
                 className={styles.mobileLogoImg}
                 style={{ 
-                  opacity: (isMobileMenuOpen || !isOverLightBackground) ? 1 : 0, 
+                  opacity: (isMobileMenuOpen || (scrolled && !isOverLightBackground)) ? 1 : 0, 
                   transition: "opacity 0.4s ease" 
                 }} 
                 priority 

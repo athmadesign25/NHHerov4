@@ -52,14 +52,6 @@ const features: Feature[] = [
   },
 ];
 
-const POP_OVER_CARDS = [
-  { img: "/App Screens/Pop over cards/Body analysis.png", text: "Get Digital twin health analysis" },
-  { img: "/App Screens/Pop over cards/Dr Card.png", text: "Book appointments in 60 seconds" },
-  { img: "/App Screens/Pop over cards/Trend Card.png", text: "Access your health records anytime" },
-  { img: "/App Screens/Pop over cards/Video block.png", text: "Video consultations from home" },
-  { img: "/App Screens/Pop over cards/Recommend.png", text: "Track vitals and wellness reports" },
-];
-
 // Digital twin is now just a plain feature image like the other four (a
 // complete phone mockup at the same 726x1200 native size as the rest —
 // see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
@@ -417,29 +409,6 @@ export default function AppDownloadBanner() {
               </motion.span>
             </h2>
 
-            {/* MOBILE ONLY: Trust Stack rendering natively under the title */}
-            <div className={styles.mobileTrustStack}>
-              {TRUST_STACK.map((item, i) => (
-                <motion.div 
-                  key={i} 
-                  className={styles.mobileTrustItem}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-                >
-                  <span className={styles.mobileTrustIconBox}>
-                    <item.Icon />
-                  </span>
-                  <div className={styles.mobileTrustLabel}>
-                    <strong>{item.label}</strong>
-                    <br />
-                    {item.subtext}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
             {/* Feature pill: held back through the whole entrance (the phone
                 is still travelling through the space it occupies) and faded
                 in only once the phone has finished settling into place. */}
@@ -539,11 +508,15 @@ export default function AppDownloadBanner() {
               style={{
                 position: "relative",
                 rotate: handRotation,
-                y: isDesktopFX ? handY : 0,
+                y: handY,
                 // The phone itself sits ~86px right-of-center within the
-                // hand image's own frame on desktop. On mobile, optical centering
-                // is handled cleanly by the CSS .phoneWrapper rule.
-                x: isDesktopFX ? -86 : 0,
+                // hand image's own frame (the hand is centered, but the
+                // phone it's holding isn't) — shift the whole unit left by
+                // that same amount so the phone (not the image canvas)
+                // lands centered on the page. Applied here, alongside the
+                // existing rotate/y motion values, so it rides through
+                // every scroll-driven entrance/exit transform unchanged.
+                x: -86,
                 pointerEvents: "none",
               }}
             >
@@ -618,7 +591,7 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].text}
+                  {activeFeature.title}
                 </motion.div>
               </AnimatePresence>
             </div>

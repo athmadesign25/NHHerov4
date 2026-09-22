@@ -45,7 +45,7 @@ export default function Footer() {
                     Bengaluru, India
                   </div>
                 </div>
-                <div style={{ marginTop: "1rem", display: "flex", gap: "10px" }}>
+                <div className={styles.socials} style={{ marginTop: "1rem", display: "flex", gap: "10px" }}>
                   <a href="https://facebook.com/narayanahealth" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ width: 36, height: 36, borderRadius: "50%", border: "1px solid rgba(255, 255, 255, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255, 255, 255, 0.8)", transition: "0.2s", backgroundColor: "transparent" }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
                       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>

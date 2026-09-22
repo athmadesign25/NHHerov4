@@ -553,8 +553,9 @@
     right: 20px;
   }
   .muteBtn {
-    bottom: 74px; /* Lower slightly on mobile since button is smaller */
+    top: 16px;
     right: 16px;
+    bottom: auto;
     width: 34px;
     height: 34px;
   }

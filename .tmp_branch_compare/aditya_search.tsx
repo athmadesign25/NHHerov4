@@ -106,53 +106,15 @@ export default function NHSearchExperience({
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
 
-  const [pulseTarget, setPulseTarget] = useState<{
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-  } | null>(null);
-
-  useEffect(() => {
-    const handleUpdatePulsePos = () => {
-      const el = document.getElementById("pulse-ai-dock-target");
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      if (rect.height > 0) {
-        setPulseTarget({
-          top: Math.round(rect.top),
-          left: Math.round(rect.left),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-        });
-      }
-    };
-    handleUpdatePulsePos();
-    window.addEventListener("scroll", handleUpdatePulsePos, { passive: true });
-    window.addEventListener("resize", handleUpdatePulsePos, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleUpdatePulsePos);
-      window.removeEventListener("resize", handleUpdatePulsePos);
-    };
-  }, []);
-
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
   const defaultProgress = useMotionValue(0);
   const baseProgress = scrollProgress || defaultProgress;
 
-  const REVERSE_CUT = 0.45;
-  const reversingRef = React.useRef(false);
-  const lastBaseProgressRef = React.useRef(0);
-
-  const positionProgress = useTransform(baseProgress, (v) =>
-    reversingRef.current ? (v > REVERSE_CUT ? 1 : 0) : v
-  );
-
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
   // This makes the transition to FAB feel much cleaner and more responsive to a single swipe
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
-  const activeProgress = isMobile ? fastMobileProgress : positionProgress;
+  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
 
   // Starting dimensions (Hero anchor)
   const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
@@ -176,18 +138,13 @@ export default function NHSearchExperience({
   // It NEVER moves up or down — pure horizontal motion straight to the right!
   const targetButton3Top = isMobile 
     ? Math.round(winSize.h - 36 - compactHeight) 
-    : pulseTarget?.top ?? squareTopInPlace;
+    : squareTopInPlace;
 
   // Horizontal position of 3rd button in side panel (right 24px, width 100px):
   // left = winW - 24 - 100 = winW - 124px
   const targetButton3Left = isMobile
     ? Math.round(winSize.w - 16 - compactWidth)
-    : pulseTarget?.left ?? (winSize.w - 124);
-
-  // The composer finishes at the slot's own size on desktop
-  const targetWidth = isMobile ? compactWidth : pulseTarget?.width ?? compactWidth;
-  const targetHeight = isMobile ? compactHeight : pulseTarget?.height ?? compactHeight;
-  const targetRadius = isMobile || !pulseTarget ? compactRadius : 14;
+    : (winSize.w - 124);
 
   // Broadcast fab-target-top so FloatingQuickActions places Button 3 at exact squareTopInPlace
   useEffect(() => {
@@ -200,13 +157,6 @@ export default function NHSearchExperience({
   }, [squareTopInPlace]);
 
   const [isMorphing, setIsMorphing] = useState(false);
-
-  useMotionValueEvent(baseProgress, "change", (latest) => {
-    const delta = latest - lastBaseProgressRef.current;
-    if (delta < -0.0008) reversingRef.current = true;
-    else if (delta > 0.0008) reversingRef.current = false;
-    lastBaseProgressRef.current = latest;
-  });
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
@@ -234,17 +184,17 @@ export default function NHSearchExperience({
 
   const targetWidthRange = isMobile
     ? [startWidth, startWidth + (compactWidth - startWidth) * 0.15, startWidth + (compactWidth - startWidth) * 0.63, compactWidth]
-    : [startWidth, compactWidth, compactWidth, targetWidth];
+    : [startWidth, compactWidth, compactWidth, compactWidth];
   const composerWidth = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetWidthRange);
 
   const targetHeightRange = isMobile
     ? [startHeight, startHeight + (compactHeight - startHeight) * 0.15, startHeight + (compactHeight - startHeight) * 0.63, compactHeight]
-    : [startHeight, compactHeight, compactHeight, targetHeight];
+    : [startHeight, compactHeight, compactHeight, compactHeight];
   const composerHeight = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetHeightRange);
 
   const targetRadiusRange = isMobile
     ? [20, 20 + (compactRadius - 20) * 0.15, 20 + (compactRadius - 20) * 0.63, compactRadius]
-    : [20, compactRadius, compactRadius, targetRadius];
+    : [20, compactRadius, compactRadius, compactRadius];
   const composerRadius = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetRadiusRange);
 
   const targetPaddingXRange = isMobile
@@ -608,7 +558,7 @@ export default function NHSearchExperience({
               width: "100%",
               height: "100%",
               pointerEvents: searchState === "landing" ? "none" : "auto",
-              zIndex: 99999,
+              zIndex: 9990,
             }
           : undefined
       }
@@ -646,8 +596,8 @@ export default function NHSearchExperience({
                 marginBottom: 0,
                 marginLeft: 0,
                 boxSizing: "border-box",
-                zIndex: 99999,
-                pointerEvents: (isDocked && !isMobile) ? "none" : "auto",
+                zIndex: 9990,
+                pointerEvents: isDocked ? "none" : "auto",
                 overflow: composerOverflow,
                 cursor: "pointer",
                 background: "transparent",

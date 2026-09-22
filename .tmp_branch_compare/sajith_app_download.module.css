@@ -578,10 +578,6 @@
   display: none !important;
 }
 
-.mobileTrustStack {
-  display: none;
-}
-
 @media (max-width: 1024px) {
   .desktopOnly {
     display: none !important;
@@ -606,71 +602,7 @@
     gap: 80px; /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
-
-  .mobileTrustStack {
-    display: flex;
-    flex-direction: row !important;
-    gap: 8px;
-    margin-top: 32px;
-    /* Matched to Health Packages */
-    align-items: flex-start;
-    justify-content: space-between;
-    /* Matched to Health Packages */
-    width: 100%;
-    padding: 0;
-    /* Remove padding to maximize space between */
-  }
-
-  .mobileTrustItem {
-    display: flex;
-    flex-direction: column !important;
-    align-items: center;
-    gap: 8px;
-    /* Matched to Health Packages */
-    background: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    padding: 0 !important;
-    border-radius: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    flex: 1;
-    white-space: normal;
-    text-align: center;
-  }
-
-  /* Exact match of HealthPackages .uspIconBox */
-  .mobileTrustIconBox {
-    display: flex;
-    width: 34px;
-    height: 34px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 9.067px;
-    background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
-    box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-  }
-
-  /* Exact match of HealthPackages .uspLabel layout, with dark color for light bg */
-  .mobileTrustLabel {
-    font-size: 12px;
-    line-height: 1.35;
-    text-align: center;
-    font-weight: 500;
-    color: #475569;
-    /* Soft slate for the subtext */
-    white-space: normal;
-  }
-
-  .mobileTrustLabel strong {
-    font-weight: 700;
-    color: #0f172a;
-    /* Dark bold for the top line */
-  }
-
+  
   .title {
     white-space: normal;
     font-size: 36px;
@@ -683,16 +615,12 @@
     gap: 32px; /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
   }
 
   /* Reset phone wrapper constraints */
   .handImage, .handOverlayImage {
     width: 100%;
     max-width: 700px;
-    display: block;
-    vertical-align: bottom;
   }
 
   .phoneMaskWrapper {
@@ -704,15 +632,12 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
   }
 
   .phoneWrapper {
     order: unset; 
     margin: 0 !important; 
-    margin-bottom: -56px !important; /* Pull hand chunk down flush to the bottom of the section */
-    left: -12.4% !important; /* Shift left by 12.4% to optically center the phone screen in hand */
+    left: -14%; /* Shift left to optically center the phone screen itself */
     transform: scale(1.2);
     transform-origin: bottom center;
   }
@@ -736,53 +661,49 @@
     margin-bottom: -24px; /* Slight overlap over the phone */
   }
 
-  /* Move store badge stack to bottom right of app download section with 80% opacity */
+  /* Solid Dark Block Below the Image */
   .storesColPosition {
     order: 3; 
-    position: absolute !important;
-    bottom: 24px !important;
-    right: 16px !important;
+    position: relative;
     top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: auto !important;
-    margin: 0 !important;
-    background: transparent !important;
-    padding: 0 !important;
-    z-index: 25 !important;
-    display: flex !important;
-    justify-content: flex-end !important;
+    bottom: auto !important;
+    left: auto;
+    right: auto;
+    transform: none;
+    
+    /* Full-bleed out of the padding */
+    width: calc(100% + 32px);
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    
+    /* Pull up further to swallow the 32px flex gap PLUS the scaled-up invisible cropped area */
+    margin-top: -54px !important;
+    margin-bottom: 0 !important;
+    
+    /* Solid Dark Background (Matches exact footer top color) */
+    background: #061120; 
+    padding: 32px 16px 40px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
   }
   
+  /* Pure Flex Row for the Buttons */
   .storesCol {
-    width: auto !important;
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 8px !important;
-  }
-
-  .storeBadgeStack {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 8px !important;
-    width: 120px !important;
-    opacity: 0.8 !important;
-  }
-  
-  .storeBadge {
-    width: 100% !important;
-    opacity: 1 !important;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
   }
   
   .storeBadge img {
-    height: 36px !important; 
-    width: auto !important;
+    height: 40px; 
+    width: auto;
   }
 }
 

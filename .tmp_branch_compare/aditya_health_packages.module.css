@@ -939,14 +939,14 @@
     align-items: flex-start;
   }
 
-  /* "Most booked in Bangalore" — center-aligned on screen */
+  /* "Most booked in Bangalore" — sentence case, left-aligned.
+     JS applyAutoReveal drives opacity/filter for blur-in entrance. */
   .railLabel {
-    align-self: center !important;
-    text-align: center !important;
-    width: 100%;
+    align-self: flex-start;
+    text-align: left;
     font-size: 14px;
     font-weight: 600;
-    margin: 0 auto 14px auto;
+    margin: 0 0 14px;
     color: rgba(255, 255, 255, 0.80);
     letter-spacing: 0.01em;
   }
@@ -969,16 +969,23 @@
     overflow: visible;
   }
 
+  /* ── Package card: the image fix ──────────────────────────────────────
+     Root cause of invisible image: `.packageCard` has
+     `background: rgb(255 250 244 / 78%)` covering the entire card, and
+     the image is `position: absolute` at z-index 0 — it IS rendered above
+     the background paint, but the background is opaque enough to visually
+     overpower it. Fix: replace the full-bleed white background with a
+     left-to-right gradient that fades to transparent at 58% — the left
+     text zone gets the frosted-glass surface, the right image zone is
+     fully clear so the artwork shows unobstructed.
+     ─────────────────────────────────────────────────────────────────── */
   .packageCard {
     position: relative;
     width: 100%;
     height: 172px; /* Restore premium card height */
     max-width: none;
-    overflow: hidden !important; /* Strictly prevents image from going out of container on the right side */
-    /* Card surface with opacity reduced by 15% (85% opaque frosted glass) */
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Solid opaque white card surface */
+    background: #FFFFFF;
     /* Premium Apple-like elevation: soft shadow + hairline border */
     border: 1px solid rgba(0, 0, 0, 0.04);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
@@ -995,37 +1002,37 @@
     z-index: auto;
   }
 
-  /* ── Card image: right-pinned, contained cleanly inside card with left side revealed ── */
+  /* ── Card image: right-pinned, full card height ── */
+  /* object-position: right centers on the interesting part of each artwork */
   .packageCardImage {
-    width: 52%;
+    width: 52%;            /* ~55% of card width — generous image zone */
     height: 100%;
     top: 0;
-    right: 0 !important;
+    right: 0;
     bottom: 0;
     object-fit: cover;
-    object-position: left center;
-    filter: none;
-    z-index: 1;
+    object-position: center center;
+    filter: none;          /* Remove drop-shadow on mobile — cleaner */
+    z-index: 1;            /* Ensure image sits above the solid white card background */
     background: transparent;
     border: none;
     outline: none;
   }
 
-  /* Diabetes (tall image): Show left portion while staying strictly inside container */
+  /* Diabetes (tall image): it's 588×424. Show center portion. */
   .packageCardImageTall {
-    width: 100% !important;
-    right: 0 !important;
-    object-position: left center;
+    width: 52%;
+    transform: none;       /* Remove the translateX push that clips it */
+    object-position: 30% center;
   }
 
-  /* Bone health (short image): Show left portion while staying strictly inside container */
+  /* Bone health (short image): bottom-anchor matches artwork composition */
   .packageCardImageShort {
-    width: 50%;
+    width: 52%;
     height: 100%;
     top: 0;
-    right: 0 !important;
     bottom: 0;
-    object-position: left top;
+    object-position: center top;
   }
 
   /* ── Card content: left column, clear of image zone ── */

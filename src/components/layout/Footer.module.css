@@ -220,7 +220,44 @@ a.contactItem:hover {
 
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 20px;
+  }
+  .brandCol {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .brand {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .brandLogo {
+    margin-left: 0;
+    justify-content: center;
+  }
+  .brandDesc {
+    text-align: center;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+  .contact {
+    align-items: center;
+    justify-content: center;
+  }
+  .contactItem {
+    justify-content: center;
+  }
+  .socials {
+    justify-content: center !important;
+    width: 100%;
+  }
+  .linkCol {
+    padding: 0 4px;
   }
   .bottomInner {
     flex-direction: column;

@@ -32,7 +32,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
     {
       id: "healthy-heart",
       name: "Healthy Heart Package",
-      image: "/healthy-heart-package-2.png",
+      image: "/health-packages/heart.png",
       testsCount: 42,
       reportsWithin: "8 hours",
       variant: 1,
@@ -53,7 +53,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
     {
       id: "bone-health",
       name: "Bone Health Package",
-      image: "/xray-image.png",
+      image: "/health-packages/thyroid.png",
       testsCount: 15,
       reportsWithin: "2 hours",
       variant: 3,

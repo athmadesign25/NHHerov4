@@ -14,6 +14,11 @@
   top: 0;
   width: 100%;
   box-sizing: border-box;
+  /* Set by FooterRevealWrapper as the footer rises up and overlays this
+     still-pinned section from below — dims its content slightly rather
+     than leaving it at full brightness underneath the footer. Defaults
+     to fully opaque everywhere else on the page. */
+  opacity: var(--footer-overlay-fade, 1);
 }
 
 /* Fills the sticky viewport behind the content; opacity is tied to the
@@ -73,7 +78,6 @@
 
 /* ─── Centered Copy Block (Eyebrow + Title + Subtitle) ─── */
 .topTextBlock {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -185,6 +189,27 @@
   justify-content: center;
 }
 
+/* Fixed width (sized for the longest feature title) so switching between
+   features of different text lengths never resizes the pill — which would
+   otherwise shove the flanking arrows sideways since the whole row is
+   centered as a unit. Content stays left-aligned inside that fixed box. */
+.featurePill {
+  display: flex;
+  width: max-content;
+  padding: 10px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 48px;
+  border: 1.327px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
+  box-sizing: border-box;
+}
+
 .pillIconBg {
   width: 30px;
   height: 30px;
@@ -234,26 +259,23 @@
    .bottomRow's own box height is set by its tallest child, the phone
    unit, so centering against .bottomRow itself lines both stacks up with
    the phone's vertical middle. */
-/* Both carry the same margin-top deliberately: they share this positioning
-   geometry, so an equal offset is what puts their centres on one line —
-   they used to sit 72px apart vertically. The value lands that shared
-   centre on the phone screen's own middle. */
 .trustStackPosition,
 .storesColPosition {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  margin-top: -22px;
 }
 
 .trustStackPosition {
   left: 0;
-  margin-left: 90px;
+  margin-top: -212px;
+  margin-left: 160px;
 }
 
 .storesColPosition {
   right: 0;
-  margin-right: 90px;
+  margin-top: -140px;
+  margin-right: 120px;
 }
 
 /* Left-side trust stack: mirrors the store column's own entrance timing/
@@ -268,18 +290,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 16px;
-}
-
-/* Bottom row: Downloads + Rating sit side by side, each hugging its own
-   content width rather than stretching to match the top unit's full
-   width — mirrors the Figma reference where the two are visibly
-   narrower than "India's Most Trusted" above them. */
-.trustStackBottomRow {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 16px;
+  gap: 12px;
 }
 
 .trustUnit {
@@ -352,134 +363,99 @@
   line-height: normal;
 }
 
-/* Shared by .qrLabel (right) and .trustCaption (left) — same typography
-   for both captions regardless of where each one sits. */
-.captionLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0F172A;
-  text-align: center;
-  line-height: normal;
-}
-
 .qrLabel {
-  composes: captionLabel;
-}
-
-/* Left-side popover's own caption, back inside the card above the image
-   (see POP_OVER_CARDS' `lines` — each caption is pre-broken into exactly
-   two lines at its own natural point via an explicit <br/>, rather than
-   left to auto-wrap at the card's width). */
-.trustCaption {
-  composes: captionLabel;
-}
-
-/* Shared glass treatment for both popover units — the left-side card and
-   the right-side "Scan to install" QR block now read as the same kind of
-   surface. */
-/* The QR card (the only thing still wearing this — the pop-over cards it
-   was shared with are gone). */
-.popoverGlass {
-  /* A whisper of the same red the value-stack icon tiles are built from,
-     so the two sides read as one family — kept low enough that the card
-     still reads as neutral glass at a glance. */
-  background:
-    linear-gradient(180deg, rgb(255 241 241 / 22%) 0%, rgb(255 138 140 / 27%) 100%),
-    rgb(255 255 255 / 55%);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
-  border-radius: 10px;
-  padding: 16px;
-  border: 1px solid rgb(255 224 225 / 76%);
-  box-shadow: 0 8px 24px rgba(233, 42, 45, 0.08);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #0F172A;
+  text-transform: uppercase;
 }
 
 .storesCol {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* App Store + Google Play badges stacked vertically beside the QR block,
-   rather than below the whole storesCol — reads as one compact unit next
-   to "Scan to install" instead of a tall single-file column. */
-/* Bare artwork at its natural proportions, sat on the bottom edge so the
-   pair lines up with the foot of the QR card rather than floating beside
-   its middle. */
-.storeBadgeStack {
+/* White glassy card, matching .featurePill's own glass treatment above —
+   a real backdrop-blur rather than a flat tint, so these read as floating
+   glass chips over the phone/background rather than plain white boxes. */
+/* Fixed width (not sized to each one's own content) so the QR card and
+   the two wider badge images all read as one consistent-width stack
+   instead of QR being visibly narrower than the badges beside it;
+   justify-content centers each one's own (narrower) content inside it. */
+.storeContainer {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  /* Centered against the QR card's own height, rather than pinned to its
-     bottom edge, now that the QR image has grown closer to the card's
-     full width. */
-  justify-content: center;
-  gap: 16px;
-  /* Matches the QR card's own width, which its label sets rather than the
-     code — so the two columns share an edge. */
-  width: 129px;
-}
-
-/* Label above, image below, wrapped in .popoverGlass (same card treatment
-   as the left-side popover).
-   !important on display: this also carries .desktopOnly (same element),
-   whose own `display: block` (defined later in this file) would
-   otherwise win the cascade at equal specificity and silently turn this
-   back into a block — collapsing the flex gap to just line-height. */
-.qrStack {
-  display: flex !important;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  width: 156px;
+  box-sizing: border-box;
+  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
+     rectangle) so the card just hugs its content evenly instead of
+     reading as padded out sideways. */
+  padding: 8px;
+  border-radius: 12px;
+  /* Subtle "white refraction" edge rather than a solid stroke — a soft
+     white border with no shadow at all, so the card reads as glass sitting
+     on the background rather than a panel floating above it. */
+  border: 1px solid rgba(100, 120, 150, 0.20);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  transition: all 0.2s ease;
 }
 
-/* Sized so the finished card lands at the 144px the trust stack opposite
-   it is tall: 83 + the 10px gap + the label + the card's 16px padding
-   either side and its 1px border. The card's *width* comes from the label,
-   not this, which is why the badge stack is pinned to that measured 129px
-   rather than to the QR itself. */
+/* QR sits stacked (image above label) at the top of the stores column,
+   reusing .storeContainer's own glass/stroke styling for visual
+   consistency with the App Store / Google Play badges below it. The QR
+   image itself is baked white-on-transparent (meant for a dark backdrop),
+   so it's inverted to read as dark-on-transparent here instead of
+   regenerating the source asset. */
+.qrContainer {
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
 .qrImg {
-  width: calc(100% - 12px);
-  height: auto;
-  display: block;
+  filter: invert(1);
 }
 
-/* Full-width of the stack so both badges share the QR card's right edge;
-   height follows from the artwork's own aspect ratio. */
+/* Was turning near-opaque white on hover (0.75 alpha) — barely
+   distinguishable from the equally-white border, which is why the border
+   effectively vanished. Shifts darker instead (a soft navy tint) while
+   staying translucent glass rather than trending toward solid, and the
+   border darkens right along with it so it stays visible against the
+   now-different background instead of reading as white-on-near-white. */
+.storeContainer:hover {
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
 .storeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 auto;
-  width: 100%;
-  opacity: 0.8;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  /* Delicate framing to separate from dark background */
+  border-radius: 8px;
+  /* Matches standard app store badge radius */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #000;
+  /* Ensures the border perfectly frames the black badge */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  /* Clips the background strictly to the rounded border */
 }
 
-/* Store badge framing from main (PR #13) — mweb only, per the desktop
-   column keeping its own sizing and opacity. */
-@media (max-width: 1024px) {
-  .storeBadge {
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: #000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-
-  .storeBadge:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
-  }
+.storeBadge:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
 }
 
 .storeBadge img {
-  width: 100%;
-  height: auto;
+  height: 38px;
   object-fit: contain;
 }
 
@@ -556,13 +532,11 @@
   z-index: 20;
 }
 
-/* display: contents on desktop, so this wrapper contributes no box at all.
-   It arrived as position:relative + width:100%, which stretched the phone
-   stage — and the screen overlay inside is positioned in percentages, so a
-   wider stage put the screens off the phone entirely. The mobile override
-   below gives it a real box, where its masking is actually wanted. */
 .phoneMaskWrapper {
-  display: contents;
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  /* Default for desktop */
 }
 
 .phoneWrapper {
@@ -586,7 +560,7 @@
   .desktopOnly {
     display: none !important;
   }
-  
+
   .mobileOnly {
     display: block !important;
   }
@@ -595,7 +569,7 @@
   .stackTrack {
     height: auto !important;
   }
-  
+
   .stickyViewport {
     position: relative !important;
     height: auto !important;
@@ -603,7 +577,8 @@
 
   .contentStack {
     padding: 48px 16px 0px;
-    gap: 80px; /* Premium breathing room between Title block and Phone block */
+    gap: 80px;
+    /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
 
@@ -676,50 +651,50 @@
     font-size: 36px;
     line-height: 1.1;
   }
-  
+
   /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
-    gap: 32px; /* Breathing room between CTAs, Pill, and Phone */
+    gap: 32px;
+    /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
   }
 
   /* Reset phone wrapper constraints */
-  .handImage, .handOverlayImage {
+  .handImage,
+  .handOverlayImage {
     width: 100%;
     max-width: 700px;
-    display: block;
-    vertical-align: bottom;
   }
 
   .phoneMaskWrapper {
-    order: 2; /* Phone Mask sits in the middle */
-    width: calc(100% + 32px); /* Full bleed out of padding */
+    order: 2;
+    /* Phone Mask sits in the middle */
+    width: calc(100% + 32px);
+    /* Full bleed out of padding */
     margin-left: -16px !important;
     margin-right: -16px !important;
-    overflow: hidden; /* Crucial mask */
+    overflow: hidden;
+    /* Crucial mask */
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
   }
 
   .phoneWrapper {
-    order: unset; 
-    margin: 0 !important; 
-    margin-bottom: -56px !important; /* Pull hand chunk down flush to the bottom of the section */
-    left: -12.4% !important; /* Shift left by 12.4% to optically center the phone screen in hand */
+    order: unset;
+    margin: 0 !important;
+    left: -14%;
+    /* Shift left to optically center the phone screen itself */
     transform: scale(1.2);
     transform-origin: bottom center;
   }
 
   /* Mobile Caption as a sleek floating pill */
   .mobileCaption {
-    order: 1; /* Ordered precisely before the phone */
+    order: 1;
+    /* Ordered precisely before the phone */
     position: relative;
     z-index: 20;
     text-align: center;
@@ -733,188 +708,56 @@
     border: 1px solid rgba(255, 255, 255, 1);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     min-width: auto;
-    margin-bottom: -24px; /* Slight overlap over the phone */
+    margin-bottom: -24px;
+    /* Slight overlap over the phone */
   }
 
-  /* Move store badge stack to bottom right of app download section with 80% opacity */
+  /* Solid Dark Block Below the Image */
   .storesColPosition {
-    order: 3; 
-    position: absolute !important;
-    bottom: 24px !important;
-    right: 16px !important;
+    order: 3;
+    position: relative;
     top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: auto !important;
-    margin: 0 !important;
-    background: transparent !important;
-    padding: 0 !important;
-    z-index: 25 !important;
-    display: flex !important;
-    justify-content: flex-end !important;
+    bottom: auto !important;
+    left: auto;
+    right: auto;
+    transform: none;
+
+    /* Full-bleed out of the padding */
+    width: calc(100% + 32px);
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+
+    /* Pull up further to swallow the 32px flex gap PLUS the scaled-up invisible cropped area */
+    margin-top: -54px !important;
+    margin-bottom: 0 !important;
+
+    /* Solid Dark Background (Matches exact footer top color) */
+    background: #061120;
+    padding: 32px 16px 40px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
   }
-  
+
+  /* Pure Flex Row for the Buttons */
   .storesCol {
-    width: auto !important;
-    background: transparent !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 8px !important;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
   }
 
-  .storeBadgeStack {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    gap: 8px !important;
-    width: 120px !important;
-    opacity: 0.8 !important;
+  .storeContainer {
+    padding: 6px;
   }
-  
-  .storeBadge {
-    width: 100% !important;
-    opacity: 1 !important;
-  }
-  
+
   .storeBadge img {
-    height: 36px !important; 
-    width: auto !important;
+    height: 40px;
+    width: auto;
   }
-}
-
-
-/* ─── Feature pill ───
-   Sits in the band between the title block and the phone — a band that
-   only exists once the phone has walked down at the end of its entrance
-   (see PHONE_SETTLE_DROP). Absolutely positioned so it claims no space in
-   the content column, which is already bottom-anchored and over-full. */
-/* Positioning only. Centering lives here as a full-width flex row rather
-   than a translateX(-50%), because Framer writes its own `transform` on
-   this element for the reveal and would overwrite it. Hung off the title
-   block's own bottom edge, so it tracks however the title wraps. */
-.featurePill {
-  position: absolute;
-  top: 100%;
-  /* Deliberately not centred in the band between the title and the phone:
-     the pill labels the phone, so it sits close to it and well clear of
-     the title (roughly 3:1). */
-  margin-top: 64px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  z-index: 4;
-  pointer-events: none;
-}
-
-/* The pill itself. The blue is a very light wash falling from the top-left
-   corner, layered over the neutral glass fill rather than replacing it. */
-.featurePillInner {
-  display: inline-flex;
-  padding: 10px 16px;
-  align-items: center;
-  gap: 10px;
-  border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  /* Neutral glass fill, with a faint grey wash pooling at the bottom edge
-     (rather than a flat tint) so the pill reads as lit from above, plus a
-     soft shadow to lift it off the backdrop now that it's no longer
-     leaning on the old blue tint for separation. */
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 100%),
-    rgba(3, 78, 162, 0.10),
-    rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(32px) saturate(1.9);
-  -webkit-backdrop-filter: blur(32px) saturate(1.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
-  white-space: nowrap;
-}
-
-.featurePillText {
-  color: rgba(0, 0, 0, 0.94);
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  white-space: nowrap;
-}
-
-/* ─── Left value stack ─── */
-/* Glass-only surface — no color fill or stroke of its own (per the Figma
-   "Glass" effect reference: refraction/frost off a transparent base).
-   Legibility comes entirely from the backdrop-filter blur+saturate
-   lifting the text off whatever busy artwork sits behind it. */
-.valueUnit {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  backdrop-filter: blur(36px) saturate(1.7);
-  -webkit-backdrop-filter: blur(36px) saturate(1.7);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  /* Slight white gradient border via the two-layer background-clip trick
-     (a real border-image would square off the rounded corners) — the
-     padding-box layer stays fully transparent so the glass blur behind
-     is all that fills the card; only the border-box layer carries the
-     gradient, and only shows through the 1px border ring. */
-  border: 1px solid transparent;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) padding-box,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 100%) border-box;
-}
-
-/* Top "India's Most Trusted" unit spans the full width of the stack (the
-   two units below it define that width by hugging their own content). */
-.valueUnitFull {
-  width: 100%;
-}
-
-/* Downloads / Rating units hug their content instead of stretching. */
-.valueUnitCompact {
-  width: auto;
-  flex: 0 0 auto;
-}
-
-.valueIconTile {
-  display: flex;
-  width: 34px;
-  height: 34px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #ef4e4e 0%, #fa8c8e 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
-}
-
-.valueText {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-}
-
-.valueLabel {
-  color: var(--darker-212121, #212121);
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-}
-
-.valueSubtext {
-  color: #414141;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
 }

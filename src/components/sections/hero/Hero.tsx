@@ -295,7 +295,7 @@ export default function Hero() {
         // over more real scrolling instead of speeding up to fit.
         height: "260vh",
         position: "relative",
-        zIndex: isPulseActive ? 9999 : 1,
+        zIndex: isPulseActive ? 9999 : "auto",
         background: "transparent",
       }}
     >

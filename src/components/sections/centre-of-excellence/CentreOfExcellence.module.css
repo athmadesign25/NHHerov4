@@ -78,6 +78,19 @@
   .sectionTitle {
     white-space: normal;
   }
+  .sectionSubtitle {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+    padding: 0 16px;
+    word-break: normal;
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+  .subtitleLine {
+    display: inline !important;
+  }
 }
 
 .sectionSubtitle {

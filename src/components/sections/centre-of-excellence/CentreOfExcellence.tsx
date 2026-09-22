@@ -283,7 +283,7 @@ export default function CentreOfExcellence() {
                 transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
               >
                 Integrated expertise across tertiary and quaternary care,
-              </motion.span>
+              </motion.span>{" "}
               <motion.span
                 className={styles.subtitleLine}
                 initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}

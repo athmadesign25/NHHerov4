@@ -16,6 +16,7 @@ interface DefaultSearchPromptProps {
   onSelectActionPill: (action: "doctor" | "symptoms") => void;
   onOpenPulse?: () => void;
   searchTheme?: "dark" | "white";
+  isMobile?: boolean;
   promptOpacity?: MotionValue<number>;
   minimizedSearchOpacity?: MotionValue<number>;
   textColor?: MotionValue<string>;
