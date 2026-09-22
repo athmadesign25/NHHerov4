@@ -69,7 +69,11 @@ export default function NHSearchExperience({
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
 
   // Search Experience Theme: "dark" (default) or "white" (simulated Figma experience)
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+  // Defaults to white/light — the navbar toggle that used to switch this
+  // was removed, so starting on "dark" would leave no way to ever reach
+  // white. The landing composer itself stays hardcoded dark below (it
+  // sits on the hero video and isn't driven by this state).
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("white");
 
   useEffect(() => {
     // Check initial search theme from localStorage or data-search-theme attribute
