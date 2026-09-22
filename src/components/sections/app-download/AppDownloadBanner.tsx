@@ -7,6 +7,7 @@ import {
   useScroll,
   useTransform,
   useMotionValueEvent,
+  type Variants,
 } from "framer-motion";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
@@ -444,21 +445,59 @@ export default function AppDownloadBanner() {
             <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginLeft: "100px" }}>
               <motion.div
                 className={styles.trustStack}
-                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
-                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                initial="hidden"
+                animate={phase === "matured" ? "visible" : "hidden"}
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
+                }}
               >
-                {TRUST_STACK.map(({ Icon, label, subtext }) => (
-                  <div key={label} className={styles.valueUnit}>
-                    <span className={styles.valueIconTile}>
-                      <Icon />
-                    </span>
-                    <span className={styles.valueText}>
-                      <span className={styles.valueLabel}>{label}</span>
-                      <span className={styles.valueSubtext}>{subtext}</span>
-                    </span>
-                  </div>
-                ))}
+                {(() => {
+                  const [primary, ...rest] = TRUST_STACK;
+                  const unitVariants: Variants = {
+                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
+                    visible: {
+                      opacity: 1,
+                      filter: "blur(0px)",
+                      y: 0,
+                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  };
+                  return (
+                    <>
+                      <motion.div
+                        key={primary.label}
+                        className={`${styles.valueUnit} ${styles.valueUnitFull}`}
+                        variants={unitVariants}
+                      >
+                        <span className={styles.valueIconTile}>
+                          <primary.Icon />
+                        </span>
+                        <span className={styles.valueText}>
+                          <span className={styles.valueLabel}>{primary.label}</span>
+                          <span className={styles.valueSubtext}>{primary.subtext}</span>
+                        </span>
+                      </motion.div>
+                      <div className={styles.trustStackBottomRow}>
+                        {rest.map(({ Icon, label, subtext }) => (
+                          <motion.div
+                            key={label}
+                            className={`${styles.valueUnit} ${styles.valueUnitCompact}`}
+                            variants={unitVariants}
+                          >
+                            <span className={styles.valueIconTile}>
+                              <Icon />
+                            </span>
+                            <span className={styles.valueText}>
+                              <span className={styles.valueLabel}>{label}</span>
+                              <span className={styles.valueSubtext}>{subtext}</span>
+                            </span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </>
+                  );
+                })()}
               </motion.div>
             </div>
 
@@ -559,20 +598,68 @@ export default function AppDownloadBanner() {
               <motion.div 
                 className={styles.storesCol}
                 style={{ pointerEvents: "auto", zIndex: 30 }}
-                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
-                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                initial="hidden"
+                animate={phase === "matured" ? "visible" : "hidden"}
+                variants={{
+                  hidden: {},
+                  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
+                }}
               >
-                <div className={`${styles.qrStack} ${styles.desktopOnly} ${styles.popoverGlass}`}>
+                <motion.div
+                  className={`${styles.qrStack} ${styles.desktopOnly} ${styles.popoverGlass}`}
+                  variants={{
+                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
+                    visible: {
+                      opacity: 1,
+                      filter: "blur(0px)",
+                      y: 0,
+                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                >
                   <Image src="/app-download-QR.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
                   <span className={styles.qrLabel}>Scan to install</span>
-                </div>
-                <a href="#" className={styles.storeBadge} tabIndex={0}>
-                  <Image width={140} height={46} alt="Download on the App Store" src="/App store.svg" />
-                </a>
-                <a href="#" className={styles.storeBadge} tabIndex={0}>
-                  <Image width={140} height={46} alt="Get it on Google Play" src="/Google play.svg" />
-                </a>
+                </motion.div>
+                <motion.div
+                  className={styles.storeBadgeStack}
+                  variants={{
+                    hidden: {},
+                    visible: { transition: { staggerChildren: 0.15 } },
+                  }}
+                >
+                  <motion.a
+                    href="#"
+                    className={styles.storeBadge}
+                    tabIndex={0}
+                    variants={{
+                      hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
+                      visible: {
+                        opacity: 1,
+                        filter: "blur(0px)",
+                        y: 0,
+                        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                      },
+                    }}
+                  >
+                    <Image width={140} height={46} alt="Download on the App Store" src="/App store.svg" />
+                  </motion.a>
+                  <motion.a
+                    href="#"
+                    className={styles.storeBadge}
+                    tabIndex={0}
+                    variants={{
+                      hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
+                      visible: {
+                        opacity: 1,
+                        filter: "blur(0px)",
+                        y: 0,
+                        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                      },
+                    }}
+                  >
+                    <Image width={140} height={46} alt="Get it on Google Play" src="/Google play.svg" />
+                  </motion.a>
+                </motion.div>
               </motion.div>
             </div>
           </div>

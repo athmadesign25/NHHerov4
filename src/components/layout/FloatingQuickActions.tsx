@@ -155,11 +155,16 @@ export default function FloatingQuickActions() {
 
       // Specialities: the grid section is dark from its first pixel, but
       // most of that is empty backdrop. The labels only need to go white
-      // once a speciality image is genuinely behind them.
+      // once a speciality image is genuinely behind them — or once the
+      // handoff strip at the bottom (CTA + the reversible plate fading to
+      // Patient Stories' solid backdrop) is behind them, since that empty
+      // gap turns solid dark well before Patient Stories itself arrives.
       const grid = document.querySelector('[class*="gridSection"]');
       const overGrid = Boolean(grid && overlapsBar(grid));
       const overGridImage =
         overGrid && Array.from(grid!.querySelectorAll("img")).some(overlapsBar);
+      const bottomStrip = document.querySelector('[class*="gridBottomStrip"]');
+      const overBottomStrip = Boolean(bottomStrip && overlapsBar(bottomStrip));
 
       // Packages: dark like every other section, so the labels are white
       // through it — until a card has grown far enough to sit under the
@@ -188,7 +193,7 @@ export default function FloatingQuickActions() {
         }
 
         let isDark = detectedTheme === "dark";
-        if (overGrid) isDark = overGridImage;
+        if (overGrid) isDark = overGridImage || overBottomStrip;
         if (overPackages) isDark = !packageCardAtBar;
         if (overHero) isDark = false;
         return isDark;

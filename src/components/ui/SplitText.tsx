@@ -19,8 +19,8 @@ const wordVariants = {
     opacity: 1,
     filter: "blur(0px)",
     transition: {
-      delay: i * 0.18,
-      duration: 1.6,
+      delay: i * 0.32,
+      duration: 2.6,
       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
     },
   }),

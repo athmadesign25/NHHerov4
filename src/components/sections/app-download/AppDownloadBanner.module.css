@@ -248,12 +248,12 @@
 
 .trustStackPosition {
   left: 0;
-  margin-left: 160px;
+  margin-left: 90px;
 }
 
 .storesColPosition {
   right: 0;
-  margin-right: 120px;
+  margin-right: 90px;
 }
 
 /* Left-side trust stack: mirrors the store column's own entrance timing/
@@ -267,6 +267,17 @@
 .trustStack {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* Bottom row: Downloads + Rating sit side by side, each hugging its own
+   content width rather than stretching to match the top unit's full
+   width — mirrors the Figma reference where the two are visibly
+   narrower than "India's Most Trusted" above them. */
+.trustStackBottomRow {
+  display: flex;
+  flex-direction: row;
   align-items: stretch;
   gap: 16px;
 }
@@ -374,19 +385,31 @@
      so the two sides read as one family — kept low enough that the card
      still reads as neutral glass at a glance. */
   background:
-    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 23%) 100%),
-    rgb(255 255 255 / 40%);
+    linear-gradient(180deg, rgb(255 241 241 / 22%) 0%, rgb(255 138 140 / 27%) 100%),
+    rgb(255 255 255 / 55%);
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-radius: 10px;
   padding: 16px;
-  border: 1px solid rgba(252, 80, 83, 0.12);
+  border: 1px solid rgb(255 224 225 / 76%);
+  box-shadow: 0 8px 24px rgba(233, 42, 45, 0.08);
 }
 
 .storesCol {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
   gap: 16px;
+}
+
+/* App Store + Google Play badges stacked vertically beside the QR block,
+   rather than below the whole storesCol — reads as one compact unit next
+   to "Scan to install" instead of a tall single-file column. */
+.storeBadgeStack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
 }
 
 /* Label above, image below, wrapped in .popoverGlass (same card treatment
@@ -416,7 +439,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 140px;
+  width: 120px;
   opacity: 0.8;
   transition: transform 0.2s ease, opacity 0.2s ease;
   overflow: hidden;
@@ -649,11 +672,16 @@
   gap: 10px;
   border-radius: 40px;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  /* No shadow at all now, so the blur is the only thing separating it from
-     the white behind — kept heavy for that reason. */
-  background: rgba(255, 255, 255, 0.14);
+  /* Neutral glass fill, with a faint grey wash pooling at the bottom edge
+     (rather than a flat tint) so the pill reads as lit from above, plus a
+     soft shadow to lift it off the backdrop now that it's no longer
+     leaning on the old blue tint for separation. */
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 100%),
+    rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
   white-space: nowrap;
 }
 
@@ -668,10 +696,10 @@
 }
 
 /* ─── Left value stack ─── */
-/* Each value sits on its own card, in the same glass family as the QR card
-   opposite so the two columns read as a pair. The red is pulled back from
-   the QR card's: these are three stacked cards against that one, so the
-   same tint would compound down the column. */
+/* Glass-only surface — no color fill or stroke of its own (per the Figma
+   "Glass" effect reference: refraction/frost off a transparent base).
+   Legibility comes entirely from the backdrop-filter blur+saturate
+   lifting the text off whatever busy artwork sits behind it. */
 .valueUnit {
   display: flex;
   align-items: center;
@@ -679,12 +707,30 @@
   padding: 12px 16px;
   box-sizing: border-box;
   border-radius: 10px;
-  background:
-    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 10%) 100%),
-    rgb(255 255 255 / 55%);
   backdrop-filter: blur(36px) saturate(1.7);
   -webkit-backdrop-filter: blur(36px) saturate(1.7);
-  border: 1px solid rgba(252, 80, 83, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  /* Slight white gradient border via the two-layer background-clip trick
+     (a real border-image would square off the rounded corners) — the
+     padding-box layer stays fully transparent so the glass blur behind
+     is all that fills the card; only the border-box layer carries the
+     gradient, and only shows through the 1px border ring. */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) padding-box,
+    linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 100%) border-box;
+}
+
+/* Top "India's Most Trusted" unit spans the full width of the stack (the
+   two units below it define that width by hugging their own content). */
+.valueUnitFull {
+  width: 100%;
+}
+
+/* Downloads / Rating units hug their content instead of stretching. */
+.valueUnitCompact {
+  width: auto;
+  flex: 0 0 auto;
 }
 
 .valueIconTile {
@@ -709,17 +755,17 @@
 .valueLabel {
   color: var(--darker-212121, #212121);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
 }
 
 .valueSubtext {
-  color: var(--darker-717171, #717171);
+  color: #414141;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: normal;
 }

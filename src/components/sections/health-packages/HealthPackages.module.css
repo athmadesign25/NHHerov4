@@ -252,7 +252,7 @@
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 9.067px;
   background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
   box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
   backdrop-filter: blur(6px);
@@ -344,7 +344,7 @@
      Without the backdrop-filter the video/frame behind is only dimmed by
      the background's own alpha, not actually blurred, so it reads through
      too crisply to feel like glass. */
-  background: rgba(255, 255, 255, 0.55);
+  background: rgb(255 250 244 / 78%);
   backdrop-filter: blur(24px) saturate(1.8);
 }
 
@@ -586,7 +586,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 9.067px;
   /* Deeper/more saturated than a light wash — against the white glass
      card a 0.20-alpha tint read as too pale to register as a chip. */
   background: linear-gradient(180deg, rgb(238 30 38 / 85%) 0%, rgb(168 9 9 / 76%) 100%);
