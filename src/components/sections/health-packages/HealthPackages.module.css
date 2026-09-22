@@ -486,11 +486,12 @@
   right: 0;
   height: 100%;
   width: 208px;
+  /* cover already fills the card's height; the overflow it trims is
+     horizontal. Anchoring left keeps the artwork's own left edge intact
+     and takes the whole crop off the right, instead of centre-cropping
+     and cutting into both sides. */
   object-fit: cover;
-  /* The fade only has to stop the artwork butting hard against the text
-     column — at 55% it was washing out over half of every image. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 22%);
-  mask-image: linear-gradient(to right, transparent 0%, black 22%);
+  object-position: left center;
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
 }
