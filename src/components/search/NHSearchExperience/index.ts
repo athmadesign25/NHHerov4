@@ -51,3 +51,5 @@ export * from "./searchData";
 export { default as DefaultSearchPrompt } from "./DefaultSearchPrompt";
 export { default as ActiveSearchCanvas } from "./ActiveSearchCanvas";
 export { default as SearchResultsCanvas } from "./SearchResultsCanvas";
+export { default as PulseAIAvatar } from "./PulseAIAvatar";
+
