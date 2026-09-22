@@ -205,8 +205,8 @@ export default function Navbar() {
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ position: "relative", width: "140px", height: "44px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>

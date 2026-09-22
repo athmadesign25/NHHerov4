@@ -605,7 +605,7 @@ export default function AppDownloadBanner() {
                 animate={phase === "matured" ? "visible" : "hidden"}
                 variants={{
                   hidden: {},
-                  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
+                  visible: { transition: { delayChildren: 0.1, staggerChildren: 0.15 } },
                 }}
               >
                 <motion.div
@@ -626,23 +626,19 @@ export default function AppDownloadBanner() {
                 <motion.div
                   className={styles.storeBadgeStack}
                   variants={{
-                    hidden: {},
-                    visible: { transition: { staggerChildren: 0.15 } },
+                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
+                    visible: {
+                      opacity: 1,
+                      filter: "blur(0px)",
+                      y: 0,
+                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                    },
                   }}
                 >
                   <motion.a
                     href="#"
                     className={styles.storeBadge}
                     tabIndex={0}
-                    variants={{
-                      hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
-                      visible: {
-                        opacity: 1,
-                        filter: "blur(0px)",
-                        y: 0,
-                        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                      },
-                    }}
                   >
                     <Image width={140} height={46} alt="Download on the App Store" src="/App store.svg" />
                   </motion.a>
@@ -650,15 +646,6 @@ export default function AppDownloadBanner() {
                     href="#"
                     className={styles.storeBadge}
                     tabIndex={0}
-                    variants={{
-                      hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
-                      visible: {
-                        opacity: 1,
-                        filter: "blur(0px)",
-                        y: 0,
-                        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                      },
-                    }}
                   >
                     <Image width={140} height={46} alt="Get it on Google Play" src="/Google play.svg" />
                   </motion.a>

@@ -178,6 +178,8 @@ export default function FloatingQuickActions() {
       const packageCardAtBar =
         overPackages &&
         Array.from(packages!.querySelectorAll('a[class*="packageCard"]')).some(overlapsBar);
+      const packagesFrame = packages?.querySelector('[class*="frame"]') ?? null;
+      const overPackagesFrame = Boolean(packagesFrame && overlapsBar(packagesFrame));
 
       const linkRefs = [linkRef0, linkRef1, linkRef2];
       const newDarkState = linkRefs.map((ref) => {
@@ -198,7 +200,7 @@ export default function FloatingQuickActions() {
 
         let isDark = detectedTheme === "dark";
         if (overGrid) isDark = overGridImage || overBottomStrip;
-        if (overPackages) isDark = !packageCardAtBar;
+        if (overPackages) isDark = !packageCardAtBar && !overPackagesFrame;
         if (overHero) isDark = false;
         return isDark;
       });
