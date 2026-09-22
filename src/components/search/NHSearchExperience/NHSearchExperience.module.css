@@ -547,11 +547,20 @@
   box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
 }
 
+.submitArrowBtn svg {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
 .submitArrowBtn:hover {
   background: #0060DF;
   border-color: rgba(255, 255, 255, 0.28);
   transform: scale(1.03);
   box-shadow: 0 3px 10px rgba(0, 96, 223, 0.4);
+}
+
+.submitArrowBtn:hover svg {
+  transform: rotate(0deg);
 }
 
 .submitArrowBtn:active {
