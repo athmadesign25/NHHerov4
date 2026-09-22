@@ -405,23 +405,24 @@
 /* App Store + Google Play badges stacked vertically beside the QR block,
    rather than below the whole storesCol — reads as one compact unit next
    to "Scan to install" instead of a tall single-file column. */
-/* Stretch, not centre: the two badges divide the stack's own height, which
-   is the QR card's, so the column reads as two equal-height elements
-   rather than a tall card beside a pair of small pills. */
+/* Bare artwork at its natural proportions, sat on the bottom edge so the
+   pair lines up with the foot of the QR card rather than floating beside
+   its middle. */
 .storeBadgeStack {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* The stack is as tall as the QR card beside it, so space-between sets
-     one badge on its top edge and the other on its bottom rather than
-     bunching the pair in the middle. */
-  justify-content: space-between;
-  width: 120px;
+  /* Sat on the bottom of the column, with the same 16px between them as
+     separates this stack from the QR card horizontally. */
+  justify-content: flex-end;
+  gap: 16px;
+  /* Matches the QR card's own width, which its label sets rather than the
+     code — so the two columns share an edge. */
+  width: 129px;
 }
 
 /* Label above, image below, wrapped in .popoverGlass (same card treatment
-   as the left-side popover). Image width still matches the App Store/
-   Google Play badges beside it (140px).
+   as the left-side popover).
    !important on display: this also carries .desktopOnly (same element),
    whose own `display: block` (defined later in this file) would
    otherwise win the cascade at equal specificity and silently turn this
@@ -430,26 +431,28 @@
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-/* 106 + the card's own 16px padding either side + its 1px border lands the
-   card at exactly the 140px the store badges below it are, so the column
-   has one clean edge rather than a card overhanging the badges. */
+/* Sized so the finished card lands at the 144px the trust stack opposite
+   it is tall: 83 + the 10px gap + the label + the card's 16px padding
+   either side and its 1px border. The card's *width* comes from the label,
+   not this, which is why the badge stack is pinned to that measured 129px
+   rather than to the QR itself. */
 .qrImg {
-  width: 106px;
+  width: 83px;
   height: auto;
   display: block;
 }
 
-/* Bare artwork at its own size — the pair is spread to the stack's edges
-   rather than stretched to fill it. */
+/* Full-width of the stack so both badges share the QR card's right edge;
+   height follows from the artwork's own aspect ratio. */
 .storeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 120px;
+  width: 100%;
   opacity: 0.8;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
