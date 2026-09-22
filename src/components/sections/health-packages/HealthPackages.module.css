@@ -504,6 +504,9 @@
    card's height with nothing trimmed off either side. */
 .packageCardImageTall {
   width: 344px;
+  /* Pushed right of its own anchor so it crowds the text column less; the
+     card clips what goes past the edge. */
+  transform: translateX(30%);
 }
 
 /* Bone health: scaled back a little and sat on the card's bottom edge,
@@ -949,6 +952,19 @@
 .packageCardCompact:hover .packageCardImage,
 .packageCardCompact:focus-visible .packageCardImage {
   width: 228px;
+}
+
+/* The sized variants need their own hover widths: the shared 228px above
+   is a grow for the 208px default but a large shrink for these two, which
+   read as the image lurching on hover rather than easing. */
+.packageCardCompact:hover .packageCardImageTall,
+.packageCardCompact:focus-visible .packageCardImageTall {
+  width: 352px;
+}
+
+.packageCardCompact:hover .packageCardImageShort,
+.packageCardCompact:focus-visible .packageCardImageShort {
+  width: 249px;
 }
 
 /* White shimmer sweep across the card on hover — replaces the height
