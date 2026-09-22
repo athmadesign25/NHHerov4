@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useTransform } from "framer-motion";
 import Link from "next/link";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
-import { searchDockProgress } from "@/components/search/NHSearchExperience/dockProgress";
 
 // The icons idle on their finished frame and only replay while hovered —
 // a bar that's always on screen shouldn't have two things animating on it
@@ -60,53 +58,6 @@ export default function FloatingQuickActions() {
   const linkRef0 = useRef<HTMLAnchorElement>(null);
   const linkRef1 = useRef<HTMLAnchorElement>(null);
   const linkRef2 = useRef<HTMLButtonElement>(null);
-
-  // The bar carries two actions until the hero search arrives; the third
-  // slot is opened by growing the bar rather than by the tile appearing in
-  // place, so the arriving composer is absorbed instead of landing on top
-  // of something. Heights are measured (not hardcoded) because the slot
-  // height follows the label's own line count.
-  const [slotHeights, setSlotHeights] = useState<{ open: number; closed: number } | null>(null);
-
-  useEffect(() => {
-    const measure = () => {
-      const el = containerRef.current;
-      const pulse = linkRef2.current;
-      if (!el || !pulse) return;
-      const open = el.scrollHeight;
-      const pulseH = pulse.offsetHeight;
-      // Below 900px the bar is display:none and both read 0 — leaving this
-      // null keeps the inline height off entirely, so the mobile layout is
-      // never driven by a measurement that was never taken.
-      if (open === 0 || pulseH === 0) {
-        setSlotHeights(null);
-        return;
-      }
-      const styleOf = window.getComputedStyle(el);
-      const gap = parseFloat(styleOf.rowGap || "0") || 0;
-      setSlotHeights({ open, closed: open - (pulseH + gap) });
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    const settle = setTimeout(measure, 1000);
-    return () => {
-      window.removeEventListener("resize", measure);
-      clearTimeout(settle);
-    };
-  }, []);
-
-  // Opens over the tail of the composer's trip, so the bar is already
-  // reaching for it before it lands.
-  const absorb = useTransform(searchDockProgress, [0.55, 1], [0, 1]);
-  const openH = slotHeights?.open ?? 0;
-  const closedH = slotHeights?.closed ?? 0;
-  const barHeight = useTransform(absorb, [0, 1], [closedH, openH]);
-  // Pins the bar's top edge while it grows, so the expansion reads as the
-  // bottom extending downward — and still leaves the grown bar centred.
-  const barMarginTop = useTransform(absorb, [0, 1], [-(openH - closedH) / 2, 0]);
-  // The real tile only takes over once the composer on top of it has gone,
-  // at identical geometry, so the swap is invisible.
-  const pulseTileOpacity = useTransform(absorb, [0.94, 1], [0, 1]);
 
   const calendarLottieRef = useRef<LottieRefCurrentProps>(null);
   const nhAppIconLottieRef = useRef<LottieRefCurrentProps>(null);
@@ -222,12 +173,11 @@ export default function FloatingQuickActions() {
   return (
     <>
       {/* Consistent Vertical Floating Utility Group on the Right Side */}
-      <motion.div
+      <div
         ref={containerRef}
         role="region"
         aria-label="Quick actions and search"
         className={`${styles.container} global-floating-quick-actions ${isQuickActionsVisible ? styles.visible : styles.hidden}`}
-        style={slotHeights ? { height: barHeight, marginTop: barMarginTop } : undefined}
       >
         {/* Action 1: Book Appointment (Primary utility) */}
         <Link
@@ -282,14 +232,13 @@ export default function FloatingQuickActions() {
         </Link>
 
         {/* Action 3: Pulse AI Search (Interactive search utility - Minimized Search) */}
-        <motion.button
+        <button
           id="floating-pulse-target"
           ref={linkRef2}
           type="button"
           className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
-          style={slotHeights ? { opacity: pulseTileOpacity } : undefined}
         >
           {/* This tile paints its own animated background rather than the
               shared blue glass, so it overrides .iconWrap's own fill. */}
@@ -304,8 +253,8 @@ export default function FloatingQuickActions() {
             </span>
           </span>
           <span className={styles.actionLabel}>Pulse AI<br />Search</span>
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
 
 
     </>
