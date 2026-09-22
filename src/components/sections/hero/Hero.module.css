@@ -114,6 +114,14 @@
   margin-bottom: 8px;
 }
 
+.desktopHeadline {
+  display: inline;
+}
+
+.mobileHeadline {
+  display: none;
+}
+
 .subHeadline {
   font-size: 18px;
   color: #F1F1F1;
@@ -985,6 +993,14 @@
 
   .headline {
     font-size: clamp(30px, 8vw, 40px);
+  }
+
+  .desktopHeadline {
+    display: none !important;
+  }
+
+  .mobileHeadline {
+    display: inline !important;
   }
 
   .searchWrap {

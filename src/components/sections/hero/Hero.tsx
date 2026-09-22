@@ -366,7 +366,14 @@ export default function Hero() {
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
             <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
               <h1 className={styles.headline}>
-                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+                <span className={styles.desktopHeadline}>
+                  <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+                </span>
+                <span className={styles.mobileHeadline}>
+                  <TextSweepEffect words={["Trusted Care,"]} sweepMs={2000} delayMs={80} finalColor="#FFFFFF" />
+                  <br />
+                  <TextSweepEffect words={["Every Day"]} sweepMs={2000} delayMs={160} finalColor="#FFFFFF" />
+                </span>
               </h1>
               <motion.p
                 className={styles.subHeadline}
