@@ -96,6 +96,26 @@ export default function Hero() {
     restDelta: 0.001,
   });
 
+  // A refresh anywhere below the hero would otherwise replay the whole
+  // dock: the spring starts at 0 and travels to the scrolled value, so the
+  // Pulse composer flew across the screen and into the floating bar on a
+  // page the user never scrolled. Jumping the spring to where the page
+  // already is skips the travel — the bar simply comes up with its third
+  // slot already open. Repeated across a frame and a settle because
+  // scrollYProgress only reads true once the hero has been laid out.
+  useEffect(() => {
+    if (typeof window === "undefined" || window.scrollY < 40) return;
+    const sync = () => smoothProgress.jump(scrollYProgress.get());
+    sync();
+    const frame = requestAnimationFrame(sync);
+    const settle = setTimeout(sync, 150);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(settle);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Scale down and round border radius on scroll
   const heroScale = useTransform(smoothProgress, [0, 0.6], [1, 0.88]);
   const heroRadius = useTransform(smoothProgress, [0, 0.6], ["0px", "20px"]);
