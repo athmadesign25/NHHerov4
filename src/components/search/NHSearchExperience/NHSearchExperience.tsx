@@ -68,7 +68,7 @@ export default function NHSearchExperience({
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
 
   // Search Experience Theme: "dark" (default) or "white" (simulated Figma experience)
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("white");
 
   useEffect(() => {
     // Check initial search theme from localStorage or data-search-theme attribute
