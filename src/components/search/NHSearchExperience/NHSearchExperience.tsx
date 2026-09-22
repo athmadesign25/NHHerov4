@@ -903,6 +903,7 @@ export default function NHSearchExperience({
           {/* Modal Wrapper holding the Card and its Ambient Glow Around Effect */}
           <div
             className={styles.modalWithAmbientWrap}
+            data-search-theme={searchTheme}
             style={{
               position: "relative",
               display: "flex",
