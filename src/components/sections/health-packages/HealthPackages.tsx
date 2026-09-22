@@ -53,7 +53,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
     {
       id: "bone-health",
       name: "Bone Health Package",
-      image: "/bone-health-package.png",
+      image: "/xray-image.png",
       testsCount: 15,
       reportsWithin: "2 hours",
       variant: 3,
@@ -142,6 +142,14 @@ const GROW_RELEASE_FRACTION = 0.55;
 // release) takes to visually settle — a real CSS transition, applied only
 // for this one moment, not during normal per-scroll updates.
 const SNAP_TRANSITION_MS = 420;
+// Dwell at full-screen coverage before the bg fades light — long enough
+// that "full state" clearly registers before anything changes, rather
+// than the fade starting the instant the frame finishes snapping in.
+const LIGHT_SWITCH_DELAY_MS = 900;
+// The fade itself, once triggered — light is always eased; dark stays
+// instant (see applyBg), since that direction has to be hidden the moment
+// the exit shrink starts revealing the frame's edges, not fading behind it.
+const LIGHT_SWITCH_FADE_MS = 700;
 
 // Card/label/explore reveal is time-based once "full", not scroll-linked
 // — scrolling further (or stopping) doesn't change how it plays out.
@@ -281,6 +289,22 @@ export default function HealthPackages() {
   // from "growing" to "full" (frame starts its snap-to-100% transition) —
   // read once by the light-switch logic below, then cleared.
   const justCommittedRef = useRef(false);
+  // How long (real time, ms epoch via performance.now()) the section
+  // stays locked at full coverage after committing, before scroll is
+  // allowed to move it again — exit is computed as 0 the whole time this
+  // is in the future, no matter how far the user has actually scrolled.
+  // Set to the same total the bg fade takes (see applyBg's own delay), so
+  // the frame is still fully hiding the sticky viewport's background for
+  // every bit of that fade — the color changes underneath, but nothing
+  // ever uncovers it while it's changing.
+  const dwellUntilRef = useRef(0);
+  // Exit progress is measured from this, not from a fixed viewport-height
+  // threshold, once the dwell ends — captured fresh at that exact moment
+  // (whatever the scroll position happens to be by then, including
+  // whatever the user scrolled THROUGH the dwell) so movement resumes
+  // from zero instead of jumping to wherever raw scroll distance would
+  // otherwise already place it.
+  const dwellExitBaselineRef = useRef<number | null>(null);
   // True only once the forward reveal has fully settled (elapsed reached
   // totalAutoMs) — gates the mouse-follow tilt handlers below so they
   // never fight the entrance animation's own inline-style writes to the
@@ -441,10 +465,14 @@ export default function HealthPackages() {
         if (!wasFull && p1raw >= GROW_COMMIT_FRACTION) {
           sectionPhaseRef.current = "full";
           justCommittedRef.current = true;
+          dwellUntilRef.current = performance.now() + SNAP_TRANSITION_MS + LIGHT_SWITCH_DELAY_MS + LIGHT_SWITCH_FADE_MS;
+          dwellExitBaselineRef.current = null;
           enableFrameSnapTransition();
           startAutoForward();
         } else if (wasFull && p1raw < GROW_RELEASE_FRACTION) {
           sectionPhaseRef.current = "growing";
+          dwellUntilRef.current = 0;
+          dwellExitBaselineRef.current = null;
           enableFrameSnapTransition();
           startAutoReverse();
         }
@@ -520,6 +548,9 @@ export default function HealthPackages() {
       const applyBg = (light: boolean) => {
         stickyIsLightRef.current = light;
         if (stickyViewport) {
+          stickyViewport.style.transition = light
+            ? `background-color ${LIGHT_SWITCH_FADE_MS}ms ease`
+            : "none";
           stickyViewport.style.backgroundColor = light ? "var(--color-bg, #fafcfc)" : "#031224";
         }
       };
@@ -529,10 +560,14 @@ export default function HealthPackages() {
       }
       if (nextIsLight && !stickyIsLightRef.current) {
         if (justCommittedRef.current) {
+          // Waits out the frame's own snap-to-full transition AND a
+          // further dwell on top of it, so the section unmistakably reads
+          // as "at full screen" for a beat before the bg starts fading —
+          // rather than fading the instant it merely reaches full size.
           lightSwitchTimeoutRef.current = window.setTimeout(() => {
             lightSwitchTimeoutRef.current = null;
             applyBg(true);
-          }, SNAP_TRANSITION_MS);
+          }, SNAP_TRANSITION_MS + LIGHT_SWITCH_DELAY_MS);
         } else {
           applyBg(true);
         }
@@ -550,7 +585,22 @@ export default function HealthPackages() {
       const total = rect.height - vh;
       const p = total <= 0 ? 0 : clamp01(-rect.top / total);
       const exitWindow = vh * EXIT_TRIGGER_VH;
-      const exitP = clamp01((exitWindow - rect.bottom) / exitWindow);
+
+      const stillDwelling = performance.now() < dwellUntilRef.current;
+      if (stillDwelling) {
+        // Locked at zero regardless of rect.bottom — scrolling through
+        // the dwell doesn't move the frame, it just doesn't count yet.
+        return { p, exitP: 0 };
+      }
+      if (dwellExitBaselineRef.current === null) {
+        // First tick after the dwell has ended: today's rect.bottom
+        // becomes exit's new zero-point, so it starts counting from here
+        // rather than from wherever the fixed threshold says it "should"
+        // already be after all the scrolling that happened during the
+        // dwell.
+        dwellExitBaselineRef.current = rect.bottom;
+      }
+      const exitP = clamp01((dwellExitBaselineRef.current - rect.bottom) / exitWindow);
       return { p, exitP };
     };
 
@@ -714,7 +764,17 @@ export default function HealthPackages() {
 
   const handleCardMouseLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!cardsSettledRef.current) return;
-    e.currentTarget.style.transform = "scale(1)";
+    const el = e.currentTarget;
+    // Only the hover-in tilt should ease (via .packageCard's own CSS
+    // transition) — leaving should snap back instantly instead of
+    // visibly un-tilting. An inline `transition` beats the stylesheet's,
+    // so this forces the reset to 0s; cleared next frame so the next
+    // hover-in still gets its normal eased transition.
+    el.style.transition = "transform 0s";
+    el.style.transform = "scale(1)";
+    requestAnimationFrame(() => {
+      el.style.transition = "";
+    });
   };
 
   return (

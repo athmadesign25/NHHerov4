@@ -450,19 +450,23 @@
   transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* No transition on the base rule for either pseudo-element below — only
+   the :hover/:focus-visible rule carries one, so entering eases in but
+   leaving (the new state is this un-transitioned base one) snaps back
+   instantly instead of visibly playing the wash/sweep in reverse. */
 .packageCard::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   background: rgba(0, 0, 0, 0);
-  transition: background 0.3s ease;
   pointer-events: none;
 }
 
 .packageCard:hover::after,
 .packageCard:focus-visible::after {
   background: rgba(0, 0, 0, 0.05);
+  transition: background 0.3s ease;
 }
 
 /* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
@@ -474,13 +478,13 @@
   z-index: 1;
   background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
   transform: translateX(-120%);
-  transition: transform 0.7s ease;
   pointer-events: none;
 }
 
 .packageCard:hover::before,
 .packageCard:focus-visible::before {
   transform: translateX(120%);
+  transition: transform 0.7s ease;
 }
 
 /* Width reduced 20% alongside the card (260px -> 208px) to stay in
@@ -519,14 +523,14 @@
   transform: translateX(74px);
 }
 
-/* Bone health: scaled back a little and sat on the card's bottom edge,
-   which both shrinks it and brings the right-hand side of the film into
-   view instead of cropping it away. */
+/* Bone health (xray-image.png, 468x424 natural): full card height so the
+   art touches both the top and bottom edges — 274px is that same 468:424
+   ratio scaled to the card's 248px height, so nothing is stretched or
+   cropped to get there. */
 .packageCardImageShort {
-  width: 241px;
-  height: 218px;
-  top: auto;
-  bottom: 0;
+  width: 274px;
+  height: 100%;
+  top: 0;
 }
 
 /* max-width stops the text column short of the image (208px wide, and
@@ -955,27 +959,26 @@
 
 /* Only a small bump — the direction 1 card's image appeared to grow a lot
    simply because the card itself got taller under it. */
-.packageCardCompact .packageCardImage {
-  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.packageCardCompact:hover .packageCardImage,
-.packageCardCompact:focus-visible .packageCardImage {
-  width: 228px;
-}
+/* No hover grow here (unlike the two sized variants below): the image is
+   right-anchored, so widening it shifts its left edge outward, which read
+   as the artwork sliding left on hover rather than a clean grow. */
 
 /* The sized variants need their own hover widths: the shared 228px above
    is a grow for the 208px default but a large shrink for these two, which
-   read as the image lurching on hover rather than easing. */
+   read as the image lurching on hover rather than easing.
+   Transition lives only on these :hover rules, not on the base image
+   rule — entering grows smoothly, but leaving (the base rule has no
+   transition of its own) snaps back to size instantly instead of visibly
+   shrinking back down. */
 .packageCardCompact:hover .packageCardImageTall,
 .packageCardCompact:focus-visible .packageCardImageTall {
   width: 352px;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.packageCardCompact:hover .packageCardImageShort,
-.packageCardCompact:focus-visible .packageCardImageShort {
-  width: 249px;
-}
+/* No hover grow for Bone Health either (same reason as the default image
+   above): right-anchored, so widening it on hover shifted its left edge
+   outward instead of growing cleanly in place. */
 
 /* White shimmer sweep across the card on hover — replaces the height
    growth as the hover affordance. Sits above the surface but below the
