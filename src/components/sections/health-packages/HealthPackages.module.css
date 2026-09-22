@@ -505,8 +505,10 @@
 .packageCardImageTall {
   width: 344px;
   /* Pushed right of its own anchor so it crowds the text column less; the
-     card clips what goes past the edge. */
-  transform: translateX(30%);
+     card clips what goes past the edge. A fixed offset rather than a
+     percentage, so the inset does not drift when the width grows on
+     hover. 74px puts its left edge 160px inside the card. */
+  transform: translateX(74px);
 }
 
 /* Bone health: scaled back a little and sat on the card's bottom edge,
