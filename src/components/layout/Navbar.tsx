@@ -38,27 +38,17 @@ export default function Navbar() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   // Search theme state ("dark" | "white") for stakeholder simulation
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // The in-navbar toggle is gone, but a mode saved from before still
+      // applies — the search reads this attribute, not any navbar state.
       const saved = localStorage.getItem('nh_search_theme') as "dark" | "white" | null;
       if (saved === 'white' || saved === 'dark') {
-        setSearchTheme(saved);
         document.documentElement.setAttribute('data-search-theme', saved);
       }
     }
   }, []);
 
-  const handleToggleSearchTheme = () => {
-    const nextTheme = searchTheme === 'dark' ? 'white' : 'dark';
-    setSearchTheme(nextTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('nh_search_theme', nextTheme);
-      document.documentElement.setAttribute('data-search-theme', nextTheme);
-      window.dispatchEvent(new CustomEvent('nh:search-theme-change', { detail: { theme: nextTheme } }));
-    }
-  };
   
   useEffect(() => {
     if (!isMobileMenuOpen) {
@@ -214,9 +204,9 @@ export default function Navbar() {
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+            <div style={{ position: "relative", width: "140px", height: "44px", display: "flex", alignItems: "center" }}>
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
@@ -424,24 +414,6 @@ export default function Navbar() {
                 on the pale red glass has nothing to sit against there. */}
             <span className={styles.emergencyLabelText}>24/7 Emergency</span>
           </Link>
-
-          {/* Search Theme Toggle (Dark / White Mode simulation for stakeholders) */}
-          <button
-            type="button"
-            onClick={handleToggleSearchTheme}
-            className={styles.searchThemeToggle}
-            title={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
-            aria-label={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
-          >
-            <span className={`${styles.themeTogglePill} ${searchTheme === "white" ? styles.themeWhiteActive : styles.themeDarkActive}`}>
-              <span className={styles.themeToggleThumb}>
-                {searchTheme === "dark" ? <Moon size={12} strokeWidth={2.5} /> : <Sun size={12} strokeWidth={2.5} />}
-              </span>
-              <span className={styles.themeToggleLabel}>
-                {searchTheme === "dark" ? "Dark" : "White"}
-              </span>
-            </span>
-          </button>
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>

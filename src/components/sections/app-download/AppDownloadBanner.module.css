@@ -543,10 +543,13 @@
   z-index: 20;
 }
 
+/* display: contents on desktop, so this wrapper contributes no box at all.
+   It arrived as position:relative + width:100%, which stretched the phone
+   stage — and the screen overlay inside is positioned in percentages, so a
+   wider stage put the screens off the phone entirely. The mobile override
+   below gives it a real box, where its masking is actually wanted. */
 .phoneMaskWrapper {
-  position: relative;
-  width: 100%;
-  overflow: visible; /* Default for desktop */
+  display: contents;
 }
 
 .phoneWrapper {

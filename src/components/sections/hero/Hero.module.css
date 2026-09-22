@@ -83,7 +83,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-4);
+  /* The composer's own glass has a soft top edge that reads as closer than
+     it measures — at --sp-4 it was crowding the subheadline (46px clear). */
+  gap: var(--sp-8);
   transform: translateY(20vh);
 }
 
