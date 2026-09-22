@@ -3674,12 +3674,16 @@ function AnimatedPlaceholder({ visible }: { visible: boolean }) {
 
 /* ─── MAIN WORKSPACE ──────────────────────────────────────── */
 function Workspace({
-  onClose, initialQuery, clearInitialQuery,
+  onClose, onBack, backLabel, isEmbedded,
+  initialQuery, clearInitialQuery,
   initialAction, initialActionData, clearInitialAction,
   isLoggedIn, setIsLoggedIn,
   isMaximized, onToggleMaximize
 }: {
   onClose: () => void;
+  onBack?: () => void;
+  backLabel?: string;
+  isEmbedded?: boolean;
   initialQuery?: string;
   clearInitialQuery?: () => void;
   initialAction?: string | null;
@@ -4264,21 +4268,48 @@ function Workspace({
       <div className={styles.chatArea}>
         <div className={styles.chatHeader}>
           <div className={styles.chatHeaderLeft}>
-            <button 
-              onClick={() => {
-                if (msgs.length > 0) {
-                  setMsgs([]);
-                } else if (onClose) {
-                  onClose();
-                }
-              }}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#1e293b", transition: "background 0.2s" }}
-              title="Back"
-            >
-              <ArrowLeft size={20} />
-            </button>
+            {onBack ? (
+              <button 
+                type="button"
+                onClick={onBack}
+                className={styles.backToResultsBtn}
+                title={backLabel || "Back to search results"}
+              >
+                <ArrowLeft size={16} />
+                <span>{backLabel || "Back to search results"}</span>
+              </button>
+            ) : (
+              <button 
+                type="button"
+                onClick={() => {
+                  if (msgs.length > 0) {
+                    setMsgs([]);
+                  } else if (onClose) {
+                    onClose();
+                  }
+                }}
+                style={{ background: "none", border: "none", cursor: "pointer", padding: "6px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "#1e293b", transition: "background 0.2s" }}
+                title="Back"
+              >
+                <ArrowLeft size={20} />
+              </button>
+            )}
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <img src="/assets/Pulse AI logo.svg" alt="Pulse AI Logo" style={{ height: "32px" }} />
+              <img src="/assets/Pulse AI logo.svg" alt="Pulse AI Logo" style={{ height: "30px" }} />
+              {isEmbedded && (
+                <span style={{
+                  fontSize: "10.5px",
+                  fontWeight: 600,
+                  color: "#034EA2",
+                  background: "#eff6ff",
+                  border: "1px solid #bfdbfe",
+                  padding: "2px 7px",
+                  borderRadius: "12px",
+                  letterSpacing: "0.02em"
+                }}>
+                  Clinical Assistant
+                </span>
+              )}
             </div>
           </div>
           <div className={styles.chatHeaderRight} style={{ position: "relative" }}>
@@ -4370,14 +4401,16 @@ function Workspace({
                 Sign In
               </button>
             )}
-            <button
-              className={styles.headerIconBtn}
-              style={{ marginLeft: "6px" }}
-              onClick={onToggleMaximize}
-              title={isMaximized ? "Restore window view" : "Expand to full screen"}
-            >
-              {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-            </button>
+            {!isEmbedded && (
+              <button
+                className={styles.headerIconBtn}
+                style={{ marginLeft: "6px" }}
+                onClick={onToggleMaximize}
+                title={isMaximized ? "Restore window view" : "Expand to full screen"}
+              >
+                {isMaximized ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+            )}
             <button className={styles.headerIconBtn} style={{ marginLeft: "4px" }} onClick={onClose} title="Close Pulse AI">
               <X size={18} />
             </button>
@@ -5098,14 +5131,20 @@ function PulseAIGateway({
 /* ─── ROOT EXPORT ─────────────────────────────────────────── */
 export default function PulseAIWorkspace({
   onClose,
+  onBack,
+  backLabel = "Back to search results",
   initialQuery: propInitialQuery = "",
   initialAction: propInitialAction = null,
-  initialActionData: propInitialActionData = null
+  initialActionData: propInitialActionData = null,
+  embedded = false,
 }: {
   onClose?: () => void;
+  onBack?: () => void;
+  backLabel?: string;
   initialQuery?: string;
   initialAction?: string | null;
   initialActionData?: any;
+  embedded?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(true);
   const [initialQuery, setInitialQuery] = useState(propInitialQuery);
@@ -5132,6 +5171,7 @@ export default function PulseAIWorkspace({
   }, []);
 
   useEffect(() => {
+    if (embedded) return;
     if (isOpen) {
       document.body.style.overflow = "hidden";
       if (typeof window !== "undefined" && (window as any).lenis) {
@@ -5149,7 +5189,7 @@ export default function PulseAIWorkspace({
         (window as any).lenis.start();
       }
     };
-  }, [isOpen]);
+  }, [isOpen, embedded]);
 
   useEffect(() => {
     const handleExternalOpen = (e: Event) => {
@@ -5175,6 +5215,30 @@ export default function PulseAIWorkspace({
     setIsOpen(false);
     if (onClose) onClose();
   };
+
+  if (embedded) {
+    return (
+      <div className={styles.embeddedWorkspaceWrap}>
+        <Workspace
+          onClose={handleClose}
+          onBack={onBack}
+          backLabel={backLabel}
+          isEmbedded={true}
+          initialQuery={initialQuery}
+          clearInitialQuery={() => setInitialQuery("")}
+          initialAction={initialAction}
+          initialActionData={initialActionData}
+          clearInitialAction={() => {
+            setInitialAction(null);
+            setInitialActionData(null);
+          }}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          isMaximized={false}
+        />
+      </div>
+    );
+  }
 
   return (
     <>

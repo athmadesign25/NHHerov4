@@ -3,6 +3,8 @@
 import React from "react";
 import { motion, MotionValue } from "framer-motion";
 import { Paperclip, Mic, ArrowUp, User, Heart, Search } from "lucide-react";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
 
@@ -12,11 +14,17 @@ interface DefaultSearchPromptProps {
   onSelectLocation: (loc: string) => void;
   onSelectActionPill: (action: "doctor" | "symptoms") => void;
   onOpenPulse?: () => void;
+  searchTheme?: "dark" | "white";
   promptOpacity?: MotionValue<number>;
+  minimizedSearchOpacity?: MotionValue<number>;
+  textColor?: MotionValue<string>;
   compactLabelOpacity?: MotionValue<number>;
+  squareIconOpacity?: MotionValue<number>;
+  fabLabelOpacity?: MotionValue<number>;
   controlsOpacity?: MotionValue<number>;
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
+  controlsOverflow?: MotionValue<"hidden" | "visible">;
 }
 
 export default function DefaultSearchPrompt({
@@ -25,25 +33,34 @@ export default function DefaultSearchPrompt({
   onSelectLocation,
   onSelectActionPill,
   onOpenPulse,
+  searchTheme = "dark",
   promptOpacity,
+  minimizedSearchOpacity,
+  textColor,
   compactLabelOpacity,
+  squareIconOpacity,
+  fabLabelOpacity,
   controlsOpacity,
   controlsHeight,
   controlsMarginBottom,
+  controlsOverflow,
 }: DefaultSearchPromptProps) {
+  const isWhite = searchTheme === "white";
+
   return (
     <div 
       className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "center", cursor: "pointer" }}
+      style={{ height: "100%", justifyContent: "center", cursor: "pointer", position: "relative", overflow: "hidden", zIndex: 5 }}
       onClick={onActivate}
     >
-      {/* Top row: Primary Prompt + Pulse AI Identity (aligned to same outer boundary) */}
+      {/* Top row: Primary Prompt (aligned to same outer boundary) */}
       <motion.div
         className={styles.landingInputRow}
         style={{
           ...(controlsMarginBottom ? { marginBottom: controlsMarginBottom } : {}),
           position: "relative",
           alignItems: "center",
+          opacity: promptOpacity,
         }}
         onClick={onActivate}
         role="button"
@@ -52,38 +69,50 @@ export default function DefaultSearchPrompt({
           if (e.key === "Enter" || e.key === " ") onActivate();
         }}
       >
-        {/* Main prompt: 20-22px, font-weight: 450 */}
-        <motion.span 
+        {/* Main prompt: Balanced airy regular weight, matching active search placeholder style */}
+        <span 
           className={styles.landingPlaceholder}
-          style={promptOpacity ? { opacity: promptOpacity } : undefined}
+          style={isWhite ? { color: "rgba(15, 23, 42, 0.60)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : undefined}
         >
           How can we help you today?
-        </motion.span>
-
-        {/* Pulse AI: Simple brand/intelligence label (no border, no button box) */}
-        <motion.div 
-          className={styles.pulseBadge}
-          style={promptOpacity ? { opacity: promptOpacity } : undefined}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onOpenPulse) {
-              onOpenPulse();
-            } else {
-              onActivate();
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          aria-label="Ask Pulse AI"
-        >
-          <div className={styles.pulseBars} aria-hidden>
-            <span className={styles.pulseBar1} />
-            <span className={styles.pulseBar2} />
-            <span className={styles.pulseBar3} />
-          </div>
-          <span className={styles.pulseText}>Pulse AI</span>
-        </motion.div>
+        </span>
       </motion.div>
+
+      {/* ── Minimized Search Content: Pulse Lottie animation with text below ── */}
+      {minimizedSearchOpacity && (
+        <motion.div
+          className={styles.squareBoxContent}
+          style={{
+            opacity: minimizedSearchOpacity,
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 7,
+            padding: "13px 6px",
+            pointerEvents: "none",
+            userSelect: "none",
+            boxSizing: "border-box",
+          }}
+        >
+          <div className={styles.floatingPulseIconWrap}>
+            <div className={styles.pulseLottieContainer} aria-hidden="true">
+              <Lottie animationData={pulseAnimation} loop={true} />
+            </div>
+          </div>
+          <motion.span
+            className={styles.floatingPulseSearchText}
+            style={{
+              color: textColor || "#FFFFFF",
+              marginTop: 1,
+            }}
+          >
+            Pulse AI<br />Search
+          </motion.span>
+        </motion.div>
+      )}
 
       {/* Continuous horizontal interaction row */}
       <motion.div 
@@ -91,7 +120,7 @@ export default function DefaultSearchPrompt({
         style={controlsOpacity ? {
           opacity: controlsOpacity,
           height: controlsHeight,
-          overflow: "hidden",
+          overflow: controlsOverflow || "visible",
         } : undefined}
       >
         <div className={styles.bottomControlsLeft}>
@@ -99,6 +128,7 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.standaloneIconBtn}
+            style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
             aria-label="Attach medical records or file"
             onClick={(e) => {
               e.stopPropagation();
@@ -118,12 +148,13 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.inlineActionBtn}
+            style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("doctor");
             }}
           >
-            <User size={14} className={styles.inlineActionIcon} />
+            <User size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
             <span>Find a doctor</span>
           </button>
 
@@ -131,12 +162,13 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.inlineActionBtn}
+            style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("symptoms");
             }}
           >
-            <Heart size={14} className={styles.inlineActionIcon} />
+            <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
             <span>Describe my symptoms</span>
           </button>
         </div>
@@ -146,6 +178,7 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.standaloneIconBtn}
+            style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
             aria-label="Voice search"
             onClick={(e) => {
               e.stopPropagation();

@@ -14,14 +14,6 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
       <div className={styles.topHeaderRow}>
         <div className={styles.headerLeftGroup}>
           <div className={`${styles.skeletonPill} ${styles.shimmer}`} />
-          <div className={styles.pulseBadge}>
-            <div className={styles.pulseBars} aria-hidden>
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </div>
-            <span className={styles.pulseText}>Pulse AI</span>
-          </div>
         </div>
         <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 32, height: 32, borderRadius: 8 }} />
       </div>
@@ -40,12 +32,6 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
 
       {/* Red Horizon Divider */}
       <div className={styles.redDivider} />
-
-      {/* Main Search Result Heading Skeleton */}
-      <div className={styles.resultsCategoryHeader}>
-        <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 240, height: 22 }} />
-        <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 140, height: 14, marginTop: 4 }} />
-      </div>
 
       {/* Two Column Skeleton Grid */}
       <div className={styles.resultsSplitLayout}>

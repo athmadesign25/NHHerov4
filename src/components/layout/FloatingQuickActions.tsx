@@ -2,13 +2,63 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../public/assets/pulse animation.json";
 import styles from "./FloatingQuickActions.module.css";
 
 export default function FloatingQuickActions() {
   console.log("FloatingQuickActions rendered");
 
   const [isQuickActionsVisible, setIsQuickActionsVisible] = useState(false);
+  const [isSearchDocked, setIsSearchDocked] = useState(false);
   const [darkLinks, setDarkLinks] = useState<boolean[]>([false, false, false]);
+  const [isMounted, setIsMounted] = useState(false);
+  const [containerTop, setContainerTop] = useState<number | null>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+
+    const updatePosition = (e?: Event) => {
+      const customDetail = (e as CustomEvent)?.detail;
+      if (customDetail && typeof customDetail.fabTop === "number") {
+        setContainerTop(customDetail.fabTop);
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        const cssVal = getComputedStyle(document.documentElement).getPropertyValue("--fab-target-top");
+        if (cssVal && cssVal.trim()) {
+          const parsed = parseFloat(cssVal);
+          if (!isNaN(parsed) && parsed > 0) {
+            setContainerTop(parsed);
+            return;
+          }
+        }
+        const winH = window.innerHeight;
+        const defaultStartTop = Math.round(winH * 0.68 - 28);
+        const defaultSquareTop = Math.round(defaultStartTop + (136 - 100) / 2);
+        setContainerTop(defaultSquareTop - 202);
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("nh:search-pos-update", updatePosition);
+
+    const handleDock = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail && typeof detail.isDocked === "boolean") {
+        setIsSearchDocked(detail.isDocked);
+      }
+    };
+    window.addEventListener("nh:search-docked", handleDock);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("nh:search-pos-update", updatePosition);
+      window.removeEventListener("nh:search-docked", handleDock);
+    };
+  }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const linkRef0 = useRef<HTMLAnchorElement>(null);
@@ -17,8 +67,8 @@ export default function FloatingQuickActions() {
 
   useEffect(() => {
     const handleScrollAndTheme = () => {
-      // Quick Health Actions Bar appears as the user scrolls past hero (at ~38% scroll)
-      const showQuickActions = window.scrollY >= window.innerHeight * 0.38;
+      // Quick Health Actions Bar appears as the user scrolls past hero (at ~35% scroll, showing 2 buttons)
+      const showQuickActions = window.scrollY >= window.innerHeight * 0.35;
       setIsQuickActionsVisible(showQuickActions);
 
 
@@ -83,7 +133,8 @@ export default function FloatingQuickActions() {
         ref={containerRef}
         role="region"
         aria-label="Quick actions and search"
-        className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden}`}
+        className={`${styles.container} ${isQuickActionsVisible ? styles.visible : styles.hidden} ${isSearchDocked ? styles.dockedThreeButtons : styles.dockedTwoButtons}`}
+        style={containerTop !== null ? { top: `${containerTop}px` } : undefined}
       >
         {/* Action 1: Book Appointment (Primary utility) */}
         <Link
@@ -113,11 +164,26 @@ export default function FloatingQuickActions() {
           onClick={handleOpenSearch}
           aria-label="Pulse AI Search"
         >
-          <span className={styles.iconWrap}>
-            <span className={styles.pulseBars} aria-hidden="true">
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
+          <div aria-hidden="true" className={styles.divider} />
+          <button
+            ref={linkRef2}
+            type="button"
+            className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
+            onClick={handleOpenSearch}
+            aria-label="Pulse AI Search"
+          >
+            <span className={styles.iconWrap}>
+              {isMounted ? (
+                <div className={styles.pulseLottieContainer} aria-hidden="true">
+                  <Lottie animationData={pulseAnimation} loop={true} />
+                </div>
+              ) : (
+                <span className={styles.pulseBars} aria-hidden="true">
+                  <span className={styles.pulseBar1} />
+                  <span className={styles.pulseBar2} />
+                  <span className={styles.pulseBar3} />
+                </span>
+              )}
             </span>
           </span>
           <span className={styles.actionLabel}>Pulse AI<br />Search</span>
