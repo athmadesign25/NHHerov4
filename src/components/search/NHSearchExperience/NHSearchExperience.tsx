@@ -9,6 +9,7 @@ import calendarCheckAnimation from "../../../../public/assets/calendar-check.jso
 import nhAppIconAnimation from "../../../../public/assets/nh-app-icon.json";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
+import { searchDockProgress } from "./dockProgress";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
 import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
@@ -126,19 +127,83 @@ export default function NHSearchExperience({
   const squareLeft = Math.round((winSize.w - compactWidth) / 2);
   const squareTopInPlace = Math.round(startTop + (startHeight - compactHeight) / 2);
 
-  // Exact vertical alignment with 3rd button position in side panel:
-  // Since FAB container is positioned at (squareTopInPlace - 202px),
-  // Button 3 is at (squareTopInPlace - 202px + 202px) = squareTopInPlace!
-  // It NEVER moves up or down — pure horizontal motion straight to the right!
-  const targetButton3Top = isMobile 
-    ? Math.round(winSize.h - 36 - compactHeight) 
-    : squareTopInPlace;
+  // Where the composer is actually going: the floating bar's own Pulse
+  // tile, measured rather than computed. The old arithmetic here assumed
+  // the bar was positioned from the composer (top: squareTopInPlace - 202),
+  // but the bar is simply centred in the viewport — so the composer was
+  // landing ~250px below the slot it was supposed to be entering, which is
+  // why the handoff could only ever be a cross-fade.
+  const [pulseTarget, setPulseTarget] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
-  // Horizontal position of 3rd button in side panel (right 24px, width 100px):
-  // left = winW - 24 - 100 = winW - 124px
+  useEffect(() => {
+    const measure = () => {
+      const el = document.getElementById("floating-pulse-target");
+      const container = document.querySelector(
+        ".global-floating-quick-actions"
+      ) as HTMLElement | null;
+      if (!el || !container) return;
+
+      // The bar is parked off-screen by a transform until it is shown, and
+      // sits short-and-raised until its third slot has opened — both are
+      // forced to their final state here, so what gets measured is where
+      // the tile ends up rather than where it currently is.
+      const originalTransform = container.style.transform;
+      const originalTransition = container.style.transition;
+      const originalMarginTop = container.style.marginTop;
+      const originalHeight = container.style.height;
+      container.style.transition = "none";
+      container.style.transform =
+        window.innerWidth < 900 ? "translateY(0)" : "translateY(-50%) translateX(0)";
+      container.style.marginTop = "0px";
+      container.style.height = "auto";
+
+      const rect = el.getBoundingClientRect();
+      if (rect.height > 0) {
+        setPulseTarget({
+          top: Math.round(rect.top),
+          left: Math.round(rect.left),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        });
+      }
+
+      container.style.transform = originalTransform;
+      container.style.marginTop = originalMarginTop;
+      container.style.height = originalHeight;
+      void container.offsetHeight;
+      container.style.transition = originalTransition;
+    };
+
+    measure();
+    // Below 900px the bar is display:none and there is nothing to measure;
+    // the settle pass covers the case where the bar mounts after this does.
+    const settle = setTimeout(measure, 800);
+    window.addEventListener("resize", measure);
+    return () => {
+      clearTimeout(settle);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  const targetButton3Top = isMobile
+    ? Math.round(winSize.h - 36 - compactHeight)
+    : pulseTarget?.top ?? squareTopInPlace;
+
   const targetButton3Left = isMobile
     ? Math.round(winSize.w - 16 - compactWidth)
-    : (winSize.w - 124);
+    : pulseTarget?.left ?? (winSize.w - 124);
+
+  // The composer finishes at the slot's own size, not at the 100x100 it
+  // crosses the screen as — otherwise it is a card sitting on a tile
+  // rather than the tile itself.
+  const targetWidth = isMobile ? compactWidth : pulseTarget?.width ?? compactWidth;
+  const targetHeight = isMobile ? compactHeight : pulseTarget?.height ?? compactHeight;
+  const targetRadius = isMobile || !pulseTarget ? compactRadius : 14;
 
   // Broadcast fab-target-top so FloatingQuickActions places Button 3 at exact squareTopInPlace
   useEffect(() => {
@@ -168,8 +233,8 @@ export default function NHSearchExperience({
   // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.84],
-    [startTop, squareTopInPlace, targetButton3Top]
+    [0.02, 0.14, 0.54, 0.84],
+    [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top]
   );
 
   const composerLeft = useTransform(
@@ -180,20 +245,20 @@ export default function NHSearchExperience({
 
   const composerWidth = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.84],
-    [startWidth, compactWidth, compactWidth]
+    [0.02, 0.14, 0.54, 0.84],
+    [startWidth, compactWidth, compactWidth, targetWidth]
   );
 
   const composerHeight = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.84],
-    [startHeight, compactHeight, compactHeight]
+    [0.02, 0.14, 0.54, 0.84],
+    [startHeight, compactHeight, compactHeight, targetHeight]
   );
 
   const composerRadius = useTransform(
     activeProgress,
-    [0.02, 0.14, 0.84],
-    [20, compactRadius, compactRadius]
+    [0.02, 0.14, 0.54, 0.84],
+    [20, compactRadius, compactRadius, targetRadius]
   );
 
   const composerPaddingX = useTransform(
@@ -255,6 +320,12 @@ export default function NHSearchExperience({
   // Moving gradient border around landing search bar edges (vibrant 0.65 on white, 0.25 on dark, fades smoothly on scroll compress)
   const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
   const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [landingBorderOpacity, landingBorderOpacity, 0]);
+
+  // Published for the floating bar, which opens its own third slot against
+  // it — the bar grows downward as the composer arrives, so the composer is
+  // absorbed into an opening space rather than dissolved on top of a tile
+  // that was already sitting there.
+  useMotionValueEvent(activeProgress, "change", (v) => searchDockProgress.set(v));
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
   const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);

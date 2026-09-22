@@ -11,7 +11,7 @@ import {
   animate,
   useInView,
 } from "framer-motion";
-import SplitText from "@/components/ui/SplitText";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./Hero.module.css";
 import { NHSearchExperience } from "@/components/search/NHSearchExperience";
 
@@ -156,34 +156,79 @@ export default function Hero() {
     height: 136,
   });
 
-  // Update anchor rectangle on mount & resize
+  // Whether the anchor has ever been read from the real element. Until it
+  // has, the guess below is all there is; once it has, the guess must never
+  // be allowed to overwrite it.
+  const anchorMeasuredRef = useRef(false);
+  const lastWinHRef = useRef(0);
+
+  // Update anchor rectangle on mount, resize, and on every return to rest
   useEffect(() => {
     const updateRect = () => {
       const winW = window.innerWidth;
       const winH = window.innerHeight;
       const initialWidth = Math.min(840, winW - 48);
+      const prevWinH = lastWinHRef.current || winH;
+      lastWinHRef.current = winH;
 
+      // The anchor only reads true while the hero is untouched: past ~20px
+      // it has already been scaled and morphed, so its rect describes where
+      // the morph currently is rather than where the composer rests.
       if (heroAnchorRef.current && window.scrollY < 20) {
         const rect = heroAnchorRef.current.getBoundingClientRect();
-        setAnchorRect({
+        const next = {
           top: Math.round(rect.top),
           left: Math.round(rect.left),
           width: Math.round(rect.width),
           height: Math.round(rect.height || 136),
-        });
-      } else {
-        setAnchorRect({
-          top: Math.round(winH * 0.68 - 28),
-          left: Math.round((winW - initialWidth) / 2),
-          width: initialWidth,
-          height: 136,
-        });
+        };
+        anchorMeasuredRef.current = true;
+        // Compared before setting because this also runs on scroll: an
+        // identical object every frame near the top would re-render the
+        // whole hero for nothing.
+        setAnchorRect((prev) =>
+          prev.top === next.top &&
+          prev.left === next.left &&
+          prev.width === next.width &&
+          prev.height === next.height
+            ? prev
+            : next
+        );
+        return;
       }
+
+      // Resized while scrolled away. The old fallback guessed the vertical
+      // position as 0.68vh, which sits ~150px above where the anchor really
+      // is — so the next time the page came back to the top the composer
+      // was resting on the hero headline. The horizontal values are exact
+      // from the viewport, so those are still refreshed; vertically the
+      // anchor tracks the bottom of the hero, so a measured top is carried
+      // by the height change rather than thrown away, and the scroll
+      // handler below re-measures it for real on arrival.
+      setAnchorRect((prev) => ({
+        top: anchorMeasuredRef.current
+          ? Math.round(prev.top + (winH - prevWinH))
+          : Math.round(winH * 0.68 - 28),
+        left: Math.round((winW - initialWidth) / 2),
+        width: initialWidth,
+        height: anchorMeasuredRef.current ? prev.height : 136,
+      }));
+    };
+
+    // Self-gated on scrollY < 20, so this is a no-op for all but the last
+    // few pixels of a scroll back to the hero — which is the one moment the
+    // anchor is both measurable and about to be used.
+    const onScroll = () => {
+      if (window.scrollY < 20) updateRect();
     };
 
     updateRect();
     window.addEventListener("resize", updateRect);
-    return () => window.removeEventListener("resize", updateRect);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   // Video playback speed management on active search / pulse AI
@@ -294,7 +339,9 @@ export default function Hero() {
         <div className={styles.centerWrap}>
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
             <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
-              <SplitText text="Trusted Care, Every Day" tag="h1" className={styles.headline} delay={0.08} />
+              <h1 className={styles.headline}>
+                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+              </h1>
               <motion.p
                 className={styles.subHeadline}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
