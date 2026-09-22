@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { 
   Paperclip, Mic, ArrowRight, X, 
   User, Heart, Sparkles, CornerDownLeft, Command
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { PredictiveState, getPredictiveCompletion } from "./searchData";
+import { PredictiveState, getPredictiveCompletion, fetchLiveApiPredictions } from "./searchData";
 import LocationSelector from "./LocationSelector";
 
 interface ActiveSearchCanvasProps {
@@ -32,11 +33,55 @@ export default function ActiveSearchCanvas({
 }: ActiveSearchCanvasProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
+  const [livePrediction, setLivePrediction] = useState<PredictiveState | null>(null);
 
-  // Compute live predictive completion whenever user types
-  const prediction: PredictiveState | null = query.trim()
+  // Compute immediate local prediction (0ms for demo speed)
+  const localPrediction: PredictiveState | null = query.trim()
     ? getPredictiveCompletion(query)
     : null;
+
+  // Debounced API prediction to fetch real entities from upstream search database
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setLivePrediction(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      try {
+        const live = await fetchLiveApiPredictions(trimmed, selectedLocation, controller.signal);
+        if (!controller.signal.aborted) {
+          setLivePrediction(live);
+        }
+      } catch {
+        // Fallback gracefully
+      }
+    }, 140);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query, selectedLocation]);
+
+  // Merge predictions:
+  // If query is an explicit demo key ("c", "ch", "chest", "k", "kn", "knee"), use local scenario
+  // Otherwise use livePrediction if available, else fallback to localPrediction
+  const isHardcodedScenario = 
+    query.trim().toLowerCase() === "c" || 
+    query.trim().toLowerCase() === "ch" || 
+    query.trim().toLowerCase() === "chest" || 
+    query.trim().toLowerCase().startsWith("chest p") || 
+    query.trim().toLowerCase() === "k" || 
+    query.trim().toLowerCase() === "kn" || 
+    query.trim().toLowerCase() === "knee" || 
+    query.trim().toLowerCase().startsWith("knee p");
+
+  const prediction = isHardcodedScenario 
+    ? (localPrediction || livePrediction)
+    : (livePrediction || localPrediction);
 
   // Auto-focus input when opening
   useEffect(() => {
@@ -187,10 +232,20 @@ export default function ActiveSearchCanvas({
       </div>
 
       {/* Red Horizon Divider Line */}
-      <div className={styles.redDivider} />
+      <motion.div 
+        className={styles.redDivider}
+        initial={{ opacity: 0, scaleX: 0.8 }}
+        animate={{ opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.32, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+      />
 
       {/* Quick Actions (Unboxed lightweight text + icon directly on the glass) */}
-      <div className={styles.activePillsRow}>
+      <motion.div 
+        className={styles.activePillsRow}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.32, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+      >
         <button
           type="button"
           className={`${styles.inlineActionBtn} ${activePill === "doctor" ? styles.inlineActionBtnActive : ""}`}
@@ -208,15 +263,20 @@ export default function ActiveSearchCanvas({
           <Heart size={14} className={styles.inlineActionIcon} />
           <span>Describe my symptoms</span>
         </button>
-      </div>
+      </motion.div>
 
       {/* ── STATE 2: EMPTY CANVAS (When user has not typed yet) ── */}
       {!prediction && query.trim().length === 0 && (
-        <div className={styles.emptyCanvasPrompt}>
+        <motion.div 
+          className={styles.emptyCanvasPrompt}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.32, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+        >
           <p className={styles.emptyPromptSub}>
             Start typing a symptom, condition, specialty, procedure or doctor name.
           </p>
-        </div>
+        </motion.div>
       )}
 
       {/* ── LIVE PREDICTIVE SECTION (When user types any character) ── */}

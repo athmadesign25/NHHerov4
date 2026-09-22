@@ -15,6 +15,7 @@ import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import AnimatedGradientWaves from "./AnimatedGradientWaves";
 import { 
   getSearchResults, 
   SearchResultsData, 
@@ -432,6 +433,25 @@ export default function NHSearchExperience({
   const [resultsData, setResultsData] = useState<SearchResultsData>(CARDIOLOGY_RESULTS);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  // The landing composer's own element — read right before the modal opens
+  // so the active-state modal can animate in from wherever it actually is
+  // (hero-anchored or already docked) instead of a fixed point on screen.
+  const landingShellRef = useRef<HTMLDivElement>(null);
+  const [originRect, setOriginRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+
+  const captureOrigin = () => {
+    if (landingShellRef.current) {
+      const rect = landingShellRef.current.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setOriginRect({
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        });
+      }
+    }
+  };
 
   // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
   useEffect(() => {
@@ -589,6 +609,7 @@ export default function NHSearchExperience({
 
   // Activate search (Landing → Active)
   const handleActivate = (customScroll?: number) => {
+    captureOrigin();
     const currentScroll = typeof customScroll === "number"
       ? customScroll
       : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
@@ -642,6 +663,7 @@ export default function NHSearchExperience({
 
   // Handle quick action pill clicks
   const handleSelectActionPill = (pill: "doctor" | "symptoms") => {
+    captureOrigin();
     setActivePill(pill);
     setSearchState("active");
     if (pill === "doctor") {
@@ -726,6 +748,7 @@ export default function NHSearchExperience({
     >
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
+        ref={landingShellRef}
         layout
         className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${styles.themeDark}`}
         data-search-theme="dark"
@@ -852,182 +875,239 @@ export default function NHSearchExperience({
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
-      {mounted && searchState !== "landing" && createPortal(
-        <div
-          id="nh-search-overlay-root"
-          data-lenis-prevent="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 99999,
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            paddingTop: (searchState === "results" || searchState === "skeleton" || searchState === "pulse")
-              ? "max(20px, 3vh)"
-              : "max(60px, 12vh)",
-            paddingBottom: "24px",
-            paddingLeft: "16px",
-            paddingRight: "16px",
-            boxSizing: "border-box",
-            pointerEvents: "auto",
-          }}
-        >
-          {/* Backdrop with translucent blur and stationary background freeze */}
-          <motion.div
-            key="search-backdrop"
-            data-backdrop="true"
-            data-lenis-prevent="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: "easeOut" }}
-            onClick={handleClose}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: searchTheme === "white" 
-                ? "rgba(255, 255, 255, 0.52)" 
-                : "rgba(5, 10, 18, 0.50)",
-              backdropFilter: searchTheme === "white" 
-                ? "blur(20px) saturate(140%)" 
-                : "blur(14px)",
-              WebkitBackdropFilter: searchTheme === "white" 
-                ? "blur(20px) saturate(140%)" 
-                : "blur(14px)",
-              zIndex: 1,
-              touchAction: "none",
-            }}
-          />
+      {mounted && createPortal(
+        <AnimatePresence>
+          {searchState !== "landing" && (() => {
+            const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
+            const modalTargetTop = typeof window !== "undefined"
+              ? (isCompactModal ? Math.max(20, window.innerHeight * 0.03) : Math.max(60, window.innerHeight * 0.12))
+              : 100;
+            const modalTargetWidth = typeof window !== "undefined"
+              ? Math.min(
+                  searchState === "pulse" ? 1000 : (searchState === "results" || searchState === "skeleton") ? 1080 : 880,
+                  winSize.w - 32
+                )
+              : 880;
 
-          {/* Modal Wrapper holding the Card and its Ambient Glow Around Effect */}
-          <div
-            className={styles.modalWithAmbientWrap}
-            style={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-              width: Math.min(
-                (searchState === "results" || searchState === "skeleton") 
-                  ? 1080 
-                  : searchState === "pulse" 
-                  ? 1000 
-                  : 880, 
-                winSize.w - 32
-              ),
-              maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
-              zIndex: 2,
-            }}
-          >
-            {/* ── Soft Feathered Random Diffused Motion Glow Behind Card ── */}
-            <div className={`${styles.cardFeatheredGlowWrap} ${searchTheme === "white" ? styles.featherWhite : styles.featherDark}`} aria-hidden="true">
-              <div className={styles.featherMeshWash} />
-              <div className={`${styles.featherLobe} ${styles.featherLobeCyan}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobePurple}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobeBlue}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobePink}`} />
-            </div>
-            <motion.div
-              layout
-              id="nh-active-search-modal"
-              className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
-              data-search-theme={searchTheme}
-              data-lenis-prevent="true"
-              initial={{ opacity: 0, scale: 0.96, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -10 }}
-              transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                position: "relative",
-                zIndex: 2,
-                width: "100%",
-                maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
-                height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
-                overflowY: searchState === "pulse" ? "hidden" : "auto",
-                overscrollBehavior: "contain",
-                margin: 0,
-                boxSizing: "border-box",
-              }}
-            >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {searchState === "active" && (
+            const originDeltaY = originRect ? Math.round(originRect.top - modalTargetTop) : 0;
+            const originScale = originRect && modalTargetWidth > 0
+              ? Math.min(1, Math.max(0.86, originRect.width / modalTargetWidth))
+              : 0.96;
+
+            return (
+              <div
+                id="nh-search-overlay-root"
+                key="nh-search-overlay-root"
+                data-lenis-prevent="true"
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  zIndex: 99999,
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  paddingTop: isCompactModal
+                    ? "max(20px, 3vh)"
+                    : "max(60px, 12vh)",
+                  paddingBottom: "24px",
+                  paddingLeft: "16px",
+                  paddingRight: "16px",
+                  boxSizing: "border-box",
+                  pointerEvents: "auto",
+                }}
+              >
+                {/* Backdrop with translucent blur and stationary background freeze */}
                 <motion.div
-                  key="active"
-                  initial={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  key="search-backdrop"
+                  data-backdrop="true"
+                  data-lenis-prevent="true"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: prefersReducedMotion ? 0.1 : 0.32, ease: "easeOut" }}
+                  onClick={handleClose}
+                  style={{
+                    position: "fixed",
+                    inset: 0,
+                    background: searchTheme === "white" 
+                      ? "rgba(255, 255, 255, 0.52)" 
+                      : "rgba(5, 10, 18, 0.55)",
+                    backdropFilter: searchTheme === "white" 
+                      ? "blur(20px) saturate(140%)" 
+                      : "blur(14px)",
+                    WebkitBackdropFilter: searchTheme === "white" 
+                      ? "blur(20px) saturate(140%)" 
+                      : "blur(14px)",
+                    zIndex: 1,
+                    touchAction: "none",
+                  }}
+                />
+
+                {/* ── Layer 2: Animated Gradient Waves Background (Mapped above fold, clearly visible above white blur) ── */}
+                <motion.div
+                  key="animated-gradient-waves-bg"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  style={{
+                    position: "fixed",
+                    inset: 0,
+                    zIndex: 2,
+                    pointerEvents: "none",
+                    overflow: "hidden",
+                  }}
+                  aria-hidden="true"
                 >
-                  <ActiveSearchCanvas
-                    query={query}
-                    onQueryChange={handleQueryChange}
-                    onSubmit={handleSubmit}
-                    onClose={handleClose}
-                    selectedLocation={selectedLocation}
-                    onSelectLocation={handleSelectLocation}
-                    activePill={activePill}
-                    onSelectActionPill={handleSelectActionPill}
+                  <AnimatedGradientWaves
+                    colorStops={["#0A25C9", "#7C3AED", "#EC4899"]}
+                    amplitude={1.35}
+                    blend={0.5}
+                    speed={0.85}
+                    opacity={0.92}
                   />
                 </motion.div>
-              )}
 
-              {searchState === "skeleton" && (
-                <motion.div
-                  key="skeleton"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                {/* ── Layer 3: Modal Wrapper holding the Search Viewport (On top of gradient) ── */}
+                <div
+                  className={styles.modalWithAmbientWrap}
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                    width: modalTargetWidth,
+                    maxHeight: isCompactModal ? "92vh" : "85vh",
+                    zIndex: 3,
+                  }}
                 >
-                  <SkeletonResultsCanvas query={query} />
-                </motion.div>
-              )}
+                  <motion.div
+                    id="nh-active-search-modal"
+                    className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
+                    data-search-theme={searchTheme}
+                    data-lenis-prevent="true"
+                    initial={{
+                      opacity: 0.85,
+                      y: originDeltaY,
+                      scale: originScale,
+                      borderRadius: 20,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      borderRadius: 24,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: originDeltaY,
+                      scale: originScale,
+                      borderRadius: 20,
+                    }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0.1 : 0.42,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      position: "relative",
+                      zIndex: 2,
+                      width: "100%",
+                      maxHeight: isCompactModal ? "92vh" : "85vh",
+                      height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
+                      overflowY: searchState === "pulse" ? "hidden" : "auto",
+                      overscrollBehavior: "contain",
+                      margin: 0,
+                      boxSizing: "border-box",
+                      transformOrigin: "center top",
+                    }}
+                  >
+                    <AnimatePresence mode="wait">
+                      {searchState === "active" && (
+                        <motion.div
+                          key="active"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.25, ease: "easeOut" }}
+                          style={{ width: "100%" }}
+                        >
+                          <ActiveSearchCanvas
+                            query={query}
+                            onQueryChange={handleQueryChange}
+                            onSubmit={handleSubmit}
+                            onClose={handleClose}
+                            selectedLocation={selectedLocation}
+                            onSelectLocation={handleSelectLocation}
+                            activePill={activePill}
+                            onSelectActionPill={handleSelectActionPill}
+                          />
+                        </motion.div>
+                      )}
 
-              {searchState === "results" && (
-                <motion.div
-                  key="results"
-                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <SearchResultsCanvas
-                    query={query || "I have chest pain and need a doctor"}
-                    results={resultsData}
-                    onEditSearch={handleEditSearch}
-                    onSubmit={handleSubmit}
-                    onClose={handleClose}
-                    selectedLocation={selectedLocation}
-                    onSelectLocation={handleSelectLocation}
-                    onSelectSpecialtyTag={handleSelectSpecialtyTag}
-                    onAskPulse={handleAskPulse}
-                  />
-                </motion.div>
-              )}
+                      {searchState === "skeleton" && (
+                        <motion.div
+                          key="skeleton"
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.98 }}
+                          transition={{ duration: 0.22, ease: "easeOut" }}
+                          style={{ width: "100%", height: "100%" }}
+                        >
+                          <SkeletonResultsCanvas
+                            query={query}
+                            selectedLocation={selectedLocation}
+                          />
+                        </motion.div>
+                      )}
 
-              {searchState === "pulse" && (
-                <motion.div
-                  key="pulse"
-                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.98, y: 10 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}
-                >
-                  <PulseAIView
-                    query={pulseInitialQuery || query}
-                    selectedLocation={selectedLocation}
-                    doctors={resultsData.doctors}
-                    onBack={handleBackToResults}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </div>,
-      document.body
-    )}
+                      {searchState === "results" && (
+                        <motion.div
+                          key="results"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ width: "100%", height: "100%" }}
+                        >
+                          <SearchResultsCanvas
+                            query={query || "I have chest pain and need a doctor"}
+                            results={resultsData}
+                            onEditSearch={handleEditSearch}
+                            onSubmit={handleSubmit}
+                            onClose={handleClose}
+                            selectedLocation={selectedLocation}
+                            onSelectLocation={handleSelectLocation}
+                            onSelectSpecialtyTag={handleSelectSpecialtyTag}
+                            onAskPulse={handleAskPulse}
+                          />
+                        </motion.div>
+                      )}
+
+                      {searchState === "pulse" && (
+                        <motion.div
+                          key="pulse"
+                          initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.98, y: 10 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}
+                        >
+                          <PulseAIView
+                            query={pulseInitialQuery || query}
+                            selectedLocation={selectedLocation}
+                            doctors={resultsData.doctors}
+                            onBack={handleBackToResults}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </div>
+              </div>
+            );
+          })()}
+        </AnimatePresence>,
+        document.body
+      )}
 
       {/* Existing Pulse AI Workspace (When opened while docked in compact size or via Pulse trigger) */}
       {mounted && isPulseWorkspaceOpen && createPortal(

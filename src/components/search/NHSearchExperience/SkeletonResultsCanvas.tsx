@@ -5,9 +5,12 @@ import styles from "./NHSearchExperience.module.css";
 
 interface SkeletonResultsCanvasProps {
   query: string;
+  selectedLocation?: string;
 }
 
-export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasProps) {
+export default function SkeletonResultsCanvas({ query, selectedLocation = "Bangalore" }: SkeletonResultsCanvasProps) {
+  const displayQuery = query?.trim() || "Finding the right care for you…";
+
   return (
     <div className={styles.resultsContainer} aria-busy="true" aria-label="Loading search results">
       {/* Top Header Row Skeleton */}
@@ -22,12 +25,20 @@ export default function SkeletonResultsCanvas({ query }: SkeletonResultsCanvasPr
       <div className={styles.resultsQueryBar}>
         <div className={styles.resultsQueryLeft}>
           <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 22, height: 22 }} />
-          <span className={styles.resultsQueryText}>{query || "Finding the right care for you…"}</span>
+          <span className={styles.resultsQueryText}>{displayQuery}</span>
         </div>
         <div className={styles.skeletonLoadingStatus}>
           <span className={styles.skeletonPulseDot} />
-          <span>Finding the right care for you…</span>
+          <span>Analysing symptoms & matching care…</span>
         </div>
+      </div>
+
+      {/* Dynamic Finding & Analysing Intent Banner */}
+      <div className={styles.analyzingActiveBanner}>
+        <span className={styles.analyzingSparkleDot} />
+        <span className={styles.analyzingBannerText}>
+          Pulse AI is finding results & analysing clinical intent for &ldquo;{displayQuery}&rdquo; in {selectedLocation}…
+        </span>
       </div>
 
       {/* Red Horizon Divider */}
