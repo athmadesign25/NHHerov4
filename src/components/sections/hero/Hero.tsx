@@ -100,12 +100,48 @@ export default function Hero() {
   const heroScale = useTransform(smoothProgress, [0, 0.6], [1, 0.88]);
   const heroRadius = useTransform(smoothProgress, [0, 0.6], ["0px", "20px"]);
 
-  // Blurs out across exit travel as next section approaches
-  const { scrollYProgress: heroExitProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const heroBlur = useTransform(heroExitProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
+  // Blurs out only once CentreOfExcellence's own header has scrolled up
+  // to the vertical center of the viewport — rather than reacting to the
+  // Hero wrapper's own scroll travel (which finished, and so started the
+  // blur, well before that header was actually in view). Same
+  // measure-on-scroll pattern as WhyChooseNH's own exit-blur gating.
+  const [heroBlurRange, setHeroBlurRange] = useState<[number, number]>([0, 1]);
+
+  useEffect(() => {
+    const BLUR_RANGE_PX = 400;
+    const measure = () => {
+      const headerEl = document.getElementById("CentreOfExcellence_header");
+      if (!headerEl) return;
+      const vh = window.innerHeight;
+      const headerTop = headerEl.getBoundingClientRect().top + window.scrollY;
+      // Trigger point: header's top reaches the vertical center of viewport.
+      const center = headerTop - vh / 2;
+      setHeroBlurRange([center, center + BLUR_RANGE_PX]);
+    };
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        measure();
+      });
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const settleTimer = setTimeout(measure, 500);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(settleTimer);
+    };
+  }, []);
+
+  const { scrollY: heroScrollY } = useScroll();
+  const heroBlur = useTransform(heroScrollY, heroBlurRange, ["blur(0px)", "blur(20px)"]);
 
   // Measure initial hero search position accurately
   const [anchorRect, setAnchorRect] = useState<{

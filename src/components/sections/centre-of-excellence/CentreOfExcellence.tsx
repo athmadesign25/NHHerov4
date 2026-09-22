@@ -258,7 +258,7 @@ export default function CentreOfExcellence() {
           a scroll-through — no "keep scrolling" hint needed either. */}
       <section className={styles.titleSection} id="centre-of-excellence">
         <div className={styles.centerContent}>
-          <div className={styles.header}>
+          <div className={styles.header} id="CentreOfExcellence_header">
             <motion.div
               style={{ color: "#000000", marginBottom: "28px" }}
               className="section-eyebrow"

@@ -12,30 +12,14 @@ const STATS = [
   { value: "1,200+", label: "Robotic surgeries performed to date" },
 ];
 
-// Referenced only by the (currently disabled, see isV2 below) v2 grid
-// layout — this declaration was missing entirely, throwing "ACCREDITATIONS
-// is not defined" at the type-check level. Logo files already exist under
-// public/accreditations/; filling in with the three the v2 markup indexes.
-const ACCREDITATIONS = [
-  { logo: "/accreditations/nabh.png", name: "NABH Accredited", subtext: "National quality & patient-safety standards" },
-  { logo: "/accreditations/nabl.png", name: "NABL Accredited", subtext: "Certified diagnostic & testing standards" },
-  { logo: "/accreditations/jci.png", name: "JCI Accredited", subtext: "International healthcare quality benchmark" },
-];
-
 // How much raw scroll distance (px) the exit blur/fade eases over, once
 // triggered — see exitRange below for what triggers it.
 const EXIT_RANGE_PX = 400;
 
-// Two complete bento-grid layouts exist below (gated on isV2) — this
-// declaration itself was missing (the file only ever referenced isV2,
-// never declared it), throwing "isV2 is not defined" on every render.
-// false keeps the original/v1 grid, matching how the section actually
-// rendered before this got fixed.
-const isV2 = false;
-
 export default function WhyChooseNH() {
   const sectionRef = useRef<HTMLElement>(null);
   const [statIndex, setStatIndex] = useState(0);
+  const comprehensiveVideoRef = useRef<HTMLVideoElement>(null);
 
   // Auto-looping stat unit (changes every 2 seconds)
   useEffect(() => {
@@ -43,6 +27,61 @@ export default function WhyChooseNH() {
       setStatIndex((prev) => (prev + 1) % STATS.length);
     }, 2000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Ping-pong loop for the Comprehensive Care background video: plays
+  // forward to the end, then reverses back to the start frame-by-frame
+  // (native <video> has no reverse playback), then forward again, etc.
+  // rVFC (requestVideoFrameCallback) is used when available for smoother,
+  // frame-accurate reverse stepping; falls back to rAF otherwise.
+  useEffect(() => {
+    const videoEl = comprehensiveVideoRef.current;
+    if (!videoEl) return;
+
+    let direction: 1 | -1 = 1;
+    let rafId: number;
+    let cancelled = false;
+
+    const REVERSE_STEP = 1 / 30; // seconds per step, ~30fps reverse scrub
+
+    const step = () => {
+      if (cancelled) return;
+      if (direction === 1) {
+        // Playing forward natively; just watch for the end to flip direction.
+        if (videoEl.ended || videoEl.currentTime >= videoEl.duration - 0.05) {
+          direction = -1;
+          videoEl.pause();
+        }
+      } else {
+        // Manually scrub backwards since <video> can't play in reverse.
+        const next = videoEl.currentTime - REVERSE_STEP;
+        if (next <= 0) {
+          videoEl.currentTime = 0;
+          direction = 1;
+          videoEl.play().catch(() => {});
+        } else {
+          videoEl.currentTime = next;
+        }
+      }
+      rafId = requestAnimationFrame(step);
+    };
+
+    const handleLoaded = () => {
+      videoEl.play().catch(() => {});
+      rafId = requestAnimationFrame(step);
+    };
+
+    if (videoEl.readyState >= 1) {
+      handleLoaded();
+    } else {
+      videoEl.addEventListener("loadedmetadata", handleLoaded, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      videoEl.removeEventListener("loadedmetadata", handleLoaded);
+    };
   }, []);
 
   // Scroll-linked expansion for entire bento grid (grows from 90% to 100% full page width)
@@ -159,7 +198,7 @@ export default function WhyChooseNH() {
             <motion.div
               className={styles.heroCard}
               style={{ transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -175,7 +214,9 @@ export default function WhyChooseNH() {
               <div className={styles.heroHeaderUnit}>
                 <h3 className={styles.heroTitle}>Clinical Excellence</h3>
                 <p className={styles.heroSubtitle}>
-                  Protocols and tracked outcomes for safer recovery paths
+                  Protocols and tracked outcomes for
+                  <br />
+                  safer recovery paths
                 </p>
               </div>
 
@@ -200,7 +241,8 @@ export default function WhyChooseNH() {
             {/* ROW 1 - CARD 2: Patient-First Support (Equal width 4 cols) */}
             <motion.div
               className={`${styles.cardRow1Equal} ${styles.cardRow1Col2}`}
-              initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
+              style={{ transformOrigin: "center" }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -214,7 +256,9 @@ export default function WhyChooseNH() {
               <div className={styles.cardHeaderUnit}>
                 <h3 className={styles.cardTitle}>Patient-First Support</h3>
                 <p className={styles.cardSubtitle}>
-                  Clear communication and care navigation for every family
+                  Clear communication and care
+                  <br />
+                  navigation for every family
                 </p>
               </div>
             </motion.div>
@@ -223,7 +267,7 @@ export default function WhyChooseNH() {
             <motion.div
               className={`${styles.cardRow1Equal} ${styles.cardRow1Col3}`}
               style={{ transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
@@ -237,15 +281,18 @@ export default function WhyChooseNH() {
               <div className={styles.cardHeaderUnit}>
                 <h3 className={styles.cardTitle}>Advanced Technology</h3>
                 <p className={styles.cardSubtitle}>
-                  Modern diagnostics and surgical platforms for precision treatment
+                  Modern diagnostics and surgical
+                  <br />
+                  platforms for precision treatment
                 </p>
               </div>
             </motion.div>
 
-            {/* ROW 2 - CARD 4: Top Medical Experts (Wider 5 cols) */}
+            {/* ROW 2 - CARD 4: Top Medical Experts (Narrower 3 cols) */}
             <motion.div
               className={styles.cardRow2Wider}
-              initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
+              style={{ transformOrigin: "center" }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.75, ease: [0.16, 1, 0.3, 1] }}
@@ -259,30 +306,38 @@ export default function WhyChooseNH() {
               <div className={styles.cardHeaderUnit}>
                 <h3 className={styles.cardTitle}>Top Medical Experts</h3>
                 <p className={styles.cardSubtitle}>
-                  Senior specialists for complex procedures and continuity of care
+                  Senior specialists for complex
+                  <br />
+                  procedures and continuity of care
                 </p>
               </div>
             </motion.div>
 
-            {/* ROW 2 - CARD 5: Comprehensive Care (Smaller/Compact 3 cols) */}
+            {/* ROW 2 - CARD 5: Comprehensive Care (Wider 5 cols) */}
             <motion.div
               className={styles.accreditationsCard}
               style={{ transformOrigin: "center" }}
-              initial={{ opacity: 0, scale: 0.92, filter: "blur(18px)" }}
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(18px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 1.15, delay: 0.95, ease: [0.16, 1, 0.3, 1] }}
             >
-              <img
-                src="/why-nh-comprehensive-care.jpg"
-                alt="Comprehensive Care"
+              <video
+                ref={comprehensiveVideoRef}
+                src="/5808902_Coll_wavebreak_Hospital_1280x720.mp4"
                 className={styles.cardBgImage}
+                muted
+                playsInline
+                preload="auto"
+                aria-label="Comprehensive Care"
               />
               <div className={styles.accreditationsDarkOverlay} />
               <div className={styles.cardHeaderUnit}>
                 <h3 className={styles.cardTitle}>Comprehensive Care</h3>
                 <p className={styles.cardSubtitle}>
-                  Multidisciplinary care across diagnosis, treatment, surgery, critical care and rehabilitation.
+                  Multidisciplinary care across diagnosis,
+                  <br />
+                  treatment, surgery, critical care and rehabilitation
                 </p>
               </div>
             </motion.div>
