@@ -412,7 +412,14 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  /* Matches .storesCol's own gap, so the space between the two badges reads
+     the same as the space between this stack and the QR card. */
+  gap: 16px;
+  /* Explicit, because a global img { max-width: 100% } caps an auto width
+     against the parent — which is itself sized by the image, so the badges
+     settled at their natural 166px instead of scaling up. 235 is the width
+     the 166:54 artwork needs at half the QR card's height. */
+  width: 235px;
 }
 
 /* Label above, image below, wrapped in .popoverGlass (same card treatment
@@ -438,27 +445,17 @@
   display: block;
 }
 
-/* The artwork is ~3:1, so it cannot simply be scaled to half the QR card's
-   height without becoming far wider than the card. It is boxed instead, on
-   the same glass the card uses, with the badge centred inside. */
+/* Bare artwork, no container. The two badges split the stack's height —
+   which is the QR card's — and scale by height, so they stay at their own
+   166:54 proportions rather than being letterboxed inside a fixed box. */
 .storeBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  width: 140px;
-  box-sizing: border-box;
-  padding: 0 10px;
+  width: auto;
   opacity: 0.8;
-  background:
-    linear-gradient(180deg, rgb(233 42 45 / 0%) 0%, rgb(252 80 83 / 23%) 100%),
-    rgb(255 255 255 / 40%);
-  backdrop-filter: blur(28px) saturate(1.6);
-  -webkit-backdrop-filter: blur(28px) saturate(1.6);
-  border: 1px solid rgba(252, 80, 83, 0.12);
   transition: transform 0.2s ease, opacity 0.2s ease;
-  overflow: hidden;
-  border-radius: 10px;
 }
 
 /* Store badge framing from main (PR #13) — mweb only, per the desktop
@@ -482,7 +479,7 @@
 
 .storeBadge img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
 }
 
