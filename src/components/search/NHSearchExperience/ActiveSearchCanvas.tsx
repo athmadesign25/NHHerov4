@@ -32,11 +32,22 @@ export default function ActiveSearchCanvas({
 }: ActiveSearchCanvasProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
+  const [prediction, setPrediction] = useState<PredictiveState | null>(null);
 
   // Compute live predictive completion whenever user types
-  const prediction: PredictiveState | null = query.trim()
-    ? getPredictiveCompletion(query)
-    : null;
+  useEffect(() => {
+    if (query.trim()) {
+      let active = true;
+      getPredictiveCompletion(query).then(res => {
+        if (active) setPrediction(res);
+      }).catch(() => {
+        if (active) setPrediction(null);
+      });
+      return () => { active = false; };
+    } else {
+      setPrediction(null);
+    }
+  }, [query]);
 
   // Auto-focus input when opening
   useEffect(() => {

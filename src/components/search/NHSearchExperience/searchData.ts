@@ -279,181 +279,31 @@ function computePredictionSuffix(targetPhrase: string, rawTyped: string): string
  *      "k" + "nee pain" => "knee pain"
  *      "knee" + " pain — find an orthopaedic doctor" => "knee pain — find an orthopaedic doctor"
  */
-export function getPredictiveCompletion(typedText: string): PredictiveState | null {
-  const clean = typedText.trim().toLowerCase();
+export async function getPredictiveCompletion(typedText: string): Promise<PredictiveState | null> {
+  const clean = typedText.trim();
   if (!clean) return null;
-
-  // ── SCENARIO A: CARDIOLOGY ('c' -> 'ch' -> 'chest' -> 'chest pain' -> 'cardio' -> 'cardiologist near me') ──
-  const cardiologySuggestions = [
-    "cardiologist near me",
-    "chest pain and need a doctor",
-    "cardiology consultation in Bangalore",
-    "chest pain specialist near me",
-  ];
-
-  if (clean === "c") {
-    const target = "cardiologist near me";
+  try {
+    const res = await fetch(`/api/search?query=${encodeURIComponent(clean)}`);
+    if (!res.ok) throw new Error("API failed");
+    const data = await res.json();
+    const items = data.inBand || [];
+    const firstMatchName = items.length > 0 ? items[0].name : `${clean} specialist`;
+    const fullText = clean.length <= firstMatchName.length && firstMatchName.toLowerCase().startsWith(clean.toLowerCase())
+      ? firstMatchName
+      : `${clean} ...`;
+    const suggestions = items.slice(0, 3).map((i: any) => i.name);
     return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
+      fullText: fullText,
+      suffix: fullText.length > clean.length ? fullText.substring(clean.length) : "",
+      suggestions: suggestions.length > 0 ? suggestions : [`Search for ${clean}`],
+      intent: "general",
+      intentLabel: items.length > 0 && items[0].subSpeciality ? items[0].subSpeciality : "Clinical Care",
     };
+  } catch (err) {
+    console.error("Predictive fetch error", err);
+    return null;
   }
-
-  if (clean === "ch") {
-    const target = "chest pain and need a doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
-    };
-  }
-
-  if (clean === "chest") {
-    const target = "chest pain and I need a doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
-    };
-  }
-
-  if (clean === "chest pain" || clean.startsWith("chest p")) {
-    const target = "chest pain and need a cardiologist";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
-    };
-  }
-
-  if (clean.startsWith("i have chest") || clean.startsWith("i need a cardio") || clean.includes("chest pain and need a doctor")) {
-    const target = "I have chest pain and need a doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
-    };
-  }
-
-  if (clean.startsWith("cardio") || clean.startsWith("heart")) {
-    const target = "cardiologist near me";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: cardiologySuggestions,
-      intent: "cardiology",
-      intentLabel: "Cardiology",
-    };
-  }
-
-  // ── SCENARIO B: ORTHOPAEDICS ('k' -> 'kn' -> 'knee' -> 'knee pain') ──
-  if (clean === "k") {
-    const target = "knee pain";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "knee pain — find an orthopaedic doctor",
-        "knee specialist near me",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  if (clean === "kn") {
-    const target = "knee pain and need a specialist";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "knee pain — find an orthopaedic doctor",
-        "knee replacement consultation",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  if (clean === "knee") {
-    const target = "knee pain — find an orthopaedic doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "I have knee pain and need an orthopaedic doctor",
-        "knee doctor near me",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  if (clean === "knee pain" || clean.startsWith("knee p")) {
-    const target = "I have knee pain and need an orthopaedic doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "knee pain — find an orthopaedic doctor",
-        "knee replacement surgeon in Bangalore",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  if (clean.startsWith("i have knee") || clean.startsWith("i need an ortho") || clean.includes("knee pain and need an orthopaedic")) {
-    const target = "I have knee pain and need an orthopaedic doctor";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "knee pain — find an orthopaedic doctor",
-        "orthopaedic consultation in Bangalore",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  if (clean.startsWith("ortho") || clean.startsWith("joint") || clean.startsWith("bone")) {
-    const target = "orthopaedic doctor for knee and joint pain";
-    return {
-      fullText: target,
-      suffix: computePredictionSuffix(target, typedText),
-      suggestions: [
-        "I have knee pain and need an orthopaedic doctor",
-        "joint replacement surgeon near me",
-      ],
-      intent: "orthopaedics",
-      intentLabel: "Orthopaedics",
-    };
-  }
-
-  // ── GENERAL FALLBACK PREDICTION ──
-  return {
-    fullText: `${typedText} specialist consultation near you`,
-    suffix: " specialist consultation near you",
-    suggestions: [
-      `${typedText} doctor in Bangalore`,
-    ],
-    intent: "general",
-    intentLabel: "Clinical Care",
-  };
 }
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // RESULTS DATASETS FOR BOTH DEMO SCENARIOS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -679,60 +529,63 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
  * - State B (Expanded 100 km): In-person hospital options within 100 km + video consults.
  * - State C (Video Only): No in-person care within 100 km; surfaces video consult options.
  */
-export async function getSearchResults(
-  query: string,
-  location: string = "Bangalore"
-): Promise<SearchResultsData> {
-  const clean = query.toLowerCase();
+export async function getSearchResults(query: string, location: string = "Bangalore"): Promise<SearchResultsData> {
+  const clean = query.trim();
   const proximity = getProximityContext(location);
+  const baseResults = CARDIOLOGY_RESULTS; // Fallback for doctors since API doesn't return doctors yet
+  
+  let mappedTreatments = baseResults.treatments;
+  let mappedSpecialties = baseResults.relatedSpecialties;
+  
+  if (clean) {
+    try {
+      const res = await fetch(`/api/search?query=${encodeURIComponent(clean)}`);
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.inBand || [];
+        if (items.length > 0) {
+          mappedTreatments = items.map((item: any) => ({
+            id: String(item.id || item.entityId),
+            title: item.name,
+            subtitle: item.subSpeciality || item.entityType,
+            iconType: "activity"
+          })).slice(0, 4);
+          
+          mappedSpecialties = data.specialities 
+            ? data.specialities.map((s: any) => s.name)
+            : items.slice(0, 4).map((i: any) => i.name);
+        }
+      }
+    } catch (err) {
+      console.error("Search fetch error", err);
+    }
+  }
 
-  const isOrtho =
-    clean.includes("knee") ||
-    clean.includes("ortho") ||
-    clean.includes("joint") ||
-    clean.includes("bone") ||
-    clean.startsWith("k");
-
-  const baseResults = isOrtho ? ORTHOPAEDICS_RESULTS : CARDIOLOGY_RESULTS;
-  const categoryTitle = isOrtho ? "Recommended orthopaedic doctors" : "Recommended doctors";
-
-  // Tailor doctor cards based on proximity tier
   let tailoredDoctors: DoctorCardData[] = [];
-
   if (proximity.tier === "local") {
-    // STATE A: Local in-person hospital visits & video consultations
     tailoredDoctors = baseResults.doctors.map((doc) => ({
-      ...doc,
-      city: location,
-      consultationType: "both" as const,
-      hospital: doc.hospital,
+      ...doc, city: location, consultationType: "both" as const, hospital: doc.hospital,
     }));
   } else if (proximity.tier === "expanded100km") {
-    // STATE B: Expanded to nearest hospital within 100 km
     const distNote = proximity.distanceKm ? ` (${proximity.distanceKm} km)` : " (within 100 km)";
     tailoredDoctors = baseResults.doctors.map((doc) => ({
-      ...doc,
-      city: proximity.nearestHubName || "Bangalore",
-      consultationType: "both" as const,
-      hospital: `${doc.hospital}${distNote}`,
-      distanceNote: `${proximity.distanceKm || 38} km away`,
+      ...doc, city: proximity.nearestHubName || "Bangalore", consultationType: "both" as const,
+      hospital: `${doc.hospital}${distNote}`, distanceNote: `${proximity.distanceKm || 38} km away`,
     }));
   } else {
-    // STATE C: No in-person care available within 100 km -> Video Consultations
     tailoredDoctors = baseResults.doctors.map((doc) => ({
-      ...doc,
-      city: "Narayana Telehealth",
-      consultationType: "video" as const,
-      hospital: "Narayana Telehealth · Online Video Consult",
+      ...doc, city: "Narayana Telehealth", consultationType: "video" as const, hospital: "Narayana Telehealth · Online Video Consult",
     }));
   }
 
   return {
     ...baseResults,
-    categoryTitle,
+    categoryTitle: "Recommended doctors",
     proximityTier: proximity.tier,
     proximityMessage: proximity.contextMessage,
     matchCountText: proximity.contextMessage,
     doctors: tailoredDoctors,
+    treatments: mappedTreatments,
+    relatedSpecialties: mappedSpecialties,
   };
 }

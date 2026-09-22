@@ -89,7 +89,7 @@ function ValueIconRating() {
 
 const TRUST_STACK = [
   { Icon: ValueIconTrust, label: "India's Most Trusted", subtext: "Hospital App" },
-  { Icon: ValueIconDownloads, label: "2.2M+", subtext: "Downloads" },
+  { Icon: ValueIconDownloads, label: "4.2M+", subtext: "Downloads" },
   { Icon: ValueIconRating, label: "4.8", subtext: "Rating" },
 ];
 
