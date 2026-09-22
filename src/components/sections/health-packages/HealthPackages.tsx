@@ -13,10 +13,12 @@ type PackageCard = {
   testsCount: number;
   reportsWithin: string;
   variant: 1 | 2 | 3;
-  // Direction 2 only: who the package is for, shown as a subtitle under
-  // the title ("35+ years · Women").
+  // Who the package is for, shown as a subtitle under the title.
   ageBand: string;
   audience: string;
+  // Optional per-card artwork treatment — the three images crop very
+  // differently in the same slot (they share a height but not a width).
+  imageFit?: "tall" | "short";
 };
 
 // Mock/demo data, keyed by city — packages (and their contents) genuinely
@@ -46,6 +48,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       variant: 2,
       ageBand: "40+ years",
       audience: "Everyone",
+      imageFit: "tall",
     },
     {
       id: "bone-health",
@@ -56,6 +59,7 @@ const PACKAGES_BY_CITY: Record<string, PackageCard[]> = {
       variant: 3,
       ageBand: "45+ years",
       audience: "Everyone",
+      imageFit: "short",
     },
   ],
 };
@@ -785,7 +789,13 @@ export default function HealthPackages() {
                           >
                             <span className={styles.packageCardBorder} aria-hidden />
                             <span className={styles.packageCardShimmer} aria-hidden />
-                            <img src={pkg.image} alt="" className={styles.packageCardImage} />
+                            <img
+                              src={pkg.image}
+                              alt=""
+                              className={`${styles.packageCardImage} ${
+                                pkg.imageFit ? styles[`packageCardImage${pkg.imageFit === "tall" ? "Tall" : "Short"}`] : ""
+                              }`}
+                            />
                             <div className={styles.packageCardContent}>
                               <h3 className={styles.packageCardTitle}>{pkg.name}</h3>
                               <p className={styles.packageCardAudience}>
