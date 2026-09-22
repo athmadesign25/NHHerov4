@@ -7,6 +7,7 @@ import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
+import TypewriterPrompt from "./TypewriterPrompt";
 
 interface DefaultSearchPromptProps {
   onActivate: () => void;
@@ -70,12 +71,10 @@ export default function DefaultSearchPrompt({
         }}
       >
         {/* Main prompt: Balanced airy regular weight, matching active search placeholder style */}
-        <span 
+        <TypewriterPrompt
           className={styles.landingPlaceholder}
-          style={isWhite ? { color: "rgba(15, 23, 42, 0.60)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : undefined}
-        >
-          How can we help you today?
-        </span>
+          style={isWhite ? { color: "rgba(15, 23, 42, 0.45)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : { color: "rgba(255, 255, 255, 0.62)", fontWeight: 400 }}
+        />
       </motion.div>
 
       {/* ── Minimized Search Content: Pulse Lottie animation with text below ── */}
