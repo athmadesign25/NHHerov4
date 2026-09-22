@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
 import { Search, X } from "lucide-react";
+import Lottie from "lottie-react";
+import calendarCheckAnimation from "../../../../public/assets/calendar-check.json";
+import nhAppIconAnimation from "../../../../public/assets/nh-app-icon.json";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
@@ -255,6 +258,10 @@ export default function NHSearchExperience({
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
   const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);
+  // Declared here because main references it without ever defining it: the
+  // mobile quick actions come up exactly as the composer's own chrome goes.
+  const fabOpacity = useTransform(activeProgress, [0.84, 0.88], [0, 1]);
+  const dockedMobile = isDocked && isMobile;
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
@@ -536,7 +543,12 @@ export default function NHSearchExperience({
       ? styles.statePulse
       : styles.stateResults;
 
-  return (
+  // Portaled to the body once docked on mobile. The wrapper is fixed, but
+  // it renders inside the hero, whose own transform makes it the containing
+  // block and bounds its stacking context — so past the hero the docked bar
+  // painted at the right coordinates yet behind the following sections.
+  const experience = (
+
     <div 
       className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`} 
       data-search-theme={searchTheme}
@@ -567,10 +579,15 @@ export default function NHSearchExperience({
           hasScroll && searchState === "landing"
             ? {
                 position: "fixed",
-                top: composerTop,
-                left: composerLeft,
-                width: composerWidth,
-                height: composerHeight,
+                // Mobile docks to a full-width bar along the bottom rather
+                // than to the desktop's corner: below 900px the floating
+                // quick-actions bar is display:none, so this IS that bar.
+                top: dockedMobile ? "auto" : composerTop,
+                bottom: dockedMobile ? "max(16px, env(safe-area-inset-bottom))" : "auto",
+                left: dockedMobile ? "16px" : composerLeft,
+                right: dockedMobile ? "auto" : "auto",
+                width: dockedMobile ? "calc(100vw - 32px)" : composerWidth,
+                height: dockedMobile ? "80px" : composerHeight,
                 borderRadius: composerRadius,
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
@@ -578,7 +595,9 @@ export default function NHSearchExperience({
                 paddingRight: composerPaddingX,
                 paddingTop: composerPaddingY,
                 paddingBottom: composerPaddingY,
-                opacity: morphShellOpacity,
+                // The docked desktop shell dissolves into the bar beside
+                // it; the docked mobile shell is the bar, so it stays.
+                opacity: dockedMobile ? 1 : morphShellOpacity,
                 maxWidth: "none",
                 minWidth: 0,
                 minHeight: 0,
@@ -589,9 +608,9 @@ export default function NHSearchExperience({
                 marginLeft: 0,
                 boxSizing: "border-box",
                 zIndex: 9990,
-                pointerEvents: isDocked ? "none" : "auto",
+                pointerEvents: isDocked && !dockedMobile ? "none" : "auto",
                 overflow: composerOverflow,
-                cursor: "pointer",
+                cursor: dockedMobile ? "default" : "pointer",
                 background: "transparent",
                 border: "none",
                 boxShadow: "none",
@@ -609,54 +628,50 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Layer 1: Dark glass background layer */}
-        {hasScroll && searchState === "landing" && (
-          <motion.div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "inherit",
-              background: "rgba(22, 28, 36, 0.28)",
-              backdropFilter: "blur(24px) saturate(140%)",
-              WebkitBackdropFilter: "blur(24px) saturate(140%)",
-              border: "1px solid rgba(255, 255, 255, 0.14)",
-              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
-              opacity: darkGlassOpacity,
-              pointerEvents: "none",
-              zIndex: 1,
-            }}
-          />
-        )}
-
-        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity, 1px thickness in both modes) */}
-        {hasScroll && searchState === "landing" && (
-          <motion.div
-            className={styles.animatedBorderOutline}
-            style={{
-              opacity: gradientBorderOpacity,
-            }}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Layer 2: Side buttons visual style (adapts during horizontal motion) */}
-        {hasScroll && searchState === "landing" && (
-          <motion.div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "inherit",
-              background: "linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%)",
-              backdropFilter: "blur(18px)",
-              WebkitBackdropFilter: "blur(18px)",
-              border: "1px solid rgba(249, 91, 97, 0.22)",
-              boxShadow: "0 8px 40px 0 rgba(0, 0, 0, 0.18)",
-              opacity: sideButtonBgOpacity,
-              pointerEvents: "none",
-            }}
-          />
+        {isMobile && hasScroll && (
+          <>
+            {/* The 3 Action Buttons that fade in as the search UI fades out */}
+            <motion.div 
+              style={{ opacity: fabOpacity, pointerEvents: isDocked ? "auto" : "none" }}
+              className={styles.mobileFabContent}
+            >
+              <a className={styles.fabLink} href="/find-a-doctor" onClick={(e) => e.stopPropagation()}>
+                <span className={styles.fabIconWrap}>
+                  <Lottie animationData={calendarCheckAnimation} loop={false} autoplay style={{ width: 26, height: 26 }} aria-hidden />
+                </span>
+                <span>Book<br/>Appointment</span>
+              </a>
+              <div className={styles.fabDivider} aria-hidden="true" />
+              <button
+                type="button"
+                className={styles.fabLink}
+                style={{ border: "none" }}
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent search box from opening
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
+                  }
+                }}
+              >
+                <span className={styles.fabIconWrap}>
+                  {/* Pulse AI bars styling placeholder or simple bars */}
+                  <div style={{ display: "flex", gap: "2px", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
+                    <div style={{ width: "2px", height: "16px", background: "white", borderRadius: "1px" }} />
+                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
+                  </div>
+                </span>
+                <span>Pulse AI<br/>Search</span>
+              </button>
+              <div className={styles.fabDivider} aria-hidden="true" />
+              <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>
+                <span className={styles.fabIconWrap}>
+                  <Lottie animationData={nhAppIconAnimation} loop={false} autoplay style={{ width: 22, height: 22 }} aria-hidden />
+                </span>
+                <span>Download<br/>NH Care App</span>
+              </a>
+            </motion.div>
+          </>
         )}
 
         <DefaultSearchPrompt
@@ -865,4 +880,6 @@ export default function NHSearchExperience({
       )}
     </div>
   );
+
+  return dockedMobile && mounted ? createPortal(experience, document.body) : experience;
 }

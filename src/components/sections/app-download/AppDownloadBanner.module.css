@@ -443,7 +443,25 @@
   opacity: 0.8;
   transition: transform 0.2s ease, opacity 0.2s ease;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 12px;}
+
+/* Store badge framing from main (PR #13) — mweb only, per the desktop
+   column keeping its own sizing and opacity. */
+@media (max-width: 1024px) {
+  .storeBadge {
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .storeBadge:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
+  }
 }
 
 .storeBadge img {
@@ -525,6 +543,12 @@
   z-index: 20;
 }
 
+.phoneMaskWrapper {
+  position: relative;
+  width: 100%;
+  overflow: visible; /* Default for desktop */
+}
+
 .phoneWrapper {
   margin-top: -30px;
   margin-bottom: -45px;
@@ -559,7 +583,7 @@
 
   .contentStack {
     padding: 48px 16px 0px;
-    gap: 48px; /* Big premium breathing room below title */
+    gap: 80px; /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
   
@@ -583,19 +607,28 @@
     max-width: 700px;
   }
 
+  .phoneMaskWrapper {
+    order: 2; /* Phone Mask sits in the middle */
+    width: calc(100% + 32px); /* Full bleed out of padding */
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    overflow: hidden; /* Crucial mask */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
   .phoneWrapper {
-    order: 3;
-    margin-top: 0 !important;
-    margin-bottom: -24px !important;
-    /* Framer Motion overrides CSS transform inline, so we use 'left' to optically center */
-    left: -12%;
-    transform: scale(0.95);
+    order: unset; 
+    margin: 0 !important; 
+    left: -14%; /* Shift left to optically center the phone screen itself */
+    transform: scale(1.2);
     transform-origin: bottom center;
   }
 
   /* Mobile Caption as a sleek floating pill */
   .mobileCaption {
-    order: 2;
+    order: 1; /* Ordered precisely before the phone */
     position: relative;
     z-index: 20;
     text-align: center;
@@ -612,24 +645,44 @@
     margin-bottom: -24px; /* Slight overlap over the phone */
   }
 
-  /* Reset Stores Position & bring to top */
+  /* Solid Dark Block Below the Image */
   .storesColPosition {
-    order: 1;
+    order: 3; 
     position: relative;
+    top: auto !important;
+    bottom: auto !important;
     left: auto;
     right: auto;
-    top: auto;
     transform: none;
-    margin: 0 !important;
-    width: 100%;
+    
+    /* Full-bleed out of the padding */
+    width: calc(100% + 32px);
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    
+    /* Pull up further to swallow the 32px flex gap PLUS the scaled-up invisible cropped area */
+    margin-top: -54px !important;
+    margin-bottom: 0 !important;
+    
+    /* Solid Dark Background (Matches exact footer top color) */
+    background: #061120; 
+    padding: 32px 16px 40px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
   }
   
-  /* Place Store Badges side-by-side perfectly tight */
+  /* Pure Flex Row for the Buttons */
   .storesCol {
+    width: 100%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
   }
   
   .storeBadge img {
