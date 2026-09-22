@@ -262,7 +262,7 @@ function StoryCard({
         }}
         aria-label={isMuted ? "Unmute video" : "Mute video"}
       >
-        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
       </button>
 
       {/* Video element — no poster: the inactive/static state is the video's
@@ -339,11 +339,21 @@ function StoryCard({
         )}
       </AnimatePresence>
 
-      {/* Text Info Unit */}
-      <div className={styles.textUnit}>
-        <h3 className={styles.patientName}>{card.name}</h3>
-        <p className={styles.patientSubtext}>{card.condition}</p>
-      </div>
+      {/* Text Info Unit (Hidden when video plays) */}
+      <AnimatePresence>
+        {!showVideo && (
+          <motion.div
+            className={styles.textUnit}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6, filter: "blur(14px)" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <h3 className={styles.patientName}>{card.name}</h3>
+            <p className={styles.patientSubtext}>{card.condition}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </article>
   );
 }

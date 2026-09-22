@@ -155,7 +155,8 @@
 /* Mute Button (Top Left) */
 .muteBtn {
   position: absolute;
-  top: 24px;
+  bottom: 104px;
+  top: auto;
   right: 24px;
   z-index: 10;
   width: 44px;
@@ -275,7 +276,7 @@
 /* Caption Container (~21px above text unit, 48px space from card sides) */
 .captionContainer {
   position: absolute;
-  bottom: 90px;
+  bottom: 32px;
   left: 48px;
   right: 48px;
   display: flex;
@@ -295,7 +296,7 @@
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   text-align: center;
@@ -309,13 +310,14 @@
 /* Text Info Unit Container */
 .textUnit {
   display: flex;
-  width: calc(100% - 48px);
+  width: calc(100% - 90px); /* Leave room for mute button on the right */
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   position: absolute;
   left: 24px;
-  bottom: 24px;
+  top: 24px;
+  bottom: auto;
   z-index: 5;
 }
 
@@ -339,11 +341,12 @@
    separate inset. */
 .overviewBoxTop {
   position: absolute;
-  top: 24px;
+  bottom: 24px;
+  top: auto;
   left: 24px;
   z-index: 8;
-  width: calc(100% - 48px);
-  max-width: calc(100% - 48px);
+  width: calc(100% - 74px);
+  max-width: calc(100% - 74px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -361,7 +364,7 @@
 .overviewText {
   color: #FFFFFF;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.45;
   margin: 0;
@@ -537,16 +540,25 @@
     border-radius: 6px;
   }
   .captionContainer {
-    bottom: 76px;
+    bottom: 24px;
     left: 20px;
     right: 20px;
+  }
+  .muteBtn {
+    bottom: 74px; /* Lower slightly on mobile since button is smaller */
+    right: 16px;
+    width: 34px;
+    height: 34px;
+  }
+  .overviewText {
+    font-size: 14px;
   }
   .ctaWrapper {
     margin-top: 8px;
   }
   .captionBox {
     font-size: 14px;
-    padding: 8px 14px;
+    padding: 6px 12px;
   }
   .textUnit {
     width: calc(100% - 40px);

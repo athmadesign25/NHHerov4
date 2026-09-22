@@ -53,27 +53,51 @@ const RollingNumber = ({ value, isHovered }: { value: string; isHovered: boolean
   return <span ref={ref}>{displayValue}{hasPlus ? "+" : ""}</span>;
 };
 
-function SpecialityCardItem({ spec }: { spec: typeof SPECIALITIES[0] }) {
+function SpecialityCardItem({ spec, screenMode = "desktop" }: { spec: typeof SPECIALITIES[0], screenMode?: string }) {
+  const ref = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Require the card to intersect the middle 30% of the viewport to play
+  const isInView = useInView(ref, { 
+    amount: "some", 
+    margin: "-35% 0px -35% 0px" 
+  });
+
+  useEffect(() => {
+    if (screenMode === "mobile" || screenMode === "tablet") {
+      if (isInView) {
+        setIsHovered(true);
+        videoRef.current?.play().catch(() => {});
+      } else {
+        setIsHovered(false);
+        videoRef.current?.pause();
+      }
+    }
+  }, [isInView, screenMode]);
 
   const handleMouseEnter = () => {
-    setIsHovered(true);
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => { });
+    if (screenMode === "desktop") {
+      setIsHovered(true);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => { });
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
+    if (screenMode === "desktop") {
+      setIsHovered(false);
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
     }
   };
 
   return (
     <a
+      ref={ref}
       aria-label={spec.name}
       className={styles.specialityCard}
       href={spec.href}
@@ -175,7 +199,7 @@ function PodiumColumnTrack({
       style={{ y, opacity, filter: dimBlur }}
     >
       {items.map((spec, idx) => (
-        <SpecialityCardItem key={idx} spec={spec} />
+        <SpecialityCardItem key={idx} spec={spec} screenMode={screenMode} />
       ))}
     </motion.div>
   );
