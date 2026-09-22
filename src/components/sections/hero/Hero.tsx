@@ -287,7 +287,13 @@ export default function Hero() {
     <div
       ref={containerRef}
       style={{
-        height: "200vh",
+        // scrollYProgress's 0->1 covers (this height - 100vh) of actual
+        // scroll — the composer's whole shrink -> glide -> dock choreography
+        // rides that range. At 200vh it was only 100vh of physical scroll,
+        // too little room for a multi-stage animation to read as anything
+        // but a rush. 260vh gives it 160vh, so the same stages play out
+        // over more real scrolling instead of speeding up to fit.
+        height: "260vh",
         position: "relative",
         zIndex: isPulseActive ? 9999 : 1,
         background: "transparent",
