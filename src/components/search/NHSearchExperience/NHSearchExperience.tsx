@@ -217,6 +217,19 @@ export default function NHSearchExperience({
 
   const [isMorphing, setIsMorphing] = useState(false);
 
+  // Scrolling down plays the full multi-stage glide into the FAB, same as
+  // always. Scrolling back up used to replay that same glide in reverse —
+  // the composer visibly flying back across the screen. It doesn't need
+  // to: past this cut, reversing just holds position at the FAB's own
+  // slot (matching wherever main.tsx's absorbed tile currently sits); once
+  // scroll crosses back below it, the composer cuts straight to its hero
+  // anchor, the same way it looks on first load. REVERSE_CUT matches the
+  // floating bar's own appear/disappear threshold, so the two hand off at
+  // the same instant rather than at two different points.
+  const REVERSE_CUT = 0.45;
+  const reversingRef = useRef(false);
+  const lastActiveProgressRef = useRef(0);
+
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
     const docked = latest >= 0.84;
@@ -224,7 +237,20 @@ export default function NHSearchExperience({
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
+
+    const delta = latest - lastActiveProgressRef.current;
+    if (delta < -0.0008) reversingRef.current = true;
+    else if (delta > 0.0008) reversingRef.current = false;
+    lastActiveProgressRef.current = latest;
   });
+
+  // The channel every geometry/appearance transform below reads instead of
+  // activeProgress directly: identical to it while scrolling down, but a
+  // hard step while scrolling up, so there is nothing in between to crawl
+  // through on the way back.
+  const positionProgress = useTransform(activeProgress, (v) =>
+    reversingRef.current ? (v > REVERSE_CUT ? 1 : 0) : v
+  );
 
   // Choreography:
   // Phase 1 [0.02 - 0.14]: Search bar shrinks in place to 100x100 glassmorphic card at center (squareLeft, squareTopInPlace)
@@ -232,56 +258,56 @@ export default function NHSearchExperience({
   // Phase 3 [0.54 - 0.84]: HORIZONTAL GLIDE: glides straight across horizontally to targetButton3Left at constant squareTopInPlace
   // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
   const composerTop = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14, 0.54, 0.84],
     [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top]
   );
 
   const composerLeft = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14, 0.54, 0.84],
     [startLeft, squareLeft, squareLeft, targetButton3Left]
   );
 
   const composerWidth = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14, 0.54, 0.84],
     [startWidth, compactWidth, compactWidth, targetWidth]
   );
 
   const composerHeight = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14, 0.54, 0.84],
     [startHeight, compactHeight, compactHeight, targetHeight]
   );
 
   const composerRadius = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14, 0.54, 0.84],
     [20, compactRadius, compactRadius, targetRadius]
   );
 
   const composerPaddingX = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14],
     [24, 0]
   );
 
   const composerPaddingY = useTransform(
-    activeProgress,
+    positionProgress,
     [0.02, 0.14],
     [20, 0]
   );
 
   // Water droplet squash & stretch during horizontal motion [0.54 -> 0.84]
   const dropletScaleX = useTransform(
-    activeProgress,
+    positionProgress,
     [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
     [1.0, 1.0, 1.15, 1.08, 0.95, 1.0]
   );
 
   const dropletScaleY = useTransform(
-    activeProgress,
+    positionProgress,
     [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
     [1.0, 1.0, 0.88, 0.94, 1.06, 1.0]
   );
@@ -289,33 +315,33 @@ export default function NHSearchExperience({
   // Background layers adaptation:
   // 1) Dark glassmorphism layer (same like main search box)
   const darkGlassOpacity = useTransform(
-    activeProgress, 
+    positionProgress, 
     [0.0, 0.02, 0.54, 0.84], 
     [1, 1, 1, 0]
   );
 
   // 2) Side button frosted glass layer (adapts during horizontal movement 0.54 -> 0.84)
   const sideButtonBgOpacity = useTransform(
-    activeProgress, 
+    positionProgress, 
     [0.54, 0.84], 
     [0, 1]
   );
 
   // Text color adaptation: white/dark in glassmorphism -> blue in side button style
   const textColor = useTransform(
-    activeProgress,
+    positionProgress,
     [0.54, 0.84],
     [searchTheme === "white" ? "#1E293B" : "#FFFFFF", "#0B5DF4"]
   );
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.02, 0.09], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.09], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
+  const controlsOpacity = useTransform(positionProgress, [0.02, 0.08], [1, 0]);
+  const controlsHeight = useTransform(positionProgress, [0.02, 0.09], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(positionProgress, [0.02, 0.09], ["32px", "0px"]);
+  const promptOpacity = useTransform(positionProgress, [0.02, 0.08], [1, 0]);
 
   // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
-  const minimizedSearchOpacity = useTransform(activeProgress, [0.04, 0.12], [0, 1]);
+  const minimizedSearchOpacity = useTransform(positionProgress, [0.04, 0.12], [0, 1]);
 
   // Moving gradient border around landing search bar edges (vibrant 0.65 on white, 0.25 on dark, fades smoothly on scroll compress)
   const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
@@ -375,10 +401,14 @@ export default function NHSearchExperience({
   // it — the bar grows downward as the composer arrives, so the composer is
   // absorbed into an opening space rather than dissolved on top of a tile
   // that was already sitting there.
-  useMotionValueEvent(activeProgress, "change", (v) => searchDockProgress.set(v));
+  // Published for the floating bar as positionProgress, not raw
+  // activeProgress — otherwise the bar's own slot would replay its
+  // opening/closing exactly in step with the composer's reverse crawl,
+  // which is the animation this is removing.
+  useMotionValueEvent(positionProgress, "change", (v) => searchDockProgress.set(v));
 
   // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);
+  const morphShellOpacity = useTransform(positionProgress, [0.84, 0.88], [1, 0]);
   // Multiplied, not chosen between: the entrance and the dock own different
   // ends of the same scroll and either one reaching 0 has to win.
   const shellOpacity = useTransform(
@@ -389,8 +419,8 @@ export default function NHSearchExperience({
   // mobile quick actions come up exactly as the composer's own chrome goes.
   const fabOpacity = useTransform(activeProgress, [0.84, 0.88], [0, 1]);
   const dockedMobile = isDocked && isMobile;
-  const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
-  const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+  const composerOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+  const controlsOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
