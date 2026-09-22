@@ -15,7 +15,6 @@ import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
-import AnimatedGradientWaves from "./AnimatedGradientWaves";
 import { 
   getSearchResults, 
   SearchResultsData, 
@@ -899,10 +898,18 @@ export default function NHSearchExperience({
               : 0.96;
 
             return (
+              /* The theme is carried on this portal root, not only on the
+                 in-tree wrapper: this subtree renders into document.body, so
+                 the wrapper is not an ancestor of it, and every white-mode
+                 rule in the stylesheet is written as a descendant selector
+                 ([data-search-theme="white"] .x / .themeWhite .x). Without it
+                 the modal kept its dark-mode text and fills — white on white. */
               <div
                 id="nh-search-overlay-root"
                 key="nh-search-overlay-root"
                 data-lenis-prevent="true"
+                data-search-theme={searchTheme}
+                className={searchTheme === "white" ? styles.themeWhite : styles.themeDark}
                 style={{
                   position: "fixed",
                   inset: 0,
@@ -933,44 +940,19 @@ export default function NHSearchExperience({
                   style={{
                     position: "fixed",
                     inset: 0,
-                    background: searchTheme === "white" 
-                      ? "rgba(255, 255, 255, 0.52)" 
-                      : "rgba(5, 10, 18, 0.55)",
-                    backdropFilter: searchTheme === "white" 
-                      ? "blur(20px) saturate(140%)" 
-                      : "blur(14px)",
-                    WebkitBackdropFilter: searchTheme === "white" 
-                      ? "blur(20px) saturate(140%)" 
-                      : "blur(14px)",
+                    background: "rgba(5, 10, 18, 0.55)",
+                    backdropFilter: "blur(14px)",
+                    WebkitBackdropFilter: "blur(14px)",
                     zIndex: 1,
                     touchAction: "none",
                   }}
                 />
 
-                {/* ── Layer 2: Animated Gradient Waves Background (Mapped above fold, clearly visible above white blur) ── */}
-                <motion.div
-                  key="animated-gradient-waves-bg"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  style={{
-                    position: "fixed",
-                    inset: 0,
-                    zIndex: 2,
-                    pointerEvents: "none",
-                    overflow: "hidden",
-                  }}
-                  aria-hidden="true"
-                >
-                  <AnimatedGradientWaves
-                    colorStops={["#0A25C9", "#7C3AED", "#EC4899"]}
-                    amplitude={1.35}
-                    blend={0.5}
-                    speed={0.85}
-                    opacity={0.92}
-                  />
-                </motion.div>
+                {/* No full-viewport gradient layer here on purpose. It used to
+                    sit at zIndex 2, i.e. ON TOP of the backdrop below, and
+                    painted the whole viewport — so the dark scrim never
+                    reached the eye and the page behind was replaced by a flat
+                    wash instead of being dimmed behind a lightbox. */}
 
                 {/* ── Layer 3: Modal Wrapper holding the Search Viewport (On top of gradient) ── */}
                 <div
