@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "NH Homepage V4",
+  title: "Best Multispeciality Private Hospital in India | Narayana Health",
   description:
     "India's most trusted hospital network with 3,000+ specialists across 30+ specialities. Book appointments, find doctors, and access world-class healthcare.",
   keywords: "Narayana Health, hospital, doctors, cardiology, oncology, book appointment",
