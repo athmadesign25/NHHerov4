@@ -134,6 +134,12 @@
   opacity: 0 !important;
 }
 
+@media (max-width: 900px) {
+  .searchShellMorphing {
+    background: rgba(0, 0, 0, 0.25) !important;
+  }
+}
+
 .stateLanding:hover {
   background: rgba(22, 28, 36, 0.33);
   border-color: rgba(255, 255, 255, 0.18);
@@ -305,9 +311,6 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
 }
 
 .headerLeftGroup {
@@ -5350,3 +5353,131 @@
 
 
 @keyframes nh-caret-blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Mobile Morphing FAB Styles (Restored)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.mobileFabContent {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+/* Same styles as FloatingQuickActions */
+.fabLink {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 6px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.1;
+  transition: opacity 0.15s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fabLink:active {
+  transform: scale(0.94);
+  opacity: 0.8;
+}
+
+.fabLink:active .fabIconWrap {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.fabIconWrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.15s ease;
+}
+
+.fabDivider {
+  height: auto;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.12);
+  margin: 12px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Mobile Morphing FAB Styles
+   ═══════════════════════════════════════════════════════════════════════════════ */
+.mobileFabContent {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+/* Same styles as FloatingQuickActions */
+.fabLink {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 6px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.1;
+  transition: opacity 0.15s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fabLink:active {
+  transform: scale(0.94);
+  opacity: 0.8;
+}
+
+.fabLink:active .fabIconWrap {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.fabIconWrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.15s ease;
+}
+
+.fabDivider {
+  height: auto;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.12);
+  margin: 12px 0;
+}

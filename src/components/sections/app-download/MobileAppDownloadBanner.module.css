@@ -1,0 +1,763 @@
+.section {
+  position: relative;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stackTrack {
+  position: relative;
+  width: 100%;
+}
+
+.stickyViewport {
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+  /* Set by FooterRevealWrapper as the footer rises up and overlays this
+     still-pinned section from below — dims its content slightly rather
+     than leaving it at full brightness underneath the footer. Defaults
+     to fully opaque everywhere else on the page. */
+  opacity: var(--footer-overlay-fade, 1);
+}
+
+/* Fills the sticky viewport behind the content; opacity is tied to the
+   same shared darkOpacity value the page-level crossfade uses. Extends
+   well above its own box (top: -320px) with a mask fading it in gradually,
+   so the switch from the plain WhyChooseNH->Footer plate into this
+   section's own textured gradient reads as a soft blend instead of a hard
+   seam right at the section's top edge — the same trick used for the
+   plate's own arrival, just now scoped to this element instead of an
+   ancestor. (Deliberately NOT clipped by .stickyViewport, which must stay
+   overflow:visible for exactly this reason; the phone's own bottom-edge
+   crop is handled separately by .phoneFrame.) */
+.neatBackdrop {
+  position: absolute;
+  top: -320px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+}
+
+/* justify-content:flex-end (not space-between) packs topTextBlock and
+   bottomBlock together as a single unit flush against the bottom of this
+   100%-height stack, with `gap` as the ONLY space between them — any extra
+   room the viewport has left over collects above topTextBlock instead of
+   between the two blocks. space-between, by contrast, hands ALL of that
+   leftover space to the one gap between the two items regardless of what
+   `gap` itself is set to (an explicit gap is just a floor under
+   space-between, not the actual rendered distance) — that's what produced a
+   large, viewport-height-dependent gap between the title and the feature
+   pill/phone below it. flex-end + a real (non-auto) gap keeps that gap fixed
+   while still anchoring the phone flush to the very bottom of the pinned
+   viewport, since bottomBlock is still the last/bottom-most item packed. */
+.contentStack {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 54px;
+  /* Pulled way back from the old clamp(72px,9vw,120px) — that, plus the
+     72px breathing-room div between this section and WhyChooseNH (see
+     page.tsx, now removed) and this section's own neatBackdrop fade-in,
+     compounded into a large stretch of empty space before any content
+     appeared, reading as "too much white gap" and pushing the sticky
+     phone stage's own entrance later than necessary. */
+  padding: 90px clamp(24px, 6vw, 80px) 0;
+  box-sizing: border-box;
+}
+
+/* ─── Centered Copy Block (Eyebrow + Title + Subtitle) ─── */
+.topTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  width: 100%;
+}
+
+.eyebrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #034EA2;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.eyebrowLine {
+  width: 24px;
+  height: 2px;
+  background: var(--color-emergency, #ED1C24);
+  border-radius: 2px;
+  display: block;
+}
+
+.title {
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  /* No margin-bottom here — the title-to-pill distance is fully owned by
+     .contentStack's own `gap` now, so an extra margin here would just be
+     added on top of that fixed value instead of being part of it. */
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+/* Each line (see the <br/> between them in the TSX) needs its own box for
+   the slide-down `y` transform to apply predictably. */
+.titleLine {
+  display: inline-block;
+}
+
+/* Base (revealed) copy of the highlighted phrase — plain solid color, no
+   gradient. The continuous shimmer sweep lives on a separate overlay below
+   so it can run as ONE pass across the whole phrase instead of per-word
+   (background-clip:text doesn't cascade, so per-word was the only way to
+   get color on the reveal spans — the shimmer itself doesn't need per-word
+   spans, just one element spanning the full phrase). */
+.titleHighlightBase {
+  display: inline-block;
+  color: var(--color-emergency, #ED1C24);
+}
+
+.titleHighlightWrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* Invisible duplicate of "Always With You." stacked exactly on top of the
+   revealed words above. Stays hidden (opacity 0) until that word reveal has
+   visually finished, then fades in permanently as one continuous left-to-
+   right gradient across the whole phrase — a plain per-word color would
+   repeat the same span on each word instead of reading as one gradient
+   across the full phrase. Both stops stay dark-enough-on-white (unlike the
+   original dark-mode light-pink-to-red sweep, which would wash out here). */
+.titleShimmerOverlay {
+  position: absolute;
+  inset: 0;
+  display: inline-block;
+  white-space: nowrap;
+  color: var(--color-emergency, #ED1C24);
+  background-image: linear-gradient(90deg, #ED1C24 0%, #A8151B 50%, #ED1C24 100%);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  pointer-events: none;
+}
+
+/* ─── Bottom-Anchored Block (Pill + Phone + QR/Store Row) ─── */
+.bottomBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Feature Name Pill Wrapper */
+.pillWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.pillInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fixed width (sized for the longest feature title) so switching between
+   features of different text lengths never resizes the pill — which would
+   otherwise shove the flanking arrows sideways since the whole row is
+   centered as a unit. Content stays left-aligned inside that fixed box. */
+.featurePill {
+  display: flex;
+  width: max-content;
+  padding: 10px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 48px;
+  border: 1.327px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
+  box-sizing: border-box;
+}
+
+.pillIconBg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(173deg, #4582F3 5.22%, #0B5DF4 118.69%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pillIcon {
+  color: #ffffff;
+}
+
+.pillText {
+  color: #0F172A;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Trust Stack | Phone Carousel | Store Badges row. The phone is the only
+   true flex-flow child — it always centers on the row's own width
+   regardless of how wide the trust stack or store column happen to be.
+   Both side stacks are pulled out of flow (absolutely positioned against
+   this row's own left/right edges) specifically so their width can never
+   pull the phone off-center. */
+.bottomRow {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Positioning lives on a plain wrapper, separate from the motion.div that
+   carries the entrance animation — framer-motion writes its own inline
+   `transform` for an animated `y`, which would silently overwrite a CSS
+   transform:translateY(-50%) set directly on that same animated element
+   (this is what was cutting the store column off / miscentering both
+   stacks: top:50% was applying, but the -50% counter-shift never was). */
+/* Vertically centered on the phone's own height (not bottom-anchored) —
+   .bottomRow's own box height is set by its tallest child, the phone
+   unit, so centering against .bottomRow itself lines both stacks up with
+   the phone's vertical middle. */
+.trustStackPosition,
+.storesColPosition {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.trustStackPosition {
+  left: 0;
+  margin-top: -212px;
+  margin-left: 160px;
+}
+
+.storesColPosition {
+  right: 0;
+  margin-top: -140px;
+  margin-right: 120px;
+}
+
+/* Left-side trust stack: mirrors the store column's own entrance timing/
+   motion for cohesion, and each unit now shares .storeContainer's own
+   glass/stroke card styling too (previously bare icon+caption with no
+   container, which read as visually disconnected from the rest of the
+   row and made the icons look like they were "hanging" with nothing
+   anchoring them). Icon-left/text-right (rather than icon-above-text)
+   keeps the whole stack shorter/more compact — closer in overall height
+   to the store column on the right, instead of towering well past it. */
+.trustStack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.trustUnit {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Fixed-width slot the icon is centered inside, rather than sizing the
+   icon's own box directly — the three icons render at different sizes
+   (see .trustIconLarge), so without a shared slot their differing widths
+   would leave the text column starting at a different x per row. Centering
+   inside a common slot keeps the icons on one visual column AND the text
+   starting at one consistent left margin. */
+.trustIconSlot {
+  width: 58px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trustIcon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+/* The heart and star icons are bare shapes with no backing shape of their
+   own (unlike the download icon's filled rounded-square backdrop), so at
+   matching box sizes they read visually lighter/smaller — scaled up here
+   to land at a comparable visual weight to the download icon beside them. */
+.trustIconLarge {
+  width: 58px;
+  height: 58px;
+}
+
+.trustTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.trustLabel {
+  color: #0F172A;
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.trustMainText {
+  color: #0F172A;
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.trustSubtext {
+  color: #64748B;
+  text-align: left;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.qrLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #0F172A;
+  text-transform: uppercase;
+}
+
+.storesCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* White glassy card, matching .featurePill's own glass treatment above —
+   a real backdrop-blur rather than a flat tint, so these read as floating
+   glass chips over the phone/background rather than plain white boxes. */
+/* Fixed width (not sized to each one's own content) so the QR card and
+   the two wider badge images all read as one consistent-width stack
+   instead of QR being visibly narrower than the badges beside it;
+   justify-content centers each one's own (narrower) content inside it. */
+.storeContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 156px;
+  box-sizing: border-box;
+  /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
+     rectangle) so the card just hugs its content evenly instead of
+     reading as padded out sideways. */
+  padding: 8px;
+  border-radius: 12px;
+  /* Subtle "white refraction" edge rather than a solid stroke — a soft
+     white border with no shadow at all, so the card reads as glass sitting
+     on the background rather than a panel floating above it. */
+  border: 1px solid rgba(100, 120, 150, 0.20);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(16px);
+  transition: all 0.2s ease;
+}
+
+/* QR sits stacked (image above label) at the top of the stores column,
+   reusing .storeContainer's own glass/stroke styling for visual
+   consistency with the App Store / Google Play badges below it. The QR
+   image itself is baked white-on-transparent (meant for a dark backdrop),
+   so it's inverted to read as dark-on-transparent here instead of
+   regenerating the source asset. */
+.qrContainer {
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+}
+
+.qrImg {
+  filter: invert(1);
+}
+
+/* Was turning near-opaque white on hover (0.75 alpha) — barely
+   distinguishable from the equally-white border, which is why the border
+   effectively vanished. Shifts darker instead (a soft navy tint) while
+   staying translucent glass rather than trending toward solid, and the
+   border darkens right along with it so it stays visible against the
+   now-different background instead of reading as white-on-near-white. */
+.storeContainer:hover {
+  background: rgba(15, 23, 42, 0.08);
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
+.storeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  /* Delicate framing to separate from dark background */
+  border-radius: 8px;
+  /* Matches standard app store badge radius */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #000;
+  /* Ensures the border perfectly frames the black badge */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  /* Clips the background strictly to the rounded border */
+}
+
+.storeBadge:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
+}
+
+.storeBadge img {
+  height: 38px;
+  object-fit: contain;
+}
+
+/* Phone Carousel Unit */
+.phoneCarouselUnit {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  max-width: 740px;
+}
+
+.phoneStageWrap {
+  position: relative;
+}
+
+.phoneMockupWrap {
+  width: 310px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
+  transform-origin: bottom center;
+}
+
+/* Crops the base screen's bottom edge off (overflow hidden on a shorter box
+   than the image's natural height) so the phone appears to sink below the
+   frame instead of showing a hard bottom edge. Kept as a ratio of the
+   authored (final) size — since the enlarged "appear" state is reached via
+   a transform (scale) on an ancestor rather than literal width/height
+   changes, this crop ratio holds at every size along the transition. */
+.phoneFrame {
+  position: relative;
+  width: 310px;
+  height: 464px;
+  overflow: hidden;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
+}
+
+.phoneImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Digital-twin entry overlay: the raw graphic, absolutely positioned
+   inside .phoneMockupWrap to land on the phone base's own screen area
+   (see the matching TWIN_SCREEN_* constants in the TSX). */
+/* Floating digital-twin card — a direct child of .contentStack now (not
+   nested inside the phone), so it can occupy any position between the
+   title and the phone mockup. top/left are JS-driven (see twinTop/twinLeft
+   in the TSX) rather than fixed, since it travels between the two. z-index
+   is high enough to clear bottomBlock's own content (the phone included)
+   since .contentStack's children aren't otherwise positioned/stacked. */
+/* Desktop overrides moved from JS inline styles */
+.handImage {
+  width: 700px;
+  height: auto;
+  object-fit: contain;
+  clip-path: inset(0 0 4% 0);
+}
+
+.handOverlayImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 700px;
+  height: auto;
+  object-fit: contain;
+  clip-path: inset(0 0 4% 0);
+  z-index: 20;
+}
+
+.phoneMaskWrapper {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  /* Default for desktop */
+}
+
+.phoneWrapper {
+  margin-top: -30px;
+  margin-bottom: -45px;
+}
+
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none !important;
+}
+
+.mobileTrustStack {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .desktopOnly {
+    display: none !important;
+  }
+
+  .mobileOnly {
+    display: block !important;
+  }
+
+  /* Override desktop sticky inline constraints to allow natural document flow */
+  .stackTrack {
+    height: auto !important;
+  }
+
+  .stickyViewport {
+    position: relative !important;
+    height: auto !important;
+  }
+
+  .contentStack {
+    padding: 48px 16px 0px;
+    gap: 80px;
+    /* Premium breathing room between Title block and Phone block */
+    justify-content: flex-start !important;
+  }
+
+  .mobileTrustStack {
+    display: flex;
+    flex-direction: row !important;
+    gap: 8px;
+    margin-top: 32px;
+    /* Matched to Health Packages */
+    align-items: flex-start;
+    justify-content: space-between;
+    /* Matched to Health Packages */
+    width: 100%;
+    padding: 0;
+    /* Remove padding to maximize space between */
+  }
+
+  .mobileTrustItem {
+    display: flex;
+    flex-direction: column !important;
+    align-items: center;
+    gap: 8px;
+    /* Matched to Health Packages */
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    flex: 1;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Exact match of HealthPackages .uspIconBox */
+  .mobileTrustIconBox {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 9.067px;
+    background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
+    box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Exact match of HealthPackages .uspLabel layout, with dark color for light bg */
+  .mobileTrustLabel {
+    font-size: 12px;
+    line-height: 1.35;
+    text-align: center;
+    font-weight: 500;
+    color: #475569;
+    /* Soft slate for the subtext */
+    white-space: normal;
+  }
+
+  .mobileTrustLabel strong {
+    font-weight: 700;
+    color: #0f172a;
+    /* Dark bold for the top line */
+  }
+
+  .title {
+    white-space: normal;
+    font-size: 36px;
+    line-height: 1.1;
+  }
+
+  /* Reset bottom row to stack cleanly */
+  .bottomRow {
+    flex-direction: column;
+    gap: 32px;
+    /* Breathing room between CTAs, Pill, and Phone */
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Reset phone wrapper constraints */
+  .handImage,
+  .handOverlayImage {
+    width: 100%;
+    max-width: 700px;
+  }
+
+  .phoneMaskWrapper {
+    order: 2;
+    /* Phone Mask sits in the middle */
+    width: calc(100% + 32px);
+    /* Full bleed out of padding */
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    overflow: hidden;
+    /* Crucial mask */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .phoneWrapper {
+    order: unset;
+    margin: 0 !important;
+    left: -14%;
+    /* Shift left to optically center the phone screen itself */
+    transform: scale(1.2);
+    transform-origin: bottom center;
+  }
+
+  /* Mobile Caption as a sleek floating pill */
+  .mobileCaption {
+    order: 1;
+    /* Ordered precisely before the phone */
+    position: relative;
+    z-index: 20;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    min-width: auto;
+    margin-bottom: -24px;
+    /* Slight overlap over the phone */
+  }
+
+  /* Solid Dark Block Below the Image */
+  .storesColPosition {
+    order: 3;
+    position: relative;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto;
+    right: auto;
+    transform: none;
+
+    /* Full-bleed out of the padding */
+    width: calc(100% + 32px);
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+
+    /* Pull up further to swallow the 32px flex gap PLUS the scaled-up invisible cropped area */
+    margin-top: -54px !important;
+    margin-bottom: 0 !important;
+
+    /* Solid Dark Background (Matches exact footer top color) */
+    background: #061120;
+    padding: 32px 16px 40px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Pure Flex Row for the Buttons */
+  .storesCol {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .storeContainer {
+    padding: 6px;
+  }
+
+  .storeBadge img {
+    height: 40px;
+    width: auto;
+  }
+}

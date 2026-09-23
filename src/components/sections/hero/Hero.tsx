@@ -289,7 +289,7 @@ export default function Hero() {
       style={{
         height: "200vh",
         position: "relative",
-        zIndex: isPulseActive ? 9999 : 1,
+        zIndex: isPulseActive ? 9999 : "auto",
         background: "transparent",
       }}
     >

@@ -7,16 +7,17 @@ import {
   useScroll,
   useTransform,
   useMotionValueEvent,
-  type Variants,
 } from "framer-motion";
+import { Video, Calendar, FileText, Activity, PersonStanding, Microscope } from "lucide-react";
 import Image from "next/image";
 import AppDownloadNeatBackground from "./AppDownloadNeatBackground";
-import styles from "./AppDownloadBanner.module.css";
+import styles from "./MobileAppDownloadBanner.module.css";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 
 type Feature = {
   id: number;
   title: string;
+  icon: typeof Video;
   img: string;
 };
 
@@ -28,28 +29,41 @@ const features: Feature[] = [
   {
     id: 0,
     title: "View detailed test reports",
+    icon: Microscope,
     img: "/App Screens/Test details.png?v=3",
   },
   {
     id: 1,
     title: "Your health dashboard at a glance",
+    icon: PersonStanding,
     img: "/App Screens/Home Page.png?v=3",
   },
   {
     id: 2,
     title: "Access your health records anytime",
+    icon: FileText,
     img: "/App Screens/Health records.png?v=3",
   },
   {
     id: 3,
     title: "Video consultations from home",
+    icon: Video,
     img: "/App Screens/Video Consultation.png?v=3",
   },
   {
     id: 4,
     title: "Track vitals and wellness reports",
+    icon: Activity,
     img: "/App Screens/Vitals tracking.png?v=3",
   },
+];
+
+const POP_OVER_CARDS = [
+  { img: "/App Screens/Pop over cards/Body analysis.png", text: "Get Digital twin health analysis" },
+  { img: "/App Screens/Pop over cards/Dr Card.png", text: "Book appointments in 60 seconds" },
+  { img: "/App Screens/Pop over cards/Trend Card.png", text: "Access your health records anytime" },
+  { img: "/App Screens/Pop over cards/Video block.png", text: "Video consultations from home" },
+  { img: "/App Screens/Pop over cards/Recommend.png", text: "Track vitals and wellness reports" },
 ];
 
 // Digital twin is now just a plain feature image like the other four (a
@@ -57,10 +71,6 @@ const features: Feature[] = [
 // see BASE_WIDTH/BASE_HEIGHT below), not a separate raw-content graphic
 // composited onto phone-base.png at runtime — so it needs no special
 // sizing/positioning constants of its own anymore.
-const MATURITY_THRESHOLD = 0.85;
-
-// Design-provided paths (single stroke, 24x24) rather than lucide
-// equivalents — none of the three match closely enough.
 function ValueIconTrust() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -86,6 +96,8 @@ function ValueIconRating() {
     </svg>
   );
 }
+
+const MATURITY_THRESHOLD = 0.85;
 
 const TRUST_STACK = [
   { Icon: ValueIconTrust, label: "India's Most Trusted", subtext: "Hospital App" },
@@ -114,15 +126,6 @@ const REVEAL = {
 // and shrinks," with no separate y-offset needed (one was tried and pushed
 // the enlarged phone up far enough to overlap the title above it).
 const PHONE_APPEAR_SCALE = 1.22;
-
-// How much further down the phone walks at the very end of its entrance,
-// to clear room for the feature pill above it. The resting layout leaves
-// ~59px between the title's baseline box and the phone's own visible top
-// edge; the pill needs its own height plus a generous gap to the title and
-// a tight one to the phone (~127px all in), so the phone gives up the
-// difference. It is spent on
-// the hand's already-cropped bottom edge, not on anything readable.
-const PHONE_SETTLE_DROP = 68;
 
 // Once the whole word-reveal for "Always With You." has visually finished
 // (title's own inView delay + its per-word stagger + duration), fade in the
@@ -165,7 +168,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 //    up resets to "pre" so the next entry replays the assembly from scratch.
 type Phase = "pre" | "matured" | "exiting";
 
-export default function AppDownloadBanner() {
+export default function MobileAppDownloadBanner() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -215,17 +218,8 @@ export default function AppDownloadBanner() {
   const phoneEntryY = useTransform(enterProgress, [0, 0.4, 0.85], [entryOffsetY, entryOffsetY, 0]);
 
   // Hand rotation and float on scroll to simulate lifting the phone
-  // Rise finishes at 0.85 (mweb timing, from nahid_work) and the settle
-  // drop picks up right after it — the two no longer overlap, so the phone
-  // lifts, lands, then walks down into its resting spot.
   const handRotation = useTransform(enterProgress, [0, 0.85], [30, 0]);
-  const handRiseY = useTransform(enterProgress, [0, 0.85], [60, 0]);
-
-  // The last stretch of the entrance walks the phone down by
-  // PHONE_SETTLE_DROP, which is what opens the band the feature pill then
-  // fades into (see PHONE_SETTLE_DROP for how that number is arrived at).
-  const phoneSettleDrop = useTransform(enterProgress, [0.86, 1], [0, PHONE_SETTLE_DROP]);
-  const handY = useTransform([handRiseY, phoneSettleDrop], ([rise, drop]: number[]) => rise + drop);
+  const handY = useTransform(enterProgress, [0, 0.85], [60, 0]);
   const bgOpacity = useTransform(enterProgress, [0.75, 0.85], [0, 1]);
 
   // Measures the gap between the text unit's bottom and the phone stage's
@@ -241,7 +235,6 @@ export default function AppDownloadBanner() {
       const phoneRect = phoneEl.getBoundingClientRect();
       const desiredTop = textRect.bottom + 24;
       setEntryOffsetY(desiredTop - phoneRect.top);
-
     };
     // Double rAF: waits for the phoneScale motion value's own initial style
     // write (applied outside React's render) to land before measuring, so
@@ -336,22 +329,16 @@ export default function AppDownloadBanner() {
   }, [isHovered, phase, activeIndex]);
 
   const activeFeature = features[activeIndex];
+  const IconComponent = activeFeature.icon;
 
   return (
     <section className={styles.section} id="app-download-banner">
-      {/* 120vh + 700px: gives the section a real, clearly-perceptible "stay
-          here" dwell (not just a sliver of one scroll tick) before the
-          footer starts smoothly rising over it. The dwell is real, added
-          scroll distance (not just visual) — position:sticky above holds
-          this section's content frozen in the viewport for exactly
-          (own height - 100vh) of scroll, so the extra 700px here directly
-          becomes extra hold time, not extra travel for anything inside it
-          (the phone's own entrance is keyed to this track's top position,
-          not its height, so it's unaffected by this). */}
-      <div ref={trackRef} className={styles.stackTrack} style={{ height: "calc(120vh + 700px)" }}>
+      {/* 120vh: gives the section a brief "stay here" dwell (a single scroll) 
+          before the footer starts smoothly rising over it. */}
+      <div ref={trackRef} className={styles.stackTrack} style={{ height: "120vh" }}>
         <div className={styles.stickyViewport} style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
-          
           <motion.div
+            className={styles.bgImageWrapper}
             style={{
               position: "absolute",
               top: 0,
@@ -392,7 +379,7 @@ export default function AppDownloadBanner() {
                 beat after the other — replaces the old per-word reveal for
                 this title specifically. Shimmer + red highlight on line 2
                 are unchanged. */}
-            <h2 id="app-download-title-unit" className={styles.title}>
+            <h2 id="mobile-app-download-title-unit" className={styles.title}>
               <span className={styles.titleLine}>
                 <TextSweepEffect words={["Your Health,"]} sweepMs={1500} />
               </span>
@@ -409,96 +396,120 @@ export default function AppDownloadBanner() {
               </motion.span>
             </h2>
 
-            {/* Feature pill: held back through the whole entrance (the phone
-                is still travelling through the space it occupies) and faded
-                in only once the phone has finished settling into place. */}
-            <motion.div
-              className={`${styles.featurePill} ${styles.desktopOnly}`}
-              initial={false}
-              animate={
-                phoneSettled && phase !== "pre"
-                  ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                  : { opacity: 0, y: 8, filter: "blur(6px)" }
-              }
-              transition={{ duration: 0.45, ease: EASE }}
-              aria-hidden={!phoneSettled}
-            >
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={activeFeature.id}
-                  className={styles.featurePillInner}
-                  initial={{ opacity: 0, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, filter: "blur(6px)" }}
-                  transition={{ duration: 0.3, ease: EASE }}
+            {/* MOBILE ONLY: Trust Stack rendering natively under the title */}
+            <div className={styles.mobileTrustStack}>
+              {TRUST_STACK.map((item, i) => (
+                <motion.div 
+                  key={i} 
+                  className={styles.mobileTrustItem}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
                 >
-                  <span className={styles.featurePillText}>{activeFeature.title}</span>
-                </motion.span>
-              </AnimatePresence>
-            </motion.div>
+                  <span className={styles.mobileTrustIconBox}>
+                    <item.Icon />
+                  </span>
+                  <div className={styles.mobileTrustLabel}>
+                    <strong>{item.label}</strong>
+                    <br />
+                    {item.subtext}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
 
           <div className={styles.bottomRow}>
-            {/* Value stack on the left — replaces the per-screen pop-over
-                cards, which competed with the feature pill above the phone
-                for the same "what does the app do" job. */}
-            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginLeft: "100px" }}>
-              <motion.div
+            {/* Pop-over Card matching active screen on the left */}
+            <div className={`${styles.trustStackPosition} ${styles.desktopOnly}`} style={{ marginTop: "-171px", marginLeft: "100px" }}>
+              <motion.div 
                 className={styles.trustStack}
-                initial="hidden"
-                animate={phase === "matured" ? "visible" : "hidden"}
-                variants={{
-                  hidden: {},
-                  visible: { transition: { staggerChildren: 0.15, delayChildren: 0.1 } },
-                }}
+                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
+                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                style={{ width: "240px", position: "relative", height: "180px" }}
               >
-                {(() => {
-                  const [primary, ...rest] = TRUST_STACK;
-                  const unitVariants: Variants = {
-                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
-                    visible: {
-                      opacity: 1,
-                      filter: "blur(0px)",
-                      y: 0,
-                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  };
-                  return (
-                    <>
-                      <motion.div
-                        key={primary.label}
-                        className={`${styles.valueUnit} ${styles.valueUnitFull}`}
-                        variants={unitVariants}
-                      >
-                        <span className={styles.valueIconTile}>
-                          <primary.Icon />
-                        </span>
-                        <span className={styles.valueText}>
-                          <span className={styles.valueLabel}>{primary.label}</span>
-                          <span className={styles.valueSubtext}>{primary.subtext}</span>
-                        </span>
-                      </motion.div>
-                      <div className={styles.trustStackBottomRow}>
-                        {rest.map(({ Icon, label, subtext }) => (
-                          <motion.div
-                            key={label}
-                            className={`${styles.valueUnit} ${styles.valueUnitCompact}`}
-                            variants={unitVariants}
-                          >
-                            <span className={styles.valueIconTile}>
-                              <Icon />
-                            </span>
-                            <span className={styles.valueText}>
-                              <span className={styles.valueLabel}>{label}</span>
-                              <span className={styles.valueSubtext}>{subtext}</span>
-                            </span>
-                          </motion.div>
-                        ))}
+                <AnimatePresence mode="popLayout">
+                  {POP_OVER_CARDS[activeIndex] && (
+                    <motion.div
+                      key={activeIndex}
+                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                      transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        backgroundColor: "rgba(255, 255, 255, 0.55)",
+                        backdropFilter: "blur(20px) saturate(1.4)",
+                        WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+                        borderRadius: "20px",
+                        padding: "16px",
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
+                        border: "1px solid rgba(255,255,255,0.6)"
+                      }}
+                    >
+                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                        {POP_OVER_CARDS[activeIndex].text}
                       </div>
-                    </>
-                  );
-                })()}
+                      <Image
+                        src={POP_OVER_CARDS[activeIndex].img}
+                        alt={POP_OVER_CARDS[activeIndex].text}
+                        width={240}
+                        height={100}
+                        style={{ width: "100%", height: "auto", display: "block", marginTop: "12px" }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
+
+              {/* Connecting Line from Phone to Card */}
+              <AnimatePresence mode="popLayout">
+                {phase === "matured" && (
+                  <motion.svg
+                    key={`line-${activeIndex}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{
+                      position: "absolute",
+                      left: "240px", 
+                      top: "40%", 
+                      width: "160px", 
+                      height: "80px",
+                      overflow: "visible",
+                      pointerEvents: "none",
+                      zIndex: 5
+                    }}
+                    viewBox="0 0 160 80"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <defs>
+                      <linearGradient id="lineGrad" x1="160" y1="80" x2="10" y2="10" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#ffffff" />
+                        <stop offset="15%" stopColor="#FF6B6B" />
+                        <stop offset="100%" stopColor="#3B82F6" />
+                      </linearGradient>
+                    </defs>
+
+                    <motion.path 
+                      d="M 160 80 C 100 80, 50 10, 10 10" 
+                      stroke="url(#lineGrad)" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  </motion.svg>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Middle Phone + Floating Hand Stage wrapped in a Mask Container */}
@@ -509,14 +520,6 @@ export default function AppDownloadBanner() {
                 position: "relative",
                 rotate: handRotation,
                 y: handY,
-                // The phone itself sits ~86px right-of-center within the
-                // hand image's own frame (the hand is centered, but the
-                // phone it's holding isn't) — shift the whole unit left by
-                // that same amount so the phone (not the image canvas)
-                // lands centered on the page. Applied here, alongside the
-                // existing rotate/y motion values, so it rides through
-                // every scroll-driven entrance/exit transform unchanged.
-                x: -86,
                 pointerEvents: "none",
               }}
             >
@@ -591,7 +594,7 @@ export default function AppDownloadBanner() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {activeFeature.title}
+                  {POP_OVER_CARDS[activeIndex] && POP_OVER_CARDS[activeIndex].text}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -601,55 +604,20 @@ export default function AppDownloadBanner() {
               <motion.div 
                 className={styles.storesCol}
                 style={{ pointerEvents: "auto", zIndex: 30 }}
-                initial="hidden"
-                animate={phase === "matured" ? "visible" : "hidden"}
-                variants={{
-                  hidden: {},
-                  visible: { transition: { delayChildren: 0.1, staggerChildren: 0.15 } },
-                }}
+                initial={{ opacity: 0, filter: "blur(4px)", y: 30 }}
+                animate={phase === "matured" ? { opacity: 1, filter: "blur(0px)", y: 0 } : { opacity: 0, filter: "blur(4px)", y: 30 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <motion.div
-                  className={`${styles.qrStack} ${styles.desktopOnly} ${styles.popoverGlass}`}
-                  variants={{
-                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
-                    visible: {
-                      opacity: 1,
-                      filter: "blur(0px)",
-                      y: 0,
-                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                >
-                  <Image src="/app-download-QR.png" alt="QR code to download the NH Care app" width={140} height={140} className={styles.qrImg} />
+                <div className={`${styles.storeContainer} ${styles.qrContainer} ${styles.desktopOnly}`}>
+                  <Image src="/qr.svg" alt="QR Code" width={64} height={64} style={{ borderRadius: "6px" }} className={styles.qrImg} />
                   <span className={styles.qrLabel}>Scan to install</span>
-                </motion.div>
-                <motion.div
-                  className={styles.storeBadgeStack}
-                  variants={{
-                    hidden: { opacity: 0, filter: "blur(10px)", y: 24 },
-                    visible: {
-                      opacity: 1,
-                      filter: "blur(0px)",
-                      y: 0,
-                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                >
-                  <motion.a
-                    href="#"
-                    className={styles.storeBadge}
-                    tabIndex={0}
-                  >
-                    <Image width={140} height={46} alt="Download on the App Store" src="/App store.svg" />
-                  </motion.a>
-                  <motion.a
-                    href="#"
-                    className={styles.storeBadge}
-                    tabIndex={0}
-                  >
-                    <Image width={140} height={46} alt="Get it on Google Play" src="/Google play.svg" />
-                  </motion.a>
-                </motion.div>
+                </div>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Download on the App Store" src="/App store.svg" />
+                </a>
+                <a href="#" className={styles.storeBadge} tabIndex={0}>
+                  <Image width={140} height={38} alt="Get it on Google Play" src="/Google play.svg" />
+                </a>
               </motion.div>
             </div>
           </div>

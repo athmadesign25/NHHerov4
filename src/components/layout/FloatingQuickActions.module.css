@@ -434,3 +434,10 @@
     gap: 8px;
   }
 }
+/* On desktop (>900px), FloatingQuickActions is the 3-button right sidebar.
+   On mobile, we hide it completely because the morphing search shell IS the bottom nav bar. */
+@media (max-width: 900px) {
+  .container {
+    display: none !important;
+  }
+}

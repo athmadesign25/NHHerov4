@@ -5,9 +5,12 @@ import { NeatGradient } from "@firecms/neat";
 import Hero from "@/components/sections/hero/Hero";
 import CentreOfExcellence from "@/components/sections/centre-of-excellence/CentreOfExcellence";
 import WhyChooseNH from "@/components/sections/why-choose-nh/WhyChooseNH";
+import MobileWhyChooseNH from "@/components/sections/why-choose-nh/MobileWhyChooseNH";
 import HealthPackages from "@/components/sections/health-packages/HealthPackages";
+import MobileHealthPackages from "@/components/sections/health-packages/MobileHealthPackages";
 import PatientStories from "@/components/sections/patient-stories/PatientStories";
 import AppDownloadBanner from "@/components/sections/app-download/AppDownloadBanner";
+import MobileAppDownloadBanner from "@/components/sections/app-download/MobileAppDownloadBanner";
 import FloatingQuickActions from "@/components/layout/FloatingQuickActions";
 
 function GlobalNeatBackground() {
@@ -163,10 +166,20 @@ function WhyNHToFooterBackground() {
     <div style={{ position: "relative", width: "100%", background: "linear-gradient(180deg, #FCFCFC 50.97%, #E0ECFF 97.06%)" }}>
       <div style={{ position: "relative", zIndex: 1 }}>
         <div data-nav-theme="light">
-          <WhyChooseNH />
+          <div className="hideOnMobile">
+            <WhyChooseNH />
+          </div>
+          <div className="hideOnDesktop">
+            <MobileWhyChooseNH />
+          </div>
         </div>
         <div data-nav-theme="light">
-          <AppDownloadBanner />
+          <div className="hideOnMobile">
+        <AppDownloadBanner />
+      </div>
+      <div className="hideOnDesktop">
+        <MobileAppDownloadBanner />
+      </div>
         </div>
       </div>
     </div>
@@ -202,7 +215,12 @@ export default function HomePage() {
         </div>
       </div>
 
-      <HealthPackages />
+      <div className="hideOnMobile">
+        <HealthPackages />
+      </div>
+      <div className="hideOnDesktop">
+        <MobileHealthPackages />
+      </div>
 
       <WhyNHToFooterBackground />
       </div>

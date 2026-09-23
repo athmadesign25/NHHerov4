@@ -233,3 +233,12 @@ a.contactItem:hover {
     justify-content: center;
   }
 }
+
+@media (max-width: 900px) {
+  .main {
+    padding: 100px 0;
+  }
+  .brandLogo {
+    margin-left: -2px;
+  }
+}

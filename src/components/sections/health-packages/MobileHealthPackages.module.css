@@ -1,0 +1,1332 @@
+/* ─── Sticky scroll runway ───────────────────────────────────────────── */
+.section {
+  position: relative;
+  width: 100%;
+  height: 260vh;
+  background: #031224;
+}
+
+/* stickyViewport is what's actually visible while pinned (this element's
+   own background sits underneath it, permanently hidden). It starts dark,
+   matching Patient Stories exactly, then swaps to light once the frame
+   fully covers the viewport (hidden behind that opaque photo), so it's
+   already light by the time the exit shrink reveals its edges again,
+   matching straight into Why NH. The color itself is set directly by JS
+   (same rAF tick as the frame's own width/height), not by toggling this
+   class — a React-state-driven class had just enough render lag to flash
+   the wrong color on a fast scroll-up. */
+.stickyViewport {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #031224;
+  transition: background 0.6s ease;
+}
+
+/* JS drives width/height/border-radius (phase 1 grow-in) and transform:
+   scale (exit shrink) via inline style. */
+.frame {
+  position: relative;
+  width: 76%;
+  height: 72%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #031224;
+  box-sizing: border-box;
+  transform-origin: center top;
+  will-change: transform, width, height, border-radius;
+}
+
+.bgVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.14);
+  filter: brightness(1.1) saturate(1.1);
+  will-change: transform;
+}
+
+/* Subtle vertical vignette, always on. Top stop darkened (from 0.32) so
+   the title/eyebrow read more clearly against the video — already a
+   smooth fade to 0% by 22%, so darkening it doesn't introduce any cut. */
+.scrimBase {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 18, 43, 0.55) 0%,
+    rgba(4, 18, 43, 0) 22%,
+    rgba(4, 18, 43, 0) 78%,
+    rgba(4, 18, 43, 0.42) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Progressive blur behind the title/eyebrow/USP row: several full-bleed
+   backdrop-blur layers, each masked to fade out at a different depth, so
+   the blur is strongest right behind the text and dissolves to nothing
+   well before the cards — no single layer has a hard edge of its own
+   (each one's own mask already fades to transparent), so the composite
+   never reads as a "cut" the way one flat blurred box would. */
+.titleBlur {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.titleBlurLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.titleBlurLayer1 {
+  backdrop-filter: blur(22px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+}
+
+.titleBlurLayer2 {
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+}
+
+.titleBlurLayer3 {
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+}
+
+.titleBlurLayer4 {
+  backdrop-filter: blur(3px);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+}
+
+/* Always-on decorative wash spanning the full frame: a red accent sweep
+   plus a deep-navy corner glow, per the Figma spec. Full height (not
+   confined to a hard-edged band) so each gradient's own long fade-out is
+   what dissolves it to nothing — there's no box boundary of its own to
+   visually "cut" against. Flipped vertically (scaleY): the literal Figma
+   values put the warm glow in the bottom-left corner — mirroring top<->
+   bottom moves it to the top-left instead, without touching which side
+   (left vs right) it sits on. */
+.topOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(13deg, rgba(255, 54, 57, 0.30) -31.94%, rgba(152, 15, 17, 0) 33.58%),
+    linear-gradient(97deg, rgba(5, 22, 50, 0.50) 19.03%, rgba(6, 24, 56, 0.47) 27.59%, rgba(9, 40, 90, 0.30) 62.01%, rgba(15, 67, 152, 0) 91.02%);
+  transform: scaleY(-1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Diagonal navy wash that deepens as the card row finishes revealing — JS
+   drives opacity 0 -> 0.7 across phase 2 (see scrimDullRef in the TSX).
+   Pinned to the BOTTOM half of the frame only — previously this was a
+   full-height `inset: 0`, which let its dark-on-the-left diagonal wash
+   bleed all the way up behind the title/eyebrow as it faded in, reading
+   as a stray "gradient on the left" nowhere near the cards it's actually
+   meant to sit behind.
+
+   Its own top edge is masked to fade in over the first ~40% of the box
+   instead of starting at full strength immediately — since the JS-driven
+   opacity applies uniformly across the whole box, without this the wash
+   would snap from "absent" to "0.7 everywhere" right at this box's top
+   edge (the frame's exact halfway line), reading as a hard horizontal
+   cut. The fade-in makes that boundary dissolve instead of cutting. */
+.bottomOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  will-change: opacity;
+}
+
+/* ─── Centered content column ─────────────────────────────────────────── */
+.grid {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 110px 56px 56px;
+  box-sizing: border-box;
+  transform-origin: center top;
+  will-change: transform;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ffffff;
+  will-change: transform;
+}
+
+/* Plain layout containers now — the sequential word/line/item reveal (see
+   HealthPackages.tsx's RevealTitleWords and .uspItem motion elements) is
+   driven per-element via Framer Motion's `animate` prop keyed off the
+   `textRevealed` boolean, not by JS setting opacity/transform/filter on
+   these wrapper divs as a whole. */
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Eyebrow + dash slide in from above together as one unit, first in the
+   column's reveal sequence — see the `eyebrowUnit` motion.div in
+   HealthPackages.tsx. Uses the global .section-eyebrow for layout
+   (centered, own dash) since this section is centered now, unlike the old
+   two-column layout that needed a left-aligned override — just recolors
+   the text white for this dark background (the global default is the
+   brand blue, meant for light sections). */
+.eyebrowUnit {
+  will-change: transform, opacity, filter;
+}
+
+.eyebrowUnit :global(.section-eyebrow) {
+  color: #ffffff;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  text-align: center;
+  max-width: none;
+  margin: 0;
+}
+
+/* ─── USP row ──────────────────────────────────────────────────────────── */
+.uspList {
+  list-style: none;
+  margin: 44px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 44px;
+}
+
+.uspItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* Glassy red icon chip — backdrop-filter + an inset highlight so it reads
+   as a lit glass tile rather than a flat colored square. */
+.uspIconBox {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 9.067px;
+  background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
+  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  backdrop-filter: blur(6px);
+}
+
+.uspLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: left;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* ─── Bottom stack: label + card row + explore button ─────────────────── */
+.bottomStack {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.railLabel {
+  color: #e1e1e1;
+  text-align: center;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: normal;
+  margin: 0 0 20px;
+  will-change: transform, opacity;
+}
+
+/* Grid (not flex) so the three columns can shrink together below the
+   spec width on narrower viewports — flex children with a fixed width
+   would just overflow the frame instead of fitting it. Max width is the
+   492px spec value reduced 20% (~394px). */
+.cardStack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(224px, 394px));
+  gap: 22px;
+  margin-bottom: 28px;
+  width: 100%;
+  justify-content: center;
+  /* Shared 3D space for the mouse-follow tilt (see handleCardMouseMove in
+     HealthPackages.tsx) — each card's own transform only needs its
+     rotation, not a repeated perspective(...) function. */
+  perspective: 1000px;
+}
+
+/* ─── Package cards ────────────────────────────────────────────────────
+   Three fixed visual variants from the design spec (background gradient /
+   border / shadow only — everything else shared). Image sits absolutely
+   against the right edge with a soft left-edge mask fade so it blends into
+   the card's own gradient instead of showing a hard seam; text content
+   sits on top, inset 34px from the left. */
+
+/* The actual CSS grid item — fixed height, so the hover-expanded card
+   below never changes grid row sizing or pushes sibling cards/rows.
+   overflow: visible lets the absolutely positioned card exceed this box. */
+.packageCardSlot {
+  position: relative;
+  height: 212px;
+  overflow: visible;
+}
+
+/* Bottom-anchored within its slot (not top-anchored) so that growing
+   `height` on hover pushes this element's own TOP edge upward, reading as
+   "the card extends upward", while its bottom edge never moves. */
+.packageCard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  height: 212px;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  text-decoration: none;
+  box-sizing: border-box;
+  border-radius: 10px;
+  transform-origin: bottom center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+  /* "Apple glass" light surface — a bright, high-saturation frosted plate.
+     Without the backdrop-filter the video/frame behind is only dimmed by
+     the background's own alpha, not actually blurred, so it reads through
+     too crisply to feel like glass. */
+  background: rgb(255 250 244 / 78%);
+  backdrop-filter: blur(24px) saturate(1.8);
+}
+
+/* Extends upward to make room for the divider + perk pills the hover
+   state reveals, on top of the facts' own (unchanged) stacked height —
+   z-index lifts it above the rail label text it now overlaps, and above
+   sibling cards' own stacking. */
+.packageCard:hover,
+.packageCard:focus-visible {
+  height: 360px;
+  z-index: 5;
+}
+
+.packageCard:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+/* Border color comes entirely from .packageCardBorder (a dedicated
+   element, see below) — no border here at all now. A transparent
+   reserved-footprint border used to live here, but an absolutely
+   positioned child's `inset` is resolved against its containing block's
+   PADDING box, not its border box — so .packageCardBorder's `inset: 0`
+   sat 1px inside this element's true edge, leaving a 1px ring of plain
+   card background visible outside the gradient stroke instead of the
+   stroke sitting flush against the card's actual edge. Background is a
+   single content gradient layer; the previous double-background-layer
+   approach for the gradient border was broken: with the content gradient
+   at 0.60 alpha, the border-gradient layer underneath (clipped to
+   border-box, which covers the full interior too, not just the ring)
+   showed through everywhere, not just at the edge — that's what was
+   washing the cards out lighter than spec'd. */
+/* All three share the one light glass surface on .packageCard now; the
+   variants only carry the per-card elevation they always differed by
+   (V2, the middle/featured card, sits on a wider, deeper shadow). */
+.packageCardV1 {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+}
+
+.packageCardV2 {
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.18);
+}
+
+.packageCardV3 {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+}
+
+/* Dedicated gradient-border ring — a separate element (not ::before/
+   ::after, both already used for the shimmer/hover-wash below) using the
+   mask-composite "exclude" trick: two overlapping masks (the full box and
+   an inset copy) cancel out everywhere except the ring itself, so this
+   element's own gradient only ever paints there — no bleed into the
+   card's own content background, unlike the flawed layered-background
+   approach above. */
+.packageCardBorder {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(30deg, rgb(144 210 253 / 57%), rgb(235 137 137 / 36%));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Grow + mouse-follow tilt is JS-driven now (handleCardMouseMove/
+   handleCardMouseLeave in HealthPackages.tsx write `transform` directly on
+   :hover/:mousemove), since a continuous tilt needs the live cursor
+   position — plain CSS :hover can't do that. Keyboard focus has no cursor
+   position to follow, so it keeps a plain scale here; !important is still
+   load-bearing for this one rule, since the auto-reveal sets an inline
+   `transform` on this same element as it blurs+grows in, and a plain
+   inline style otherwise beats any stylesheet rule regardless of
+   specificity. While actually hovered, the transition is shortened so the
+   tilt tracks the cursor snappily instead of lagging behind a 350ms ease;
+   the base (slower) transition still applies on mouseleave, for a smooth
+   settle back to neutral. */
+.packageCard:focus-visible {
+  transform: scale(1.05) !important;
+}
+
+/* `transition` is a single cascading value, not merged per-property — this
+   rule's whole point is to shorten just the transform transition (so tilt
+   tracks the cursor snappily) while hovering, but doing that by re-
+   declaring the shorthand here was silently dropping `height` from the
+   list entirely, since it isn't mentioned here — the expand-on-hover grew
+   with no eased transition at all (it wasn't merging with the base rule's
+   height transition, it was replacing it with nothing). Re-listing height
+   here too, and slower/more eased than the base rule's 0.45s, since the
+   snappy 0.12s that transform gets would otherwise be the only easing
+   compared against and read as too abrupt for something this size. */
+.packageCard:hover {
+  transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::after,
+.packageCard:focus-visible::after {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
+   ever active on the one card actually under the pointer. */
+.packageCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+
+.packageCard:hover::before,
+.packageCard:focus-visible::before {
+  transform: translateX(120%);
+}
+
+/* Width reduced 20% alongside the card (260px -> 208px) to stay in
+   proportion at the narrower card size. Stuck to the top/right/bottom
+   edges (height: 100% + top/right/bottom implicitly follow the card's own
+   height, so it automatically grows taller in lockstep as the card itself
+   extends on hover — no extra rule needed for that). */
+.packageCardImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 208px;
+  /* cover already fills the card's height; the overflow it trims is
+     horizontal. Anchoring left keeps the artwork's own left edge intact
+     and takes the whole crop off the right, instead of centre-cropping
+     and cutting into both sides. */
+  object-fit: cover;
+  object-position: left center;
+  /* Lifts the artwork off the card's own glass a little. */
+  filter: drop-shadow(0 6px 16px rgba(15, 23, 42, 0.20));
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+/* Diabetes: at 588x424 it was the worst-cropped of the three — the 208px
+   slot cut 136px out of it. 344px is exactly its natural width once its
+   424px height is scaled to the card's 248px, so it sits tight to the
+   card's height with nothing trimmed off either side. */
+.packageCardImageTall {
+  width: 344px;
+  /* Pushed right of its own anchor so it crowds the text column less; the
+     card clips what goes past the edge. A fixed offset rather than a
+     percentage, so the inset does not drift when the width grows on
+     hover. 74px puts its left edge 160px inside the card. */
+  transform: translateX(74px);
+}
+
+/* Bone health: scaled back a little and sat on the card's bottom edge,
+   which both shrinks it and brings the right-hand side of the film into
+   view instead of cropping it away. */
+.packageCardImageShort {
+  width: 241px;
+  height: 218px;
+  top: auto;
+  bottom: 0;
+}
+
+/* max-width stops the text column short of the image (208px wide, and
+   itself left-edge-faded to transparent — see .packageCardImage's mask —
+   so text can run right up to it without a hard seam) — at the narrower
+   20%-reduced card width, an unconstrained title could run wide enough
+   to sit visually on top of the image; capping it just wraps the title
+   onto a second line instead. 200px (slightly less than the image's own
+   208px) keeps every title's wrap to exactly 2 lines instead of 3 — the
+   longest title ("Thyroid Health Package") tips into a cramped 3rd line
+   at a tighter cap, which is tall enough to clip the facts rows below
+   against the card's fixed height. */
+.packageCardContent {
+  position: relative;
+  z-index: 2;
+  max-width: calc(100% - 200px);
+  padding: 28px 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-sizing: border-box;
+  transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Widened on hover — the facts need room to sit side by side, and the
+   perk pills ("Free doctor consultation") are wider than either. Both
+   run past the (230px) image's left edge, which is fine: the image is
+   masked to transparent there, and the pills are their own glass
+   surface rather than bare text over the photo. */
+.packageCard:hover .packageCardContent,
+.packageCard:focus-visible .packageCardContent {
+  max-width: calc(100% - 90px);
+}
+
+.packageCardTitle {
+  color: #1A1A2E;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+}
+
+/* Both facts stay stacked in every state — hover only adds the divider
+   and perks below them, and grows the card to make room. */
+.packageCardFacts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.packageCardFact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Roundedness (8px) and the subtle inset stroke + blur now match
+   .uspIconBox exactly (previously 4px with neither of those, reading as
+   visibly a different, flatter shape than the USP row's icon chips). */
+.packageCardFactIcon {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 9.067px;
+  /* Deeper/more saturated than a light wash — against the white glass
+     card a 0.20-alpha tint read as too pale to register as a chip. */
+  background: linear-gradient(180deg, rgb(238 30 38 / 85%) 0%, rgb(168 9 9 / 76%) 100%);
+  box-shadow: 0 1.133px 0 1.133px rgb(232 134 134 / 10%) inset;
+  backdrop-filter: blur(6px);
+}
+
+.packageCardFactText {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Divider + perk pills, revealed on hover. 0fr -> 1fr is an exact zero
+   height at rest rather than a guessed max-height, so the card's own
+   growth and this reveal stay in step instead of being two independently
+   approximated animations. The 24px above the divider is
+   .packageCardContent's own gap. */
+.packageCardExtras {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  /* A flex gap still applies around a zero-height item, so while collapsed
+     this would silently claim 24px of the resting card's height — enough
+     to push the facts past the bottom edge on narrow viewports, where the
+     title wraps to three lines. Cancelling it here keeps the resting
+     layout exactly as it was, and unwinds in step with the reveal. */
+  margin-top: -24px;
+  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.packageCard:hover .packageCardExtras,
+.packageCard:focus-visible .packageCardExtras {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 0;
+  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease 0.1s;
+}
+
+.packageCardExtrasInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.packageCardPerks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-top: 1px solid #C0BFBF;
+  padding-top: 16px;
+}
+
+/* Staggered so the pills land one after the other rather than as a
+   single block. Delays live only in the hover rule — on the way out they
+   should leave together, not replay the stagger in reverse. */
+.perkPill {
+  display: flex;
+  padding: 4px 8px;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.10);
+  /* Not in the spec, but 10% white over a light card is invisible on its
+     own — the blur and hairline edge are what make it read as the glass
+     chip it's drawn as. */
+  backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.packageCard:hover .perkPill,
+.packageCard:focus-visible .perkPill {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.packageCard:hover .perkPill:nth-child(1),
+.packageCard:focus-visible .perkPill:nth-child(1) {
+  transition-delay: 0.18s;
+}
+
+.packageCard:hover .perkPill:nth-child(2),
+.packageCard:focus-visible .perkPill:nth-child(2) {
+  transition-delay: 0.3s;
+}
+
+.perkIcon {
+  display: flex;
+  padding: 4px;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(10, 246, 124, 0.60) 0%, rgba(2, 128, 55, 0.60) 100%);
+}
+
+.perkText {
+  color: var(--darker-212121, #212121);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.perkStrong {
+  font-weight: 600;
+}
+
+.factBold {
+  color: #1A1A2E;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.factLight {
+  color: #000000;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* "View Details" — replaces the old top-right arrow badge, at the same
+   left/bottom offsets as the content column's own top/left padding
+   (34px/28px). Hidden at rest and fades/lifts in on hover (matching the
+   "Explore" affordance in the speciality grid cards), with its
+   underline additionally sweeping in left-to-right. The card itself is
+   the actual clickable element (see the surrounding <Link>); this is a
+   plain <span>, not a nested anchor (invalid HTML/a11y otherwise). */
+.viewDetailsLink {
+  position: absolute;
+  left: 34px;
+  bottom: 28px;
+  z-index: 3;
+  display: inline-block;
+  color: #1A1A2E;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard:hover .viewDetailsLink,
+.packageCard:focus-visible .viewDetailsLink {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.viewDetailsUnderline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  /* currentColor, not a hardcoded value — matches whichever of the two
+     text colors above is active without a separate light-mode override. */
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCard:hover .viewDetailsUnderline,
+.packageCard:focus-visible .viewDetailsUnderline {
+  transform: scaleX(1);
+}
+
+/* Secondary white-outlined button — unified site-wide with PatientStories'
+   .secondaryCtaBtn and CentreOfExcellence's .viewAllBtn (same padding,
+   radius, border, background, blur, hover lift). This element's own
+   `transform` is also scroll-driven (see the JS stagger further up), so
+   the hover lift needs !important to actually apply once the entrance
+   has finished writing its own inline transform — same fix as
+   .packageCard's hover scale above. */
+.exploreRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, opacity;
+}
+
+.exploreRow:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.exploreRow:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+/* ─── Mobile: no sticky pin, single-column stacked layout ───────────────
+   Design rationale (Gestalt / spacing principles):
+   - Proximity: related elements (eyebrow → title → USPs) are grouped with
+     tight internal gaps; the card group is separated by a larger gap so it
+     reads as a distinct block.
+   - Figure/Ground: the full-bleed dark video + a reinforced overlay keep
+     the white text sitting clearly "on top" at all viewport widths.
+   - Continuity: consistent 20px horizontal margins on every element so the
+     eye's natural left-edge scan never jumps.
+   - Uniform connectedness: each card shares identical width/padding/radius
+     so they group as one coherent "stack" rather than independent items.
+   ─────────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+
+  /* ── Section shell: normal document flow, no sticky runway ── */
+  .section {
+    height: auto;
+  }
+
+  /* Sticky viewport: converted to normal relative container */
+  .stickyViewport {
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    display: block; /* Remove flex centering so it flows normally */
+  }
+
+  /* Cinema Overlay: Dims the background strictly on mobile */
+  .cinemaOverlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    will-change: opacity;
+  }
+
+  /* Frame: JS drives width and border-radius. Height is auto to fit content without cropping. */
+  .frame {
+    height: auto !important;
+    margin: 0 auto; /* Center horizontally since we removed flex */
+    opacity: 1;
+    z-index: 1; /* Keep frame above the cinema overlay */
+  }
+
+  /* frameRevealed class is no longer needed — JS drives everything */
+  .frameRevealed {
+    opacity: 1;
+  }
+
+  .bgVideo {
+    transform: scale(1.08);
+  }
+
+  /* Stronger overlay so white text pops against any video frame */
+  .bottomOverlay {
+    opacity: 0.85 !important;
+    height: 75%;
+  }
+
+  /* ── Grid: restore luxurious vertical rhythm ── */
+  .grid {
+    height: auto;
+    flex-direction: column;
+    gap: 0;
+    padding: 80px 24px 64px;
+    justify-content: flex-start;
+  }
+
+  /* ── Text block: eyebrow → title centred; USPs left-aligned ── */
+  .textBlock {
+    width: 100%;
+    align-items: center;
+    margin-bottom: 72px; /* Increased to give breathing room before the rail label */
+  }
+
+  /* Eyebrow sits directly above the title (8px gap via titleGroup) */
+  .titleGroup {
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  /* Eyebrow inherits white colour already; enforce centre alignment */
+  .eyebrowUnit :global(.section-eyebrow) {
+    text-align: center;
+  }
+
+  /* Fluid headline: large on wide phones, still readable at 320px */
+  .title {
+    font-size: clamp(26px, 7.5vw, 36px);
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── USP list: single horizontal row, icon above label ── */
+  .uspList {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 32px; /* Comfortable gap from headline — enough to breathe */
+    width: 100%;
+  }
+
+  .uspItem {
+    flex: 1;
+    flex-direction: column;  /* icon on top, label below */
+    align-items: center;
+    gap: 8px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .uspLabel {
+    white-space: normal;
+    font-size: 12px;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  /* ── Bottom stack (label + cards + CTA) ── */
+  /* Left-align the flex stack so railLabel and cards sit on the left edge */
+  .bottomStack {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* "Most booked in Bangalore" — sentence case, left-aligned.
+     JS applyAutoReveal drives opacity/filter for blur-in entrance. */
+  .railLabel {
+    align-self: flex-start;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    color: rgba(255, 255, 255, 0.80);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Card stack: single column, full-width ── */
+  .cardStack {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    margin-bottom: 24px;
+    grid-template-columns: unset;
+    perspective: none;
+  }
+
+  /* Each slot: natural block flow, no absolute tricks needed */
+  .packageCardSlot {
+    height: auto;
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* ── Package card: the image fix ──────────────────────────────────────
+     Root cause of invisible image: `.packageCard` has
+     `background: rgb(255 250 244 / 78%)` covering the entire card, and
+     the image is `position: absolute` at z-index 0 — it IS rendered above
+     the background paint, but the background is opaque enough to visually
+     overpower it. Fix: replace the full-bleed white background with a
+     left-to-right gradient that fades to transparent at 58% — the left
+     text zone gets the frosted-glass surface, the right image zone is
+     fully clear so the artwork shows unobstructed.
+     ─────────────────────────────────────────────────────────────────── */
+  .packageCard {
+    position: relative;
+    width: 100%;
+    height: 172px; /* Restore premium card height */
+    max-width: none;
+    /* Solid opaque white card surface */
+    background: #FFFFFF;
+    /* Premium Apple-like elevation: soft shadow + hairline border */
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border-radius: 10px;
+    /* JS applyAutoReveal drives transform/opacity/filter for card entrance —
+       do NOT override with !important. Cards start invisible; JS fades them in. */
+    transition: none;
+  }
+
+  /* Prevent hover-expand height from changing on touch devices */
+  .packageCard:hover,
+  .packageCard:focus-visible {
+    height: 172px;
+    z-index: auto;
+  }
+
+  /* ── Card image: right-pinned, full card height ── */
+  /* object-position: right centers on the interesting part of each artwork */
+  .packageCardImage {
+    width: 52%;            /* ~55% of card width — generous image zone */
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    object-fit: cover;
+    object-position: center center;
+    filter: none;          /* Remove drop-shadow on mobile — cleaner */
+    z-index: 1;            /* Ensure image sits above the solid white card background */
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+
+  /* Diabetes (tall image): it's 588×424. Show center portion. */
+  .packageCardImageTall {
+    width: 52%;
+    transform: none;       /* Remove the translateX push that clips it */
+    object-position: 30% center;
+  }
+
+  /* Bone health (short image): bottom-anchor matches artwork composition */
+  .packageCardImageShort {
+    width: 52%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    object-position: center top;
+  }
+
+  /* ── Card content: left column, clear of image zone ── */
+  .packageCardContent {
+    position: relative;
+    z-index: 2;
+    max-width: 56%;        /* Stay clear of the image on the right */
+    /* 44px bottom padding ensures the facts don't overlap the absolute-positioned View Details link */
+    padding: 16px 0 44px 16px;
+    gap: 6px;
+    /* Stretch full card height so View Details anchors to bottom */
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .packageCardTitle {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    white-space: normal;
+    color: #1A1A2E;
+    margin: 0;
+  }
+
+  .packageCardAudience {
+    font-size: 11px;
+    font-weight: 400;
+    margin: 0;
+    white-space: normal;
+    color: #3D4653;
+  }
+
+  /* Facts: horizontal row to save vertical space */
+  .packageCardFacts {
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 10px;      /* Pull facts up right below the subtitle */
+  }
+
+  .packageCardFact {
+    gap: 6px;
+  }
+
+  /* Shrink the icon chip slightly for the compact card */
+  .packageCardFactIcon {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+  }
+
+  .packageCardFactIcon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .factBold {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .factLight {
+    font-size: 10px;
+    font-weight: 300;
+  }
+
+  /* View Details: Always visible on mobile, positioned at the bottom left */
+  .viewDetailsLink {
+    display: inline-block;
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    opacity: 1;
+    transform: none;
+    z-index: 3;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5F6977; /* Premium dark grey */
+  }
+  
+  .viewDetailsUnderline {
+    display: none; /* Remove underline on mobile */
+  }
+
+  /* ── Compact variant height override ── */
+  .packageCardSlotCompact {
+    height: auto;
+  }
+
+  .packageCardCompact,
+  .packageCardCompact:hover,
+  .packageCardCompact:focus-visible {
+    height: 172px;
+  }
+
+  .packageCardCompact .packageCardTitle {
+    white-space: normal;
+    font-size: 15px;
+  }
+
+  .packageCardCompact .packageCardContent {
+    max-width: 56%;
+    padding: 16px 0 44px 16px;
+    gap: 6px;
+  }
+
+  /* ── Explore CTA: full-width, consistent radius ── */
+  /* JS applyAutoReveal drives opacity/filter/scale for entrance. */
+  .exploreRow {
+    width: 100%;
+    margin: 8px 0 0;
+    padding: 14px 24px;
+    font-size: 15px;
+    border-radius: 10px;   /* Match card border-radius */
+    box-sizing: border-box;
+  }
+}
+
+/* ═══ Compact card treatment (direction 1) ═══════════════════════════════════════
+   A fixed-height card: it never grows on hover, so "View Details" has to
+   already have room at the bottom in the resting state. The hover read
+   comes from a shimmer sweep and a small image bump instead of the height
+   change (and the perk pills are gone with it — see HealthPackages.tsx). */
+.packageCardSlotCompact {
+  height: 248px;
+}
+
+.packageCardCompact,
+.packageCardCompact:hover,
+.packageCardCompact:focus-visible {
+  height: 248px;
+}
+
+/* Wider columns than direction 1 — the titles run on one line here, so
+   they need the room. */
+.cardStackCompact {
+  grid-template-columns: repeat(3, minmax(260px, 430px));
+}
+
+/* One line, never wrapping. The content column also stops reserving room
+   for a 2-line title, so the subtitle sits directly beneath it. */
+.packageCardCompact .packageCardTitle {
+  white-space: nowrap;
+  font-size: 19px;
+}
+
+.packageCardCompact .packageCardContent {
+  max-width: calc(100% - 150px);
+  gap: 20px;
+}
+
+/* Pulled back up against the title: the content column's own gap would
+   otherwise sit this equidistant between the title above and the facts
+   below, reading as though it belonged to the facts. */
+.packageCardAudience {
+  margin: calc(6px - 20px) 0 0;
+  color: #3D4653;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+/* Only a small bump — the direction 1 card's image appeared to grow a lot
+   simply because the card itself got taller under it. */
+.packageCardCompact .packageCardImage {
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.packageCardCompact:hover .packageCardImage,
+.packageCardCompact:focus-visible .packageCardImage {
+  width: 228px;
+}
+
+/* The sized variants need their own hover widths: the shared 228px above
+   is a grow for the 208px default but a large shrink for these two, which
+   read as the image lurching on hover rather than easing. */
+.packageCardCompact:hover .packageCardImageTall,
+.packageCardCompact:focus-visible .packageCardImageTall {
+  width: 352px;
+}
+
+.packageCardCompact:hover .packageCardImageShort,
+.packageCardCompact:focus-visible .packageCardImageShort {
+  width: 249px;
+}
+
+/* White shimmer sweep across the card on hover — replaces the height
+   growth as the hover affordance. Sits above the surface but below the
+   content, and is only painted while hovered so it never runs at rest. */
+.packageCardShimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.packageCardShimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 55%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-18deg);
+}
+
+.packageCardCompact:hover .packageCardShimmer,
+.packageCardCompact:focus-visible .packageCardShimmer {
+  opacity: 1;
+}
+
+.packageCardCompact:hover .packageCardShimmer::after,
+.packageCardCompact:focus-visible .packageCardShimmer::after {
+  animation: packageCardShimmerSweep 0.9s cubic-bezier(0.32, 0.72, 0.4, 1);
+}
+
+@keyframes packageCardShimmerSweep {
+  from {
+    left: -60%;
+  }
+  to {
+    left: 120%;
+  }
+}
+
+/* ─── Direction toggle (review aid) ─── */
+/* Absolute inside .stickyViewport (not fixed to the page) so it shows up
+   exactly while this section is pinned. Bottom-left: the compact card row
+   is wide enough to run under a mid-height toggle. */
+.directionToggle {
+  position: absolute;
+  left: 16px;
+  bottom: 88px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.directionToggleLabel {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.directionToggleBtn {
+  width: 34px;
+  padding: 6px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.directionToggleBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.directionToggleBtnActive {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #0B1B33;
+}
+
+@media (max-width: 1024px) {
+  .directionToggle {
+    display: none;
+  }
+}

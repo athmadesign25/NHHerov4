@@ -617,22 +617,7 @@ export default function Navbar() {
                 width={112} 
                 height={35} 
                 className={styles.mobileLogoImg}
-                style={{ 
-                  opacity: (!isMobileMenuOpen && isOverLightBackground) ? 1 : 0, 
-                  transition: "opacity 0.4s ease" 
-                }} 
-                priority 
-              />
-              <Image 
-                alt="Narayana Health" 
-                src="/NH-logo-white.svg" 
-                width={112} 
-                height={35} 
-                className={styles.mobileLogoImg}
-                style={{ 
-                  opacity: (isMobileMenuOpen || !isOverLightBackground) ? 1 : 0, 
-                  transition: "opacity 0.4s ease" 
-                }} 
+                style={{ opacity: 1 }} 
                 priority 
               />
             </div>

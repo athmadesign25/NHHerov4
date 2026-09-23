@@ -26,6 +26,7 @@ interface DefaultSearchPromptProps {
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
   controlsOverflow?: MotionValue<"hidden" | "visible">;
+  isMobile?: boolean;
 }
 
 export default function DefaultSearchPrompt({
@@ -45,6 +46,7 @@ export default function DefaultSearchPrompt({
   controlsHeight,
   controlsMarginBottom,
   controlsOverflow,
+  isMobile = false,
 }: DefaultSearchPromptProps) {
   const isWhite = searchTheme === "white";
 
@@ -79,7 +81,8 @@ export default function DefaultSearchPrompt({
 
       {/* ── Minimized Search Content: Pulse Lottie animation with text below ── */}
       {minimizedSearchOpacity && (
-        <motion.div
+        <div className="hideOnMobile" style={{ position: "absolute", inset: 0 }}>
+          <motion.div
           className={styles.squareBoxContent}
           style={{
             opacity: minimizedSearchOpacity,
@@ -111,6 +114,7 @@ export default function DefaultSearchPrompt({
             Pulse AI<br />Search
           </motion.span>
         </motion.div>
+        </div>
       )}
 
       {/* Continuous horizontal interaction row */}
@@ -158,47 +162,51 @@ export default function DefaultSearchPrompt({
           </button>
 
           {/* Quick Action: Describe my symptoms - lightweight icon + text, no box */}
-          <button
-            type="button"
-            className={styles.inlineActionBtn}
-            style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelectActionPill("symptoms");
-            }}
-          >
-            <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
-            <span>Describe my symptoms</span>
-          </button>
+          {!isMobile && (
+            <button
+              type="button"
+              className={styles.inlineActionBtn}
+              style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectActionPill("symptoms");
+              }}
+            >
+              <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
+              <span>Describe my symptoms</span>
+            </button>
+          )}
         </div>
 
         {/* Right side controls: Microphone (standalone icon) + Primary Submit Arrow (the ONLY filled button) */}
-        <div className={styles.bottomControlsRight}>
-          <button
-            type="button"
-            className={styles.standaloneIconBtn}
-            style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
-            aria-label="Voice search"
-            onClick={(e) => {
-              e.stopPropagation();
-              onActivate();
-            }}
-          >
-            <Mic size={17} />
-          </button>
+        {!isMobile && (
+          <div className={styles.bottomControlsRight}>
+            <button
+              type="button"
+              className={styles.standaloneIconBtn}
+              style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
+              aria-label="Voice search"
+              onClick={(e) => {
+                e.stopPropagation();
+                onActivate();
+              }}
+            >
+              <Mic size={17} />
+            </button>
 
-          <button
-            type="button"
-            className={styles.submitArrowBtn}
-            aria-label="Submit search"
-            onClick={(e) => {
-              e.stopPropagation();
-              onActivate();
-            }}
-          >
-            <ArrowUp size={16} strokeWidth={2.5} />
-          </button>
-        </div>
+            <button
+              type="button"
+              className={styles.submitArrowBtn}
+              aria-label="Submit search"
+              onClick={(e) => {
+                e.stopPropagation();
+                onActivate();
+              }}
+            >
+              <ArrowUp size={16} strokeWidth={2.5} />
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );

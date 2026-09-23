@@ -364,3 +364,11 @@ body:has(#hero-section) > footer {
 /* Hide navbar when Pulse AI is maximized */
 body.pulse-maximized nav { display: none !important; opacity: 0; pointer-events: none; }
 
+
+/* Responsive Utilities */
+.hideOnMobile { display: block; }
+.hideOnDesktop { display: none; }
+@media (max-width: 900px) {
+  .hideOnMobile { display: none !important; }
+  .hideOnDesktop { display: block !important; }
+}

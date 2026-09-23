@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, animate, MotionValue } from "framer-motion";
 import { Search, X } from "lucide-react";
 import Lottie from "lottie-react";
+import pulseAnimation from "../../../../public/assets/pulse animation.json";
+import searchPulseAnimation from "../../../../public/assets/search-pulse.json";
 import calendarCheckAnimation from "../../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../../public/assets/nh-app-icon.json";
 import styles from "./NHSearchExperience.module.css";
@@ -101,7 +103,7 @@ export default function NHSearchExperience({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isMobile = winSize.w < 640;
+  const isMobile = winSize.w <= 900;
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
@@ -111,17 +113,21 @@ export default function NHSearchExperience({
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
   const defaultProgress = useMotionValue(0);
-  const activeProgress = scrollProgress || defaultProgress;
+  const baseProgress = scrollProgress || defaultProgress;
+  const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
+  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
 
   // Starting dimensions (Hero anchor)
   const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
-  const startHeight = anchorRect?.height || 136;
-  const startTop = anchorRect?.top || Math.round(winSize.h * 0.68 - 28);
+  const startHeight = anchorRect ? (isMobile ? 130 : anchorRect.height) : (isMobile ? 130 : 136);
+  const startTop = isMobile 
+    ? (winSize.h > 0 ? winSize.h - 36 - startHeight : 500)
+    : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
   const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
 
-  // Minimized search card size (100px x 100px, matches sidebar 3rd button)
-  const compactWidth = 100;
-  const compactHeight = 100;
+  // Minimized search card size
+  const compactWidth = isMobile ? winSize.w - 32 : 100;
+  const compactHeight = isMobile ? 80 : 100;
   const compactRadius = 18;
 
   const squareLeft = Math.round((winSize.w - compactWidth) / 2);
@@ -257,35 +263,30 @@ export default function NHSearchExperience({
   // Phase 2 [0.14 - 0.54]: WAITS at center position with dark glassmorphism while hero scales & side panel appears with 2 buttons
   // Phase 3 [0.54 - 0.84]: HORIZONTAL GLIDE: glides straight across horizontally to targetButton3Left at constant squareTopInPlace
   // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
-  const composerTop = useTransform(
-    positionProgress,
-    [0.02, 0.14, 0.54, 0.84],
-    [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top]
-  );
+  const targetTopRange = isMobile
+    ? [startTop, startTop + (targetButton3Top - startTop) * 0.15, startTop + (targetButton3Top - startTop) * 0.63, targetButton3Top]
+    : [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top];
+  const composerTop = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetTopRange);
 
-  const composerLeft = useTransform(
-    positionProgress,
-    [0.02, 0.14, 0.54, 0.84],
-    [startLeft, squareLeft, squareLeft, targetButton3Left]
-  );
+  const targetLeftRange = isMobile
+    ? [startLeft, startLeft + (targetButton3Left - startLeft) * 0.15, startLeft + (targetButton3Left - startLeft) * 0.63, targetButton3Left]
+    : [startLeft, squareLeft, squareLeft, targetButton3Left];
+  const composerLeft = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetLeftRange);
 
-  const composerWidth = useTransform(
-    positionProgress,
-    [0.02, 0.14, 0.54, 0.84],
-    [startWidth, compactWidth, compactWidth, targetWidth]
-  );
+  const targetWidthRange = isMobile
+    ? [startWidth, startWidth + (compactWidth - startWidth) * 0.15, startWidth + (compactWidth - startWidth) * 0.63, compactWidth]
+    : [startWidth, compactWidth, compactWidth, targetWidth];
+  const composerWidth = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetWidthRange);
 
-  const composerHeight = useTransform(
-    positionProgress,
-    [0.02, 0.14, 0.54, 0.84],
-    [startHeight, compactHeight, compactHeight, targetHeight]
-  );
+  const targetHeightRange = isMobile
+    ? [startHeight, startHeight + (compactHeight - startHeight) * 0.15, startHeight + (compactHeight - startHeight) * 0.63, compactHeight]
+    : [startHeight, compactHeight, compactHeight, targetHeight];
+  const composerHeight = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetHeightRange);
 
-  const composerRadius = useTransform(
-    positionProgress,
-    [0.02, 0.14, 0.54, 0.84],
-    [20, compactRadius, compactRadius, targetRadius]
-  );
+  const targetRadiusRange = isMobile
+    ? [20, 20 + (compactRadius - 20) * 0.15, 20 + (compactRadius - 20) * 0.63, compactRadius]
+    : [20, compactRadius, compactRadius, targetRadius];
+  const composerRadius = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetRadiusRange);
 
   const composerPaddingX = useTransform(
     positionProgress,
@@ -338,7 +339,8 @@ export default function NHSearchExperience({
   const controlsOpacity = useTransform(positionProgress, [0.02, 0.08], [1, 0]);
   const controlsHeight = useTransform(positionProgress, [0.02, 0.09], ["36px", "0px"]);
   const controlsMarginBottom = useTransform(positionProgress, [0.02, 0.09], ["32px", "0px"]);
-  const promptOpacity = useTransform(positionProgress, [0.02, 0.08], [1, 0]);
+  const promptOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
+  const controlsOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
   // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
   const minimizedSearchOpacity = useTransform(positionProgress, [0.04, 0.12], [0, 1]);
@@ -417,10 +419,9 @@ export default function NHSearchExperience({
   );
   // Declared here because main references it without ever defining it: the
   // mobile quick actions come up exactly as the composer's own chrome goes.
-  const fabOpacity = useTransform(activeProgress, [0.84, 0.88], [0, 1]);
+  const fabOpacity = useTransform(activeProgress, [isMobile ? 0.25 : 0.30, isMobile ? 0.50 : 0.45], [0, 1]);
   const dockedMobile = isDocked && isMobile;
   const composerOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
-  const controlsOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -736,15 +737,10 @@ export default function NHSearchExperience({
           hasScroll && searchState === "landing"
             ? {
                 position: "fixed",
-                // Mobile docks to a full-width bar along the bottom rather
-                // than to the desktop's corner: below 900px the floating
-                // quick-actions bar is display:none, so this IS that bar.
-                top: dockedMobile ? "auto" : composerTop,
-                bottom: dockedMobile ? "max(16px, env(safe-area-inset-bottom))" : "auto",
-                left: dockedMobile ? "16px" : composerLeft,
-                right: dockedMobile ? "auto" : "auto",
-                width: dockedMobile ? "calc(100vw - 32px)" : composerWidth,
-                height: dockedMobile ? "80px" : composerHeight,
+                top: composerTop,
+                left: composerLeft,
+                width: composerWidth,
+                height: composerHeight,
                 borderRadius: composerRadius,
                 scaleX: dropletScaleX,
                 scaleY: dropletScaleY,
@@ -752,9 +748,8 @@ export default function NHSearchExperience({
                 paddingRight: composerPaddingX,
                 paddingTop: composerPaddingY,
                 paddingBottom: composerPaddingY,
-                // The docked desktop shell dissolves into the bar beside
-                // it; the docked mobile shell is the bar, so it stays.
-                opacity: dockedMobile ? 1 : shellOpacity,
+                // Keep opacity at 1 permanently on mobile across all folds:
+                opacity: isMobile ? 1 : shellOpacity,
                 y: entranceY,
                 filter: entranceFilter,
                 maxWidth: "none",
@@ -787,8 +782,8 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {isMobile && hasScroll && (
-          <>
+        {hasScroll && (
+          <div className="hideOnDesktop">
             {/* The 3 Action Buttons that fade in as the search UI fades out */}
             <motion.div 
               style={{ opacity: fabOpacity, pointerEvents: isDocked ? "auto" : "none" }}
@@ -796,7 +791,15 @@ export default function NHSearchExperience({
             >
               <a className={styles.fabLink} href="/find-a-doctor" onClick={(e) => e.stopPropagation()}>
                 <span className={styles.fabIconWrap}>
-                  <Lottie animationData={calendarCheckAnimation} loop={false} autoplay style={{ width: 26, height: 26 }} aria-hidden />
+                  <span style={{ width: "20px", height: "20px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Lottie
+                      animationData={calendarCheckAnimation}
+                      loop={false}
+                      autoplay
+                      style={{ width: 31, height: 31, flexShrink: 0 }}
+                      aria-hidden
+                    />
+                  </span>
                 </span>
                 <span>Book<br/>Appointment</span>
               </a>
@@ -806,34 +809,42 @@ export default function NHSearchExperience({
                 className={styles.fabLink}
                 style={{ border: "none" }}
                 onClick={(e) => {
-                  e.stopPropagation(); // prevent search box from opening
+                  e.stopPropagation();
                   if (typeof window !== "undefined") {
                     window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
                   }
                 }}
               >
-                <span className={styles.fabIconWrap}>
-                  {/* Pulse AI bars styling placeholder or simple bars */}
-                  <div style={{ display: "flex", gap: "2px", alignItems: "center", justifyContent: "center" }}>
-                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
-                    <div style={{ width: "2px", height: "16px", background: "white", borderRadius: "1px" }} />
-                    <div style={{ width: "2px", height: "10px", background: "white", borderRadius: "1px" }} />
-                  </div>
+                <span className="FloatingQuickActions_iconWrap__fl_Sc FloatingQuickActions_pulseIconWrap__q9xLM">
+                  <span className="FloatingQuickActions_gradientLayer__dc_zt" aria-hidden="true"></span>
+                  <span className="FloatingQuickActions_gradientLayer__dc_zt FloatingQuickActions_gradientLayerDodge__Fz_NS" aria-hidden="true"></span>
+                  <span className="FloatingQuickActions_pulseIconLight__D3IEi" aria-hidden="true"></span>
+                  <span className="FloatingQuickActions_pulseBars__yFp3c" aria-hidden="true">
+                    <span className="FloatingQuickActions_pulseBar1__hQWw8"></span>
+                    <span className="FloatingQuickActions_pulseBar2__3x9Jl"></span>
+                    <span className="FloatingQuickActions_pulseBar3__OY5Kw"></span>
+                  </span>
                 </span>
                 <span>Pulse AI<br/>Search</span>
               </button>
               <div className={styles.fabDivider} aria-hidden="true" />
               <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>
                 <span className={styles.fabIconWrap}>
-                  <Lottie animationData={nhAppIconAnimation} loop={false} autoplay style={{ width: 22, height: 22 }} aria-hidden />
+                  <Lottie
+                    animationData={nhAppIconAnimation}
+                    loop={false}
+                    autoplay
+                    style={{ width: 22, height: 22, flexShrink: 0 }}
+                    aria-hidden
+                  />
                 </span>
                 <span>Download<br/>NH Care App</span>
               </a>
             </motion.div>
-          </>
+          </div>
         )}
 
-        <DefaultSearchPrompt
+        <DefaultSearchPrompt isMobile={isMobile}
           onActivate={handleActivate}
           selectedLocation={selectedLocation}
           onSelectLocation={handleSelectLocation}
