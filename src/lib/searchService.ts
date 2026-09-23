@@ -430,18 +430,47 @@ function cleanEntityName(name: string | null | undefined): string {
 
 // --- API caller (calls internal Next.js proxy to avoid browser CORS/SSL issues) ---
 
+// Short-lived cache of in-flight/recent requests, keyed by "query|cityId".
+// Prevents duplicate upstream calls when the same query fires multiple times
+// in quick succession (e.g. debounce race, repeated keystrokes on a slow link).
+const inFlightCache = new Map<string, Promise<NormalizedResults>>();
+const RESULT_CACHE_TTL_MS = 15000;
+const resultCache = new Map<string, { data: NormalizedResults; expiresAt: number }>();
+
 export async function searchHealthcare(
   query: string,
   cityId: number | null,
   signal?: AbortSignal
 ): Promise<NormalizedResults> {
+  const trimmed = query.trim();
+  const cacheKey = `${trimmed.toLowerCase()}|${cityId ?? ""}`;
+
+  const cached = resultCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+
+  const existing = inFlightCache.get(cacheKey);
+  if (existing) return existing;
+
   const url = new URL("/api/search", window.location.origin);
-  url.searchParams.set("query", query.trim());
+  url.searchParams.set("query", trimmed);
   if (cityId !== null) url.searchParams.set("cityId", String(cityId));
 
-  const res = await fetch(url.toString(), { signal });
-  if (!res.ok) throw new Error(`Search API error: ${res.status}`);
+  const request = (async () => {
+    const res = await fetch(url.toString(), { signal });
+    if (!res.ok) throw new Error(`Search API error: ${res.status}`);
 
-  const raw: RawApiResponse = await res.json();
-  return normalizeSearchResponse(raw);
+    const raw: RawApiResponse = await res.json();
+    const normalized = normalizeSearchResponse(raw);
+    resultCache.set(cacheKey, { data: normalized, expiresAt: Date.now() + RESULT_CACHE_TTL_MS });
+    return normalized;
+  })();
+
+  inFlightCache.set(cacheKey, request);
+  try {
+    return await request;
+  } finally {
+    inFlightCache.delete(cacheKey);
+  }
 }

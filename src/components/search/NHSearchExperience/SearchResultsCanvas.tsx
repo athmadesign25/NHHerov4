@@ -91,10 +91,7 @@ export default function SearchResultsCanvas({
     }, 260);
 
     try {
-      const [newResults] = await Promise.all([
-        getSearchResults(clean, selectedLocation),
-        new Promise((resolve) => setTimeout(resolve, 680)),
-      ]);
+      const newResults = await getSearchResults(clean, selectedLocation);
 
       if (newResults) {
         setCurrentResults(newResults);

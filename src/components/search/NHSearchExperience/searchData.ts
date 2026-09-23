@@ -887,8 +887,10 @@ export async function getSearchResults(
       apiResults &&
       (apiResults.doctors.length > 0 ||
         apiResults.specialities.length > 0 ||
+        apiResults.subSpecialities.length > 0 ||
         apiResults.procedures.length > 0 ||
-        apiResults.treatments.length > 0)
+        apiResults.treatments.length > 0 ||
+        apiResults.blogs.length > 0)
     ) {
       return mapApiResultsToSearchData(apiResults, query, location);
     }

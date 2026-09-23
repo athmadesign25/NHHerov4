@@ -607,15 +607,18 @@ export default function NHSearchExperience({
     // Step 1: Immediately transition to realistic skeleton state
     setSearchState("skeleton");
     
-    // Step 2: Realistic AI matching delay (750ms)
-    const [results] = await Promise.all([
-      getSearchResults(targetQuery, selectedLocation),
-      new Promise((resolve) => setTimeout(resolve, 750)),
-    ]);
+    // Guard against any unexpected error (network, parsing, etc.) leaving the
+    // modal stuck on the skeleton state or bouncing back to landing.
+    try {
+      const results = await getSearchResults(targetQuery, selectedLocation);
 
-    // Step 3: Smoothly reveal final results
-    setResultsData(results);
-    setSearchState("results");
+      // Step 2: Smoothly reveal final results as soon as they're ready
+      setResultsData(results);
+    } catch (err) {
+      console.error("[NHSearchExperience] Search submit failed:", err);
+    } finally {
+      setSearchState("results");
+    }
   };
 
   // Edit search (Results → Active)

@@ -777,8 +777,13 @@ function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  const initialQuery = searchParams.get("q") || searchParams.get("search") || "";
-  const initialLocation = searchParams.get("location") || "All";
+  const initialQuery =
+    searchParams.get("q") || searchParams.get("search") || searchParams.get("query") || "";
+  const initialCityId = searchParams.get("cityId");
+  const initialCityName = initialCityId
+    ? NH_CITIES.find((c) => c.id === Number(initialCityId))?.value ?? "All"
+    : null;
+  const initialLocation = initialCityName || searchParams.get("location") || "All";
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
   const [activeTab, setActiveTab] = useState("doctors");
@@ -873,9 +878,9 @@ function SearchResultsContent() {
       setSelectedSpecialties([]);
     }
 
-    setLocation(searchParams.get("location") || "All");
+    setLocation(initialCityName || searchParams.get("location") || "All");
     setActiveTab("doctors");
-  }, [initialQuery, searchParams]);
+  }, [initialQuery, initialCityName, searchParams]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
