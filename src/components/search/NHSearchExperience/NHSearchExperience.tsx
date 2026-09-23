@@ -6,7 +6,6 @@ import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform
 import { Search, X } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
-import searchPulseAnimation from "../../../../public/assets/search-pulse.json";
 import calendarCheckAnimation from "../../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../../public/assets/nh-app-icon.json";
 import styles from "./NHSearchExperience.module.css";
