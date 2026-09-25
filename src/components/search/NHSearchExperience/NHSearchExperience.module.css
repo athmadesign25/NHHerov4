@@ -4740,9 +4740,9 @@
 .pulseBotReplyContent {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  max-width: 600px;
+  max-width: 100%;
   align-items: flex-start;
   text-align: left;
 }
@@ -4762,6 +4762,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 3px;
+  max-width: 840px;
 }
 
 .pulseUserQueryBubble {
@@ -4863,14 +4864,15 @@
 /* ── Doctor Card Skeleton Shimmer (Mobile App Chat Transition) ── */
 .pulseDoctorSkeletonGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
   width: 100%;
 }
 
 .pulseDoctorSkeletonCard {
   border-radius: 16px;
-  height: 250px;
+  height: 260px;
+  min-height: 260px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.10);
   overflow: hidden;
@@ -4952,13 +4954,13 @@
 
 .pulseCardsContainer {
   width: 100%;
-  min-height: 230px;
+  min-height: 260px;
 }
 
 .pulseDoctorGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
   width: 100%;
 }
 
@@ -4967,21 +4969,23 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 14px;
+  border-radius: 16px;
   background: #0B111E;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 6px 18px -3px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.35);
   overflow: hidden;
-  height: 225px;
-  min-height: 225px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  height: 260px;
+  min-height: 260px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.22s ease, 
+              box-shadow 0.22s ease;
   box-sizing: border-box;
 }
 
 .pulseDoctorCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5);
 }
 
 .pulseDocImage {
@@ -4990,7 +4994,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 10%;
   display: block;
 }
 
@@ -4999,12 +5003,12 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(8, 13, 23, 0.98) 0%,
-    rgba(8, 13, 23, 0.90) 28%,
-    rgba(8, 13, 23, 0.55) 50%,
-    rgba(8, 13, 23, 0.12) 65%,
-    rgba(0, 0, 0, 0) 80%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(8, 13, 23, 0.94) 0%,
+    rgba(8, 13, 23, 0.82) 20%,
+    rgba(8, 13, 23, 0.42) 36%,
+    rgba(8, 13, 23, 0.10) 48%,
+    rgba(8, 13, 23, 0) 56%,
+    rgba(8, 13, 23, 0) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -5013,7 +5017,7 @@
 .pulseDocOverlayContent {
   position: relative;
   z-index: 2;
-  padding: 10px 10px 11px 10px;
+  padding: 12px 12px 13px 12px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -5022,21 +5026,21 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
 }
 
 .pulseDocTextCol {
   display: flex;
   flex-direction: column;
-  gap: 1.5px;
+  gap: 2px;
   min-width: 0;
   flex: 1;
 }
 
 .pulseDocName {
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   color: #FFFFFF;
   line-height: 1.25;
@@ -5044,6 +5048,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .pulseDocSpecialty {
@@ -5053,28 +5058,31 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .pulseDocHospital {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.82);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .pulseDocExpRow {
   display: flex;
   align-items: center;
-  gap: 3.5px;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  gap: 4px;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.85);
   margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .pulseDocExpIcon {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   flex-shrink: 0;
 }
 
@@ -5086,7 +5094,7 @@
   background: #FFFFFF;
   color: #034EA2;
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 8px;
@@ -5124,30 +5132,18 @@
   transform: translateY(-1px);
 }
 
-.pulseDocFavBtn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 3;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.38);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.18s ease;
-}
+@media (max-width: 940px) and (min-width: 641px) {
+  .pulseDoctorGrid,
+  .pulseDoctorSkeletonGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
 
-.pulseDocFavBtn:hover {
-  background: rgba(0, 0, 0, 0.65);
-  border-color: rgba(255, 255, 255, 0.35);
-  transform: scale(1.08);
+  .pulseDoctorCard,
+  .pulseDoctorSkeletonCard {
+    height: 245px !important;
+    min-height: 245px !important;
+  }
 }
 
 .pulseEmptyAnalysisArea {
@@ -6150,11 +6146,12 @@
 [data-search-theme="white"] .pulseDocGradient {
   background: linear-gradient(
     to top,
-    rgba(15, 23, 42, 0.95) 0%,
-    rgba(15, 23, 42, 0.85) 30%,
-    rgba(15, 23, 42, 0.45) 55%,
-    rgba(15, 23, 42, 0.1) 75%,
-    transparent 100%
+    rgba(10, 18, 34, 0.94) 0%,
+    rgba(10, 18, 34, 0.80) 20%,
+    rgba(10, 18, 34, 0.40) 36%,
+    rgba(10, 18, 34, 0.08) 48%,
+    rgba(10, 18, 34, 0) 56%,
+    rgba(10, 18, 34, 0) 100%
   ) !important;
 }
 

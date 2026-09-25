@@ -127,7 +127,6 @@ export default function PulseAIView({
   const [activeChip, setActiveChip] = useState<ActionChipType>("none");
   const [inputValue, setInputValue] = useState("");
   const [isListening, setIsListening] = useState(false);
-  const [favorites, setFavorites] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [selectedSpecialistIndex, setSelectedSpecialistIndex] = useState(0);
@@ -152,12 +151,6 @@ export default function PulseAIView({
       icon: Heart,
     },
   ];
-
-  const toggleFavorite = (docId: string) => {
-    setFavorites((prev) => 
-      prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
-    );
-  };
 
   // ── Stage 1: Prompt sent -> Stage 2: Bot starts thinking ──
   useEffect(() => {
@@ -812,22 +805,6 @@ export default function PulseAIView({
                             alt={doc.name}
                             className={styles.pulseDocImage}
                           />
-                          <button
-                            type="button"
-                            className={styles.pulseDocFavBtn}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              toggleFavorite(doc.id);
-                            }}
-                            aria-label={`Save ${doc.name} to favorites`}
-                          >
-                            <Heart
-                              size={12}
-                              fill={favorites.includes(doc.id) ? "#ED1C24" : "none"}
-                              color={favorites.includes(doc.id) ? "#ED1C24" : "rgba(255, 255, 255, 0.85)"}
-                            />
-                          </button>
                           <div className={styles.pulseDocGradient} />
                           <div className={styles.pulseDocOverlayContent}>
                             <div className={styles.pulseDocBottomFlex}>
