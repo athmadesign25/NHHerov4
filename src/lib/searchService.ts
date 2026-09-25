@@ -10,6 +10,7 @@ export interface ApiDoctor {
     appt_enabled?: boolean;
     walkin_enabled?: boolean;
     vc_enabled?: boolean;
+    distanceKm?: number;
   } | null;
 }
 
@@ -46,6 +47,7 @@ export interface NormalizedDoctor {
   walkinEnabled: boolean;
   vcEnabled: boolean;
   availability: { hospital: string; video: string };
+  distanceKm?: number;
 }
 
 export interface NormalizedSpeciality {
@@ -122,8 +124,13 @@ export const NH_CITIES: { label: string; value: string; id: number }[] = [
 
 const CITY_ID_MAP: Record<string, number> = Object.fromEntries([
   ...NH_CITIES.map((c) => [c.value, c.id]),
-  ["Bengaluru", 37], // alias
-  ["NCR", 52],       // alias
+  ["Bengaluru", 37],
+  ["Bangalore", 37],
+  ["NCR", 52],
+  ["Delhi NCR", 52],
+  ["New Delhi", 52],
+  ["Gurgaon", 50],
+  ["Gurugram", 50],
 ]);
 
 export function getCityId(cityName: string): number | null {
@@ -379,6 +386,7 @@ export function normalizeSearchResponse(raw: RawApiResponse): NormalizedResults 
       hospital: "Today 05:30 PM",
       video: "Today 05:30 PM",
     },
+    distanceKm: typeof d.metaData?.distanceKm === "number" ? d.metaData.distanceKm : undefined,
   }));
 
   const specialities: NormalizedSpeciality[] = (raw.specialities ?? []).map((s) => ({

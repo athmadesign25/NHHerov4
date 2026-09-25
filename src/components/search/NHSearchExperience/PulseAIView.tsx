@@ -12,7 +12,15 @@ import {
   Activity,
   Heart,
   Brain,
-  Bone
+  Bone,
+  X,
+  FileText,
+  Calendar,
+  ChevronDown,
+  Plus,
+  CheckCircle2,
+  AlertCircle,
+  Stethoscope
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData, getSearchResults } from "./searchData";
@@ -29,6 +37,8 @@ interface PulseAIViewProps {
   selectedLocation: string;
   doctors: DoctorCardData[];
   onBack: () => void;
+  onClose?: () => void;
+  attachedFile?: { name: string; size?: number } | null;
 }
 
 type ActionChipType = "none" | "symptoms" | "tests" | "slots" | "video";
@@ -39,7 +49,9 @@ type ChatPhase =
   | "typewriter"      // Stage 3: Bot text types out in typewriter format
   | "skeleton_cards"  // Stage 4: Doctor skeleton cards appear and shimmer
   | "cards_revealed"  // Stage 5: Real doctor cards revealed
-  | "chips_ready";    // Stage 6: Action sub-chips appear
+  | "chips_ready"     // Stage 6: Action sub-chips appear
+  | "report_skeleton" // Stage 7: Health Report Skeleton shimmer appears first
+  | "report_ready";   // Stage 8: Health Report Analysis revealed with fade disclosure effect
 
 function formatExperienceText(exp: string): string {
   if (!exp) return "10+ yrs of experience";
@@ -74,6 +86,8 @@ export default function PulseAIView({
   selectedLocation,
   doctors,
   onBack,
+  onClose,
+  attachedFile,
 }: PulseAIViewProps) {
   // 1. Multi-turn chat state & conversation memory
   const [activeQuery, setActiveQuery] = useState(query || "Cardiologist near me");
@@ -96,11 +110,48 @@ export default function PulseAIView({
   const [displayedText, setDisplayedText] = useState("");
   const [typedIndex, setTypedIndex] = useState(0);
 
+  // Sync doctors when query / location changes or if passed doctors updates
+  useEffect(() => {
+    let isMounted = true;
+    const triage = analyzePulseIntent(query || "Cardiologist near me", [], selectedLocation);
+    getSearchResults(triage.searchQueryForApi || query, selectedLocation).then((res) => {
+      if (isMounted && res && res.doctors.length > 0) {
+        setCurrentDoctors(res.doctors);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [query, selectedLocation]);
+
   const [activeChip, setActiveChip] = useState<ActionChipType>("none");
   const [inputValue, setInputValue] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [selectedSpecialistIndex, setSelectedSpecialistIndex] = useState(0);
+
+  const reportSpecialistRecommendations = [
+    {
+      specialty: "Gastroenterologist",
+      label: "Recommended specialist",
+      desc: "You need to have Evaluation of mild it to fatty liver changes for better health",
+      icon: Activity,
+    },
+    {
+      specialty: "Neurologist",
+      label: "Recommended specialist",
+      desc: "Imaging showed mild compression in your neck area with reduced reflexes. Specialized neurology consult advised.",
+      icon: Brain,
+    },
+    {
+      specialty: "Cardiologist",
+      label: "Recommended specialist",
+      desc: "Normal cardiac biomarkers (Troponin I) & ECG rhythm. Preventive wellness consult recommended.",
+      icon: Heart,
+    },
+  ];
 
   const toggleFavorite = (docId: string) => {
     setFavorites((prev) => 
@@ -116,14 +167,33 @@ export default function PulseAIView({
     return () => clearTimeout(t);
   }, []);
 
-  // ── Stage 2: Bot thinking -> Stage 3: Typewriter starts ──
+  // ── Stage 2: Bot thinking -> Stage 3: Typewriter (for text/voice) OR Report Skeleton (for attached file) ──
   useEffect(() => {
     if (phase === "bot_thinking") {
+      if (attachedFile) {
+        // Step 1: 1.2s extracting lab biomarkers, then show skeleton shimmer first!
+        const t = setTimeout(() => {
+          setPhase("report_skeleton");
+        }, 1200);
+        return () => clearTimeout(t);
+      } else {
+        const t = setTimeout(() => {
+          setPhase("typewriter");
+          setDisplayedText("");
+          setTypedIndex(0);
+        }, 650);
+        return () => clearTimeout(t);
+      }
+    }
+  }, [phase, attachedFile]);
+
+  // ── Stage: Report Skeleton -> Stage: Report Ready with Fade Disclosure Effect ──
+  useEffect(() => {
+    if (phase === "report_skeleton") {
+      // Step 2: 750ms of skeleton shimmer before progressive fade disclosure
       const t = setTimeout(() => {
-        setPhase("typewriter");
-        setDisplayedText("");
-        setTypedIndex(0);
-      }, 650);
+        setPhase("report_ready");
+      }, 750);
       return () => clearTimeout(t);
     }
   }, [phase]);
@@ -259,11 +329,13 @@ export default function PulseAIView({
     await performTriageAndSearch(clean, "none", newHistory);
   };
 
-  const displayQueryText = activeQuery.trim()
-    ? (activeQuery.toLowerCase().includes(selectedLocation.toLowerCase())
-        ? activeQuery.trim()
-        : `${activeQuery.trim()} in ${selectedLocation}`)
-    : `Cardiologist near me in ${selectedLocation}`;
+  const displayQueryText = attachedFile
+    ? (activeQuery.trim() || "Understand my health report")
+    : (activeQuery.trim()
+        ? (activeQuery.toLowerCase().includes(selectedLocation.toLowerCase())
+            ? activeQuery.trim()
+            : `${activeQuery.trim()} in ${selectedLocation}`)
+        : `Cardiologist near me in ${selectedLocation}`);
 
   return (
     <div className={styles.pulseViewContainer}>
@@ -294,267 +366,588 @@ export default function PulseAIView({
             LIVE
           </span>
         </div>
+
+        <div className={styles.pulseHeaderRight}>
+          {attachedFile && (
+            <div className={styles.pulseUserPill} title="Patient Profile">
+              <div className={styles.pulseUserAvatar}>
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                  alt="Omkar J"
+                />
+              </div>
+              <span className={styles.pulseUserName}>Omkar J</span>
+              <ChevronDown size={14} className={styles.pulseUserChevron} />
+            </div>
+          )}
+
+          {onClose && (
+            <button
+              type="button"
+              className={styles.pulseCloseBtn}
+              onClick={onClose}
+              aria-label="Close search"
+              title="Close"
+            >
+              <X size={18} />
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* ── 2. Chat Interface (Starts below Header with clear spacing/padding) ── */}
+      {/* ── 2. Chat Interface (Scrollable middle container) ── */}
       <div className={styles.pulseChatInterface}>
-        {/* ── Chat Row 1: User Prompt Message (Top-Right with Dynamic Query Text) ── */}
+        {/* ── Chat Row 1: User Prompt Message (RIGHT-ALIGNED) ── */}
         <div className={styles.pulseChatRowUser}>
-          <motion.div 
+          <motion.div
             key={activeQuery}
             initial={{ opacity: 0, y: 8, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className={styles.pulseUserQueryBubble}>
+              {/* Attached PDF Preview Card */}
+              {attachedFile && (
+                <div className={styles.pulseUserPdfCard}>
+                  <div className={styles.pulseUserPdfIconWrap}>
+                    <FileText size={16} />
+                  </div>
+                  <div className={styles.pulseUserPdfDetails}>
+                    <span className={styles.pulseUserPdfName}>{attachedFile.name}</span>
+                    <span className={styles.pulseUserPdfSub}>Medical Health Report · PDF</span>
+                  </div>
+                </div>
+              )}
               <span className={styles.pulseQueryText}>{displayQueryText}</span>
               <span className={styles.pulseQueryTime}>Just now</span>
             </div>
           </motion.div>
         </div>
 
-        {/* ── Chat Row 2: Bot Response Row with Small Sparkle Star (Matching App) ── */}
+        {/* ── Chat Row 2: Pulse AI Clinical Response (LEFT-ALIGNED) ── */}
         <div className={styles.pulseChatRowBot}>
           <div className={styles.pulseStarIconBox} aria-hidden="true">
-            <SparkleStarIcon size={18} />
+            <SparkleStarIcon size={20} />
           </div>
 
-          {phase === "bot_thinking" ? (
-            /* Bot Thinking State */
-            <motion.div 
-              className={styles.pulseThinkingPill}
-              initial={{ opacity: 0, x: -6 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <span>Pulse AI is analyzing symptoms & matching specialists in {selectedLocation}</span>
-              <span className={styles.pulseThinkingDots}>
-                <span />
-                <span />
-                <span />
-              </span>
-            </motion.div>
-          ) : (
-            /* Typewriter Bot Text with Intent Emphasis */
-            <motion.div
-              className={styles.pulseResponseTextWrap}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <span className={styles.pulseResponseText}>
-                {phase === "typewriter" ? displayedText : targetMessage}
-              </span>
-              {phase === "typewriter" && (
-                <span className={styles.typewriterCaret} />
-              )}
-            </motion.div>
-          )}
-        </div>
-
-        {/* ── Chat Row 3: Doctor Cards Carousel or Diagnostic Tests ── */}
-        <div className={styles.pulseCardsContainer}>
-          {phase === "prompt_sent" || phase === "bot_thinking" || phase === "typewriter" ? (
-            /* Reserved clean height while typing */
-            <div className={styles.pulseEmptyAnalysisArea} />
-          ) : phase === "skeleton_cards" ? (
-            /* Shimmer Skeleton Cards */
-            <motion.div 
-              className={styles.pulseDoctorSkeletonGrid}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.24 }}
-            >
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className={styles.pulseDoctorSkeletonCard}>
-                  <div className={styles.pulseSkeletonShimmer} />
-                  <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarTitle}`} />
-                  <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarSub}`} />
-                  <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarLocation}`} />
-                  <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarBtn}`} />
+          <div className={styles.pulseBotReplyContent}>
+            {attachedFile && (phase === "prompt_sent" || phase === "bot_thinking") ? (
+              /* Pulse AI Analyzing State (1-2s Triage Phase) */
+              <motion.div
+                className={styles.pulseReportAnalyzingCard}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <div className={styles.pulseReportAnalyzingLottie}>
+                  <Lottie animationData={pulseAnimation} loop={true} />
                 </div>
-              ))}
-            </motion.div>
-          ) : activeChip === "tests" ? (
-            /* Dynamic Diagnostic Tests View by Specialty */
-            <motion.div 
-              className={styles.pulseTestsGrid}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.28 }}
-            >
-              {analysis.tests.map((test) => {
-                let IconComp = Activity;
-                if (test.iconType === "heart") IconComp = Heart;
-                else if (test.iconType === "brain") IconComp = Brain;
-                else if (test.iconType === "bone") IconComp = Bone;
-
-                return (
-                  <div key={test.id} className={styles.pulseTestCard}>
-                    <div className={styles.pulseTestIcon}><IconComp size={18} /></div>
-                    <h4 className={styles.pulseTestTitle}>{test.title}</h4>
-                    <p className={styles.pulseTestDesc}>{test.desc}</p>
-                    <span className={styles.pulseTestBadge}>{test.badge}</span>
+                <div className={styles.pulseReportAnalyzingText}>
+                  <h4>Analyzing Health Report</h4>
+                  <p>
+                    Pulse AI is extracting lab biomarkers &amp; clinical parameters from{" "}
+                    <strong>{attachedFile.name}</strong>...
+                  </p>
+                </div>
+                <div className={styles.pulseScanningBarWrap}>
+                  <div className={styles.pulseScanningBar} />
+                </div>
+              </motion.div>
+            ) : attachedFile && phase === "report_skeleton" ? (
+              /* Pulse AI Report Skeleton Card with Shimmer (Appears First) */
+              <motion.div
+                className={styles.pulseReportSkeletonWrap}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Greeting row skeleton */}
+                <div className={styles.pulseReportTopRow}>
+                  <div className={styles.pulseSkeletonGreetingCol}>
+                    <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelTitle}`} />
+                    <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSubtitle}`} />
                   </div>
-                );
-              })}
-            </motion.div>
-          ) : (
-            /* 4 Relevant Live Doctor Cards with Result Page Composition */
-            <motion.div 
-              className={styles.pulseDoctorGrid}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {currentDoctors.slice(0, 4).map((doc) => (
-                <div key={doc.id} className={styles.pulseDoctorCard}>
-                  {/* Full-bleed background photo */}
-                  <img
-                    src={doc.image}
-                    alt={doc.name}
-                    className={styles.pulseDocImage}
-                  />
+                  <div className={styles.pulseSkeletonThumbBox}>
+                    <div className={styles.pulseSkeletonThumbShimmer} />
+                  </div>
+                </div>
 
-                  {/* Heart / Favorite toggle button */}
-                  <button
-                    type="button"
-                    className={styles.pulseDocFavBtn}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      toggleFavorite(doc.id);
-                    }}
-                    aria-label={`Save ${doc.name} to favorites`}
-                  >
-                    <Heart
-                      size={12}
-                      fill={favorites.includes(doc.id) ? "#EF4444" : "none"}
-                      color={favorites.includes(doc.id) ? "#EF4444" : "rgba(255, 255, 255, 0.85)"}
-                    />
-                  </button>
+                {/* Main Report Card skeleton */}
+                <div className={styles.pulseReportSkeletonCard}>
+                  {/* Header skeleton */}
+                  <div className={styles.pulseSkelCardHeader}>
+                    <div className={styles.pulseSkelHeaderLeft}>
+                      <div className={styles.pulseSkelIconCircle} />
+                      <div className={styles.pulseSkelHeaderLines}>
+                        <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelHeaderTitle}`} />
+                        <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelHeaderSub}`} />
+                      </div>
+                    </div>
+                    <div className={styles.pulseSkelDateBadge} />
+                  </div>
 
-                  {/* Smooth bottom dark gradient scrim */}
-                  <div className={styles.pulseDocGradient} />
-
-                  {/* Doctor info overlay matching Result Page composition */}
-                  <div className={styles.pulseDocOverlayContent}>
-                    <div className={styles.pulseDocBottomFlex}>
-                      {/* Left Column: Name, Specialty in color, Experience, Hospital */}
-                      <div className={styles.pulseDocTextCol}>
-                        <h3 className={styles.pulseDocName} title={doc.name}>
-                          {doc.name}
-                        </h3>
-
-                        <div className={styles.pulseDocSpecialty} title={doc.speciality}>
-                          {doc.speciality}
-                        </div>
-
-                        <div className={styles.pulseDocExpRow}>
-                          <Briefcase size={11} className={styles.pulseDocExpIcon} />
-                          <span>{formatExperienceText(doc.experience)}</span>
-                        </div>
-
-                        <div className={styles.pulseDocHospital} title={doc.hospital}>
-                          {doc.hospital}
+                  {/* Findings items skeleton */}
+                  <div className={styles.pulseSkelFindingsList}>
+                    {[0, 1, 2, 3].map((idx) => (
+                      <div key={idx} className={styles.pulseSkelFindingItem}>
+                        <div className={styles.pulseSkelFindingIcon} />
+                        <div className={styles.pulseSkelFindingLines}>
+                          <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelFindingTitle}`} />
+                          <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelFindingDesc}`} />
                         </div>
                       </div>
+                    ))}
+                  </div>
 
-                      {/* Right Column: Crisp White Book Button */}
-                      <Link
-                        href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
-                        className={styles.pulseDocBookBtnWhite}
-                      >
-                        Book
-                      </Link>
+                  {/* Specialist section skeleton */}
+                  <div className={styles.pulseSkelSpecialistSection}>
+                    <div className={styles.pulseSkelSpecialistHeader}>
+                      <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecTitle}`} />
+                      <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecCounter}`} />
+                    </div>
+                    <div className={styles.pulseSkelSpecCard}>
+                      <div className={styles.pulseSkelSpecTop}>
+                        <div className={styles.pulseSkelSpecIcon} />
+                        <div className={styles.pulseSkelSpecMeta}>
+                          <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecLabel}`} />
+                          <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecName}`} />
+                        </div>
+                      </div>
+                      <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecDesc1}`} />
+                      <div className={`${styles.pulseSkeletonLine} ${styles.pulseSkelSpecDesc2}`} />
+                      <div className={styles.pulseSkelConsultBtn} />
                     </div>
                   </div>
                 </div>
-              ))}
-            </motion.div>
-          )}
-        </div>
+              </motion.div>
+            ) : attachedFile && phase === "report_ready" ? (
+              /* Health Report Analysis Result View with Fade Disclosure Effect */
+              <motion.div
+                className={styles.pulseReportContentWrap}
+                initial={{ opacity: 0, y: 14, scale: 0.99 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* 1. Patient Greeting + Document Thumbnail in Top Row */}
+                <div className={styles.pulseReportTopRow}>
+                  <div className={styles.pulseReportPatientGreeting}>
+                    <h3>Hello Omkar J (age 48),</h3>
+                    <p>Mild fatty liver and normal heart function detected.</p>
+                  </div>
 
-        {/* ── Chat Row 4: Sub-Chips Section with Dynamic Specialty Intent ── */}
-        <AnimatePresence>
-          {(phase === "chips_ready" || phase === "cards_revealed") && (
-            <motion.div 
-              className={styles.pulseChipsSection}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-            >
-              <span className={styles.pulseChipsSectionLabel}>
-                If you&apos;re looking for something else:
-              </span>
-
-              <div className={styles.pulseChipsRow} role="group" aria-label="Quick follow-up actions">
-                {analysis.chips.map((chip, index) => (
-                  <motion.button
-                    key={chip.id}
-                    type="button"
-                    className={`${styles.pulseChip} ${activeChip === chip.id ? styles.pulseChipActive : ""}`}
-                    onClick={() => handleChipClick(chip.id as ActionChipType)}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.04, duration: 0.2 }}
+                  {/* Mini Lab Report Thumbnail Card */}
+                  <div
+                    className={styles.pulseReportThumbnailCard}
+                    title={`${attachedFile.name} (Verified)`}
                   >
-                    {chip.label}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                    <div className={styles.pulseThumbnailDocSheet}>
+                      <div className={styles.pulseThumbnailLines}>
+                        <div className={styles.pulseThumbLine} style={{ width: "80%" }} />
+                        <div className={styles.pulseThumbLine} style={{ width: "60%" }} />
+                        <div className={styles.pulseThumbLine} style={{ width: "95%" }} />
+                      </div>
+                      <div className={styles.pulseThumbGrid}>
+                        <div className={styles.pulseThumbGridItem} />
+                        <div className={styles.pulseThumbGridItem} />
+                        <div className={styles.pulseThumbGridItem} />
+                        <div className={styles.pulseThumbGridItem} />
+                      </div>
+                      <div className={styles.pulseThumbBodyFigures}>
+                        <svg width="18" height="24" viewBox="0 0 20 28" fill="none" stroke="#034EA2" strokeWidth="1.2">
+                          <circle cx="10" cy="5" r="3" />
+                          <path d="M10 8V18M6 11L14 11M6 26L10 18L14 26" />
+                        </svg>
+                        <svg width="18" height="24" viewBox="0 0 20 28" fill="none" stroke="#ED1C24" strokeWidth="1.2">
+                          <circle cx="10" cy="5" r="3" />
+                          <path d="M10 8V18M6 11L14 11M6 26L10 18L14 26" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-        {/* ── Chat Row 5: Bottom Conversational Input (Functional & Connected) ── */}
-        <form className={styles.pulseInputBar} onSubmit={handleFormSubmit}>
+                {/* 2. Main Crisp White Report Analysis Card */}
+                <div className={styles.pulseReportCard}>
+                  {/* Card Header with Peach Gradient */}
+                  <div className={styles.pulseReportCardHeader}>
+                    <div className={styles.pulseReportCardHeaderLeft}>
+                      <div className={styles.pulseReportCardIconBox}>
+                        <FileText size={20} />
+                      </div>
+                      <div className={styles.pulseReportCardHeaderText}>
+                        <h4 className={styles.pulseReportCardTitle}>Report Analysis</h4>
+                        <span className={styles.pulseReportCardSubtitle}>Based on Visit Summary, Lab Report</span>
+                      </div>
+                    </div>
+                    <div className={styles.pulseReportDateBadge}>
+                      <Calendar size={13} />
+                      <span>Nov&apos;2024</span>
+                    </div>
+                  </div>
+
+                  {/* Findings List */}
+                  <div className={styles.pulseReportFindingsList}>
+                    <div className={styles.pulseReportFindingItem}>
+                      <div className={styles.pulseFindingIconRed}>!</div>
+                      <div className={styles.pulseFindingText}>
+                        <h5 className={styles.pulseFindingTitle}>Reflexes reduced</h5>
+                        <p className={styles.pulseFindingDesc}>Imaging showed mild compression in your neck area.</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.pulseReportFindingItem}>
+                      <div className={styles.pulseFindingIconRed}>!</div>
+                      <div className={styles.pulseFindingText}>
+                        <h5 className={styles.pulseFindingTitle}>Reflexes reduced</h5>
+                        <p className={styles.pulseFindingDesc}>Imaging showed mild compression in your neck area.</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.pulseReportFindingItem}>
+                      <div className={styles.pulseFindingIconGreen}>✓</div>
+                      <div className={styles.pulseFindingText}>
+                        <h5 className={styles.pulseFindingTitle}>Left hand tremors</h5>
+                        <p className={styles.pulseFindingDesc}>You reported shaking in your left hand.</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.pulseReportFindingItem}>
+                      <div className={styles.pulseFindingIconGreen}>✓</div>
+                      <div className={styles.pulseFindingText}>
+                        <h5 className={styles.pulseFindingTitle}>Left hand tremors</h5>
+                        <p className={styles.pulseFindingDesc}>You reported shaking in your left hand.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* "To improve your health" Recommendation Box */}
+                  <div className={styles.pulseSpecialistSection}>
+                    <div className={styles.pulseSpecialistHeader}>
+                      <span className={styles.pulseSpecialistHeaderTitle}>To improve your health</span>
+                      <span className={styles.pulseSpecialistCounter}>{selectedSpecialistIndex + 1}/3</span>
+                    </div>
+
+                    <div className={styles.pulseSpecialistCard}>
+                      <div className={styles.pulseSpecialistTop}>
+                        <div className={styles.pulseSpecialistIconWrap}>
+                          {React.createElement(reportSpecialistRecommendations[selectedSpecialistIndex].icon, { size: 20 })}
+                        </div>
+                        <div className={styles.pulseSpecialistMeta}>
+                          <span className={styles.pulseSpecialistLabel}>{reportSpecialistRecommendations[selectedSpecialistIndex].label}</span>
+                          <span className={styles.pulseSpecialistName}>{reportSpecialistRecommendations[selectedSpecialistIndex].specialty}</span>
+                        </div>
+                      </div>
+
+                      <p className={styles.pulseSpecialistDesc}>
+                        {reportSpecialistRecommendations[selectedSpecialistIndex].desc}
+                      </p>
+
+                      <Link
+                        href={`/doctors?speciality=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&city=${encodeURIComponent(selectedLocation)}`}
+                        className={styles.pulseConsultBtn}
+                      >
+                        Consult
+                      </Link>
+                    </div>
+
+                    {/* 3 Dots Carousel Pagination */}
+                    <div className={styles.pulseCarouselDots}>
+                      {[0, 1, 2].map((idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className={`${styles.pulseDot} ${selectedSpecialistIndex === idx ? styles.pulseDotActive : ""}`}
+                          onClick={() => setSelectedSpecialistIndex(idx)}
+                          aria-label={`Slide ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. If you're looking for something else */}
+                <div className={styles.pulseAlternativesSection}>
+                  <h5 className={styles.pulseAlternativesTitle}>If your looking for something elese</h5>
+                  <div className={styles.pulseAlternativesRow}>
+                    <button
+                      type="button"
+                      className={styles.pulseAltChip}
+                      onClick={() => {
+                        setActiveQuery("Book for ENT in " + selectedLocation);
+                        setTargetMessage("Here are leading ENT (Ear, Nose & Throat) specialists available at Narayana Health:");
+                        setPhase("bot_thinking");
+                      }}
+                    >
+                      Book for ENT
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.pulseAltChip}
+                      onClick={() => {
+                        setActiveQuery("Book for Cardiologist in " + selectedLocation);
+                        setTargetMessage("Here are leading Cardiologists and cardiac wellness consultation slots at Narayana Health:");
+                        setPhase("bot_thinking");
+                      }}
+                    >
+                      Book for Cardiologist
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.pulseAltChip}
+                      onClick={() => {
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      Specify more symptoms
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.pulseAltChip}
+                      onClick={() => {
+                        setActiveQuery("Book video consultation in " + selectedLocation);
+                        setTargetMessage("Video consultations allow you to consult specialists remotely from home with digital prescription delivery:");
+                        setPhase("bot_thinking");
+                      }}
+                    >
+                      Book video consultation
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              /* Regular Text/Voice Multi-turn Bot Response */
+              <>
+                {phase === "bot_thinking" ? (
+                  <motion.div
+                    className={styles.pulseThinkingPill}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span>
+                      Pulse AI is analyzing symptoms &amp; matching specialists in {selectedLocation}
+                    </span>
+                    <span className={styles.pulseThinkingDots}>
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className={styles.pulseResponseTextWrap}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span className={styles.pulseResponseText}>
+                      {phase === "typewriter" ? displayedText : targetMessage}
+                    </span>
+                    {phase === "typewriter" && (
+                      <span className={styles.typewriterCaret} />
+                    )}
+                  </motion.div>
+                )}
+
+                {/* Doctor Cards Carousel or Diagnostic Tests */}
+                <div className={styles.pulseCardsContainer}>
+                  {phase === "prompt_sent" || phase === "bot_thinking" || phase === "typewriter" ? (
+                    <div className={styles.pulseEmptyAnalysisArea} />
+                  ) : phase === "skeleton_cards" ? (
+                    <motion.div
+                      className={styles.pulseDoctorSkeletonGrid}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.24 }}
+                    >
+                      {[0, 1, 2, 3].map((i) => (
+                        <div key={i} className={styles.pulseDoctorSkeletonCard}>
+                          <div className={styles.pulseSkeletonShimmer} />
+                          <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarTitle}`} />
+                          <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarSub}`} />
+                          <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarLocation}`} />
+                          <div className={`${styles.pulseSkeletonBar} ${styles.pulseSkeletonBarBtn}`} />
+                        </div>
+                      ))}
+                    </motion.div>
+                  ) : activeChip === "tests" ? (
+                    <motion.div
+                      className={styles.pulseTestsGrid}
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.28 }}
+                    >
+                      {analysis.tests.map((test) => {
+                        let IconComp = Activity;
+                        if (test.iconType === "heart") IconComp = Heart;
+                        else if (test.iconType === "brain") IconComp = Brain;
+                        else if (test.iconType === "bone") IconComp = Bone;
+
+                        return (
+                          <div key={test.id} className={styles.pulseTestCard}>
+                            <div className={styles.pulseTestIcon}><IconComp size={18} /></div>
+                            <h4 className={styles.pulseTestTitle}>{test.title}</h4>
+                            <p className={styles.pulseTestDesc}>{test.desc}</p>
+                            <span className={styles.pulseTestBadge}>{test.badge}</span>
+                          </div>
+                        );
+                      })}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      className={styles.pulseDoctorGrid}
+                      initial={{ opacity: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      {currentDoctors.slice(0, 4).map((doc) => (
+                        <div key={doc.id} className={styles.pulseDoctorCard}>
+                          <img
+                            src={doc.image}
+                            alt={doc.name}
+                            className={styles.pulseDocImage}
+                          />
+                          <button
+                            type="button"
+                            className={styles.pulseDocFavBtn}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleFavorite(doc.id);
+                            }}
+                            aria-label={`Save ${doc.name} to favorites`}
+                          >
+                            <Heart
+                              size={12}
+                              fill={favorites.includes(doc.id) ? "#ED1C24" : "none"}
+                              color={favorites.includes(doc.id) ? "#ED1C24" : "rgba(255, 255, 255, 0.85)"}
+                            />
+                          </button>
+                          <div className={styles.pulseDocGradient} />
+                          <div className={styles.pulseDocOverlayContent}>
+                            <div className={styles.pulseDocBottomFlex}>
+                              <div className={styles.pulseDocTextCol}>
+                                <h3 className={styles.pulseDocName} title={doc.name}>
+                                  {doc.name}
+                                </h3>
+                                <div className={styles.pulseDocSpecialty} title={doc.speciality}>
+                                  {doc.speciality}
+                                </div>
+                                <div className={styles.pulseDocExpRow}>
+                                  <Briefcase size={11} className={styles.pulseDocExpIcon} />
+                                  <span>{formatExperienceText(doc.experience)}</span>
+                                </div>
+                                <div className={styles.pulseDocHospital} title={doc.hospital}>
+                                  {doc.hospital}
+                                </div>
+                              </div>
+                              <Link
+                                href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
+                                className={styles.pulseDocBookBtnWhite}
+                              >
+                                Book
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* Sub-Chips */}
+                <AnimatePresence>
+                  {(phase === "chips_ready" || phase === "cards_revealed") && (
+                    <motion.div
+                      className={styles.pulseChipsSection}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                    >
+                      <span className={styles.pulseChipsSectionLabel}>
+                        If you&apos;re looking for something else:
+                      </span>
+                      <div className={styles.pulseChipsRow} role="group" aria-label="Quick follow-up actions">
+                        {analysis.chips.map((chip, index) => (
+                          <motion.button
+                            key={chip.id}
+                            type="button"
+                            className={`${styles.pulseChip} ${activeChip === chip.id ? styles.pulseChipActive : ""}`}
+                            onClick={() => handleChipClick(chip.id as ActionChipType)}
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.04, duration: 0.2 }}
+                          >
+                            {chip.label}
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── 3. Sticky Bottom Conversational Input Bar (Pinned at bottom, outside the scroll area!) ── */}
+      <div className={styles.pulseBottomStickyBar}>
+        <form
+          className={styles.pulseBottomInputBar}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const text = inputValue.trim();
+            if (text) {
+              handleFormSubmit(e);
+            }
+          }}
+        >
           <button
             type="button"
-            className={styles.pulseInputAttachBtn}
-            title="Attach medical report or file"
+            className={styles.pulseBottomPlusBtn}
+            title="Attach file"
             aria-label="Attach file"
-            onClick={() => {
-              setTargetMessage("Medical report upload is active. Pulse AI can analyze clinical records and prescriptions. Describe symptoms below to proceed:");
-              setPhase("bot_thinking");
-            }}
+            onClick={() => inputRef.current?.focus()}
           >
-            <Paperclip size={16} />
+            <Plus size={16} />
           </button>
 
           <input
             ref={inputRef}
             type="text"
-            className={styles.pulseTextInput}
+            className={styles.pulseBottomInputField}
+            placeholder="Ask Pulse..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={
-              activeChip === "symptoms"
-                ? "Describe your symptoms (e.g. chest tightness, joint stiffness, headache)..."
-                : `Ask Pulse AI or describe symptoms in ${selectedLocation}...`
-            }
-            aria-label="Ask Pulse AI"
+            aria-label="Ask Pulse"
           />
 
           <button
             type="button"
-            className={`${styles.pulseMicBtn} ${isListening ? styles.pulseMicBtnActive : ""}`}
+            className={`${styles.pulseBottomMicBtn} ${isListening ? styles.pulseMicBtnActive : ""}`}
             title={isListening ? "Listening..." : "Speak symptoms"}
-            aria-label="Voice input"
+            aria-label="Voice search"
             onClick={() => setIsListening((prev) => !prev)}
           >
-            <Mic size={16} />
+            <Mic size={17} />
           </button>
 
-          <button
-            type="submit"
-            className={styles.pulseSendBtn}
-            title="Send message to Pulse AI"
-            aria-label="Send message"
-          >
-            <Send size={15} color="#FFFFFF" />
-          </button>
+          {inputValue.trim().length > 0 && (
+            <button
+              type="submit"
+              className={styles.pulseBottomSendBtn}
+              title="Send"
+              aria-label="Send query"
+            >
+              <Send size={14} color="#FFFFFF" />
+            </button>
+          )}
         </form>
       </div>
     </div>

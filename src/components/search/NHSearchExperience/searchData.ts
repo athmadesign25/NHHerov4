@@ -465,7 +465,7 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
   proximityTier: "local",
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
-  pulseRecommendationText: "Want a more personalised recommendation?",
+  pulseRecommendationText: "Personalise recommendation",
   doctors: [
     {
       id: "doc-devi-shetty",
@@ -507,6 +507,50 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
       hospital: "Mazumdar Shaw Medical Center",
       experience: "18 years experience",
       image: "/doctors/doc_vivek.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-shashidhar",
+      name: "Dr. Shashidhar S.",
+      speciality: "Cardiac Surgeon",
+      hospital: "Narayana Health City",
+      experience: "21 years experience",
+      image: "/assets/doctor_1.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-kavitha",
+      name: "Dr. Kavitha Chivukula",
+      speciality: "Pediatric Cardiologist",
+      hospital: "Narayana Multispeciality Hospital",
+      experience: "16 years experience",
+      image: "/assets/doctor_2.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sanjay",
+      name: "Dr. Sanjay Mehrotra",
+      speciality: "Director & Senior Cardiologist",
+      hospital: "Narayana Institute of Cardiac Sciences",
+      experience: "26 years experience",
+      image: "/assets/doctor_3.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-colin",
+      name: "Dr. Colin John",
+      speciality: "Adult & Pediatric Cardiac Surgery",
+      hospital: "Mazumdar Shaw Medical Center",
+      experience: "28 years experience",
+      image: "/assets/hero_doctor.png",
       city: "Bangalore",
       availableToday: true,
       consultationType: "both",
@@ -582,7 +626,7 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
   proximityTier: "local",
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
-  pulseRecommendationText: "Get customise recommendation with Pulse ai",
+  pulseRecommendationText: "Personalise recommendation",
   doctors: [
     {
       id: "doc-prakash",
@@ -624,6 +668,50 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
       hospital: "Narayana Multispeciality Hospital",
       experience: "11 years experience",
       image: "/assets/doctor_2.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sridhar",
+      name: "Dr. M. K. Sridhar",
+      speciality: "Senior Joint Replacement Surgeon",
+      hospital: "Narayana Health City",
+      experience: "24 years experience",
+      image: "/doctors/doc_bagirath.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-balaji",
+      name: "Dr. R. Balaji",
+      speciality: "Spine & Orthopaedic Specialist",
+      hospital: "Mazumdar Shaw Medical Center",
+      experience: "19 years experience",
+      image: "/doctors/doc_devi_shetty.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sneha",
+      name: "Dr. Sneha Hegde",
+      speciality: "Knee & Shoulder Specialist",
+      hospital: "Narayana Multispeciality Hospital",
+      experience: "15 years experience",
+      image: "/doctors/doc_ananya.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-rajesh",
+      name: "Dr. Rajesh Kumar",
+      speciality: "Trauma & Reconstructive Surgeon",
+      hospital: "Narayana Health City",
+      experience: "18 years experience",
+      image: "/assets/hero_doctor.png",
       city: "Bangalore",
       availableToday: true,
       consultationType: "both",
@@ -770,13 +858,13 @@ export function mapApiResultsToSearchData(
     };
   });
 
-  // Ensure we have at least 4 doctor cards so the 2x2 grid is balanced
-  if (mappedDocs.length > 0 && mappedDocs.length < 4) {
+  // Ensure we have at least 8 doctor cards so the list is richly scrollable
+  if (mappedDocs.length > 0 && mappedDocs.length < 8) {
     const fallbackList = cleanQ.includes("knee") || cleanQ.includes("ortho") 
       ? ORTHOPAEDICS_RESULTS.doctors 
       : CARDIOLOGY_RESULTS.doctors;
     for (const fb of fallbackList) {
-      if (mappedDocs.length >= 4) break;
+      if (mappedDocs.length >= 8) break;
       if (!mappedDocs.some((d) => d.name === fb.name)) {
         mappedDocs.push({
           ...fb,
@@ -859,7 +947,7 @@ export function mapApiResultsToSearchData(
     proximityTier: proximity.tier,
     proximityMessage: proximity.contextMessage,
     matchCountText: proximity.contextMessage,
-    pulseRecommendationText: "Want a more personalised recommendation?",
+    pulseRecommendationText: "Personalise recommendation",
     doctors: mappedDocs,
     relatedSpecialties: Array.from(specSet).slice(0, 8),
     treatments: mappedTreatments,
@@ -887,10 +975,8 @@ export async function getSearchResults(
       apiResults &&
       (apiResults.doctors.length > 0 ||
         apiResults.specialities.length > 0 ||
-        apiResults.subSpecialities.length > 0 ||
         apiResults.procedures.length > 0 ||
-        apiResults.treatments.length > 0 ||
-        apiResults.blogs.length > 0)
+        apiResults.treatments.length > 0)
     ) {
       return mapApiResultsToSearchData(apiResults, query, location);
     }
