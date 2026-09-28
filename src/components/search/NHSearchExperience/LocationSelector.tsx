@@ -264,7 +264,7 @@ export default function LocationSelector({
                   >
                     <span>{city.name}</span>
                     {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
-                      <Check size={13} style={{ marginLeft: "auto", color: "#00C4FF" }} />
+                      <Check size={13} style={{ marginLeft: "auto", color: "#034EA2" }} />
                     )}
                   </button>
                 ))
@@ -295,7 +295,7 @@ export default function LocationSelector({
                 >
                   <span>{city.name}</span>
                   {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
-                    <Check size={13} style={{ marginLeft: "auto", color: "#00C4FF" }} />
+                    <Check size={13} style={{ marginLeft: "auto", color: "#034EA2" }} />
                   )}
                 </button>
               ))}
