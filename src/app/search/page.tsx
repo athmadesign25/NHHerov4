@@ -777,16 +777,20 @@ function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  const initialQuery =
-    searchParams.get("q") || searchParams.get("search") || searchParams.get("query") || "";
-  const initialCityId = searchParams.get("cityId");
-  const initialCityName = initialCityId
-    ? NH_CITIES.find((c) => c.id === Number(initialCityId))?.value ?? "All"
-    : null;
-  const initialLocation = initialCityName || searchParams.get("location") || "All";
+  const initialQuery = searchParams.get("q") || searchParams.get("search") || "";
+  const initialLocation = searchParams.get("location") || "All";
+  const initialTab = searchParams.get("tab") || "doctors";
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
-  const [activeTab, setActiveTab] = useState("doctors");
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Sync activeTab when query string changes
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam && ["doctors", "specialties", "packages_tests", "treatments", "articles"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   // Filter State
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
@@ -878,9 +882,9 @@ function SearchResultsContent() {
       setSelectedSpecialties([]);
     }
 
-    setLocation(initialCityName || searchParams.get("location") || "All");
+    setLocation(searchParams.get("location") || "All");
     setActiveTab("doctors");
-  }, [initialQuery, initialCityName, searchParams]);
+  }, [initialQuery, searchParams]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

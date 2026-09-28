@@ -63,12 +63,8 @@
 }
 
 /* Main */
-/* The footer's own height is exactly how far the curtain reveal travels
-   (see FooterRevealWrapper) — so this padding is what decides how much of
-   the app-download section is still on screen at the end of the page.
-   Sized to leave roughly a quarter of it visible. */
 .main {
-  padding: 220px 0;
+  padding: var(--sp-10) 0 var(--sp-8);
 }
 
 .grid {
@@ -84,15 +80,10 @@
   gap: var(--sp-3);
 }
 
-/* Pulled left so the wordmark's "N" — not the box edge — sits on the same
-   line as the copy and links below it. 18px is where the N starts inside
-   the artwork (x=40.2 of a 300-wide viewBox, at the 136px render width),
-   which leaves the cross mark hanging just outside the column. */
 .brandLogo {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: -18px;
 }
 
 
@@ -231,14 +222,5 @@ a.contactItem:hover {
   }
   .emergencyInner {
     justify-content: center;
-  }
-}
-
-@media (max-width: 900px) {
-  .main {
-    padding: 100px 0;
-  }
-  .brandLogo {
-    margin-left: -2px;
   }
 }

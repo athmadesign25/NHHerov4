@@ -10,6 +10,7 @@ import PrimaryResults from "./PrimaryResults";
 import TertiaryResults from "./TertiaryResults";
 import PulseAIView from "./PulseAIView";
 import PulseAIAvatar from "./PulseAIAvatar";
+import PulseAnalyzingCentral from "./PulseAnalyzingCentral";
 
 interface SearchResultsCanvasProps {
   query: string;
@@ -41,9 +42,11 @@ export default function SearchResultsCanvas({
   const [requeryStage, setRequeryStage] = useState<"idle" | "analyzing" | "skeleton">("idle");
   const [isPulseExpanded, setIsPulseExpanded] = useState(false);
   const [pulseOriginY, setPulseOriginY] = useState(440);
+  const [mobileTab, setMobileTab] = useState<"doctors" | "care">("doctors");
   const inputRef = useRef<HTMLInputElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const pulseRowRef = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
 
   // Synchronize local states when incoming props change
   useEffect(() => {
@@ -91,7 +94,10 @@ export default function SearchResultsCanvas({
     }, 260);
 
     try {
-      const newResults = await getSearchResults(clean, selectedLocation);
+      const [newResults] = await Promise.all([
+        getSearchResults(clean, selectedLocation),
+        new Promise((resolve) => setTimeout(resolve, 680)),
+      ]);
 
       if (newResults) {
         setCurrentResults(newResults);
@@ -214,83 +220,51 @@ export default function SearchResultsCanvas({
               </div>
             </form>
 
-            {/* Dynamic Finding & Analysing Intent Banner */}
-            <AnimatePresence>
-              {isRequerying && (
-                <motion.div
-                  key="analyzing-banner"
-                  initial={{ opacity: 0, y: -6, height: 0 }}
-                  animate={{ opacity: 1, y: 0, height: "auto" }}
-                  exit={{ opacity: 0, y: -6, height: 0 }}
-                  transition={{ duration: 0.22, ease: "easeOut" }}
-                  className={styles.analyzingActiveBanner}
-                >
-                  <span className={styles.analyzingSparkleDot} />
-                  <span className={styles.analyzingBannerText}>
-                    {requeryStage === "analyzing"
-                      ? `Finding results & analysing clinical intent for “${activeQuery}” in ${selectedLocation}…`
-                      : `Matching verified specialists, diagnostic slots & care in ${selectedLocation}…`}
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             {/* Red Horizon Divider */}
             <div className={styles.redDivider} />
 
-            {/* 2-Column Result Layout or In-place Skeleton while Re-querying */}
-            {requeryStage === "skeleton" ? (
-              /* In-Place Skeleton Shimmer while re-querying */
-              <div className={styles.resultsSplitLayout} aria-busy="true">
-                {/* Left Column Skeleton */}
-                <div className={styles.resultsLeftCol}>
-                  <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 140, height: 12, marginBottom: 12 }} />
-                  <div className={styles.doctorsGrid}>
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className={styles.skeletonDoctorCard}>
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                          <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 48, height: 48, flexShrink: 0 }} />
-                          <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
-                            <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "70%", height: 18 }} />
-                            <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "45%", height: 14, marginTop: 2 }} />
-                            <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "60%", height: 13, marginTop: 2 }} />
-                          </div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                          <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 85, height: 13 }} />
-                          <div className={`${styles.skeletonPill} ${styles.shimmer}`} style={{ width: 48, height: 22, borderRadius: 5 }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right Column Skeleton */}
-                <div className={styles.resultsRightCol}>
-                  <div className={styles.tertiarySectionBlock}>
-                    <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 120, height: 11, marginBottom: 8 }} />
-                    <div className={styles.tertiaryListRows}>
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className={styles.skeletonSecondaryCard}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                            <div className={`${styles.skeletonCircle} ${styles.shimmer}`} style={{ width: 20, height: 20, borderRadius: 4 }} />
-                            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                              <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 115, height: 12 }} />
-                              <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 75, height: 10 }} />
-                            </div>
-                          </div>
-                          <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 10, height: 10 }} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+            {/* Mobile Viewport Segmented Control: Doctors vs Care & Info (shown only when viewing results) */}
+            {!isRequerying && (
+              <div className={styles.mobileSegmentedControl} role="tablist" aria-label="Search results views">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mobileTab === "doctors"}
+                  className={`${styles.mobileSegmentBtn} ${mobileTab === "doctors" ? styles.mobileSegmentBtnActive : ""}`}
+                  onClick={() => setMobileTab("doctors")}
+                >
+                  <span>Doctors ({currentResults.doctors.length})</span>
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={mobileTab === "care"}
+                  className={`${styles.mobileSegmentBtn} ${mobileTab === "care" ? styles.mobileSegmentBtnActive : ""}`}
+                  onClick={() => setMobileTab("care")}
+                >
+                  <span>Care & Info ({currentResults.treatments.length + currentResults.articles.length})</span>
+                </button>
               </div>
+            )}
+
+            {/* Central Pulse AI Clinical Intelligence Analyzing View or 2-Column Results */}
+            {isRequerying ? (
+              <PulseAnalyzingCentral
+                query={inputValue.trim() || activeQuery}
+                selectedLocation={selectedLocation}
+              />
             ) : (
               /* Standard 2-Column Result Layout */
-              <div className={styles.resultsSplitLayout}>
-                {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors ── */}
-                <div className={styles.resultsLeftCol}>
+              <div className={styles.resultsSplitLayout} data-mobile-tab={mobileTab}>
+                {/* ── LEFT / PRIMARY COLUMN: Recommended Doctors (Scrolls independently) ── */}
+                <div
+                  ref={leftColRef}
+                  className={styles.resultsLeftCol}
+                  data-lenis-prevent="true"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Doctors list"
+                >
                   <PrimaryResults
                     doctors={currentResults.doctors}
                     selectedLocation={selectedLocation}
@@ -299,22 +273,28 @@ export default function SearchResultsCanvas({
                   />
                 </div>
 
-                {/* ── RIGHT / SECONDARY COLUMN: Treatments, Articles & Related Specialties ── */}
+                {/* ── RIGHT / SECONDARY COLUMN: Treatments, Articles & Related Specialties (Remains Steady) ── */}
                 <TertiaryResults
                   treatments={currentResults.treatments}
                   articles={currentResults.articles}
                   relatedSpecialties={currentResults.relatedSpecialties}
                   onSelectSpecialtyTag={onSelectSpecialtyTag}
+                  query={activeQuery}
                 />
               </div>
             )}
 
-            {/* ── FULL SIZE Ask Pulse Banner at Bottom (Spanning 100% Width) ── */}
-            {results.pulseRecommendationText && (
+            {/* ── Sticky Pinned Bottom Pulse AI Card (Anchored at actual bottom of modal viewport) ── */}
+            {currentResults.pulseRecommendationText && (
               <div
                 ref={pulseRowRef}
                 className={styles.refPulseRow}
                 onClick={handleOpenPulse}
+                onWheel={(e) => {
+                  if (leftColRef.current) {
+                    leftColRef.current.scrollTop += e.deltaY;
+                  }
+                }}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
@@ -324,7 +304,7 @@ export default function SearchResultsCanvas({
               >
                 <div className={styles.refPulseLeft}>
                   <div className={styles.refPulseIconBox} aria-hidden="true">
-                    <PulseAIAvatar size={36} />
+                    <PulseAIAvatar size={38} />
                   </div>
                   <div className={styles.refPulseTextWrap}>
                     <div className={styles.refPulseTitleLine}>

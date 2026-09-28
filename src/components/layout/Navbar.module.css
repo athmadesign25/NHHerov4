@@ -32,7 +32,7 @@
   justify-content: space-between;
   height: 68px;
   margin: 0 auto;
-  padding: 0 max(4vw, 40px);
+  padding: 0 80px;
 }
 
 .desktopOnly {
@@ -954,106 +954,6 @@
 
 .navItem:hover .navLink svg {
   transform: rotate(180deg);
-}
-
-/* ─── 24/7 Emergency: red glass secondary button ───
-   Carries its own surface rather than sitting bare on the navbar, so it
-   reads identically over the light and dark sections instead of flipping
-   with --nav-fg-color the way the plain nav labels do. */
-.emergencyBtn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  /* Height (and radius) matched to the Login button sitting beside it —
-     its own 18px icon is taller than Login's text line, so equal padding
-     would not have produced equal buttons. */
-  height: 35px;
-  box-sizing: border-box;
-  padding: 0 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  background: rgba(237, 28, 36, 0.18);
-  backdrop-filter: blur(14px) saturate(1.5);
-  -webkit-backdrop-filter: blur(14px) saturate(1.5);
-  border: 1px solid rgba(255, 56, 56, 0.85);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  will-change: filter, transform;
-  transition: filter 0.25s ease, transform 0.25s ease, background 0.25s ease;
-}
-
-.emergencyBtn:hover {
-  background: rgba(237, 28, 36, 0.28);
-  filter: drop-shadow(0 0 8px rgba(237, 28, 36, 0.55)) drop-shadow(0 0 2px rgba(237, 28, 36, 0.65));
-  transform: translateY(-1px);
-}
-
-.emergencyLabelText {
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: #FFFFFF;
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Over light sections the glass has no dark backdrop to hold white text,
-   so label and siren both take the brand red instead. */
-.emergencyBtnOnLight {
-  background: rgba(237, 28, 36, 0.10);
-  border-color: rgba(237, 28, 36, 0.55);
-}
-
-.emergencyBtnOnLight .emergencyLabelText,
-.emergencyBtnOnLight .emergencyIcon {
-  color: #ED1C24;
-}
-
-/* Hover deepens the red fill, which leaves the red label with nothing to
-   read against — so label and siren flip to white for that state only. */
-.emergencyBtnOnLight:hover {
-  background: rgba(237, 28, 36, 0.92);
-  border-color: rgba(237, 28, 36, 0.92);
-}
-
-.emergencyBtnOnLight:hover .emergencyLabelText,
-.emergencyBtnOnLight:hover .emergencyIcon {
-  color: #FFFFFF;
-}
-
-/* Siren icon: takes the label's colour in both themes. */
-.emergencyIcon {
-  display: flex;
-  color: #FFFFFF;
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ─── City picker (desktop) ───
-   Tertiary next to the emergency button: plain text and icon on the
-   navbar's own dynamic colour, no surface of its own. Only present once
-   the hero search — which otherwise owns the location — has docked. */
-.navLocationBtn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--nav-fg-color, #FFFFFF);
-  overflow: hidden;
-  white-space: nowrap;
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-}
-
-.navLocationBtn:hover {
-  opacity: 0.75;
-}
-
-.navLocationName {
-  font-size: 14px;
-  font-weight: 500;
-  color: inherit;
 }
 
 /* ─── Search Experience Theme Toggle (Dark / White Mode) ─── */

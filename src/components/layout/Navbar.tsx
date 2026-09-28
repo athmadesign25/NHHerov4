@@ -9,18 +9,6 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
 import styles from "./Navbar.module.css";
 
-// Emergency siren icon (custom, not in lucide-react) for the 24/7 Emergency
-// nav button. Fixed red (see .emergencyIcon) rather than currentColor —
-// unlike the label beside it, this doesn't follow the navbar's dynamic
-// light/dark text color.
-function EmergencyIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 256 256">
-      <path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM134.68,87.89C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0c0-27.4-20.07-51.43-46.68-55.89a8,8,0,1,0-2.64,15.78ZM216,200V176H40v24H216Z"></path>
-    </svg>
-  );
-}
-
 const MOCK_FAMILY_MEMBERS = [
   { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
@@ -38,17 +26,27 @@ export default function Navbar() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
   // Search theme state ("dark" | "white") for stakeholder simulation
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // The in-navbar toggle is gone, but a mode saved from before still
-      // applies — the search reads this attribute, not any navbar state.
       const saved = localStorage.getItem('nh_search_theme') as "dark" | "white" | null;
       if (saved === 'white' || saved === 'dark') {
+        setSearchTheme(saved);
         document.documentElement.setAttribute('data-search-theme', saved);
       }
     }
   }, []);
 
+  const handleToggleSearchTheme = () => {
+    const nextTheme = searchTheme === 'dark' ? 'white' : 'dark';
+    setSearchTheme(nextTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nh_search_theme', nextTheme);
+      document.documentElement.setAttribute('data-search-theme', nextTheme);
+      window.dispatchEvent(new CustomEvent('nh:search-theme-change', { detail: { theme: nextTheme } }));
+    }
+  };
   
   useEffect(() => {
     if (!isMobileMenuOpen) {
@@ -80,10 +78,6 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
-  // The hero search carries the location picker; once it has handed off to
-  // the floating bar there is nowhere left to see or change it, so the
-  // navbar picks it up. Same threshold the floating bar appears on.
-  const [searchDocked, setSearchDocked] = useState(false);
   const isOverLightRef = useRef(false);
   const lastScrollY = useRef(0);
 
@@ -124,7 +118,6 @@ export default function Navbar() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setSearchDocked(currentScrollY >= window.innerHeight * 0.65);
 
       if (currentScrollY > 20) {
         setScrolled(true);
@@ -204,9 +197,9 @@ export default function Navbar() {
       <div className={`container ${styles.navContainer}`}>
         <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
-            <div style={{ position: "relative", width: "140px", height: "44px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+            <div style={{ position: "relative", width: "108px", height: "34px", display: "flex", alignItems: "center" }}>
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={108} height={34} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", opacity: isOverLightBackground ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
           <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
@@ -384,36 +377,31 @@ export default function Navbar() {
           </ul>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
-          <AnimatePresence>
-            {searchDocked && (
-              <motion.button
-                type="button"
-                className={styles.navLocationBtn}
-                aria-label="Change city"
-                initial={{ opacity: 0, width: 0, marginRight: -12 }}
-                animate={{ opacity: 1, width: "auto", marginRight: 0 }}
-                exit={{ opacity: 0, width: 0, marginRight: -12 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <MapPin size={16} strokeWidth={2} />
-                <span className={styles.navLocationName}>Bangalore</span>
-                <ChevronDown size={14} style={{ opacity: 0.7 }} />
-              </motion.button>
-            )}
-          </AnimatePresence>
-
-          <Link
-            href="/emergency"
-            className={`${styles.emergencyBtn} ${isOverLightBackground ? styles.emergencyBtnOnLight : ""}`}
-          >
-            <span className={styles.emergencyIcon}>
-              <EmergencyIcon size={18} />
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "8px", color: "var(--nav-fg-color)", transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+            <MapPin size={18} strokeWidth={2.5} />
+            <span className={styles.locationText} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ fontSize: "14px", fontWeight: 500 }}>Bangalore</span>
+              <ChevronDown size={14} />
             </span>
-            {/* Red over light sections, white over dark — flipping on the
-                same signal the rest of the navbar's labels use, since white
-                on the pale red glass has nothing to sit against there. */}
-            <span className={styles.emergencyLabelText}>24/7 Emergency</span>
-          </Link>
+          </div>
+
+          {/* Search Theme Toggle (Dark / White Mode simulation for stakeholders) */}
+          <button
+            type="button"
+            onClick={handleToggleSearchTheme}
+            className={styles.searchThemeToggle}
+            title={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
+            aria-label={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
+          >
+            <span className={`${styles.themeTogglePill} ${searchTheme === "white" ? styles.themeWhiteActive : styles.themeDarkActive}`}>
+              <span className={styles.themeToggleThumb}>
+                {searchTheme === "dark" ? <Moon size={12} strokeWidth={2.5} /> : <Sun size={12} strokeWidth={2.5} />}
+              </span>
+              <span className={styles.themeToggleLabel}>
+                {searchTheme === "dark" ? "Dark" : "White"}
+              </span>
+            </span>
+          </button>
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
@@ -617,7 +605,22 @@ export default function Navbar() {
                 width={112} 
                 height={35} 
                 className={styles.mobileLogoImg}
-                style={{ opacity: 1 }} 
+                style={{ 
+                  opacity: (!isMobileMenuOpen && isOverLightBackground) ? 1 : 0, 
+                  transition: "opacity 0.4s ease" 
+                }} 
+                priority 
+              />
+              <Image 
+                alt="Narayana Health" 
+                src="/NH-logo-white.svg" 
+                width={112} 
+                height={35} 
+                className={styles.mobileLogoImg}
+                style={{ 
+                  opacity: (isMobileMenuOpen || !isOverLightBackground) ? 1 : 0, 
+                  transition: "opacity 0.4s ease" 
+                }} 
                 priority 
               />
             </div>

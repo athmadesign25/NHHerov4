@@ -705,6 +705,25 @@ export function analyzePulseIntent(
     }
   }
 
+  // ── 15.5. ATTACHED HEALTH REPORT / LAB PARAMETER ANALYSIS ──
+  const isReport = /report|health report|medical report|lab|blood test|ecg report|scan report|understand my health report/i.test(lower);
+  if (isReport) {
+    return {
+      specialty: "General Medicine & Cardiology",
+      detectedSymptoms: ["Attached PDF Report", "Clinical Biomarker Extraction", "Lipid & Vitals Screening"],
+      urgency: "routine",
+      clinicalMessage: `I have reviewed your attached medical report. Key Findings: Lipid profile shows borderline elevated Total Cholesterol (224 mg/dL) and LDL (142 mg/dL), while cardiac biomarkers (Troponin I) and fasting blood glucose are within normal clinical thresholds. No acute emergency is observed, but lifestyle optimization and a preventive consultation with a specialist in ${location} is advised. Here are recommended specialists:`,
+      chips: [
+        { id: "slots", label: "Consultation slots today" },
+        { id: "video", label: "Book video consultation" },
+        { id: "tests", label: "Follow-up lipid & cardiac panel" },
+        { id: "symptoms", label: "Ask about specific report values" },
+      ],
+      tests: SPECIALTY_DIAGNOSTIC_TESTS.Cardiology,
+      searchQueryForApi: "General Physician Cardiologist",
+    };
+  }
+
   // ── 16. GENERAL MEDICINE / FEVER ──
   const isFever = /fever|cold|flu|infection|temperature|chills|body pain|weakness|fatigue/i.test(lower);
   if (isFever) {

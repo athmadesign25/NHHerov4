@@ -38,9 +38,9 @@ export default function PrimaryResults({
         </span>
       </div>
 
-      {/* 2 × 2 Grid: Doctor Cards with radius 8 and bottom action */}
+      {/* 2-Column Responsive Grid: Doctor Cards with radius 8 and bottom action */}
       <div className={styles.refDoctorsGrid}>
-        {doctors.slice(0, 4).map((doc) => {
+        {doctors.map((doc) => {
           // If name is long (> 18 chars), name wraps to 2 lines and hospital truncates to 1 line
           // If name is short, name is 1 line and hospital can wrap to 2 lines
           const isLongName = doc.name.length > 18;
@@ -52,6 +52,7 @@ export default function PrimaryResults({
                 src={doc.image}
                 alt={doc.name}
                 className={styles.refDocFullImage}
+                draggable={false}
               />
 
               {/* Gradient overlay darkening smoothly towards the bottom */}
