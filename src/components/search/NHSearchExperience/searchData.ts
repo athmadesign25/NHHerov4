@@ -23,7 +23,7 @@
  *      healthcare search backend (OpenSearch / Elasticsearch / Pulse AI API).
  */
 
-import { searchHealthcare, getCityId, NormalizedResults } from "@/lib/searchService";
+import { searchHealthcare, getCityIdAsync, NormalizedResults } from "@/lib/searchService";
 
 export interface DoctorCardData {
   id: string;
@@ -880,19 +880,31 @@ export async function getSearchResults(
 
   // 1. Attempt to query live healthcare search API
   try {
-    const cityId = getCityId(location);
+    const cityId = await getCityIdAsync(location);
     const apiResults = await searchHealthcare(query, cityId);
 
-    if (
-      apiResults &&
-      (apiResults.doctors.length > 0 ||
+    if (apiResults) {
+      // Strict Location Filtering:
+      // If the API fell back to a nearby city, we enforce strict matching by clearing the distant doctors.
+      if (apiResults.nearbyCityUsed) {
+        apiResults.doctors = [];
+      }
+
+      if (
+        apiResults.doctors.length > 0 ||
         apiResults.specialities.length > 0 ||
         apiResults.subSpecialities.length > 0 ||
         apiResults.procedures.length > 0 ||
         apiResults.treatments.length > 0 ||
-        apiResults.blogs.length > 0)
-    ) {
-      return mapApiResultsToSearchData(apiResults, query, location);
+        apiResults.blogs.length > 0
+      ) {
+        const mapped = mapApiResultsToSearchData(apiResults, query, location);
+        if (apiResults.nearbyCityUsed) {
+          mapped.categoryTitle = `No doctors found in ${location}`;
+          mapped.matchCountText = `Showing related information`;
+        }
+        return mapped;
+      }
     }
   } catch (err) {
     console.warn("Live search API returned error, gracefully falling back to simulation data:", err);

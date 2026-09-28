@@ -87,6 +87,14 @@ function trimResponse(data: unknown) {
       trimmed[key] = list.map((item) => pickEntityFields(item as RawEntity));
     }
   }
+  
+  if (raw.nearbyCityUsed !== undefined) {
+    trimmed.nearbyCityUsed = raw.nearbyCityUsed;
+  }
+  if (raw.nearbyCityName !== undefined) {
+    trimmed.nearbyCityName = raw.nearbyCityName;
+  }
+
   return trimmed;
 }
 

@@ -32,6 +32,8 @@ export interface RawApiResponse {
   treatments?: ApiEntity[];
   blogs?: ApiEntity[];
   skills?: ApiEntity[];
+  nearbyCityUsed?: boolean;
+  nearbyCityName?: string;
 }
 
 // --- Normalized types used by the UI ---
@@ -93,6 +95,8 @@ export interface NormalizedResults {
   procedures: NormalizedProcedure[];
   treatments: NormalizedTreatment[];
   blogs: NormalizedBlog[];
+  nearbyCityUsed?: boolean;
+  nearbyCityName?: string;
 }
 
 // --- City ID mapping (confirmed from production city select) ---
@@ -128,6 +132,44 @@ const CITY_ID_MAP: Record<string, number> = Object.fromEntries([
 
 export function getCityId(cityName: string): number | null {
   if (!cityName || cityName === "All Locations" || cityName === "All") return null;
+  return CITY_ID_MAP[cityName] ?? null;
+}
+
+// --- Dynamic Cities Fetching ---
+let cachedCities: { id: number; name: string }[] | null = null;
+
+export async function fetchCities(): Promise<{ id: number; name: string }[]> {
+  if (cachedCities) return cachedCities;
+  if (typeof window === "undefined") return []; // SSR fallback
+  
+  try {
+    const res = await fetch(new URL("/api/cities", window.location.origin).toString());
+    if (res.ok) {
+      cachedCities = await res.json();
+      return cachedCities || [];
+    }
+  } catch (err) {
+    console.error("Failed to fetch cities", err);
+  }
+  return [];
+}
+
+export async function getCityIdAsync(cityName: string): Promise<number | null> {
+  if (!cityName || cityName === "All Locations" || cityName === "All") return null;
+  
+  // Try dynamic fetch first
+  const dynamicCities = await fetchCities();
+  if (dynamicCities && dynamicCities.length > 0) {
+    const match = dynamicCities.find(c => c.name.toLowerCase() === cityName.toLowerCase());
+    if (match) return match.id;
+    // Check aliases
+    if (cityName.toLowerCase() === "bengaluru") {
+      const blr = dynamicCities.find(c => c.name.toLowerCase() === "bangalore");
+      if (blr) return blr.id;
+    }
+  }
+  
+  // Fallback to hardcoded map if API failed
   return CITY_ID_MAP[cityName] ?? null;
 }
 
@@ -425,7 +467,16 @@ function cleanEntityName(name: string | null | undefined): string {
     image: BLOG_IMAGES[i % BLOG_IMAGES.length],
   }));
 
-  return { doctors, specialities, subSpecialities, procedures, treatments, blogs };
+  return {
+    doctors,
+    specialities,
+    subSpecialities,
+    procedures,
+    treatments,
+    blogs,
+    nearbyCityUsed: raw.nearbyCityUsed,
+    nearbyCityName: raw.nearbyCityName,
+  };
 }
 
 // --- API caller (calls internal Next.js proxy to avoid browser CORS/SSL issues) ---

@@ -5,9 +5,9 @@ import { MapPin, ChevronDown, Navigation, Search, Check, Loader2 } from "lucide-
 import styles from "./NHSearchExperience.module.css";
 import {
   NH_LOCAL_HUBS,
-  NH_ALL_CITIES,
   findClosestNHHub,
 } from "./searchData";
+import { fetchCities } from "@/lib/searchService";
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -25,9 +25,18 @@ export default function LocationSelector({
   const [isDetecting, setIsDetecting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [cities, setCities] = useState<{id: number, name: string}[]>([]);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fetchCities().then((data) => {
+      if (data && data.length > 0) {
+        setCities(data);
+      }
+    });
+  }, []);
 
   // Check available viewport space to open upward if near screen bottom
   useEffect(() => {
@@ -133,8 +142,8 @@ export default function LocationSelector({
 
   // Filter cities based on search term
   const filteredCities = searchTerm.trim()
-    ? NH_ALL_CITIES.filter((city) =>
-        city.toLowerCase().includes(searchTerm.trim().toLowerCase())
+    ? cities.filter((city) =>
+        city.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
       )
     : [];
 
@@ -150,7 +159,7 @@ export default function LocationSelector({
     if (e.key === "Enter") {
       e.preventDefault();
       if (filteredCities.length > 0) {
-        handleSelectCity(filteredCities[0]);
+        handleSelectCity(filteredCities[0].name);
       } else if (searchTerm.trim()) {
         // Allow custom city entry
         handleSelectCity(searchTerm.trim());
@@ -244,17 +253,17 @@ export default function LocationSelector({
               {filteredCities.length > 0 ? (
                 filteredCities.map((city) => (
                   <button
-                    key={city}
+                    key={city.id}
                     type="button"
                     className={`${styles.locationMenuItem} ${
-                      city.toLowerCase() === selectedLocation.toLowerCase()
+                      city.name.toLowerCase() === selectedLocation.toLowerCase()
                         ? styles.locationMenuItemSelected
                         : ""
                     }`}
-                    onClick={(e) => handleSelectCity(city, e)}
+                    onClick={(e) => handleSelectCity(city.name, e)}
                   >
-                    <span>{city}</span>
-                    {city.toLowerCase() === selectedLocation.toLowerCase() && (
+                    <span>{city.name}</span>
+                    {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
                       <Check size={13} style={{ marginLeft: "auto", color: "#00C4FF" }} />
                     )}
                   </button>
@@ -272,20 +281,20 @@ export default function LocationSelector({
           ) : (
             /* Standard Hub Cities List + Proximity State Demos */
             <div className={styles.locationScrollList}>
-              <div className={styles.locationMenuHeader}>POPULAR HUBS</div>
-              {NH_LOCAL_HUBS.map((city) => (
+              <div className={styles.locationMenuHeader}>AVAILABLE CITIES</div>
+              {(cities.length > 0 ? cities : NH_LOCAL_HUBS.map((c, i) => ({ id: i, name: c }))).map((city) => (
                 <button
-                  key={city}
+                  key={city.id}
                   type="button"
                   className={`${styles.locationMenuItem} ${
-                    city.toLowerCase() === selectedLocation.toLowerCase()
+                    city.name.toLowerCase() === selectedLocation.toLowerCase()
                       ? styles.locationMenuItemSelected
                       : ""
                   }`}
-                  onClick={(e) => handleSelectCity(city, e)}
+                  onClick={(e) => handleSelectCity(city.name, e)}
                 >
-                  <span>{city}</span>
-                  {city.toLowerCase() === selectedLocation.toLowerCase() && (
+                  <span>{city.name}</span>
+                  {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
                     <Check size={13} style={{ marginLeft: "auto", color: "#00C4FF" }} />
                   )}
                 </button>
