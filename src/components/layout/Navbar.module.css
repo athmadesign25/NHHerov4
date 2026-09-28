@@ -4,9 +4,13 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  height: var(--nav-height);
+  /* Extend background behind the iOS status bar (notch/dynamic island) */
+  padding-top: env(safe-area-inset-top, 0px);
+  /* Adjust height to include the safe area */
+  height: calc(var(--nav-height) + env(safe-area-inset-top, 0px));
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-light);
   transition: background var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-slow);
 }

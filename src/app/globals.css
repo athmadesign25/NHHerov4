@@ -107,6 +107,13 @@ body {
   overflow-x: hidden;
   scrollbar-width: none; /* Hide scrollbar for Firefox */
   -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+
+  /* Safe-area insets for edge-to-edge rendering on iPhones
+     (viewport-fit=cover). Prevents content from hiding behind
+     the notch or home indicator. Falls back to 0px on devices
+     that don't have safe areas. */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }
 
 body::-webkit-scrollbar {

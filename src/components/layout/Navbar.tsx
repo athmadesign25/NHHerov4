@@ -99,26 +99,67 @@ export default function Navbar() {
     // vice versa, until a big enough scroll happened to also pass the
     // unrelated hide/show gate. Running it on every scroll tick (plus once
     // on mount) keeps it in sync with whatever is actually under it.
-    const probeTheme = () => {
+    const probeTheme = (currentScrollY: number, navbarVisible: boolean) => {
       if (typeof document === "undefined") return;
       const probeX = window.innerWidth / 2;
       const probeY = 35;
       const elements = document.elementsFromPoint(probeX, probeY);
       let detectedTheme = "light";
 
+      let explicitColor: string | null = null;
       for (const el of elements) {
         if (el.closest("nav")) continue;
         const themeEl = el.closest("[data-nav-theme]");
         if (themeEl) {
           detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
-          break;
         }
+        const colorEl = el.closest("[data-theme-color]");
+        if (colorEl) {
+          explicitColor = colorEl.getAttribute("data-theme-color");
+        }
+        if (themeEl || explicitColor) break;
       }
 
       const isLight = detectedTheme !== "dark";
       if (isLight !== isOverLightRef.current) {
         isOverLightRef.current = isLight;
         setIsOverLightBackground(isLight);
+      }
+
+      // Sync Safari status bar natively using body background to prevent the "two-strips" effect
+      // and allow the BOTTOM Safari toolbar to remain translucent glass natively!
+      let metaTag = document.querySelector('meta[name="theme-color"]');
+      if (metaTag) {
+        metaTag.remove(); // Remove theme-color so Safari bottom bar uses native glass effect!
+      }
+
+      let targetBgColor = "#034EA2"; // Default Hero Blue
+
+      if (isMobileMenuOpen) {
+        targetBgColor = "#0F172A";
+      } else if (currentScrollY < 40) {
+        targetBgColor = "#034EA2"; // Hero
+      } else if (navbarVisible) {
+        // When Navbar is visible, body bg matches Navbar background closely
+        targetBgColor = isLight ? "#FAFCFC" : "#080F1C";
+      } else {
+        // When Navbar is hidden, body bg matches the section underneath
+        if (explicitColor) {
+          targetBgColor = explicitColor;
+        } else {
+           // Fallback to section dark/light base colors
+           targetBgColor = isLight ? "#FAFCFC" : "#061323"; 
+        }
+        
+        // Hard check for Footer at absolute bottom
+        if (window.innerHeight + currentScrollY >= document.documentElement.scrollHeight - 100) {
+          targetBgColor = "#061120"; // Footer dark background
+        }
+      }
+
+      // iOS Safari natively reads body background color for the top status bar!
+      if (document.body.style.backgroundColor !== targetBgColor) {
+        document.body.style.backgroundColor = targetBgColor;
       }
     };
 
@@ -132,32 +173,29 @@ export default function Navbar() {
         setScrolled(false);
       }
 
-      probeTheme();
-
+      let nextVisible = isVisible;
+      
       // Always show navbar near the top
       if (currentScrollY < 120) {
-        setIsVisible(true);
-        lastScrollY.current = currentScrollY;
-        return;
-      }
-
-      const delta = currentScrollY - lastScrollY.current;
-
-      // Dead zone: ignore tiny scroll movements / Lenis momentum jitter (less than 12px)
-      if (Math.abs(delta) < 12) {
-        return;
-      }
-
-      if (delta > 0) {
-        // Sustained downward scroll
-        setIsVisible(false);
+        nextVisible = true;
       } else {
-        // Sustained upward scroll
-        setIsVisible(true);
+        const delta = currentScrollY - lastScrollY.current;
+        // Dead zone: ignore tiny scroll movements
+        if (Math.abs(delta) >= 12) {
+          if (delta > 0) {
+            nextVisible = false; // Sustained downward scroll
+          } else {
+            nextVisible = true;  // Sustained upward scroll
+          }
+        }
       }
 
-      // Update baseline after a meaningful scroll distance
-      lastScrollY.current = currentScrollY;
+      setIsVisible(nextVisible);
+      probeTheme(currentScrollY, nextVisible);
+      
+      if (Math.abs(currentScrollY - lastScrollY.current) >= 12) {
+        lastScrollY.current = currentScrollY;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

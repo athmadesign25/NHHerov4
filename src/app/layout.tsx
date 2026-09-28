@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
@@ -12,6 +12,12 @@ const inter = Inter({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "Best Multispeciality Private Hospital in India | Narayana Health",
   description:
@@ -24,6 +30,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.svg",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Narayana Health",
   },
 };
 

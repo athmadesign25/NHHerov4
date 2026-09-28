@@ -4,6 +4,8 @@
   border-radius: 0;
   background: radial-gradient(75% 55% at 50% 100%, rgba(13, 87, 189, 0.30) 0%, rgba(6, 17, 32, 0) 100%), #061120;
   color: rgba(255, 255, 255, 0.85);
+  /* Ensure footer content clears the iPhone home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Emergency Strip */
