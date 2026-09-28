@@ -2,14 +2,15 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Briefcase } from "lucide-react";
+import { ArrowRight, Briefcase, MapPin, Video } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { DoctorCardData } from "./searchData";
+import { DoctorCardData, ProximityTier } from "./searchData";
 
 interface PrimaryResultsProps {
   doctors: DoctorCardData[];
   selectedLocation: string;
   proximityMessage?: string;
+  proximityTier?: ProximityTier;
   query: string;
   pulseRecommendationText?: string;
   onAskPulse?: () => void;
@@ -27,15 +28,26 @@ function formatExperienceText(exp: string): string {
 export default function PrimaryResults({
   doctors,
   selectedLocation,
+  proximityMessage,
+  proximityTier,
   query,
 }: PrimaryResultsProps) {
+  // Determine if results context is video consultations (e.g. no in-person NH care within 100 km)
+  const isVideoContext = 
+    proximityTier === "videoOnly" || 
+    Boolean(proximityMessage?.toLowerCase().includes("video consultations"));
+
   return (
     <div className={styles.primaryResultsSection}>
-      {/* Header: Title */}
+      {/* Header: Title & Proximity Subheader (Images 3 & 4) */}
       <div className={styles.primaryHeaderRow}>
         <span className={styles.sectionEyebrowTitle}>
           RECOMMENDED DOCTORS
         </span>
+        <div className={styles.primaryProximityNotice}>
+          <MapPin size={13} className={styles.primaryPinIcon} />
+          <span>{proximityMessage || `Showing care near ${selectedLocation || "Bangalore"}`}</span>
+        </div>
       </div>
 
       {/* 2-Column Responsive Grid: Doctor Cards with radius 8 and bottom action */}
@@ -44,6 +56,12 @@ export default function PrimaryResults({
           // If name is long (> 18 chars), name wraps to 2 lines and hospital truncates to 1 line
           // If name is short, name is 1 line and hospital can wrap to 2 lines
           const isLongName = doc.name.length > 18;
+
+          // Video Consult doctor badge: shown if doctor is VC, or recommended for VC because no NH facility nearby
+          const isVcDoctor = 
+            doc.consultationType === "video" || 
+            isVideoContext || 
+            Boolean(doc.isVideoConsult);
 
           return (
             <div key={doc.id} className={styles.refDoctorCard}>
@@ -55,10 +73,18 @@ export default function PrimaryResults({
                 draggable={false}
               />
 
+              {/* Video Consult Tag at Top Right (Image 5) */}
+              {isVcDoctor && (
+                <div className={styles.refDocVideoTag}>
+                  <Video size={13} strokeWidth={2.4} className={styles.refDocVideoIcon} />
+                  <span>Video Consult</span>
+                </div>
+              )}
+
               {/* Gradient overlay darkening smoothly towards the bottom */}
               <div className={styles.refDocFullGradient} />
 
-              {/* Doctor Information directly over the gradient overlay at the bottom */}
+              {/* Doctor Information directly over the gradient overlay at the bottom (undisturbed) */}
               <div className={styles.refDocOverlayContent}>
                 <div className={styles.refDocBottomFlex}>
                   {/* Left Column: Name, Specialty, Experience, Hospital */}

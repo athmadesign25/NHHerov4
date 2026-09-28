@@ -2,11 +2,18 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, MotionValue, AnimatePresence } from "framer-motion";
-import { Paperclip, Mic, ArrowUp, User, Heart, X, Square, Pause, FileText } from "lucide-react";
+import { Paperclip, Mic, ArrowRight, User, Heart, X, Square, Pause, FileText, Check, Clock } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
+import { 
+  MAX_SEARCH_WORDS, 
+  MAX_AUDIO_DURATION_SECONDS, 
+  countWords, 
+  enforceWordLimit, 
+  formatAudioDuration 
+} from "./searchData";
 
 interface DefaultSearchPromptProps {
   onActivate: () => void;
@@ -107,6 +114,7 @@ export default function DefaultSearchPrompt({
   const [voiceMode, setVoiceMode] = useState<"idle" | "listening" | "transcribed">("idle");
   const [transcribedText, setTranscribedText] = useState("");
   const [liveTranscript, setLiveTranscript] = useState("");
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
 
   // Attached Document (PDF only)
   const [attachedPdf, setAttachedPdf] = useState<{ name: string; size?: number } | null>(null);
@@ -116,9 +124,11 @@ export default function DefaultSearchPrompt({
   const simulationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const streamIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const recordingSecondsRef = useRef(0);
   const isListeningRef = useRef(false);
 
-  // Clean up speech recognition on unmount
+  // Clean up speech recognition & recording timers on unmount
   useEffect(() => {
     return () => {
       if (recognitionRef.current) {
@@ -129,15 +139,20 @@ export default function DefaultSearchPrompt({
       if (simulationTimerRef.current) clearTimeout(simulationTimerRef.current);
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+      if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
     };
   }, []);
 
-  // Stop recording and finalize transcript
+  // Stop recording and finalize transcript (capped at 500 words max)
   const finishRecording = useCallback((finalText?: string) => {
     isListeningRef.current = false;
     if (simulationTimerRef.current) clearTimeout(simulationTimerRef.current);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
 
     if (recognitionRef.current) {
       try {
@@ -146,20 +161,46 @@ export default function DefaultSearchPrompt({
     }
 
     const resolvedText = (finalText || liveTranscript || DEMO_VOICE_QUERY).trim();
-    setTranscribedText(resolvedText);
+    // Enforce 500-word limit
+    const limitedText = enforceWordLimit(resolvedText, MAX_SEARCH_WORDS);
+    setTranscribedText(limitedText);
     setVoiceMode("transcribed");
   }, [liveTranscript]);
 
-  // Start Voice Recording in default placement
+  // Start Voice Recording (Strict 3-minute limit = 180 seconds max)
   const startRecording = useCallback(() => {
     setVoiceMode("listening");
     setLiveTranscript("");
     setTranscribedText("");
+    setRecordingSeconds(0);
+    recordingSecondsRef.current = 0;
     isListeningRef.current = true;
 
     if (simulationTimerRef.current) clearTimeout(simulationTimerRef.current);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+
+    // Audio duration timer: strictly capped at 3 minutes (180 seconds)
+    recordingTimerRef.current = setInterval(() => {
+      if (!isListeningRef.current) {
+        if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
+        return;
+      }
+      recordingSecondsRef.current += 1;
+      setRecordingSeconds(recordingSecondsRef.current);
+
+      if (recordingSecondsRef.current >= MAX_AUDIO_DURATION_SECONDS) {
+        if (recordingTimerRef.current) {
+          clearInterval(recordingTimerRef.current);
+          recordingTimerRef.current = null;
+        }
+        finishRecording();
+      }
+    }, 1000);
 
     // 1. Try native Web Speech API if supported
     let speechApiFound = false;
@@ -290,6 +331,12 @@ export default function DefaultSearchPrompt({
     if (simulationTimerRef.current) clearTimeout(simulationTimerRef.current);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (streamIntervalRef.current) clearInterval(streamIntervalRef.current);
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    setRecordingSeconds(0);
+    recordingSecondsRef.current = 0;
     setVoiceMode("idle");
     setLiveTranscript("");
     setTranscribedText("");
@@ -370,7 +417,11 @@ export default function DefaultSearchPrompt({
       <motion.div
         className={styles.landingInputRow}
         style={{
-          ...(controlsMarginBottom ? { marginBottom: controlsMarginBottom } : {}),
+          ...(voiceMode === "listening" 
+            ? { marginBottom: 0 } 
+            : controlsMarginBottom 
+            ? { marginBottom: controlsMarginBottom } 
+            : {}),
           position: "relative",
           alignItems: "center",
           opacity: promptOpacity,
@@ -462,6 +513,17 @@ export default function DefaultSearchPrompt({
                 </span>
               )}
 
+              {/* Only in last 10 seconds: slight blinking alert text */}
+              {recordingSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && recordingSeconds < MAX_AUDIO_DURATION_SECONDS && (
+                <div 
+                  className={styles.voiceLastSecondsBlink}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span>{MAX_AUDIO_DURATION_SECONDS - recordingSeconds}s remaining</span>
+                </div>
+              )}
+
               {/* Dynamic acoustic wave bars extending across the remaining row */}
               <div className={styles.compactAcousticWave} aria-hidden="true">
                 {ACOUSTIC_WAVE_BARS.map((bar, i) => (
@@ -475,6 +537,31 @@ export default function DefaultSearchPrompt({
                     }}
                   />
                 ))}
+              </div>
+
+              {/* Recording Action CTAs: Cancel (X) and Confirm (Check) */}
+              <div className={styles.voiceListeningActions}>
+                <button
+                  type="button"
+                  className={styles.voiceCancelBtn}
+                  onClick={handleClearVoice}
+                  title="Cancel recording"
+                  aria-label="Cancel voice recording"
+                >
+                  <X size={15} strokeWidth={2.2} />
+                </button>
+                <button
+                  type="button"
+                  className={styles.voiceConfirmBtn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    finishRecording();
+                  }}
+                  title="Done recording"
+                  aria-label="Confirm and finish voice recording"
+                >
+                  <Check size={16} strokeWidth={2.4} />
+                </button>
               </div>
             </motion.div>
           )}
@@ -493,7 +580,15 @@ export default function DefaultSearchPrompt({
                 type="text"
                 className={styles.transcribedInput}
                 value={transcribedText}
-                onChange={(e) => setTranscribedText(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const words = countWords(val);
+                  if (words > MAX_SEARCH_WORDS) {
+                    setTranscribedText(enforceWordLimit(val, MAX_SEARCH_WORDS));
+                  } else {
+                    setTranscribedText(val);
+                  }
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -506,6 +601,14 @@ export default function DefaultSearchPrompt({
               />
 
               <div className={styles.transcribedActions}>
+                {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
+                  <span 
+                    className={styles.transcribedWordLimitError}
+                    role="alert"
+                  >
+                    500 words limit reached
+                  </span>
+                )}
                 <span className={styles.transcribedBadge}>
                   <Mic size={11} /> Voice
                 </span>
@@ -561,128 +664,108 @@ export default function DefaultSearchPrompt({
       )}
 
       {/* Continuous horizontal interaction row */}
-      <motion.div 
-        className={styles.landingBottomRow}
-        onClick={(e) => e.stopPropagation()}
-        onPointerDown={(e) => e.stopPropagation()}
-        style={controlsOpacity ? {
-          opacity: controlsOpacity,
-          height: controlsHeight,
-          overflow: controlsOverflow || "visible",
-        } : undefined}
-      >
-        <div className={styles.bottomControlsLeft}>
-          {/* Attachment Icon Button - standalone, supports PDF health reports only */}
-          <button
-            type="button"
-            className={`${styles.standaloneIconBtn} ${attachedPdf ? styles.attachedActiveBtn : ""}`}
-            aria-label="Attach medical records or file (PDF only)"
-            title="Attach health report (PDF only)"
-            onClick={handlePaperclipClick}
-          >
-            <Paperclip size={17} />
-          </button>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf,application/pdf"
-            style={{ display: "none" }}
-            onChange={handleFileSelected}
+      <AnimatePresence initial={false}>
+        {voiceMode !== "listening" ? (
+          <motion.div 
+            key="standard-bottom-controls"
+            className={styles.landingBottomRow}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-          />
-
-          {/* Location Context Selector - the ONLY outlined contextual control */}
-          <LocationSelector
-            selectedLocation={selectedLocation}
-            onSelectLocation={onSelectLocation}
-          />
-
-          {/* Quick Action: Find a doctor - unboxed clean text + icon, NO border/box */}
-          {!isMobile && (
-            <button
-              type="button"
-              className={styles.landingTextAction}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "none",
-                backgroundColor: "transparent",
-                border: "none",
-                outline: "none",
-                padding: "0 4px",
-                color: "#FFFFFF",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectActionPill("doctor");
-              }}
-            >
-              <User size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
-              <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Find a doctor</span>
-            </button>
-          )}
-
-          {/* Quick Action: Describe my symptoms - unboxed clean text + icon, NO border/box */}
-          {!isMobile && (
-            <button
-              type="button"
-              className={styles.landingTextAction}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "none",
-                backgroundColor: "transparent",
-                border: "none",
-                outline: "none",
-                padding: "0 4px",
-                color: "#FFFFFF",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectActionPill("symptoms");
-              }}
-            >
-              <Heart size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
-              <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Describe my symptoms</span>
-            </button>
-          )}
-        </div>
-
-        {/* Right side controls: turns into Pause button during recording, splits into Send + Mic when paused */}
-        <div className={styles.bottomControlsRight}>
-          <AnimatePresence mode="popLayout" initial={false}>
-            {voiceMode === "listening" ? (
-              <motion.button
-                key="recording-pause-btn"
+            onPointerDown={(e) => e.stopPropagation()}
+            style={controlsOpacity ? {
+              opacity: controlsOpacity,
+              height: controlsHeight,
+              overflow: controlsOverflow || "visible",
+            } : undefined}
+          >
+            <div className={styles.bottomControlsLeft}>
+              {/* Attachment Icon Button - standalone, supports PDF health reports only */}
+              <button
                 type="button"
-                className={styles.recordingPauseBtn}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                aria-label="Pause recording"
-                title="Click to pause recording"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  finishRecording();
-                }}
+                className={`${styles.standaloneIconBtn} ${attachedPdf ? styles.attachedActiveBtn : ""}`}
+                aria-label="Attach medical records or file (PDF only)"
+                title="Attach health report (PDF only)"
+                onClick={handlePaperclipClick}
               >
-                <Pause size={15} fill="currentColor" />
-              </motion.button>
-            ) : (
-              <motion.div
-                key="split-controls-group"
-                className={styles.splitControlsGroup}
-                initial={{ opacity: 0, x: 6, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 6, scale: 0.95 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              >
+                <Paperclip size={17} />
+              </button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,application/pdf"
+                style={{ display: "none" }}
+                onChange={handleFileSelected}
+                onClick={(e) => e.stopPropagation()}
+              />
+
+              {/* Location Context Selector - the ONLY outlined contextual control */}
+              <LocationSelector
+                selectedLocation={selectedLocation}
+                onSelectLocation={onSelectLocation}
+              />
+
+              {/* Quick Action: Find a doctor - unboxed clean text + icon, NO border/box */}
+              {!isMobile && (
+                <button
+                  type="button"
+                  className={styles.landingTextAction}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    outline: "none",
+                    padding: "0 4px",
+                    color: "#FFFFFF",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectActionPill("doctor");
+                  }}
+                >
+                  <User size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
+                  <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Find a doctor</span>
+                </button>
+              )}
+
+              {/* Quick Action: Describe my symptoms - unboxed clean text + icon, NO border/box */}
+              {!isMobile && (
+                <button
+                  type="button"
+                  className={styles.landingTextAction}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    background: "none",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    outline: "none",
+                    padding: "0 4px",
+                    color: "#FFFFFF",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectActionPill("symptoms");
+                  }}
+                >
+                  <Heart size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
+                  <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Describe my symptoms</span>
+                </button>
+              )}
+            </div>
+
+            {/* Right side controls: splits into Send + Mic */}
+            <div className={styles.bottomControlsRight}>
+              <div className={styles.splitControlsGroup}>
                 {/* Mic button (standalone, allows re-recording in transcribed state) */}
                 <button
                   type="button"
@@ -711,13 +794,13 @@ export default function DefaultSearchPrompt({
                     }
                   }}
                 >
-                  <ArrowUp size={16} strokeWidth={2.5} />
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

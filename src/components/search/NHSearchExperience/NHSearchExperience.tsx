@@ -18,7 +18,10 @@ import AnimatedGradientWaves from "./AnimatedGradientWaves";
 import { 
   getSearchResults, 
   SearchResultsData, 
-  CARDIOLOGY_RESULTS 
+  CARDIOLOGY_RESULTS,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
 } from "./searchData";
 import { analyzePulseIntent } from "./pulseClinicalEngine";
 
@@ -219,27 +222,27 @@ export default function NHSearchExperience({
   const dropletScaleY = useTransform(activeProgress, [0.0, 0.54, 0.62, 0.74, 0.84, 0.88], targetDropletScaleY);
 
   // Background layers adaptation:
-  // 1) Dark glassmorphism layer (same like main search box)
-  const targetDarkGlassOpacity = isMobile ? [1, 1, 1, 1] : [1, 1, 1, 0];
+  // 1) Dark glassmorphism layer (active on full landing search bar, smoothly fades out as it collapses to minimized state)
+  const targetDarkGlassOpacity = isMobile ? [1, 1, 0, 0] : [1, 1, 0, 0];
   const darkGlassOpacity = useTransform(
     activeProgress, 
-    [0.0, 0.02, 0.54, 0.84], 
+    [0.0, 0.02, 0.12, 0.84], 
     targetDarkGlassOpacity
   );
 
-  // 2) Side button frosted glass layer (adapts during horizontal movement 0.54 -> 0.84)
-  const targetSideButtonBgOpacity = isMobile ? [0, 0] : [0, 1];
+  // 2) Frosted glass layer (fades in as search collapses [0.02 -> 0.14], giving minimized chip a clean, luminous look)
+  const targetSideButtonBgOpacity = isMobile ? [0, 0, 1, 1] : [0, 0, 1, 1];
   const sideButtonBgOpacity = useTransform(
     activeProgress, 
-    [0.54, 0.84], 
+    [0.0, 0.02, 0.14, 0.84], 
     targetSideButtonBgOpacity
   );
 
-  // Text color adaptation: white/dark in glassmorphism -> NH brand blue in side button style
+  // Text color adaptation: white in landing glassmorphism -> vibrant NH brand blue (#034EA2) as soon as minimized on light frosted chip
   const targetTextColor = isMobile ? ["#FFFFFF", "#FFFFFF"] : [searchTheme === "white" ? "#1E293B" : "#FFFFFF", "#034EA2"];
   const textColor = useTransform(
     activeProgress,
-    [0.54, 0.84],
+    [0.04, 0.14],
     targetTextColor
   );
 
@@ -435,9 +438,14 @@ export default function NHSearchExperience({
     }
   }, [searchState !== "landing"]);
 
-  // Handle Query typing
+  // Handle Query typing (enforces max 500 words limit)
   const handleQueryChange = useCallback((newQuery: string) => {
-    setQuery(newQuery);
+    const words = countWords(newQuery);
+    if (words > MAX_SEARCH_WORDS) {
+      setQuery(enforceWordLimit(newQuery, MAX_SEARCH_WORDS));
+    } else {
+      setQuery(newQuery);
+    }
   }, []);
 
   // Open Pulse AI Workspace
@@ -455,7 +463,7 @@ export default function NHSearchExperience({
 
   // Submit query (Active → Skeleton Loading → Results)
   const handleSubmit = async (searchQuery: string) => {
-    const targetQuery = searchQuery.trim() || "I have chest pain and need a doctor";
+    const targetQuery = enforceWordLimit(searchQuery.trim() || "I have chest pain and need a doctor", MAX_SEARCH_WORDS);
     setQuery(targetQuery);
     
     // Step 1: Transition to Pulse AI clinical intelligence analyzing state
@@ -480,7 +488,8 @@ export default function NHSearchExperience({
       : 0;
     savedScrollY.current = currentScroll;
 
-    const targetQuery = transcript.trim() || "I have chest pain and shortness of breath since morning";
+    const rawQuery = transcript.trim() || "I have chest pain and shortness of breath since morning";
+    const targetQuery = enforceWordLimit(rawQuery, MAX_SEARCH_WORDS);
     setQuery(targetQuery);
     setPulseInitialQuery(targetQuery);
 
@@ -710,7 +719,7 @@ export default function NHSearchExperience({
           />
         )}
 
-        {/* Layer 2: Side buttons visual style (adapts during horizontal motion) */}
+        {/* Layer 2: Frosted glass visual style for minimized card and docked button */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -718,11 +727,11 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: "linear-gradient(176deg, rgba(237, 28, 36, 0.04) -3.08%, rgba(253, 234, 235, 0.06) 22.92%, rgba(255, 255, 255, 0.06) 93.39%)",
-              backdropFilter: "blur(18px)",
-              WebkitBackdropFilter: "blur(18px)",
-              border: "1px solid rgba(249, 91, 97, 0.22)",
-              boxShadow: "0 8px 40px 0 rgba(0, 0, 0, 0.18)",
+              background: "linear-gradient(168deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 48%, rgba(255, 255, 255, 0.38) 100%)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.65)",
+              boxShadow: "0 12px 34px rgba(5, 20, 45, 0.16), inset 0 1px 2px rgba(255, 255, 255, 0.85), inset 0 0 24px rgba(18, 71, 194, 0.12)",
               opacity: sideButtonBgOpacity,
               pointerEvents: "none",
             }}
@@ -812,13 +821,13 @@ export default function NHSearchExperience({
             const modalTargetTop = typeof window !== "undefined"
               ? (isPhone 
                   ? (isCompactModal ? 10 : 16)
-                  : (isCompactModal ? Math.max(20, window.innerHeight * 0.03) : Math.max(60, window.innerHeight * 0.12)))
+                  : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
               : 100;
             const modalTargetWidth = typeof window !== "undefined"
               ? (isPhone
                   ? Math.min(600, winSize.w - 16)
                   : Math.min(
-                      searchState === "pulse" ? 1000 : (searchState === "results" || searchState === "skeleton") ? 1080 : 880,
+                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? 1120 : 880,
                       winSize.w - 32
                     ))
               : 880;
@@ -841,16 +850,16 @@ export default function NHSearchExperience({
                   alignItems: "flex-start",
                   justifyContent: "center",
                   paddingTop: isPhone
-                    ? (isCompactModal ? "10px" : "16px")
-                    : (isCompactModal ? "max(20px, 3vh)" : "max(60px, 12vh)"),
-                  paddingBottom: isPhone ? "10px" : "24px",
+                    ? (isCompactModal ? "8px" : "16px")
+                    : (isCompactModal ? "max(14px, 2vh)" : "max(60px, 12vh)"),
+                  paddingBottom: isPhone ? "8px" : "18px",
                   paddingLeft: isPhone ? "8px" : "16px",
                   paddingRight: isPhone ? "8px" : "16px",
                   boxSizing: "border-box",
                   pointerEvents: "auto",
                 }}
               >
-                {/* Backdrop with translucent blur and stationary background freeze */}
+                {/* Backdrop with translucent blur and stationary background freeze (40% white overlay with blur on freeze screen) */}
                 <motion.div
                   key="search-backdrop"
                   data-backdrop="true"
@@ -864,45 +873,47 @@ export default function NHSearchExperience({
                     position: "fixed",
                     inset: 0,
                     background: searchTheme === "white" 
-                      ? "rgba(255, 255, 255, 0.52)" 
+                      ? "rgba(255, 255, 255, 0.40)" 
                       : "rgba(5, 10, 18, 0.55)",
                     backdropFilter: searchTheme === "white" 
-                      ? "blur(20px) saturate(140%)" 
+                      ? "blur(12px)" 
                       : "blur(14px)",
                     WebkitBackdropFilter: searchTheme === "white" 
-                      ? "blur(20px) saturate(140%)" 
+                      ? "blur(12px)" 
                       : "blur(14px)",
                     zIndex: 1,
                     touchAction: "none",
                   }}
                 />
 
-                {/* ── Layer 2: Animated Gradient Waves Background (Mapped above fold, clearly visible above white blur) ── */}
-                <motion.div
-                  key="animated-gradient-waves-bg"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  style={{
-                    position: "fixed",
-                    inset: 0,
-                    zIndex: 2,
-                    pointerEvents: "none",
-                    overflow: "hidden",
-                  }}
-                  aria-hidden="true"
-                >
-                  <AnimatedGradientWaves
-                    colorStops={["#0A25C9", "#7C3AED", "#EC4899"]}
-                    amplitude={1.35}
-                    blend={0.5}
-                    speed={0.85}
-                    opacity={0.92}
-                  />
-                </motion.div>
+                {/* ── Layer 2: Animated Gradient Waves Background (Hidden on white theme to keep 40% translucent frosted freeze screen) ── */}
+                {searchTheme !== "white" && (
+                  <motion.div
+                    key="animated-gradient-waves-bg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    style={{
+                      position: "fixed",
+                      inset: 0,
+                      zIndex: 2,
+                      pointerEvents: "none",
+                      overflow: "hidden",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <AnimatedGradientWaves
+                      colorStops={["#0A25C9", "#7C3AED", "#EC4899"]}
+                      amplitude={1.35}
+                      blend={0.5}
+                      speed={0.85}
+                      opacity={0.92}
+                    />
+                  </motion.div>
+                )}
 
-                {/* ── Layer 3: Modal Wrapper holding the Search Viewport (On top of gradient) ── */}
+                {/* ── Layer 3: Modal Wrapper holding the Search Viewport (On top of translucent backdrop) ── */}
                 <div
                   className={styles.modalWithAmbientWrap}
                   style={{
@@ -911,11 +922,11 @@ export default function NHSearchExperience({
                     justifyContent: "center",
                     width: modalTargetWidth,
                     height: (searchState === "results" || searchState === "skeleton") 
-                      ? (isPhone ? "calc(100dvh - 24px)" : "min(840px, 90vh)") 
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
                       : searchState === "pulse" 
-                      ? (isPhone ? "calc(100dvh - 24px)" : "min(840px, 90vh)") 
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
                       : undefined,
-                    maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "92vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                    maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                     zIndex: 3,
                   }}
                 >
@@ -951,11 +962,11 @@ export default function NHSearchExperience({
                       zIndex: 2,
                       width: "100%",
                       height: (searchState === "results" || searchState === "skeleton") 
-                        ? (isPhone ? "calc(100dvh - 24px)" : "min(840px, 90vh)") 
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
                         : searchState === "pulse" 
-                        ? (isPhone ? "calc(100dvh - 24px)" : "min(840px, 90vh)") 
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
                         : undefined,
-                      maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "92vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                      maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                       display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,
                       flexDirection: "column",
                       overflow: "hidden",

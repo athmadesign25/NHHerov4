@@ -8,8 +8,15 @@ import {
   Activity, Bone, Brain
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { PredictiveState, getPredictiveCompletion, fetchLiveApiPredictions } from "./searchData";
 import LocationSelector from "./LocationSelector";
+import { 
+  PredictiveState, 
+  getPredictiveCompletion, 
+  fetchLiveApiPredictions,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
+} from "./searchData";
 
 const MOBILE_POPULAR_SEARCHES = [
   { label: "Cardiologist", query: "Cardiologist near me", icon: Heart },
@@ -189,7 +196,13 @@ export default function ActiveSearchCanvas({
             className={styles.activeTextInput}
             value={query}
             onChange={(e) => {
-              onQueryChange(e.target.value);
+              const val = e.target.value;
+              const words = countWords(val);
+              if (words > MAX_SEARCH_WORDS) {
+                onQueryChange(enforceWordLimit(val, MAX_SEARCH_WORDS));
+              } else {
+                onQueryChange(val);
+              }
               setSelectedSugIndex(-1);
             }}
             onKeyDown={handleKeyDown}
@@ -199,20 +212,13 @@ export default function ActiveSearchCanvas({
             spellCheck="false"
           />
 
-          {/* Clear Button when query has text */}
-          {query.length > 0 && (
-            <button
-              type="button"
-              className={styles.inputClearBtn}
-              onClick={() => {
-                onQueryChange("");
-                setSelectedSugIndex(-1);
-                inputRef.current?.focus();
-              }}
-              aria-label="Clear input text"
-            >
-              <X size={14} />
-            </button>
+          {/* Out-of-Word-Limit Error Indicator (Shown ONLY when limit is reached) */}
+          {countWords(query) >= MAX_SEARCH_WORDS && (
+            <div className={styles.inputEndAdornment}>
+              <span className={styles.inputWordLimitError} role="alert">
+                500 words limit reached
+              </span>
+            </div>
           )}
 
           {/* Inline ghost predictive sentence overlay */}

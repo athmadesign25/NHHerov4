@@ -36,6 +36,7 @@ export interface DoctorCardData {
   city: string;
   availableToday?: boolean;
   consultationType?: "in-person" | "video" | "both";
+  isVideoConsult?: boolean;
   distanceNote?: string;
 }
 
@@ -854,6 +855,7 @@ export function mapApiResultsToSearchData(
       city: proximity.tier === "videoOnly" ? "Narayana Telehealth" : location,
       availableToday: doc.apptEnabled || doc.walkinEnabled || true,
       consultationType: consultType,
+      isVideoConsult: proximity.tier === "videoOnly" || consultType === "video",
       distanceNote: proximity.tier === "expanded100km" ? `${proximity.distanceKm || 38} km away` : undefined,
     };
   });
@@ -1129,4 +1131,41 @@ export async function fetchLiveApiPredictions(
   } catch {
     return null;
   }
+}
+
+/**
+ * ═════════════════════════════════════════════════════════════════════════════════
+ * SEARCH LIMITS & UTILITIES (AUDIO: 3 MIN MAX | TEXT INPUT: 500 WORDS MAX)
+ * ═════════════════════════════════════════════════════════════════════════════════
+ */
+export const MAX_SEARCH_WORDS = 500;
+export const MAX_AUDIO_DURATION_SECONDS = 180; // 3 minutes maximum limit
+
+/**
+ * Accurately count words separated by whitespace
+ */
+export function countWords(text: string): number {
+  const trimmed = text.trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).filter(Boolean).length;
+}
+
+/**
+ * Clamp text to maximum words allowed
+ */
+export function enforceWordLimit(text: string, maxWords: number = MAX_SEARCH_WORDS): string {
+  const trimmed = text.trim();
+  if (!trimmed) return text;
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ");
+}
+
+/**
+ * Format elapsed seconds into mm:ss format
+ */
+export function formatAudioDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
 }

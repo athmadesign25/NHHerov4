@@ -4,7 +4,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { Search, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NHSearchExperience.module.css";
-import { SearchResultsData, getSearchResults } from "./searchData";
+import { 
+  SearchResultsData, 
+  getSearchResults, 
+  countWords, 
+  enforceWordLimit, 
+  MAX_SEARCH_WORDS 
+} from "./searchData";
 import LocationSelector from "./LocationSelector";
 import PrimaryResults from "./PrimaryResults";
 import TertiaryResults from "./TertiaryResults";
@@ -182,7 +188,15 @@ export default function SearchResultsCanvas({
                   type="text"
                   className={styles.resultsQueryInput}
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const words = countWords(val);
+                    if (words > MAX_SEARCH_WORDS) {
+                      setInputValue(enforceWordLimit(val, MAX_SEARCH_WORDS));
+                    } else {
+                      setInputValue(val);
+                    }
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -197,6 +211,14 @@ export default function SearchResultsCanvas({
                   placeholder="Search doctors, specialties, symptoms..."
                   aria-label="Edit search prompt"
                 />
+                {countWords(inputValue) >= MAX_SEARCH_WORDS && (
+                  <span 
+                    className={styles.resultsWordLimitError}
+                    role="alert"
+                  >
+                    500 words limit reached
+                  </span>
+                )}
               </div>
 
               <div className={styles.resultsQueryActions}>
@@ -269,6 +291,7 @@ export default function SearchResultsCanvas({
                     doctors={currentResults.doctors}
                     selectedLocation={selectedLocation}
                     proximityMessage={currentResults.proximityMessage}
+                    proximityTier={currentResults.proximityTier}
                     query={activeQuery}
                   />
                 </div>
@@ -304,7 +327,7 @@ export default function SearchResultsCanvas({
               >
                 <div className={styles.refPulseLeft}>
                   <div className={styles.refPulseIconBox} aria-hidden="true">
-                    <PulseAIAvatar size={38} />
+                    <PulseAIAvatar size={26} />
                   </div>
                   <div className={styles.refPulseTextWrap}>
                     <div className={styles.refPulseTitleLine}>

@@ -20,10 +20,19 @@ import {
   Plus,
   CheckCircle2,
   AlertCircle,
-  Stethoscope
+  Stethoscope,
+  Clock
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { DoctorCardData, getSearchResults } from "./searchData";
+import { 
+  DoctorCardData, 
+  getSearchResults, 
+  countWords, 
+  enforceWordLimit, 
+  formatAudioDuration, 
+  MAX_SEARCH_WORDS, 
+  MAX_AUDIO_DURATION_SECONDS 
+} from "./searchData";
 import { 
   analyzePulseIntent, 
   ClinicalAnalysisResult, 
@@ -127,7 +136,36 @@ export default function PulseAIView({
   const [activeChip, setActiveChip] = useState<ActionChipType>("none");
   const [inputValue, setInputValue] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [pulseAudioSeconds, setPulseAudioSeconds] = useState(0);
+  const pulseAudioTimerRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Audio recording limit: strictly capped at 3 minutes (180 seconds)
+  useEffect(() => {
+    if (isListening) {
+      setPulseAudioSeconds(0);
+      if (pulseAudioTimerRef.current) clearInterval(pulseAudioTimerRef.current);
+      pulseAudioTimerRef.current = setInterval(() => {
+        setPulseAudioSeconds((prev) => {
+          if (prev + 1 >= MAX_AUDIO_DURATION_SECONDS) {
+            setIsListening(false);
+            if (pulseAudioTimerRef.current) clearInterval(pulseAudioTimerRef.current);
+            return MAX_AUDIO_DURATION_SECONDS;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } else {
+      if (pulseAudioTimerRef.current) {
+        clearInterval(pulseAudioTimerRef.current);
+        pulseAudioTimerRef.current = null;
+      }
+      setPulseAudioSeconds(0);
+    }
+    return () => {
+      if (pulseAudioTimerRef.current) clearInterval(pulseAudioTimerRef.current);
+    };
+  }, [isListening]);
 
   const [selectedSpecialistIndex, setSelectedSpecialistIndex] = useState(0);
 
@@ -901,14 +939,41 @@ export default function PulseAIView({
             className={styles.pulseBottomInputField}
             placeholder="Ask Pulse..."
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              const words = countWords(val);
+              if (words > MAX_SEARCH_WORDS) {
+                setInputValue(enforceWordLimit(val, MAX_SEARCH_WORDS));
+              } else {
+                setInputValue(val);
+              }
+            }}
             aria-label="Ask Pulse"
           />
+
+          {countWords(inputValue) >= MAX_SEARCH_WORDS && (
+            <span 
+              className={styles.pulseWordLimitError}
+              role="alert"
+            >
+              500 words limit reached
+            </span>
+          )}
+
+          {isListening && pulseAudioSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && pulseAudioSeconds < MAX_AUDIO_DURATION_SECONDS && (
+            <span 
+              className={styles.pulseLastSecondsBlink}
+              role="status"
+              aria-live="polite"
+            >
+              {MAX_AUDIO_DURATION_SECONDS - pulseAudioSeconds}s remaining
+            </span>
+          )}
 
           <button
             type="button"
             className={`${styles.pulseBottomMicBtn} ${isListening ? styles.pulseMicBtnActive : ""}`}
-            title={isListening ? "Listening..." : "Speak symptoms"}
+            title={isListening ? "Listening (max 3 min)..." : "Speak symptoms"}
             aria-label="Voice search"
             onClick={() => setIsListening((prev) => !prev)}
           >
