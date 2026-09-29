@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Footer from "./Footer";
+import SeoLinksBand from "./SeoLinksBand";
 
 /**
  * Curtain-reveal footer, as on sites like icomat.co.uk: the footer is
@@ -86,6 +87,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
         }
       >
         <Footer />
+        <SeoLinksBand />
       </div>
     </>
   );
