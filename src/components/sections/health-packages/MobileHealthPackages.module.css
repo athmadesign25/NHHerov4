@@ -1011,7 +1011,11 @@
     right: 0;
     bottom: 0;
     object-fit: cover;
-    object-position: center center;
+    /* Anchored left, not centred: `cover` trims the horizontal overflow, and
+       centring split that trim across both edges — which cut into the
+       artwork's left side (most visibly on Healthy Heart). Anchoring left
+       keeps that edge intact and takes the whole crop off the right. */
+    object-position: left center;
     filter: none;          /* Remove drop-shadow on mobile — cleaner */
     z-index: 1;            /* Ensure image sits above the solid white card background */
     background: transparent;
@@ -1026,13 +1030,16 @@
     object-position: 30% center;
   }
 
-  /* Bone health (short image): bottom-anchor matches artwork composition */
+  /* Bone health (short image): top-anchored vertically to match the
+     artwork's composition, and left-anchored horizontally for the same
+     reason as the base rule above — centred, its left side was being
+     cropped away. */
   .packageCardImageShort {
     width: 52%;
     height: 100%;
     top: 0;
     bottom: 0;
-    object-position: center top;
+    object-position: left top;
   }
 
   /* ── Card content: left column, clear of image zone ── */
@@ -1079,25 +1086,35 @@
     gap: 6px;
   }
 
-  /* Shrink the icon chip slightly for the compact card */
+  /* Sized to the text unit beside it, not chosen independently: the two
+     stacked lines measured 26px together at 11/10px and the chip matched
+     at 26px. At 14/13px that unit is ~33px, so the chip follows to keep
+     the row reading as one object rather than a chip floating against
+     taller text. Radius and glyph scale with it (26->32 is ~1.23x). */
   .packageCardFactIcon {
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
   }
 
   .packageCardFactIcon svg {
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
   }
 
+  /* 11/10px rendered as the smallest type anywhere in the mweb layout and
+     sat well under a comfortable reading size on a phone. 14/13px puts the
+     pair on the scale the rest of mweb already uses (14px is its most
+     common size, and the audience line above is already 14px), keeping the
+     original 1px step between value and label. The card has the room: the
+     content column runs ~115px of its ~188px usable height at rest. */
   .factBold {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
   }
 
   .factLight {
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 300;
   }
 
@@ -1115,8 +1132,14 @@
     color: #5F6977; /* Premium dark grey */
   }
   
+  /* Shown permanently rather than hidden: on desktop this wipes in on
+     hover, which touch never triggers, so mobile was left with no underline
+     at all. Held at full width with the transition dropped, since there is
+     no hover state here for it to animate between. */
   .viewDetailsUnderline {
-    display: none; /* Remove underline on mobile */
+    display: block;
+    transform: scaleX(1);
+    transition: none;
   }
 
   /* ── Compact variant height override ── */
