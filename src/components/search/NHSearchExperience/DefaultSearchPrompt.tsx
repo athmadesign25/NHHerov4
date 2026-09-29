@@ -7,6 +7,7 @@ import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
+import TypewriterPrompt from "./TypewriterPrompt";
 import { 
   MAX_SEARCH_WORDS, 
   MAX_AUDIO_DURATION_SECONDS, 
@@ -410,7 +411,7 @@ export default function DefaultSearchPrompt({
   return (
     <div 
       className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "center", cursor: voiceMode === "idle" ? "pointer" : "default", position: "relative", overflow: "hidden", zIndex: 5 }}
+      style={{ height: "100%", justifyContent: "flex-start", cursor: voiceMode === "idle" ? "pointer" : "default", position: "relative", overflow: "visible", zIndex: 5 }}
       onClick={handleContainerClick}
     >
       {/* Top row: Primary Prompt or Voice In-Place Mode */}
@@ -473,17 +474,19 @@ export default function DefaultSearchPrompt({
           )}
 
           {!attachedPdf && voiceMode === "idle" && (
-            <motion.span
-              key="idle-placeholder"
-              className={styles.landingPlaceholder}
+            <motion.div
+              key="idle-placeholder-animated"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              style={isWhite ? { color: "rgba(15, 23, 42, 0.60)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : undefined}
+              style={{ width: "100%", display: "flex", alignItems: "center" }}
             >
-              How can we help you today?
-            </motion.span>
+              <TypewriterPrompt
+                className={styles.landingPlaceholder}
+                style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : undefined}
+              />
+            </motion.div>
           )}
 
           {voiceMode === "listening" && (
@@ -707,60 +710,6 @@ export default function DefaultSearchPrompt({
                 selectedLocation={selectedLocation}
                 onSelectLocation={onSelectLocation}
               />
-
-              {/* Quick Action: Find a doctor - unboxed clean text + icon, NO border/box */}
-              {!isMobile && (
-                <button
-                  type="button"
-                  className={styles.landingTextAction}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    backgroundColor: "transparent",
-                    border: "none",
-                    outline: "none",
-                    padding: "0 4px",
-                    color: "#FFFFFF",
-                    cursor: "pointer",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectActionPill("doctor");
-                  }}
-                >
-                  <User size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
-                  <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Find a doctor</span>
-                </button>
-              )}
-
-              {/* Quick Action: Describe my symptoms - unboxed clean text + icon, NO border/box */}
-              {!isMobile && (
-                <button
-                  type="button"
-                  className={styles.landingTextAction}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    background: "none",
-                    backgroundColor: "transparent",
-                    border: "none",
-                    outline: "none",
-                    padding: "0 4px",
-                    color: "#FFFFFF",
-                    cursor: "pointer",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectActionPill("symptoms");
-                  }}
-                >
-                  <Heart size={14} style={{ color: "rgba(255, 255, 255, 0.88)" }} />
-                  <span style={{ color: "#FFFFFF", fontWeight: 450, fontSize: "13.5px" }}>Describe my symptoms</span>
-                </button>
-              )}
             </div>
 
             {/* Right side controls: splits into Send + Mic */}

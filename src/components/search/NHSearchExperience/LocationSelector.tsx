@@ -29,12 +29,13 @@ export default function LocationSelector({
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Check available viewport space to open upward if near screen bottom
+  // Check available viewport space to open upward ONLY if pressed against the very bottom of the screen
   useEffect(() => {
     if (isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
-      if (spaceBelow < 280 && rect.top > spaceBelow) {
+      // The dropdown height is around 220px. Only flip upward if space below is genuinely insufficient (< 180px) AND there is ample room above (> 260px)
+      if (spaceBelow < 180 && rect.top > 260) {
         setOpenUpward(true);
       } else {
         setOpenUpward(false);

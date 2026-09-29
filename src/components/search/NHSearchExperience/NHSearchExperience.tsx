@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { Search, X, CalendarCheck, Activity, QrCode, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
@@ -106,11 +108,26 @@ export default function NHSearchExperience({
   }, []);
 
   const isMobile = winSize.w <= 900;
+  const router = useRouter();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
+  const [isQrOpen, setIsQrOpen] = useState(false);
+
+  // Close QR code popover when clicking outside
+  useEffect(() => {
+    if (!isQrOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(`.${styles.qrPopoverCard}`) && !target.closest(`.${styles.morphingActionBtn}`) && !target.closest(`.${styles.islandBubble}`)) {
+        setIsQrOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => window.removeEventListener("mousedown", handleClickOutside);
+  }, [isQrOpen]);
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -118,52 +135,60 @@ export default function NHSearchExperience({
   const baseProgress = scrollProgress || defaultProgress;
 
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
-  // This makes the transition to FAB feel much cleaner and more responsive to a single swipe
+  // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
   const activeProgress = isMobile ? fastMobileProgress : baseProgress;
 
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
   const startWidth = isMobile ? Math.min(winSize.w - 32, 600) : (anchorRect?.width || Math.min(840, winSize.w - 48));
-  const startHeight = anchorRect ? (isMobile ? 130 : anchorRect.height) : (isMobile ? 130 : 136);
+  const startHeight = anchorRect ? (isMobile ? 114 : Math.max(120, anchorRect.height)) : (isMobile ? 114 : 120);
   const startTop = isMobile 
     ? (winSize.h > 0 ? winSize.h - 36 - startHeight : 500)
     : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
   const startLeft = isMobile ? Math.round((winSize.w - startWidth) / 2) : (anchorRect?.left || Math.round((winSize.w - startWidth) / 2));
 
-  // Minimized search card size
-  const compactWidth = isMobile ? winSize.w - 32 : 100;
-  const compactHeight = isMobile ? 80 : 100;
-  const compactRadius = 18;
+  // Apple Spotlight Bottom Floating Island Dimensions
+  const bubbleSize = isPhone ? 40 : 46;
+  const bubbleGap = isPhone ? 8 : 10;
+  const bubblesCount = 3;
+  const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * bubblesCount);
+  
+  const spotlightWidth = isMobile 
+    ? Math.max(160, Math.min(240, winSize.w - 32 - bubblesTotalWidth - 10)) 
+    : 360;
+  const spotlightHeight = isPhone ? 42 : 46;
+  const islandTotalWidth = spotlightWidth + bubblesTotalWidth;
+  const islandLeft = Math.round((winSize.w - islandTotalWidth) / 2);
 
-  const squareLeft = Math.round((winSize.w - compactWidth) / 2);
-  const squareTopInPlace = Math.round(startTop + (startHeight - compactHeight) / 2);
+  // Raised above the bottom edge by the height of the compact search for an elevated floating dock
+  const bottomClearance = isMobile ? 32 : 56;
+  const targetTop = winSize.h > 0 ? winSize.h - bottomClearance - spotlightHeight : 600;
+  const targetLeft = islandLeft;
 
-  // Exact vertical alignment with 3rd button position in side panel (desktop) or bottom nav bar (mobile):
-  const targetButton3Top = isMobile 
-    ? Math.round(winSize.h - 36 - compactHeight) 
-    : squareTopInPlace;
+  // Hero Outside Buttons Dimensions & Starting Coordinates
+  const heroBtn1Width = isPhone ? 156 : 180;
+  const heroBtn2Width = isPhone ? 188 : 218;
+  const heroBtnGap = isPhone ? 8 : 12;
+  const heroRowWidth = heroBtn1Width + heroBtnGap + heroBtn2Width;
+  const heroRowLeft = Math.round(startLeft + (startWidth - heroRowWidth) / 2);
 
-  // Horizontal position: Exactly centered on mobile (16px margins), right 24px on desktop:
-  const targetButton3Left = isMobile
-    ? Math.round(winSize.w - 16 - compactWidth)
-    : (winSize.w - 124);
+  const heroBtn1Left = heroRowLeft;
+  const heroBtn2Left = heroRowLeft + heroBtn1Width + heroBtnGap;
+  const heroBtnTop = startTop + startHeight + 14;
+  const heroBtnHeight = isPhone ? 38 : 40;
+  const heroBtnRadius = 12;
 
-  // Broadcast fab-target-top so FloatingQuickActions places Button 3 at exact squareTopInPlace
-  useEffect(() => {
-    if (typeof window !== "undefined" && squareTopInPlace > 0) {
-      const fabTop = squareTopInPlace - 202;
-      document.documentElement.style.setProperty("--fab-target-top", `${fabTop}px`);
-      document.documentElement.style.setProperty("--compact-search-top", `${squareTopInPlace}px`);
-      window.dispatchEvent(new CustomEvent("nh:search-pos-update", { detail: { fabTop, squareTopInPlace } }));
-    }
-  }, [squareTopInPlace]);
+  // Docked Buttons Target Coordinates (flanking the Spotlight pill at the bottom dock)
+  const dockBtn1Left = targetLeft + spotlightWidth + bubbleGap;
+  const dockBtn2Left = dockBtn1Left + bubbleSize + bubbleGap;
+  const dockBtn3Left = dockBtn2Left + bubbleSize + bubbleGap;
 
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
-    const docked = latest >= 0.84;
+    const docked = latest >= 0.08;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
@@ -171,103 +196,103 @@ export default function NHSearchExperience({
   });
 
   // Choreography:
-  // Phase 1 [0.02 - 0.14]: Search bar shrinks in place to compact glassmorphic card at center (squareLeft, squareTopInPlace)
-  // Phase 2 [0.14 - 0.54]: WAITS at center position with dark glassmorphism while hero scales
-  // Phase 3 [0.54 - 0.84]: GLIDE: On desktop glides to right sidebar; on mobile glides smoothly straight down to bottom center nav bar
-  // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into center position on mobile / 3rd slot on desktop
-  const targetTopRange = isMobile
-    ? [startTop, startTop + (targetButton3Top - startTop) * 0.15, startTop + (targetButton3Top - startTop) * 0.63, targetButton3Top]
-    : [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top];
-  const composerTop = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetTopRange);
+  // 1. Search bar rapidly minimizes in width & height, rounding into a pill, and glides down to dock
+  const composerTop = useTransform(activeProgress, [0.04, 0.32], [startTop, targetTop]);
+  const composerLeft = useTransform(activeProgress, [0.04, 0.32], [startLeft, targetLeft]);
+  const composerWidth = useTransform(activeProgress, [0.02, 0.26], [startWidth, spotlightWidth]);
+  const composerHeight = useTransform(activeProgress, [0.02, 0.24], [startHeight, spotlightHeight]);
+  const composerRadius = useTransform(activeProgress, [0.02, 0.24], [20, 9999]);
+  const composerPaddingX = useTransform(activeProgress, [0.02, 0.24], [24, 14]);
+  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.24], [22, 0]);
+  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.24], [18, 0]);
 
-  const targetLeftRange = isMobile
-    ? [startLeft, startLeft + (targetButton3Left - startLeft) * 0.15, startLeft + (targetButton3Left - startLeft) * 0.63, targetButton3Left]
-    : [startLeft, squareLeft, squareLeft, targetButton3Left];
-  const composerLeft = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetLeftRange);
+  // Content cross-fades inside Search Bar
+  const promptOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
+  const spotlightOpacity = useTransform(activeProgress, [0.12, 0.24], [0, 1]);
 
-  const targetWidthRange = isMobile
-    ? [startWidth, startWidth + (compactWidth - startWidth) * 0.15, startWidth + (compactWidth - startWidth) * 0.63, compactWidth]
-    : [startWidth, compactWidth, compactWidth, compactWidth];
-  const composerWidth = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetWidthRange);
+  // 2. Button 1: "Book Appointment" physically morphs into Bubble 1
+  const btn1Top = useTransform(activeProgress, [0.04, 0.32], [heroBtnTop, targetTop]);
+  const btn1Left = useTransform(activeProgress, [0.04, 0.32], [heroBtn1Left, dockBtn1Left]);
+  const btn1Width = useTransform(activeProgress, [0.04, 0.24], [heroBtn1Width, bubbleSize]);
+  const btn1Height = useTransform(activeProgress, [0.04, 0.24], [heroBtnHeight, spotlightHeight]);
+  const btn1Radius = useTransform(activeProgress, [0.04, 0.24], [heroBtnRadius, 9999]);
+  const btn1TextOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
+  const btn1TextWidth = useTransform(activeProgress, [0.02, 0.14], [130, 0]);
+  const btn1TextMargin = useTransform(activeProgress, [0.02, 0.14], [8, 0]);
+  const btn1PaddingX = useTransform(activeProgress, [0.04, 0.24], [16, 0]);
 
-  const targetHeightRange = isMobile
-    ? [startHeight, startHeight + (compactHeight - startHeight) * 0.15, startHeight + (compactHeight - startHeight) * 0.63, compactHeight]
-    : [startHeight, compactHeight, compactHeight, compactHeight];
-  const composerHeight = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetHeightRange);
+  // 3. Button 2: "Book Tests & Checkups" physically morphs into Bubble 2
+  const btn2Top = useTransform(activeProgress, [0.04, 0.32], [heroBtnTop, targetTop]);
+  const btn2Left = useTransform(activeProgress, [0.04, 0.32], [heroBtn2Left, dockBtn2Left]);
+  const btn2Width = useTransform(activeProgress, [0.04, 0.24], [heroBtn2Width, bubbleSize]);
+  const btn2Height = useTransform(activeProgress, [0.04, 0.24], [heroBtnHeight, spotlightHeight]);
+  const btn2Radius = useTransform(activeProgress, [0.04, 0.24], [heroBtnRadius, 9999]);
+  const btn2TextOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
+  const btn2TextWidth = useTransform(activeProgress, [0.02, 0.14], [168, 0]);
+  const btn2TextMargin = useTransform(activeProgress, [0.02, 0.14], [8, 0]);
+  const btn2PaddingX = useTransform(activeProgress, [0.04, 0.24], [16, 0]);
 
-  const targetRadiusRange = isMobile
-    ? [20, 20 + (compactRadius - 20) * 0.15, 20 + (compactRadius - 20) * 0.63, compactRadius]
-    : [20, compactRadius, compactRadius, compactRadius];
-  const composerRadius = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetRadiusRange);
-
-  const targetPaddingXRange = isMobile
-    ? [24, 24 + (0 - 24) * 0.15, 24 + (0 - 24) * 0.63, 0]
-    : [24, 0, 0, 0];
-  const composerPaddingX = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetPaddingXRange);
-
-  const targetPaddingYRange = isMobile
-    ? [20, 20 + (0 - 20) * 0.15, 20 + (0 - 20) * 0.63, 0]
-    : [20, 0, 0, 0];
-  const composerPaddingY = useTransform(activeProgress, [0.02, 0.14, 0.54, 0.84], targetPaddingYRange);
-
-  // Water droplet squash & stretch during horizontal motion [0.54 -> 0.84]
-  const targetDropletScaleX = isMobile
-    ? [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    : [1.0, 1.0, 1.15, 1.08, 0.95, 1.0];
-  const dropletScaleX = useTransform(activeProgress, [0.0, 0.54, 0.62, 0.74, 0.84, 0.88], targetDropletScaleX);
-
-  const targetDropletScaleY = isMobile
-    ? [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-    : [1.0, 1.0, 0.88, 0.94, 1.06, 1.0];
-  const dropletScaleY = useTransform(activeProgress, [0.0, 0.54, 0.62, 0.74, 0.84, 0.88], targetDropletScaleY);
-
-  // Background layers adaptation:
-  // 1) Dark glassmorphism layer (active on full landing search bar, smoothly fades out as it collapses to minimized state)
-  const targetDarkGlassOpacity = isMobile ? [1, 1, 0, 0] : [1, 1, 0, 0];
-  const darkGlassOpacity = useTransform(
-    activeProgress, 
-    [0.0, 0.02, 0.12, 0.84], 
-    targetDarkGlassOpacity
-  );
-
-  // 2) Frosted glass layer (fades in as search collapses [0.02 -> 0.14], giving minimized chip a clean, luminous look)
-  const targetSideButtonBgOpacity = isMobile ? [0, 0, 1, 1] : [0, 0, 1, 1];
-  const sideButtonBgOpacity = useTransform(
-    activeProgress, 
-    [0.0, 0.02, 0.14, 0.84], 
-    targetSideButtonBgOpacity
-  );
-
-  // Text color adaptation: white in landing glassmorphism -> vibrant NH brand blue (#034EA2) as soon as minimized on light frosted chip
-  const targetTextColor = isMobile ? ["#FFFFFF", "#FFFFFF"] : [searchTheme === "white" ? "#1E293B" : "#FFFFFF", "#034EA2"];
-  const textColor = useTransform(
-    activeProgress,
-    [0.04, 0.14],
-    targetTextColor
-  );
+  // 4. Bubble 3 (QR Code App Download): scales and fades into position beside Bubble 2 as they dock
+  const btn3Opacity = useTransform(activeProgress, [0.18, 0.32], [0, 1]);
+  const btn3Scale = useTransform(activeProgress, [0.18, 0.32], [0.4, 1.0]);
 
   // Secondary buttons and prompt cross-fades
   const controlsOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
   const controlsHeight = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], [isMobile ? "24px" : "32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], [isMobile ? "14px" : "18px", "0px"]);
 
-  // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
-  // NOTE: On mobile, we use the mobileFabContent instead, so this stays hidden.
-  const targetMinimizedOpacity = isMobile ? [0, 0] : [0, 1];
-  const minimizedSearchOpacity = useTransform(activeProgress, [0.04, 0.12], targetMinimizedOpacity);
+  // Moving gradient border around landing search bar edges (vibrant 0.95 on landing, refined 0.40 on docked pill)
+  const landingBorderOpacity = searchTheme === "white" ? 0.75 : 0.95;
+  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.10, 0.32], [landingBorderOpacity, 0.65, 0.40]);
 
-  // Moving gradient border around landing search bar edges (vibrant 0.65 on white, 0.25 on dark, fades smoothly on scroll compress)
-  const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
-  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [landingBorderOpacity, landingBorderOpacity, 0]);
+  // Translucent dark glass for default landing prompt, smoothly deepening only as it docks into the bottom pill
+  const composerBg = useTransform(
+    activeProgress,
+    [0.0, 0.12, 0.32],
+    [
+      "rgba(22, 28, 36, 0.28)",
+      "rgba(22, 28, 36, 0.45)",
+      "rgba(20, 26, 36, 0.72)"
+    ]
+  );
 
-  // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 0]);
+  // Section-aware contextual placeholder for docked Spotlight Search
+  const [dockedPlaceholder, setDockedPlaceholder] = useState("Search doctors, symptoms, packages...");
+
+  useEffect(() => {
+    const handleSectionScroll = () => {
+      if (typeof window === "undefined") return;
+      const vh = window.innerHeight;
+
+      const coeEl = document.getElementById("centre-of-excellence") || document.querySelector('[class*="gridSection"]');
+      const healthEl = document.getElementById("health-packages");
+      const whyEl = document.getElementById("WhyChooseNH_section");
+
+      const isElementInView = (el: Element | null) => {
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= vh * 0.65 && rect.bottom >= vh * 0.25;
+      };
+
+      if (isElementInView(whyEl)) {
+        setDockedPlaceholder("Search hospitals & network...");
+      } else if (isElementInView(healthEl)) {
+        setDockedPlaceholder("Search health checkups & tests...");
+      } else if (isElementInView(coeEl)) {
+        setDockedPlaceholder("Search by speciality...");
+      } else {
+        setDockedPlaceholder(isMobile ? "Search Narayana Health..." : "Search doctors, symptoms, packages...");
+      }
+    };
+
+    window.addEventListener("scroll", handleSectionScroll, { passive: true });
+    handleSectionScroll();
+    return () => window.removeEventListener("scroll", handleSectionScroll);
+  }, [isMobile]);
+
+  const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 1]);
   const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
   const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
-
-  // The FAB contents (3 buttons) fade in during the final stage of the morph
-  const fabOpacity = useTransform(activeProgress, [isMobile ? 0.25 : 0.30, isMobile ? 0.50 : 0.45], [0, 1]);
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
@@ -657,12 +682,10 @@ export default function NHSearchExperience({
                 width: composerWidth,
                 height: composerHeight,
                 borderRadius: composerRadius,
-                scaleX: dropletScaleX,
-                scaleY: dropletScaleY,
                 paddingLeft: composerPaddingX,
                 paddingRight: composerPaddingX,
-                paddingTop: composerPaddingY,
-                paddingBottom: composerPaddingY,
+                paddingTop: composerPaddingTop,
+                paddingBottom: composerPaddingBottom,
                 opacity: isMobile ? 1 : morphShellOpacity,
                 maxWidth: "none",
                 minWidth: 0,
@@ -674,7 +697,7 @@ export default function NHSearchExperience({
                 marginLeft: 0,
                 boxSizing: "border-box",
                 zIndex: 9990,
-                pointerEvents: isDocked ? "none" : "auto",
+                pointerEvents: "auto",
                 overflow: composerOverflow,
                 cursor: "pointer",
                 background: "transparent",
@@ -688,7 +711,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        {/* Layer 1: Dark glass background layer */}
+        {/* Layer 1: Dark glass background layer for composer & docked spotlight pill */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
@@ -696,19 +719,18 @@ export default function NHSearchExperience({
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: "rgba(22, 28, 36, 0.28)",
+              background: composerBg,
               backdropFilter: "blur(24px) saturate(140%)",
               WebkitBackdropFilter: "blur(24px) saturate(140%)",
               border: "1px solid rgba(255, 255, 255, 0.14)",
-              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.12)",
-              opacity: darkGlassOpacity,
+              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.16)",
               pointerEvents: "none",
               zIndex: 1,
             }}
           />
         )}
 
-        {/* Animated Motion Gradient Border Outline (just outline, 20% opacity, 1px thickness in both modes) */}
+        {/* Animated Motion Gradient Border Outline */}
         {hasScroll && searchState === "landing" && (
           <motion.div
             className={styles.animatedBorderOutline}
@@ -719,76 +741,50 @@ export default function NHSearchExperience({
           />
         )}
 
-        {/* Layer 2: Frosted glass visual style for minimized card and docked button */}
+        {/* Apple Spotlight Content (fades in as search morphs into bottom pill) */}
         {hasScroll && searchState === "landing" && (
-          <motion.div
-            aria-hidden="true"
-            style={{
+          <motion.div 
+            className={styles.spotlightContent}
+            style={{ 
               position: "absolute",
               inset: 0,
-              borderRadius: "inherit",
-              background: "linear-gradient(168deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.25) 48%, rgba(255, 255, 255, 0.38) 100%)",
-              backdropFilter: "blur(20px) saturate(180%)",
-              WebkitBackdropFilter: "blur(20px) saturate(180%)",
-              border: "1px solid rgba(255, 255, 255, 0.65)",
-              boxShadow: "0 12px 34px rgba(5, 20, 45, 0.16), inset 0 1px 2px rgba(255, 255, 255, 0.85), inset 0 0 24px rgba(18, 71, 194, 0.12)",
-              opacity: sideButtonBgOpacity,
-              pointerEvents: "none",
+              opacity: spotlightOpacity, 
+              pointerEvents: isDocked ? "auto" : "none",
+              zIndex: 10,
             }}
-          />
-        )}
-
-        {isMobile && hasScroll && (
-          <>
-            {/* The 3 Action Buttons that fade in as the search UI fades out */}
-            <motion.div 
-              style={{ opacity: fabOpacity, pointerEvents: isDocked ? "auto" : "none" }}
-              className={styles.mobileFabContent}
-            >
-              <Link className={styles.fabLink} href="/doctors" onClick={(e) => e.stopPropagation()}>
-                <span className={styles.fabIconWrap}>
-                  <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-                    <path d="M7.33301 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M14.667 1.83398V4.58398" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M17.4167 2.75H4.58333C3.57081 2.75 2.75 3.57081 2.75 4.58333V17.4167C2.75 18.4292 3.57081 19.25 4.58333 19.25H17.4167C18.4292 19.25 19.25 18.4292 19.25 17.4167V4.58333C19.25 3.57081 18.4292 2.75 17.4167 2.75Z" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M2.75 8.25H19.25" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M8.25 13.7493L10.0833 15.5827L13.75 11.916" stroke="white" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span>Book<br/>Appointment</span>
-              </Link>
-              <div className={styles.fabDivider} aria-hidden="true" />
-              <button
-                type="button"
-                className={styles.fabLink}
-                style={{ border: "none" }}
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent search box from opening
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
-                  }
-                }}
-              >
-                <span className={styles.fabIconWrap}>
-                  <div className={styles.pulseLottieContainer} aria-hidden="true">
-                    <Lottie animationData={pulseAnimation} loop={true} />
-                  </div>
-                </span>
-                <span>Pulse AI<br/>Search</span>
-              </button>
-              <div className={styles.fabDivider} aria-hidden="true" />
-              <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>
-                <span className={styles.fabIconWrap}>
-                  <svg width="20" height="20" viewBox="0 0 22 22" fill="none" aria-hidden="true">
-                    <path d="M13.6476 0.675781C14.523 0.694168 15.234 0.949481 15.759 1.70794C16.3096 2.50334 16.1902 3.60656 16.2 4.52036C16.2037 4.864 16.2291 5.41718 16.1655 5.74948C16.6706 5.73485 17.1972 5.75994 17.7041 5.75259C18.6999 5.73818 19.6462 5.63224 20.4624 6.35871C20.9549 6.79375 21.2544 7.4067 21.2948 8.06259C21.3678 9.44683 20.3516 10.5283 18.9765 10.5999C18.9009 10.6249 17.8642 10.6007 17.704 10.6007L13.3896 10.6037C12.7865 10.6048 11.8491 10.5704 11.2844 10.6172C11.2837 10.6091 11.283 10.6009 11.2824 10.5928C11.2548 10.2334 11.2769 9.55103 11.2771 9.16305L11.2783 6.349L11.2771 4.16857C11.2765 3.46614 11.2245 2.93537 11.4607 2.25793C11.8231 1.2185 12.5951 0.756891 13.6476 0.675781Z" fill="white" />
-                    <path d="M2.9581 11.3954C3.64255 11.4101 10.4512 11.3552 10.518 11.4164C10.587 11.4796 10.5758 11.6064 10.5786 11.6931C10.5944 12.181 10.5753 12.6713 10.5749 13.1597L10.5781 16.1594L10.5762 17.8892C10.5787 18.3785 10.5971 18.8648 10.5327 19.3508C10.3918 20.4138 9.40064 21.2846 8.33085 21.3157C7.61441 21.4032 6.9007 21.1148 6.4008 20.6032C5.5816 19.7647 5.67598 18.9589 5.67785 17.9001C5.67963 17.3668 5.67798 16.8336 5.67286 16.3003C5.59097 16.2281 5.06187 16.2595 4.91502 16.26L3.53508 16.2649C2.73281 16.2666 2.06055 16.1788 1.41883 15.6349C0.417136 14.786 0.321846 13.2159 1.16404 12.2279C1.65893 11.6474 2.20088 11.4389 2.9581 11.3954Z" fill="white" />
-                    <path d="M7.97633 0.672988C8.71331 0.590763 9.37294 0.911643 9.89173 1.40803C10.626 2.11058 10.5687 2.94732 10.5641 3.88361L10.5627 5.14523C10.5619 6.9409 10.5352 8.81837 10.574 10.6093L3.21885 10.6085C2.54156 10.5873 1.90293 10.4852 1.3926 9.99015C0.879518 9.49245 0.612287 8.94994 0.605623 8.22796C0.598571 7.46381 0.833714 6.95819 1.36194 6.41363C1.64923 6.11747 2.24847 5.87022 2.64006 5.78564C2.9703 5.71431 3.5562 5.7379 3.91387 5.73848L5.69985 5.7373C5.69332 5.70097 5.68837 5.66436 5.68507 5.62758C5.65213 5.25596 5.68021 4.76434 5.68148 4.37657C5.68371 3.69356 5.60428 2.91945 5.84768 2.27754C6.20746 1.32862 6.96564 0.759628 7.97633 0.672988Z" fill="white" />
-                  </svg>
-                </span>
-                <span>Download<br/>NH Care App</span>
-              </a>
-            </motion.div>
-          </>
+            onClick={(e) => {
+              e.stopPropagation();
+              handleActivate();
+            }}
+          >
+            <div className={styles.spotlightLeft}>
+              <div className={styles.spotlightIconWrapper}>
+                <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                  <defs>
+                    <linearGradient id="nhSearchPillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00C4FF" />
+                      <stop offset="35%" stopColor="#8B5CF6" />
+                      <stop offset="70%" stopColor="#FF2E93" />
+                      <stop offset="100%" stopColor="#ED1C24" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <Search size={17} className={styles.spotlightSearchIcon} strokeWidth={2.5} />
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={dockedPlaceholder}
+                  initial={{ opacity: 0, y: 3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -3 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className={styles.spotlightPlaceholder}
+                >
+                  {dockedPlaceholder}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          </motion.div>
         )}
 
         <DefaultSearchPrompt
@@ -802,14 +798,228 @@ export default function NHSearchExperience({
           searchTheme="dark"
           isMobile={isMobile}
           promptOpacity={hasScroll ? promptOpacity : undefined}
-          minimizedSearchOpacity={hasScroll && !isMobile ? minimizedSearchOpacity : undefined}
-          textColor={hasScroll ? textColor : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
           controlsOverflow={hasScroll ? controlsOverflow : undefined}
         />
       </motion.div>
+
+      {/* ── Unified Morphing Action Buttons (Hero Pill Buttons -> Docked Circular Bubbles) ── */}
+      {hasScroll && searchState === "landing" && (
+        <>
+          {/* Button 1: Book Appointment -> Morphs into Docked Bubble 1 */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            style={{
+              position: "fixed",
+              top: btn1Top,
+              left: btn1Left,
+              width: btn1Width,
+              height: btn1Height,
+              borderRadius: btn1Radius,
+              paddingLeft: btn1PaddingX,
+              paddingRight: btn1PaddingX,
+              pointerEvents: "auto",
+              zIndex: 9990,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push("/doctors");
+            }}
+            aria-label="Book Appointment"
+          >
+            <div className={styles.morphingActionIcon}>
+              <CalendarCheck size={18} strokeWidth={2.0} />
+            </div>
+            <motion.span
+              className={styles.morphingActionText}
+              style={{
+                opacity: btn1TextOpacity,
+                width: btn1TextWidth,
+                marginLeft: btn1TextMargin,
+              }}
+            >
+              Book Appointment
+            </motion.span>
+            <span className={styles.bubbleTooltip}>Book Appointment</span>
+          </motion.button>
+
+          {/* Button 2: Book Tests & Checkups -> Morphs into Docked Bubble 2 */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            style={{
+              position: "fixed",
+              top: btn2Top,
+              left: btn2Left,
+              width: btn2Width,
+              height: btn2Height,
+              borderRadius: btn2Radius,
+              paddingLeft: btn2PaddingX,
+              paddingRight: btn2PaddingX,
+              pointerEvents: "auto",
+              zIndex: 9990,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              captureOrigin();
+              setActivePill("symptoms");
+              setSearchState("active");
+              setQuery("Book health checkup and lab tests");
+            }}
+            aria-label="Book Tests & Checkups"
+          >
+            <div className={styles.morphingActionIcon}>
+              <Activity size={18} strokeWidth={2.0} />
+            </div>
+            <motion.span
+              className={styles.morphingActionText}
+              style={{
+                opacity: btn2TextOpacity,
+                width: btn2TextWidth,
+                marginLeft: btn2TextMargin,
+              }}
+            >
+              Book Tests & Checkups
+            </motion.span>
+            <span className={styles.bubbleTooltip}>Book Tests & Checkups</span>
+          </motion.button>
+
+          {/* Bubble 3: QR Code App Download -> Scales in beside Bubble 2 as they dock */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${styles.morphingActionBtnDocked} ${isQrOpen ? styles.qrBubbleActive : ""}`}
+            style={{
+              position: "fixed",
+              top: targetTop,
+              left: dockBtn3Left,
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn3Opacity,
+              scale: btn3Scale,
+              pointerEvents: isDocked ? "auto" : "none",
+              zIndex: 9990,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsQrOpen((prev) => !prev);
+            }}
+            aria-label="Download NH Care App (QR Code)"
+          >
+            <div className={styles.morphingActionIcon}>
+              <QrCode size={19} strokeWidth={2.2} />
+            </div>
+            <span className={styles.bubbleTooltip}>Download NH Care App</span>
+          </motion.button>
+        </>
+      )}
+
+      {/* ── QR Code Popover Card ── */}
+      <AnimatePresence>
+        {isQrOpen && searchState === "landing" && (
+          <motion.div
+            className={styles.qrPopoverCard}
+            style={{
+              bottom: bottomClearance + spotlightHeight + 12,
+              left: Math.min(
+                winSize.w - 266,
+                Math.max(16, dockBtn3Left - 190)
+              ),
+            }}
+            initial={{ opacity: 0, y: 12, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.94 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.qrHeader}>
+              <div className={styles.qrTitleGroup}>
+                <span className={styles.qrAppTitle}>Narayana Health App</span>
+                <span className={styles.qrAppSubtitle}>Scan with phone camera to install</span>
+              </div>
+              <button
+                type="button"
+                className={styles.qrCloseBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsQrOpen(false);
+                }}
+                aria-label="Close QR Code Popover"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <div className={styles.qrImageWrapper}>
+              <Image
+                src="/app-download-QR.png"
+                alt="Scan to download NH Care App"
+                width={124}
+                height={124}
+                className={styles.qrCodeImage}
+                priority
+              />
+            </div>
+
+            <div className={styles.qrStoreBadges}>
+              <a
+                href="https://apps.apple.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.storeBadgeLink}
+              >
+                App Store
+              </a>
+              <a
+                href="https://play.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.storeBadgeLink}
+              >
+                Google Play
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fallback Google-style quick action buttons below search box (when no scroll is active or on initial SSR) */}
+      {!hasScroll && searchState === "landing" && (
+        <div className={styles.outsideActionRow}>
+          <button
+            type="button"
+            className={styles.outsideActionCard}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push("/doctors");
+            }}
+          >
+            <div className={`${styles.outsideActionIconWrap} ${styles.outsideDoctorIconWrap}`}>
+              <CalendarCheck size={17} className={styles.outsideDoctorIcon} strokeWidth={2.2} />
+            </div>
+            <span className={styles.outsideActionTitle}>Book Appointment</span>
+          </button>
+
+          <button
+            type="button"
+            className={styles.outsideActionCard}
+            onClick={(e) => {
+              e.stopPropagation();
+              captureOrigin();
+              setActivePill("symptoms");
+              setSearchState("active");
+              setQuery("Book health checkup and lab tests");
+            }}
+          >
+            <div className={`${styles.outsideActionIconWrap} ${styles.outsideSymptomsIconWrap}`}>
+              <Activity size={17} className={styles.outsideSymptomsIcon} strokeWidth={2.2} />
+            </div>
+            <span className={styles.outsideActionTitle}>Book Tests & Checkups</span>
+          </button>
+        </div>
+      )}
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}

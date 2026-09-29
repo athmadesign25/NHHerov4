@@ -377,7 +377,8 @@ export default function Hero() {
               ref={heroAnchorRef}
               style={{
                 width: "min(840px, calc(100vw - 48px))",
-                height: 136,
+                height: 120,
+                marginBottom: 64,
                 pointerEvents: "none",
                 opacity: 0,
               }}
