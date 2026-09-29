@@ -18,6 +18,9 @@ type Feature = {
   id: number;
   title: string;
   img: string;
+  // Optional autoplaying video shown in place of the static screen image —
+  // only "Track vitals and wellness reports" uses one right now.
+  video?: string;
 };
 
 // Digital Twin is the entry-animated feature (id 0, always first — see the
@@ -49,6 +52,7 @@ const features: Feature[] = [
     id: 4,
     title: "Track vitals and wellness reports",
     img: "/App Screens/Vitals tracking.png?v=3",
+    video: "/vitals-report-vid.mp4",
   },
 ];
 
@@ -325,8 +329,11 @@ export default function AppDownloadBanner() {
   }, [phase]);
 
   // Auto-play carousel every 3 seconds, only once matured and not hovered.
+  // The vitals feature has its own video instead of a static screen — it
+  // advances itself once the video finishes playing (see the `onEnded`
+  // handler below) rather than on this fixed timer, so it's excluded here.
   useEffect(() => {
-    if (isHovered || phase !== "matured") return;
+    if (isHovered || phase !== "matured" || features[activeIndex].video) return;
 
     const timer = setInterval(() => {
       paginate(1);
@@ -542,31 +549,76 @@ export default function AppDownloadBanner() {
                 pointerEvents: "auto", 
               }}>
                 <AnimatePresence initial={false} custom={direction}>
-                  <motion.img
-                    key={activeFeature.id}
-                    src={activeFeature.img}
-                    alt={activeFeature.title}
-                    custom={direction}
-                    variants={screenVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 }
-                    }}
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={1}
-                    onDragEnd={(e, { offset, velocity }) => {
-                      const swipe = swipePower(offset.x, velocity.x);
-                      if (swipe < -swipeConfidenceThreshold) {
-                        paginate(1);
-                      } else if (swipe > swipeConfidenceThreshold) {
-                        paginate(-1);
-                      }
-                    }}
-                    style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute" }}
-                  />
+                  {activeFeature.video ? (
+                    <motion.video
+                      key={activeFeature.id}
+                      src={activeFeature.video}
+                      autoPlay
+                      muted
+                      playsInline
+                      onEnded={() => {
+                        if (!isHovered) paginate(1);
+                      }}
+                      custom={direction}
+                      variants={screenVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 }
+                      }}
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={1}
+                      onDragEnd={(e, { offset, velocity }) => {
+                        const swipe = swipePower(offset.x, velocity.x);
+                        if (swipe < -swipeConfidenceThreshold) {
+                          paginate(1);
+                        } else if (swipe > swipeConfidenceThreshold) {
+                          paginate(-1);
+                        }
+                      }}
+                      // The shared box above is deliberately larger than the
+                      // phone's actual screen (scale(1.3) grows it from the
+                      // centre, pushing its top edge above the device), so
+                      // the video is inset back onto the screen window read
+                      // off the phone artwork itself — x 463–811, y 72–784
+                      // of the 1019×1130 image, expressed as a share of the
+                      // scaled box. Contain (not cover) keeps the full width
+                      // visible, since cropping the sides clips the header's
+                      // back and share icons. The video is 9:16 while the
+                      // screen is taller, so the leftover strip at the
+                      // bottom is painted in the video's own background
+                      // colour and reads as the app screen continuing.
+                      style={{ position: "absolute", left: "2.97%", width: "95.53%", top: "9.4%", height: "82.85%", objectFit: "contain", objectPosition: "50% 0%", background: "#F3F4FA" }}
+                    />
+                  ) : (
+                    <motion.img
+                      key={activeFeature.id}
+                      src={activeFeature.img}
+                      alt={activeFeature.title}
+                      custom={direction}
+                      variants={screenVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { type: "tween", ease: [0.25, 1, 0.5, 1], duration: 0.6 }
+                      }}
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={1}
+                      onDragEnd={(e, { offset, velocity }) => {
+                        const swipe = swipePower(offset.x, velocity.x);
+                        if (swipe < -swipeConfidenceThreshold) {
+                          paginate(1);
+                        } else if (swipe > swipeConfidenceThreshold) {
+                          paginate(-1);
+                        }
+                      }}
+                      style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute" }}
+                    />
+                  )}
                 </AnimatePresence>
               </div>
 
