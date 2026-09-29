@@ -6,9 +6,6 @@
   width: 100%;
   background: var(--color-primary-light);
   border-top: 1px solid rgba(3, 78, 162, 0.08);
-  /* Keeps the toggle clear of the sticky navbar when opening scrolls the
-     band to the top of the viewport. */
-  scroll-margin-top: calc(var(--nav-height) + 12px);
 }
 
 .srOnly {
@@ -42,10 +39,6 @@
   transition: color var(--transition-fast);
 }
 
-.masterToggle:hover {
-  color: var(--color-primary-dark);
-}
-
 /* Wipes in from the left on hover, matching HealthPackages' .viewDetailsUnderline.
    The hover target is the full-width row, so the whole band drives it — which is
    what makes the strip read as one control rather than a small text button
@@ -67,9 +60,24 @@
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.masterToggle:hover .masterLabel::after,
+/* Keyboard focus gets the same affordance on every pointer type — only the
+   :hover half is gated below, since touch has no hover to gate. */
 .masterToggle:focus-visible .masterLabel::after {
   transform: scaleX(1);
+}
+
+/* Hover only for pointers that can actually hover. Without this gate, a tap
+   on a touchscreen leaves the browser's synthetic :hover engaged until the
+   next unrelated tap — the underline and colour shift would visibly stick
+   on, reading as a stray highlight rather than feedback for anything. */
+@media (hover: hover) and (pointer: fine) {
+  .masterToggle:hover {
+    color: var(--color-primary-dark);
+  }
+
+  .masterToggle:hover .masterLabel::after {
+    transform: scaleX(1);
+  }
 }
 
 .masterChevron {
@@ -113,14 +121,18 @@
   transition: color var(--transition-fast);
 }
 
-/* Colour shift only — the sweeping underline is reserved for the master
-   toggle and the links themselves, so the section rows stay quiet. */
-.groupToggle:hover {
-  color: var(--color-primary);
-}
-
 .groupTitle {
   min-width: 0;
+}
+
+/* Colour shift only — the sweeping underline is reserved for the master
+   toggle and the links themselves, so the section rows stay quiet. Hover
+   only for pointers that can actually hover; see the note on .masterToggle
+   above. */
+@media (hover: hover) and (pointer: fine) {
+  .groupToggle:hover {
+    color: var(--color-primary);
+  }
 }
 
 .groupChevron {
@@ -156,10 +168,20 @@
   transition: color var(--transition-fast);
 }
 
-.link:hover {
+/* Keyboard focus keeps the affordance on every pointer type; the :hover
+   half is gated to hover-capable pointers below. */
+.link:focus-visible {
   color: var(--color-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -172,6 +194,10 @@
 @media (max-width: 768px) {
   .masterToggle {
     padding: 15px 0;
+  }
+  .groupToggle {
+    padding: 18px 0;
+    font-size: var(--font-size-base);
   }
   .linkGrid {
     grid-template-columns: repeat(2, 1fr);

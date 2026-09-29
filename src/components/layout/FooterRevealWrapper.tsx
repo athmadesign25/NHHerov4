@@ -39,6 +39,33 @@ import SeoLinksBand from "./SeoLinksBand";
  * mainly): pinning something taller than the screen to `bottom: 0` puts
  * its own top permanently out of reach, so there it just stays in normal
  * document flow and scrolls in the ordinary way.
+ *
+ * SeoLinksBand lives INSIDE this same measured/pinned div, alongside
+ * Footer, as one rigid fixed unit — it was briefly split out as a
+ * sibling after it, which seemed like the safer change but is actually
+ * wrong: `main`'s margin-bottom is the *only* thing that gives the
+ * reveal its distance, so it has to equal the full height of whatever
+ * is fixed at the viewport's bottom edge, or the two fall out of sync.
+ * With the band outside, margin-bottom matched Footer alone while the
+ * fixed edge the reveal was aiming for was still Footer's own edge —
+ * fine on its own — but the band, as a normal-flow sibling right after,
+ * started its own box exactly where Footer's *flow* position would
+ * have ended, not where its *fixed, on-screen* edge actually was. Those
+ * two points are only the same when nothing else shares the fixed
+ * unit, so the split introduced a standing gap between the previous
+ * section and the footer, and a matching overlap where the band's
+ * fixed-flow start undercut the still-fixed footer's own bottom edge —
+ * both off by exactly the band's own height, every time.
+ *
+ * Kept together, `measure()` naturally covers both states this
+ * component needs, with no extra wiring: collapsed, the combined
+ * height is small and it pins as one block, curtain-style; once
+ * SeoLinksBand is expanded, the very same ResizeObserver sees the
+ * height cross the pin threshold and flips `pinned` off on its own —
+ * the whole unit drops into normal document flow and scrolls like
+ * anything else, which is also the fix for the other failure mode: a
+ * fixed unit taller than the viewport would otherwise trap its own top
+ * permanently out of reach.
  */
 export default function FooterRevealWrapper({ children }: { children: React.ReactNode }) {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +79,15 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
     const measure = () => {
       const height = Math.ceil(footerEl.getBoundingClientRect().height);
       setFooterHeight(height);
-      setPinned(height > 0 && height <= window.innerHeight - 80);
+      // The real constraint is only whether the unit fits on screen: pinned
+      // to `bottom: 0`, anything taller than the viewport puts its own top
+      // permanently out of reach. The previous `- 80` was breathing room on
+      // top of that, and it quietly cost the effect entirely — Footer alone
+      // is ~847px, so the buffer already demanded a ~927px viewport, and the
+      // collapsed band's ~50px pushed the bar to ~977px. Ordinary laptop
+      // windows sit between those two numbers, which is why the curtain kept
+      // vanishing on real screens while measuring fine in a tall one.
+      setPinned(height > 0 && height <= window.innerHeight);
     };
 
     measure();
