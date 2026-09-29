@@ -458,7 +458,11 @@
 }
 
 /* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
-   ever active on the one card actually under the pointer. */
+   ever active on the one card actually under the pointer. No transition on
+   the base (rest) state: the sweep-in is eased via the transition declared
+   on the :hover/:focus-visible rule below, but on mouse-leave the base
+   rule's own transition (none) is what applies, so it resets instantly
+   behind the card instead of visibly sweeping back out. */
 .packageCard::before {
   content: "";
   position: absolute;
@@ -466,13 +470,13 @@
   z-index: 1;
   background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
   transform: translateX(-120%);
-  transition: transform 0.7s ease;
   pointer-events: none;
 }
 
 .packageCard:hover::before,
 .packageCard:focus-visible::before {
   transform: translateX(120%);
+  transition: transform 0.7s ease;
 }
 
 /* Width reduced 20% alongside the card (260px -> 208px) to stay in
@@ -511,14 +515,13 @@
   transform: translateX(74px);
 }
 
-/* Bone health: scaled back a little and sat on the card's bottom edge,
-   which both shrinks it and brings the right-hand side of the film into
-   view instead of cropping it away. */
+/* Bone health: sat flush against both the card's top and bottom edges
+   (height: 100% inherited from the base rule, same as the other cards),
+   and nudged right of its own anchor so the wider effective crop doesn't
+   creep over the text column. */
 .packageCardImageShort {
   width: 241px;
-  height: 218px;
-  top: auto;
-  bottom: 0;
+  transform: translateX(40px);
 }
 
 /* max-width stops the text column short of the image (208px wide, and
