@@ -495,7 +495,7 @@
   position: relative;
   width: 100%;
   min-height: 48px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: linear-gradient(110deg, rgba(0, 0, 0, 0.25) 30%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.25) 70%);
   background-size: 200% 100%;
   animation: streakMove 4s linear infinite;
@@ -520,7 +520,7 @@
   content: "";
   position: absolute;
   inset: -1.5px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 1.5px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -535,7 +535,7 @@
   content: "";
   position: absolute;
   inset: -1.5px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -555,7 +555,7 @@
 .searchIconWrapper {
   width: 32px;
   height: 32px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.2);
   display: inline-flex;
   align-items: center;

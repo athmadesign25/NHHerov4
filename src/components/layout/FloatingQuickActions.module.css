@@ -359,7 +359,7 @@
   position: relative;
   width: 56px;
   height: 56px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   backdrop-filter: blur(34px);

@@ -542,7 +542,7 @@
 .searchIconWrapper {
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.2);
   display: inline-flex;
   align-items: center;
@@ -664,7 +664,7 @@
   gap: 6px;
   background: #e9eef5;
   border: 1px solid #ccd7e5;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 4px 10px;
 }
 
@@ -1341,7 +1341,7 @@
   align-items: center;
   gap: 6px;
   background: transparent;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 4px 12px;
   border: 1px solid var(--slate-200);
   transition: all 0.2s ease;
@@ -1442,7 +1442,7 @@
   background: var(--slate-100);
   color: var(--slate-800);
   border: 1px solid var(--slate-200);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
@@ -1782,7 +1782,7 @@
   width: auto;
   min-width: 36px;
   height: 36px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.3s ease;
@@ -1797,7 +1797,7 @@
   content: "";
   position: absolute;
   inset: -12px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   background: conic-gradient(from var(--border-angle, 0deg), rgba(139, 92, 246, 0.7), rgba(236, 72, 153, 0.7), rgba(255, 20, 20, 0.9), rgba(20, 100, 255, 0.9), rgba(139, 92, 246, 0.7));
   -webkit-mask: radial-gradient(circle, var(--white) 0%, transparent 70%);
   mask: radial-gradient(circle, var(--white) 0%, transparent 70%);
@@ -1810,7 +1810,7 @@
   content: "";
   position: absolute;
   inset: -2px;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 20%, #8b5cf6 40%, var(--pink-500) 60%, #ff1111 80%, #1166ff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -2240,7 +2240,7 @@
   color: var(--violet-600);
   background: #f5f3ff;
   padding: 2px 8px;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   border: 1px solid #ddd6fe;
 }
 
@@ -2327,7 +2327,7 @@
   background: linear-gradient(135deg, var(--blue-brand) 0%, #022e60 100%);
   color: white;
   border: none;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 7px 16px;
   font-size: 11.5px;
   font-weight: 600;
@@ -2347,7 +2347,7 @@
   background: transparent;
   color: var(--blue-brand);
   border: 1px solid rgba(var(--blue-brand-rgb), 0.4);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 6px 14px;
   font-size: 11.5px;
   font-weight: 600;
@@ -2551,7 +2551,7 @@
 
 .intentChip {
   background: var(--white);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 6px 12px;
   font-size: 11.5px;
   font-weight: 600;
@@ -2623,7 +2623,7 @@
 .pulseSecondaryChip {
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(124, 58, 237, 0.25);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: 5px 12px;
   font-size: 11.5px;
   font-weight: 600;
