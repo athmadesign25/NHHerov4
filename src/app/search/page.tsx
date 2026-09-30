@@ -1129,7 +1129,7 @@ function SearchResultsContent() {
                 <span 
                   style={{ 
                     fontSize: 11, 
-                    background: isActive ? "rgba(3, 78, 162, 0.08)" : "var(--slate-200)", 
+                    background: isActive ? "rgba(var(--blue-brand-rgb), 0.08)" : "var(--slate-200)", 
                     color: isActive ? "var(--black)" : "var(--slate-500)",
                     padding: "2px 6px",
                     borderRadius: 10,
@@ -1841,7 +1841,7 @@ function SearchResultsContent() {
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                         <div>
-                          <span style={{ fontSize: 10, background: "rgba(3,78,162,0.08)", color: "var(--color-primary, var(--blue-brand))", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
+                          <span style={{ fontSize: 10, background: "rgba(var(--blue-brand-rgb), 0.08)", color: "var(--color-primary, var(--blue-brand))", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
                             {hosp.type}
                           </span>
                           <h3 style={{ fontSize: 17, fontWeight: 700, color: "var(--slate-800)", marginTop: 6 }}>{hosp.name}</h3>
@@ -2449,7 +2449,7 @@ function SearchResultsContent() {
                                     display: "inline-flex", 
                                     alignItems: "center", 
                                     padding: "4px 10px", 
-                                    background: "rgba(3, 78, 162, 0.08)", 
+                                    background: "rgba(var(--blue-brand-rgb), 0.08)", 
                                     color: "var(--slate-800)", 
                                     borderRadius: 16, 
                                     fontSize: 11, 

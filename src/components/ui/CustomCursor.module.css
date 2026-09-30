@@ -5,8 +5,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(3, 78, 162, 0.12);
-  border: 1.5px solid rgba(3, 78, 162, 0.25);
+  background: rgba(var(--blue-brand-rgb), 0.12);
+  border: 1.5px solid rgba(var(--blue-brand-rgb), 0.25);
   pointer-events: none;
   z-index: 99999;
   will-change: transform;
@@ -15,8 +15,8 @@
 }
 
 .cursorButton {
-  background: rgba(3, 78, 162, 0.08);
-  border-color: rgba(3, 78, 162, 0.4);
+  background: rgba(var(--blue-brand-rgb), 0.08);
+  border-color: rgba(var(--blue-brand-rgb), 0.4);
 }
 
 .dot {

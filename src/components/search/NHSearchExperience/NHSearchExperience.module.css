@@ -82,7 +82,7 @@
     rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
     rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
     rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
-    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(var(--blue-brand-rgb), 0.95) 175deg,     /* NH Blue */
     rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
     rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
     rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
@@ -177,10 +177,10 @@
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.38) 0deg,
-    rgba(3, 78, 162, 0.48) 75deg,
+    rgba(var(--blue-brand-rgb), 0.48) 75deg,
     rgba(237, 28, 36, 0.22) 150deg,
     rgba(0, 196, 255, 0.10) 220deg,
-    rgba(3, 78, 162, 0.32) 290deg,
+    rgba(var(--blue-brand-rgb), 0.32) 290deg,
     rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -201,10 +201,10 @@
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.08) 0deg,
-    rgba(3, 78, 162, 0.10) 75deg,
+    rgba(var(--blue-brand-rgb), 0.10) 75deg,
     rgba(237, 28, 36, 0.04) 150deg,
     rgba(0, 196, 255, 0.02) 220deg,
-    rgba(3, 78, 162, 0.06) 290deg,
+    rgba(var(--blue-brand-rgb), 0.06) 290deg,
     rgba(0, 196, 255, 0.08) 360deg
   );
   filter: blur(10px);
@@ -240,10 +240,10 @@
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.38) 0deg,
-    rgba(3, 78, 162, 0.48) 75deg,
+    rgba(var(--blue-brand-rgb), 0.48) 75deg,
     rgba(237, 28, 36, 0.22) 150deg,
     rgba(0, 196, 255, 0.10) 220deg,
-    rgba(3, 78, 162, 0.32) 290deg,
+    rgba(var(--blue-brand-rgb), 0.32) 290deg,
     rgba(0, 196, 255, 0.38) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -264,10 +264,10 @@
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(0, 196, 255, 0.08) 0deg,
-    rgba(3, 78, 162, 0.10) 75deg,
+    rgba(var(--blue-brand-rgb), 0.10) 75deg,
     rgba(237, 28, 36, 0.04) 150deg,
     rgba(0, 196, 255, 0.02) 220deg,
-    rgba(3, 78, 162, 0.06) 290deg,
+    rgba(var(--blue-brand-rgb), 0.06) 290deg,
     rgba(0, 196, 255, 0.08) 360deg
   );
   filter: blur(10px);
@@ -549,7 +549,7 @@
   color: var(--white);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
+  box-shadow: 0 2px 6px rgba(var(--blue-brand-rgb), 0.3);
 }
 
 .submitArrowBtn svg {
@@ -907,8 +907,8 @@
 }
 
 .actionPillActive {
-  background: rgba(3, 78, 162, 0.25);
-  border-color: rgba(3, 78, 162, 0.6);
+  background: rgba(var(--blue-brand-rgb), 0.25);
+  border-color: rgba(var(--blue-brand-rgb), 0.6);
   color: var(--white);
 }
 
@@ -1128,7 +1128,7 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--sky-400);
-  background: rgba(3, 78, 162, 0.22);
+  background: rgba(var(--blue-brand-rgb), 0.22);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 2.5px 10px;
   border-radius: 9999px;
@@ -1311,7 +1311,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(3, 78, 162, 0.35), 0 0 12px rgba(0, 196, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(var(--blue-brand-rgb), 0.35), 0 0 12px rgba(0, 196, 255, 0.2);
   transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   animation: sendBtnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1361,7 +1361,7 @@
   gap: 10px;
   padding: 6px 6px 6px 14px;
   border-radius: 9999px;
-  background: rgba(3, 78, 162, 0.18);
+  background: rgba(var(--blue-brand-rgb), 0.18);
   border: 1px solid rgba(0, 196, 255, 0.25);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
@@ -1990,13 +1990,13 @@
 .pulseExpandedCard {
   margin-top: 16px;
   border-radius: 16px;
-  background: radial-gradient(130% 120% at 15% 0%, rgba(3, 78, 162, 0.32) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
+  background: radial-gradient(130% 120% at 15% 0%, rgba(var(--blue-brand-rgb), 0.32) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(0, 196, 255, 0.28);
   box-shadow: 
     0 24px 64px -16px rgba(0, 0, 0, 0.7),
-    0 0 45px rgba(3, 78, 162, 0.22),
+    0 0 45px rgba(var(--blue-brand-rgb), 0.22),
     inset 0 1px 1.5px rgba(255, 255, 255, 0.15);
   padding: 18px;
   display: flex;
@@ -2132,7 +2132,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(0, 196, 255, 0.28), rgba(3, 78, 162, 0.15));
+  background: radial-gradient(circle at 30% 30%, rgba(0, 196, 255, 0.28), rgba(var(--blue-brand-rgb), 0.15));
   border: 1px solid rgba(0, 196, 255, 0.3);
   display: flex;
   align-items: center;
@@ -2150,7 +2150,7 @@
   color: var(--white);
   font-size: 12.5px;
   line-height: 1.4;
-  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.35);
+  box-shadow: 0 4px 16px rgba(var(--blue-brand-rgb), 0.35);
 }
 
 .pulseAiBubble {
@@ -2942,7 +2942,7 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--sky-400);
-  background: rgba(3, 78, 162, 0.18);
+  background: rgba(var(--blue-brand-rgb), 0.18);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 4px 12px;
   border-radius: 9999px;
@@ -2964,7 +2964,7 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 12px;
-  background: linear-gradient(90deg, rgba(3, 78, 162, 0.12) 0%, rgba(124, 58, 237, 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
+  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.12) 0%, rgba(124, 58, 237, 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
   border: 1px solid rgba(124, 58, 237, 0.28);
   margin-top: 10px;
   margin-bottom: 12px;
@@ -3005,7 +3005,7 @@
 
 .themeWhite .analyzingActiveBanner,
 [data-search-theme="white"] .analyzingActiveBanner {
-  background: linear-gradient(90deg, rgba(3, 78, 162, 0.06) 0%, rgba(124, 58, 237, 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
+  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.06) 0%, rgba(124, 58, 237, 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
   border: 1px solid rgba(124, 58, 237, 0.22) !important;
 }
 
@@ -3671,7 +3671,7 @@
   border-radius: 16px 16px 4px 16px;
   padding: 8px 14px;
   max-width: 380px;
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.08);
+  box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .pulseQueryText {
@@ -4906,7 +4906,7 @@
   border: 1px solid rgba(219, 234, 254, 0.9) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  box-shadow: 0 8px 32px rgba(3, 78, 162, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 8px 32px rgba(var(--blue-brand-rgb), 0.06), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
 }
 
 .themeWhite .pulseBackBtn,
@@ -4952,7 +4952,7 @@
 [data-search-theme="white"] .pulseUserQueryBubble {
   background: #E1F0FF !important;
   border: 1px solid #BAE6FD !important;
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.08) !important;
 }
 
 .themeWhite .pulseQueryText,
@@ -5253,7 +5253,7 @@
   height: 250px;
   bottom: -30px;
   right: 8%;
-  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(3, 78, 162, 0.40) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(var(--blue-brand-rgb), 0.40) 45%, transparent 75%);
   animation: featherFloatBlue 6.5s ease-in-out infinite alternate;
 }
 

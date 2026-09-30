@@ -43,8 +43,15 @@
   --grey-500: #666666;
   --grey-600: #4a5568;
 
-  /* Brand blue and its dark steps. */
-  --blue-brand: #034EA2;
+  /* Brand blue and its dark steps.
+     Held as bare channels so the 62 places that need it at some opacity can
+     compose from the same source — rgba(var(--blue-brand-rgb), 0.08) — rather
+     than hard-coding the channels alongside their own alpha. Changing the
+     brand blue now moves the solid colour and every tint of it together.
+     The value is the one in the brand artwork (the One Health lockup and the
+     speciality icons); the CSS had been a shade off at #034EA2. */
+  --blue-brand-rgb: 3, 78, 161;
+  --blue-brand: rgb(var(--blue-brand-rgb));
   --blue-700: #0f58b8;
   --blue-800: #0446b8;
 

@@ -926,17 +926,17 @@ export default function Navbar() {
                   <input placeholder="Search for doctors, treatments and specialities, conditions or procedures" style={{ width: "100%", padding: "16px 16px 16px 44px", border: "1px solid #ddd", borderRadius: "9999px", background: "#f8f9fa", fontSize: "15px", outline: "none", transition: "border 0.15s" }} />
                 </div>
               </div>
-              <button style={{ backgroundColor: "rgb(3, 78, 162)", color: "rgb(255, 255, 255)", border: "none", borderRadius: "9999px", padding: "16px 32px", fontWeight: 700, fontSize: "15px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}>
+              <button style={{ backgroundColor: "var(--blue-brand)", color: "rgb(255, 255, 255)", border: "none", borderRadius: "9999px", padding: "16px 32px", fontWeight: 700, fontSize: "15px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}>
                 <Search size={18} strokeWidth={2} />Search
               </button>
             </div>
 
             <div style={{ marginTop: "24px", display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
               <span style={{ fontSize: "13px", color: "var(--grey-500)", fontWeight: 600 }}>Popular:</span>
-              <button style={{ background: "#e6f0fa", color: "rgb(3, 78, 162)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Cardiologist</button>
-              <button style={{ background: "#e6f0fa", color: "rgb(3, 78, 162)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Orthopaedic Surgeon</button>
-              <button style={{ background: "#e6f0fa", color: "rgb(3, 78, 162)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Neurologist</button>
-              <button style={{ background: "#e6f0fa", color: "rgb(3, 78, 162)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Oncologist</button>
+              <button style={{ background: "#e6f0fa", color: "var(--blue-brand)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Cardiologist</button>
+              <button style={{ background: "#e6f0fa", color: "var(--blue-brand)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Orthopaedic Surgeon</button>
+              <button style={{ background: "#e6f0fa", color: "var(--blue-brand)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Neurologist</button>
+              <button style={{ background: "#e6f0fa", color: "var(--blue-brand)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Oncologist</button>
             </div>
 
             <div style={{ borderRadius: "12px", border: "1px solid #eee", background: "rgb(255, 255, 255)", padding: "24px", marginTop: "24px", width: "100%" }}>

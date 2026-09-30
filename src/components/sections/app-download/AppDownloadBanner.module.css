@@ -747,7 +747,7 @@
      leaning on the old blue tint for separation. */
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 100%),
-    rgba(3, 78, 162, 0.10),
+    rgba(var(--blue-brand-rgb), 0.10),
     rgba(255, 255, 255, 0.14);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
