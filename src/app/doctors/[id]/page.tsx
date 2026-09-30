@@ -161,7 +161,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               transition={{ duration: 0.5 }}
               style={{ background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", boxShadow: "var(--shadow-sm)", overflow: "hidden" }}
             >
-              <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
+              <div style={{ background: "linear-gradient(135deg, var(--white) 0%, var(--color-primary-light) 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
                   <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
                     <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
@@ -220,7 +220,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 <SectionHeading title="Languages known" />
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                   {doc.languages.map((lang, i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 14px", background: "#F8FAFC", borderRadius: 20, border: "1px solid var(--color-border)" }}>
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 14px", background: "var(--slate-50)", borderRadius: 20, border: "1px solid var(--color-border)" }}>
                       <span style={{ color: "var(--color-primary)", fontWeight: 700, fontSize: "var(--font-size-sm)" }}>{lang.script}</span>
                       <span style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)", fontWeight: 500 }}>{lang.name}</span>
                     </div>
@@ -284,7 +284,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {doc.expertise.map((item, i) => (
                     <div key={i} style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                      <CheckCircle2 size={20} style={{ color: "#10B981", flexShrink: 0 }} />
+                      <CheckCircle2 size={20} style={{ color: "var(--emerald-500)", flexShrink: 0 }} />
                       <div style={{ fontSize: "var(--font-size-base)", color: "var(--color-text)", fontWeight: 500 }}>{item}</div>
                     </div>
                   ))}
@@ -305,7 +305,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             <div style={{ 
               display: "flex", 
               alignItems: "center",
-              background: "#E2E8F0", 
+              background: "var(--slate-200)", 
               borderRadius: 24, 
               padding: 4, 
               gap: 4,
@@ -321,7 +321,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
-                  color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "#475569",
+                  color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "var(--slate-600)",
                   fontWeight: 600,
                   cursor: "pointer",
                   outline: "none"
@@ -333,7 +333,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "#ffffff",
+                      background: "var(--white)",
                       borderRadius: 20,
                       boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                       zIndex: 0
@@ -366,7 +366,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
-                  color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "#475569",
+                  color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "var(--slate-600)",
                   fontWeight: 500,
                   cursor: "pointer",
                   outline: "none"
@@ -378,7 +378,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "#ffffff",
+                      background: "var(--white)",
                       borderRadius: 20,
                       boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                       zIndex: 0
@@ -473,7 +473,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
 
               <div style={{ display: "flex", alignItems: "stretch", gap: 12 }}>
-                <div style={{ background: "#F1F5F9", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ background: "var(--slate-100)", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>FEB</span>
                 </div>
                 <div ref={scrollContainerRef} style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none" }} className="hide-scrollbar">
@@ -531,7 +531,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               {/* Morning */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <CloudSun size={16} style={{ color: "#F59E0B" }} /> Morning
+                  <CloudSun size={16} style={{ color: "var(--amber-500)" }} /> Morning
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
                   {["09:15 AM", "09:45 AM", "10:15 AM", "10:45 AM", "11:15 AM", "11:45 AM"].map((slot) => (
@@ -546,7 +546,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                         fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
                         cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", 
                         fontFamily: "var(--font-family)", 
                         transition: "all 0.15s" 
                       }}
@@ -560,7 +560,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               {/* Afternoon */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <Sun size={16} style={{ color: "#F59E0B" }} /> Afternoon
+                  <Sun size={16} style={{ color: "var(--amber-500)" }} /> Afternoon
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
                   {["12:45 PM", "01:15 PM", "01:45 PM", "02:15 PM", "02:45 PM", "03:15 PM"].map((slot) => (
@@ -575,7 +575,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                         fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
                         cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", 
                         fontFamily: "var(--font-family)", 
                         transition: "all 0.15s" 
                       }}
@@ -589,7 +589,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               {/* Evening */}
               <div style={{ marginBottom: 16 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <CloudSun size={16} style={{ color: "#F59E0B" }} /> Evening
+                  <CloudSun size={16} style={{ color: "var(--amber-500)" }} /> Evening
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
                   {["04:45 PM"].map((slot) => (
@@ -604,7 +604,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                         fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
                         cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", 
                         fontFamily: "var(--font-family)", 
                         transition: "all 0.15s" 
                       }}
@@ -616,7 +616,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "#fff", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", border: "none", cursor: "pointer", fontFamily: "var(--font-family)", marginBottom: 10, transition: "background 0.15s, transform 0.15s" }}
+            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--white)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", border: "none", cursor: "pointer", fontFamily: "var(--font-family)", marginBottom: 10, transition: "background 0.15s, transform 0.15s" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
             >

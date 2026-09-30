@@ -130,7 +130,7 @@ export default function DoctorsPage() {
             <div style={{ color: "rgba(255,255,255,0.65)", fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
               Find Your Doctor
             </div>
-            <h1 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, color: "#fff", marginBottom: 16, letterSpacing: "-0.02em" }}>
+            <h1 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, color: "var(--white)", marginBottom: 16, letterSpacing: "-0.02em" }}>
               Our Specialist Doctors
             </h1>
             <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "var(--font-size-lg)", marginBottom: 24 }}>
@@ -138,7 +138,7 @@ export default function DoctorsPage() {
             </p>
             {/* Search Bar */}
             <div style={{ display: "flex", gap: 12, maxWidth: 640, flexWrap: "wrap" }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "#fff", borderRadius: "var(--radius-md)", padding: "12px 16px", minWidth: 200 }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, background: "var(--white)", borderRadius: "var(--radius-md)", padding: "12px 16px", minWidth: 200 }}>
                 <Search size={18} style={{ color: "var(--color-text-muted)", flexShrink: 0 }} />
                 <input
                   id="doctor-search-input"
@@ -154,7 +154,7 @@ export default function DoctorsPage() {
                 id="doctor-city-filter"
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                style={{ padding: "12px 40px 12px 16px", background: "#fff", border: "none", borderRadius: "var(--radius-md)", fontSize: "var(--font-size-base)", fontFamily: "var(--font-family)", color: "var(--color-text)", cursor: "pointer", outline: "none" }}
+                style={{ padding: "12px 40px 12px 16px", background: "var(--white)", border: "none", borderRadius: "var(--radius-md)", fontSize: "var(--font-size-base)", fontFamily: "var(--font-family)", color: "var(--color-text)", cursor: "pointer", outline: "none" }}
               >
                 {cities.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -165,7 +165,7 @@ export default function DoctorsPage() {
 
       <div className="container" style={{ padding: "32px var(--sp-3)", display: "grid", gridTemplateColumns: "260px 1fr", gap: "var(--sp-4)", alignItems: "start" }}>
         {/* Sidebar */}
-        <aside style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "#fff", borderRadius: "var(--radius-xl)", border: "1px solid var(--color-border-light)", padding: "var(--sp-3)", boxShadow: "var(--shadow-md)" }}>
+        <aside style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "var(--white)", borderRadius: "var(--radius-xl)", border: "1px solid var(--color-border-light)", padding: "var(--sp-3)", boxShadow: "var(--shadow-md)" }}>
           <div style={{ fontSize: "var(--font-size-base)", fontWeight: 700, color: "var(--color-text)", marginBottom: "var(--sp-3)", display: "flex", alignItems: "center", gap: 8 }}>
             <SlidersHorizontal size={16} style={{ color: "var(--color-primary)" }} />
             Filters
@@ -210,7 +210,7 @@ export default function DoctorsPage() {
             <div style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>
               Showing <strong style={{ color: "var(--color-text)" }}>{filtered.length}</strong> doctors
             </div>
-            <select id="doctor-sort" style={{ padding: "8px 14px", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)", fontSize: "var(--font-size-sm)", fontFamily: "var(--font-family)", background: "#fff", color: "var(--color-text)", cursor: "pointer" }}>
+            <select id="doctor-sort" style={{ padding: "8px 14px", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)", fontSize: "var(--font-size-sm)", fontFamily: "var(--font-family)", background: "var(--white)", color: "var(--color-text)", cursor: "pointer" }}>
               <option>Sort: Relevance</option>
               <option>Experience: High to Low</option>
               <option>Rating: High to Low</option>
@@ -229,7 +229,7 @@ export default function DoctorsPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: i * 0.05, duration: 0.35 }}
                 >
-                  <Link href={`/doctors/${doc.id}`} id={`doctor-card-${doc.id}`} style={{ display: "block", background: "#fff", border: "1px solid var(--color-border-light)", borderRadius: "var(--radius-xl)", padding: "var(--sp-3)", boxShadow: "var(--shadow-sm)", textDecoration: "none", transition: "transform 0.2s ease-out, box-shadow 0.2s ease-out" }}
+                  <Link href={`/doctors/${doc.id}`} id={`doctor-card-${doc.id}`} style={{ display: "block", background: "var(--white)", border: "1px solid var(--color-border-light)", borderRadius: "var(--radius-xl)", padding: "var(--sp-3)", boxShadow: "var(--shadow-sm)", textDecoration: "none", transition: "transform 0.2s ease-out, box-shadow 0.2s ease-out" }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card-hover)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-sm)"; }}
                   >
@@ -247,7 +247,7 @@ export default function DoctorsPage() {
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: "var(--sp-2)", marginBottom: "var(--sp-2)", flexWrap: "wrap" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "var(--font-size-xs)", color: "#F59E0B", fontWeight: 600 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "var(--font-size-xs)", color: "var(--amber-500)", fontWeight: 600 }}>
                         <Star size={12} fill="currentColor" /> {doc.rating} ({doc.reviews.toLocaleString()})
                       </div>
                       <div style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
@@ -261,7 +261,7 @@ export default function DoctorsPage() {
                         </div>
                         <div style={{ fontSize: "var(--font-size-sm)", fontWeight: 700, color: "var(--color-text)" }}>{doc.fee} per visit</div>
                       </div>
-                      <div style={{ padding: "8px 16px", background: "var(--color-primary)", color: "#fff", borderRadius: "var(--radius-full)", fontSize: "var(--font-size-xs)", fontWeight: 700 }}>
+                      <div style={{ padding: "8px 16px", background: "var(--color-primary)", color: "var(--white)", borderRadius: "var(--radius-full)", fontSize: "var(--font-size-xs)", fontWeight: 700 }}>
                         Book Now
                       </div>
                     </div>

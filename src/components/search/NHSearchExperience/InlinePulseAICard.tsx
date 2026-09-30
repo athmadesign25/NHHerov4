@@ -296,7 +296,7 @@ export default function InlinePulseAICard({
               </span>
             </div>
             <p className={styles.pulseExpandedSubtitle}>
-              Tailored for <strong style={{ color: "#E2E8F0" }}>{query || "cardiologists"}</strong> in {selectedLocation}
+              Tailored for <strong style={{ color: "var(--slate-200)" }}>{query || "cardiologists"}</strong> in {selectedLocation}
             </p>
           </div>
         </div>
@@ -357,7 +357,7 @@ export default function InlinePulseAICard({
                         {parts.map((p, pIdx) => {
                           if (p.startsWith("**") && p.endsWith("**")) {
                             return (
-                              <strong key={pIdx} style={{ color: "#38BDF8" }}>
+                              <strong key={pIdx} style={{ color: "var(--sky-400)" }}>
                                 {p.slice(2, -2)}
                               </strong>
                             );
@@ -440,7 +440,7 @@ export default function InlinePulseAICard({
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
-                <span style={{ fontSize: 11.5, color: "#94A3B8", marginLeft: 6 }}>
+                <span style={{ fontSize: 11.5, color: "var(--slate-400)", marginLeft: 6 }}>
                   Pulse AI is analyzing specialists…
                 </span>
               </div>

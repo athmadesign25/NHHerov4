@@ -459,7 +459,7 @@ export default function MobileAppDownloadBanner() {
                         border: "1px solid rgba(255,255,255,0.6)"
                       }}
                     >
-                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                      <div style={{ textAlign: "center", color: "var(--slate-700)", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
                         {POP_OVER_CARDS[activeIndex].text}
                       </div>
                       <Image

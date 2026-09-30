@@ -77,16 +77,16 @@ const simulateAIResponse = (query: string): Omit<Message, "id" | "timestamp"> =>
 };
 
 const FEATURE_CHIPS = [
-  { icon: <Stethoscope size={14} style={{ color: "#3b82f6" }} />, label: "Find the right doctor", query: "Help me find the right doctor for my condition" },
-  { icon: <Heart size={14} style={{ color: "#ef4444" }} />, label: "Know your health", query: "Tell me about staying healthy and what checkups I need" },
-  { icon: <Calendar size={14} style={{ color: "#3b82f6" }} />, label: "Book appointment", query: "I want to book an appointment with a specialist" },
+  { icon: <Stethoscope size={14} style={{ color: "var(--blue-500)" }} />, label: "Find the right doctor", query: "Help me find the right doctor for my condition" },
+  { icon: <Heart size={14} style={{ color: "var(--red-500)" }} />, label: "Know your health", query: "Tell me about staying healthy and what checkups I need" },
+  { icon: <Calendar size={14} style={{ color: "var(--blue-500)" }} />, label: "Book appointment", query: "I want to book an appointment with a specialist" },
 ];
 
 const SUGGESTION_CHIPS = [
-  { icon: <Activity size={14} style={{ color: "#ef4444" }} />, label: "I have chest pain", query: "I have chest pain and shortness of breath" },
-  { icon: <Brain size={14} style={{ color: "#3b82f6" }} />, label: "Frequent headaches", query: "I get frequent headaches and migraines" },
-  { icon: <Sparkles size={14} style={{ color: "#f59e0b" }} />, label: "I have fever", query: "I have high fever and body ache" },
-  { icon: <Activity size={14} style={{ color: "#10b981" }} />, label: "Stomach pain", query: "I have stomach pain and acidity" },
+  { icon: <Activity size={14} style={{ color: "var(--red-500)" }} />, label: "I have chest pain", query: "I have chest pain and shortness of breath" },
+  { icon: <Brain size={14} style={{ color: "var(--blue-500)" }} />, label: "Frequent headaches", query: "I get frequent headaches and migraines" },
+  { icon: <Sparkles size={14} style={{ color: "var(--amber-500)" }} />, label: "I have fever", query: "I have high fever and body ache" },
+  { icon: <Activity size={14} style={{ color: "var(--emerald-500)" }} />, label: "Stomach pain", query: "I have stomach pain and acidity" },
 ];
 
 const UrgencyBadge = ({ level }: { level: "routine" | "soon" | "urgent" }) => {
@@ -332,7 +332,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                   {/* Specialities Matches */}
                   {liveResults.specialities && liveResults.specialities.length > 0 && (
                     <div>
-                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Specialities</div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--slate-400)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Specialities</div>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "8px" }}>
                         {liveResults.specialities.map((spec: any) => (
                           <div
@@ -341,7 +341,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "12px", cursor: "pointer" }}
                           >
                             <img src={spec.image || "/Specialities icons/General Medicine.svg"} alt={spec.name} style={{ width: "24px", height: "24px" }} />
-                            <div style={{ fontSize: "13px", fontWeight: 600, color: "#ffffff" }}>{spec.name}</div>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--white)" }}>{spec.name}</div>
                           </div>
                         ))}
                       </div>
@@ -351,7 +351,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                   {/* Doctors Matches */}
                   {liveResults.doctors && liveResults.doctors.length > 0 && (
                     <div>
-                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Doctors</div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--slate-400)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Doctors</div>
                       <div className={styles.doctorResults} style={{ gap: "8px" }}>
                         {liveResults.doctors.slice(0, 3).map((doc: any) => (
                           <DoctorResultCard
@@ -377,13 +377,13 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                   {/* Treatments Matches */}
                   {liveResults.treatments && liveResults.treatments.length > 0 && (
                     <div>
-                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Treatments</div>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--slate-400)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" }}>Treatments</div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                         {liveResults.treatments.map((t: any) => (
                           <div
                             key={t.id}
                             onClick={() => sendMessage(t.name)}
-                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "20px", fontSize: "12px", color: "#e2e8f0", cursor: "pointer" }}
+                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "20px", fontSize: "12px", color: "var(--slate-200)", cursor: "pointer" }}
                           >
                             {t.name}
                           </div>
@@ -408,13 +408,13 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                      <div style={{ color: "#a78bfa" }}><Sparkles size={20} /></div>
+                      <div style={{ color: "var(--violet-400)" }}><Sparkles size={20} /></div>
                       <div>
-                        <div style={{ fontSize: "14px", fontWeight: 700, color: "#ffffff" }}>Ask Pulse AI Workspace</div>
-                        <div style={{ fontSize: "11.5px", color: "#94a3b8", marginTop: "2px" }}>Get AI-powered health insights and doctor recommendations for "{inputValue}"</div>
+                        <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--white)" }}>Ask Pulse AI Workspace</div>
+                        <div style={{ fontSize: "11.5px", color: "var(--slate-400)", marginTop: "2px" }}>Get AI-powered health insights and doctor recommendations for "{inputValue}"</div>
                       </div>
                     </div>
-                    <div style={{ fontSize: "12px", fontWeight: 700, color: "#a78bfa" }}>Ask Pulse →</div>
+                    <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--violet-400)" }}>Ask Pulse →</div>
                   </div>
 
                 </div>

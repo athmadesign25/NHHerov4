@@ -156,7 +156,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 priority
               />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent)", zIndex: 1 }}></div>
-              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "#ffffff" }}>
+              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--white)" }}>
                 <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
                 <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
               </div>
@@ -167,7 +167,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <button 
                 onClick={onClose}
                 style={{ 
-                  background: "var(--color-bg-alt, #f8fafc)", 
+                  background: "var(--color-bg-alt, var(--slate-50))", 
                   border: "none", 
                   width: "36px", 
                   height: "36px", 
@@ -176,7 +176,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   alignItems: "center", 
                   justifyContent: "center", 
                   cursor: "pointer", 
-                  color: "var(--color-text-secondary, #475569)",
+                  color: "var(--color-text-secondary, var(--slate-600))",
                   transition: "background 0.2s"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "#e2e8f0"}
@@ -189,8 +189,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             {/* Body */}
             <div style={{ padding: "0px 24px 32px 24px", height: "510px", display: "flex", flexDirection: "column" }}>
               <div style={{ flexShrink: 0, textAlign: "center", marginBottom: "24px" }}>
-                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, #0f172a)", margin: "0 0 8px 0" }}>Login / Register</h2>
-                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, #475569)", margin: 0, lineHeight: 1.5 }}>
+                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, var(--slate-900))", margin: "0 0 8px 0" }}>Login / Register</h2>
+                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, var(--slate-600))", margin: 0, lineHeight: 1.5 }}>
                   Sign in to manage appointments, access reports, and stay connected with your doctors.
                 </p>
               </div>
@@ -199,7 +199,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               {step === "phone" ? (
                 <>
               {/* Tabs */}
-              <div style={{ display: "flex", background: "#F1F5F9", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
+              <div style={{ display: "flex", background: "var(--slate-100)", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
                 <button
                   onClick={() => setActiveTab("mobile")}
                   style={{
@@ -222,7 +222,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "mobile" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -255,7 +255,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "email" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -272,7 +272,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <div style={{ marginBottom: "24px" }}>
                 {activeTab === "mobile" ? (
                   <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Mobile Number</label>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Mobile Number</label>
                     <div style={{ display: "flex", gap: "12px" }}>
                       {/* Country Code */}
                       <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
@@ -281,10 +281,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             width: "100%",
                             padding: "14px 32px 14px 16px",
                             borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, #e2e8f0)",
-                            background: "#ffffff",
+                            border: "1.5px solid var(--color-border, var(--slate-200))",
+                            background: "var(--white)",
                             fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, #0f172a)",
+                            color: "var(--color-text, var(--slate-900))",
                             fontWeight: 500,
                             appearance: "none",
                             outline: "none",
@@ -295,7 +295,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           <option value="+91">🇮🇳 +91</option>
                           <option value="+880">🇧🇩 +880</option>
                         </select>
-                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, #475569)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, var(--slate-600))", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <ChevronDown size={16} />
                         </div>
                       </div>
@@ -315,10 +315,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           flex: 1,
                           padding: "14px 16px",
                           borderRadius: "100px",
-                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, #e2e8f0)"}`,
-                          background: "#ffffff",
+                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, var(--slate-200))"}`,
+                          background: "var(--white)",
                           fontSize: "var(--font-size-base, 16px)",
-                          color: "var(--color-text, #0f172a)",
+                          color: "var(--color-text, var(--slate-900))",
                           outline: "none"
                         }}
                         onFocus={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-primary)"}
@@ -338,7 +338,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   </div>
                 ) : (
                   <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Email ID</label>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Email ID</label>
                     <input 
                       type="email"
                       placeholder="Enter your email address"
@@ -346,10 +346,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         width: "100%",
                         padding: "14px 16px",
                         borderRadius: "100px",
-                        border: "1.5px solid var(--color-border, #e2e8f0)",
-                        background: "#ffffff",
+                        border: "1.5px solid var(--color-border, var(--slate-200))",
+                        background: "var(--white)",
                         fontSize: "var(--font-size-base, 16px)",
-                        color: "var(--color-text, #0f172a)",
+                        color: "var(--color-text, var(--slate-900))",
                         outline: "none"
                       }}
                     />
@@ -363,8 +363,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: "var(--color-primary, #034ea2)",
-                  color: "#ffffff",
+                  background: "var(--color-primary, var(--blue-brand))",
+                  color: "var(--white)",
                   fontSize: "var(--font-size-base, 16px)",
                   fontWeight: 700,
                   borderRadius: "100px",
@@ -378,9 +378,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
               {/* Divider */}
               <div style={{ display: "flex", alignItems: "center", margin: "24px 0" }}>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, #e2e8f0)" }} />
-                <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, #475569)", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, #e2e8f0)" }} />
+                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
+                <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, var(--slate-600))", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
+                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
               </div>
 
               {/* Google Button */}
@@ -388,8 +388,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: "#ffffff",
-                  border: "1.5px solid var(--color-border, #e2e8f0)",
+                  background: "var(--white)",
+                  border: "1.5px solid var(--color-border, var(--slate-200))",
                   borderRadius: "100px",
                   display: "flex",
                   alignItems: "center",
@@ -398,7 +398,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   cursor: "pointer",
                   fontSize: "var(--font-size-base, 16px)",
                   fontWeight: 600,
-                  color: "var(--color-text, #0f172a)",
+                  color: "var(--color-text, var(--slate-900))",
                   transition: "background 0.2s"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "var(--color-bg-alt, #f8fafc)"}
@@ -412,16 +412,16 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 Sign in with Google
               </button>
               
-              <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.5 }}>
+              <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, var(--slate-400))", textAlign: "center", lineHeight: 1.5 }}>
                 By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
               </p>
                 </>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "24px", animation: "fadeIn 0.3s ease-in-out", height: "100%", justifyContent: "space-between" }}>
                   <div style={{ marginTop: "32px" }}>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, #475569)", marginBottom: "8px", textAlign: "center" }}>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, var(--slate-600))", marginBottom: "8px", textAlign: "center" }}>
                       Enter the 6-digit OTP sent to <br/>
-                      <span style={{ fontWeight: 700, color: "var(--color-text, #0f172a)" }}>{mobileNumber}</span>
+                      <span style={{ fontWeight: 700, color: "var(--color-text, var(--slate-900))" }}>{mobileNumber}</span>
                       <button onClick={() => setStep("phone")} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
                     </label>
                     <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "16px" }}>
@@ -442,9 +442,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             fontSize: "24px",
                             fontWeight: 600,
                             borderRadius: "12px",
-                            border: "1.5px solid var(--color-border, #e2e8f0)",
-                            background: "#ffffff",
-                            color: "var(--color-text, #0f172a)",
+                            border: "1.5px solid var(--color-border, var(--slate-200))",
+                            background: "var(--white)",
+                            color: "var(--color-text, var(--slate-900))",
                             outline: "none"
                           }}
                           onFocus={(e) => e.target.style.borderColor = "var(--color-primary)"}
@@ -459,9 +459,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     style={{
                       width: "100%",
                       padding: "14px",
-                      background: "var(--color-primary, #034ea2)",
+                      background: "var(--color-primary, var(--blue-brand))",
                       opacity: isVerifying ? 0.9 : 1,
-                      color: "#ffffff",
+                      color: "var(--white)",
                       fontSize: "var(--font-size-base, 16px)",
                       fontWeight: 700,
                       borderRadius: "100px",
@@ -479,7 +479,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         <motion.div
                           animate={{ rotate: 360 }}
                           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
+                          style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "var(--white)", borderRadius: "50%" }}
                         />
                         Verifying...
                       </>

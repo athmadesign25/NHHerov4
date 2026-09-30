@@ -1043,7 +1043,7 @@ function SearchResultsContent() {
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       {/* Top Search Banner */}
-      <div style={{ background: "linear-gradient(to bottom, #FFFFFF 0%, var(--color-bg-alt) 100%)", padding: "24px 0 24px", color: "var(--color-text)" }}>
+      <div style={{ background: "linear-gradient(to bottom, var(--white) 0%, var(--color-bg-alt) 100%)", padding: "24px 0 24px", color: "var(--color-text)" }}>
         <div className="container">
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
@@ -1068,7 +1068,7 @@ function SearchResultsContent() {
                     border: "none",
                     outline: "none",
                     fontSize: 16,
-                    color: "#1E293B",
+                    color: "var(--slate-800)",
                     fontWeight: 500,
                     boxShadow: "var(--shadow-sm)",
                   }}
@@ -1077,14 +1077,14 @@ function SearchResultsContent() {
                   <button 
                     type="button" 
                     onClick={() => setQuery("")}
-                    style={{ position: "absolute", right: 20, top: 16, background: "none", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                    style={{ position: "absolute", right: 20, top: 16, background: "none", border: "none", cursor: "pointer", color: "var(--slate-400)" }}
                   >
                     <X size={20} />
                   </button>
                 )}
                 <Search 
                   size={20} 
-                  style={{ position: "absolute", left: 20, top: 16, color: "#94A3B8" }} 
+                  style={{ position: "absolute", left: 20, top: 16, color: "var(--slate-400)" }} 
                 />
               </div>
 
@@ -1109,14 +1109,14 @@ function SearchResultsContent() {
                   position: "relative",
                   padding: "12px 18px",
                   background: isActive 
-                    ? "linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box, linear-gradient(to bottom, var(--color-emergency, #EF4444) 0%, var(--color-bg-alt) 70%) border-box" 
+                    ? "linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box, linear-gradient(to bottom, var(--color-emergency, var(--red-500)) 0%, var(--color-bg-alt) 70%) border-box" 
                     : "var(--color-bg-alt)",
                   border: "1px solid transparent",
                   borderBottom: "1px solid transparent",
                   borderRadius: "16px 16px 0 0",
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: isActive ? "#000000" : "#64748B",
+                  color: isActive ? "var(--black)" : "var(--slate-500)",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -1129,8 +1129,8 @@ function SearchResultsContent() {
                 <span 
                   style={{ 
                     fontSize: 11, 
-                    background: isActive ? "rgba(3, 78, 162, 0.08)" : "#E2E8F0", 
-                    color: isActive ? "#000000" : "#64748B",
+                    background: isActive ? "rgba(3, 78, 162, 0.08)" : "var(--slate-200)", 
+                    color: isActive ? "var(--black)" : "var(--slate-500)",
                     padding: "2px 6px",
                     borderRadius: 10,
                     fontWeight: 500
@@ -1147,7 +1147,7 @@ function SearchResultsContent() {
                       left: "calc(50% - 18px)",
                       width: 36,
                       height: 2,
-                      background: "var(--color-emergency, #EF4444)",
+                      background: "var(--color-emergency, var(--red-500))",
                       borderRadius: 4,
                     }}
                   />
@@ -1388,7 +1388,7 @@ function SearchResultsContent() {
                         style={{ 
                           display: "flex", 
                           alignItems: "center", 
-                          background: "#E2E8F0", 
+                          background: "var(--slate-200)", 
                           borderRadius: 24, 
                           padding: 4, 
                           gap: 4 
@@ -1410,7 +1410,7 @@ function SearchResultsContent() {
                             borderRadius: 20,
                             border: "none",
                             background: "transparent",
-                            color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "#475569",
+                            color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "var(--slate-600)",
                             fontWeight: consultationType === "Hospital Visit" ? 600 : 500,
                             cursor: "pointer",
                             outline: "none"
@@ -1422,7 +1422,7 @@ function SearchResultsContent() {
                               style={{
                                 position: "absolute",
                                 inset: 0,
-                                background: "#ffffff",
+                                background: "var(--white)",
                                 borderRadius: 20,
                                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                                 zIndex: 0
@@ -1460,7 +1460,7 @@ function SearchResultsContent() {
                             borderRadius: 20,
                             border: "none",
                             background: "transparent",
-                            color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "#475569",
+                            color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "var(--slate-600)",
                             fontWeight: consultationType === "Video Consultation" ? 600 : 500,
                             cursor: "pointer",
                             outline: "none"
@@ -1472,7 +1472,7 @@ function SearchResultsContent() {
                               style={{
                                 position: "absolute",
                                 inset: 0,
-                                background: "#ffffff",
+                                background: "var(--white)",
                                 borderRadius: 20,
                                 boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                                 zIndex: 0
@@ -1507,7 +1507,7 @@ function SearchResultsContent() {
                           boxSizing: "border-box",
                           borderRadius: 16,
                           border: `1px solid ${selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-border)"}`,
-                          background: selectedAvailability.includes("Available Today") ? "rgba(237, 28, 36, 0.08)" : "#ffffff",
+                          background: selectedAvailability.includes("Available Today") ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
                           color: selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-text-secondary)",
                           fontSize: 13,
                           fontWeight: 500,
@@ -1527,7 +1527,7 @@ function SearchResultsContent() {
                           boxSizing: "border-box",
                           borderRadius: 16,
                           border: `1px solid ${selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-border)"}`,
-                          background: selectedAvailability.includes("Available Tomorrow") ? "rgba(237, 28, 36, 0.08)" : "#ffffff",
+                          background: selectedAvailability.includes("Available Tomorrow") ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
                           color: selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-text-secondary)",
                           fontSize: 13,
                           fontWeight: 500,
@@ -1597,7 +1597,7 @@ function SearchResultsContent() {
                       </div>
 
                       {/* Location Pill (Right Side) */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
                         <MapPin size={14} color="var(--color-primary)" />
                         <select
                           value={location}
@@ -1641,7 +1641,7 @@ function SearchResultsContent() {
 
                     {/* Search Summary Text */}
                     {activeTab === "doctors" && (
-                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                      <div style={{ fontSize: 15, color: "var(--slate-700)", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
                         Showing results for {consultationType === "Video Consultation" ? "video consultations" : "hospital visits"} in {location === "All" ? "all locations" : `${location} location`}
                       </div>
                     )}
@@ -1658,28 +1658,28 @@ function SearchResultsContent() {
                           <div style={{ padding: 18, borderBottom: "1px solid var(--color-border)" }}>
                             <div style={{ display: "flex", gap: 16 }}>
                               <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                                <div style={{ width: 80, height: 80, borderRadius: 12, background: "#E2E8F0" }} />
-                                <div style={{ width: 80, height: 18, borderRadius: 6, background: "#E2E8F0" }} />
+                                <div style={{ width: 80, height: 80, borderRadius: 12, background: "var(--slate-200)" }} />
+                                <div style={{ width: 80, height: 18, borderRadius: 6, background: "var(--slate-200)" }} />
                               </div>
                               <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, paddingTop: 4 }}>
-                                <div style={{ width: "70%", height: 22, background: "#E2E8F0", borderRadius: 4 }} />
-                                <div style={{ width: "50%", height: 16, background: "#E2E8F0", borderRadius: 4 }} />
-                                <div style={{ width: "80%", height: 14, background: "#E2E8F0", borderRadius: 4 }} />
+                                <div style={{ width: "70%", height: 22, background: "var(--slate-200)", borderRadius: 4 }} />
+                                <div style={{ width: "50%", height: 16, background: "var(--slate-200)", borderRadius: 4 }} />
+                                <div style={{ width: "80%", height: 14, background: "var(--slate-200)", borderRadius: 4 }} />
                               </div>
                             </div>
                           </div>
                           <div style={{ padding: 18 }}>
-                             <div style={{ width: "60%", height: 14, background: "#E2E8F0", borderRadius: 4, marginBottom: 16 }} />
+                             <div style={{ width: "60%", height: 14, background: "var(--slate-200)", borderRadius: 4, marginBottom: 16 }} />
                              <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
-                               <div style={{ width: 100, height: 28, background: "#E2E8F0", borderRadius: 14 }} />
-                               <div style={{ width: 100, height: 28, background: "#E2E8F0", borderRadius: 14 }} />
+                               <div style={{ width: 100, height: 28, background: "var(--slate-200)", borderRadius: 14 }} />
+                               <div style={{ width: 100, height: 28, background: "var(--slate-200)", borderRadius: 14 }} />
                              </div>
                              <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                               <div style={{ width: 80, height: 24, background: "#E2E8F0", borderRadius: 4 }} />
+                               <div style={{ width: 80, height: 24, background: "var(--slate-200)", borderRadius: 4 }} />
                                <div style={{ display: "flex", gap: 8 }}>
-                                 <div style={{ width: 44, height: 44, borderRadius: 22, background: "#E2E8F0" }} />
-                                 <div style={{ width: 100, height: 44, borderRadius: 22, background: "#E2E8F0" }} />
+                                 <div style={{ width: 44, height: 44, borderRadius: 22, background: "var(--slate-200)" }} />
+                                 <div style={{ width: 100, height: 44, borderRadius: 22, background: "var(--slate-200)" }} />
                                </div>
                              </div>
                           </div>
@@ -1724,7 +1724,7 @@ function SearchResultsContent() {
                         </div>
                       )}
                       {/* Top Section */}
-                      <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+                      <div style={{ background: "linear-gradient(135deg, var(--white) 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                         <div style={{ display: "flex", gap: 16 }}>
                           <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
                             <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
@@ -1742,7 +1742,7 @@ function SearchResultsContent() {
                                     left: 0,
                                     right: 0,
                                     background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))",
-                                    color: "#ffffff",
+                                    color: "var(--white)",
                                     fontSize: 9,
                                     fontWeight: 600,
                                     padding: "20px 4px 4px 4px",
@@ -1766,8 +1766,8 @@ function SearchResultsContent() {
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: doc.name.length > 22 ? 1 : 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", marginTop: 2, fontWeight: 500 }}>{doc.experience}</p>
                             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 4 }}>
-                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>English</span>
-                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>Hindi</span>
+                              <span style={{ fontSize: 10, background: "var(--white)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>English</span>
+                              <span style={{ fontSize: 10, background: "var(--white)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>Hindi</span>
                             </div>
                           </div>
                         </div>
@@ -1789,12 +1789,12 @@ function SearchResultsContent() {
 
                         <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 12, marginBottom: 16 }}>
                           {consultationType !== "Video Consultation" && (
-                            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, var(--white) 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
                               <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} />
                               {doc.availability.hospital}
                             </div>
                           )}
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, var(--white) 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
                             <Image src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={16} height={16} />
                             {doc.availability.video}
                           </div>
@@ -1832,8 +1832,8 @@ function SearchResultsContent() {
                     <div 
                       key={hosp.id}
                       style={{ 
-                        background: "#FFFFFF", 
-                        border: "1px solid #E2E8F0", 
+                        background: "var(--white)", 
+                        border: "1px solid var(--slate-200)", 
                         borderRadius: 16, 
                         padding: 20, 
                         boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" 
@@ -1841,28 +1841,28 @@ function SearchResultsContent() {
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                         <div>
-                          <span style={{ fontSize: 10, background: "rgba(3,78,162,0.08)", color: "var(--color-primary, #034EA2)", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
+                          <span style={{ fontSize: 10, background: "rgba(3,78,162,0.08)", color: "var(--color-primary, var(--blue-brand))", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
                             {hosp.type}
                           </span>
-                          <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1E293B", marginTop: 6 }}>{hosp.name}</h3>
+                          <h3 style={{ fontSize: 17, fontWeight: 700, color: "var(--slate-800)", marginTop: 6 }}>{hosp.name}</h3>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, color: "#F59E0B", fontSize: 14, fontWeight: 700 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, color: "var(--amber-500)", fontSize: 14, fontWeight: 700 }}>
                           <Star size={14} fill="currentColor" /> {hosp.rating}
                         </div>
                       </div>
-                      <p style={{ fontSize: 13, color: "#64748B", display: "flex", alignItems: "center", gap: 4, marginBottom: 14 }}>
+                      <p style={{ fontSize: 13, color: "var(--slate-500)", display: "flex", alignItems: "center", gap: 4, marginBottom: 14 }}>
                         <MapPin size={13} /> {hosp.address}
                       </p>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
                         {hosp.specs.map(spec => (
-                          <span key={spec} style={{ fontSize: 11, background: "#F1F5F9", color: "#475569", padding: "3px 8px", borderRadius: 6, fontWeight: 500 }}>
+                          <span key={spec} style={{ fontSize: 11, background: "var(--slate-100)", color: "var(--slate-600)", padding: "3px 8px", borderRadius: 6, fontWeight: 500 }}>
                             {spec}
                           </span>
                         ))}
                       </div>
-                      <div style={{ borderTop: "1px solid #F1F5F9", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: 13, color: "#475569", fontWeight: 600 }}>{hosp.beds}</span>
-                        <Link href="/" style={{ fontSize: 13, color: "var(--color-primary, #034EA2)", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, textDecoration: "none" }}>
+                      <div style={{ borderTop: "1px solid var(--slate-100)", paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "var(--slate-600)", fontWeight: 600 }}>{hosp.beds}</span>
+                        <Link href="/" style={{ fontSize: 13, color: "var(--color-primary, var(--blue-brand))", fontWeight: 700, display: "flex", alignItems: "center", gap: 4, textDecoration: "none" }}>
                           View Hospital <ArrowRight size={14} />
                         </Link>
                       </div>
@@ -1900,7 +1900,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "#fff",
+                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -1918,7 +1918,7 @@ function SearchResultsContent() {
                     </div>
                   </div>
                   <div className={styles.doctorResultsArea}>
-                    <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: 20 }}>
+                    <div style={{ fontSize: 15, color: "var(--slate-700)", fontWeight: 500, padding: "4px 0 0px", marginBottom: 20 }}>
                       Showing results for specialties {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
                     </div>
 
@@ -2027,7 +2027,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "#fff",
+                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -2127,7 +2127,7 @@ function SearchResultsContent() {
 
                     {/* Search Summary Text */}
                     {activeTab === "treatments" && (
-                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                      <div style={{ fontSize: 15, color: "var(--slate-700)", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
                         Showing results for {selectedTreatmentTypes.length > 0 ? selectedTreatmentTypes.join(" and ").toLowerCase() : "procedures and treatments"} {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
                       </div>
                     )}
@@ -2302,7 +2302,7 @@ function SearchResultsContent() {
                             onClick={() => toggleFilter(setSelectedPackageGender, "Male")}
                             style={{ 
                               display: "inline-flex", alignItems: "center", gap: 6, 
-                              background: "#FFFFFF", border: "1px solid var(--color-border)", 
+                              background: "var(--white)", border: "1px solid var(--color-border)", 
                               borderRadius: 16, height: 32, padding: "0 16px", 
                               fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
                               transition: "var(--transition-fast)"
@@ -2316,7 +2316,7 @@ function SearchResultsContent() {
                             onClick={() => toggleFilter(setSelectedPackageGender, "Female")}
                             style={{ 
                               display: "inline-flex", alignItems: "center", gap: 6, 
-                              background: "#FFFFFF", border: "1px solid var(--color-border)", 
+                              background: "var(--white)", border: "1px solid var(--color-border)", 
                               borderRadius: 16, height: 32, padding: "0 16px", 
                               fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
                               transition: "var(--transition-fast)"
@@ -2370,7 +2370,7 @@ function SearchResultsContent() {
                         ))}
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
                         <MapPin size={14} color="var(--color-primary)" />
                         <select
                           value={location}
@@ -2414,7 +2414,7 @@ function SearchResultsContent() {
 
                     {/* Search Summary Text */}
                     {activeTab === "packages_tests" && (
-                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
+                      <div style={{ fontSize: 15, color: "var(--slate-700)", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
                         Showing results for {selectedPackageType.length > 0 ? selectedPackageType.join(" and ").toLowerCase() : "health packages and tests"} {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
                       </div>
                     )}
@@ -2427,8 +2427,8 @@ function SearchResultsContent() {
                           <div 
                             key={pkg.id}
                             style={{ 
-                              background: "#FFFFFF", 
-                              border: "1px solid #E2E8F0", 
+                              background: "var(--white)", 
+                              border: "1px solid var(--slate-200)", 
                               borderRadius: 16, 
                               padding: 20, 
                               boxShadow: "var(--shadow-sm)",
@@ -2450,7 +2450,7 @@ function SearchResultsContent() {
                                     alignItems: "center", 
                                     padding: "4px 10px", 
                                     background: "rgba(3, 78, 162, 0.08)", 
-                                    color: "#1E293B", 
+                                    color: "var(--slate-800)", 
                                     borderRadius: 16, 
                                     fontSize: 11, 
                                     fontWeight: 400, 
@@ -2459,13 +2459,13 @@ function SearchResultsContent() {
                                     {pkg.idealFor}
                                   </div>
                                 )}
-                                <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1E293B", marginTop: 4 }}>{pkg.name}</h3>
+                                <h3 style={{ fontSize: 17, fontWeight: 700, color: "var(--slate-800)", marginTop: 4 }}>{pkg.name}</h3>
                               </div>
                               
                               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 8 }}>
                                 {pkg.inclusions.slice(0, pkg.name.length > 34 ? 4 : 5).map((inc) => (
-                                  <div key={inc} style={{ fontSize: 12, color: "#475569", display: "flex", alignItems: "center", gap: 6 }}>
-                                    <ShieldCheck size={14} style={{ color: "#10B981" }} /> {inc}
+                                  <div key={inc} style={{ fontSize: 12, color: "var(--slate-600)", display: "flex", alignItems: "center", gap: 6 }}>
+                                    <ShieldCheck size={14} style={{ color: "var(--emerald-500)" }} /> {inc}
                                   </div>
                                 ))}
                                 <div style={{ fontSize: 11, color: "var(--color-primary)", fontWeight: 700, paddingLeft: 20 }}>
@@ -2503,8 +2503,8 @@ function SearchResultsContent() {
                           <div 
                             key={lab.id}
                             style={{ 
-                              background: "#FFFFFF", 
-                              border: "1px solid #E2E8F0", 
+                              background: "var(--white)", 
+                              border: "1px solid var(--slate-200)", 
                               borderRadius: 16, 
                               padding: 18, 
                               boxShadow: "var(--shadow-sm)",
@@ -2514,10 +2514,10 @@ function SearchResultsContent() {
                           >
                             <div style={{ flex: 1 }}>
                               <div style={{ marginBottom: 12 }}>
-                                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1E293B" }}>{lab.name}</h3>
-                                <p style={{ fontSize: 11, color: "#64748B", marginTop: 4 }}>{lab.parameters}</p>
+                                <h3 style={{ fontSize: 15, fontWeight: 700, color: "var(--slate-800)" }}>{lab.name}</h3>
+                                <p style={{ fontSize: 11, color: "var(--slate-500)", marginTop: 4 }}>{lab.parameters}</p>
                               </div>
-                              <p style={{ fontSize: 12, color: "#64748B", display: "flex", alignItems: "center", gap: 4, marginBottom: 8 }}>
+                              <p style={{ fontSize: 12, color: "var(--slate-500)", display: "flex", alignItems: "center", gap: 4, marginBottom: 8 }}>
                                 <Clock size={12} /> {lab.time}
                               </p>
                             </div>
@@ -2577,7 +2577,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "#fff",
+                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -2598,7 +2598,7 @@ function SearchResultsContent() {
 
                   {/* Main Grid Content Area */}
                   <div>
-                    <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: 16 }}>
+                    <div style={{ fontSize: 15, color: "var(--slate-700)", fontWeight: 500, padding: "4px 0 0px", marginBottom: 16 }}>
                       Showing results for specialties {query ? `matching "${query}" ` : ""}in {location === "All" ? "all locations" : `${location} location`}
                     </div>
 
@@ -2657,7 +2657,7 @@ function SearchResultsContent() {
                             whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }}
                             transition={{ duration: 0.2 }}
                             style={{ 
-                              background: "linear-gradient(to right, #ffffff 0%, var(--color-primary-light) 100%)", 
+                              background: "linear-gradient(to right, var(--white) 0%, var(--color-primary-light) 100%)", 
                               padding: "0 20px", 
                               borderRadius: 12, 
                               border: "1px solid var(--color-border)",
@@ -2715,18 +2715,18 @@ function SearchResultsContent() {
                           <span style={{ fontSize: 10, color: "var(--color-primary)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                             {art.category}
                           </span>
-                          <span style={{ fontSize: 11, color: "#94A3B8" }}>{art.date}</span>
+                          <span style={{ fontSize: 11, color: "var(--slate-400)" }}>{art.date}</span>
                         </div>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1E293B", lineHeight: 1.4, marginBottom: 8 }}>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--slate-800)", lineHeight: 1.4, marginBottom: 8 }}>
                           {art.title}
                         </h3>
-                        <p style={{ fontSize: 13, color: "#64748B", lineHeight: 1.5, marginBottom: 16 }}>
+                        <p style={{ fontSize: 13, color: "var(--slate-500)", lineHeight: 1.5, marginBottom: 16 }}>
                           {art.summary}
                         </p>
                         <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12 }}>
-                          <span style={{ color: "#475569" }}>By <strong>{art.author}</strong></span>
-                          <span style={{ color: "#94A3B8", display: "flex", alignItems: "center", gap: 4 }}>
+                          <span style={{ color: "var(--slate-600)" }}>By <strong>{art.author}</strong></span>
+                          <span style={{ color: "var(--slate-400)", display: "flex", alignItems: "center", gap: 4 }}>
                             <Clock size={12} /> {art.readTime}
                           </span>
                         </div>
@@ -2746,10 +2746,10 @@ function SearchResultsContent() {
 
 function EmptyState({ category }: { category: string }) {
   return (
-    <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "64px 24px", background: "#FFFFFF", borderRadius: 16, border: "1px dashed #CBD5E1" }}>
-      <ShieldAlert size={40} style={{ color: "#94A3B8", margin: "0 auto 12px" }} />
-      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#475569", marginBottom: 4 }}>No matching {category} found</h3>
-      <p style={{ fontSize: 13, color: "#94A3B8" }}>Try adjusting your search criteria or typing alternate keywords.</p>
+    <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "64px 24px", background: "var(--white)", borderRadius: 16, border: "1px dashed var(--slate-300)" }}>
+      <ShieldAlert size={40} style={{ color: "var(--slate-400)", margin: "0 auto 12px" }} />
+      <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--slate-600)", marginBottom: 4 }}>No matching {category} found</h3>
+      <p style={{ fontSize: 13, color: "var(--slate-400)" }}>Try adjusting your search criteria or typing alternate keywords.</p>
     </div>
   );
 }

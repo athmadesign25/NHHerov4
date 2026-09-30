@@ -67,7 +67,7 @@ export default function PulseAIAvatar({
           height: "100%",
           borderRadius: "50%",
           padding: `${strokeWidth}px`,
-          background: "linear-gradient(135deg, #8B5CF6 0%, #6366F1 45%, #2563EB 100%)",
+          background: "linear-gradient(135deg, #8B5CF6 0%, #6366F1 45%, var(--blue-600) 100%)",
           boxShadow: isPulsing
             ? "0 0 16px rgba(139, 92, 246, 0.5), 0 2px 8px rgba(37, 99, 235, 0.35)"
             : "0 2px 8px rgba(37, 99, 235, 0.22)",
@@ -86,7 +86,7 @@ export default function PulseAIAvatar({
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: "#FFFFFF",
+            background: "var(--white)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -101,7 +101,7 @@ export default function PulseAIAvatar({
                 width: `${barWidth}px`,
                 height: `${h}px`,
                 borderRadius: `${barWidth}px`,
-                background: "linear-gradient(180deg, #00C4FF 0%, #0099FF 100%)",
+                background: "linear-gradient(180deg, var(--cyan-bright) 0%, #0099FF 100%)",
                 display: "inline-block",
               }}
             />

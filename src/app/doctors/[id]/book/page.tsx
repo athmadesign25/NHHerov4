@@ -110,7 +110,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               </p>
 
               {/* Doctor Mini Card */}
-              <div style={{ background: "#F8FAFC", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", gap: 20, alignItems: "center" }}>
+              <div style={{ background: "var(--slate-50)", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", gap: 20, alignItems: "center" }}>
                 <div style={{ position: "relative", width: 90, height: 90, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                 </div>
@@ -143,7 +143,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              style={{ background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", flexDirection: "column", gap: 16 }}
+              style={{ background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", flexDirection: "column", gap: 16 }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--color-border-light)", paddingBottom: 16 }}>
                 <div style={{ color: "var(--color-text-secondary)", fontWeight: 500 }}>Consultation Fee</div>
@@ -170,7 +170,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
             <div style={{ 
               display: "flex", 
               alignItems: "center",
-              background: "#F1F5F9", 
+              background: "var(--slate-100)", 
               borderRadius: 24, 
               padding: 4, 
               gap: 4,
@@ -188,7 +188,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
-                  color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "#475569",
+                  color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "var(--slate-600)",
                   fontWeight: consultationType === "Hospital Visit" ? 600 : 500,
                   cursor: "pointer",
                   outline: "none"
@@ -197,7 +197,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Hospital Visit" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -219,7 +219,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
-                  color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "#475569",
+                  color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "var(--slate-600)",
                   fontWeight: consultationType === "Video Consultation" ? 600 : 500,
                   cursor: "pointer",
                   outline: "none"
@@ -228,7 +228,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Video Consultation" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -292,7 +292,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               </div>
 
               <div style={{ display: "flex", alignItems: "stretch", gap: 12 }}>
-                <div style={{ background: "#F1F5F9", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <div style={{ background: "var(--slate-100)", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>{activeMonth}</span>
                 </div>
                 <div ref={scrollContainerRef} style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none", scrollSnapType: "x mandatory" }} className="hide-scrollbar">
@@ -334,7 +334,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               {/* Morning */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <CloudSun size={16} style={{ color: "#F59E0B" }} /> Morning
+                  <CloudSun size={16} style={{ color: "var(--amber-500)" }} /> Morning
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["09:15 AM", "09:45 AM", "10:15 AM", "10:45 AM", "11:15 AM", "11:45 AM"].map((slot) => (
@@ -345,7 +345,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                         padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
                         borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", transition: "all 0.15s",
                         fontFamily: "inherit"
                       }}
                     >
@@ -358,7 +358,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               {/* Afternoon */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <Sun size={16} style={{ color: "#F59E0B" }} /> Afternoon
+                  <Sun size={16} style={{ color: "var(--amber-500)" }} /> Afternoon
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["12:45 PM", "01:15 PM", "01:45 PM", "02:15 PM", "02:45 PM", "03:15 PM"].map((slot) => (
@@ -369,7 +369,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                         padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
                         borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", transition: "all 0.15s",
                         fontFamily: "inherit"
                       }}
                     >
@@ -382,7 +382,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               {/* Evening */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <Moon size={16} style={{ color: "#F59E0B" }} /> Evening
+                  <Moon size={16} style={{ color: "var(--amber-500)" }} /> Evening
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {["05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM"].map((slot) => (
@@ -393,7 +393,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                         padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
                         borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
                         color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "var(--white)", transition: "all 0.15s",
                         fontFamily: "inherit"
                       }}
                     >
@@ -404,7 +404,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "#fff", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10 }}
+            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--white)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10 }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
             >
