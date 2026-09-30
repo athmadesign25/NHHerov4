@@ -5,15 +5,15 @@
   gap: 12px;
   text-align: left;
   border-radius: 14px;
-  border: 1px solid #cfd8e5;
-  background: #eef2f7;
+  border: 1px solid var(--slate-250);
+  background: var(--blue-tint-50);
   padding: 12px;
   transition: background 0.2s, border-color 0.2s;
   cursor: pointer;
 }
 .specCard:hover {
   background: #f7faff;
-  border-color: #0f58b8;
+  border-color: var(--blue-700);
 }
 .specImage {
   width: 44px;
@@ -29,11 +29,11 @@
   font-size: 38px;
   line-height: 1;
   font-weight: 800;
-  color: #223148;
+  color: var(--navy-800);
 }
 .specMatch {
   font-size: 30px;
   line-height: 1.25;
-  color: #6a7890;
+  color: var(--slate-450);
   margin-top: 4px;
 }

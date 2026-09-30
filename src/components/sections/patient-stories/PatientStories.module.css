@@ -13,7 +13,7 @@
    section's own card is fully full-page and hides it. */
 .section {
   position: relative;
-  background: #031224;
+  background: var(--navy-900);
   overflow: hidden;
   /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
      below 1024px, where the mobile swipe carousel's own full-bleed trick
@@ -48,20 +48,20 @@
 }
 
 .eyebrowText {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .eyebrowDash {
   width: 24px;
   height: 2px;
-  background: var(--color-emergency, #ED1C24);
+  background: var(--color-emergency, var(--red-emergency));
   margin-top: 4px;
 }
 
 .sectionTitle {
   font-size: 42px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--white);
   margin-bottom: 12px;
 }
 
@@ -171,7 +171,7 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -206,8 +206,8 @@
     rgba(0, 17, 36, 0.5) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, var(--black) 60%, var(--black) 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, var(--black) 60%, var(--black) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -231,8 +231,8 @@
     rgba(0, 17, 36, 0) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, var(--black) 0%, var(--black) 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--black) 0%, var(--black) 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -366,7 +366,7 @@
 }
 
 .overviewText {
-  color: #FFFFFF;
+  color: var(--white);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 22px;
   font-weight: 400;
@@ -380,7 +380,7 @@
 }
 
 .patientName {
-  color: #FFF;
+  color: var(--white);
   font-family: Inter, sans-serif;
   font-size: 20px;
   font-style: normal;
@@ -404,7 +404,7 @@
 }
 
 /* Dark edge fades: same solid color as the section's own background
-   (#031224), fading to transparent toward the carousel's center, so the
+   (var(--navy-900)), fading to transparent toward the carousel's center, so the
    track's outer edges blend seamlessly into the surrounding section on
    both sides instead of cutting off hard. Sit above the card content but
    below the nav arrows (z-index 25 vs. the arrows' 30), which are placed
@@ -422,12 +422,12 @@
 
 .edgeFadeLeft {
   left: 0;
-  background: linear-gradient(90deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+  background: linear-gradient(90deg, var(--navy-900) 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
 }
 
 .edgeFadeRight {
   right: 0;
-  background: linear-gradient(270deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+  background: linear-gradient(270deg, var(--navy-900) 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
 }
 
 /* Glass navigation arrows — overlaid directly on the carousel track
@@ -449,7 +449,7 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(3, 18, 36, 0.55);
   backdrop-filter: blur(16px);
-  color: #ffffff;
+  color: var(--white);
   width: 44px;
   height: 44px;
   display: flex;
@@ -504,7 +504,7 @@
   border: 1px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: Inter, sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -517,7 +517,7 @@
 
 .secondaryCtaBtn:hover {
   background: rgba(255, 255, 255, 0.14);
-  border-color: #FFFFFF;
+  border-color: var(--white);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
 }

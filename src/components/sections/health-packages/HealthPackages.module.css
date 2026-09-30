@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   height: 260vh;
-  background: #031224;
+  background: var(--navy-900);
 }
 
 /* stickyViewport is what's actually visible while pinned (this element's
@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #031224;
+  background: var(--navy-900);
   transition: background 0.6s ease;
 }
 
@@ -36,7 +36,7 @@
   height: 72%;
   border-radius: 26px;
   overflow: hidden;
-  background: #031224;
+  background: var(--navy-900);
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform, width, height, border-radius;
@@ -180,7 +180,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ffffff;
+  color: var(--white);
   will-change: transform;
 }
 
@@ -208,7 +208,7 @@
 }
 
 .eyebrowUnit :global(.section-eyebrow) {
-  color: #ffffff;
+  color: var(--white);
 }
 
 .title {
@@ -216,7 +216,7 @@
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--white);
   text-align: center;
   max-width: none;
   margin: 0;
@@ -262,7 +262,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--white);
   text-align: left;
   line-height: 1.3;
   white-space: nowrap;
@@ -406,7 +406,7 @@
   border-radius: inherit;
   padding: 1px;
   background: linear-gradient(30deg, rgb(144 210 253 / 57%), rgb(235 137 137 / 36%));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -557,7 +557,7 @@
 }
 
 .packageCardTitle {
-  color: #1A1A2E;
+  color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -704,7 +704,7 @@
 }
 
 .factBold {
-  color: #1A1A2E;
+  color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 700;
@@ -713,7 +713,7 @@
 }
 
 .factLight {
-  color: #000000;
+  color: var(--black);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -734,7 +734,7 @@
   bottom: 28px;
   z-index: 3;
   display: inline-block;
-  color: #1A1A2E;
+  color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -784,7 +784,7 @@
   margin-top: 4px;
   font-size: 15px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--white);
   text-decoration: none;
   border-radius: 8px;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
@@ -796,7 +796,7 @@
 
 .exploreRow:hover {
   background: rgba(255, 255, 255, 0.14);
-  border-color: #ffffff;
+  border-color: var(--white);
   transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
@@ -1056,7 +1056,7 @@
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -1069,8 +1069,8 @@
 }
 
 .directionToggleBtnActive {
-  background: #FFFFFF;
-  border-color: #FFFFFF;
+  background: var(--white);
+  border-color: var(--white);
   color: #0B1B33;
 }
 

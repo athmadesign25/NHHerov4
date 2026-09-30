@@ -45,7 +45,7 @@
 }
 
 .header :global(.section-eyebrow) {
-  color: #034EA2 !important;
+  color: var(--blue-brand) !important;
   text-align: center;
   margin: 0 auto;
 }
@@ -58,7 +58,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(30px, 3.2vw, 44px);
   font-weight: 800;
-  color: #0F172A;
+  color: var(--slate-900);
   letter-spacing: -0.025em;
   margin: 0;
   line-height: 1.15;
@@ -183,7 +183,7 @@
 
 /* Title matches 30px font-size across all cards */
 .heroTitle {
-  color: #F7F7F7;
+  color: var(--grey-100);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 30px;
   font-weight: 600;
@@ -191,12 +191,12 @@
   margin: 0;
   background: linear-gradient(
     90deg,
-    #F7F7F7 0%,
-    #F7F7F7 35%,
-    #ED1C24 50%,
+    var(--grey-100) 0%,
+    var(--grey-100) 35%,
+    var(--red-emergency) 50%,
     #FFA8AB 55%,
-    #F7F7F7 65%,
-    #F7F7F7 100%
+    var(--grey-100) 65%,
+    var(--grey-100) 100%
   );
   background-size: 300% 100%;
   background-position: 100% 0;
@@ -238,7 +238,7 @@
 }
 
 .heroStatValue {
-  color: #FFFFFF;
+  color: var(--white);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 32px;
   font-weight: 700;
@@ -265,7 +265,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
-  background: #0F172A;
+  background: var(--slate-900);
   box-sizing: border-box;
 }
 
@@ -289,7 +289,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
-  background: #0F172A;
+  background: var(--slate-900);
   box-sizing: border-box;
 }
 
@@ -332,7 +332,7 @@
 }
 
 .cardTitle {
-  color: #F7F7F7;
+  color: var(--grey-100);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 30px;
   font-weight: 600;
@@ -340,12 +340,12 @@
   margin: 0;
   background: linear-gradient(
     90deg,
-    #F7F7F7 0%,
-    #F7F7F7 40%,
-    #ED1C24 50%,
+    var(--grey-100) 0%,
+    var(--grey-100) 40%,
+    var(--red-emergency) 50%,
     #FFA8AB 55%,
-    #F7F7F7 65%,
-    #F7F7F7 100%
+    var(--grey-100) 65%,
+    var(--grey-100) 100%
   );
   background-size: 300% 100%;
   background-position: 100% 0;

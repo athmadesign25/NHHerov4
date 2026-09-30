@@ -61,7 +61,7 @@
 .sectionTitle {
   font-size: clamp(28px, 3.4vw, 48px);
   font-weight: 800;
-  color: #000000 !important;
+  color: var(--black) !important;
   margin-top: 0;
   margin-bottom: 20px;
   line-height: 1.22;
@@ -127,7 +127,7 @@
   box-sizing: border-box;
 }
 
-/* Reversible seamless handoff plate: transparent -> solid #031224 (exactly
+/* Reversible seamless handoff plate: transparent -> solid var(--navy-900) (exactly
    matching the top color of Patient Stories' background gradient, so there's
    no visible seam once it surfaces), driven by raw scroll position from the
    "View All Specialties" button entering from the bottom of the viewport
@@ -143,7 +143,7 @@
   left: calc(-1 * var(--gx-pad));
   right: calc(-1 * var(--gx-pad));
   z-index: -1;
-  background: #031224;
+  background: var(--navy-900);
   pointer-events: none;
   will-change: opacity;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 150px);
@@ -327,7 +327,7 @@
 }
 
 .specialityCard:hover .metricValue {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .metricLabel {
@@ -359,14 +359,14 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(18px, 1.8vw, 22px);
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.2;
   letter-spacing: -0.01em;
   transition: transform 0.3s ease;
 }
 
 .nameArrow {
-  color: #FFFFFF;
+  color: var(--white);
   opacity: 0;
   transform: translateX(-4px);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -389,7 +389,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 12px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   opacity: 0;
   transform: translateY(10px);
   transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
@@ -447,7 +447,7 @@
   border-radius: 8px;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.06);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -460,7 +460,7 @@
 
 .viewAllBtn:hover {
   background: rgba(255, 255, 255, 0.14);
-  border-color: #ffffff;
+  border-color: var(--white);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
 }

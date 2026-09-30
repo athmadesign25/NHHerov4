@@ -51,24 +51,24 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  background: linear-gradient(135deg, var(--violet-600), #06b6d4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--white);
   flex-shrink: 0;
 }
 
 .headerTitle {
   font-size: 15px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: -0.01em;
 }
 
 .headerSub {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--slate-400);
   margin-top: 1px;
 }
 
@@ -78,7 +78,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.06);
-  color: #cbd5e1;
+  color: var(--slate-300);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +86,7 @@
   transition: all 0.15s ease;
   flex-shrink: 0;
 }
-.closeBtn:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; }
+.closeBtn:hover { background: rgba(255, 255, 255, 0.12); color: var(--white); }
 
 /* ─── Body ────────────────────────────────────────────────────────────── */
 .body {
@@ -127,7 +127,7 @@
 .welcomeTitle {
   font-size: 34px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--white);
   letter-spacing: -0.025em;
   margin: 0 0 10px;
 }
@@ -143,7 +143,7 @@
 .loginCta {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--white);
   padding: 8px 18px;
   border-radius: 20px;
   font-size: 13px;
@@ -168,7 +168,7 @@
 .userMessage {
   align-self: flex-end;
   background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: var(--white);
   font-size: 14.5px;
   font-weight: 500;
   line-height: 1.5;
@@ -189,11 +189,11 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  background: linear-gradient(135deg, var(--violet-600), #06b6d4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--white);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -208,7 +208,7 @@
 
 .assistantText {
   font-size: 14.5px;
-  color: #e2e8f0;
+  color: var(--slate-200);
   line-height: 1.6;
 }
 
@@ -223,7 +223,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #a78bfa;
+  background: var(--violet-400);
   animation: bounce 1.2s ease-in-out infinite;
 }
 .typingDots span:nth-child(2) { animation-delay: 0.2s; }
@@ -245,7 +245,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #a78bfa;
+  color: var(--violet-400);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -264,7 +264,7 @@
 .analysisSectionTitle {
   font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--slate-400);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 6px;
@@ -273,7 +273,7 @@
 .symptomPill {
   display: inline-flex;
   font-size: 12px;
-  color: #f1f5f9;
+  color: var(--slate-100);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
@@ -281,18 +281,18 @@
   margin: 2px 4px 2px 0;
 }
 
-.conditionItem { font-size: 12px; color: #94a3b8; line-height: 1.7; }
+.conditionItem { font-size: 12px; color: var(--slate-400); line-height: 1.7; }
 
 .analysisRecommendation {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--slate-400);
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-.analysisRecommendation strong { color: #f1f5f9; }
+.analysisRecommendation strong { color: var(--slate-100); }
 
 /* ─── Doctor Cards ────────────────────────────────────────────────────── */
 .doctorResults {
@@ -338,8 +338,8 @@
 .doctorAvatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .doctorInfo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.doctorName { font-size: 14px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.doctorSpec { font-size: 12px; color: #a78bfa; font-weight: 600; }
+.doctorName { font-size: 14px; font-weight: 700; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doctorSpec { font-size: 12px; color: var(--violet-400); font-weight: 600; }
 
 .doctorMeta {
   display: flex;
@@ -352,7 +352,7 @@
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--slate-400);
 }
 
 .doctorRating {
@@ -361,8 +361,8 @@
   gap: 4px;
   margin-top: 4px;
 }
-.doctorRating span { font-size: 11px; color: #f59e0b; font-weight: 700; }
-.doctorExp { color: #94a3b8 !important; font-weight: 400 !important; margin-left: 4px; }
+.doctorRating span { font-size: 11px; color: var(--amber-500); font-weight: 700; }
+.doctorExp { color: var(--slate-400) !important; font-weight: 400 !important; margin-left: 4px; }
 
 .doctorCardRight {
   display: flex;
@@ -377,11 +377,11 @@
   display: flex;
   flex-direction: column;
 }
-.doctorFee { font-size: 16px; font-weight: 800; color: #ffffff; }
-.doctorFeeLabel { font-size: 10px; color: #64748b; }
+.doctorFee { font-size: 16px; font-weight: 800; color: var(--white); }
+.doctorFeeLabel { font-size: 10px; color: var(--slate-500); }
 .bookBtn {
-  background: #ffffff;
-  color: #0f172a;
+  background: var(--white);
+  color: var(--slate-900);
   border: none;
   border-radius: 20px;
   padding: 8px 20px;
@@ -426,11 +426,11 @@
 .chip:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--white);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-.chipIcon { display: flex; align-items: center; color: #a78bfa; }
+.chipIcon { display: flex; align-items: center; color: var(--violet-400); }
 
 /* Premium visual treatment for core feature chips */
 .featureChip {
@@ -441,7 +441,7 @@
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--white);
   font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
@@ -523,9 +523,9 @@
   border-radius: 999px;
   padding: 1.5px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask-composite: exclude;
   animation: spinBorder 5s linear infinite;
   pointer-events: none;
@@ -538,9 +538,9 @@
   border-radius: 999px;
   padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask-composite: exclude;
   filter: blur(4px);
   animation: spinBorder 5s linear infinite;
@@ -579,12 +579,12 @@
     transparent 100%
   );
   -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(var(--white) 0 0) content-box,
+    linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
   mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(var(--white) 0 0) content-box,
+    linear-gradient(var(--white) 0 0);
   mask-composite: exclude;
   animation: spinBorder 2.5s linear infinite;
   pointer-events: none;
@@ -613,7 +613,7 @@
 }
 
 .searchIcon {
-  color: #ffffff;
+  color: var(--white);
 }
 
 /* Match the exact text style of the search input (.searchInput) */
@@ -622,7 +622,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: #ffffff;
+  color: var(--white);
   font-size: 18px;
   line-height: 1.4;
   padding-right: 8px;
@@ -657,7 +657,7 @@
   flex-shrink: 0;
   color: rgba(255, 255, 255, 0.8);
 }
-.micBtn:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
+.micBtn:hover { background: rgba(255, 255, 255, 0.1); color: var(--white); }
 
 .sendBtn {
   width: 40px;
@@ -665,7 +665,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -674,8 +674,8 @@
 }
 .sendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 .sendBtnActive {
-  background: #ffffff;
-  color: #0f172a;
+  background: var(--white);
+  color: var(--slate-900);
 }
 .sendBtnActive:hover { transform: scale(1.05); }
 

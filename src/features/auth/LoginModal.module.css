@@ -1,7 +1,7 @@
 .modalContainer {
   position: relative;
   z-index: 10000;
-  background: var(--color-bg-card, #ffffff);
+  background: var(--color-bg-card, var(--white));
   width: 100%;
   max-width: 440px;
   border-radius: 24px;

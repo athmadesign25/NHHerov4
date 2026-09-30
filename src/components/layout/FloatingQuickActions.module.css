@@ -26,7 +26,7 @@
      closed; without this the tiles would squeeze instead of being clipped. */
   flex-shrink: 0;
   border-radius: 14px;
-  color: #0B5DF4;
+  color: var(--blue-vivid);
   text-decoration: none;
   background: transparent;
   transition: color 0.2s ease, background 0.2s ease;
@@ -37,7 +37,7 @@
 }
 
 .linkOnDark {
-  color: #ffffff !important;
+  color: var(--white) !important;
 }
 
 /* Default (over light sections) a white wash is invisible against the pale
@@ -72,12 +72,12 @@
   border: 1px solid rgba(90, 166, 238, 0.85);
   background: radial-gradient(
     95% 60% at 50% 78%,
-    #034EA2 0%,
+    var(--blue-brand) 0%,
     #2E8BE0 100%
   );
   box-shadow:
     0 3px 18px -6px rgba(17, 135, 255, 0.72),
-    inset 0 1px 6px -3px #FFFFFF;
+    inset 0 1px 6px -3px var(--white);
   transition: transform 0.2s ease, filter 0.25s ease;
 }
 
@@ -188,7 +188,7 @@
   margin: -130% 0 0 -130%;
   background: radial-gradient(
     ellipse at 65% 180%,
-    #fff, #00f, #fff, #00f, #fff, #00f, #fff, #00f, #fff, #00f, #fff
+    var(--white), #00f, var(--white), #00f, var(--white), #00f, var(--white), #00f, var(--white), #00f, var(--white)
   );
   mix-blend-mode: difference;
   animation: pulseIconRotate 8s linear infinite;
@@ -332,7 +332,7 @@
 }
 
 .pulseCardTitle {
-  color: #FFF;
+  color: var(--white);
   font-family: Geist, var(--font-sans), sans-serif;
   font-size: 22px;
   font-style: normal;
@@ -381,7 +381,7 @@
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  color: #FFFFFF;
+  color: var(--white);
   filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
 }
 
@@ -402,7 +402,7 @@
   width: 3.5px;
   height: 12px;
   border-radius: 2px;
-  background: #FFFFFF;
+  background: var(--white);
   animation: barBreathing 1.8s ease-in-out infinite;
 }
 
@@ -410,7 +410,7 @@
   width: 3.5px;
   height: 20px;
   border-radius: 2px;
-  background: #FFFFFF;
+  background: var(--white);
   animation: barBreathing 1.8s ease-in-out 0.25s infinite;
 }
 
@@ -418,7 +418,7 @@
   width: 3.5px;
   height: 13px;
   border-radius: 2px;
-  background: #FFFFFF;
+  background: var(--white);
   animation: barBreathing 1.8s ease-in-out 0.5s infinite;
 }
 

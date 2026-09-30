@@ -4,7 +4,7 @@
   right: 24px;
   width: 320px;
   height: 400px;
-  background-color: #fff;
+  background-color: var(--white);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   z-index: 9999;
@@ -20,8 +20,8 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: var(--color-primary, #034EA2);
-  color: #fff;
+  background-color: var(--color-primary, var(--blue-brand));
+  color: var(--white);
   border: none;
   box-shadow: 0 4px 14px rgba(3, 78, 162, 0.4);
   cursor: pointer;

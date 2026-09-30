@@ -8,7 +8,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: #FFFFFF;
+  background: var(--white);
   border-radius: 12px;
   padding: 0 16px;
   height: 52px;
@@ -216,7 +216,7 @@
   top: -8px;
   right: 32px;
   background: linear-gradient(180deg, #F4C430 0%, #C59B0D 100%);
-  color: #FFFFFF;
+  color: var(--white);
   padding: 6px 16px;
   font-size: 14px;
   font-weight: 700;

@@ -87,9 +87,9 @@
     rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
     rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask-composite: exclude;
   animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
@@ -116,9 +116,9 @@
     rgba(255, 255, 255, 0.10) 50%,
     rgba(255, 255, 255, 0.28) 100%
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask-composite: exclude;
   pointer-events: none;
   z-index: 4;
@@ -183,8 +183,8 @@
     rgba(3, 78, 162, 0.32) 290deg,
     rgba(0, 196, 255, 0.38) 360deg
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: rotateBorderAngle 11s linear infinite;
@@ -246,8 +246,8 @@
     rgba(3, 78, 162, 0.32) 290deg,
     rgba(0, 196, 255, 0.38) 360deg
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: rotateBorderAngle 11s linear infinite;
@@ -375,21 +375,21 @@
   width: 2px;
   height: 7px;
   border-radius: 1px;
-  background: #00C4FF;
+  background: var(--cyan-bright);
 }
 
 .pulseBar2 {
   width: 2px;
   height: 12px;
   border-radius: 1px;
-  background: #034EA2;
+  background: var(--blue-brand);
 }
 
 .pulseBar3 {
   width: 2px;
   height: 8px;
   border-radius: 1px;
-  background: #ED1C24;
+  background: var(--red-emergency);
 }
 
 .pulseText {
@@ -409,14 +409,14 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94A3B8;
+  color: var(--slate-400);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .closeBtn:hover {
   background: rgba(255, 255, 255, 0.16);
-  color: #FFFFFF;
+  color: var(--white);
   transform: scale(1.05);
 }
 
@@ -424,7 +424,7 @@
 .redDivider {
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #ED1C24 0%, #FF454D 50%, #ED1C24 100%);
+  background: linear-gradient(90deg, var(--red-emergency) 0%, #FF454D 50%, var(--red-emergency) 100%);
   border-radius: 2px;
   margin: 10px 0 16px;
   box-shadow: 0 0 12px rgba(237, 28, 36, 0.35);
@@ -504,12 +504,12 @@
 }
 
 .standaloneIconBtn:hover {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.12);
 }
 
 .standaloneIconBtn:focus-visible {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.16);
   outline: none;
 }
@@ -524,13 +524,13 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94A3B8;
+  color: var(--slate-400);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .iconControlBtn:hover {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
@@ -544,9 +544,9 @@
   width: 30px;
   height: 30px;
   border-radius: 7px;
-  background: #034EA2;
+  background: var(--blue-brand);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #FFFFFF;
+  color: var(--white);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
@@ -595,11 +595,11 @@
 .locationPill:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .locationPinIcon {
-  color: #FFFFFF;
+  color: var(--white);
   opacity: 0.85;
 }
 
@@ -666,7 +666,7 @@
   border-radius: 7px;
   font-size: 13px;
   font-weight: 500;
-  color: #00C4FF;
+  color: var(--cyan-bright);
   background: rgba(0, 196, 255, 0.06);
   border: 1px solid rgba(0, 196, 255, 0.16);
   cursor: pointer;
@@ -678,7 +678,7 @@
 .locationCurrentAction:hover {
   background: rgba(0, 196, 255, 0.14);
   border-color: rgba(0, 196, 255, 0.35);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .locationCurrentAction:disabled {
@@ -687,12 +687,12 @@
 }
 
 .locationNavIcon {
-  color: #00C4FF;
+  color: var(--cyan-bright);
   flex-shrink: 0;
 }
 
 .locationDetectingSpinner {
-  color: #00C4FF;
+  color: var(--cyan-bright);
   animation: spinDetecting 1s linear infinite;
   flex-shrink: 0;
 }
@@ -705,7 +705,7 @@
 .locationStatusNote {
   font-size: 11px;
   line-height: 1.35;
-  color: #F87171;
+  color: var(--red-400);
   padding: 4px 8px;
   border-radius: 5px;
   background: rgba(239, 68, 68, 0.08);
@@ -736,7 +736,7 @@
 }
 
 .locationSearchIcon {
-  color: #94A3B8;
+  color: var(--slate-400);
   flex-shrink: 0;
 }
 
@@ -746,12 +746,12 @@
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
-  color: #FFFFFF;
+  color: var(--white);
   width: 100%;
 }
 
 .locationSearchInput::placeholder {
-  color: #64748B;
+  color: var(--slate-500);
 }
 
 .locationScrollList {
@@ -776,7 +776,7 @@
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.06em;
-  color: #64748B;
+  color: var(--slate-500);
   padding: 6px 8px 3px;
   text-transform: uppercase;
 }
@@ -784,7 +784,7 @@
 .locationSubTag {
   margin-left: auto;
   font-size: 10.5px;
-  color: #64748B;
+  color: var(--slate-500);
   font-weight: 400;
 }
 
@@ -795,7 +795,7 @@
   padding: 7px 10px;
   border-radius: 6px;
   font-size: 12.5px;
-  color: #CBD5E1;
+  color: var(--slate-300);
   background: transparent;
   border: none;
   text-align: left;
@@ -807,7 +807,7 @@
 .locationMenuItem:hover,
 .locationMenuItemSelected {
   background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  color: var(--white);
   font-weight: 500;
 }
 
@@ -831,12 +831,12 @@
 }
 
 .inlineActionBtn:hover {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.10);
 }
 
 .inlineActionBtn:focus-visible {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.14);
   outline: none;
 }
@@ -847,7 +847,7 @@
 }
 
 .inlineActionBtn:hover .inlineActionIcon {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 /* ── Landing Quick Actions ("Find a doctor", "Describe my symptoms" - pure clean text + icon, NO BOX) ── */
@@ -860,7 +860,7 @@
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
-  color: #FFFFFF !important;
+  color: var(--white) !important;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
   font-weight: 450;
@@ -877,7 +877,7 @@
 }
 
 .landingTextAction span {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .landingTextAction svg {
@@ -892,7 +892,7 @@
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.05);
-  color: #E2E8F0;
+  color: var(--slate-200);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -903,13 +903,13 @@
 .actionPill:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.24);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .actionPillActive {
   background: rgba(3, 78, 162, 0.25);
   border-color: rgba(3, 78, 162, 0.6);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 /* ── State 02: Active Search Elements ── */
@@ -937,10 +937,10 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: clamp(18px, 1.6vw, 20px);
   font-weight: 450;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.4;
   letter-spacing: -0.01em;
-  caret-color: #00C4FF;
+  caret-color: var(--cyan-bright);
   position: relative;
   z-index: 2;
   padding: 0;
@@ -999,7 +999,7 @@
   margin-left: 10px;
   font-size: 11px;
   font-weight: 500;
-  color: #38BDF8;
+  color: var(--sky-400);
   background: rgba(56, 189, 248, 0.1);
   border: 1px solid rgba(56, 189, 248, 0.25);
   border-radius: 4px;
@@ -1019,12 +1019,12 @@
 }
 
 .inlineActionBtnActive {
-  color: #00C4FF !important;
+  color: var(--cyan-bright) !important;
   background: rgba(0, 196, 255, 0.08) !important;
 }
 
 .inlineActionBtnActive .inlineActionIcon {
-  color: #00C4FF !important;
+  color: var(--cyan-bright) !important;
 }
 
 /* ── Empty State Canvas (Before Typing) ── */
@@ -1049,7 +1049,7 @@
 
 .emptyPromptSub {
   font-size: 13px;
-  color: #64748B;
+  color: var(--slate-500);
   font-weight: 400;
   line-height: 1.5;
   margin: 0;
@@ -1066,7 +1066,7 @@
   font-family: inherit;
   font-size: 12.5px;
   font-weight: 500;
-  color: #CBD5E1;
+  color: var(--slate-300);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 5px 14px;
@@ -1078,14 +1078,14 @@
 }
 
 .genericExampleChip:hover {
-  color: #FFFFFF;
+  color: var(--white);
   background: rgba(255, 255, 255, 0.09);
   border-color: rgba(56, 189, 248, 0.35);
   transform: translateY(-1px);
 }
 
 .genericDot {
-  color: #475569;
+  color: var(--slate-600);
   font-size: 14px;
   user-select: none;
 }
@@ -1121,13 +1121,13 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748B;
+  color: var(--slate-500);
 }
 
 .intentTagBadge {
   font-size: 11px;
   font-weight: 600;
-  color: #38BDF8;
+  color: var(--sky-400);
   background: rgba(3, 78, 162, 0.22);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 2.5px 10px;
@@ -1160,11 +1160,11 @@
 .suggestionItemActive {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .suggestionArrow {
-  color: #00C4FF;
+  color: var(--cyan-bright);
   opacity: 0.75;
   flex-shrink: 0;
 }
@@ -1180,19 +1180,19 @@
 .pressEnterHint {
   display: flex;
   align-items: center;
-  color: #64748B;
+  color: var(--slate-500);
   opacity: 0.7;
   margin-left: auto;
 }
 
 .suggestionItem:hover .pressEnterHint {
-  color: #38BDF8;
+  color: var(--sky-400);
   opacity: 1;
 }
 
 .highlightMatch {
   font-weight: 500;
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 /* ── Subtle Pulse AI Status ── */
@@ -1204,13 +1204,13 @@
   padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 12.5px;
-  color: #94A3B8;
+  color: var(--slate-400);
   font-weight: 400;
   user-select: none;
 }
 
 .sparkleIcon {
-  color: #00C4FF;
+  color: var(--cyan-bright);
   font-size: 13px;
 }
 
@@ -1247,19 +1247,19 @@
 }
 
 .resultsQuerySearchIcon {
-  color: #94A3B8;
+  color: var(--slate-400);
   flex-shrink: 0;
   transition: color 0.18s ease;
 }
 
 .resultsQueryLeft:focus-within .resultsQuerySearchIcon {
-  color: #00C4FF;
+  color: var(--cyan-bright);
 }
 
 .resultsQueryText {
   font-size: 19px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   letter-spacing: -0.01em;
 }
 
@@ -1272,22 +1272,22 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 19px;
   font-weight: 550;
-  color: #FFFFFF;
+  color: var(--white);
   letter-spacing: -0.01em;
   padding: 4px 0;
   width: 100%;
-  caret-color: #00C4FF;
+  caret-color: var(--cyan-bright);
 }
 
 .resultsQueryInput::placeholder {
-  color: #64748B;
+  color: var(--slate-500);
   font-weight: 400;
   font-size: 16px;
 }
 
 .resultsQueryInput::selection {
   background: rgba(0, 196, 255, 0.35);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .resultsQueryActions {
@@ -1303,9 +1303,9 @@
   gap: 6px;
   padding: 6px 14px;
   border-radius: 8px;
-  background: #034EA2;
+  background: var(--blue-brand);
   border: 1px solid rgba(0, 196, 255, 0.45);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
   font-weight: 600;
@@ -1341,7 +1341,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #38BDF8;
+  color: var(--sky-400);
   cursor: pointer;
   padding: 6px 12px;
   border-radius: 6px;
@@ -1369,18 +1369,18 @@
 .pulseAiCardText {
   font-size: 12px;
   font-weight: 500;
-  color: #E2E8F0;
+  color: var(--slate-200);
 }
 
 .askPulseBtn {
-  background: #034EA2;
+  background: var(--blue-brand);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 9999px;
   padding: 5px 14px;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -1442,16 +1442,16 @@
   gap: 4px;
   font-size: 12px;
   font-weight: 400;
-  color: #94A3B8;
+  color: var(--slate-400);
 }
 
 .primaryPinIcon {
-  color: #38BDF8;
+  color: var(--sky-400);
   flex-shrink: 0;
 }
 
 .primaryInfoIcon {
-  color: #64748B;
+  color: var(--slate-500);
   flex-shrink: 0;
   margin-left: 2px;
 }
@@ -1545,13 +1545,13 @@
 
 .refDocFavBtn:hover {
   background: rgba(0, 0, 0, 0.6);
-  color: #FFFFFF;
+  color: var(--white);
   transform: scale(1.08);
 }
 
 .refHeartFilled {
-  fill: #ED1C24;
-  color: #ED1C24;
+  fill: var(--red-emergency);
+  color: var(--red-emergency);
 }
 
 .refHeartOutline {
@@ -1573,7 +1573,7 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.20);
-  color: #FFFFFF;
+  color: var(--white);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -1616,7 +1616,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 15.5px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--white);
   letter-spacing: -0.015em;
   line-height: 1.22;
   margin: 0;
@@ -1642,7 +1642,7 @@
 .refDocSpecialty {
   font-size: 12px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: var(--white);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1697,8 +1697,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  color: #0B5DF4;
+  background: var(--white);
+  color: var(--blue-vivid);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -1725,7 +1725,7 @@
   align-items: center;
   justify-content: center;
   background: #1D68FE;
-  color: #FFFFFF;
+  color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -1758,7 +1758,7 @@
   gap: 4px;
   font-size: 12.5px;
   font-weight: 500;
-  color: #38BDF8;
+  color: var(--sky-400);
   text-decoration: none;
   cursor: pointer;
   transition: color 0.15s ease;
@@ -1824,7 +1824,7 @@
 }
 
 .refSparkleIcon {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .refPulseTextWrap {
@@ -1845,7 +1845,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   letter-spacing: -0.01em;
 }
 
@@ -1877,7 +1877,7 @@
   border-radius: 8px;
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -1932,7 +1932,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 13px;
   font-weight: 500;
-  color: #F1F5F9;
+  color: var(--slate-100);
   letter-spacing: -0.01em;
   line-height: 1.25;
 }
@@ -1942,7 +1942,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #38BDF8;
+  color: var(--sky-400);
   background: rgba(0, 196, 255, 0.08);
   border: 1px solid rgba(0, 196, 255, 0.2);
   padding: 1px 5.5px;
@@ -1952,7 +1952,7 @@
 .pulseNudgeSubtext {
   font-size: 11.5px;
   font-weight: 400;
-  color: #94A3B8;
+  color: var(--slate-400);
   line-height: 1.35;
 }
 
@@ -1970,7 +1970,7 @@
   border-radius: 6px;
   background: rgba(0, 196, 255, 0.1);
   border: 1px solid rgba(0, 196, 255, 0.28);
-  color: #00C4FF;
+  color: var(--cyan-bright);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
   font-weight: 500;
@@ -1982,7 +1982,7 @@
 .pulseNudgeBtn:hover {
   background: rgba(0, 196, 255, 0.18);
   border-color: rgba(0, 196, 255, 0.45);
-  color: #38BDF8;
+  color: var(--sky-400);
   transform: translateY(-0.5px);
 }
 
@@ -2031,7 +2031,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 14px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   margin: 0;
   line-height: 1.2;
 }
@@ -2054,13 +2054,13 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #22C55E;
-  box-shadow: 0 0 6px #22C55E;
+  background: var(--green-500);
+  box-shadow: 0 0 6px var(--green-500);
 }
 
 .pulseExpandedSubtitle {
   font-size: 11.5px;
-  color: #94A3B8;
+  color: var(--slate-400);
   margin: 2px 0 0;
   line-height: 1.3;
 }
@@ -2073,7 +2073,7 @@
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #CBD5E1;
+  color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11.5px;
   font-weight: 500;
@@ -2083,7 +2083,7 @@
 
 .pulseExpandedMinimizeBtn:hover {
   background: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
+  color: var(--white);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
@@ -2092,7 +2092,7 @@
   border-radius: 6px;
   background: rgba(0, 196, 255, 0.12);
   border: 1px solid rgba(0, 196, 255, 0.3);
-  color: #38BDF8;
+  color: var(--sky-400);
   font-size: 11.5px;
   animation: sendBtnFadeIn 0.2s ease;
 }
@@ -2143,11 +2143,11 @@
 
 .pulseUserBubble {
   max-width: 80%;
-  background: linear-gradient(135deg, #034EA2 0%, #0284C7 100%);
+  background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   border: none;
   border-radius: 14px 14px 2px 14px;
   padding: 9px 14px;
-  color: #FFFFFF;
+  color: var(--white);
   font-size: 12.5px;
   line-height: 1.4;
   box-shadow: 0 4px 16px rgba(3, 78, 162, 0.35);
@@ -2158,7 +2158,7 @@
   background: transparent;
   border: none;
   padding: 2px 2px;
-  color: #E2E8F0;
+  color: var(--slate-200);
   font-size: 12.5px;
   line-height: 1.5;
 }
@@ -2187,7 +2187,7 @@
   border-radius: 6px;
   background: rgba(0, 196, 255, 0.12);
   border: 1px solid rgba(0, 196, 255, 0.3);
-  color: #38BDF8;
+  color: var(--sky-400);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11px;
   font-weight: 500;
@@ -2197,7 +2197,7 @@
 
 .pulseContextActionBtn:hover {
   background: rgba(0, 196, 255, 0.22);
-  color: #FFFFFF;
+  color: var(--white);
   border-color: rgba(0, 196, 255, 0.45);
 }
 
@@ -2218,13 +2218,13 @@
 }
 
 .pulseEmergencyActionBtn:hover {
-  background: #ED1C24;
-  color: #FFFFFF;
+  background: var(--red-emergency);
+  color: var(--white);
 }
 
 .pulseBubbleTime {
   font-size: 10px;
-  color: #64748B;
+  color: var(--slate-500);
   margin-top: 4px;
   display: block;
 }
@@ -2243,7 +2243,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #00C4FF;
+  background: var(--cyan-bright);
   animation: pulseDotBlink 1.2s infinite ease-in-out;
 }
 
@@ -2286,7 +2286,7 @@
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #CBD5E1;
+  color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11px;
   font-weight: 500;
@@ -2299,7 +2299,7 @@
 .pulseQuickChip:hover {
   background: rgba(0, 196, 255, 0.12);
   border-color: rgba(0, 196, 255, 0.35);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .pulseComposerForm {
@@ -2328,18 +2328,18 @@
   border-radius: 6px;
   background: transparent;
   border: none;
-  color: #94A3B8;
+  color: var(--slate-400);
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
 .pulseComposerAttachBtn:hover,
 .pulseComposerMicBtn:hover {
-  color: #00C4FF;
+  color: var(--cyan-bright);
 }
 
 .pulseComposerMicActive {
-  color: #ED1C24 !important;
+  color: var(--red-emergency) !important;
 }
 
 .pulseComposerInput {
@@ -2350,11 +2350,11 @@
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .pulseComposerInput::placeholder {
-  color: #64748B;
+  color: var(--slate-500);
 }
 
 .pulseComposerSendBtn {
@@ -2364,9 +2364,9 @@
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background: #034EA2;
+  background: var(--blue-brand);
   border: 1px solid rgba(0, 196, 255, 0.4);
-  color: #FFFFFF;
+  color: var(--white);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -2383,7 +2383,7 @@
 
 .pulseDisclaimerRow {
   font-size: 10px;
-  color: #64748B;
+  color: var(--slate-500);
   line-height: 1.35;
   padding: 0 4px;
 }
@@ -2454,7 +2454,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
@@ -2463,7 +2463,7 @@
 
 .pulseCuratedDocSpec {
   font-size: 10.5px;
-  color: #38BDF8;
+  color: var(--sky-400);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -2475,7 +2475,7 @@
   align-items: center;
   gap: 3px;
   font-size: 9.5px;
-  color: #94A3B8;
+  color: var(--slate-400);
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -2490,7 +2490,7 @@
 
 .pulseCuratedPinIcon {
   flex-shrink: 0;
-  color: #94A3B8;
+  color: var(--slate-400);
 }
 
 .pulseCuratedDocBottom {
@@ -2515,7 +2515,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #22C55E;
+  background: var(--green-500);
 }
 
 .pulseCuratedDocBookBtn {
@@ -2524,9 +2524,9 @@
   gap: 3px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #034EA2 0%, #0284C7 100%);
+  background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   border: 1px solid rgba(0, 196, 255, 0.35);
-  color: #FFFFFF;
+  color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 10.5px;
   font-weight: 600;
@@ -2574,7 +2574,7 @@
   padding: 12px 16px;
   background: rgba(255, 255, 255, 0.03);
   border: none;
-  color: #CBD5E1;
+  color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
   font-weight: 500;
@@ -2584,7 +2584,7 @@
 
 .buriedResultsToggle:hover {
   background: rgba(255, 255, 255, 0.07);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .buriedToggleLeft {
@@ -2594,13 +2594,13 @@
 }
 
 .buriedToggleIcon {
-  color: #38BDF8;
+  color: var(--sky-400);
   flex-shrink: 0;
 }
 
 .buriedCountBadge {
   font-size: 10.5px;
-  color: #94A3B8;
+  color: var(--slate-400);
   background: rgba(255, 255, 255, 0.06);
   padding: 2px 7px;
   border-radius: 9999px;
@@ -2612,7 +2612,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #94A3B8;
+  color: var(--slate-400);
   font-size: 11.5px;
 }
 
@@ -2632,7 +2632,7 @@
 
 /* ── State: Pulse Attached Mode ── */
 .statePulse {
-  background: #ffffff;
+  background: var(--white);
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.6);
@@ -2640,7 +2640,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 @media (max-width: 640px) {
@@ -2679,7 +2679,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748B;
+  color: var(--slate-500);
 }
 
 .relatedTagsGroup {
@@ -2705,7 +2705,7 @@
 .specPillTag:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.14);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 /* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis (Editorial Sidebar) ── */
@@ -2747,7 +2747,7 @@
 }
 
 .editorialHeaderViewAll:hover {
-  color: #38BDF8;
+  color: var(--sky-400);
   transform: translateX(1px);
 }
 
@@ -2812,7 +2812,7 @@
   font-family: var(--font-inter, "Inter", sans-serif);
   font-size: 13.5px;
   font-weight: 500;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
@@ -2858,7 +2858,7 @@
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #CBD5E1;
+  color: var(--slate-300);
   font-family: var(--font-inter, "Inter", sans-serif);
   font-size: 11.5px;
   font-weight: 400;
@@ -2870,7 +2870,7 @@
 .editorialPill:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
+  color: var(--white);
   transform: translateY(-0.5px);
 }
 
@@ -2941,7 +2941,7 @@
   gap: 8px;
   font-size: 12px;
   font-weight: 500;
-  color: #38BDF8;
+  color: var(--sky-400);
   background: rgba(3, 78, 162, 0.18);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 4px 12px;
@@ -2953,7 +2953,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #38BDF8;
+  background: var(--sky-400);
   animation: pulseDot 1.4s ease-in-out infinite;
 }
 
@@ -2987,7 +2987,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00C4FF 0%, #A855F7 100%);
+  background: linear-gradient(135deg, var(--cyan-bright) 0%, #A855F7 100%);
   box-shadow: 0 0 8px rgba(0, 196, 255, 0.7);
   animation: pulseDot 1.4s ease-in-out infinite;
   flex-shrink: 0;
@@ -2996,7 +2996,7 @@
 .analyzingBannerText {
   font-size: 13px;
   font-weight: 500;
-  color: #38BDF8;
+  color: var(--sky-400);
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
@@ -3011,7 +3011,7 @@
 
 .themeWhite .analyzingBannerText,
 [data-search-theme="white"] .analyzingBannerText {
-  color: #034EA2 !important;
+  color: var(--blue-brand) !important;
 }
 
 @keyframes pulseDot {
@@ -3521,7 +3521,7 @@
   font-size: 11.5px;
   font-weight: 600;
   line-height: 1.25;
-  color: #FFFFFF;
+  color: var(--white);
   text-align: center;
   letter-spacing: -0.01em;
   white-space: normal;
@@ -3570,7 +3570,7 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
+  color: var(--white);
   cursor: pointer;
   transition: all 0.18s ease;
 }
@@ -3595,7 +3595,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
@@ -3607,7 +3607,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #22C55E;
+  color: var(--green-500);
   background: rgba(34, 197, 94, 0.14);
   border: 1px solid rgba(34, 197, 94, 0.3);
   padding: 2px 7px;
@@ -3619,8 +3619,8 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #22C55E;
-  box-shadow: 0 0 6px #22C55E;
+  background: var(--green-500);
+  box-shadow: 0 0 6px var(--green-500);
 }
 
 /* ── Chat Interface (Starts below Header with clear padding) ── */
@@ -3678,13 +3678,13 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: #034EA2;
+  color: var(--blue-brand);
   line-height: 1.35;
 }
 
 .pulseQueryTime {
   font-size: 10px;
-  color: #0284C7;
+  color: var(--sky-600);
   font-weight: 500;
 }
 
@@ -3706,7 +3706,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.4;
   letter-spacing: -0.01em;
 }
@@ -3715,7 +3715,7 @@
   display: inline-block;
   width: 2px;
   height: 15px;
-  background: #00C4FF;
+  background: var(--cyan-bright);
   margin-left: 3px;
   vertical-align: middle;
   border-radius: 1px;
@@ -3736,7 +3736,7 @@
   padding: 6px 14px;
   border-radius: 9999px;
   font-size: 13px;
-  color: #CBD5E1;
+  color: var(--slate-300);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -3750,7 +3750,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #00C4FF;
+  background: var(--cyan-bright);
   animation: pulseDotBounce 1.2s infinite ease-in-out both;
 }
 
@@ -3935,7 +3935,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12.5px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   line-height: 1.25;
   margin: 0;
   white-space: nowrap;
@@ -3946,7 +3946,7 @@
 .pulseDocSpecialty {
   font-size: 11px;
   font-weight: 500;
-  color: #38BDF8;
+  color: var(--sky-400);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3980,8 +3980,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #FFFFFF;
-  color: #034EA2;
+  background: var(--white);
+  color: var(--blue-brand);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 11.5px;
   font-weight: 600;
@@ -4005,8 +4005,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #2563EB;
-  color: #FFFFFF;
+  background: var(--blue-600);
+  color: var(--white);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 11.5px;
   font-weight: 600;
@@ -4093,20 +4093,20 @@
 }
 
 .pulseTestIcon {
-  color: #38BDF8;
+  color: var(--sky-400);
   margin-bottom: 4px;
 }
 
 .pulseTestTitle {
   font-size: 13px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--white);
   margin: 0;
 }
 
 .pulseTestDesc {
   font-size: 11px;
-  color: #94A3B8;
+  color: var(--slate-400);
   line-height: 1.35;
   margin: 0;
   flex: 1;
@@ -4115,7 +4115,7 @@
 .pulseTestBadge {
   font-size: 10px;
   font-weight: 600;
-  color: #38BDF8;
+  color: var(--sky-400);
   background: rgba(56, 189, 248, 0.12);
   border: 1px solid rgba(56, 189, 248, 0.25);
   padding: 3px 8px;
@@ -4137,7 +4137,7 @@
   gap: 6px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94A3B8;
+  color: var(--slate-400);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -4151,7 +4151,7 @@
 .pulseChip:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.22);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .pulseChipActive {
@@ -4182,7 +4182,7 @@
 .pulseInputAttachBtn {
   background: transparent;
   border: none;
-  color: #94A3B8;
+  color: var(--slate-400);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -4192,7 +4192,7 @@
 }
 
 .pulseInputAttachBtn:hover {
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .pulseTextInput {
@@ -4200,20 +4200,20 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #FFFFFF;
+  color: var(--white);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 13px;
   font-weight: 400;
 }
 
 .pulseTextInput::placeholder {
-  color: #64748B;
+  color: var(--slate-500);
 }
 
 .pulseMicBtn {
   background: transparent;
   border: none;
-  color: #94A3B8;
+  color: var(--slate-400);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -4224,16 +4224,16 @@
 
 .pulseMicBtn:hover,
 .pulseMicBtnActive {
-  color: #38BDF8;
+  color: var(--sky-400);
 }
 
 .pulseSendBtn {
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: #2563EB;
+  background: var(--blue-600);
   border: none;
-  color: #FFFFFF;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4254,7 +4254,7 @@
 .themeWhite.stateActive,
 .themeWhite .stateActive,
 [data-search-theme="white"] .stateActive {
-  background: #FFFFFF !important;
+  background: var(--white) !important;
   border: 1px solid rgba(226, 232, 240, 0.9) !important;
   box-shadow: 
     0 24px 60px -12px rgba(0, 0, 0, 0.14),
@@ -4272,44 +4272,44 @@
 
 .themeWhite .activeTextInput,
 [data-search-theme="white"] .activeTextInput {
-  color: #0F172A !important;
-  caret-color: #0B5DF4 !important;
+  color: var(--slate-900) !important;
+  caret-color: var(--blue-vivid) !important;
 }
 
 .themeWhite .activeTextInput::placeholder,
 [data-search-theme="white"] .activeTextInput::placeholder {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 /* Standalone Icon Buttons (Paperclip attachment & Microphone) */
 .themeWhite .standaloneIconBtn,
 [data-search-theme="white"] .standaloneIconBtn {
-  color: #475569 !important;
+  color: var(--slate-600) !important;
   background: transparent !important;
 }
 
 .themeWhite .standaloneIconBtn:hover,
 [data-search-theme="white"] .standaloneIconBtn:hover {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
   background: rgba(15, 23, 42, 0.06) !important;
 }
 
 .themeWhite .standaloneIconBtn:focus-visible,
 [data-search-theme="white"] .standaloneIconBtn:focus-visible {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
   background: rgba(15, 23, 42, 0.08) !important;
 }
 
 /* Submit Arrow Button */
 .themeWhite .submitArrowBtn,
 [data-search-theme="white"] .submitArrowBtn {
-  background: #0B5DF4 !important;
-  color: #FFFFFF !important;
+  background: var(--blue-vivid) !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .submitArrowBtn:hover,
 [data-search-theme="white"] .submitArrowBtn:hover {
-  background: #0446B8 !important;
+  background: var(--blue-800) !important;
   transform: translateY(-1px) scale(1.04) !important;
 }
 
@@ -4337,7 +4337,7 @@
 .landingContainer .inlineActionBtn:hover,
 .themeWhite .stateLanding .inlineActionBtn:hover,
 [data-search-theme="white"] .stateLanding .inlineActionBtn:hover {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
   background: rgba(255, 255, 255, 0.12) !important;
 }
 
@@ -4345,41 +4345,41 @@
 .landingContainer .inlineActionBtn:hover .inlineActionIcon,
 .themeWhite .stateLanding .inlineActionBtn:hover .inlineActionIcon,
 [data-search-theme="white"] .stateLanding .inlineActionBtn:hover .inlineActionIcon {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 /* Quick Actions in Active Modal (White Mode only) */
 .themeWhite .stateActive .inlineActionBtn,
 [data-search-theme="white"] .stateActive .inlineActionBtn {
-  color: #334155 !important;
+  color: var(--slate-700) !important;
   font-weight: 500 !important;
 }
 
 .themeWhite .stateActive .inlineActionBtn:hover,
 [data-search-theme="white"] .stateActive .inlineActionBtn:hover {
   background: rgba(11, 93, 244, 0.08) !important;
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .stateActive .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionIcon {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .stateActive .inlineActionBtn:hover .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionBtn:hover .inlineActionIcon {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .stateActive .inlineActionBtnActive,
 [data-search-theme="white"] .stateActive .inlineActionBtnActive {
   background: rgba(11, 93, 244, 0.10) !important;
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .stateActive .inlineActionBtnActive .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionBtnActive .inlineActionIcon {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 /* Location Selector (White Mode) */
@@ -4387,52 +4387,52 @@
 [data-search-theme="white"] .locationPill {
   background: rgba(15, 23, 42, 0.04) !important;
   border: 1px solid rgba(203, 213, 225, 0.8) !important;
-  color: #1E293B !important;
+  color: var(--slate-800) !important;
   font-weight: 500 !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 .themeWhite .locationPill:hover,
 [data-search-theme="white"] .locationPill:hover {
-  background: #FFFFFF !important;
-  border-color: #94A3B8 !important;
-  color: #0F172A !important;
+  background: var(--white) !important;
+  border-color: var(--slate-400) !important;
+  color: var(--slate-900) !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
 }
 
 .themeWhite .locationPinIcon,
 [data-search-theme="white"] .locationPinIcon {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
   opacity: 1 !important;
 }
 
 .themeWhite .locationMenu,
 [data-search-theme="white"] .locationMenu {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
 }
 
 .themeWhite .locationMenuItem,
 [data-search-theme="white"] .locationMenuItem {
-  color: #1E293B !important;
+  color: var(--slate-800) !important;
 }
 
 .themeWhite .locationMenuItem:hover,
 [data-search-theme="white"] .locationMenuItem:hover {
-  background: #F8FAFC !important;
-  color: #0F172A !important;
+  background: var(--slate-50) !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .locationMenuItemSelected,
 [data-search-theme="white"] .locationMenuItemSelected {
   background: #EFF6FF !important;
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .locationCurrentAction,
 [data-search-theme="white"] .locationCurrentAction {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
   background: #EFF6FF !important;
   border: 1px solid #BFDBFE !important;
 }
@@ -4444,84 +4444,84 @@
 
 .themeWhite .locationNavIcon,
 [data-search-theme="white"] .locationNavIcon {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .locationDetectingSpinner,
 [data-search-theme="white"] .locationDetectingSpinner {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .locationSearchWrapper,
 [data-search-theme="white"] .locationSearchWrapper {
-  background: #F1F5F9 !important;
-  border: 1px solid #CBD5E1 !important;
+  background: var(--slate-100) !important;
+  border: 1px solid var(--slate-300) !important;
 }
 
 .themeWhite .locationSearchWrapper:focus-within,
 [data-search-theme="white"] .locationSearchWrapper:focus-within {
-  border-color: #3B82F6 !important;
-  background: #FFFFFF !important;
+  border-color: var(--blue-500) !important;
+  background: var(--white) !important;
 }
 
 .themeWhite .locationSearchInput,
 [data-search-theme="white"] .locationSearchInput {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .locationSearchInput::placeholder,
 [data-search-theme="white"] .locationSearchInput::placeholder {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .locationSearchIcon,
 [data-search-theme="white"] .locationSearchIcon {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .locationMenuHeader,
 [data-search-theme="white"] .locationMenuHeader {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .locationDivider,
 [data-search-theme="white"] .locationDivider {
-  background: #E2E8F0 !important;
+  background: var(--slate-200) !important;
 }
 
 .themeWhite .locationScrollList::-webkit-scrollbar-thumb,
 [data-search-theme="white"] .locationScrollList::-webkit-scrollbar-thumb {
-  background: #CBD5E1 !important;
+  background: var(--slate-300) !important;
 }
 
 .themeWhite .ghostSuffix,
 [data-search-theme="white"] .ghostSuffix {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .tabBadge,
 [data-search-theme="white"] .tabBadge {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #64748B !important;
+  background: var(--slate-100) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .closeBtn,
 [data-search-theme="white"] .closeBtn {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #475569 !important;
+  background: var(--slate-100) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-600) !important;
 }
 
 .themeWhite .closeBtn:hover,
 [data-search-theme="white"] .closeBtn:hover {
-  background: #E2E8F0 !important;
-  color: #0F172A !important;
+  background: var(--slate-200) !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .emptyPromptSub,
 [data-search-theme="white"] .emptyPromptSub {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
   font-size: 13px !important;
   line-height: 1.5 !important;
 }
@@ -4537,7 +4537,7 @@
 .stateLanding .standaloneIconBtn:hover,
 .themeWhite .stateLanding .standaloneIconBtn:hover,
 [data-search-theme="white"] .stateLanding .standaloneIconBtn:hover {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
   background: rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -4552,7 +4552,7 @@
 .stateLanding .locationPinIcon,
 .themeWhite .stateLanding .locationPinIcon,
 [data-search-theme="white"] .stateLanding .locationPinIcon {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .stateLanding .landingTextAction,
@@ -4561,13 +4561,13 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .stateLanding .landingTextAction span,
 .themeWhite .stateLanding .landingTextAction span,
 [data-search-theme="white"] .stateLanding .landingTextAction span {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .stateLanding .landingTextAction svg,
@@ -4578,53 +4578,53 @@
 
 .themeWhite .suggestionsHeader,
 [data-search-theme="white"] .suggestionsHeader {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .suggestionItem,
 [data-search-theme="white"] .suggestionItem {
-  color: #1E293B !important;
+  color: var(--slate-800) !important;
 }
 
 .themeWhite .suggestionItem:hover,
 .themeWhite .suggestionItemActive,
 [data-search-theme="white"] .suggestionItem:hover,
 [data-search-theme="white"] .suggestionItemActive {
-  background: #F8FAFC !important;
+  background: var(--slate-50) !important;
 }
 
 .themeWhite .suggestionArrow,
 [data-search-theme="white"] .suggestionArrow {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .suggestionText,
 [data-search-theme="white"] .suggestionText {
-  color: #1E293B !important;
+  color: var(--slate-800) !important;
 }
 
 .themeWhite .pressEnterHint,
 [data-search-theme="white"] .pressEnterHint {
-  color: #94A3B8 !important;
-  background: #F1F5F9 !important;
+  color: var(--slate-400) !important;
+  background: var(--slate-100) !important;
 }
 
 .themeWhite .pulseStatusRow,
 [data-search-theme="white"] .pulseStatusRow {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .sparkleIcon,
 [data-search-theme="white"] .sparkleIcon {
-  color: #EC4899 !important;
+  color: var(--pink-500) !important;
 }
 
 /* ── 3. Search Results Canvas (White Mode) ── */
 .themeWhite.stateResults,
 .themeWhite .stateResults,
 [data-search-theme="white"] .stateResults {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.14) !important;
 }
 
@@ -4647,45 +4647,45 @@
 
 .themeWhite .resultsQuerySearchIcon,
 [data-search-theme="white"] .resultsQuerySearchIcon {
-  color: #3B82F6 !important;
+  color: var(--blue-500) !important;
 }
 
 .themeWhite .resultsQueryInput,
 [data-search-theme="white"] .resultsQueryInput {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
   background: transparent !important;
   border: none !important;
   outline: none !important;
   font-weight: 500 !important;
-  caret-color: #0B5DF4 !important;
+  caret-color: var(--blue-vivid) !important;
 }
 
 .themeWhite .resultsQueryInput::placeholder,
 [data-search-theme="white"] .resultsQueryInput::placeholder {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .querySendBtn,
 [data-search-theme="white"] .querySendBtn {
-  background: #0B5DF4 !important;
-  color: #FFFFFF !important;
+  background: var(--blue-vivid) !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .sectionEyebrowTitle,
 [data-search-theme="white"] .sectionEyebrowTitle {
-  color: #475569 !important;
+  color: var(--slate-600) !important;
   font-weight: 600 !important;
   letter-spacing: 0.07em !important;
 }
 
 .themeWhite .primaryProximityNotice,
 [data-search-theme="white"] .primaryProximityNotice {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .redDivider,
 [data-search-theme="white"] .redDivider {
-  background: #3B82F6 !important;
+  background: var(--blue-500) !important;
   box-shadow: none !important;
   height: 2px !important;
   margin: 8px 0 20px !important;
@@ -4708,12 +4708,12 @@
 
 .themeWhite .refDocName,
 [data-search-theme="white"] .refDocName {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .refDocSpecialty,
 [data-search-theme="white"] .refDocSpecialty {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .refDocExpRow,
@@ -4728,21 +4728,21 @@
 
 .themeWhite .refBookBtnWhite,
 [data-search-theme="white"] .refBookBtnWhite {
-  background: #FFFFFF !important;
-  color: #0B5DF4 !important;
+  background: var(--white) !important;
+  color: var(--blue-vivid) !important;
   border-radius: 8px !important;
 }
 
 .themeWhite .refBookBtnWhite:hover,
 [data-search-theme="white"] .refBookBtnWhite:hover {
   background: #F3F7FC !important;
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .refBookBtn,
 [data-search-theme="white"] .refBookBtn {
   background: #1D68FE !important;
-  color: #FFFFFF !important;
+  color: var(--white) !important;
   border-radius: 10px !important;
 }
 
@@ -4753,19 +4753,19 @@
 
 .themeWhite .refViewAllLink,
 [data-search-theme="white"] .refViewAllLink {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .refViewAllLink:hover,
 [data-search-theme="white"] .refViewAllLink:hover {
-  color: #0446B8 !important;
+  color: var(--blue-800) !important;
 }
 
 /* Results Pulse Recommendation Row (White Mode - Clean, solid, no rainbow/pink gradient) */
 .themeWhite .refPulseRow,
 [data-search-theme="white"] .refPulseRow {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   border-radius: 16px !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
   margin-top: 14px !important;
@@ -4775,40 +4775,40 @@
 
 .themeWhite .refPulseRow:hover,
 [data-search-theme="white"] .refPulseRow:hover {
-  background: #FFFFFF !important;
-  border-color: #CBD5E1 !important;
+  background: var(--white) !important;
+  border-color: var(--slate-300) !important;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07) !important;
 }
 
 .themeWhite .refPulseIconBox,
 [data-search-theme="white"] .refPulseIconBox {
-  background: #F8FAFC !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--slate-50) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
 }
 
 .themeWhite .refPulseTitle,
 [data-search-theme="white"] .refPulseTitle {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .refPulseBadge,
 [data-search-theme="white"] .refPulseBadge {
   background: rgba(237, 28, 36, 0.08) !important;
-  color: #ED1C24 !important;
+  color: var(--red-emergency) !important;
   border: 1px solid rgba(237, 28, 36, 0.20) !important;
 }
 
 .themeWhite .refPulseSubtext,
 [data-search-theme="white"] .refPulseSubtext {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .refPulseBtn,
 [data-search-theme="white"] .refPulseBtn {
-  background: #FFFFFF !important;
+  background: var(--white) !important;
   border: 1px solid rgba(203, 213, 225, 0.85) !important;
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
   font-weight: 500 !important;
   border-radius: 8px !important;
   padding: 8px 18px !important;
@@ -4817,9 +4817,9 @@
 
 .themeWhite .refPulseBtn:hover,
 [data-search-theme="white"] .refPulseBtn:hover {
-  background: #F8FAFC !important;
-  border-color: #94A3B8 !important;
-  color: #0F172A !important;
+  background: var(--slate-50) !important;
+  border-color: var(--slate-400) !important;
+  color: var(--slate-900) !important;
 }
 
 /* Right column Editorial / Tertiary items (White Mode - Clean unboxed without row/section lines) */
@@ -4830,65 +4830,65 @@
 
 .themeWhite .editorialItem:hover,
 [data-search-theme="white"] .editorialItem:hover {
-  background: #F8FAFC !important;
+  background: var(--slate-50) !important;
 }
 
 .themeWhite .editorialIconMono,
 [data-search-theme="white"] .editorialIconMono {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .editorialItem:hover .editorialIconMono,
 [data-search-theme="white"] .editorialItem:hover .editorialIconMono {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .editorialItemTitle,
 [data-search-theme="white"] .editorialItemTitle {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .editorialItemSub,
 [data-search-theme="white"] .editorialItemSub {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .editorialChevron,
 [data-search-theme="white"] .editorialChevron {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .editorialItem:hover .editorialChevron,
 [data-search-theme="white"] .editorialItem:hover .editorialChevron {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .editorialViewMoreLink,
 [data-search-theme="white"] .editorialViewMoreLink,
 .themeWhite .editorialHeaderViewAll,
 [data-search-theme="white"] .editorialHeaderViewAll {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .editorialViewMoreLink:hover,
 [data-search-theme="white"] .editorialViewMoreLink:hover,
 .themeWhite .editorialHeaderViewAll:hover,
 [data-search-theme="white"] .editorialHeaderViewAll:hover {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .editorialPill,
 [data-search-theme="white"] .editorialPill {
-  background: #F1F5F9 !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #334155 !important;
+  background: var(--slate-100) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-700) !important;
 }
 
 .themeWhite .editorialPill:hover,
 [data-search-theme="white"] .editorialPill:hover {
   background: #EFF6FF !important;
   border-color: #93C5FD !important;
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 /* ── 4. Pulse AI View (Screenshot 1 Match in White Mode) ── */
@@ -4902,7 +4902,7 @@
 
 .themeWhite .pulseViewContainer,
 [data-search-theme="white"] .pulseViewContainer {
-  background: linear-gradient(145deg, #F0F7FF 0%, #FFFFFF 46%, #FFF4F5 100%) !important;
+  background: linear-gradient(145deg, #F0F7FF 0%, var(--white) 46%, #FFF4F5 100%) !important;
   border: 1px solid rgba(219, 234, 254, 0.9) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -4911,16 +4911,16 @@
 
 .themeWhite .pulseBackBtn,
 [data-search-theme="white"] .pulseBackBtn {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #1E293B !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-800) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
 .themeWhite .pulseBackBtn:hover,
 [data-search-theme="white"] .pulseBackBtn:hover {
-  background: #F8FAFC !important;
-  border-color: #CBD5E1 !important;
+  background: var(--slate-50) !important;
+  border-color: var(--slate-300) !important;
 }
 
 .themeWhite .pulseHeaderIconBox,
@@ -4932,7 +4932,7 @@
 
 .themeWhite .pulseHeaderTitle,
 [data-search-theme="white"] .pulseHeaderTitle {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseLiveBadge,
@@ -4957,12 +4957,12 @@
 
 .themeWhite .pulseQueryText,
 [data-search-theme="white"] .pulseQueryText {
-  color: #034EA2 !important;
+  color: var(--blue-brand) !important;
 }
 
 .themeWhite .pulseQueryTime,
 [data-search-theme="white"] .pulseQueryTime {
-  color: #0284C7 !important;
+  color: var(--sky-600) !important;
 }
 
 .themeWhite .pulseResponseGlyph,
@@ -4973,18 +4973,18 @@
 
 .themeWhite .pulseResponseText,
 [data-search-theme="white"] .pulseResponseText {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseChipsSectionLabel,
 [data-search-theme="white"] .pulseChipsSectionLabel {
-  color: #475569 !important;
+  color: var(--slate-600) !important;
 }
 
 .themeWhite .pulseDoctorSkeletonCard,
 [data-search-theme="white"] .pulseDoctorSkeletonCard {
-  background: #F8FAFC !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--slate-50) !important;
+  border: 1px solid var(--slate-200) !important;
 }
 
 .themeWhite .pulseSkeletonShimmer,
@@ -4999,31 +4999,31 @@
 
 .themeWhite .pulseSkeletonBar,
 [data-search-theme="white"] .pulseSkeletonBar {
-  background: #E2E8F0 !important;
+  background: var(--slate-200) !important;
 }
 
 .themeWhite .pulseSkeletonBarBtn,
 [data-search-theme="white"] .pulseSkeletonBarBtn {
-  background: #CBD5E1 !important;
+  background: var(--slate-300) !important;
 }
 
 .themeWhite .pulseThinkingPill,
 [data-search-theme="white"] .pulseThinkingPill {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #475569 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-600) !important;
 }
 
 .themeWhite .pulseDoctorCard,
 [data-search-theme="white"] .pulseDoctorCard {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
 }
 
 .themeWhite .pulseDoctorCard:hover,
 [data-search-theme="white"] .pulseDoctorCard:hover {
-  border-color: #CBD5E1 !important;
+  border-color: var(--slate-300) !important;
   box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -5041,12 +5041,12 @@
 
 .themeWhite .pulseDocName,
 [data-search-theme="white"] .pulseDocName {
-  color: #FFFFFF !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .pulseDocSpecialty,
 [data-search-theme="white"] .pulseDocSpecialty {
-  color: #38BDF8 !important;
+  color: var(--sky-400) !important;
 }
 
 .themeWhite .pulseDocHospital,
@@ -5066,42 +5066,42 @@
 
 .themeWhite .pulseBookBtn,
 [data-search-theme="white"] .pulseBookBtn {
-  background: #0B5DF4 !important;
-  color: #FFFFFF !important;
+  background: var(--blue-vivid) !important;
+  color: var(--white) !important;
 }
 
 .themeWhite .pulseBookBtn:hover,
 [data-search-theme="white"] .pulseBookBtn:hover {
-  background: #0446B8 !important;
+  background: var(--blue-800) !important;
 }
 
 .themeWhite .pulseChip,
 [data-search-theme="white"] .pulseChip {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  color: #334155 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
+  color: var(--slate-700) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
 }
 
 .themeWhite .pulseChip:hover,
 [data-search-theme="white"] .pulseChip:hover {
-  background: #F8FAFC !important;
-  border-color: #CBD5E1 !important;
-  color: #0F172A !important;
+  background: var(--slate-50) !important;
+  border-color: var(--slate-300) !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseChipActive,
 [data-search-theme="white"] .pulseChipActive {
   background: #EFF6FF !important;
-  border-color: #3B82F6 !important;
+  border-color: var(--blue-500) !important;
   color: #1D4ED8 !important;
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
 }
 
 .themeWhite .pulseInputBar,
 [data-search-theme="white"] .pulseInputBar {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -5113,62 +5113,62 @@
 
 .themeWhite .pulseInputAttachBtn,
 [data-search-theme="white"] .pulseInputAttachBtn {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .pulseInputAttachBtn:hover,
 [data-search-theme="white"] .pulseInputAttachBtn:hover {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseTextInput,
 [data-search-theme="white"] .pulseTextInput {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseTextInput::placeholder,
 [data-search-theme="white"] .pulseTextInput::placeholder {
-  color: #94A3B8 !important;
+  color: var(--slate-400) !important;
 }
 
 .themeWhite .pulseMicBtn,
 [data-search-theme="white"] .pulseMicBtn {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 .themeWhite .pulseMicBtn:hover,
 [data-search-theme="white"] .pulseMicBtn:hover {
-  color: #0B5DF4 !important;
+  color: var(--blue-vivid) !important;
 }
 
 .themeWhite .pulseSendBtn,
 [data-search-theme="white"] .pulseSendBtn {
-  background: #0B5DF4 !important;
-  color: #FFFFFF !important;
+  background: var(--blue-vivid) !important;
+  color: var(--white) !important;
   box-shadow: 0 2px 8px rgba(11, 93, 244, 0.3) !important;
 }
 
 .themeWhite .pulseSendBtn:hover,
 [data-search-theme="white"] .pulseSendBtn:hover {
-  background: #0446B8 !important;
+  background: var(--blue-800) !important;
 }
 
 /* Diagnostic test cards in White Mode */
 .themeWhite .pulseTestCard,
 [data-search-theme="white"] .pulseTestCard {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
+  background: var(--white) !important;
+  border: 1px solid var(--slate-200) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
 .themeWhite .pulseTestTitle,
 [data-search-theme="white"] .pulseTestTitle {
-  color: #0F172A !important;
+  color: var(--slate-900) !important;
 }
 
 .themeWhite .pulseTestDesc,
 [data-search-theme="white"] .pulseTestDesc {
-  color: #64748B !important;
+  color: var(--slate-500) !important;
 }
 
 /* ── Soft Feathered Random Diffused Motion Glow Behind Popup Card ── */
@@ -5376,7 +5376,7 @@
   justify-content: center;
   gap: 7px;
   padding: 13px 6px;
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   background: transparent;
   width: 100%;
@@ -5440,7 +5440,7 @@
   justify-content: center;
   gap: 7px;
   padding: 13px 6px;
-  color: #fff;
+  color: var(--white);
   text-decoration: none;
   background: transparent;
   width: 100%;

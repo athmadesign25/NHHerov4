@@ -1,31 +1,113 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────────────── */
+/*
+ * Two layers, deliberately:
+ *
+ *   PRIMITIVES  raw values, named for what they ARE (--slate-500).
+ *               Nothing in a component should reference a raw hex again.
+ *   SEMANTIC    named for what they are FOR (--color-border), pointing at
+ *               a primitive. This is what components should prefer.
+ *
+ * Every primitive below is the exact value already in use somewhere in the
+ * codebase — this layer was extracted, not invented, so adding it changed
+ * no pixels. The near-duplicates it exposes (see the notes) are real and
+ * deliberate to leave for now: naming them is what makes them fixable in
+ * one place later.
+ */
 :root {
-  --color-primary: #034EA2;
+  /* ── PRIMITIVES ──────────────────────────────────────────────────────── */
+
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Neutral ramp. These ten are an exact match for a standard slate scale,
+     so they were already a coherent system — just an unnamed one. */
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-250: #cfd8e5;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-450: #6a7890;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  /* Off-ramp greys. --grey-600 is NOT a slate step: it sits one notch from
+     --slate-600 and the two are used 85 times between them for the same
+     job. Merging them is a judgement call, so both keep a name for now. */
+  --grey-100: #f7f7f7;
+  --grey-500: #666666;
+  --grey-600: #4a5568;
+
+  /* Brand blue and its dark steps. */
+  --blue-brand: #034EA2;
+  --blue-700: #0f58b8;
+  --blue-800: #0446b8;
+
+  /* Accent blues. Five distinct hues with no rule between them — the
+     largest single inconsistency the audit turned up. */
+  --blue-vivid: #0b5df4;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --cyan-bright: #00c4ff;
+  --sky-400: #38bdf8;
+  --sky-600: #0284c7;
+
+  /* Pale blue tints. */
+  --blue-tint-50: #eef2f7;
+  --blue-tint-100: #ebf3fc;
+
+  /* Emergency red and its supporting steps. */
+  --red-emergency: #ED1C24;
+  --red-emergency-tint: #fef5f5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-700: #c8151c;
+
+  /* Dark surfaces used by the navy sections and the footer. */
+  --navy-800: #223148;
+  --navy-900: #031224;
+  --navy-ink: #1a1a2e;
+
+  /* Support hues. */
+  --green-500: #22C55E;
+  --emerald-500: #10b981;
+  --teal-600: #0d9488;
+  --amber-500: #F59E0B;
+  --violet-400: #a78bfa;
+  --violet-600: #7c3aed;
+  --pink-500: #ec4899;
+
+  /* ── SEMANTIC ────────────────────────────────────────────────────────── */
+
+  --color-primary: var(--blue-brand);
   --color-primary-dark: #023070;
   --color-primary-light: #EEF3FA;
   --color-primary-mid: #1565C0;
   --color-primary-tint: rgba(3, 78, 162, 0.08);
   --color-primary-tint-hover: rgba(3, 78, 162, 0.15);
 
-  --color-emergency: #ED1C24;
+  --color-emergency: var(--red-emergency);
   --color-emergency-light: #FFF0F0;
 
-  --color-text: #1A1A2E;
-  --color-text-secondary: #4A5568;
+  --color-text: var(--navy-ink);
+  --color-text-secondary: var(--grey-600);
   --color-text-muted: #718096;
-  --color-text-inverse: #FFFFFF;
+  --color-text-inverse: var(--white);
 
   --color-bg: #fafcfc;
   --color-bg-alt: #F3F5F9;
-  --color-bg-card: #FFFFFF;
+  --color-bg-card: var(--white);
 
-  --color-border: #E2E8F0;
-  --color-border-light: #EEF2F7;
+  --color-border: var(--slate-200);
+  --color-border-light: var(--blue-tint-50);
 
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
+  --color-success: var(--green-500);
+  --color-warning: var(--amber-500);
 
   /* Typography */
   --font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;

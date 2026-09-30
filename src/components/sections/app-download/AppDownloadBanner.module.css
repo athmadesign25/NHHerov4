@@ -35,8 +35,8 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
 }
 
 /* justify-content:flex-end (not space-between) packs topTextBlock and
@@ -90,7 +90,7 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #034EA2;
+  color: var(--blue-brand);
   margin-bottom: 12px;
   text-transform: uppercase;
   text-align: center;
@@ -99,7 +99,7 @@
 .eyebrowLine {
   width: 24px;
   height: 2px;
-  background: var(--color-emergency, #ED1C24);
+  background: var(--color-emergency, var(--red-emergency));
   border-radius: 2px;
   display: block;
 }
@@ -107,7 +107,7 @@
 .title {
   font-size: clamp(30px, 4vw, 52px);
   font-weight: 800;
-  color: #0F172A;
+  color: var(--slate-900);
   line-height: 1.15;
   letter-spacing: -0.02em;
   /* No margin-bottom here — the title-to-pill distance is fully owned by
@@ -131,7 +131,7 @@
    spans, just one element spanning the full phrase). */
 .titleHighlightBase {
   display: inline-block;
-  color: var(--color-emergency, #ED1C24);
+  color: var(--color-emergency, var(--red-emergency));
 }
 
 .titleHighlightWrap {
@@ -151,8 +151,8 @@
   inset: 0;
   display: inline-block;
   white-space: nowrap;
-  color: var(--color-emergency, #ED1C24);
-  background-image: linear-gradient(90deg, #ED1C24 0%, #A8151B 50%, #ED1C24 100%);
+  color: var(--color-emergency, var(--red-emergency));
+  background-image: linear-gradient(90deg, var(--red-emergency) 0%, #A8151B 50%, var(--red-emergency) 100%);
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
@@ -189,7 +189,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(173deg, #4582F3 5.22%, #0B5DF4 118.69%);
+  background: linear-gradient(173deg, #4582F3 5.22%, var(--blue-vivid) 118.69%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,11 +197,11 @@
 }
 
 .pillIcon {
-  color: #ffffff;
+  color: var(--white);
 }
 
 .pillText {
-  color: #0F172A;
+  color: var(--slate-900);
   font-size: 17px;
   font-weight: 600;
   line-height: 1.2;
@@ -326,7 +326,7 @@
 }
 
 .trustLabel {
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
@@ -335,7 +335,7 @@
 }
 
 .trustMainText {
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
@@ -344,7 +344,7 @@
 }
 
 .trustSubtext {
-  color: #64748B;
+  color: var(--slate-500);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
@@ -358,7 +358,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: center;
   line-height: normal;
 }
@@ -464,7 +464,7 @@
   .storeBadge {
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    background: #000;
+    background: var(--black);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
