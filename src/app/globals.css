@@ -36,12 +36,12 @@
   --slate-800: #1e293b;
   --slate-900: #0f172a;
 
-  /* Off-ramp greys. --grey-600 is NOT a slate step: it sits one notch from
-     --slate-600 and the two are used 85 times between them for the same
-     job. Merging them is a judgement call, so both keep a name for now. */
+  /* Off-ramp greys — neutral rather than blue-tinted, so they are genuinely
+     a separate family from the slate ramp above rather than near-misses of
+     it. (A third, #4a5568, used to live here: it sat one channel-step from
+     --slate-600 and did the same job in 52 places, so it was merged away.) */
   --grey-100: #f7f7f7;
   --grey-500: #666666;
-  --grey-600: #4a5568;
 
   /* Brand blue and its dark steps.
      Held as bare channels so the 62 places that need it at some opacity can
@@ -102,7 +102,7 @@
   --color-emergency-light: #FFF0F0;
 
   --color-text: var(--navy-ink);
-  --color-text-secondary: var(--grey-600);
+  --color-text-secondary: var(--slate-600);
   --color-text-muted: #718096;
   --color-text-inverse: var(--white);
 
