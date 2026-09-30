@@ -383,7 +383,7 @@ export default function Navbar() {
 
           </ul>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3, 12px)" }} className={styles.desktopOnly}>
+        <div style={{ display: "flex", alignItems: "center", gap: "24px" }} className={styles.desktopOnly}>
           <AnimatePresence>
             {searchDocked && (
               <motion.button
@@ -401,6 +401,27 @@ export default function Navbar() {
               </motion.button>
             )}
           </AnimatePresence>
+
+          {/* Narayana One Health — sibling-brand cross-link. A stacked
+              three-tier lockup, so it is sized by its own legibility rather
+              than to the 35px button boxes beside it: matched to their
+              height, the "Narayana" wordmark drops to about a 5px cap and
+              stops reading as words. */}
+          <a
+            href="https://www.narayanaone.health/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.oneHealthLink} ${isOverLightBackground ? "" : styles.oneHealthLinkOnDark}`}
+            aria-label="Narayana One Health (opens in a new tab)"
+          >
+            <Image
+              src="/narayana_one_health_logo.svg"
+              alt="Narayana One Health"
+              width={91}
+              height={100}
+              className={styles.oneHealthLogo}
+            />
+          </a>
 
           <Link
             href="/emergency"
@@ -640,14 +661,9 @@ export default function Navbar() {
                 </motion.button>
               )}
             </AnimatePresence>
-            <button 
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              className={styles.mobileSearchBtn}
-              aria-label="Search doctors, specialities, or hospitals"
-            >
-              <Search size={20} strokeWidth={2} />
-            </button>
+            {/* No search affordance in the mobile bar: the hero composer
+                docks into the bottom action bar on scroll and carries search
+                from there, so a second entry point up here was a duplicate. */}
 
             {/* Apple-Style Morphing 2-Line Animated Hamburger Button */}
             <button 
@@ -743,6 +759,27 @@ export default function Navbar() {
                           <Phone size={18} color="#f87171" />
                           <span className={styles.coreNavTitle} style={{ color: "#f87171" }}>24/7 Emergency (1800 309 0309)</span>
                         </div>
+                      </a>
+
+                      {/* Carries no title text: the lockup spells the brand
+                          out itself, so a "Narayana One Health" label beside
+                          it would just say the same thing twice. */}
+                      <a
+                        href="https://www.narayanaone.health/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`${styles.coreNavLink} ${styles.oneHealthNavRow}`}
+                        aria-label="Narayana One Health (opens in a new tab)"
+                      >
+                        <Image
+                          src="/narayana_one_health_logo.svg"
+                          alt="Narayana One Health"
+                          width={91}
+                          height={100}
+                          className={styles.oneHealthNavLogo}
+                        />
+                        <ChevronRight size={20} className={styles.coreNavChevron} />
                       </a>
                     </motion.div>
 

@@ -363,6 +363,24 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* Narayana One Health row in the mobile drawer. Full-colour artwork, unlike
+   the desktop lockup, which reverses to white over the dark sections — the
+   drawer keeps the brand's own colours. Its left edge sits in the icon
+   column with the other rows' glyphs. */
+.oneHealthNavLogo {
+  height: 46px;
+  width: auto;
+}
+
+/* The lockup is more than twice the height of the 18px glyphs the other
+   rows carry, so the shared 20px vertical padding made this row half again
+   as tall as its neighbours. Trimmed to keep it reading as a peer in the
+   list rather than a banner at the end of it. */
+.oneHealthNavRow {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
 .coreNavTitle {
   font-size: 17px;
   font-weight: 500;
@@ -1025,6 +1043,43 @@
   display: flex;
   color: #FFFFFF;
   transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Narayana One Health lockup (desktop) ───
+   Sits bare on the navbar, like the city picker rather than the emergency
+   and login buttons — a second bordered surface next to those two would
+   read as a third action. */
+.oneHealthLink {
+  display: flex;
+  align-items: center;
+  /* Optically level with the 35px buttons: the lockup carries its own
+     internal breathing room top and bottom, so an equal box height would
+     leave the artwork itself looking smaller than the text beside it. */
+  height: 44px;
+  flex: none;
+  border-radius: 8px;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.oneHealthLogo {
+  height: 100%;
+  /* Set by the intrinsic 91:100 ratio rather than a second fixed value, so
+     the two can never disagree. */
+  width: auto;
+}
+
+/* Over the dark sections the lockup's navy wordmark has nothing to read
+   against. `brightness(0) invert(1)` flattens the whole mark to white,
+   which is exactly NH's own reversed treatment — narayana_one_health_logo_white.png
+   is the same all-white silhouette — so this reproduces the official
+   artwork from the vector instead of swapping in a 91px raster. */
+.oneHealthLinkOnDark .oneHealthLogo {
+  filter: brightness(0) invert(1);
+}
+
+.oneHealthLink:hover {
+  transform: translateY(-1px);
+  opacity: 0.82;
 }
 
 /* ─── City picker (desktop) ───

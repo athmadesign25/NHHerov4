@@ -666,6 +666,11 @@
   .handOverlayImage {
     width: 100%;
     max-width: 700px;
+    /* The base rule clips the bottom 4% away. clip-path only hides pixels —
+       the element keeps its full height — so that 4% stayed as empty space
+       under the artwork, which is what made the hand read as floating above
+       the section's edge rather than sitting on it. */
+    clip-path: none;
   }
 
   .phoneMaskWrapper {
@@ -712,40 +717,40 @@
     /* Slight overlap over the phone */
   }
 
-  /* Solid Dark Block Below the Image */
+  /* Lifted out of the column and sat over the artwork's bottom-right, on
+     the open area beside the wrist where nothing important is behind them.
+     Absolute against .bottomRow (already position: relative), so they no
+     longer occupy flow height — which is what lets the phone artwork run
+     all the way to the section's own bottom edge. Replaces the solid dark
+     block that used to sit below the image: that block was pulled up 54px
+     to close the flex gap, and the 54px it borrowed came straight off the
+     bottom of the hand, cutting the forearm mid-stroke. */
   .storesColPosition {
-    order: 3;
-    position: relative;
-    top: auto !important;
-    bottom: auto !important;
+    order: unset;
+    position: absolute;
+    right: 12px;
+    bottom: 24px;
     left: auto;
-    right: auto;
+    top: auto !important;
     transform: none;
-
-    /* Full-bleed out of the padding */
-    width: calc(100% + 32px);
-    margin-left: -16px !important;
-    margin-right: -16px !important;
-
-    /* Pull up further to swallow the 32px flex gap PLUS the scaled-up invisible cropped area */
-    margin-top: -54px !important;
-    margin-bottom: 0 !important;
-
-    /* Solid Dark Background (Matches exact footer top color) */
-    background: #061120;
-    padding: 32px 16px 40px;
-    z-index: 10;
+    width: auto;
+    margin: 0 !important;
+    padding: 0;
+    background: transparent;
+    z-index: 30;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
   }
 
-  /* Pure Flex Row for the Buttons */
+  /* Stacked rather than side by side — at this width a row of two badges
+     spans nearly the full screen, which is what forced them off the
+     artwork and into their own band in the first place. */
   .storesCol {
-    width: 100%;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
+    width: auto;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 10px;
     background: transparent;
     padding: 0;
     border: none;
@@ -757,7 +762,7 @@
   }
 
   .storeBadge img {
-    height: 40px;
+    height: 38px;
     width: auto;
   }
 }

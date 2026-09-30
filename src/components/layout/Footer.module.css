@@ -219,8 +219,26 @@ a.contactItem:hover {
 }
 
 @media (max-width: 768px) {
+  /* Two columns, not one: the brand block still spans the full width (see
+     the 1024px rule above), so this only applies to the link sections that
+     follow the socials row. */
+  /* minmax(0, 1fr) rather than 1fr: the brand block spans both columns and
+     its content is wide enough that plain `1fr` let it set the first
+     column's min-content width, splitting the pair 220/114 instead of
+     evenly. */
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--sp-4) var(--sp-3);
+  }
+  /* The grid item is .brandCol; .brand is a child of it, so the existing
+     `grid-column: 1 / -1` on .brand never applied and the first link
+     section sat alongside the brand text instead of below the socials. */
+  .brandCol {
+    grid-column: 1 / -1;
+  }
+  .bottom {
+    padding-left: 12px;
+    padding-right: 12px;
   }
   .bottomInner {
     flex-direction: column;
@@ -235,8 +253,11 @@ a.contactItem:hover {
 }
 
 @media (max-width: 900px) {
+  /* Side padding lives here rather than in the 768px block above: this
+     rule is later in the file and sets `padding` as a shorthand, so it
+     would reset any left/right set earlier. Adds to .container's own 16px. */
   .main {
-    padding: 100px 0;
+    padding: 100px 12px;
   }
   .brandLogo {
     margin-left: -2px;

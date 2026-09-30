@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, useTransform, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import { Search } from "lucide-react";
 import calendarCheckAnimation from "../../../public/assets/calendar-check.json";
 import nhAppIconAnimation from "../../../public/assets/nh-app-icon.json";
 import styles from "./FloatingQuickActions.module.css";
@@ -304,22 +305,16 @@ export default function FloatingQuickActions() {
           type="button"
           className={`${styles.link} ${styles.pulseSearchAction} ${darkLinks[2] ? styles.linkOnDark : ""}`}
           onClick={handleOpenSearch}
-          aria-label="Pulse AI Search"
+          aria-label="Search anything"
           style={slotHeights ? { opacity: pulseTileOpacity } : undefined}
         >
-          {/* This tile paints its own animated background rather than the
-              shared blue glass, so it overrides .iconWrap's own fill. */}
-          <span className={`${styles.iconWrap} ${styles.pulseIconWrap}`}>
-            <span className={styles.gradientLayer} aria-hidden="true" />
-            <span className={`${styles.gradientLayer} ${styles.gradientLayerDodge}`} aria-hidden="true" />
+          {/* Same candy fill as the two tiles above it — what marks this one
+              out is the glyph, not a different surface. */}
+          <span className={`${styles.iconWrap} ${styles.pulseIconWrapMetal}`}>
             <span className={styles.pulseIconLight} aria-hidden="true" />
-            <span className={styles.pulseBars} aria-hidden="true">
-              <span className={styles.pulseBar1} />
-              <span className={styles.pulseBar2} />
-              <span className={styles.pulseBar3} />
-            </span>
+            <Search className={styles.pulseSearchIcon} strokeWidth={2.2} aria-hidden="true" />
           </span>
-          <span className={styles.actionLabel}>Pulse AI<br />Search</span>
+          <span className={styles.actionLabel}>Search<br />Anything</span>
         </motion.button>
       </motion.div>
 

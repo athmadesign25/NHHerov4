@@ -62,18 +62,44 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 10px;
-  /* Deeper, more saturated blue than the earlier wash — the tile should
-     read as blue glass in its own right rather than a faint tint picking
-     up whatever is behind the bar. */
-  background: linear-gradient(149deg, rgba(37, 110, 255, 0.86) 0%, rgba(6, 58, 168, 0.94) 100%);
-  backdrop-filter: blur(12px) saturate(1.6);
-  -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  /* Candy fill, keyed to NH blue rather than the reference's generic
+     #005FD6/#209BFF: the gradient is anchored low and centre so the tile
+     lights from beneath, with --color-primary as the deep core and a
+     brighter sibling at the rim. The two shadows do the sweet-wrapper
+     work — an outer bloom of the same hue, and a tight inset white
+     catch along the top edge. Blur radii are scaled down from the
+     source, which was drawn for a full-size button, not a 40px tile. */
+  border: 1px solid rgba(90, 166, 238, 0.85);
+  background: radial-gradient(
+    95% 60% at 50% 78%,
+    #034EA2 0%,
+    #2E8BE0 100%
+  );
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.62),
-    inset 0 -1px 2px rgba(255, 255, 255, 0.20),
-    inset 0 0 16px rgba(120, 180, 255, 0.28),
-    0 3px 10px rgba(8, 62, 180, 0.20);
-  transition: transform 0.2s ease, background 0.25s ease;
+    0 3px 18px -6px rgba(17, 135, 255, 0.72),
+    inset 0 1px 6px -3px #FFFFFF;
+  transition: transform 0.2s ease, filter 0.25s ease;
+}
+
+/* The specular streak across the top of the wrapper — inset slightly from
+   the corners so it reads as light catching a curved surface rather than a
+   full-width rule. */
+.iconWrap::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 12%;
+  width: 58%;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 3;
 }
 
 /* Fixed window the oversized calendar Lottie is centered and clipped
@@ -91,8 +117,11 @@
   flex-shrink: 0;
 }
 
+/* Brightness lift on hover comes from the candy reference; the existing
+   scale is kept alongside it. */
 .link:hover .iconWrap {
   transform: scale(1.06);
+  filter: brightness(1.1);
 }
 
 .actionLabel {
@@ -120,6 +149,9 @@
    blend modes from reaching the page behind it, and `overflow: clip`
    keeps the rotating discs inside the 10px radius. Overrides .iconWrap,
    so it has to stay after it in source order. */
+/* Still the original tile: the mobile docked bar in NHSearchExperience.tsx
+   hardcodes this module's compiled class names and reuses this look, so it
+   has to keep working. The desktop tile uses .pulseIconWrapMetal below. */
 .pulseIconWrap {
   overflow: clip;
   isolation: isolate;
@@ -131,6 +163,16 @@
      tile size that blew the color-dodge pass out to a flat white lobe
      over most of the face instead of reading as shifting color. */
   filter: saturate(0.85) brightness(1.15);
+}
+
+/* Desktop tile. Keeps .iconWrap's blue glass rather than overriding it: the
+   red base and the saturate/brightness lift above existed to feed the two
+   rotating gradient passes that blended over them, and on desktop both are
+   gone. What marks this tile out now is the liquid-metal ring on its edge,
+   not a different fill. */
+.pulseIconWrapMetal {
+  overflow: clip;
+  isolation: isolate;
 }
 
 /* Centered by negative margins rather than a translate, so the rotate
@@ -188,18 +230,6 @@
   }
 }
 
-.pulseBars {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3.2px;
-  height: 18px;
-  /* The gradient underneath swings through near-white, so the bars need
-     their own separation from it rather than relying on tile contrast. */
-  filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
-}
 /* Base styles (Desktop) */
 /* Vertically centered on the viewport (right-anchored horizontally) —
    independent of the global Pulse floating button (GlobalPulseFAB's
@@ -339,6 +369,35 @@
   justify-content: center;
 }
 
+/* Replaces the three equaliser bars. Sized to read at the same visual
+   weight as the two Lottie glyphs beside it rather than to the same box:
+   those animate inside 29px and 42px canvases whose artwork only fills
+   part of the frame, so a 22px stroke glyph lands level with them. Keeps
+   the bars' own drop-shadow, which is what separated them from the tile
+   when the fill underneath swings bright. */
+.pulseSearchIcon {
+  position: relative;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: #FFFFFF;
+  filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
+}
+
+/* Retained for the mobile docked bar only (NHSearchExperience.tsx renders
+   these by their compiled names); the desktop tile now uses a search glyph. */
+.pulseBars {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.2px;
+  height: 18px;
+  filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
+}
+
 .pulseBar1 {
   width: 3.5px;
   height: 12px;
@@ -387,18 +446,6 @@
   padding: 24px;
   box-sizing: border-box;
 
-}
-
-.pulseSearchAction:hover .pulseBar1 {
-  animation-duration: 1.2s;
-}
-
-.pulseSearchAction:hover .pulseBar2 {
-  animation-duration: 1.2s;
-}
-
-.pulseSearchAction:hover .pulseBar3 {
-  animation-duration: 1.2s;
 }
 
 /* ── Responsive styles (Mobile & Tablet) ── */

@@ -16,6 +16,7 @@ import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import LiquidMetalEdge from "@/components/ui/LiquidMetalEdge";
 import { 
   getSearchResults, 
   SearchResultsData, 
@@ -735,6 +736,10 @@ export default function NHSearchExperience({
         onClick={() => {
           handleActivate();
         }}
+        // Replaces the rotating conic-gradient stroke this box used to
+        // carry (see .stateLanding::before, now disabled). Inherits the
+        // shell's radius, so it stays a correct ring while the radius
+        // animates through the morph to the docked square.
         style={
           hasScroll && searchState === "landing"
             ? {
@@ -784,6 +789,7 @@ export default function NHSearchExperience({
           ease: [0.16, 1, 0.3, 1],
         }}
       >
+        <LiquidMetalEdge borderWidth={2} speed={0.45} repetition={4} distortion={0.12} />
         {hasScroll && (
           <div className="hideOnDesktop">
             {/* The 3 Action Buttons that fade in as the search UI fades out */}
@@ -817,17 +823,14 @@ export default function NHSearchExperience({
                   }
                 }}
               >
-                <span className="FloatingQuickActions_iconWrap__fl_Sc FloatingQuickActions_pulseIconWrap__q9xLM">
-                  <span className="FloatingQuickActions_gradientLayer__dc_zt" aria-hidden="true"></span>
-                  <span className="FloatingQuickActions_gradientLayer__dc_zt FloatingQuickActions_gradientLayerDodge__Fz_NS" aria-hidden="true"></span>
-                  <span className="FloatingQuickActions_pulseIconLight__D3IEi" aria-hidden="true"></span>
-                  <span className="FloatingQuickActions_pulseBars__yFp3c" aria-hidden="true">
-                    <span className="FloatingQuickActions_pulseBar1__hQWw8"></span>
-                    <span className="FloatingQuickActions_pulseBar2__3x9Jl"></span>
-                    <span className="FloatingQuickActions_pulseBar3__OY5Kw"></span>
-                  </span>
+                {/* Same Search glyph the desktop bar uses, in this bar's own
+                    tile rather than the animated pulse square — which also
+                    drops the hardcoded FloatingQuickActions_* class strings
+                    this markup used to borrow from another CSS module. */}
+                <span className={styles.fabIconWrap}>
+                  <Search size={18} strokeWidth={2.2} aria-hidden />
                 </span>
-                <span>Pulse AI<br/>Search</span>
+                <span>Search<br/>Anything</span>
               </button>
               <div className={styles.fabDivider} aria-hidden="true" />
               <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>

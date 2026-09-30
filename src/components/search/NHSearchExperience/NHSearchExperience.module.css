@@ -99,31 +99,30 @@
   transition: opacity 0.35s ease;
 }
 
-/* Fallback pseudo-element when JS layers are not rendered */
+/* The rotating conic stroke this box used to carry is now drawn by
+   <LiquidMetalEdge>, which renders the same masked ring from a shader
+   instead. Kept as a static hairline for the cases the shader deliberately
+   skips — under 900px and under reduced-motion — so the box never loses its
+   outline entirely. */
 .stateLanding::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(
-    from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,
-    rgba(255, 46, 147, 0.90) 55deg,
-    rgba(139, 92, 246, 0.90) 115deg,
-    rgba(3, 78, 162, 0.95) 175deg,
-    rgba(0, 196, 255, 0.95) 235deg,
-    rgba(37, 99, 235, 0.95) 295deg,
-    rgba(237, 28, 36, 0.95) 360deg
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.28) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  animation: rotateBorderAngle 7.5s linear infinite;
   pointer-events: none;
   z-index: 4;
-  opacity: 0.25;
+  opacity: 0.55;
   transition: opacity 0.35s ease;
   box-sizing: border-box;
 }

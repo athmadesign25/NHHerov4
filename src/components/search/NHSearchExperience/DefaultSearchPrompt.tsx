@@ -99,20 +99,14 @@ export default function DefaultSearchPrompt({
             boxSizing: "border-box",
           }}
         >
+          {/* Docked state carries the mark alone — the label it used to sit
+              under duplicated the one the floating bar shows once this
+              lands there, so it read twice during the same transition. */}
           <div className={styles.floatingPulseIconWrap}>
             <div className={styles.pulseLottieContainer} aria-hidden="true">
               <Lottie animationData={pulseAnimation} loop={true} />
             </div>
           </div>
-          <motion.span
-            className={styles.floatingPulseSearchText}
-            style={{
-              color: textColor || "#FFFFFF",
-              marginTop: 1,
-            }}
-          >
-            Pulse AI<br />Search
-          </motion.span>
         </motion.div>
         </div>
       )}

@@ -1,0 +1,28 @@
+/* Masked to a ring rather than filling the element: the shader canvas is
+   painted across the whole box, then the content-box is punched out of it,
+   so only the `padding`-wide border survives. Same technique the conic
+   gradient border it replaces used — the only thing that changed is what
+   paints underneath the mask. */
+.edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+/* Absolutely positioned, not `width/height: 100%`. An in-flow child is laid
+   out in the CONTENT box — i.e. inset by exactly the padding that forms the
+   ring — so the shader painted only the area the mask then cuts away, and
+   nothing but corner anti-aliasing survived. An abspos child resolves
+   `inset: 0` against the PADDING box instead, so it covers the ring too. */
+.shaderHost {
+  position: absolute;
+  inset: 0;
+}

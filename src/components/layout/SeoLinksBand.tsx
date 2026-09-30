@@ -201,11 +201,14 @@ export default function SeoLinksBand() {
                     }}
                   >
                     <ul className={styles.linkGrid}>
-                      {section.links.map((link) => {
+                      {section.links.map((link, i) => {
                         const external = link.href.startsWith("http");
                         const tab = open && isOpen ? 0 : -1;
                         return (
-                          <li key={`${section.id}-${link.href}-${link.label}`}>
+                          // Index-keyed: the live index this mirrors genuinely
+                          // repeats one entry (Gastro lists Howrah twice), so
+                          // href+label is not unique within a section.
+                          <li key={`${section.id}-${i}`}>
                             {external ? (
                               <a
                                 href={link.href}

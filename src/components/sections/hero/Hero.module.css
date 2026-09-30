@@ -977,9 +977,17 @@
 @media (max-width: 768px) {
   .hero {
     --hero-width: calc(100vw - var(--sp-4));
-    min-height: 100dvh;
-    height: 100dvh;
-    transform: none !important;
+    /* 32px taller than the viewport so the dock drift below has somewhere to
+       travel: the section is pinned at top: 0, so sliding it up by up to
+       26px would otherwise pull its bottom edge clear of the screen and
+       expose a strip of the section behind. The overflow simply sits below
+       the fold. */
+    min-height: calc(100dvh + 32px);
+    height: calc(100dvh + 32px);
+    /* `transform: none !important` used to sit here, which killed the scale
+       AND left the hero completely static while the search composer flew out
+       of it. Scale is instead held at 1 from the component on mobile (see
+       Hero.tsx), leaving transform free for the drift alone. */
     border-radius: 0 !important;
   }
 
