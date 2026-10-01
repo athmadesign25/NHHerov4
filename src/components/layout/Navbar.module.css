@@ -292,7 +292,7 @@
 .emergencyNumber {
   font-size: 20px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: 0.02em;
 }
 
@@ -313,7 +313,7 @@
   padding: 16px;
   text-decoration: none;
   border: none;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -322,7 +322,7 @@
 }
 
 .primaryActionCard span {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .primaryActionCard:active {
@@ -437,11 +437,11 @@
   height: 28px;
   border-radius: 8px;
   background: rgba(var(--white-rgb), 0.1);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .utilityRow strong {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* -- Sub Panes -- */
@@ -473,7 +473,7 @@
 .paneTitle {
   font-size: 16px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   margin-left: 12px;
 }
 
@@ -559,7 +559,7 @@
 }
 
 .scrolled .navLink:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.15);
 }
 
@@ -579,7 +579,7 @@
   left: 50%;
   transform: translateX(-50%);
   min-width: 210px;
-  background: var(--white);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
@@ -632,7 +632,7 @@
 }
 
 .scrolled .phoneLink:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* Rectangular Rounded Secondary Login Button */
@@ -656,12 +656,12 @@
 
 .loginBtnActive:hover {
   background: var(--color-primary, var(--blue-brand));
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .loginBtnInactive {
   border: 1.5px solid rgba(var(--white-rgb), 0.6);
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: transparent;
 }
 
@@ -696,7 +696,7 @@
   padding: 9px 18px;
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: var(--color-emergency);
   border-radius: var(--radius-full);
   transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
@@ -732,7 +732,7 @@
 }
 
 .scrolled .mobileToggle {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .mobileToggle:hover {
@@ -750,7 +750,7 @@
   right: 0;
   bottom: 0;
   width: min(340px, 90vw);
-  background: var(--white);
+  background: var(--color-surface);
   box-shadow: -8px 0 40px rgba(var(--black-rgb), 0.15);
   z-index: 999;
   overflow-y: auto;
@@ -794,7 +794,7 @@
   padding: 14px;
   font-size: var(--font-size-base);
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: var(--color-emergency);
   border-radius: var(--radius-md);
   transition: background var(--transition-fast);
@@ -820,7 +820,7 @@
 
 .mobileLoginBtn:hover {
   background: var(--color-primary);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .mobilePhoneLink {
@@ -1010,7 +1010,7 @@
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
-  color: var(--white);
+  color: var(--color-text-inverse);
   transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1035,13 +1035,13 @@
 
 .emergencyBtnOnLight:hover .emergencyLabelText,
 .emergencyBtnOnLight:hover .emergencyIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* Siren icon: takes the label's colour in both themes. */
 .emergencyIcon {
   display: flex;
-  color: var(--white);
+  color: var(--color-text-inverse);
   transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1167,7 +1167,7 @@
 
 .themeWhiteActive .themeToggleThumb {
   background: var(--blue-vivid);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .themeDarkActive .themeToggleThumb {

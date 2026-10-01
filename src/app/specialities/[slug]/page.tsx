@@ -62,12 +62,12 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
           </Link>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-3)", marginBottom: "var(--sp-3)", flexWrap: "wrap" }}>
-              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(var(--white-rgb), 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--white)", flexShrink: 0 }}>
+              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(var(--white-rgb), 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-inverse)", flexShrink: 0 }}>
                 <Icon size={32} />
               </div>
               <div>
                 <div style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(var(--white-rgb), 0.6)", marginBottom: 4 }}>Department of</div>
-                <h1 style={{ fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 900, color: "var(--white)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>{spec.name}</h1>
+                <h1 style={{ fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 900, color: "var(--color-text-inverse)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>{spec.name}</h1>
               </div>
             </div>
             <p style={{ fontSize: "var(--font-size-xl)", color: "rgba(var(--white-rgb), 0.8)", marginBottom: "var(--sp-5)", maxWidth: 560 }}>{spec.desc}</p>
@@ -88,7 +88,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
             <h2 style={{ fontSize: "var(--font-size-3xl)", fontWeight: 800, color: "var(--color-text)", marginBottom: "var(--sp-3)", letterSpacing: "-0.02em" }}>Department Overview</h2>
             <p style={{ fontSize: "var(--font-size-base)", color: "var(--color-text-secondary)", lineHeight: 1.8, marginBottom: "var(--sp-4)" }}>{spec.overview}</p>
-            <Link href="/doctors" id="spec-find-doctors" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--color-primary)", color: "var(--white)", fontWeight: 700, fontSize: "var(--font-size-sm)", borderRadius: "var(--radius-full)" }}>
+            <Link href="/doctors" id="spec-find-doctors" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", fontWeight: 700, fontSize: "var(--font-size-sm)", borderRadius: "var(--radius-full)" }}>
               Find {spec.name} Doctors <ChevronRight size={16} />
             </Link>
           </motion.div>
@@ -122,7 +122,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "var(--sp-3)" }}>
             {sampleDoctors.map((doc, i) => (
               <motion.div key={doc.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.45 }}>
-                <Link href={`/doctors/${doc.id}`} id={`spec-doctor-${doc.id}`} style={{ display: "flex", flexDirection: "column", background: "var(--white)", border: "1px solid var(--color-border-light)", borderRadius: "var(--radius-xl)", overflow: "hidden", textDecoration: "none", boxShadow: "var(--shadow-md)", transition: "transform 0.2s, box-shadow 0.2s" }}
+                <Link href={`/doctors/${doc.id}`} id={`spec-doctor-${doc.id}`} style={{ display: "flex", flexDirection: "column", background: "var(--color-surface)", border: "1px solid var(--color-border-light)", borderRadius: "var(--radius-xl)", overflow: "hidden", textDecoration: "none", boxShadow: "var(--shadow-md)", transition: "transform 0.2s, box-shadow 0.2s" }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-card-hover)"; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)"; }}
                 >

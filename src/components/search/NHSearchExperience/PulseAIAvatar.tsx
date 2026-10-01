@@ -86,7 +86,7 @@ export default function PulseAIAvatar({
             width: "100%",
             height: "100%",
             borderRadius: "50%",
-            background: "var(--white)",
+            background: "var(--color-surface)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

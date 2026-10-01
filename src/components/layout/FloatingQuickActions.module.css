@@ -37,7 +37,7 @@
 }
 
 .linkOnDark {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 /* Default (over light sections) a white wash is invisible against the pale
@@ -332,7 +332,7 @@
 }
 
 .pulseCardTitle {
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: Geist, var(--font-sans), sans-serif;
   font-size: 22px;
   font-style: normal;
@@ -381,7 +381,7 @@
   width: 22px;
   height: 22px;
   flex-shrink: 0;
-  color: var(--white);
+  color: var(--color-text-inverse);
   filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
 }
 
@@ -402,7 +402,7 @@
   width: 3.5px;
   height: 12px;
   border-radius: 2px;
-  background: var(--white);
+  background: var(--color-surface);
   animation: barBreathing 1.8s ease-in-out infinite;
 }
 
@@ -410,7 +410,7 @@
   width: 3.5px;
   height: 20px;
   border-radius: 2px;
-  background: var(--white);
+  background: var(--color-surface);
   animation: barBreathing 1.8s ease-in-out 0.25s infinite;
 }
 
@@ -418,7 +418,7 @@
   width: 3.5px;
   height: 13px;
   border-radius: 2px;
-  background: var(--white);
+  background: var(--color-surface);
   animation: barBreathing 1.8s ease-in-out 0.5s infinite;
 }
 

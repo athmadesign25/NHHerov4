@@ -136,6 +136,10 @@
   --color-bg: #fafcfc;
   --color-bg-alt: #F3F5F9;
   --color-bg-card: var(--white);
+  /* The general light surface. --color-bg-card is the same value but names
+     a narrower job; components that are not cards were reaching past it to
+     the primitive instead of through a role. */
+  --color-surface: var(--white);
 
   --color-border: var(--slate-200);
   --color-border-light: var(--blue-tint-50);

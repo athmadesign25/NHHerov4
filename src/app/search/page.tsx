@@ -1422,7 +1422,7 @@ function SearchResultsContent() {
                               style={{
                                 position: "absolute",
                                 inset: 0,
-                                background: "var(--white)",
+                                background: "var(--color-surface)",
                                 borderRadius: 20,
                                 boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                                 zIndex: 0
@@ -1472,7 +1472,7 @@ function SearchResultsContent() {
                               style={{
                                 position: "absolute",
                                 inset: 0,
-                                background: "var(--white)",
+                                background: "var(--color-surface)",
                                 borderRadius: 20,
                                 boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                                 zIndex: 0
@@ -1597,7 +1597,7 @@ function SearchResultsContent() {
                       </div>
 
                       {/* Location Pill (Right Side) */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
                         <MapPin size={14} color="var(--color-primary)" />
                         <select
                           value={location}
@@ -1742,7 +1742,7 @@ function SearchResultsContent() {
                                     left: 0,
                                     right: 0,
                                     background: "linear-gradient(transparent, rgba(var(--black-rgb), 0.5))",
-                                    color: "var(--white)",
+                                    color: "var(--color-text-inverse)",
                                     fontSize: 9,
                                     fontWeight: 600,
                                     padding: "20px 4px 4px 4px",
@@ -1766,8 +1766,8 @@ function SearchResultsContent() {
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: doc.name.length > 22 ? 1 : 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
                             <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", marginTop: 2, fontWeight: 500 }}>{doc.experience}</p>
                             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 4 }}>
-                              <span style={{ fontSize: 10, background: "var(--white)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>English</span>
-                              <span style={{ fontSize: 10, background: "var(--white)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>Hindi</span>
+                              <span style={{ fontSize: 10, background: "var(--color-surface)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>English</span>
+                              <span style={{ fontSize: 10, background: "var(--color-surface)", padding: "2px 8px", borderRadius: 12, color: "var(--slate-600)", fontWeight: 400 }}>Hindi</span>
                             </div>
                           </div>
                         </div>
@@ -1832,7 +1832,7 @@ function SearchResultsContent() {
                     <div 
                       key={hosp.id}
                       style={{ 
-                        background: "var(--white)", 
+                        background: "var(--color-surface)", 
                         border: "1px solid var(--slate-200)", 
                         borderRadius: 16, 
                         padding: 20, 
@@ -2302,7 +2302,7 @@ function SearchResultsContent() {
                             onClick={() => toggleFilter(setSelectedPackageGender, "Male")}
                             style={{ 
                               display: "inline-flex", alignItems: "center", gap: 6, 
-                              background: "var(--white)", border: "1px solid var(--color-border)", 
+                              background: "var(--color-surface)", border: "1px solid var(--color-border)", 
                               borderRadius: 16, height: 32, padding: "0 16px", 
                               fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
                               transition: "var(--transition-fast)"
@@ -2316,7 +2316,7 @@ function SearchResultsContent() {
                             onClick={() => toggleFilter(setSelectedPackageGender, "Female")}
                             style={{ 
                               display: "inline-flex", alignItems: "center", gap: 6, 
-                              background: "var(--white)", border: "1px solid var(--color-border)", 
+                              background: "var(--color-surface)", border: "1px solid var(--color-border)", 
                               borderRadius: 16, height: 32, padding: "0 16px", 
                               fontSize: 13, fontWeight: 500, color: "var(--color-text)", cursor: "pointer",
                               transition: "var(--transition-fast)"
@@ -2370,7 +2370,7 @@ function SearchResultsContent() {
                         ))}
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
                         <MapPin size={14} color="var(--color-primary)" />
                         <select
                           value={location}
@@ -2427,7 +2427,7 @@ function SearchResultsContent() {
                           <div 
                             key={pkg.id}
                             style={{ 
-                              background: "var(--white)", 
+                              background: "var(--color-surface)", 
                               border: "1px solid var(--slate-200)", 
                               borderRadius: 16, 
                               padding: 20, 
@@ -2503,7 +2503,7 @@ function SearchResultsContent() {
                           <div 
                             key={lab.id}
                             style={{ 
-                              background: "var(--white)", 
+                              background: "var(--color-surface)", 
                               border: "1px solid var(--slate-200)", 
                               borderRadius: 16, 
                               padding: 18, 
@@ -2746,7 +2746,7 @@ function SearchResultsContent() {
 
 function EmptyState({ category }: { category: string }) {
   return (
-    <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "64px 24px", background: "var(--white)", borderRadius: 16, border: "1px dashed var(--slate-300)" }}>
+    <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "64px 24px", background: "var(--color-surface)", borderRadius: 16, border: "1px dashed var(--slate-300)" }}>
       <ShieldAlert size={40} style={{ color: "var(--slate-400)", margin: "0 auto 12px" }} />
       <h3 style={{ fontSize: 16, fontWeight: 700, color: "var(--slate-600)", marginBottom: 4 }}>No matching {category} found</h3>
       <p style={{ fontSize: 13, color: "var(--slate-400)" }}>Try adjusting your search criteria or typing alternate keywords.</p>

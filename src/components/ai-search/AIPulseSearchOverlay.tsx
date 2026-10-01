@@ -341,7 +341,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(var(--white-rgb), 0.04)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "12px", cursor: "pointer" }}
                           >
                             <img src={spec.image || "/Specialities icons/General Medicine.svg"} alt={spec.name} style={{ width: "24px", height: "24px" }} />
-                            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--white)" }}>{spec.name}</div>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-text-inverse)" }}>{spec.name}</div>
                           </div>
                         ))}
                       </div>
@@ -410,7 +410,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                       <div style={{ color: "var(--violet-400)" }}><Sparkles size={20} /></div>
                       <div>
-                        <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--white)" }}>Ask Pulse AI Workspace</div>
+                        <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--color-text-inverse)" }}>Ask Pulse AI Workspace</div>
                         <div style={{ fontSize: "11.5px", color: "var(--slate-400)", marginTop: "2px" }}>Get AI-powered health insights and doctor recommendations for "{inputValue}"</div>
                       </div>
                     </div>

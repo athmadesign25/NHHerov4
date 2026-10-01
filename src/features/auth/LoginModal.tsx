@@ -156,7 +156,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 priority
               />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(var(--black-rgb), 0.8), transparent)", zIndex: 1 }}></div>
-              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--white)" }}>
+              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--color-text-inverse)" }}>
                 <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
                 <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
               </div>
@@ -222,7 +222,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "mobile" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -255,7 +255,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "email" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -282,7 +282,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             padding: "14px 32px 14px 16px",
                             borderRadius: "100px",
                             border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--white)",
+                            background: "var(--color-surface)",
                             fontSize: "var(--font-size-base, 16px)",
                             color: "var(--color-text, var(--slate-900))",
                             fontWeight: 500,
@@ -316,7 +316,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           padding: "14px 16px",
                           borderRadius: "100px",
                           border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, var(--slate-200))"}`,
-                          background: "var(--white)",
+                          background: "var(--color-surface)",
                           fontSize: "var(--font-size-base, 16px)",
                           color: "var(--color-text, var(--slate-900))",
                           outline: "none"
@@ -347,7 +347,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         padding: "14px 16px",
                         borderRadius: "100px",
                         border: "1.5px solid var(--color-border, var(--slate-200))",
-                        background: "var(--white)",
+                        background: "var(--color-surface)",
                         fontSize: "var(--font-size-base, 16px)",
                         color: "var(--color-text, var(--slate-900))",
                         outline: "none"
@@ -364,7 +364,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   width: "100%",
                   padding: "14px",
                   background: "var(--color-primary, var(--blue-brand))",
-                  color: "var(--white)",
+                  color: "var(--color-text-inverse)",
                   fontSize: "var(--font-size-base, 16px)",
                   fontWeight: 700,
                   borderRadius: "100px",
@@ -388,7 +388,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: "var(--white)",
+                  background: "var(--color-surface)",
                   border: "1.5px solid var(--color-border, var(--slate-200))",
                   borderRadius: "100px",
                   display: "flex",
@@ -443,7 +443,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             fontWeight: 600,
                             borderRadius: "12px",
                             border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--white)",
+                            background: "var(--color-surface)",
                             color: "var(--color-text, var(--slate-900))",
                             outline: "none"
                           }}
@@ -461,7 +461,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                       padding: "14px",
                       background: "var(--color-primary, var(--blue-brand))",
                       opacity: isVerifying ? 0.9 : 1,
-                      color: "var(--white)",
+                      color: "var(--color-text-inverse)",
                       fontSize: "var(--font-size-base, 16px)",
                       fontWeight: 700,
                       borderRadius: "100px",

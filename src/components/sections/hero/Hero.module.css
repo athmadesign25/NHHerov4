@@ -309,7 +309,7 @@
 }
 
 .blinkingCursor {
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 18px;
   font-weight: 400;
@@ -339,7 +339,7 @@
 }
 
 .typedText {
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 18px;
   font-weight: 500;
@@ -403,7 +403,7 @@
 
 .iconBtn:hover {
   background: rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .actionBtn {
@@ -414,7 +414,7 @@
   border-radius: 10px;
   border: 1px solid rgba(var(--white-rgb), 0.15);
   background: transparent;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -446,7 +446,7 @@
   border-radius: 10px;
   border: none;
   background: var(--blue-brand);
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -470,7 +470,7 @@
   border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -551,7 +551,7 @@
 }
 
 .searchIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .searchInput {
@@ -574,7 +574,7 @@
   border: none;
   border-radius: var(--radius-full);
   background: var(--blue-700);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 34px;
   line-height: 1;
   font-weight: 700;
@@ -1114,13 +1114,13 @@
 
 .searchContainer:focus-within::before,
 .searchContainerActive::before {
-  background: var(--white);
+  background: var(--color-surface);
   animation: none;
 }
 
 .searchContainer:focus-within::after,
 .searchContainerActive::after {
-  background: var(--white);
+  background: var(--color-surface);
   animation: none;
   filter: blur(8px);
 }
@@ -1140,7 +1140,7 @@
 }
 
 .searchIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
   flex-shrink: 0;
 }
 
@@ -1149,7 +1149,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 16px;
   font-family: var(--font-family);
   width: 100%;
@@ -1159,11 +1159,11 @@
 
 .searchInput:focus,
 .searchContainerActive .searchInput {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .searchInput::placeholder {
-  color: var(--white);
+  color: var(--color-text-inverse);
   transition: color 0.2s ease;
 }
 
@@ -1174,7 +1174,7 @@
 
 .searchBtn {
   background: var(--color-primary, var(--blue-brand));
-  color: var(--white);
+  color: var(--color-text-inverse);
   border: none;
   border-radius: var(--radius-full);
   height: 44px;
@@ -1202,7 +1202,7 @@
   max-height: min(75vh, 580px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--white);
+  background: var(--color-surface);
   border: 1px solid rgba(var(--black-rgb), 0.08);
   border-radius: 20px;
   box-shadow: 0 24px 48px rgba(var(--black-rgb), 0.2);
@@ -1835,7 +1835,7 @@
 .pulseText {
   position: relative;
   z-index: 1;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-weight: 500;
   font-size: 14px;
   max-width: 0;
@@ -1921,7 +1921,7 @@
 .metricValue {
   font-size: 28px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   margin-bottom: 6px;
   line-height: 1.1;
 }
@@ -2078,7 +2078,7 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: var(--white);
+  background: var(--color-surface);
   box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.04);
 }
 
@@ -2126,7 +2126,7 @@
 }
 
 .entryCardHeader:hover .entryCardChevronBtn {
-  background: var(--white);
+  background: var(--color-surface);
   transform: translateX(2px);
 }
 
@@ -2477,7 +2477,7 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: var(--white);
+  background: var(--color-surface);
   box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.04);
 }
 
@@ -2525,7 +2525,7 @@
 }
 
 .entryCardHeader:hover .entryCardChevronBtn {
-  background: var(--white);
+  background: var(--color-surface);
   transform: translateX(2px);
 }
 
@@ -2550,7 +2550,7 @@
 }
 
 .intentChip {
-  background: var(--white);
+  background: var(--color-surface);
   border-radius: var(--radius-full);
   padding: 6px 12px;
   font-size: 11.5px;
@@ -2569,7 +2569,7 @@
 
 .blueChip:hover {
   background: var(--sky-600);
-  color: var(--white);
+  color: var(--color-text-inverse);
   border-color: var(--sky-600);
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(2, 132, 199, 0.2);
@@ -2582,7 +2582,7 @@
 
 .tealChip:hover {
   background: var(--teal-600);
-  color: var(--white);
+  color: var(--color-text-inverse);
   border-color: var(--teal-600);
   transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(13, 148, 136, 0.2);
@@ -2635,7 +2635,7 @@
 
 .pulseSecondaryChip:hover {
   background: var(--blue-brand);
-  color: var(--white);
+  color: var(--color-text-inverse);
   border-color: var(--blue-brand);
   transform: translateY(-1px);
 }

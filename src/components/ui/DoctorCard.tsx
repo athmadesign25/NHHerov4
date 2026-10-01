@@ -42,12 +42,12 @@ export default function DoctorCard({ doc, searchQuery = "", onClick }: DoctorCar
       </div>
       
       <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap", width: "100%", borderTop: "1px solid var(--color-border)", paddingTop: "10px", marginTop: "2px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--white)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--color-surface)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
           <img src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={10} height={10} />
           {doc.availability?.hospital || "Today 05:30 PM"}
         </div>
         {(doc.consultationModes === "both" || !doc.consultationModes) && (
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--white)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", background: "var(--color-surface)", color: "var(--color-text)", padding: "2px 6px", borderRadius: "20px", fontSize: "10px", fontWeight: 600, whiteSpace: "nowrap", border: "1px solid var(--color-border)" }}>
             <img src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={10} height={10} />
             {doc.availability?.video || "Today 05:30 PM"}
           </div>

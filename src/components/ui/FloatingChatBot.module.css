@@ -4,7 +4,7 @@
   right: 24px;
   width: 320px;
   height: 400px;
-  background-color: var(--white);
+  background-color: var(--color-surface);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(var(--black-rgb), 0.12);
   z-index: 9999;
@@ -21,7 +21,7 @@
   height: 56px;
   border-radius: 50%;
   background-color: var(--color-primary, var(--blue-brand));
-  color: var(--white);
+  color: var(--color-text-inverse);
   border: none;
   box-shadow: 0 4px 14px rgba(var(--blue-brand-rgb), 0.4);
   cursor: pointer;

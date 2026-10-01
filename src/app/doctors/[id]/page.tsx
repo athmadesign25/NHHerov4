@@ -333,7 +333,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "var(--white)",
+                      background: "var(--color-surface)",
                       borderRadius: 20,
                       boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                       zIndex: 0
@@ -378,7 +378,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "var(--white)",
+                      background: "var(--color-surface)",
                       borderRadius: 20,
                       boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                       zIndex: 0
@@ -616,7 +616,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--white)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", border: "none", cursor: "pointer", fontFamily: "var(--font-family)", marginBottom: 10, transition: "background 0.15s, transform 0.15s" }}
+            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--color-text-inverse)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", border: "none", cursor: "pointer", fontFamily: "var(--font-family)", marginBottom: 10, transition: "background 0.15s, transform 0.15s" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
             >

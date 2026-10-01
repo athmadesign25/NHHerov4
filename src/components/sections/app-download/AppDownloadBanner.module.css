@@ -197,7 +197,7 @@
 }
 
 .pillIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pillText {

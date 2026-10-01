@@ -55,14 +55,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white);
+  color: var(--color-text-inverse);
   flex-shrink: 0;
 }
 
 .headerTitle {
   font-size: 15px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.01em;
 }
 
@@ -86,7 +86,7 @@
   transition: all 0.15s ease;
   flex-shrink: 0;
 }
-.closeBtn:hover { background: rgba(var(--white-rgb), 0.12); color: var(--white); }
+.closeBtn:hover { background: rgba(var(--white-rgb), 0.12); color: var(--color-text-inverse); }
 
 /* ─── Body ────────────────────────────────────────────────────────────── */
 .body {
@@ -127,7 +127,7 @@
 .welcomeTitle {
   font-size: 34px;
   font-weight: 800;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.025em;
   margin: 0 0 10px;
 }
@@ -143,7 +143,7 @@
 .loginCta {
   background: rgba(var(--white-rgb), 0.08);
   border: 1px solid rgba(var(--white-rgb), 0.15);
-  color: var(--white);
+  color: var(--color-text-inverse);
   padding: 8px 18px;
   border-radius: 20px;
   font-size: 13px;
@@ -168,7 +168,7 @@
 .userMessage {
   align-self: flex-end;
   background: rgba(var(--white-rgb), 0.1);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 14.5px;
   font-weight: 500;
   line-height: 1.5;
@@ -193,7 +193,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white);
+  color: var(--color-text-inverse);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -338,7 +338,7 @@
 .doctorAvatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .doctorInfo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.doctorName { font-size: 14px; font-weight: 700; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doctorName { font-size: 14px; font-weight: 700; color: var(--color-text-inverse); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .doctorSpec { font-size: 12px; color: var(--violet-400); font-weight: 600; }
 
 .doctorMeta {
@@ -377,10 +377,10 @@
   display: flex;
   flex-direction: column;
 }
-.doctorFee { font-size: 16px; font-weight: 800; color: var(--white); }
+.doctorFee { font-size: 16px; font-weight: 800; color: var(--color-text-inverse); }
 .doctorFeeLabel { font-size: 10px; color: var(--slate-500); }
 .bookBtn {
-  background: var(--white);
+  background: var(--color-surface);
   color: var(--slate-900);
   border: none;
   border-radius: 20px;
@@ -426,7 +426,7 @@
 .chip:hover {
   background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--white-rgb), 0.15);
-  color: var(--white);
+  color: var(--color-text-inverse);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.15);
 }
@@ -441,7 +441,7 @@
   border-radius: 24px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.15);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
@@ -613,7 +613,7 @@
 }
 
 .searchIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* Match the exact text style of the search input (.searchInput) */
@@ -622,7 +622,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 18px;
   line-height: 1.4;
   padding-right: 8px;
@@ -657,7 +657,7 @@
   flex-shrink: 0;
   color: rgba(var(--white-rgb), 0.8);
 }
-.micBtn:hover { background: rgba(var(--white-rgb), 0.1); color: var(--white); }
+.micBtn:hover { background: rgba(var(--white-rgb), 0.1); color: var(--color-text-inverse); }
 
 .sendBtn {
   width: 40px;
@@ -665,7 +665,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(var(--white-rgb), 0.2);
-  color: var(--white);
+  color: var(--color-text-inverse);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -674,7 +674,7 @@
 }
 .sendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 .sendBtnActive {
-  background: var(--white);
+  background: var(--color-surface);
   color: var(--slate-900);
 }
 .sendBtnActive:hover { transform: scale(1.05); }

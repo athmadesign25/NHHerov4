@@ -35,7 +35,7 @@
 .heroTitle {
   font-size: clamp(28px, 4vw, 52px);
   font-weight: 900;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin-bottom: var(--sp-2);
@@ -51,7 +51,7 @@
 
 /* FILTER TABS */
 .filterBar {
-  background: var(--white);
+  background: var(--color-surface);
   border-bottom: 1px solid var(--color-border-light);
   position: sticky;
   top: var(--nav-height);
@@ -95,7 +95,7 @@
 .filterTabActive {
   background: var(--color-primary);
   border-color: var(--color-primary);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* GRID SECTION */
@@ -265,7 +265,7 @@
   gap: 8px;
   padding: 14px 28px;
   background: var(--color-primary);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: var(--font-size-sm);
   font-weight: 700;
   border-radius: var(--radius-full);
@@ -295,7 +295,7 @@
 
 .ctaBtnSecondary:hover {
   background: var(--color-primary);
-  color: var(--white);
+  color: var(--color-text-inverse);
   transform: translateY(-2px);
 }
 

@@ -416,7 +416,7 @@
 
 .closeBtn:hover {
   background: rgba(var(--white-rgb), 0.16);
-  color: var(--white);
+  color: var(--color-text-inverse);
   transform: scale(1.05);
 }
 
@@ -504,12 +504,12 @@
 }
 
 .standaloneIconBtn:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.12);
 }
 
 .standaloneIconBtn:focus-visible {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.16);
   outline: none;
 }
@@ -530,7 +530,7 @@
 }
 
 .iconControlBtn:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.1);
   border-color: rgba(var(--white-rgb), 0.16);
   transform: translateY(-1px);
@@ -546,7 +546,7 @@
   border-radius: 7px;
   background: var(--blue-brand);
   border: 1px solid rgba(var(--white-rgb), 0.16);
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   box-shadow: 0 2px 6px rgba(var(--blue-brand-rgb), 0.3);
@@ -595,11 +595,11 @@
 .locationPill:hover {
   background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--white-rgb), 0.2);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .locationPinIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
   opacity: 0.85;
 }
 
@@ -678,7 +678,7 @@
 .locationCurrentAction:hover {
   background: rgba(var(--cyan-bright-rgb), 0.14);
   border-color: rgba(var(--cyan-bright-rgb), 0.35);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .locationCurrentAction:disabled {
@@ -746,7 +746,7 @@
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
-  color: var(--white);
+  color: var(--color-text-inverse);
   width: 100%;
 }
 
@@ -807,7 +807,7 @@
 .locationMenuItem:hover,
 .locationMenuItemSelected {
   background: rgba(var(--white-rgb), 0.08);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-weight: 500;
 }
 
@@ -831,12 +831,12 @@
 }
 
 .inlineActionBtn:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.10);
 }
 
 .inlineActionBtn:focus-visible {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.14);
   outline: none;
 }
@@ -847,7 +847,7 @@
 }
 
 .inlineActionBtn:hover .inlineActionIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* ── Landing Quick Actions ("Find a doctor", "Describe my symptoms" - pure clean text + icon, NO BOX) ── */
@@ -860,7 +860,7 @@
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
   font-weight: 450;
@@ -877,7 +877,7 @@
 }
 
 .landingTextAction span {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .landingTextAction svg {
@@ -903,13 +903,13 @@
 .actionPill:hover {
   background: rgba(var(--white-rgb), 0.12);
   border-color: rgba(var(--white-rgb), 0.24);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .actionPillActive {
   background: rgba(var(--blue-brand-rgb), 0.25);
   border-color: rgba(var(--blue-brand-rgb), 0.6);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* ── State 02: Active Search Elements ── */
@@ -937,7 +937,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: clamp(18px, 1.6vw, 20px);
   font-weight: 450;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.4;
   letter-spacing: -0.01em;
   caret-color: var(--cyan-bright);
@@ -1078,7 +1078,7 @@
 }
 
 .genericExampleChip:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
   background: rgba(var(--white-rgb), 0.09);
   border-color: rgba(var(--sky-400-rgb), 0.35);
   transform: translateY(-1px);
@@ -1160,7 +1160,7 @@
 .suggestionItemActive {
   background: rgba(var(--white-rgb), 0.06);
   border-color: rgba(var(--white-rgb), 0.08);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .suggestionArrow {
@@ -1192,7 +1192,7 @@
 
 .highlightMatch {
   font-weight: 500;
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* ── Subtle Pulse AI Status ── */
@@ -1259,7 +1259,7 @@
 .resultsQueryText {
   font-size: 19px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.01em;
 }
 
@@ -1272,7 +1272,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 19px;
   font-weight: 550;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.01em;
   padding: 4px 0;
   width: 100%;
@@ -1287,7 +1287,7 @@
 
 .resultsQueryInput::selection {
   background: rgba(var(--cyan-bright-rgb), 0.35);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .resultsQueryActions {
@@ -1305,7 +1305,7 @@
   border-radius: 8px;
   background: var(--blue-brand);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.45);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
   font-weight: 600;
@@ -1380,7 +1380,7 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -1545,7 +1545,7 @@
 
 .refDocFavBtn:hover {
   background: rgba(var(--black-rgb), 0.6);
-  color: var(--white);
+  color: var(--color-text-inverse);
   transform: scale(1.08);
 }
 
@@ -1573,7 +1573,7 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb), 0.20);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -1616,7 +1616,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 15.5px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.015em;
   line-height: 1.22;
   margin: 0;
@@ -1642,7 +1642,7 @@
 .refDocSpecialty {
   font-size: 12px;
   font-weight: 500;
-  color: var(--white);
+  color: var(--color-text-inverse);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1697,7 +1697,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--white);
+  background: var(--color-surface);
   color: var(--blue-vivid);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
@@ -1725,7 +1725,7 @@
   align-items: center;
   justify-content: center;
   background: #1D68FE;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -1824,7 +1824,7 @@
 }
 
 .refSparkleIcon {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .refPulseTextWrap {
@@ -1845,7 +1845,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 14px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.01em;
 }
 
@@ -1877,7 +1877,7 @@
   border-radius: 8px;
   background: rgba(var(--slate-900-rgb), 0.85);
   border: 1px solid rgba(var(--white-rgb), 0.16);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
   font-weight: 600;
@@ -2031,7 +2031,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 14px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   margin: 0;
   line-height: 1.2;
 }
@@ -2083,7 +2083,7 @@
 
 .pulseExpandedMinimizeBtn:hover {
   background: rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  color: var(--color-text-inverse);
   border-color: rgba(var(--white-rgb), 0.22);
 }
 
@@ -2147,7 +2147,7 @@
   border: none;
   border-radius: 14px 14px 2px 14px;
   padding: 9px 14px;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-size: 12.5px;
   line-height: 1.4;
   box-shadow: 0 4px 16px rgba(var(--blue-brand-rgb), 0.35);
@@ -2197,7 +2197,7 @@
 
 .pulseContextActionBtn:hover {
   background: rgba(var(--cyan-bright-rgb), 0.22);
-  color: var(--white);
+  color: var(--color-text-inverse);
   border-color: rgba(var(--cyan-bright-rgb), 0.45);
 }
 
@@ -2219,7 +2219,7 @@
 
 .pulseEmergencyActionBtn:hover {
   background: var(--red-emergency);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pulseBubbleTime {
@@ -2299,7 +2299,7 @@
 .pulseQuickChip:hover {
   background: rgba(var(--cyan-bright-rgb), 0.12);
   border-color: rgba(var(--cyan-bright-rgb), 0.35);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pulseComposerForm {
@@ -2350,7 +2350,7 @@
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pulseComposerInput::placeholder {
@@ -2366,7 +2366,7 @@
   border-radius: 6px;
   background: var(--blue-brand);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -2454,7 +2454,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
@@ -2526,7 +2526,7 @@
   border-radius: 6px;
   background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.35);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 10.5px;
   font-weight: 600;
@@ -2584,7 +2584,7 @@
 
 .buriedResultsToggle:hover {
   background: rgba(var(--white-rgb), 0.07);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .buriedToggleLeft {
@@ -2632,7 +2632,7 @@
 
 /* ── State: Pulse Attached Mode ── */
 .statePulse {
-  background: var(--white);
+  background: var(--color-surface);
   border: 1px solid rgba(var(--white-rgb), 0.9);
   border-radius: 20px;
   box-shadow: 0 24px 64px -12px rgba(var(--black-rgb), 0.6);
@@ -2705,7 +2705,7 @@
 .specPillTag:hover {
   background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--white-rgb), 0.14);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 /* ── Tertiary Right Rail: Supporting Discovery, Reduced Emphasis (Editorial Sidebar) ── */
@@ -2812,7 +2812,7 @@
   font-family: var(--font-inter, "Inter", sans-serif);
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
@@ -2870,7 +2870,7 @@
 .editorialPill:hover {
   background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--white-rgb), 0.2);
-  color: var(--white);
+  color: var(--color-text-inverse);
   transform: translateY(-0.5px);
 }
 
@@ -3521,7 +3521,7 @@
   font-size: 11.5px;
   font-weight: 600;
   line-height: 1.25;
-  color: var(--white);
+  color: var(--color-text-inverse);
   text-align: center;
   letter-spacing: -0.01em;
   white-space: normal;
@@ -3570,7 +3570,7 @@
   border-radius: 8px;
   background: rgba(var(--white-rgb), 0.06);
   border: 1px solid rgba(var(--white-rgb), 0.12);
-  color: var(--white);
+  color: var(--color-text-inverse);
   cursor: pointer;
   transition: all 0.18s ease;
 }
@@ -3595,7 +3595,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
@@ -3706,7 +3706,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.4;
   letter-spacing: -0.01em;
 }
@@ -3935,7 +3935,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   line-height: 1.25;
   margin: 0;
   white-space: nowrap;
@@ -3980,7 +3980,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--white);
+  background: var(--color-surface);
   color: var(--blue-brand);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 11.5px;
@@ -4006,7 +4006,7 @@
   align-items: center;
   justify-content: center;
   background: var(--blue-600);
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 11.5px;
   font-weight: 600;
@@ -4100,7 +4100,7 @@
 .pulseTestTitle {
   font-size: 13px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--color-text-inverse);
   margin: 0;
 }
 
@@ -4151,7 +4151,7 @@
 .pulseChip:hover {
   background: rgba(var(--white-rgb), 0.1);
   border-color: rgba(var(--white-rgb), 0.22);
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pulseChipActive {
@@ -4192,7 +4192,7 @@
 }
 
 .pulseInputAttachBtn:hover {
-  color: var(--white);
+  color: var(--color-text-inverse);
 }
 
 .pulseTextInput {
@@ -4200,7 +4200,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -4233,7 +4233,7 @@
   border-radius: 8px;
   background: var(--blue-600);
   border: none;
-  color: var(--white);
+  color: var(--color-text-inverse);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4254,7 +4254,7 @@
 .themeWhite.stateActive,
 .themeWhite .stateActive,
 [data-search-theme="white"] .stateActive {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid rgba(var(--slate-200-rgb), 0.9) !important;
   box-shadow: 
     0 24px 60px -12px rgba(var(--black-rgb), 0.14),
@@ -4304,7 +4304,7 @@
 .themeWhite .submitArrowBtn,
 [data-search-theme="white"] .submitArrowBtn {
   background: var(--blue-vivid) !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .submitArrowBtn:hover,
@@ -4337,7 +4337,7 @@
 .landingContainer .inlineActionBtn:hover,
 .themeWhite .stateLanding .inlineActionBtn:hover,
 [data-search-theme="white"] .stateLanding .inlineActionBtn:hover {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
   background: rgba(var(--white-rgb), 0.12) !important;
 }
 
@@ -4345,7 +4345,7 @@
 .landingContainer .inlineActionBtn:hover .inlineActionIcon,
 .themeWhite .stateLanding .inlineActionBtn:hover .inlineActionIcon,
 [data-search-theme="white"] .stateLanding .inlineActionBtn:hover .inlineActionIcon {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 /* Quick Actions in Active Modal (White Mode only) */
@@ -4394,7 +4394,7 @@
 
 .themeWhite .locationPill:hover,
 [data-search-theme="white"] .locationPill:hover {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border-color: var(--slate-400) !important;
   color: var(--slate-900) !important;
   box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.06) !important;
@@ -4408,7 +4408,7 @@
 
 .themeWhite .locationMenu,
 [data-search-theme="white"] .locationMenu {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   box-shadow: 0 16px 36px rgba(var(--black-rgb), 0.12) !important;
 }
@@ -4461,7 +4461,7 @@
 .themeWhite .locationSearchWrapper:focus-within,
 [data-search-theme="white"] .locationSearchWrapper:focus-within {
   border-color: var(--blue-500) !important;
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
 }
 
 .themeWhite .locationSearchInput,
@@ -4537,7 +4537,7 @@
 .stateLanding .standaloneIconBtn:hover,
 .themeWhite .stateLanding .standaloneIconBtn:hover,
 [data-search-theme="white"] .stateLanding .standaloneIconBtn:hover {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
   background: rgba(var(--white-rgb), 0.08) !important;
 }
 
@@ -4552,7 +4552,7 @@
 .stateLanding .locationPinIcon,
 .themeWhite .stateLanding .locationPinIcon,
 [data-search-theme="white"] .stateLanding .locationPinIcon {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .stateLanding .landingTextAction,
@@ -4561,13 +4561,13 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .stateLanding .landingTextAction span,
 .themeWhite .stateLanding .landingTextAction span,
 [data-search-theme="white"] .stateLanding .landingTextAction span {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .stateLanding .landingTextAction svg,
@@ -4623,7 +4623,7 @@
 .themeWhite.stateResults,
 .themeWhite .stateResults,
 [data-search-theme="white"] .stateResults {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   box-shadow: 0 24px 60px -15px rgba(var(--black-rgb), 0.14) !important;
 }
@@ -4668,7 +4668,7 @@
 .themeWhite .querySendBtn,
 [data-search-theme="white"] .querySendBtn {
   background: var(--blue-vivid) !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .sectionEyebrowTitle,
@@ -4708,12 +4708,12 @@
 
 .themeWhite .refDocName,
 [data-search-theme="white"] .refDocName {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .refDocSpecialty,
 [data-search-theme="white"] .refDocSpecialty {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .refDocExpRow,
@@ -4728,7 +4728,7 @@
 
 .themeWhite .refBookBtnWhite,
 [data-search-theme="white"] .refBookBtnWhite {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   color: var(--blue-vivid) !important;
   border-radius: 8px !important;
 }
@@ -4742,7 +4742,7 @@
 .themeWhite .refBookBtn,
 [data-search-theme="white"] .refBookBtn {
   background: #1D68FE !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
   border-radius: 10px !important;
 }
 
@@ -4764,7 +4764,7 @@
 /* Results Pulse Recommendation Row (White Mode - Clean, solid, no rainbow/pink gradient) */
 .themeWhite .refPulseRow,
 [data-search-theme="white"] .refPulseRow {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   border-radius: 16px !important;
   box-shadow: 0 2px 12px rgba(var(--black-rgb), 0.04) !important;
@@ -4775,7 +4775,7 @@
 
 .themeWhite .refPulseRow:hover,
 [data-search-theme="white"] .refPulseRow:hover {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border-color: var(--slate-300) !important;
   box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.07) !important;
 }
@@ -4806,7 +4806,7 @@
 
 .themeWhite .refPulseBtn,
 [data-search-theme="white"] .refPulseBtn {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid rgba(203, 213, 225, 0.85) !important;
   color: var(--slate-900) !important;
   font-weight: 500 !important;
@@ -4911,7 +4911,7 @@
 
 .themeWhite .pulseBackBtn,
 [data-search-theme="white"] .pulseBackBtn {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-800) !important;
   box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.05) !important;
@@ -5009,14 +5009,14 @@
 
 .themeWhite .pulseThinkingPill,
 [data-search-theme="white"] .pulseThinkingPill {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-600) !important;
 }
 
 .themeWhite .pulseDoctorCard,
 [data-search-theme="white"] .pulseDoctorCard {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   box-shadow: 0 4px 16px -2px rgba(var(--black-rgb), 0.08) !important;
 }
@@ -5041,7 +5041,7 @@
 
 .themeWhite .pulseDocName,
 [data-search-theme="white"] .pulseDocName {
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .pulseDocSpecialty,
@@ -5067,7 +5067,7 @@
 .themeWhite .pulseBookBtn,
 [data-search-theme="white"] .pulseBookBtn {
   background: var(--blue-vivid) !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .themeWhite .pulseBookBtn:hover,
@@ -5077,7 +5077,7 @@
 
 .themeWhite .pulseChip,
 [data-search-theme="white"] .pulseChip {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-700) !important;
   box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04) !important;
@@ -5100,7 +5100,7 @@
 
 .themeWhite .pulseInputBar,
 [data-search-theme="white"] .pulseInputBar {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   box-shadow: 0 2px 10px rgba(var(--black-rgb), 0.05) !important;
 }
@@ -5144,7 +5144,7 @@
 .themeWhite .pulseSendBtn,
 [data-search-theme="white"] .pulseSendBtn {
   background: var(--blue-vivid) !important;
-  color: var(--white) !important;
+  color: var(--color-text-inverse) !important;
   box-shadow: 0 2px 8px rgba(var(--blue-vivid-rgb), 0.3) !important;
 }
 
@@ -5156,7 +5156,7 @@
 /* Diagnostic test cards in White Mode */
 .themeWhite .pulseTestCard,
 [data-search-theme="white"] .pulseTestCard {
-  background: var(--white) !important;
+  background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.05) !important;
 }
@@ -5376,7 +5376,7 @@
   justify-content: center;
   gap: 7px;
   padding: 13px 6px;
-  color: var(--white);
+  color: var(--color-text-inverse);
   text-decoration: none;
   background: transparent;
   width: 100%;
@@ -5440,7 +5440,7 @@
   justify-content: center;
   gap: 7px;
   padding: 13px 6px;
-  color: var(--white);
+  color: var(--color-text-inverse);
   text-decoration: none;
   background: transparent;
   width: 100%;

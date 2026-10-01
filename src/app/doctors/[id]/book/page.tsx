@@ -143,7 +143,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              style={{ background: "var(--white)", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", flexDirection: "column", gap: 16 }}
+              style={{ background: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: 16, padding: 20, display: "flex", flexDirection: "column", gap: 16 }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--color-border-light)", paddingBottom: 16 }}>
                 <div style={{ color: "var(--color-text-secondary)", fontWeight: 500 }}>Consultation Fee</div>
@@ -197,7 +197,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Hospital Visit" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -228,7 +228,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Video Consultation" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -404,7 +404,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--white)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10 }}
+            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "var(--color-text-inverse)", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10 }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
             >

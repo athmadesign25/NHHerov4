@@ -230,7 +230,7 @@
 }
 
 .heroStatValue {
-  color: var(--white);
+  color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 32px;
   font-weight: 700;
