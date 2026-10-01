@@ -23,7 +23,8 @@
   background-color: var(--color-primary, var(--blue-brand));
   color: var(--color-text-inverse);
   border: none;
-  box-shadow: 0 4px 14px rgba(var(--blue-brand-rgb), 0.4);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
   cursor: pointer;
   z-index: 9999;
   display: flex;

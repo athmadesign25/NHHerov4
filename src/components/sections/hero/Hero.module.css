@@ -1182,7 +1182,8 @@
   font-size: var(--font-size-sm, 14px);
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.25);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
   transition: all 0.2s ease;
   line-height: normal;
 }
@@ -1190,7 +1191,8 @@
 .searchBtn:hover {
   background: var(--color-primary-dark, #013a7d);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(var(--blue-brand-rgb), 0.4);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-3);
 }
 
 .dropdown {
@@ -1456,7 +1458,8 @@
   color: var(--color-primary, var(--blue-brand));
   border-color: var(--color-primary, var(--blue-brand));
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.16);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .doctorGrid {
@@ -1482,7 +1485,8 @@
 .doctorCard:hover {
   border-color: var(--color-primary, var(--blue-brand));
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.08);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .doctorPhoto {
@@ -1571,7 +1575,8 @@
 
 .specCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.08);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .specImage {
@@ -1624,7 +1629,8 @@
 
 .treatmentCard:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.08);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .treatmentImage {
@@ -2333,14 +2339,16 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 3px 8px rgba(var(--blue-brand-rgb), 0.25);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-1);
   font-family: inherit;
   white-space: nowrap;
 }
 
 .pulsePreviewBookBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.35);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .pulsePreviewModifyBtn {
@@ -2572,7 +2580,8 @@
   color: var(--color-text-inverse);
   border-color: var(--sky-600);
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.2);
+  --shadow-rgb: var(--sky-600-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .tealChip {
@@ -2585,7 +2594,8 @@
   color: var(--color-text-inverse);
   border-color: var(--teal-600);
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(13, 148, 136, 0.2);
+  --shadow-rgb: var(--teal-600-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .pulsePreviewSecondarySection {

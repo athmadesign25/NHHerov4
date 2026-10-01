@@ -64,6 +64,11 @@
   --blue-brand: rgb(var(--blue-brand-rgb));
   --blue-700: #0f58b8;
   --blue-800: #0446b8;
+  /* The navbar's scrolled shadow was written as rgba(2, 48, 112, 0.3) —
+     which is exactly this value, and exactly what --color-primary-dark
+     already held. It was the same colour twice, one of them anonymous. */
+  --blue-900-rgb: 2, 48, 112;
+  --blue-900: rgb(var(--blue-900-rgb));
 
   /* Accent blues. Not drift: --cyan-bright, --sky-400 and --blue-600 are
      concentrated in the Pulse AI components, where they appear in gradients
@@ -78,7 +83,8 @@
   --cyan-bright: rgb(var(--cyan-bright-rgb));
   --sky-400-rgb: 56, 189, 248;
   --sky-400: rgb(var(--sky-400-rgb));
-  --sky-600: #0284c7;
+  --sky-600-rgb: 2, 132, 199;
+  --sky-600: rgb(var(--sky-600-rgb));
 
   /* Pale blue tints. */
   --blue-tint-50: #eef2f7;
@@ -88,7 +94,8 @@
   --red-emergency-rgb: 237, 28, 36;
   --red-emergency: rgb(var(--red-emergency-rgb));
   --red-emergency-tint: #fef5f5;
-  --red-400: #f87171;
+  --red-400-rgb: 248, 113, 113;
+  --red-400: rgb(var(--red-400-rgb));
   --red-500-rgb: 239, 68, 68;
   --red-500: rgb(var(--red-500-rgb));
   --red-700: #c8151c;
@@ -103,7 +110,8 @@
   --green-500-rgb: 34, 197, 94;
   --green-500: rgb(var(--green-500-rgb));
   --emerald-500: #10b981;
-  --teal-600: #0d9488;
+  --teal-600-rgb: 13, 148, 136;
+  --teal-600: rgb(var(--teal-600-rgb));
   --amber-500-rgb: 245, 158, 11;
   --amber-500: rgb(var(--amber-500-rgb));
   --violet-400: #a78bfa;
@@ -114,7 +122,7 @@
   /* ── SEMANTIC ────────────────────────────────────────────────────────── */
 
   --color-primary: var(--blue-brand);
-  --color-primary-dark: #023070;
+  --color-primary-dark: var(--blue-900);
   --color-primary-light: #EEF3FA;
   --color-primary-mid: #1565C0;
   /* These two kept the pre-correction channels (…, 162) after the brand blue
@@ -229,23 +237,9 @@
 
      Elevation is about distance from the surface, so each step raises blur
      and alpha together. */
+  /* The default shadow hue. A component overrides this locally to retint
+     the whole ramp — see the * rule below, which is what makes that work. */
   --shadow-rgb: 12, 24, 57;
-
-  --elevation-1:
-    0 1px 2px rgba(var(--shadow-rgb), 0.06),
-    0 2px 6px rgba(var(--shadow-rgb), 0.06);
-  --elevation-2:
-    0 1px 2px rgba(var(--shadow-rgb), 0.06),
-    0 4px 12px rgba(var(--shadow-rgb), 0.08);
-  --elevation-3:
-    0 2px 4px rgba(var(--shadow-rgb), 0.06),
-    0 8px 24px rgba(var(--shadow-rgb), 0.10);
-  --elevation-4:
-    0 4px 8px -2px rgba(var(--shadow-rgb), 0.08),
-    0 16px 40px -8px rgba(var(--shadow-rgb), 0.16);
-  --elevation-5:
-    0 8px 16px -4px rgba(var(--shadow-rgb), 0.10),
-    0 24px 64px -12px rgba(var(--shadow-rgb), 0.24);
 
   /* Not elevation: a focus ring and an inner top-edge highlight. Kept here
      because they are written as box-shadows and would otherwise be the last
@@ -286,6 +280,42 @@
   --transition-fast: 150ms ease-out;
   --transition-base: 250ms ease-out;
   --transition-slow: 400ms ease-out;
+}
+
+/* ─── ELEVATION RAMP ──────────────────────────────────────────────────────
+   Declared on * rather than :root, and that placement is load-bearing.
+
+   A custom property substitutes its own var() references at computed-value
+   time on the element where it is DECLARED. Defined on :root, --elevation-2
+   would resolve var(--shadow-rgb) once, against the root's default navy, and
+   every element would inherit that already-resolved string — so a component
+   setting --shadow-rgb on itself would have no effect whatsoever. Verified:
+   it silently did nothing.
+
+   Declared on *, each element computes its own copy against its own
+   --shadow-rgb. That is what lets a component retint the entire ramp with
+   one line:
+
+     .bookBtn { --shadow-rgb: var(--red-emergency-rgb); box-shadow: var(--elevation-1); }
+
+   One elevation axis that carries hue, rather than a parallel glow scale.
+   It is also why hover is a step up the ramp instead of a brighter glow. */
+*, *::before, *::after {
+  --elevation-1:
+    0 1px 2px rgba(var(--shadow-rgb), 0.06),
+    0 2px 6px rgba(var(--shadow-rgb), 0.06);
+  --elevation-2:
+    0 1px 2px rgba(var(--shadow-rgb), 0.06),
+    0 4px 12px rgba(var(--shadow-rgb), 0.08);
+  --elevation-3:
+    0 2px 4px rgba(var(--shadow-rgb), 0.06),
+    0 8px 24px rgba(var(--shadow-rgb), 0.10);
+  --elevation-4:
+    0 4px 8px -2px rgba(var(--shadow-rgb), 0.08),
+    0 16px 40px -8px rgba(var(--shadow-rgb), 0.16);
+  --elevation-5:
+    0 8px 16px -4px rgba(var(--shadow-rgb), 0.10),
+    0 24px 64px -12px rgba(var(--shadow-rgb), 0.24);
 }
 
 /* ─── RESETS ─────────────────────────────────────────────────────────────── */

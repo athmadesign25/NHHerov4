@@ -549,7 +549,8 @@
   color: var(--color-text-inverse);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 6px rgba(var(--blue-brand-rgb), 0.3);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .submitArrowBtn svg {
@@ -561,7 +562,8 @@
   background: #0060DF;
   border-color: rgba(var(--white-rgb), 0.3);
   transform: scale(1.03);
-  box-shadow: 0 3px 10px rgba(0, 96, 223, 0.4);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .submitArrowBtn:hover svg {
@@ -1735,13 +1737,15 @@
   border: none;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 2px 8px rgba(29, 104, 254, 0.35);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .refBookBtn:hover {
   background: #1557E0;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(29, 104, 254, 0.45);
+  --shadow-rgb: var(--blue-brand-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 /* Below Doctor Grid Link */
@@ -5143,7 +5147,8 @@
 [data-search-theme="white"] .pulseSendBtn {
   background: var(--blue-vivid) !important;
   color: var(--color-text-inverse) !important;
-  box-shadow: 0 2px 8px rgba(var(--blue-vivid-rgb), 0.3) !important;
+  --shadow-rgb: var(--blue-vivid-rgb);
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .pulseSendBtn:hover,

@@ -385,7 +385,7 @@
 }
 
 .packageCardV2 {
-  box-shadow: 0 0 40px 0 rgba(var(--black-rgb), 0.16);
+  box-shadow: var(--elevation-4);
 }
 
 .packageCardV3 {
@@ -590,7 +590,7 @@
   /* Deeper/more saturated than a light wash — against the white glass
      card a 0.20-alpha tint read as too pale to register as a chip. */
   background: linear-gradient(180deg, rgb(238 30 38 / 85%) 0%, rgb(168 9 9 / 76%) 100%);
-  box-shadow: 0 1.133px 0 1.133px rgb(232 134 134 / 10%) inset;
+  box-shadow: 0 1px 0 1px rgba(var(--red-400-rgb), 0.1) inset;
   backdrop-filter: blur(6px);
 }
 

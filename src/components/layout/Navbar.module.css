@@ -15,7 +15,8 @@
   background: rgba(var(--blue-brand-rgb), 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.16);
-  box-shadow: 0 4px 20px rgba(2, 48, 112, 0.3);
+  --shadow-rgb: var(--blue-900-rgb);
+  box-shadow: var(--elevation-3);
 }
 
 .inner {
@@ -701,13 +702,15 @@
   border-radius: var(--radius-full);
   transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(var(--red-emergency-rgb), 0.3);
+  --shadow-rgb: var(--red-emergency-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .bookBtn:hover {
   background: var(--red-700);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(var(--red-emergency-rgb), 0.4);
+  --shadow-rgb: var(--red-emergency-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .scrolled .bookBtn {
