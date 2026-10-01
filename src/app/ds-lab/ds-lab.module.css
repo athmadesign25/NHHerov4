@@ -163,7 +163,7 @@
 
 .alphaCell span {
   font-family: ui-monospace, monospace;
-  font-size: 8px;
+  font-size: var(--font-size-2xs);
   opacity: 0.6;
 }
 

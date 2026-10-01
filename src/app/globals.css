@@ -160,6 +160,10 @@
   --font-size-2xl: 24px;
   --font-size-3xl: 30px;
   --font-size-4xl: 36px;
+  /* Section-title display size. Sits between 4xl and 5xl because the
+     section titles across PatientStories and HealthPackages had settled on
+     42px independently, and the page h1 at 40px was within 2px of them. */
+  --font-size-display: 42px;
   --font-size-5xl: 48px;
   --font-size-6xl: 60px;
   --font-size-7xl: 72px;

@@ -212,7 +212,7 @@
 }
 
 .title {
-  font-size: 42px;
+  font-size: var(--font-size-display);
   font-weight: 800;
   line-height: var(--leading-tight);
   letter-spacing: -0.025em;
