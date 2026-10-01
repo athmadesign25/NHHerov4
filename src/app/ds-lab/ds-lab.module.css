@@ -1,0 +1,333 @@
+/* Token proof sheet. Intentionally plain: the page is a measuring surface,
+   so anything decorative here would compete with the tokens being judged. */
+
+.page {
+  min-height: 100dvh;
+  /* Top padding clears the fixed navbar, which belongs to the root layout
+     and would otherwise sit over the heading. */
+  padding: calc(var(--nav-height) + var(--sp-3)) clamp(16px, 4vw, 48px) var(--sp-16);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+
+/* Dark surface, for judging the on-dark values. Every dark section in the
+   app hand-writes its own whites, so this is where that shows up. */
+.dark {
+  background: var(--navy-900);
+  color: var(--color-text-inverse);
+}
+
+.empty {
+  padding: var(--sp-6);
+  color: var(--color-text-secondary);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid currentColor;
+  margin-bottom: var(--sp-5);
+}
+
+.h1 {
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+.sub {
+  margin-top: 8px;
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+  opacity: 0.7;
+}
+
+.toggle {
+  flex: none;
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.toggle:hover { opacity: 0.65; }
+
+.section {
+  padding: var(--sp-5) 0;
+  border-bottom: 1px solid rgba(var(--slate-500-rgb, 100, 116, 139), 0.2);
+}
+
+.h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: var(--font-size-xl);
+  line-height: var(--leading-snug);
+  font-weight: 700;
+  margin-bottom: var(--sp-2);
+}
+
+.count {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+.h3 {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+  margin-bottom: 12px;
+}
+
+.note {
+  max-width: 68ch;
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+  opacity: 0.7;
+  margin-bottom: var(--sp-2);
+}
+
+.block { margin-top: var(--sp-3); }
+
+.tokName {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: var(--font-size-2xs);
+  opacity: 0.9;
+  word-break: break-all;
+}
+
+.tokVal {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: var(--font-size-2xs);
+  opacity: 0.5;
+}
+
+/* ─── colour ─── */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.swatch { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+.chip {
+  height: 56px;
+  border-radius: var(--radius-md);
+  /* A ring, so white-on-white and near-transparent values stay visible —
+     without it half the neutral ramp is invisible on this page. */
+  box-shadow: inset 0 0 0 1px rgba(var(--slate-500-rgb, 100, 116, 139), 0.35);
+}
+
+/* ─── alpha ─── */
+.alphaRow { margin-bottom: 14px; }
+
+.alphaStrip {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  margin-top: 6px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  /* Checkerboard, so opacity is legible rather than guessed at. */
+  background-image:
+    linear-gradient(45deg, rgba(var(--slate-500-rgb, 100, 116, 139), 0.25) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(var(--slate-500-rgb, 100, 116, 139), 0.25) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(var(--slate-500-rgb, 100, 116, 139), 0.25) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(var(--slate-500-rgb, 100, 116, 139), 0.25) 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+}
+
+.alphaCell {
+  height: 44px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 2px;
+}
+
+.alphaCell span {
+  font-family: ui-monospace, monospace;
+  font-size: 8px;
+  opacity: 0.6;
+}
+
+/* ─── type ─── */
+.typeRow {
+  display: grid;
+  grid-template-columns: 170px 70px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(var(--slate-500-rgb, 100, 116, 139), 0.14);
+}
+
+.specimen {
+  line-height: var(--leading-snug);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.leadGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--sp-2);
+}
+
+.leadCell p {
+  margin-top: 6px;
+  font-size: var(--font-size-base);
+}
+
+/* ─── elevation ─── */
+.elevGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--sp-3);
+  padding: var(--sp-2) 0 var(--sp-4);
+}
+
+.elevCell {
+  display: flex;
+  align-items: flex-end;
+  min-height: 104px;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* ─── radius & spacing ─── */
+.radGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--sp-2);
+}
+
+.radCell { display: flex; flex-direction: column; gap: 4px; }
+
+.radBox {
+  height: 72px;
+  background: rgba(var(--blue-brand-rgb), 0.14);
+  box-shadow: inset 0 0 0 1px rgba(var(--blue-brand-rgb), 0.4);
+}
+
+.spaceRow {
+  display: grid;
+  grid-template-columns: 110px 60px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 5px 0;
+}
+
+.spaceBar {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--blue-brand);
+}
+
+/* ─── motion ─── */
+.motionRow {
+  display: grid;
+  grid-template-columns: 180px 60px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+}
+
+.motionTrack {
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--slate-500-rgb, 100, 116, 139), 0.16);
+  position: relative;
+}
+
+.motionDot {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background: var(--blue-brand);
+  transition-property: transform;
+}
+
+.motionRow:hover .motionDot { transform: translateX(calc(100cqw)); }
+.motionTrack { container-type: inline-size; }
+
+/* ─── states ─── */
+.stateRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.btnPrimary,
+.btnOutline,
+.btnGhost {
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.btnPrimary {
+  background: var(--blue-brand);
+  color: var(--color-text-inverse);
+  border: 1px solid transparent;
+  box-shadow: var(--elevation-2);
+}
+
+.btnPrimary:disabled {
+  /* No disabled token exists, so this is a local fudge — which is exactly
+     the gap this page is meant to surface. */
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.isFocus { box-shadow: var(--shadow-focus-ring); }
+
+.btnOutline {
+  background: transparent;
+  color: var(--blue-brand);
+  border: 1px solid currentColor;
+}
+
+.btnGhost {
+  background: transparent;
+  color: inherit;
+  border: 1px solid transparent;
+}
+
+@media (max-width: 768px) {
+  .typeRow,
+  .spaceRow,
+  .motionRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .alphaStrip { grid-template-columns: repeat(8, 1fr); }
+}
