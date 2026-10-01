@@ -3,7 +3,7 @@
   overflow: hidden;
   border-radius: 0;
   background: radial-gradient(75% 55% at 50% 100%, rgba(13, 87, 189, 0.30) 0%, rgba(6, 17, 32, 0) 100%), #061120;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
 }
 
 /* Emergency Strip */
@@ -53,7 +53,7 @@
   font-weight: 700;
   color: var(--white);
   padding: 4px 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(var(--white-rgb), 0.4);
   border-radius: var(--radius-full);
   transition: border-color var(--transition-fast);
 }
@@ -100,7 +100,7 @@
 .brandDesc {
   font-size: var(--font-size-sm);
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--white-rgb), 0.65);
 }
 
 .contact {
@@ -114,7 +114,7 @@
   align-items: center;
   gap: 8px;
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--white-rgb), 0.65);
   transition: color var(--transition-fast);
 }
 
@@ -135,8 +135,8 @@ a.contactItem:hover {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--white-rgb), 0.1);
+  color: rgba(var(--white-rgb), 0.7);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
@@ -163,7 +163,7 @@ a.contactItem:hover {
 
 .link {
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--white-rgb), 0.6);
   transition: color var(--transition-fast), padding-left var(--transition-fast);
   display: block;
 }
@@ -175,7 +175,7 @@ a.contactItem:hover {
 
 /* Bottom Bar */
 .bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--white-rgb), 0.1);
   padding: var(--sp-3) 0;
 }
 
@@ -189,7 +189,7 @@ a.contactItem:hover {
 
 .copyright {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--white-rgb), 0.45);
 }
 
 .bottomLinks {
@@ -200,12 +200,12 @@ a.contactItem:hover {
 
 .bottomLink {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--white-rgb), 0.45);
   transition: color var(--transition-fast);
 }
 
 .bottomLink:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(var(--white-rgb), 0.8);
 }
 
 @media (max-width: 1024px) {

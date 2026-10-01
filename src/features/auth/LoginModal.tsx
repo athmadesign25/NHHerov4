@@ -132,7 +132,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              backgroundColor: "rgba(var(--black-rgb), 0.4)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
             }}
@@ -155,7 +155,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 style={{ objectFit: "cover", objectPosition: "center" }}
                 priority
               />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent)", zIndex: 1 }}></div>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(var(--black-rgb), 0.8), transparent)", zIndex: 1 }}></div>
               <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--white)" }}>
                 <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
                 <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
@@ -222,7 +222,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "mobile" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -255,7 +255,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "email" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -479,7 +479,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         <motion.div
                           animate={{ rotate: 360 }}
                           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "var(--white)", borderRadius: "50%" }}
+                          style={{ width: 18, height: 18, border: "2px solid rgba(var(--white-rgb), 0.3)", borderTopColor: "var(--white)", borderRadius: "50%" }}
                         />
                         Verifying...
                       </>

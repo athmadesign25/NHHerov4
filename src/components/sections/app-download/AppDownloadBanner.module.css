@@ -35,8 +35,8 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
 }
 
 /* justify-content:flex-end (not space-between) packs topTextBlock and
@@ -463,17 +463,17 @@
 @media (max-width: 1024px) {
   .storeBadge {
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(var(--white-rgb), 0.15);
     background: var(--black);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.5);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .storeBadge:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
+    border-color: rgba(var(--white-rgb), 0.35);
+    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.6), 0 0 16px rgba(var(--white-rgb), 0.12);
   }
 }
 
@@ -516,7 +516,7 @@
   width: 310px;
   height: 464px;
   overflow: hidden;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 30px 60px rgba(var(--black-rgb), 0.35));
 }
 
 .phoneImg {
@@ -652,11 +652,11 @@
     font-weight: 600;
     color: #111827;
     padding: 10px 24px;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(var(--white-rgb), 0.85);
     backdrop-filter: blur(16px);
     border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(var(--white-rgb), 1);
+    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.08);
     min-width: auto;
     margin-bottom: -24px; /* Slight overlap over the phone */
   }
@@ -740,23 +740,23 @@
   align-items: center;
   gap: 10px;
   border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
   /* Neutral glass fill, with a faint grey wash pooling at the bottom edge
      (rather than a flat tint) so the pill reads as lit from above, plus a
      soft shadow to lift it off the backdrop now that it's no longer
      leaning on the old blue tint for separation. */
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 100%),
+    linear-gradient(180deg, rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 0.06) 100%),
     rgba(var(--blue-brand-rgb), 0.10),
-    rgba(255, 255, 255, 0.14);
+    rgba(var(--white-rgb), 0.14);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.10);
   white-space: nowrap;
 }
 
 .featurePillText {
-  color: rgba(0, 0, 0, 0.94);
+  color: rgba(var(--black-rgb), 0.94);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 16px;
   font-style: normal;
@@ -779,7 +779,7 @@
   border-radius: 10px;
   backdrop-filter: blur(36px) saturate(1.7);
   -webkit-backdrop-filter: blur(36px) saturate(1.7);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.06);
   /* Slight white gradient border via the two-layer background-clip trick
      (a real border-image would square off the rounded corners) — the
      padding-box layer stays fully transparent so the glass blur behind
@@ -787,8 +787,8 @@
      gradient, and only shows through the 1px border ring. */
   border: 1px solid transparent;
   background:
-    linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) padding-box,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 100%) border-box;
+    linear-gradient(rgba(var(--black-rgb), 0), rgba(var(--black-rgb), 0)) padding-box,
+    linear-gradient(180deg, rgba(var(--white-rgb), 0.65) 0%, rgba(var(--white-rgb), 0.12) 100%) border-box;
 }
 
 /* Top "India's Most Trusted" unit spans the full width of the stack (the
@@ -812,7 +812,7 @@
   flex-shrink: 0;
   border-radius: 10px;
   background: linear-gradient(180deg, #ef4e4e 0%, #fa8c8e 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  box-shadow: 0 1.133px 0 1.133px rgba(var(--white-rgb), 0.22) inset;
 }
 
 .valueText {

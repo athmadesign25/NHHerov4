@@ -126,7 +126,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 12px 36px rgba(var(--black-rgb), 0.16);
   background: #19100E;
   box-sizing: border-box;
 }
@@ -230,7 +230,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  border-left: 2px solid rgba(255, 255, 255, 0.40);
+  border-left: 2px solid rgba(var(--white-rgb), 0.40);
   padding: 0 0 0 16px;
   height: 64px;
   min-height: 64px;
@@ -264,7 +264,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
   background: var(--slate-900);
   box-sizing: border-box;
 }
@@ -288,7 +288,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
   background: var(--slate-900);
   box-sizing: border-box;
 }
@@ -316,7 +316,7 @@
   left: 0;
   right: 0;
   height: 220px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.40) 48%, rgba(0, 0, 0, 0.00) 100%);
+  background: linear-gradient(180deg, rgba(var(--black-rgb), 0.78) 0%, rgba(var(--black-rgb), 0.40) 48%, rgba(var(--black-rgb), 0.00) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -381,7 +381,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
   background: #0a3167;
   box-sizing: border-box;
 }
@@ -401,7 +401,7 @@
   left: 0;
   right: 0;
   height: 340px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.5) 48%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(180deg, rgba(var(--black-rgb), 0.85) 0%, rgba(var(--black-rgb), 0.5) 48%, rgba(var(--black-rgb), 0) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -471,7 +471,7 @@
   .cardTitle {
     font-size: 18px !important;
     line-height: 1.25 !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.4);
   }
 
   .cardSubtitle {

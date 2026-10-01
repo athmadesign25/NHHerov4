@@ -431,7 +431,7 @@ export default function PulseAIView({
                     <Heart
                       size={12}
                       fill={favorites.includes(doc.id) ? "#EF4444" : "none"}
-                      color={favorites.includes(doc.id) ? "#EF4444" : "rgba(255, 255, 255, 0.85)"}
+                      color={favorites.includes(doc.id) ? "#EF4444" : "rgba(var(--white-rgb), 0.85)"}
                     />
                   </button>
 

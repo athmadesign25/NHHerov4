@@ -162,7 +162,7 @@ function KaraokeCaption({
             <span
               key={`${lineIndex}-${wIdx}`}
               style={{
-                color: isHighlighted ? "var(--white)" : "rgba(255, 255, 255, 0.4)",
+                color: isHighlighted ? "var(--white)" : "rgba(var(--white-rgb), 0.4)",
                 fontWeight: 600,
                 transition: "color 0.18s ease-in-out",
                 marginRight: wIdx === words.length - 1 ? "0px" : "6px",

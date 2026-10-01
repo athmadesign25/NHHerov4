@@ -75,7 +75,7 @@ export default function DefaultSearchPrompt({
         {/* Main prompt: Balanced airy regular weight, matching active search placeholder style */}
         <TypewriterPrompt
           className={styles.landingPlaceholder}
-          style={isWhite ? { color: "rgba(15, 23, 42, 0.45)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : { color: "rgba(255, 255, 255, 0.62)", fontWeight: 400 }}
+          style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.45)", fontWeight: 400, letterSpacing: "-0.01em", textShadow: "none" } : { color: "rgba(var(--white-rgb), 0.62)", fontWeight: 400 }}
         />
       </motion.div>
 
@@ -125,7 +125,7 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.standaloneIconBtn}
-            style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
+            style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.55)" } : undefined}
             aria-label="Attach medical records or file"
             onClick={(e) => {
               e.stopPropagation();
@@ -145,13 +145,13 @@ export default function DefaultSearchPrompt({
           <button
             type="button"
             className={styles.inlineActionBtn}
-            style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
+            style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.65)", fontWeight: 400 } : undefined}
             onClick={(e) => {
               e.stopPropagation();
               onSelectActionPill("doctor");
             }}
           >
-            <User size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
+            <User size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.50)" } : undefined} />
             <span>Find a doctor</span>
           </button>
 
@@ -160,13 +160,13 @@ export default function DefaultSearchPrompt({
             <button
               type="button"
               className={styles.inlineActionBtn}
-              style={isWhite ? { color: "rgba(15, 23, 42, 0.65)", fontWeight: 400 } : undefined}
+              style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.65)", fontWeight: 400 } : undefined}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelectActionPill("symptoms");
               }}
             >
-              <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(15, 23, 42, 0.50)" } : undefined} />
+              <Heart size={14} className={styles.inlineActionIcon} style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.50)" } : undefined} />
               <span>Describe my symptoms</span>
             </button>
           )}
@@ -178,7 +178,7 @@ export default function DefaultSearchPrompt({
             <button
               type="button"
               className={styles.standaloneIconBtn}
-              style={isWhite ? { color: "rgba(15, 23, 42, 0.55)" } : undefined}
+              style={isWhite ? { color: "rgba(var(--slate-900-rgb), 0.55)" } : undefined}
               aria-label="Voice search"
               onClick={(e) => {
                 e.stopPropagation();

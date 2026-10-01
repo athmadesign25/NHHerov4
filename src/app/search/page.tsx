@@ -1424,7 +1424,7 @@ function SearchResultsContent() {
                                 inset: 0,
                                 background: "var(--white)",
                                 borderRadius: 20,
-                                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                                boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                                 zIndex: 0
                               }}
                               transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -1474,7 +1474,7 @@ function SearchResultsContent() {
                                 inset: 0,
                                 background: "var(--white)",
                                 borderRadius: 20,
-                                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                                boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                                 zIndex: 0
                               }}
                               transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -1507,7 +1507,7 @@ function SearchResultsContent() {
                           boxSizing: "border-box",
                           borderRadius: 16,
                           border: `1px solid ${selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-border)"}`,
-                          background: selectedAvailability.includes("Available Today") ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
+                          background: selectedAvailability.includes("Available Today") ? "rgba(var(--red-emergency-rgb), 0.08)" : "var(--white)",
                           color: selectedAvailability.includes("Available Today") ? "var(--color-emergency)" : "var(--color-text-secondary)",
                           fontSize: 13,
                           fontWeight: 500,
@@ -1527,7 +1527,7 @@ function SearchResultsContent() {
                           boxSizing: "border-box",
                           borderRadius: 16,
                           border: `1px solid ${selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-border)"}`,
-                          background: selectedAvailability.includes("Available Tomorrow") ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
+                          background: selectedAvailability.includes("Available Tomorrow") ? "rgba(var(--red-emergency-rgb), 0.08)" : "var(--white)",
                           color: selectedAvailability.includes("Available Tomorrow") ? "var(--color-emergency)" : "var(--color-text-secondary)",
                           fontSize: 13,
                           fontWeight: 500,
@@ -1565,7 +1565,7 @@ function SearchResultsContent() {
                             display: "inline-flex", 
                             alignItems: "center", 
                             gap: 6, 
-                            background: "rgba(237, 28, 36, 0.08)", 
+                            background: "rgba(var(--red-emergency-rgb), 0.08)", 
                             border: "1px solid var(--color-emergency)", 
                             borderRadius: 16, 
                             height: 32,
@@ -1716,7 +1716,7 @@ function SearchResultsContent() {
                                 top: 0,
                                 bottom: 0,
                                 width: "40%",
-                                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent)",
+                                background: "linear-gradient(90deg, transparent, rgba(var(--white-rgb), 0.25), transparent)",
                                 transform: "skewX(-20deg)"
                               }}
                             />
@@ -1741,7 +1741,7 @@ function SearchResultsContent() {
                                     bottom: 0,
                                     left: 0,
                                     right: 0,
-                                    background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))",
+                                    background: "linear-gradient(transparent, rgba(var(--black-rgb), 0.5))",
                                     color: "var(--white)",
                                     fontSize: 9,
                                     fontWeight: 600,
@@ -1836,7 +1836,7 @@ function SearchResultsContent() {
                         border: "1px solid var(--slate-200)", 
                         borderRadius: 16, 
                         padding: 20, 
-                        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)" 
+                        boxShadow: "0 4px 6px -1px rgba(var(--black-rgb), 0.05)" 
                       }}
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
@@ -1900,7 +1900,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
+                            background: selectedAlphabets.includes(letter) ? "rgba(var(--red-emergency-rgb), 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -1931,7 +1931,7 @@ function SearchResultsContent() {
                               display: "inline-flex", 
                               alignItems: "center", 
                               gap: 6, 
-                              background: "rgba(237, 28, 36, 0.08)", 
+                              background: "rgba(var(--red-emergency-rgb), 0.08)", 
                               border: "1px solid var(--color-emergency)", 
                               borderRadius: 100, 
                               height: 32,
@@ -2027,7 +2027,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
+                            background: selectedAlphabets.includes(letter) ? "rgba(var(--red-emergency-rgb), 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -2092,7 +2092,7 @@ function SearchResultsContent() {
                               display: "inline-flex", 
                               alignItems: "center", 
                               gap: 6, 
-                              background: "rgba(237, 28, 36, 0.08)", 
+                              background: "rgba(var(--red-emergency-rgb), 0.08)", 
                               border: "1px solid var(--color-emergency)", 
                               borderRadius: 16, 
                               height: 32,
@@ -2157,7 +2157,7 @@ function SearchResultsContent() {
                               />
                               <div style={{ 
                                 position: "absolute", top: 8, left: 8, 
-                                background: "rgba(255,255,255,0.9)", padding: "4px 10px", 
+                                background: "rgba(var(--white-rgb), 0.9)", padding: "4px 10px", 
                                 borderRadius: 20, fontSize: 12, fontWeight: 700, 
                                 color: "var(--color-primary)" 
                               }}>
@@ -2338,7 +2338,7 @@ function SearchResultsContent() {
                               display: "inline-flex", 
                               alignItems: "center", 
                               gap: 6, 
-                              background: "rgba(237, 28, 36, 0.08)", 
+                              background: "rgba(var(--red-emergency-rgb), 0.08)", 
                               border: "1px solid var(--color-emergency)", 
                               borderRadius: 16, 
                               height: 32,
@@ -2577,7 +2577,7 @@ function SearchResultsContent() {
                             display: "flex", alignItems: "center", justifyContent: "center", 
                             padding: "8px 0", border: "1px solid", 
                             borderColor: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-border)",
-                            background: selectedAlphabets.includes(letter) ? "rgba(237, 28, 36, 0.08)" : "var(--white)",
+                            background: selectedAlphabets.includes(letter) ? "rgba(var(--red-emergency-rgb), 0.08)" : "var(--white)",
                             color: selectedAlphabets.includes(letter) ? "var(--color-emergency)" : "var(--color-text)",
                             borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600,
                             transition: "all 0.2s"
@@ -2609,7 +2609,7 @@ function SearchResultsContent() {
                             key={alphabet}
                             style={{ 
                               display: "inline-flex", alignItems: "center", gap: 6, 
-                              background: "rgba(237, 28, 36, 0.08)", border: "1px solid var(--color-emergency)", 
+                              background: "rgba(var(--red-emergency-rgb), 0.08)", border: "1px solid var(--color-emergency)", 
                               borderRadius: 16, height: 32, padding: "0 12px", 
                               fontSize: 13, fontWeight: 500, color: "var(--color-emergency)"
                             }}

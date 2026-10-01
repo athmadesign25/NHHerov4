@@ -55,25 +55,25 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh" }}>
       {/* Hero */}
       <div style={{ background: "linear-gradient(135deg, var(--color-primary-dark), var(--color-primary))", padding: "64px 0 80px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(var(--white-rgb), 0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="container" style={{ position: "relative" }}>
-          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,0.65)", fontWeight: 600, fontSize: "var(--font-size-sm)", marginBottom: "var(--sp-3)" }} id="spec-back">
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(var(--white-rgb), 0.65)", fontWeight: 600, fontSize: "var(--font-size-sm)", marginBottom: "var(--sp-3)" }} id="spec-back">
             <ArrowLeft size={16} /> Home
           </Link>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-3)", marginBottom: "var(--sp-3)", flexWrap: "wrap" }}>
-              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--white)", flexShrink: 0 }}>
+              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(var(--white-rgb), 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--white)", flexShrink: 0 }}>
                 <Icon size={32} />
               </div>
               <div>
-                <div style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.6)", marginBottom: 4 }}>Department of</div>
+                <div style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(var(--white-rgb), 0.6)", marginBottom: 4 }}>Department of</div>
                 <h1 style={{ fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 900, color: "var(--white)", letterSpacing: "-0.03em", lineHeight: 1.1 }}>{spec.name}</h1>
               </div>
             </div>
-            <p style={{ fontSize: "var(--font-size-xl)", color: "rgba(255,255,255,0.8)", marginBottom: "var(--sp-5)", maxWidth: 560 }}>{spec.desc}</p>
+            <p style={{ fontSize: "var(--font-size-xl)", color: "rgba(var(--white-rgb), 0.8)", marginBottom: "var(--sp-5)", maxWidth: 560 }}>{spec.desc}</p>
             <div style={{ display: "flex", gap: "var(--sp-4)", flexWrap: "wrap" }}>
               {[{ icon: Users, label: "120+ Doctors" }, { icon: Star, label: "4.9 Rating" }, { icon: CheckCircle2, label: "NABH Certified" }].map(({ icon: I, label }) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,0.85)", fontSize: "var(--font-size-sm)", fontWeight: 600 }}>
+                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(var(--white-rgb), 0.85)", fontSize: "var(--font-size-sm)", fontWeight: 600 }}>
                   <I size={16} /> {label}
                 </div>
               ))}

@@ -90,26 +90,26 @@
 
 .titleBlurLayer1 {
   backdrop-filter: blur(22px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 32%, rgba(var(--black-rgb), 0) 46%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 32%, rgba(var(--black-rgb), 0) 46%);
 }
 
 .titleBlurLayer2 {
   backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 40%, rgba(var(--black-rgb), 0) 54%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 40%, rgba(var(--black-rgb), 0) 54%);
 }
 
 .titleBlurLayer3 {
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 48%, rgba(var(--black-rgb), 0) 62%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 48%, rgba(var(--black-rgb), 0) 62%);
 }
 
 .titleBlurLayer4 {
   backdrop-filter: blur(3px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 56%, rgba(var(--black-rgb), 0) 70%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 56%, rgba(var(--black-rgb), 0) 70%);
 }
 
 /* Always-on decorative wash spanning the full frame: a red accent sweep
@@ -152,8 +152,8 @@
   right: 0;
   height: 50%;
   background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 1) 40%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 1) 40%);
   opacity: 0;
   pointer-events: none;
   z-index: 3;
@@ -254,7 +254,7 @@
   flex-shrink: 0;
   border-radius: 9.067px;
   background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  box-shadow: 0 1.133px 0 1.133px rgba(var(--white-rgb), 0.22) inset;
   backdrop-filter: blur(6px);
 }
 
@@ -359,7 +359,7 @@
 }
 
 .packageCard:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 2px solid rgba(var(--white-rgb), 0.6);
   outline-offset: 2px;
 }
 
@@ -381,15 +381,15 @@
    variants only carry the per-card elevation they always differed by
    (V2, the middle/featured card, sits on a wider, deeper shadow). */
 .packageCardV1 {
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+  box-shadow: 0 4px 16px 0 rgba(var(--black-rgb), 0.10);
 }
 
 .packageCardV2 {
-  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: 0 0 40px 0 rgba(var(--black-rgb), 0.18);
 }
 
 .packageCardV3 {
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+  box-shadow: 0 4px 16px 0 rgba(var(--black-rgb), 0.10);
 }
 
 /* Dedicated gradient-border ring — a separate element (not ::before/
@@ -447,14 +447,14 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(var(--black-rgb), 0);
   transition: background 0.3s ease;
   pointer-events: none;
 }
 
 .packageCard:hover::after,
 .packageCard:focus-visible::after {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--black-rgb), 0.05);
 }
 
 /* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
@@ -464,7 +464,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
+  background: linear-gradient(115deg, transparent 30%, rgba(var(--black-rgb), 0.06) 48%, transparent 66%);
   transform: translateX(-120%);
   transition: transform 0.7s ease;
   pointer-events: none;
@@ -493,7 +493,7 @@
   object-fit: cover;
   object-position: left center;
   /* Lifts the artwork off the card's own glass a little. */
-  filter: drop-shadow(0 6px 16px rgba(15, 23, 42, 0.20));
+  filter: drop-shadow(0 6px 16px rgba(var(--slate-900-rgb), 0.20));
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 0;
 }
@@ -649,13 +649,13 @@
   gap: 8px;
   width: fit-content;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.10);
   /* Not in the spec, but 10% white over a light card is invisible on its
      own — the blur and hairline edge are what make it read as the glass
      chip it's drawn as. */
   backdrop-filter: blur(12px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.45);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.05);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.28s ease, transform 0.28s ease;
@@ -784,22 +784,22 @@
   color: var(--white);
   text-decoration: none;
   border-radius: 8px;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(var(--white-rgb), 0.5);
+  background: rgba(var(--white-rgb), 0.06);
   backdrop-filter: blur(12px);
   transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   will-change: transform, opacity;
 }
 
 .exploreRow:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.14);
   border-color: var(--white);
   transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.2);
 }
 
 .exploreRow:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 2px solid rgba(var(--white-rgb), 0.6);
   outline-offset: 2px;
 }
 
@@ -947,7 +947,7 @@
     font-size: 14px;
     font-weight: 600;
     margin: 0 0 14px;
-    color: rgba(255, 255, 255, 0.80);
+    color: rgba(var(--white-rgb), 0.80);
     letter-spacing: 0.01em;
   }
 
@@ -987,8 +987,8 @@
     /* Solid opaque white card surface */
     background: var(--white);
     /* Premium Apple-like elevation: soft shadow + hairline border */
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(var(--black-rgb), 0.04);
+    box-shadow: 0 8px 24px rgba(var(--slate-900-rgb), 0.06);
     border-radius: 10px;
     /* JS applyAutoReveal drives transform/opacity/filter for card entrance —
        do NOT override with !important. Cards start invisible; JS fades them in. */
@@ -1268,9 +1268,9 @@
   width: 55%;
   background: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(var(--white-rgb), 0) 0%,
+    rgba(var(--white-rgb), 0.55) 50%,
+    rgba(var(--white-rgb), 0) 100%
   );
   transform: skewX(-18deg);
 }
@@ -1308,11 +1308,11 @@
   gap: 6px;
   padding: 8px 10px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.22);
 }
 
 .directionToggleLabel {
@@ -1321,15 +1321,15 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--white-rgb), 0.72);
 }
 
 .directionToggleBtn {
   width: 34px;
   padding: 6px 0;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.28);
+  background: rgba(var(--white-rgb), 0.08);
   color: var(--white);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 13px;
@@ -1339,7 +1339,7 @@
 }
 
 .directionToggleBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--white-rgb), 0.18);
 }
 
 .directionToggleBtnActive {

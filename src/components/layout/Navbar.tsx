@@ -186,17 +186,17 @@ export default function Navbar() {
           inset: 0,
           zIndex: -1,
           backgroundColor: isMobileMenuOpen
-            ? "rgba(15, 23, 42, 0.95)"
+            ? "rgba(var(--slate-900-rgb), 0.95)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "rgba(255, 255, 255, 0.82)" : "rgba(8, 15, 28, 0.55)")
+                ? (isOverLightBackground ? "rgba(var(--white-rgb), 0.82)" : "rgba(8, 15, 28, 0.55)")
                 : "transparent"),
           backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           borderBottom: isMobileMenuOpen
-            ? "1px solid rgba(255, 255, 255, 0.1)"
+            ? "1px solid rgba(var(--white-rgb), 0.1)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "1px solid rgba(0, 0, 0, 0.08)" : "1px solid rgba(255, 255, 255, 0.22)")
-                : "1px solid rgba(255, 255, 255, 0)"),
+                ? (isOverLightBackground ? "1px solid rgba(var(--black-rgb), 0.08)" : "1px solid rgba(var(--white-rgb), 0.22)")
+                : "1px solid rgba(var(--white-rgb), 0)"),
           transition: "background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
         }}
@@ -219,7 +219,7 @@ export default function Navbar() {
               Find a Doctor<ChevronDown size={14} />
             </Link>
             {activeDropdown === "find-a-doctor" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
+              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--white)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Top Specialties</div>
                   <Link href="/search?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
@@ -267,7 +267,7 @@ export default function Navbar() {
               Hospitals & Clinics<ChevronDown size={14} />
             </Link>
             {activeDropdown === "hospitals" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
+              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--white)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>SOUTH INDIA</div>
                   <Link href="/hospitals/bengaluru-health-city" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru — Health City</Link>
@@ -311,7 +311,7 @@ export default function Navbar() {
               Treatment & Specialities<ChevronDown size={14} />
             </Link>
             {activeDropdown === "specialities" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
+              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--white)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>HEART & VASCULAR</div>
                   <Link href="/specialities/cardiology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiology</Link>
@@ -353,7 +353,7 @@ export default function Navbar() {
               Health Checkups<ChevronDown size={14} />
             </Link>
             {activeDropdown === "health-checks" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
+              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--white)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
                 <div style={{ gridColumn: "span 2" }}>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Health Packages for Women</div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
@@ -452,23 +452,23 @@ export default function Navbar() {
                   alignItems: "center", 
                   gap: "8px",
                   background: isProfileDropdownOpen 
-                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)") 
-                    : (isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)"),
+                    ? (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)") 
+                    : (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)"),
                   color: "var(--nav-fg-color)",
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",
-                  border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
+                  border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.45)",
                   borderRadius: "100px",
                   transition: "all 0.2s"
                 }}
                 onMouseEnter={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)";
                   }
                 }}
                 onMouseLeave={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)";
                   }
                 }}
               >
@@ -485,7 +485,7 @@ export default function Navbar() {
                   width: "240px",
                   background: "var(--white)",
                   borderRadius: "16px",
-                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                  boxShadow: "0 10px 25px -5px rgba(var(--black-rgb), 0.1), 0 8px 10px -6px rgba(var(--black-rgb), 0.1)",
                   border: "1px solid var(--color-border, var(--slate-200))",
                   overflow: "hidden",
                   zIndex: 50,
@@ -589,11 +589,11 @@ export default function Navbar() {
               style={{ 
                 cursor: "pointer", 
                 fontFamily: "inherit",
-                background: isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)",
+                background: isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)",
                 color: "var(--nav-fg-color)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
-                border: isOverLightBackground ? "1px solid rgba(15, 23, 42, 0.2)" : "1px solid rgba(255, 255, 255, 0.45)",
+                border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.45)",
                 padding: "8px 24px",
                 borderRadius: "var(--radius-md)",
                 fontWeight: 600,
@@ -601,10 +601,10 @@ export default function Navbar() {
                 transition: "all 0.2s"
               }}
               onMouseEnter={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)";
               }}
               onMouseLeave={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)";
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)";
               }}
             >
               Login
@@ -912,8 +912,8 @@ export default function Navbar() {
       </AnimatePresence>
 
       {isSearchOpen && (
-        <div style={{ position: "absolute", top: "100%", left: 0, width: "100%", height: "100vh", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "flex-start", paddingTop: "20px" }} onClick={() => setIsSearchOpen(false)}>
-          <div onClick={(e) => e.stopPropagation()} style={{ background: "rgb(255, 255, 255)", borderRadius: "16px", padding: "32px", boxShadow: "0 10px 40px rgba(0,0,0,0.1)", position: "relative", width: "100%", maxWidth: "1100px" }}>
+        <div style={{ position: "absolute", top: "100%", left: 0, width: "100%", height: "100vh", backgroundColor: "rgba(var(--black-rgb), 0.5)", display: "flex", justifyContent: "center", alignItems: "flex-start", paddingTop: "20px" }} onClick={() => setIsSearchOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: "var(--white)", borderRadius: "16px", padding: "32px", boxShadow: "0 10px 40px rgba(var(--black-rgb), 0.1)", position: "relative", width: "100%", maxWidth: "1100px" }}>
             <button aria-label="Close search" onClick={() => setIsSearchOpen(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "transparent", border: "none", cursor: "pointer", padding: "8px", color: "var(--grey-500)" }}>
               <X size={24} strokeWidth={2.5} />
             </button>
@@ -926,7 +926,7 @@ export default function Navbar() {
                   <input placeholder="Search for doctors, treatments and specialities, conditions or procedures" style={{ width: "100%", padding: "16px 16px 16px 44px", border: "1px solid #ddd", borderRadius: "9999px", background: "#f8f9fa", fontSize: "15px", outline: "none", transition: "border 0.15s" }} />
                 </div>
               </div>
-              <button style={{ backgroundColor: "var(--blue-brand)", color: "rgb(255, 255, 255)", border: "none", borderRadius: "9999px", padding: "16px 32px", fontWeight: 700, fontSize: "15px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}>
+              <button style={{ backgroundColor: "var(--blue-brand)", color: "var(--white)", border: "none", borderRadius: "9999px", padding: "16px 32px", fontWeight: 700, fontSize: "15px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}>
                 <Search size={18} strokeWidth={2} />Search
               </button>
             </div>
@@ -939,11 +939,11 @@ export default function Navbar() {
               <button style={{ background: "#e6f0fa", color: "var(--blue-brand)", border: "1px solid #cce0f5", borderRadius: "9999px", padding: "6px 14px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Oncologist</button>
             </div>
 
-            <div style={{ borderRadius: "12px", border: "1px solid #eee", background: "rgb(255, 255, 255)", padding: "24px", marginTop: "24px", width: "100%" }}>
+            <div style={{ borderRadius: "12px", border: "1px solid #eee", background: "var(--white)", padding: "24px", marginTop: "24px", width: "100%" }}>
               <h3 style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "var(--grey-500)", marginBottom: "12px", letterSpacing: "0.05em", textTransform: "uppercase" }}>You can also find treatments &amp; procedures by first letter</h3>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                 {Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(letter => (
-                  <Link key={letter} href={`/search?letter=${letter.toLowerCase()}`} style={{ width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "6px", fontSize: "12px", fontWeight: 700, border: "1px solid #eee", color: "#333", background: "rgb(255, 255, 255)", textDecoration: "none" }}>{letter}</Link>
+                  <Link key={letter} href={`/search?letter=${letter.toLowerCase()}`} style={{ width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "6px", fontSize: "12px", fontWeight: 700, border: "1px solid #eee", color: "#333", background: "var(--white)", textDecoration: "none" }}>{letter}</Link>
                 ))}
               </div>
             </div>

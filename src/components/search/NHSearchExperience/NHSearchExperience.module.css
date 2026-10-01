@@ -40,12 +40,12 @@
   background: rgba(14, 20, 34, 0.82);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   overscroll-behavior: contain;
   box-shadow: 
-    0 24px 60px -12px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    inset 0 1px 2px rgba(255, 255, 255, 0.16);
+    0 24px 60px -12px rgba(var(--black-rgb), 0.6),
+    0 0 0 1px rgba(var(--white-rgb), 0.06),
+    inset 0 1px 2px rgba(var(--white-rgb), 0.16);
   transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -57,13 +57,13 @@
   max-width: 840px;
   padding: 20px 24px 18px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.28);
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 16px 40px -10px rgba(0, 0, 0, 0.35),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+    0 16px 40px -10px rgba(var(--black-rgb), 0.35),
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
   transition: box-shadow 0.3s ease,
@@ -79,13 +79,13 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(var(--red-emergency-rgb), 0.95) 0deg,      /* NH Red */
     rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
     rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
     rgba(var(--blue-brand-rgb), 0.95) 175deg,     /* NH Blue */
-    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(var(--cyan-bright-rgb), 0.95) 235deg,    /* Pulse Cyan */
     rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
-    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
+    rgba(var(--red-emergency-rgb), 0.95) 360deg     /* Loop to NH Red */
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -112,9 +112,9 @@
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.34) 0%,
-    rgba(255, 255, 255, 0.10) 50%,
-    rgba(255, 255, 255, 0.28) 100%
+    rgba(var(--white-rgb), 0.34) 0%,
+    rgba(var(--white-rgb), 0.10) 50%,
+    rgba(var(--white-rgb), 0.28) 100%
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -135,16 +135,16 @@
 
 @media (max-width: 900px) {
   .searchShellMorphing {
-    background: rgba(0, 0, 0, 0.25) !important;
+    background: rgba(var(--black-rgb), 0.25) !important;
   }
 }
 
 .stateLanding:hover {
   background: rgba(22, 28, 36, 0.33);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(var(--white-rgb), 0.18);
   box-shadow: 
-    0 20px 48px -10px rgba(0, 0, 0, 0.42),
-    inset 0 1px 2px rgba(255, 255, 255, 0.16);
+    0 20px 48px -10px rgba(var(--black-rgb), 0.42),
+    inset 0 1px 2px rgba(var(--white-rgb), 0.16);
 }
 
 .stateLanding:hover .animatedBorderOutline,
@@ -157,13 +157,13 @@
   max-width: 880px;
   padding: 24px 28px 24px;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.30);
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 20px 50px -12px rgba(0, 0, 0, 0.38),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+    0 20px 50px -12px rgba(var(--black-rgb), 0.38),
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
 }
@@ -176,12 +176,12 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.38) 0deg,
+    rgba(var(--cyan-bright-rgb), 0.38) 0deg,
     rgba(var(--blue-brand-rgb), 0.48) 75deg,
-    rgba(237, 28, 36, 0.22) 150deg,
-    rgba(0, 196, 255, 0.10) 220deg,
+    rgba(var(--red-emergency-rgb), 0.22) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.10) 220deg,
     rgba(var(--blue-brand-rgb), 0.32) 290deg,
-    rgba(0, 196, 255, 0.38) 360deg
+    rgba(var(--cyan-bright-rgb), 0.38) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -200,12 +200,12 @@
   border-radius: 25px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.08) 0deg,
+    rgba(var(--cyan-bright-rgb), 0.08) 0deg,
     rgba(var(--blue-brand-rgb), 0.10) 75deg,
-    rgba(237, 28, 36, 0.04) 150deg,
-    rgba(0, 196, 255, 0.02) 220deg,
+    rgba(var(--red-emergency-rgb), 0.04) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.02) 220deg,
     rgba(var(--blue-brand-rgb), 0.06) 290deg,
-    rgba(0, 196, 255, 0.08) 360deg
+    rgba(var(--cyan-bright-rgb), 0.08) 360deg
   );
   filter: blur(10px);
   -webkit-filter: blur(10px);
@@ -220,13 +220,13 @@
   max-width: 1080px;
   padding: 26px 32px 28px;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.32);
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 24px 60px -15px rgba(0, 0, 0, 0.42),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+    0 24px 60px -15px rgba(var(--black-rgb), 0.42),
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
 }
@@ -239,12 +239,12 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.38) 0deg,
+    rgba(var(--cyan-bright-rgb), 0.38) 0deg,
     rgba(var(--blue-brand-rgb), 0.48) 75deg,
-    rgba(237, 28, 36, 0.22) 150deg,
-    rgba(0, 196, 255, 0.10) 220deg,
+    rgba(var(--red-emergency-rgb), 0.22) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.10) 220deg,
     rgba(var(--blue-brand-rgb), 0.32) 290deg,
-    rgba(0, 196, 255, 0.38) 360deg
+    rgba(var(--cyan-bright-rgb), 0.38) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -263,12 +263,12 @@
   border-radius: 25px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(0, 196, 255, 0.08) 0deg,
+    rgba(var(--cyan-bright-rgb), 0.08) 0deg,
     rgba(var(--blue-brand-rgb), 0.10) 75deg,
-    rgba(237, 28, 36, 0.04) 150deg,
-    rgba(0, 196, 255, 0.02) 220deg,
+    rgba(var(--red-emergency-rgb), 0.04) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.02) 220deg,
     rgba(var(--blue-brand-rgb), 0.06) 290deg,
-    rgba(0, 196, 255, 0.08) 360deg
+    rgba(var(--cyan-bright-rgb), 0.08) 360deg
   );
   filter: blur(10px);
   -webkit-filter: blur(10px);
@@ -324,24 +324,24 @@
   gap: 7px;
   padding: 6px 12px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
+  color: rgba(var(--white-rgb), 0.9);
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
 }
 
 .headerPulseBadge:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--white-rgb), 0.09);
+  border-color: rgba(var(--white-rgb), 0.2);
   transform: translateY(-0.5px);
 }
 
 .pulseBadgeText {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(var(--white-rgb), 0.92);
 }
 
 /* ── Pulse AI Identity (clean brand intelligence label, no button box) ── */
@@ -395,7 +395,7 @@
 .pulseText {
   font-size: 13.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--white-rgb), 0.9);
   letter-spacing: 0.01em;
 }
 
@@ -407,15 +407,15 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-400);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .closeBtn:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(var(--white-rgb), 0.16);
   color: var(--white);
   transform: scale(1.05);
 }
@@ -427,7 +427,7 @@
   background: linear-gradient(90deg, var(--red-emergency) 0%, #FF454D 50%, var(--red-emergency) 100%);
   border-radius: 2px;
   margin: 10px 0 16px;
-  box-shadow: 0 0 12px rgba(237, 28, 36, 0.35);
+  box-shadow: 0 0 12px rgba(var(--red-emergency-rgb), 0.35);
 }
 
 /* ── State 01: Default Landing Elements ── */
@@ -451,7 +451,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: clamp(18px, 1.6vw, 20px);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(var(--white-rgb), 0.92);
   letter-spacing: -0.01em;
   user-select: none;
   line-height: 1.4;
@@ -496,7 +496,7 @@
   border-radius: 50%;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
   padding: 0;
@@ -505,12 +505,12 @@
 
 .standaloneIconBtn:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
 }
 
 .standaloneIconBtn:focus-visible {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(var(--white-rgb), 0.16);
   outline: none;
 }
 
@@ -522,8 +522,8 @@
   width: 33px;
   height: 33px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   color: var(--slate-400);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -531,8 +531,8 @@
 
 .iconControlBtn:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(var(--white-rgb), 0.1);
+  border-color: rgba(var(--white-rgb), 0.16);
   transform: translateY(-1px);
 }
 
@@ -545,7 +545,7 @@
   height: 30px;
   border-radius: 7px;
   background: var(--blue-brand);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--white);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
@@ -559,7 +559,7 @@
 
 .submitArrowBtn:hover {
   background: #0060DF;
-  border-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(var(--white-rgb), 0.28);
   transform: scale(1.03);
   box-shadow: 0 3px 10px rgba(0, 96, 223, 0.4);
 }
@@ -581,9 +581,9 @@
   height: 30px;
   padding: 0 10px;
   border-radius: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.04);
+  color: rgba(var(--white-rgb), 0.88);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
   font-weight: 450;
@@ -593,8 +593,8 @@
 }
 
 .locationPill:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--white-rgb), 0.08);
+  border-color: rgba(var(--white-rgb), 0.2);
   color: var(--white);
 }
 
@@ -616,11 +616,11 @@
   background: rgba(18, 24, 38, 0.95);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(var(--white-rgb), 0.14);
   border-radius: 12px;
   box-shadow: 
-    0 16px 36px rgba(0, 0, 0, 0.55),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.12);
+    0 16px 36px rgba(var(--black-rgb), 0.55),
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   padding: 8px;
   z-index: 150;
   display: flex;
@@ -667,8 +667,8 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--cyan-bright);
-  background: rgba(0, 196, 255, 0.06);
-  border: 1px solid rgba(0, 196, 255, 0.16);
+  background: rgba(var(--cyan-bright-rgb), 0.06);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.16);
   cursor: pointer;
   transition: all 0.18s ease;
   width: 100%;
@@ -676,8 +676,8 @@
 }
 
 .locationCurrentAction:hover {
-  background: rgba(0, 196, 255, 0.14);
-  border-color: rgba(0, 196, 255, 0.35);
+  background: rgba(var(--cyan-bright-rgb), 0.14);
+  border-color: rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--white);
 }
 
@@ -708,13 +708,13 @@
   color: var(--red-400);
   padding: 4px 8px;
   border-radius: 5px;
-  background: rgba(239, 68, 68, 0.08);
+  background: rgba(var(--red-500-rgb), 0.08);
   margin-top: 2px;
 }
 
 .locationDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
   margin: 4px 0;
   width: 100%;
 }
@@ -725,14 +725,14 @@
   gap: 7px;
   padding: 6px 9px;
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.10);
   margin-bottom: 4px;
 }
 
 .locationSearchWrapper:focus-within {
-  border-color: rgba(0, 196, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(var(--cyan-bright-rgb), 0.4);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 .locationSearchIcon {
@@ -768,7 +768,7 @@
 }
 
 .locationScrollList::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
   border-radius: 4px;
 }
 
@@ -806,7 +806,7 @@
 
 .locationMenuItem:hover,
 .locationMenuItemSelected {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
   color: var(--white);
   font-weight: 500;
 }
@@ -821,7 +821,7 @@
   border-radius: 6px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.90);
+  color: rgba(var(--white-rgb), 0.90);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
   font-weight: 450;
@@ -832,17 +832,17 @@
 
 .inlineActionBtn:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.10);
 }
 
 .inlineActionBtn:focus-visible {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.14);
   outline: none;
 }
 
 .inlineActionIcon {
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(var(--white-rgb), 0.82);
   transition: color 0.2s ease;
 }
 
@@ -881,7 +881,7 @@
 }
 
 .landingTextAction svg {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(var(--white-rgb), 0.88) !important;
 }
 
 .actionPill {
@@ -890,8 +890,8 @@
   gap: 6px;
   padding: 6px 14px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.05);
   color: var(--slate-200);
   font-size: 13px;
   font-weight: 500;
@@ -901,8 +901,8 @@
 }
 
 .actionPill:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(var(--white-rgb), 0.12);
+  border-color: rgba(var(--white-rgb), 0.24);
   color: var(--white);
 }
 
@@ -948,7 +948,7 @@
 }
 
 .activeTextInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--white-rgb), 0.4);
   font-weight: 400;
 }
 
@@ -981,7 +981,7 @@
 }
 
 .ghostSuffix {
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(var(--white-rgb), 0.38);
   font-weight: 400;
   letter-spacing: -0.01em;
   pointer-events: auto;
@@ -990,7 +990,7 @@
 }
 
 .ghostSuffix:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
 }
 
 .tabBadge {
@@ -1000,8 +1000,8 @@
   font-size: 11px;
   font-weight: 500;
   color: var(--sky-400);
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(var(--sky-400-rgb), 0.1);
+  border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   border-radius: 4px;
   padding: 1px 6px;
   letter-spacing: 0.02em;
@@ -1020,7 +1020,7 @@
 
 .inlineActionBtnActive {
   color: var(--cyan-bright) !important;
-  background: rgba(0, 196, 255, 0.08) !important;
+  background: rgba(var(--cyan-bright-rgb), 0.08) !important;
 }
 
 .inlineActionBtnActive .inlineActionIcon {
@@ -1067,8 +1067,8 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--slate-300);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   padding: 5px 14px;
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
@@ -1079,8 +1079,8 @@
 
 .genericExampleChip:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(56, 189, 248, 0.35);
+  background: rgba(var(--white-rgb), 0.09);
+  border-color: rgba(var(--sky-400-rgb), 0.35);
   transform: translateY(-1px);
 }
 
@@ -1129,7 +1129,7 @@
   font-weight: 600;
   color: var(--sky-400);
   background: rgba(var(--blue-brand-rgb), 0.22);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   padding: 2.5px 10px;
   border-radius: var(--radius-full);
   letter-spacing: 0.03em;
@@ -1158,8 +1158,8 @@
 
 .suggestionItem:hover,
 .suggestionItemActive {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.06);
+  border-color: rgba(var(--white-rgb), 0.08);
   color: var(--white);
 }
 
@@ -1174,7 +1174,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 15.5px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(var(--white-rgb), 0.88);
 }
 
 .pressEnterHint {
@@ -1202,7 +1202,7 @@
   gap: 8px;
   margin-top: 18px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(var(--white-rgb), 0.05);
   font-size: 12.5px;
   color: var(--slate-400);
   font-weight: 400;
@@ -1286,7 +1286,7 @@
 }
 
 .resultsQueryInput::selection {
-  background: rgba(0, 196, 255, 0.35);
+  background: rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--white);
 }
 
@@ -1304,14 +1304,14 @@
   padding: 6px 14px;
   border-radius: 8px;
   background: var(--blue-brand);
-  border: 1px solid rgba(0, 196, 255, 0.45);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.45);
   color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(var(--blue-brand-rgb), 0.35), 0 0 12px rgba(0, 196, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(var(--blue-brand-rgb), 0.35), 0 0 12px rgba(var(--cyan-bright-rgb), 0.2);
   transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   animation: sendBtnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1319,7 +1319,7 @@
 .querySendBtn:hover {
   background: #0060DF;
   transform: translateY(-0.5px);
-  box-shadow: 0 4px 14px rgba(0, 96, 223, 0.45), 0 0 16px rgba(0, 196, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 96, 223, 0.45), 0 0 16px rgba(var(--cyan-bright-rgb), 0.35);
 }
 
 @keyframes sendBtnFadeIn {
@@ -1350,7 +1350,7 @@
 }
 
 .editSearchBtn:hover {
-  background: rgba(56, 189, 248, 0.12);
+  background: rgba(var(--sky-400-rgb), 0.12);
   color: #7DD3FC;
 }
 
@@ -1362,8 +1362,8 @@
   padding: 6px 6px 6px 14px;
   border-radius: var(--radius-full);
   background: rgba(var(--blue-brand-rgb), 0.18);
-  border: 1px solid rgba(0, 196, 255, 0.25);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.25);
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.2);
 }
 
 .pulseAiCardText {
@@ -1374,7 +1374,7 @@
 
 .askPulseBtn {
   background: var(--blue-brand);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(var(--white-rgb), 0.2);
   border-radius: var(--radius-full);
   padding: 5px 14px;
   font-family: inherit;
@@ -1388,7 +1388,7 @@
 
 .askPulseBtn:hover {
   background: #0066FF;
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(var(--white-rgb), 0.4);
   transform: scale(1.03);
 }
 
@@ -1472,7 +1472,7 @@
   border-radius: 8px;
   background: #0B111E;
   border: none;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 24px -4px rgba(var(--black-rgb), 0.45);
   overflow: hidden;
   height: 310px;
   min-height: 310px;
@@ -1484,7 +1484,7 @@
 .refDoctorCard:hover {
   transform: translateY(-3px);
   border: none;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 36px -6px rgba(var(--black-rgb), 0.6);
 }
 
 /* Full background photo covering 100% of the card - Zoomed in on face, positioned slightly above center */
@@ -1515,7 +1515,7 @@
     rgba(6, 11, 20, 0.65) 24%,
     rgba(6, 11, 20, 0.32) 42%,
     rgba(6, 11, 20, 0.06) 55%,
-    rgba(0, 0, 0, 0) 68%
+    rgba(var(--black-rgb), 0) 68%
   );
   pointer-events: none;
   z-index: 1;
@@ -1530,21 +1530,21 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.32);
+  background: rgba(var(--black-rgb), 0.32);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
   cursor: pointer;
   transition: all 0.18s ease;
   padding: 0;
 }
 
 .refDocFavBtn:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--black-rgb), 0.6);
   color: var(--white);
   transform: scale(1.08);
 }
@@ -1555,7 +1555,7 @@
 }
 
 .refHeartOutline {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
 }
 
 /* Top-left Experience Badge on Doctor Photo */
@@ -1569,20 +1569,20 @@
   gap: 4.5px;
   padding: 3px 8.5px;
   border-radius: var(--radius-full);
-  background: rgba(0, 0, 0, 0.40);
+  background: rgba(var(--black-rgb), 0.40);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.20);
+  border: 1px solid rgba(var(--white-rgb), 0.20);
   color: var(--white);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
   pointer-events: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.25);
 }
 
 .refDocExpBadgeIcon {
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(var(--white-rgb), 0.88);
   flex-shrink: 0;
 }
 
@@ -1620,7 +1620,7 @@
   letter-spacing: -0.015em;
   line-height: 1.22;
   margin: 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
 }
 
 .refDocNameSingleLine {
@@ -1647,7 +1647,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 1px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.6);
 }
 
 /* Experience in text layer */
@@ -1657,23 +1657,23 @@
   gap: 5px;
   font-size: 11.5px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(var(--white-rgb), 0.88);
   margin-top: 1px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.6);
 }
 
 .refDocExpIcon {
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(var(--white-rgb), 0.82);
   flex-shrink: 0;
 }
 
 .refDocHospital {
   font-size: 11px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(var(--white-rgb), 0.78);
   line-height: 1.35;
   margin-top: 2px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.5);
 }
 
 .refDocHospitalSingleLine {
@@ -1707,7 +1707,7 @@
   text-decoration: none;
   flex-shrink: 0;
   align-self: flex-end;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.22);
   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
   white-space: nowrap;
 }
@@ -1715,7 +1715,7 @@
 .refBookBtnWhite:hover {
   background: #F3F7FC;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.3);
 }
 
 /* Fallback full-width Book Button */
@@ -1780,10 +1780,10 @@
   width: 100%;
   box-sizing: border-box;
   background: linear-gradient(135deg, rgba(20, 30, 55, 0.90) 0%, rgba(18, 24, 38, 0.92) 50%, rgba(42, 24, 46, 0.88) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.25);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   margin-top: 14px;
@@ -1791,8 +1791,8 @@
 
 .refPulseRow:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(var(--white-rgb), 0.22);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35);
 }
 
 .refPulseLeft {
@@ -1807,8 +1807,8 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1875,8 +1875,8 @@
   flex-shrink: 0;
   padding: 9px 18px;
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(var(--slate-900-rgb), 0.85);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13px;
@@ -1887,8 +1887,8 @@
 }
 
 .refPulseBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--white-rgb), 0.12);
+  border-color: rgba(var(--white-rgb), 0.3);
   transform: translateX(1px);
 }
 
@@ -1906,8 +1906,8 @@
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1943,8 +1943,8 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--sky-400);
-  background: rgba(0, 196, 255, 0.08);
-  border: 1px solid rgba(0, 196, 255, 0.2);
+  background: rgba(var(--cyan-bright-rgb), 0.08);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.2);
   padding: 1px 5.5px;
   border-radius: 4px;
 }
@@ -1968,8 +1968,8 @@
   gap: 5px;
   padding: 6px 13px;
   border-radius: 6px;
-  background: rgba(0, 196, 255, 0.1);
-  border: 1px solid rgba(0, 196, 255, 0.28);
+  background: rgba(var(--cyan-bright-rgb), 0.1);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.28);
   color: var(--cyan-bright);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
@@ -1980,8 +1980,8 @@
 }
 
 .pulseNudgeBtn:hover {
-  background: rgba(0, 196, 255, 0.18);
-  border-color: rgba(0, 196, 255, 0.45);
+  background: rgba(var(--cyan-bright-rgb), 0.18);
+  border-color: rgba(var(--cyan-bright-rgb), 0.45);
   color: var(--sky-400);
   transform: translateY(-0.5px);
 }
@@ -1993,11 +1993,11 @@
   background: radial-gradient(130% 120% at 15% 0%, rgba(var(--blue-brand-rgb), 0.32) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(0, 196, 255, 0.28);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.28);
   box-shadow: 
-    0 24px 64px -16px rgba(0, 0, 0, 0.7),
+    0 24px 64px -16px rgba(var(--black-rgb), 0.7),
     0 0 45px rgba(var(--blue-brand-rgb), 0.22),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.15);
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.15);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -2012,7 +2012,7 @@
   justify-content: space-between;
   gap: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
 .pulseExpandedHeaderLeft {
@@ -2042,8 +2042,8 @@
   gap: 4px;
   padding: 1.5px 6px;
   border-radius: var(--radius-full);
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(var(--green-500-rgb), 0.15);
+  border: 1px solid rgba(var(--green-500-rgb), 0.3);
   color: #4ADE80;
   font-size: 9.5px;
   font-weight: 700;
@@ -2071,8 +2071,8 @@
   gap: 4px;
   padding: 5px 10px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11.5px;
@@ -2082,16 +2082,16 @@
 }
 
 .pulseExpandedMinimizeBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
   color: var(--white);
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(var(--white-rgb), 0.22);
 }
 
 .pulseUploadToast {
   padding: 6px 12px;
   border-radius: 6px;
-  background: rgba(0, 196, 255, 0.12);
-  border: 1px solid rgba(0, 196, 255, 0.3);
+  background: rgba(var(--cyan-bright-rgb), 0.12);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--sky-400);
   font-size: 11.5px;
   animation: sendBtnFadeIn 0.2s ease;
@@ -2111,7 +2111,7 @@
 }
 
 .pulseMessagesStream::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
   border-radius: 4px;
 }
 
@@ -2132,8 +2132,8 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(0, 196, 255, 0.28), rgba(var(--blue-brand-rgb), 0.15));
-  border: 1px solid rgba(0, 196, 255, 0.3);
+  background: radial-gradient(circle at 30% 30%, rgba(var(--cyan-bright-rgb), 0.28), rgba(var(--blue-brand-rgb), 0.15));
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2164,8 +2164,8 @@
 }
 
 .pulseAiBubbleUrgent {
-  background: rgba(237, 28, 36, 0.08);
-  border-color: rgba(237, 28, 36, 0.32);
+  background: rgba(var(--red-emergency-rgb), 0.08);
+  border-color: rgba(var(--red-emergency-rgb), 0.32);
 }
 
 .pulseBubbleText {
@@ -2185,8 +2185,8 @@
   gap: 4px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: rgba(0, 196, 255, 0.12);
-  border: 1px solid rgba(0, 196, 255, 0.3);
+  background: rgba(var(--cyan-bright-rgb), 0.12);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--sky-400);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11px;
@@ -2196,9 +2196,9 @@
 }
 
 .pulseContextActionBtn:hover {
-  background: rgba(0, 196, 255, 0.22);
+  background: rgba(var(--cyan-bright-rgb), 0.22);
   color: var(--white);
-  border-color: rgba(0, 196, 255, 0.45);
+  border-color: rgba(var(--cyan-bright-rgb), 0.45);
 }
 
 .pulseEmergencyActionBtn {
@@ -2207,8 +2207,8 @@
   gap: 4px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: rgba(237, 28, 36, 0.18);
-  border: 1px solid rgba(237, 28, 36, 0.4);
+  background: rgba(var(--red-emergency-rgb), 0.18);
+  border: 1px solid rgba(var(--red-emergency-rgb), 0.4);
   color: #FFA3A6;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11px;
@@ -2235,8 +2235,8 @@
   gap: 4px;
   padding: 7px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
 .pulseThinkingDot {
@@ -2284,8 +2284,8 @@
   align-items: center;
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 11px;
@@ -2297,8 +2297,8 @@
 }
 
 .pulseQuickChip:hover {
-  background: rgba(0, 196, 255, 0.12);
-  border-color: rgba(0, 196, 255, 0.35);
+  background: rgba(var(--cyan-bright-rgb), 0.12);
+  border-color: rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--white);
 }
 
@@ -2308,14 +2308,14 @@
   gap: 8px;
   padding: 6px 8px 6px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.14);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pulseComposerForm:focus-within {
-  border-color: rgba(0, 196, 255, 0.45);
-  box-shadow: 0 0 14px rgba(0, 196, 255, 0.16);
+  border-color: rgba(var(--cyan-bright-rgb), 0.45);
+  box-shadow: 0 0 14px rgba(var(--cyan-bright-rgb), 0.16);
 }
 
 .pulseComposerAttachBtn,
@@ -2365,7 +2365,7 @@
   height: 28px;
   border-radius: 6px;
   background: var(--blue-brand);
-  border: 1px solid rgba(0, 196, 255, 0.4);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--white);
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2404,14 +2404,14 @@
 }
 
 .pulseCuratedDoctorsRow::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--white-rgb), 0.18);
   border-radius: 4px;
 }
 
 .pulseCuratedDoctorCard {
   flex: 0 0 224px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-radius: 12px;
@@ -2424,9 +2424,9 @@
 }
 
 .pulseCuratedDoctorCard:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(0, 196, 255, 0.35);
-  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.45);
+  background: rgba(var(--white-rgb), 0.07);
+  border-color: rgba(var(--cyan-bright-rgb), 0.35);
+  box-shadow: 0 8px 24px -6px rgba(var(--black-rgb), 0.45);
   transform: translateY(-1.5px);
 }
 
@@ -2442,7 +2442,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1.5px solid rgba(0, 196, 255, 0.25);
+  border: 1.5px solid rgba(var(--cyan-bright-rgb), 0.25);
 }
 
 .pulseCuratedDocMeta {
@@ -2525,14 +2525,14 @@
   padding: 4px 10px;
   border-radius: 6px;
   background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
-  border: 1px solid rgba(0, 196, 255, 0.35);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--white);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 10.5px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.25);
   transition: all 0.15s ease;
 }
 
@@ -2556,14 +2556,14 @@
 .buriedResultsContainer {
   margin-top: 4px;
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--slate-900-rgb), 0.45);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
 
 .buriedResultsContainer:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(var(--white-rgb), 0.16);
 }
 
 .buriedResultsToggle {
@@ -2572,7 +2572,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(var(--white-rgb), 0.03);
   border: none;
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
@@ -2583,7 +2583,7 @@
 }
 
 .buriedResultsToggle:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(var(--white-rgb), 0.07);
   color: var(--white);
 }
 
@@ -2601,10 +2601,10 @@
 .buriedCountBadge {
   font-size: 10.5px;
   color: var(--slate-400);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--white-rgb), 0.06);
   padding: 2px 7px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   margin-left: 4px;
 }
 
@@ -2626,16 +2626,16 @@
 
 .buriedResultsContent {
   padding: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(var(--white-rgb), 0.08);
   background: rgba(10, 15, 29, 0.4);
 }
 
 /* ── State: Pulse Attached Mode ── */
 .statePulse {
   background: var(--white);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(var(--white-rgb), 0.9);
   border-radius: 20px;
-  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 24px 64px -12px rgba(var(--black-rgb), 0.6);
   padding: 0 !important;
   overflow: hidden;
   display: flex;
@@ -2692,9 +2692,9 @@
 .specPillTag {
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.82);
+  background: rgba(var(--white-rgb), 0.035);
+  border: 1px solid rgba(var(--white-rgb), 0.07);
+  color: rgba(var(--white-rgb), 0.82);
   font-size: 12px;
   font-weight: 400;
   cursor: pointer;
@@ -2703,8 +2703,8 @@
 }
 
 .specPillTag:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.08);
+  border-color: rgba(var(--white-rgb), 0.14);
   color: var(--white);
 }
 
@@ -2770,7 +2770,7 @@
 }
 
 .editorialItem:hover {
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(var(--white-rgb), 0.035);
 }
 
 .editorialItem:last-child {
@@ -2794,12 +2794,12 @@
 }
 
 .editorialIconMono {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--white-rgb), 0.45);
   transition: color 0.15s ease;
 }
 
 .editorialItem:hover .editorialIconMono {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
 }
 
 .editorialMeta {
@@ -2830,13 +2830,13 @@
 }
 
 .editorialChevron {
-  color: rgba(255, 255, 255, 0.32);
+  color: rgba(var(--white-rgb), 0.32);
   flex-shrink: 0;
   transition: transform 0.15s ease, color 0.15s ease;
 }
 
 .editorialItem:hover .editorialChevron {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--white-rgb), 0.7);
   transform: translateX(2px);
 }
 
@@ -2856,8 +2856,8 @@
   align-items: center;
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", sans-serif);
   font-size: 11.5px;
@@ -2868,8 +2868,8 @@
 }
 
 .editorialPill:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--white-rgb), 0.08);
+  border-color: rgba(var(--white-rgb), 0.2);
   color: var(--white);
   transform: translateY(-0.5px);
 }
@@ -2878,9 +2878,9 @@
 .shimmer {
   background: linear-gradient(
     90deg, 
-    rgba(255, 255, 255, 0.04) 25%, 
-    rgba(255, 255, 255, 0.12) 50%, 
-    rgba(255, 255, 255, 0.04) 75%
+    rgba(var(--white-rgb), 0.04) 25%, 
+    rgba(var(--white-rgb), 0.12) 50%, 
+    rgba(var(--white-rgb), 0.04) 75%
   );
   background-size: 200% 100%;
   animation: shimmerPulse 1.5s infinite ease-in-out;
@@ -2897,18 +2897,18 @@
 
 .skeletonPill {
   border-radius: var(--radius-full);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(var(--white-rgb), 0.06);
 }
 
 .skeletonCircle {
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(var(--white-rgb), 0.06);
   flex-shrink: 0;
 }
 
 .skeletonBar {
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(var(--white-rgb), 0.06);
 }
 
 .skeletonDoctorCard {
@@ -2917,8 +2917,8 @@
   justify-content: space-between;
   padding: 14px 16px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.035);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   height: 160px;
   min-height: 160px;
   max-height: 160px;
@@ -2931,8 +2931,8 @@
   justify-content: space-between;
   padding: 10px 14px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid rgba(var(--white-rgb), 0.06);
 }
 
 .skeletonLoadingStatus {
@@ -2943,7 +2943,7 @@
   font-weight: 500;
   color: var(--sky-400);
   background: rgba(var(--blue-brand-rgb), 0.18);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   padding: 4px 12px;
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
@@ -2964,18 +2964,18 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 12px;
-  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.12) 0%, rgba(124, 58, 237, 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
-  border: 1px solid rgba(124, 58, 237, 0.28);
+  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.12) 0%, rgba(var(--violet-600-rgb), 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
+  border: 1px solid rgba(var(--violet-600-rgb), 0.28);
   margin-top: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.06);
   animation: pulseSubtleGlow 2.4s ease-in-out infinite alternate;
 }
 
 @keyframes pulseSubtleGlow {
   0% {
-    border-color: rgba(56, 189, 248, 0.25);
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.08);
+    border-color: rgba(var(--sky-400-rgb), 0.25);
+    box-shadow: 0 0 12px rgba(var(--sky-400-rgb), 0.08);
   }
   100% {
     border-color: rgba(236, 72, 153, 0.35);
@@ -2988,7 +2988,7 @@
   height: 8px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--cyan-bright) 0%, #A855F7 100%);
-  box-shadow: 0 0 8px rgba(0, 196, 255, 0.7);
+  box-shadow: 0 0 8px rgba(var(--cyan-bright-rgb), 0.7);
   animation: pulseDot 1.4s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -3005,8 +3005,8 @@
 
 .themeWhite .analyzingActiveBanner,
 [data-search-theme="white"] .analyzingActiveBanner {
-  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.06) 0%, rgba(124, 58, 237, 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
-  border: 1px solid rgba(124, 58, 237, 0.22) !important;
+  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.06) 0%, rgba(var(--violet-600-rgb), 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
+  border: 1px solid rgba(var(--violet-600-rgb), 0.22) !important;
 }
 
 .themeWhite .analyzingBannerText,
@@ -3490,7 +3490,7 @@
   height: 38px;
   border-radius: 10px;
   background: linear-gradient(149deg, #2F78FF 57.5%, #0B4DC7 167.13%);
-  box-shadow: 0 1px 2px 0 rgba(255, 255, 255, 0.20) inset;
+  box-shadow: 0 1px 2px 0 rgba(var(--white-rgb), 0.20) inset;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3539,10 +3539,10 @@
   border-radius: 18px;
   position: relative;
   background: linear-gradient(145deg, rgba(17, 26, 47, 0.94) 0%, rgba(18, 24, 38, 0.96) 50%, rgba(38, 22, 42, 0.90) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 16px 40px -8px rgba(var(--black-rgb), 0.55);
   padding: 22px 24px;
 }
 
@@ -3552,7 +3552,7 @@
   justify-content: space-between;
   width: 100%;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
 .pulseHeaderLeft {
@@ -3568,16 +3568,16 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--white);
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
 .pulseBackBtn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--white-rgb), 0.14);
+  border-color: rgba(var(--white-rgb), 0.25);
   transform: translateX(-2px);
 }
 
@@ -3608,8 +3608,8 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--green-500);
-  background: rgba(34, 197, 94, 0.14);
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  background: rgba(var(--green-500-rgb), 0.14);
+  border: 1px solid rgba(var(--green-500-rgb), 0.3);
   padding: 2px 7px;
   border-radius: var(--radius-full);
   text-transform: uppercase;
@@ -3731,13 +3731,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   font-size: 13px;
   color: var(--slate-300);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
 }
 
 .pulseThinkingDots {
@@ -3768,8 +3768,8 @@
 .pulseDoctorSkeletonCard {
   border-radius: 16px;
   height: 250px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.10);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -3784,9 +3784,9 @@
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(var(--white-rgb), 0) 0%,
+    rgba(var(--white-rgb), 0.08) 50%,
+    rgba(var(--white-rgb), 0) 100%
   );
   animation: pulseShimmer 1.3s ease-in-out infinite;
   pointer-events: none;
@@ -3794,7 +3794,7 @@
 
 .pulseSkeletonBar {
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.14);
   margin-bottom: 8px;
 }
 
@@ -3819,7 +3819,7 @@
   border-radius: 8px;
   margin-top: 6px;
   margin-bottom: 0;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--white-rgb), 0.18);
 }
 
 @keyframes pulseShimmer {
@@ -3838,7 +3838,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--white-rgb), 0.65);
   margin-left: 2px;
 }
 
@@ -3866,8 +3866,8 @@
   justify-content: flex-end;
   border-radius: 14px;
   background: #0B111E;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 6px 18px -3px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
+  box-shadow: 0 6px 18px -3px rgba(var(--black-rgb), 0.45);
   overflow: hidden;
   height: 225px;
   min-height: 225px;
@@ -3877,8 +3877,8 @@
 
 .pulseDoctorCard:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.6);
+  border-color: rgba(var(--white-rgb), 0.22);
+  box-shadow: 0 10px 24px -4px rgba(var(--black-rgb), 0.6);
 }
 
 .pulseDocImage {
@@ -3900,8 +3900,8 @@
     rgba(8, 13, 23, 0.90) 28%,
     rgba(8, 13, 23, 0.55) 50%,
     rgba(8, 13, 23, 0.12) 65%,
-    rgba(0, 0, 0, 0) 80%,
-    rgba(0, 0, 0, 0) 100%
+    rgba(var(--black-rgb), 0) 80%,
+    rgba(var(--black-rgb), 0) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -3954,7 +3954,7 @@
 
 .pulseDocHospital {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(var(--white-rgb), 0.78);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3966,12 +3966,12 @@
   align-items: center;
   gap: 3.5px;
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(var(--white-rgb), 0.78);
   margin-top: 1px;
 }
 
 .pulseDocExpIcon {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(var(--white-rgb), 0.7);
   flex-shrink: 0;
 }
 
@@ -3989,7 +3989,7 @@
   border-radius: 8px;
   text-decoration: none;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.25);
   transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
   white-space: nowrap;
 }
@@ -3997,7 +3997,7 @@
 .pulseDocBookBtnWhite:hover {
   background: #F0F7FF;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.35);
 }
 
 .pulseBookBtn {
@@ -4029,10 +4029,10 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.38);
+  background: rgba(var(--black-rgb), 0.38);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4042,8 +4042,8 @@
 }
 
 .pulseDocFavBtn:hover {
-  background: rgba(0, 0, 0, 0.65);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(var(--black-rgb), 0.65);
+  border-color: rgba(var(--white-rgb), 0.35);
   transform: scale(1.08);
 }
 
@@ -4062,8 +4062,8 @@
 .pulseCardSkeleton {
   height: 225px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   animation: pulseSkeletonShimmer 1.5s infinite ease-in-out;
 }
 
@@ -4081,8 +4081,8 @@
 }
 
 .pulseTestCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: 14px;
   padding: 16px 14px;
   display: flex;
@@ -4116,8 +4116,8 @@
   font-size: 10px;
   font-weight: 600;
   color: var(--sky-400);
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(var(--sky-400-rgb), 0.12);
+  border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   padding: 3px 8px;
   border-radius: 6px;
   width: fit-content;
@@ -4135,8 +4135,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-400);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
@@ -4149,8 +4149,8 @@
 }
 
 .pulseChip:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(var(--white-rgb), 0.1);
+  border-color: rgba(var(--white-rgb), 0.22);
   color: var(--white);
 }
 
@@ -4167,16 +4167,16 @@
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   border-radius: 12px;
   padding: 6px 10px 6px 14px;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .pulseInputBar:focus-within {
-  border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(var(--white-rgb), 0.25);
+  background: rgba(var(--white-rgb), 0.07);
 }
 
 .pulseInputAttachBtn {
@@ -4255,10 +4255,10 @@
 .themeWhite .stateActive,
 [data-search-theme="white"] .stateActive {
   background: var(--white) !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  border: 1px solid rgba(var(--slate-200-rgb), 0.9) !important;
   box-shadow: 
-    0 24px 60px -12px rgba(0, 0, 0, 0.14),
-    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+    0 24px 60px -12px rgba(var(--black-rgb), 0.14),
+    0 0 0 1px rgba(var(--black-rgb), 0.04) !important;
 }
 
 .themeWhite.stateActive::before,
@@ -4291,13 +4291,13 @@
 .themeWhite .standaloneIconBtn:hover,
 [data-search-theme="white"] .standaloneIconBtn:hover {
   color: var(--slate-900) !important;
-  background: rgba(15, 23, 42, 0.06) !important;
+  background: rgba(var(--slate-900-rgb), 0.06) !important;
 }
 
 .themeWhite .standaloneIconBtn:focus-visible,
 [data-search-theme="white"] .standaloneIconBtn:focus-visible {
   color: var(--slate-900) !important;
-  background: rgba(15, 23, 42, 0.08) !important;
+  background: rgba(var(--slate-900-rgb), 0.08) !important;
 }
 
 /* Submit Arrow Button */
@@ -4320,7 +4320,7 @@
 .themeWhite .stateLanding .inlineActionBtn,
 [data-search-theme="white"] .stateLanding .inlineActionBtn,
 [data-search-theme="dark"] .stateLanding .inlineActionBtn {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: rgba(var(--white-rgb), 0.92) !important;
   font-weight: 450 !important;
 }
 
@@ -4330,7 +4330,7 @@
 .themeWhite .stateLanding .inlineActionIcon,
 [data-search-theme="white"] .stateLanding .inlineActionIcon,
 [data-search-theme="dark"] .stateLanding .inlineActionIcon {
-  color: rgba(255, 255, 255, 0.82) !important;
+  color: rgba(var(--white-rgb), 0.82) !important;
 }
 
 .stateLanding .inlineActionBtn:hover,
@@ -4338,7 +4338,7 @@
 .themeWhite .stateLanding .inlineActionBtn:hover,
 [data-search-theme="white"] .stateLanding .inlineActionBtn:hover {
   color: var(--white) !important;
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(var(--white-rgb), 0.12) !important;
 }
 
 .stateLanding .inlineActionBtn:hover .inlineActionIcon,
@@ -4357,7 +4357,7 @@
 
 .themeWhite .stateActive .inlineActionBtn:hover,
 [data-search-theme="white"] .stateActive .inlineActionBtn:hover {
-  background: rgba(11, 93, 244, 0.08) !important;
+  background: rgba(var(--blue-vivid-rgb), 0.08) !important;
   color: var(--blue-vivid) !important;
 }
 
@@ -4373,7 +4373,7 @@
 
 .themeWhite .stateActive .inlineActionBtnActive,
 [data-search-theme="white"] .stateActive .inlineActionBtnActive {
-  background: rgba(11, 93, 244, 0.10) !important;
+  background: rgba(var(--blue-vivid-rgb), 0.10) !important;
   color: var(--blue-vivid) !important;
 }
 
@@ -4385,11 +4385,11 @@
 /* Location Selector (White Mode) */
 .themeWhite .locationPill,
 [data-search-theme="white"] .locationPill {
-  background: rgba(15, 23, 42, 0.04) !important;
+  background: rgba(var(--slate-900-rgb), 0.04) !important;
   border: 1px solid rgba(203, 213, 225, 0.8) !important;
   color: var(--slate-800) !important;
   font-weight: 500 !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 1px 2px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite .locationPill:hover,
@@ -4397,7 +4397,7 @@
   background: var(--white) !important;
   border-color: var(--slate-400) !important;
   color: var(--slate-900) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.06) !important;
 }
 
 .themeWhite .locationPinIcon,
@@ -4410,7 +4410,7 @@
 [data-search-theme="white"] .locationMenu {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 16px 36px rgba(var(--black-rgb), 0.12) !important;
 }
 
 .themeWhite .locationMenuItem,
@@ -4530,7 +4530,7 @@
 .stateLanding .standaloneIconBtn,
 .themeWhite .stateLanding .standaloneIconBtn,
 [data-search-theme="white"] .stateLanding .standaloneIconBtn {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(var(--white-rgb), 0.6) !important;
   background: transparent !important;
 }
 
@@ -4538,15 +4538,15 @@
 .themeWhite .stateLanding .standaloneIconBtn:hover,
 [data-search-theme="white"] .stateLanding .standaloneIconBtn:hover {
   color: var(--white) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(var(--white-rgb), 0.08) !important;
 }
 
 .stateLanding .locationPill,
 .themeWhite .stateLanding .locationPill,
 [data-search-theme="white"] .stateLanding .locationPill {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  color: rgba(255, 255, 255, 0.88) !important;
+  background: rgba(var(--white-rgb), 0.04) !important;
+  border: 1px solid rgba(var(--white-rgb), 0.12) !important;
+  color: rgba(var(--white-rgb), 0.88) !important;
 }
 
 .stateLanding .locationPinIcon,
@@ -4573,7 +4573,7 @@
 .stateLanding .landingTextAction svg,
 .themeWhite .stateLanding .landingTextAction svg,
 [data-search-theme="white"] .stateLanding .landingTextAction svg {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(var(--white-rgb), 0.88) !important;
 }
 
 .themeWhite .suggestionsHeader,
@@ -4625,7 +4625,7 @@
 [data-search-theme="white"] .stateResults {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 24px 60px -15px rgba(var(--black-rgb), 0.14) !important;
 }
 
 .themeWhite.stateResults::before,
@@ -4697,13 +4697,13 @@
   background: #0B111E !important;
   border-radius: 8px !important;
   border: none !important;
-  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 4px 20px -4px rgba(var(--black-rgb), 0.12) !important;
 }
 
 .themeWhite .refDoctorCard:hover,
 [data-search-theme="white"] .refDoctorCard:hover {
   border: none !important;
-  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.20) !important;
+  box-shadow: 0 10px 28px -4px rgba(var(--black-rgb), 0.20) !important;
 }
 
 .themeWhite .refDocName,
@@ -4718,12 +4718,12 @@
 
 .themeWhite .refDocExpRow,
 [data-search-theme="white"] .refDocExpRow {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(var(--white-rgb), 0.88) !important;
 }
 
 .themeWhite .refDocHospital,
 [data-search-theme="white"] .refDocHospital {
-  color: rgba(255, 255, 255, 0.78) !important;
+  color: rgba(var(--white-rgb), 0.78) !important;
 }
 
 .themeWhite .refBookBtnWhite,
@@ -4767,7 +4767,7 @@
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
   border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 2px 12px rgba(var(--black-rgb), 0.04) !important;
   margin-top: 14px !important;
   padding: 12px 20px !important;
   width: 100% !important;
@@ -4777,14 +4777,14 @@
 [data-search-theme="white"] .refPulseRow:hover {
   background: var(--white) !important;
   border-color: var(--slate-300) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07) !important;
+  box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.07) !important;
 }
 
 .themeWhite .refPulseIconBox,
 [data-search-theme="white"] .refPulseIconBox {
   background: var(--slate-50) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite .refPulseTitle,
@@ -4794,9 +4794,9 @@
 
 .themeWhite .refPulseBadge,
 [data-search-theme="white"] .refPulseBadge {
-  background: rgba(237, 28, 36, 0.08) !important;
+  background: rgba(var(--red-emergency-rgb), 0.08) !important;
   color: var(--red-emergency) !important;
-  border: 1px solid rgba(237, 28, 36, 0.20) !important;
+  border: 1px solid rgba(var(--red-emergency-rgb), 0.20) !important;
 }
 
 .themeWhite .refPulseSubtext,
@@ -4812,7 +4812,7 @@
   font-weight: 500 !important;
   border-radius: 8px !important;
   padding: 8px 18px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04) !important;
 }
 
 .themeWhite .refPulseBtn:hover,
@@ -4906,7 +4906,7 @@
   border: 1px solid rgba(219, 234, 254, 0.9) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  box-shadow: 0 8px 32px rgba(var(--blue-brand-rgb), 0.06), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 8px 32px rgba(var(--blue-brand-rgb), 0.06), 0 2px 8px rgba(var(--black-rgb), 0.04) !important;
 }
 
 .themeWhite .pulseBackBtn,
@@ -4914,7 +4914,7 @@
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-800) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.05) !important;
 }
 
 .themeWhite .pulseBackBtn:hover,
@@ -4937,8 +4937,8 @@
 
 .themeWhite .pulseLiveBadge,
 [data-search-theme="white"] .pulseLiveBadge {
-  background: rgba(34, 197, 94, 0.12) !important;
-  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  background: rgba(var(--green-500-rgb), 0.12) !important;
+  border: 1px solid rgba(var(--green-500-rgb), 0.3) !important;
   color: #15803D !important;
 }
 
@@ -4992,7 +4992,7 @@
   background: linear-gradient(
     90deg,
     rgba(241, 245, 249, 0) 0%,
-    rgba(226, 232, 240, 0.85) 50%,
+    rgba(var(--slate-200-rgb), 0.85) 50%,
     rgba(241, 245, 249, 0) 100%
   ) !important;
 }
@@ -5018,23 +5018,23 @@
 [data-search-theme="white"] .pulseDoctorCard {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 16px -2px rgba(var(--black-rgb), 0.08) !important;
 }
 
 .themeWhite .pulseDoctorCard:hover,
 [data-search-theme="white"] .pulseDoctorCard:hover {
   border-color: var(--slate-300) !important;
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 10px 24px -4px rgba(var(--black-rgb), 0.12) !important;
 }
 
 .themeWhite .pulseDocGradient,
 [data-search-theme="white"] .pulseDocGradient {
   background: linear-gradient(
     to top,
-    rgba(15, 23, 42, 0.95) 0%,
-    rgba(15, 23, 42, 0.85) 30%,
-    rgba(15, 23, 42, 0.45) 55%,
-    rgba(15, 23, 42, 0.1) 75%,
+    rgba(var(--slate-900-rgb), 0.95) 0%,
+    rgba(var(--slate-900-rgb), 0.85) 30%,
+    rgba(var(--slate-900-rgb), 0.45) 55%,
+    rgba(var(--slate-900-rgb), 0.1) 75%,
     transparent 100%
   ) !important;
 }
@@ -5051,17 +5051,17 @@
 
 .themeWhite .pulseDocHospital,
 [data-search-theme="white"] .pulseDocHospital {
-  color: rgba(255, 255, 255, 0.8) !important;
+  color: rgba(var(--white-rgb), 0.8) !important;
 }
 
 .themeWhite .pulseDocExpRow,
 [data-search-theme="white"] .pulseDocExpRow {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: rgba(var(--white-rgb), 0.75) !important;
 }
 
 .themeWhite .pulseDocExpIcon,
 [data-search-theme="white"] .pulseDocExpIcon {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: rgba(var(--white-rgb), 0.75) !important;
 }
 
 .themeWhite .pulseBookBtn,
@@ -5080,7 +5080,7 @@
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-700) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04) !important;
 }
 
 .themeWhite .pulseChip:hover,
@@ -5095,20 +5095,20 @@
   background: #EFF6FF !important;
   border-color: var(--blue-500) !important;
   color: #1D4ED8 !important;
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 0 12px rgba(var(--blue-500-rgb), 0.2) !important;
 }
 
 .themeWhite .pulseInputBar,
 [data-search-theme="white"] .pulseInputBar {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 2px 10px rgba(var(--black-rgb), 0.05) !important;
 }
 
 .themeWhite .pulseInputBar:focus-within,
 [data-search-theme="white"] .pulseInputBar:focus-within {
   border-color: #93C5FD !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(var(--blue-500-rgb), 0.15) !important;
 }
 
 .themeWhite .pulseInputAttachBtn,
@@ -5145,7 +5145,7 @@
 [data-search-theme="white"] .pulseSendBtn {
   background: var(--blue-vivid) !important;
   color: var(--white) !important;
-  box-shadow: 0 2px 8px rgba(11, 93, 244, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(var(--blue-vivid-rgb), 0.3) !important;
 }
 
 .themeWhite .pulseSendBtn:hover,
@@ -5158,7 +5158,7 @@
 [data-search-theme="white"] .pulseTestCard {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.05) !important;
 }
 
 .themeWhite .pulseTestTitle,
@@ -5233,7 +5233,7 @@
   height: 240px;
   top: -30px;
   left: 5%;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.85) 0%, rgba(56, 189, 248, 0.40) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.85) 0%, rgba(var(--sky-400-rgb), 0.40) 45%, transparent 75%);
   animation: featherFloatCyan 6s ease-in-out infinite alternate;
 }
 
@@ -5253,7 +5253,7 @@
   height: 250px;
   bottom: -30px;
   right: 8%;
-  background: radial-gradient(circle, rgba(11, 93, 244, 0.85) 0%, rgba(var(--blue-brand-rgb), 0.40) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(var(--blue-vivid-rgb), 0.85) 0%, rgba(var(--blue-brand-rgb), 0.40) 45%, transparent 75%);
   animation: featherFloatBlue 6.5s ease-in-out infinite alternate;
 }
 
@@ -5263,7 +5263,7 @@
   height: 240px;
   bottom: -25px;
   left: 8%;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(237, 28, 36, 0.38) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(var(--red-emergency-rgb), 0.38) 45%, transparent 75%);
   animation: featherFloatPink 7.5s ease-in-out infinite alternate;
 }
 
@@ -5395,7 +5395,7 @@
 }
 
 .fabLink:active .fabIconWrap {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--white-rgb), 0.25);
 }
 
 .fabIconWrap {
@@ -5406,14 +5406,14 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
   transition: background 0.15s ease;
 }
 
 .fabDivider {
   height: auto;
   width: 1px;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(var(--white-rgb), 0.12);
   margin: 12px 0;
 }
 
@@ -5459,7 +5459,7 @@
 }
 
 .fabLink:active .fabIconWrap {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(var(--white-rgb), 0.25);
 }
 
 .fabIconWrap {
@@ -5470,13 +5470,13 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
   transition: background 0.15s ease;
 }
 
 .fabDivider {
   height: auto;
   width: 1px;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(var(--white-rgb), 0.12);
   margin: 12px 0;
 }

@@ -40,8 +40,8 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
 }
 
 /* justify-content:flex-end (not space-between) packs topTextBlock and
@@ -201,12 +201,12 @@
   justify-content: center;
   gap: 10px;
   border-radius: 48px;
-  border: 1.327px solid rgba(15, 23, 42, 0.10);
-  background: rgba(255, 255, 255, 0.75);
+  border: 1.327px solid rgba(var(--slate-900-rgb), 0.10);
+  background: rgba(var(--white-rgb), 0.75);
   backdrop-filter: blur(12px);
   position: relative;
   z-index: 2;
-  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.10);
+  box-shadow: 0 8px 32px rgba(var(--slate-900-rgb), 0.10);
   box-sizing: border-box;
 }
 
@@ -399,7 +399,7 @@
      white border with no shadow at all, so the card reads as glass sitting
      on the background rather than a panel floating above it. */
   border: 1px solid rgba(100, 120, 150, 0.20);
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(var(--white-rgb), 0.35);
   backdrop-filter: blur(16px);
   transition: all 0.2s ease;
 }
@@ -427,8 +427,8 @@
    border darkens right along with it so it stays visible against the
    now-different background instead of reading as white-on-near-white. */
 .storeContainer:hover {
-  background: rgba(15, 23, 42, 0.08);
-  border-color: rgba(15, 23, 42, 0.22);
+  background: rgba(var(--slate-900-rgb), 0.08);
+  border-color: rgba(var(--slate-900-rgb), 0.22);
 }
 
 .storeBadge {
@@ -440,18 +440,18 @@
   /* Delicate framing to separate from dark background */
   border-radius: 8px;
   /* Matches standard app store badge radius */
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--white-rgb), 0.15);
   background: var(--black);
   /* Ensures the border perfectly frames the black badge */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.5);
   overflow: hidden;
   /* Clips the background strictly to the rounded border */
 }
 
 .storeBadge:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
+  border-color: rgba(var(--white-rgb), 0.35);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.6), 0 0 16px rgba(var(--white-rgb), 0.12);
 }
 
 .storeBadge img {
@@ -492,7 +492,7 @@
   width: 310px;
   height: 464px;
   overflow: hidden;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 30px 60px rgba(var(--black-rgb), 0.35));
 }
 
 .phoneImg {
@@ -624,7 +624,7 @@
     flex-shrink: 0;
     border-radius: 9.067px;
     background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
-    box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+    box-shadow: 0 1.133px 0 1.133px rgba(var(--white-rgb), 0.22) inset;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
   }
@@ -707,11 +707,11 @@
     font-weight: 600;
     color: #111827;
     padding: 10px 24px;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(var(--white-rgb), 0.85);
     backdrop-filter: blur(16px);
     border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(var(--white-rgb), 1);
+    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.08);
     min-width: auto;
     margin-bottom: -24px;
     /* Slight overlap over the phone */

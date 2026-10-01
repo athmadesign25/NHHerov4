@@ -163,7 +163,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             >
               <div style={{ background: "linear-gradient(135deg, var(--white) 0%, var(--color-primary-light) 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
-                  <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
+                  <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(var(--white-rgb), 0.5)" }}>
                     <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column" }}>
@@ -335,7 +335,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                       inset: 0,
                       background: "var(--white)",
                       borderRadius: 20,
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                      boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                       zIndex: 0
                     }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -380,7 +380,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                       inset: 0,
                       background: "var(--white)",
                       borderRadius: 20,
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                      boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)",
                       zIndex: 0
                     }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}

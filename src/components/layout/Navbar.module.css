@@ -5,7 +5,7 @@
   right: 0;
   z-index: 1000;
   height: var(--nav-height);
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(var(--white-rgb), 0.97);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-light);
   transition: background var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-slow);
@@ -14,7 +14,7 @@
 .navbar.scrolled {
   background: rgba(var(--blue-brand-rgb), 0.97);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.15);
   box-shadow: 0 4px 20px rgba(2, 48, 112, 0.3);
 }
 
@@ -137,7 +137,7 @@
 
 .mobileSearchBtn:active {
   transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
 }
 
 
@@ -171,7 +171,7 @@
 
 .appleHamburgerBtn:active {
   transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
 }
 
 .hamburgerLine {
@@ -221,12 +221,12 @@
   right: 0;
   bottom: 0;
   height: calc(100dvh - 56px);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(var(--slate-900-rgb), 0.95);
   backdrop-filter: blur(40px) saturate(150%);
   -webkit-backdrop-filter: blur(40px) saturate(150%);
   z-index: 999999;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--white-rgb), 0.1);
 }
 
 .darkDrawerPane {
@@ -260,7 +260,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--white-rgb), 0.04);
   border-radius: 16px;
   padding: 16px;
   text-decoration: none;
@@ -269,7 +269,7 @@
 .emergencyIconPulse {
   width: 40px;
   height: 40px;
-  background: rgba(237, 28, 36, 0.1);
+  background: rgba(var(--red-emergency-rgb), 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -308,7 +308,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--white-rgb), 0.04);
   border-radius: 16px;
   padding: 16px;
   text-decoration: none;
@@ -326,7 +326,7 @@
 }
 
 .primaryActionCard:active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 /* -- Core Nav List -- */
@@ -360,7 +360,7 @@
   left: 54px; /* Aligns with text start */
   right: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 /* Narayana One Health row in the mobile drawer. Full-colour artwork, unlike
@@ -426,7 +426,7 @@
   left: 24px;
   right: 24px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 .utilityIconWrap {
@@ -436,7 +436,7 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.1);
   color: var(--white);
 }
 
@@ -449,8 +449,8 @@
   display: flex;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(15, 23, 42, 0.5);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  background: rgba(var(--slate-900-rgb), 0.5);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -501,11 +501,11 @@
   color: var(--slate-100);
   text-decoration: none;
   border-radius: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.06);
 }
 
 .subCategoryLink:active {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--white-rgb), 0.05);
 }
 
 /* ── Logo ── */
@@ -550,7 +550,7 @@
 }
 
 .scrolled .navLink {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--white-rgb), 0.9);
 }
 
 .navLink:hover {
@@ -560,7 +560,7 @@
 
 .scrolled .navLink:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
 }
 
 .chevron {
@@ -624,7 +624,7 @@
 }
 
 .scrolled .phoneLink {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--white-rgb), 0.75);
 }
 
 .phoneLink:hover {
@@ -660,13 +660,13 @@
 }
 
 .loginBtnInactive {
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border: 1.5px solid rgba(var(--white-rgb), 0.6);
   color: var(--white);
   background: transparent;
 }
 
 .loginBtnInactive:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
   border-color: var(--white);
 }
 
@@ -701,13 +701,13 @@
   border-radius: var(--radius-full);
   transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(237, 28, 36, 0.3);
+  box-shadow: 0 2px 8px rgba(var(--red-emergency-rgb), 0.3);
 }
 
 .bookBtn:hover {
   background: var(--red-700);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(237, 28, 36, 0.4);
+  box-shadow: 0 4px 14px rgba(var(--red-emergency-rgb), 0.4);
 }
 
 .scrolled .bookBtn {
@@ -740,7 +740,7 @@
 }
 
 .scrolled .mobileToggle:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.15);
 }
 
 /* ── Mobile Menu ── */
@@ -751,7 +751,7 @@
   bottom: 0;
   width: min(340px, 90vw);
   background: var(--white);
-  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15);
+  box-shadow: -8px 0 40px rgba(var(--black-rgb), 0.15);
   z-index: 999;
   overflow-y: auto;
 }
@@ -991,18 +991,18 @@
   padding: 0 14px;
   border-radius: 10px;
   text-decoration: none;
-  background: rgba(237, 28, 36, 0.18);
+  background: rgba(var(--red-emergency-rgb), 0.18);
   backdrop-filter: blur(14px) saturate(1.5);
   -webkit-backdrop-filter: blur(14px) saturate(1.5);
   border: 1px solid rgba(255, 56, 56, 0.85);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(var(--white-rgb), 0.18);
   will-change: filter, transform;
   transition: filter 0.25s ease, transform 0.25s ease, background 0.25s ease;
 }
 
 .emergencyBtn:hover {
-  background: rgba(237, 28, 36, 0.28);
-  filter: drop-shadow(0 0 8px rgba(237, 28, 36, 0.55)) drop-shadow(0 0 2px rgba(237, 28, 36, 0.65));
+  background: rgba(var(--red-emergency-rgb), 0.28);
+  filter: drop-shadow(0 0 8px rgba(var(--red-emergency-rgb), 0.55)) drop-shadow(0 0 2px rgba(var(--red-emergency-rgb), 0.65));
   transform: translateY(-1px);
 }
 
@@ -1017,8 +1017,8 @@
 /* Over light sections the glass has no dark backdrop to hold white text,
    so label and siren both take the brand red instead. */
 .emergencyBtnOnLight {
-  background: rgba(237, 28, 36, 0.10);
-  border-color: rgba(237, 28, 36, 0.55);
+  background: rgba(var(--red-emergency-rgb), 0.10);
+  border-color: rgba(var(--red-emergency-rgb), 0.55);
 }
 
 .emergencyBtnOnLight .emergencyLabelText,
@@ -1029,8 +1029,8 @@
 /* Hover deepens the red fill, which leaves the red label with nothing to
    read against — so label and siren flip to white for that state only. */
 .emergencyBtnOnLight:hover {
-  background: rgba(237, 28, 36, 0.92);
-  border-color: rgba(237, 28, 36, 0.92);
+  background: rgba(var(--red-emergency-rgb), 0.92);
+  border-color: rgba(var(--red-emergency-rgb), 0.92);
 }
 
 .emergencyBtnOnLight:hover .emergencyLabelText,
@@ -1128,8 +1128,8 @@
   gap: 6px;
   padding: 4px 10px 4px 5px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(var(--white-rgb), 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.22);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: var(--nav-fg-color, var(--white));
@@ -1138,19 +1138,19 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.08);
 }
 
 .navbarScrolled .themeTogglePill,
 :global([data-nav-theme="light"]) .themeTogglePill {
-  background: rgba(15, 23, 42, 0.06);
-  border-color: rgba(15, 23, 42, 0.15);
+  background: rgba(var(--slate-900-rgb), 0.06);
+  border-color: rgba(var(--slate-900-rgb), 0.15);
   color: var(--slate-900);
 }
 
 .searchThemeToggle:hover .themeTogglePill {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.14);
 }
 
 .themeToggleThumb {
@@ -1160,7 +1160,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(var(--white-rgb), 0.24);
   color: inherit;
   transition: transform 0.25s ease, background 0.25s ease;
 }
@@ -1171,7 +1171,7 @@
 }
 
 .themeDarkActive .themeToggleThumb {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(var(--slate-800-rgb), 0.7);
   color: var(--slate-50);
 }
 

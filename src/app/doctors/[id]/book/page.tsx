@@ -197,7 +197,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Hospital Visit" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -228,7 +228,7 @@ export default function BookingPage({ params }: { params: Promise<{ id: string }
                 {consultationType === "Video Consultation" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
+                    style={{ position: "absolute", inset: 0, background: "var(--white)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}

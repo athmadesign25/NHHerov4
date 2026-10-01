@@ -450,13 +450,13 @@ export default function MobileAppDownloadBanner() {
                         top: 0,
                         left: 0,
                         width: "100%",
-                        backgroundColor: "rgba(255, 255, 255, 0.55)",
+                        backgroundColor: "rgba(var(--white-rgb), 0.55)",
                         backdropFilter: "blur(20px) saturate(1.4)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                         borderRadius: "20px",
                         padding: "16px",
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                        border: "1px solid rgba(255,255,255,0.6)"
+                        boxShadow: "0 20px 40px rgba(var(--black-rgb), 0.12)",
+                        border: "1px solid rgba(var(--white-rgb), 0.6)"
                       }}
                     >
                       <div style={{ textAlign: "center", color: "var(--slate-700)", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>

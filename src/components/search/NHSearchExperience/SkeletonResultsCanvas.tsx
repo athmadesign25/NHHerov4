@@ -62,7 +62,7 @@ export default function SkeletonResultsCanvas({ query, selectedLocation = "Banga
                     <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: "60%", height: 13, marginTop: 2 }} />
                   </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(var(--white-rgb), 0.07)" }}>
                   <div className={`${styles.skeletonBar} ${styles.shimmer}`} style={{ width: 85, height: 13 }} />
                   <div className={`${styles.skeletonPill} ${styles.shimmer}`} style={{ width: 48, height: 22, borderRadius: 5 }} />
                 </div>

@@ -338,7 +338,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                           <div
                             key={spec.id}
                             onClick={() => sendMessage(spec.name)}
-                            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "12px", cursor: "pointer" }}
+                            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(var(--white-rgb), 0.04)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "12px", cursor: "pointer" }}
                           >
                             <img src={spec.image || "/Specialities icons/General Medicine.svg"} alt={spec.name} style={{ width: "24px", height: "24px" }} />
                             <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--white)" }}>{spec.name}</div>
@@ -383,7 +383,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                           <div
                             key={t.id}
                             onClick={() => sendMessage(t.name)}
-                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(255, 255, 255, 0.04)", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "20px", fontSize: "12px", color: "var(--slate-200)", cursor: "pointer" }}
+                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(var(--white-rgb), 0.04)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "20px", fontSize: "12px", color: "var(--slate-200)", cursor: "pointer" }}
                           >
                             {t.name}
                           </div>
@@ -400,8 +400,8 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                       alignItems: "center", 
                       justifyContent: "space-between", 
                       padding: "16px 20px", 
-                      background: "linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)", 
-                      border: "1px solid rgba(124, 58, 237, 0.2)", 
+                      background: "linear-gradient(135deg, rgba(var(--violet-600-rgb), 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)", 
+                      border: "1px solid rgba(var(--violet-600-rgb), 0.2)", 
                       borderRadius: "20px", 
                       cursor: "pointer", 
                       marginTop: "10px" 

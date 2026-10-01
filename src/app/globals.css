@@ -18,14 +18,22 @@
 :root {
   /* ── PRIMITIVES ──────────────────────────────────────────────────────── */
 
-  --white: #ffffff;
-  --black: #000000;
+  /* A primitive is held as bare channels whenever it is used at an opacity
+     more often than solid — white alone appears in 446 rgba() literals
+     across 64 different alphas. Composing from the channel var keeps one
+     source of truth for the colour while the alpha stays at the call site:
+     rgba(var(--white-rgb), 0.08) */
+  --white-rgb: 255, 255, 255;
+  --white: rgb(var(--white-rgb));
+  --black-rgb: 0, 0, 0;
+  --black: rgb(var(--black-rgb));
 
   /* Neutral ramp. These ten are an exact match for a standard slate scale,
      so they were already a coherent system — just an unnamed one. */
   --slate-50: #f8fafc;
   --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
+  --slate-200-rgb: 226, 232, 240;
+  --slate-200: rgb(var(--slate-200-rgb));
   --slate-250: #cfd8e5;
   --slate-300: #cbd5e1;
   --slate-400: #94a3b8;
@@ -33,8 +41,10 @@
   --slate-500: #64748b;
   --slate-600: #475569;
   --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
+  --slate-800-rgb: 30, 41, 59;
+  --slate-800: rgb(var(--slate-800-rgb));
+  --slate-900-rgb: 15, 23, 42;
+  --slate-900: rgb(var(--slate-900-rgb));
 
   /* Off-ramp greys — neutral rather than blue-tinted, so they are genuinely
      a separate family from the slate ramp above rather than near-misses of
@@ -55,13 +65,19 @@
   --blue-700: #0f58b8;
   --blue-800: #0446b8;
 
-  /* Accent blues. Five distinct hues with no rule between them — the
-     largest single inconsistency the audit turned up. */
-  --blue-vivid: #0b5df4;
-  --blue-500: #3b82f6;
+  /* Accent blues. Not drift: --cyan-bright, --sky-400 and --blue-600 are
+     concentrated in the Pulse AI components, where they appear in gradients
+     alongside the violets below. That is a deliberate AI accent identity,
+     distinct from the NH brand blue, so they are kept apart on purpose. */
+  --blue-vivid-rgb: 11, 93, 244;
+  --blue-vivid: rgb(var(--blue-vivid-rgb));
+  --blue-500-rgb: 59, 130, 246;
+  --blue-500: rgb(var(--blue-500-rgb));
   --blue-600: #2563eb;
-  --cyan-bright: #00c4ff;
-  --sky-400: #38bdf8;
+  --cyan-bright-rgb: 0, 196, 255;
+  --cyan-bright: rgb(var(--cyan-bright-rgb));
+  --sky-400-rgb: 56, 189, 248;
+  --sky-400: rgb(var(--sky-400-rgb));
   --sky-600: #0284c7;
 
   /* Pale blue tints. */
@@ -69,24 +85,30 @@
   --blue-tint-100: #ebf3fc;
 
   /* Emergency red and its supporting steps. */
-  --red-emergency: #ED1C24;
+  --red-emergency-rgb: 237, 28, 36;
+  --red-emergency: rgb(var(--red-emergency-rgb));
   --red-emergency-tint: #fef5f5;
   --red-400: #f87171;
-  --red-500: #ef4444;
+  --red-500-rgb: 239, 68, 68;
+  --red-500: rgb(var(--red-500-rgb));
   --red-700: #c8151c;
 
   /* Dark surfaces used by the navy sections and the footer. */
   --navy-800: #223148;
-  --navy-900: #031224;
+  --navy-900-rgb: 3, 18, 36;
+  --navy-900: rgb(var(--navy-900-rgb));
   --navy-ink: #1a1a2e;
 
   /* Support hues. */
-  --green-500: #22C55E;
+  --green-500-rgb: 34, 197, 94;
+  --green-500: rgb(var(--green-500-rgb));
   --emerald-500: #10b981;
   --teal-600: #0d9488;
-  --amber-500: #F59E0B;
+  --amber-500-rgb: 245, 158, 11;
+  --amber-500: rgb(var(--amber-500-rgb));
   --violet-400: #a78bfa;
-  --violet-600: #7c3aed;
+  --violet-600-rgb: 124, 58, 237;
+  --violet-600: rgb(var(--violet-600-rgb));
   --pink-500: #ec4899;
 
   /* ── SEMANTIC ────────────────────────────────────────────────────────── */
@@ -95,8 +117,13 @@
   --color-primary-dark: #023070;
   --color-primary-light: #EEF3FA;
   --color-primary-mid: #1565C0;
-  --color-primary-tint: rgba(3, 78, 162, 0.08);
-  --color-primary-tint-hover: rgba(3, 78, 162, 0.15);
+  /* These two kept the pre-correction channels (…, 162) after the brand blue
+     moved to 161: the sweep that fixed it globbed the component files and
+     never looked at this one, so the brand's own tints were left a shade off
+     the brand. Composing them from the channel var is what stops that class
+     of drift recurring. */
+  --color-primary-tint: rgba(var(--blue-brand-rgb), 0.08);
+  --color-primary-tint-hover: rgba(var(--blue-brand-rgb), 0.15);
 
   --color-emergency: var(--red-emergency);
   --color-emergency-light: #FFF0F0;

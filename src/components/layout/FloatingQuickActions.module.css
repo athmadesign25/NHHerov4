@@ -43,11 +43,11 @@
 /* Default (over light sections) a white wash is invisible against the pale
    glass — the tint has to go the other way, toward the label's own blue. */
 .link:hover {
-  background: rgba(11, 93, 244, 0.14);
+  background: rgba(var(--blue-vivid-rgb), 0.14);
 }
 
 .linkOnDark:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--white-rgb), 0.18);
 }
 
 /* Glassy blue tile: translucent tint rather than the old flat gradient,
@@ -95,7 +95,7 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(255, 255, 255, 0.55) 50%,
+    rgba(var(--white-rgb), 0.55) 50%,
     transparent 100%
   );
   pointer-events: none;
@@ -158,7 +158,7 @@
   background: #f00;
   box-shadow:
     inset 0 0 10px 9px #558,
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    inset 0 1px 1px rgba(var(--white-rgb), 0.5);
   /* Lifted far less than the source effect's brightness(1.8) — at this
      tile size that blew the color-dodge pass out to a flat white lobe
      over most of the face instead of reading as shifting color. */
@@ -210,7 +210,7 @@
   width: 80%;
   height: 14px;
   border-radius: 50px;
-  background-color: rgba(255, 255, 255, 0.33);
+  background-color: rgba(var(--white-rgb), 0.33);
   filter: blur(5px);
   animation: pulseIconGlow 3s ease-in-out infinite;
 }
@@ -248,14 +248,14 @@
   width: 98px;
   padding: 10px 0;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  background: linear-gradient(168deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 48%, rgba(255, 255, 255, 0.12) 100%);
+  border: 1px solid rgba(var(--white-rgb), 0.42);
+  background: linear-gradient(168deg, rgba(var(--white-rgb), 0.16) 0%, rgba(var(--white-rgb), 0.07) 48%, rgba(var(--white-rgb), 0.12) 100%);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   box-shadow:
     0 12px 34px rgba(5, 20, 45, 0.20),
-    inset 0 1px 1px rgba(255, 255, 255, 0.72),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.28),
+    inset 0 1px 1px rgba(var(--white-rgb), 0.72),
+    inset 0 -1px 1px rgba(var(--white-rgb), 0.28),
     inset 0 0 30px rgb(18 71 194 / 20%);
   display: flex;
   flex-direction: column;
@@ -326,7 +326,7 @@
   border: 1px solid rgba(225, 216, 216, 0.40);
   background: linear-gradient(180deg, #034EA1 0%, #471F1F 100%);
   backdrop-filter: blur(12px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 36px rgba(var(--black-rgb), 0.35);
   pointer-events: none;
   box-sizing: border-box;
 }
@@ -360,8 +360,8 @@
   width: 56px;
   height: 56px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background: linear-gradient(85deg, rgba(0, 0, 0, 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
+  border: 1px solid rgba(var(--white-rgb), 0.24);
+  background: linear-gradient(85deg, rgba(var(--black-rgb), 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   backdrop-filter: blur(34px);
   cursor: pointer;
   display: flex;
@@ -430,7 +430,7 @@
   50% {
     transform: scaleY(1.15);
     opacity: 1;
-    filter: drop-shadow(0 0 2.5px rgba(0, 196, 255, 0.6));
+    filter: drop-shadow(0 0 2.5px rgba(var(--cyan-bright-rgb), 0.6));
   }
 }
 /* Centered Pulse AI Modal (Triggered from Floating Action Button wherever user is) */
