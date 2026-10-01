@@ -215,7 +215,7 @@
 /* ─── Typing Dots ─────────────────────────────────────────────────────── */
 .typingDots {
   display: flex;
-  gap: 5px;
+  gap: 6px;
   padding: 8px 4px;
   align-items: center;
 }
@@ -277,7 +277,7 @@
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: 6px;
-  padding: 3px 8px;
+  padding: 4px 8px;
   margin: 2px 4px 2px 0;
 }
 
@@ -436,7 +436,7 @@
 .featureChip {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   padding: 8px 16px;
   border-radius: 24px;
   background: rgba(var(--white-rgb), 0.05);
@@ -521,7 +521,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: var(--radius-full);
-  padding: 1.5px;
+  padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;

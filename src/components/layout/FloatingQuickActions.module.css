@@ -393,7 +393,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3.2px;
+  gap: 4px;
   height: 18px;
   filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
 }

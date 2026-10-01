@@ -212,7 +212,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: 30px;
-  padding: 1.5px;
+  padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -259,7 +259,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: 20px;
-  padding: 1.5px;
+  padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -503,7 +503,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: var(--radius-full);
-  padding: 1.5px;
+  padding: 2px;
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -1540,7 +1540,7 @@
   color: var(--color-primary, var(--blue-brand));
   font-weight: 700;
   background: rgba(var(--blue-brand-rgb), 0.08);
-  padding: 1px 5px;
+  padding: 1px 6px;
   border-radius: 4px;
   margin-left: 4px;
   display: inline-block;
@@ -2328,7 +2328,7 @@
   color: white;
   border: none;
   border-radius: var(--radius-full);
-  padding: 7px 16px;
+  padding: 8px 16px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -2624,7 +2624,7 @@
   background: rgba(var(--white-rgb), 0.85);
   border: 1px solid rgba(var(--violet-600-rgb), 0.25);
   border-radius: var(--radius-full);
-  padding: 5px 12px;
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
   color: var(--blue-brand);

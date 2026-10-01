@@ -161,7 +161,7 @@
 .link {
   display: block;
   min-width: 0;
-  padding: 7px 0;
+  padding: 8px 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   line-height: 1.45;
@@ -193,7 +193,7 @@
 
 @media (max-width: 768px) {
   .masterToggle {
-    padding: 15px 0;
+    padding: 16px 0;
   }
   .groupToggle {
     padding: 18px 0;
