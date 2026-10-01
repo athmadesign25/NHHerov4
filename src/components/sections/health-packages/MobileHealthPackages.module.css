@@ -214,7 +214,7 @@
 .title {
   font-size: 42px;
   font-weight: 800;
-  line-height: 1.12;
+  line-height: var(--leading-tight);
   letter-spacing: -0.025em;
   color: var(--color-text-inverse);
   text-align: center;
@@ -260,11 +260,11 @@
 
 .uspLabel {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--color-text-inverse);
   text-align: left;
-  line-height: 1.3;
+  line-height: var(--leading-snug);
   white-space: nowrap;
 }
 
@@ -281,7 +281,7 @@
   color: #e1e1e1;
   text-align: center;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   line-height: normal;
   margin: 0 0 20px;
@@ -556,7 +556,7 @@
 .packageCardTitle {
   color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   line-height: normal;
   margin: 0;
@@ -690,7 +690,7 @@
 .perkText {
   color: var(--darker-212121, #212121);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: normal;
   white-space: nowrap;
@@ -703,7 +703,7 @@
 .factBold {
   color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   line-height: normal;
   white-space: nowrap;
@@ -712,7 +712,7 @@
 .factLight {
   color: var(--black);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 300;
   line-height: normal;
   white-space: nowrap;
@@ -733,7 +733,7 @@
   display: inline-block;
   color: var(--navy-ink);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   opacity: 0;
   transform: translateY(10px);
@@ -779,7 +779,7 @@
   gap: 8px;
   padding: 12px 28px;
   margin-top: 4px;
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-text-inverse);
   text-decoration: none;
@@ -900,7 +900,7 @@
   .title {
     font-size: clamp(26px, 7.5vw, 36px);
     text-align: center;
-    line-height: 1.15;
+    line-height: var(--leading-tight);
     letter-spacing: -0.02em;
   }
 
@@ -925,8 +925,8 @@
 
   .uspLabel {
     white-space: normal;
-    font-size: 12px;
-    line-height: 1.35;
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-normal);
     text-align: center;
   }
 
@@ -944,7 +944,7 @@
   .railLabel {
     align-self: flex-start;
     text-align: left;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 600;
     margin: 0 0 14px;
     color: rgba(var(--white-rgb), 0.80);
@@ -1059,16 +1059,16 @@
   }
 
   .packageCardTitle {
-    font-size: 15px;
+    font-size: var(--font-size-base);
     font-weight: 700;
-    line-height: 1.25;
+    line-height: var(--leading-snug);
     white-space: normal;
     color: var(--navy-ink);
     margin: 0;
   }
 
   .packageCardAudience {
-    font-size: 11px;
+    font-size: var(--font-size-xs);
     font-weight: 400;
     margin: 0;
     white-space: normal;
@@ -1109,12 +1109,12 @@
      original 1px step between value and label. The card has the room: the
      content column runs ~115px of its ~188px usable height at rest. */
   .factBold {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 700;
   }
 
   .factLight {
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     font-weight: 300;
   }
 
@@ -1127,7 +1127,7 @@
     opacity: 1;
     transform: none;
     z-index: 3;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     font-weight: 700;
     color: #5F6977; /* Premium dark grey */
   }
@@ -1155,7 +1155,7 @@
 
   .packageCardCompact .packageCardTitle {
     white-space: normal;
-    font-size: 15px;
+    font-size: var(--font-size-base);
   }
 
   .packageCardCompact .packageCardContent {
@@ -1170,7 +1170,7 @@
     width: 100%;
     margin: 8px 0 0;
     padding: 14px 24px;
-    font-size: 15px;
+    font-size: var(--font-size-base);
     border-radius: 10px;   /* Match card border-radius */
     box-sizing: border-box;
   }
@@ -1201,7 +1201,7 @@
    for a 2-line title, so the subtitle sits directly beneath it. */
 .packageCardCompact .packageCardTitle {
   white-space: nowrap;
-  font-size: 19px;
+  font-size: var(--font-size-xl);
 }
 
 .packageCardCompact .packageCardContent {
@@ -1216,7 +1216,7 @@
   margin: calc(6px - 20px) 0 0;
   color: #3D4653;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
@@ -1317,7 +1317,7 @@
 
 .directionToggleLabel {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1332,7 +1332,7 @@
   background: rgba(var(--white-rgb), 0.08);
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;

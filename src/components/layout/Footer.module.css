@@ -99,7 +99,7 @@
 
 .brandDesc {
   font-size: var(--font-size-sm);
-  line-height: 1.7;
+  line-height: var(--leading-relaxed);
   color: rgba(var(--white-rgb), 0.7);
 }
 

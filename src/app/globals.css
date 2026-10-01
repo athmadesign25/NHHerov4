@@ -149,6 +149,9 @@
 
   /* Typography */
   --font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* 10px, for the smallest badge and overline labels. The scale previously
+     bottomed out at 12px, so everything below it was written as a literal. */
+  --font-size-2xs: 10px;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
@@ -160,6 +163,23 @@
   --font-size-5xl: 48px;
   --font-size-6xl: 60px;
   --font-size-7xl: 72px;
+
+  /* Leading, chosen by the size it accompanies rather than per instance —
+     small text needs proportionally more room, display type needs less, so
+     a single "line-height" value cannot serve both. There were 18 distinct
+     values here with no rule; these six cover all of them.
+
+     Rough guide:
+       body and anything under 20px   -> normal / relaxed
+       subtitles, 20-30px             -> snug
+       titles and display, 30px+      -> tight
+       numerals and icon labels       -> none */
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.4;
+  --leading-body: 1.5;
+  --leading-relaxed: 1.65;
 
   /* Spacing (8px system) */
   --sp-1: 8px;

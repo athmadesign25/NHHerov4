@@ -109,15 +109,15 @@
   font-size: clamp(28px, 3.2vw, 44px);
   font-weight: 800;
   color: var(--color-text-inverse);
-  line-height: 1.18;
+  line-height: var(--leading-tight);
   letter-spacing: -0.025em;
   margin-bottom: 8px;
 }
 
 .subHeadline {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   color: #F1F1F1;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   margin-top: 0;
 }
 
@@ -311,7 +311,7 @@
 .blinkingCursor {
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 400;
   margin-right: 2px;
   animation: cursorBlink 1s step-end infinite;
@@ -332,7 +332,7 @@
 .aiSuggestionText {
   color: rgba(var(--white-rgb), 0.7);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -341,7 +341,7 @@
 .typedText {
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   line-height: normal;
 }
@@ -356,7 +356,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   color: transparent;
 }
@@ -367,7 +367,7 @@
   gap: 4px;
   color: rgba(var(--white-rgb), 0.9);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   pointer-events: none;
 }
@@ -416,7 +416,7 @@
   background: transparent;
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -560,8 +560,8 @@
   outline: none;
   background: transparent;
   color: var(--color-text-inverse);
-  font-size: 34px;
-  line-height: 1;
+  font-size: var(--font-size-4xl);
+  line-height: var(--leading-none);
   padding-right: 8px;
 }
 
@@ -575,8 +575,8 @@
   border-radius: var(--radius-full);
   background: var(--blue-700);
   color: var(--color-text-inverse);
-  font-size: 34px;
-  line-height: 1;
+  font-size: var(--font-size-4xl);
+  line-height: var(--leading-none);
   font-weight: 700;
   padding: 10px 32px;
   cursor: pointer;
@@ -603,7 +603,7 @@
 }
 
 .popularTitle {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--slate-450);
   font-weight: 800;
   text-transform: uppercase;
@@ -622,7 +622,7 @@
   background: transparent;
   color: var(--slate-900);
   padding: 0;
-  font-size: 22px;
+  font-size: var(--font-size-2xl);
   font-weight: 500;
   cursor: pointer;
 }
@@ -646,8 +646,8 @@
   border-bottom: 3px solid transparent;
   background: transparent;
   color: var(--slate-450);
-  font-size: 34px;
-  line-height: 1;
+  font-size: var(--font-size-4xl);
+  line-height: var(--leading-none);
   font-weight: 700;
   padding: 4px 0 12px;
   cursor: pointer;
@@ -676,8 +676,8 @@
   border: none;
   background: transparent;
   color: var(--navy-800);
-  font-size: 30px;
-  line-height: 1;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-none);
   font-weight: 700;
   outline: none;
 }
@@ -697,7 +697,7 @@
 .sectionHeader {
   text-align: left;
   width: 100%;
-  font-size: 22px;
+  font-size: var(--font-size-2xl);
   font-weight: 800;
   text-transform: uppercase;
   color: var(--blue-700);
@@ -787,14 +787,14 @@
 .specName,
 .treatmentName {
   font-size: 38px;
-  line-height: 1;
+  line-height: var(--leading-none);
   font-weight: 800;
   color: var(--navy-800);
 }
 
 .doctorSpec {
-  font-size: 32px;
-  line-height: 1;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-none);
   color: var(--blue-700);
   font-weight: 800;
   margin-top: 6px;
@@ -804,8 +804,8 @@
 .treatmentDesc,
 .specMatch,
 .treatmentMeta {
-  font-size: 30px;
-  line-height: 1.25;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-snug);
   color: var(--slate-450);
   margin-top: 4px;
 }
@@ -863,8 +863,8 @@
 }
 
 .articleTitle {
-  font-size: 34px;
-  line-height: 1.15;
+  font-size: var(--font-size-4xl);
+  line-height: var(--leading-tight);
   font-weight: 700;
   color: var(--navy-800);
 }
@@ -957,19 +957,19 @@
   color: var(--color-text-inverse);
   font-size: clamp(20px, 2.1vw, 28px);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .pulseDescription {
   color: color-mix(in srgb, var(--color-text-muted) 82%, var(--color-text-inverse));
   font-size: var(--font-size-base);
-  line-height: 1.5;
+  line-height: var(--leading-body);
   margin: 0;
 }
 
 .pulseVersion {
   color: color-mix(in srgb, var(--color-text-muted) 82%, var(--color-text-inverse));
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   margin: 0;
   opacity: 0.85;
 }
@@ -1000,11 +1000,11 @@
   }
 
   .searchInput {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
   }
 
   .searchBtn {
-    font-size: 16px;
+    font-size: var(--font-size-base);
     padding: 8px 16px;
   }
 
@@ -1034,11 +1034,11 @@
 
   .dropdownTab,
   .locationDropdownSelect {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .sectionHeader {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .doctorGrid {
@@ -1053,7 +1053,7 @@
   .specName,
   .treatmentName,
   .articleTitle {
-    font-size: 18px;
+    font-size: var(--font-size-lg);
   }
 
   .doctorSpec,
@@ -1061,7 +1061,7 @@
   .treatmentDesc,
   .specMatch,
   .treatmentMeta {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .pulseShellAnchor {
@@ -1150,7 +1150,7 @@
   outline: none;
   background: transparent;
   color: var(--color-text-inverse);
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-family: var(--font-family);
   width: 100%;
   transition: color 0.2s ease;
@@ -1240,7 +1240,7 @@
 .sectionHeader {
   text-align: left;
   width: 100%;
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--black);
@@ -1256,7 +1256,7 @@
   padding: 6px 10px;
   border-radius: 8px;
   color: var(--slate-800);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   text-decoration: none;
@@ -1293,7 +1293,7 @@
 }
 
 .itemTag {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   padding: 2px 8px;
   border-radius: 4px;
   background: rgba(var(--black-rgb), 0.03);
@@ -1303,7 +1303,7 @@
 
 .noResults {
   color: var(--slate-500);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   text-align: center;
   padding: 16px 0;
 }
@@ -1361,7 +1361,7 @@
   border: none;
   outline: none;
   color: var(--color-primary, var(--blue-brand));
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   padding-right: 4px;
@@ -1373,7 +1373,7 @@
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--slate-500);
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
   padding: 6px 12px;
@@ -1424,7 +1424,7 @@
 }
 
 .popularTitle {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1444,7 +1444,7 @@
   border: 1px solid var(--slate-200);
   border-radius: var(--radius-full);
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1502,7 +1502,7 @@
 }
 
 .doctorName {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--slate-800);
   white-space: nowrap;
@@ -1512,7 +1512,7 @@
 }
 
 .doctorSpec {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--color-text-secondary);
   line-height: normal;
@@ -1520,7 +1520,7 @@
 }
 
 .doctorLoc {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   color: var(--slate-500);
   font-weight: 500;
   display: flex;
@@ -1584,7 +1584,7 @@
 }
 
 .specName {
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--slate-800);
   line-height: normal;
@@ -1595,9 +1595,9 @@
 
 .specMatch,
 .treatmentMeta {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--slate-500);
-  line-height: 1.2;
+  line-height: var(--leading-tight);
 }
 
 .treatmentGrid {
@@ -1652,16 +1652,16 @@
 }
 
 .treatmentName {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--slate-800);
   line-height: normal;
 }
 
 .treatmentDesc {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--slate-500);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1705,13 +1705,13 @@
   }
 
   .searchInput {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 
   .searchBtn {
     height: 38px;
     padding: 0 16px;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .dropdown {
@@ -1729,12 +1729,12 @@
   }
 
   .popularTitle {
-    font-size: 11px;
+    font-size: var(--font-size-xs);
   }
 
   .popularTagBtn {
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .doctorGrid {
@@ -1759,7 +1759,7 @@
   .searchBtn {
     height: 36px;
     padding: 0 14px;
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 
   .dropdown {
@@ -1837,7 +1837,7 @@
   z-index: 1;
   color: var(--color-text-inverse);
   font-weight: 500;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   max-width: 0;
   opacity: 0;
   overflow: hidden;
@@ -1919,17 +1919,17 @@
 }
 
 .metricValue {
-  font-size: 28px;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
   color: var(--color-text-inverse);
   margin-bottom: 6px;
-  line-height: 1.1;
+  line-height: var(--leading-tight);
 }
 
 .metricLabel {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: rgba(var(--white-rgb), 0.85);
-  line-height: 1.3;
+  line-height: var(--leading-snug);
 }
 
 @media (max-width: 768px) {
@@ -1946,11 +1946,11 @@
   }
 
   .metricValue {
-    font-size: 24px;
+    font-size: var(--font-size-2xl);
   }
 
   .metricLabel {
-    font-size: 12px;
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -2019,7 +2019,7 @@
 }
 
 .dropdownPulseDivider span {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--slate-400);
   text-transform: uppercase;
@@ -2094,14 +2094,14 @@
 }
 
 .entryCardTitle {
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--slate-900);
   margin: 0 0 2px 0;
 }
 
 .entryCardSubtitle {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--slate-600);
   margin: 0;
@@ -2164,7 +2164,7 @@
 }
 
 .pulsePreviewTitle {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--slate-400);
   text-transform: uppercase;
@@ -2224,7 +2224,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: #1e3a8a;
 }
@@ -2235,7 +2235,7 @@
 }
 
 .pulsePreviewTag {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--violet-600);
   background: #f5f3ff;
@@ -2245,10 +2245,10 @@
 }
 
 .pulsePreviewEmpathy {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-style: italic;
   color: var(--slate-600);
-  line-height: 1.5;
+  line-height: var(--leading-body);
   margin-bottom: 14px;
   font-weight: 500;
 }
@@ -2283,7 +2283,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--violet-600);
   background: #f5f3ff;
@@ -2296,19 +2296,19 @@
 }
 
 .pulsePreviewDocName {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--slate-800);
 }
 
 .pulsePreviewDocSub {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--slate-500);
   margin-top: 1px;
 }
 
 .pulsePreviewDocSlot {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--slate-700);
   margin-top: 2px;
 }
@@ -2329,7 +2329,7 @@
   border: none;
   border-radius: var(--radius-full);
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2349,7 +2349,7 @@
   border: 1px solid rgba(var(--blue-brand-rgb), 0.4);
   border-radius: var(--radius-full);
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2364,11 +2364,11 @@
 }
 
 .pulseAIPendingOneLiner {
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   color: var(--slate-600);
   font-weight: 500;
   text-align: center;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .pulseAIPendingOneLiner strong {
@@ -2418,7 +2418,7 @@
 }
 
 .dropdownPulseDivider span {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--slate-400);
   text-transform: uppercase;
@@ -2493,14 +2493,14 @@
 }
 
 .entryCardTitle {
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--slate-900);
   margin: 0 0 2px 0;
 }
 
 .entryCardSubtitle {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--slate-600);
   margin: 0;
@@ -2536,7 +2536,7 @@
 }
 
 .intentLabel {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--slate-500);
   text-transform: uppercase;
@@ -2553,7 +2553,7 @@
   background: var(--color-surface);
   border-radius: var(--radius-full);
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -2601,7 +2601,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--slate-700);
 }
@@ -2625,7 +2625,7 @@
   border: 1px solid rgba(var(--violet-600-rgb), 0.25);
   border-radius: var(--radius-full);
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--blue-brand);
   cursor: pointer;
@@ -2643,7 +2643,7 @@
 .pulseViewAllDocsBtn {
   background: transparent;
   border: none;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--violet-600);
   cursor: pointer;

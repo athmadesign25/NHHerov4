@@ -60,14 +60,14 @@
 }
 
 .headerTitle {
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-text-inverse);
   letter-spacing: -0.01em;
 }
 
 .headerSub {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--slate-400);
   margin-top: 1px;
 }
@@ -125,7 +125,7 @@
 }
 
 .welcomeTitle {
-  font-size: 34px;
+  font-size: var(--font-size-4xl);
   font-weight: 800;
   color: var(--color-text-inverse);
   letter-spacing: -0.025em;
@@ -133,10 +133,10 @@
 }
 
 .welcomeSub {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: rgba(var(--white-rgb), 0.6);
   max-width: 500px;
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   margin: 0 0 20px;
 }
 
@@ -146,7 +146,7 @@
   color: var(--color-text-inverse);
   padding: 8px 18px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
@@ -169,9 +169,9 @@
   align-self: flex-end;
   background: rgba(var(--white-rgb), 0.1);
   color: var(--color-text-inverse);
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: var(--leading-body);
   padding: 10px 16px;
   border-radius: 20px 20px 4px 20px;
   max-width: 75%;
@@ -207,9 +207,9 @@
 }
 
 .assistantText {
-  font-size: 15px;
+  font-size: var(--font-size-base);
   color: var(--slate-200);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
 }
 
 /* ─── Typing Dots ─────────────────────────────────────────────────────── */
@@ -246,7 +246,7 @@
   align-items: center;
   gap: 8px;
   color: var(--violet-400);
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -262,7 +262,7 @@
 
 .analysisSection {}
 .analysisSectionTitle {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--slate-400);
   text-transform: uppercase;
@@ -272,7 +272,7 @@
 
 .symptomPill {
   display: inline-flex;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--slate-100);
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.1);
@@ -281,13 +281,13 @@
   margin: 2px 4px 2px 0;
 }
 
-.conditionItem { font-size: 12px; color: var(--slate-400); line-height: 1.7; }
+.conditionItem { font-size: var(--font-size-xs); color: var(--slate-400); line-height: var(--leading-relaxed); }
 
 .analysisRecommendation {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   color: var(--slate-400);
   padding-top: 8px;
   border-top: 1px solid rgba(var(--white-rgb), 0.08);
@@ -338,8 +338,8 @@
 .doctorAvatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .doctorInfo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.doctorName { font-size: 14px; font-weight: 700; color: var(--color-text-inverse); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.doctorSpec { font-size: 12px; color: var(--violet-400); font-weight: 600; }
+.doctorName { font-size: var(--font-size-sm); font-weight: 700; color: var(--color-text-inverse); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doctorSpec { font-size: var(--font-size-xs); color: var(--violet-400); font-weight: 600; }
 
 .doctorMeta {
   display: flex;
@@ -351,7 +351,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: var(--slate-400);
 }
 
@@ -361,7 +361,7 @@
   gap: 4px;
   margin-top: 4px;
 }
-.doctorRating span { font-size: 11px; color: var(--amber-500); font-weight: 700; }
+.doctorRating span { font-size: var(--font-size-xs); color: var(--amber-500); font-weight: 700; }
 .doctorExp { color: var(--slate-400) !important; font-weight: 400 !important; margin-left: 4px; }
 
 .doctorCardRight {
@@ -377,15 +377,15 @@
   display: flex;
   flex-direction: column;
 }
-.doctorFee { font-size: 16px; font-weight: 800; color: var(--color-text-inverse); }
-.doctorFeeLabel { font-size: 10px; color: var(--slate-500); }
+.doctorFee { font-size: var(--font-size-base); font-weight: 800; color: var(--color-text-inverse); }
+.doctorFeeLabel { font-size: var(--font-size-2xs); color: var(--slate-500); }
 .bookBtn {
   background: var(--color-surface);
   color: var(--slate-900);
   border: none;
   border-radius: 20px;
   padding: 8px 20px;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
@@ -418,7 +418,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.08);
   background: rgba(var(--white-rgb), 0.03);
   color: rgba(var(--white-rgb), 0.7);
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -442,7 +442,7 @@
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--color-text-inverse);
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   cursor: pointer;
   box-shadow: 
@@ -623,8 +623,8 @@
   outline: none;
   background: transparent;
   color: var(--color-text-inverse);
-  font-size: 18px;
-  line-height: 1.4;
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-normal);
   padding-right: 8px;
   resize: none;
   height: 26px;
@@ -686,9 +686,9 @@
 
 /* ─── Footer ──────────────────────────────────────────────────────────── */
 .inputFooter {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   color: rgba(var(--white-rgb), 0.35);
   text-align: center;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 .inputFooter strong { color: rgba(var(--white-rgb), 0.5); }

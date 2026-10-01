@@ -28,13 +28,13 @@
 }
 .doctorName {
   font-size: 38px;
-  line-height: 1;
+  line-height: var(--leading-none);
   font-weight: 800;
   color: var(--navy-800);
 }
 .doctorSpec {
-  font-size: 32px;
-  line-height: 1;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-none);
   color: var(--blue-700);
   font-weight: 800;
   margin-top: 6px;
@@ -43,8 +43,8 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 30px;
-  line-height: 1.25;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-snug);
   color: var(--slate-450);
   margin-top: 4px;
 }

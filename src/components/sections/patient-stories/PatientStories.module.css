@@ -67,7 +67,7 @@
 
 .sectionSubtitle {
   color: #F1F1F1;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   text-align: center;
   max-width: 600px;
 }
@@ -307,7 +307,7 @@
   max-width: 100%;
   overflow: hidden;
   font-family: Inter, sans-serif;
-  font-size: 19px;
+  font-size: var(--font-size-xl);
   line-height: normal;
 }
 
@@ -368,9 +368,9 @@
 .overviewText {
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 22px;
+  font-size: var(--font-size-2xl);
   font-weight: 400;
-  line-height: 1.45;
+  line-height: var(--leading-body);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3; /* allow up to 3 lines */
@@ -382,7 +382,7 @@
 .patientName {
   color: var(--color-text-inverse);
   font-family: Inter, sans-serif;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -395,7 +395,7 @@
   align-self: stretch;
   color: #E0E0E0;
   font-family: Inter, sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
@@ -506,7 +506,7 @@
   backdrop-filter: blur(12px);
   color: var(--color-text-inverse);
   font-family: Inter, sans-serif;
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 600;
   line-height: normal;
   text-decoration: none;
@@ -559,13 +559,13 @@
     height: 34px;
   }
   .overviewText {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
   .ctaWrapper {
     margin-top: 8px;
   }
   .captionBox {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     padding: 6px 12px;
   }
   .textUnit {
@@ -574,10 +574,10 @@
     bottom: 20px;
   }
   .patientName {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
   .patientSubtext {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 }
 

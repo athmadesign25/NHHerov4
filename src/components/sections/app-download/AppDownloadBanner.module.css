@@ -87,7 +87,7 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--blue-brand);
@@ -108,7 +108,7 @@
   font-size: clamp(30px, 4vw, 52px);
   font-weight: 800;
   color: var(--slate-900);
-  line-height: 1.15;
+  line-height: var(--leading-tight);
   letter-spacing: -0.02em;
   /* No margin-bottom here — the title-to-pill distance is fully owned by
      .contentStack's own `gap` now, so an extra margin here would just be
@@ -202,9 +202,9 @@
 
 .pillText {
   color: var(--slate-900);
-  font-size: 17px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   white-space: nowrap;
 }
 
@@ -329,7 +329,7 @@
   color: var(--slate-900);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
 }
@@ -338,7 +338,7 @@
   color: var(--slate-900);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
 }
@@ -347,7 +347,7 @@
   color: var(--slate-500);
   text-align: left;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
 }
@@ -356,7 +356,7 @@
    for both captions regardless of where each one sits. */
 .captionLabel {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--slate-900);
   text-align: center;
@@ -605,8 +605,8 @@
   
   .title {
     white-space: normal;
-    font-size: 36px;
-    line-height: 1.1;
+    font-size: var(--font-size-4xl);
+    line-height: var(--leading-tight);
   }
   
   /* Reset bottom row to stack cleanly */
@@ -648,7 +648,7 @@
     position: relative;
     z-index: 20;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: #111827;
     padding: 10px 24px;
@@ -758,7 +758,7 @@
 .featurePillText {
   color: rgba(var(--black-rgb), 0.95);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -825,7 +825,7 @@
 .valueLabel {
   color: var(--darker-212121, #212121);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -834,7 +834,7 @@
 .valueSubtext {
   color: #414141;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-style: normal;
   font-weight: 400;
   line-height: normal;

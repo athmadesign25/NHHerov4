@@ -27,13 +27,13 @@
 }
 .specName {
   font-size: 38px;
-  line-height: 1;
+  line-height: var(--leading-none);
   font-weight: 800;
   color: var(--navy-800);
 }
 .specMatch {
-  font-size: 30px;
-  line-height: 1.25;
+  font-size: var(--font-size-3xl);
+  line-height: var(--leading-snug);
   color: var(--slate-450);
   margin-top: 4px;
 }

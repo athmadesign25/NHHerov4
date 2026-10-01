@@ -61,16 +61,16 @@
   color: var(--slate-900);
   letter-spacing: -0.025em;
   margin: 0;
-  line-height: 1.15;
+  line-height: var(--leading-tight);
 }
 
 .sectionSubtitle {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 400;
   color: #414141;
   margin: 0;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 /* Outer Grid Motion Container for Scroll Expansion to Full Page Width.
@@ -185,9 +185,9 @@
 .heroTitle {
   color: var(--grey-100);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 30px;
+  font-size: var(--font-size-3xl);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   margin: 0;
   background: linear-gradient(
     90deg,
@@ -212,9 +212,9 @@
 .heroSubtitle {
   color: #D1D1D1;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   margin: 0;
 }
 
@@ -240,18 +240,18 @@
 .heroStatValue {
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 32px;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: var(--leading-tight);
   letter-spacing: -0.01em;
 }
 
 .heroStatLabel {
   color: #E1E1E1;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 400;
-  line-height: 1.35;
+  line-height: var(--leading-normal);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -334,9 +334,9 @@
 .cardTitle {
   color: var(--grey-100);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 30px;
+  font-size: var(--font-size-3xl);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   margin: 0;
   background: linear-gradient(
     90deg,
@@ -362,9 +362,9 @@
 .cardSubtitle {
   color: #D1D1D1;
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1.4;
+  line-height: var(--leading-normal);
   margin: 0;
 }
 
@@ -447,7 +447,7 @@
   }
   
   .heroTitle {
-    font-size: 24px !important;
+    font-size: var(--font-size-2xl) !important;
   }
   
   .heroStatUnit {
@@ -460,7 +460,7 @@
   }
   
   .heroStatValue {
-    font-size: 28px !important;
+    font-size: var(--font-size-3xl) !important;
   }
 
   .cardHeaderUnit {
@@ -469,7 +469,7 @@
   }
 
   .cardTitle {
-    font-size: 18px !important;
+    font-size: var(--font-size-lg) !important;
     line-height: 1.25 !important;
     text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.4);
   }

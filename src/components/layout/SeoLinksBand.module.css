@@ -164,7 +164,7 @@
   padding: 8px 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
-  line-height: 1.45;
+  line-height: var(--leading-body);
   transition: color var(--transition-fast);
 }
 
