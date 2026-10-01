@@ -393,7 +393,7 @@
 }
 
 .pulseText {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: rgba(var(--white-rgb), 0.9);
   letter-spacing: 0.01em;
@@ -585,7 +585,7 @@
   background: rgba(var(--white-rgb), 0.03);
   color: rgba(var(--white-rgb), 0.9);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 450;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -783,7 +783,7 @@
 
 .locationSubTag {
   margin-left: auto;
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--slate-500);
   font-weight: 400;
 }
@@ -794,7 +794,7 @@
   gap: 8px;
   padding: 7px 10px;
   border-radius: 6px;
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--slate-300);
   background: transparent;
   border: none;
@@ -823,7 +823,7 @@
   background: transparent;
   color: rgba(var(--white-rgb), 0.90);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 450;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
@@ -862,7 +862,7 @@
   box-shadow: none !important;
   color: var(--color-text-inverse) !important;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 450;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -1064,7 +1064,7 @@
 
 .genericExampleChip {
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--slate-300);
   background: rgba(var(--white-rgb), 0.03);
@@ -1117,7 +1117,7 @@
 
 .suggestionsHeader {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1172,7 +1172,7 @@
 .suggestionText {
   flex: 1;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.9);
 }
@@ -1203,7 +1203,7 @@
   margin-top: 18px;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--white-rgb), 0.05);
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--slate-400);
   font-weight: 400;
   user-select: none;
@@ -1307,7 +1307,7 @@
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -1614,7 +1614,7 @@
 
 .refDocName {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--color-text-inverse);
   letter-spacing: -0.015em;
@@ -1655,7 +1655,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.9);
   margin-top: 1px;
@@ -1756,7 +1756,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--sky-400);
   text-decoration: none;
@@ -1850,7 +1850,7 @@
 }
 
 .refPulseBadge {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1938,7 +1938,7 @@
 }
 
 .pulseNudgeBadge {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1950,7 +1950,7 @@
 }
 
 .pulseNudgeSubtext {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--slate-400);
   line-height: 1.35;
@@ -2045,7 +2045,7 @@
   background: rgba(var(--green-500-rgb), 0.16);
   border: 1px solid rgba(var(--green-500-rgb), 0.3);
   color: #4ADE80;
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -2059,7 +2059,7 @@
 }
 
 .pulseExpandedSubtitle {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--slate-400);
   margin: 2px 0 0;
   line-height: 1.3;
@@ -2075,7 +2075,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2093,7 +2093,7 @@
   background: rgba(var(--cyan-bright-rgb), 0.12);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--sky-400);
-  font-size: 11.5px;
+  font-size: 12px;
   animation: sendBtnFadeIn 0.2s ease;
 }
 
@@ -2148,7 +2148,7 @@
   border-radius: 14px 14px 2px 14px;
   padding: 9px 14px;
   color: var(--color-text-inverse);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.4;
   box-shadow: 0 4px 16px rgba(var(--blue-brand-rgb), 0.35);
 }
@@ -2159,7 +2159,7 @@
   border: none;
   padding: 2px 2px;
   color: var(--slate-200);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -2349,7 +2349,7 @@
   border: none;
   outline: none;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--color-text-inverse);
 }
 
@@ -2452,7 +2452,7 @@
 
 .pulseCuratedDocName {
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-text-inverse);
   line-height: 1.25;
@@ -2462,7 +2462,7 @@
 }
 
 .pulseCuratedDocSpec {
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--sky-400);
   margin-top: 2px;
   white-space: nowrap;
@@ -2474,7 +2474,7 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 9.5px;
+  font-size: 10px;
   color: var(--slate-400);
   margin-top: 3px;
   white-space: nowrap;
@@ -2528,7 +2528,7 @@
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -2599,7 +2599,7 @@
 }
 
 .buriedCountBadge {
-  font-size: 10.5px;
+  font-size: 11px;
   color: var(--slate-400);
   background: rgba(var(--white-rgb), 0.05);
   padding: 2px 7px;
@@ -2613,7 +2613,7 @@
   align-items: center;
   gap: 6px;
   color: var(--slate-400);
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .buriedChevron {
@@ -2736,7 +2736,7 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-inter, "Inter", sans-serif);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   color: #7E8B9B;
   text-decoration: none;
@@ -2810,7 +2810,7 @@
 
 .editorialItemTitle {
   font-family: var(--font-inter, "Inter", sans-serif);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-inverse);
   line-height: 1.3;
@@ -2820,7 +2820,7 @@
 }
 
 .editorialItemSub {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 400;
   color: #7E8B9B;
   margin-top: 1.5px;
@@ -2860,7 +2860,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", sans-serif);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -3186,15 +3186,15 @@
   }
 
   .refDocName {
-    font-size: 13.5px !important;
+    font-size: 14px !important;
   }
 
   .refDocSpecialty {
-    font-size: 11.5px !important;
+    font-size: 12px !important;
   }
 
   .refDocHospital {
-    font-size: 10.5px !important;
+    font-size: 11px !important;
   }
 
   .refDocExpRow {
@@ -3216,7 +3216,7 @@
   }
 
   .sectionEyebrowTitle {
-    font-size: 10.5px !important;
+    font-size: 11px !important;
   }
 
   .editorialList {
@@ -3240,7 +3240,7 @@
   }
 
   .editorialItemTitle {
-    font-size: 12.5px !important;
+    font-size: 13px !important;
   }
 
   .editorialItemSub {
@@ -3274,11 +3274,11 @@
   }
 
   .refPulseTitle {
-    font-size: 12.5px !important;
+    font-size: 13px !important;
   }
 
   .refPulseBadge {
-    font-size: 8.5px !important;
+    font-size: 9px !important;
     padding: 1.5px 5px !important;
   }
 
@@ -3293,7 +3293,7 @@
 
   .refPulseBtn {
     padding: 6px 12px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
   }
 
   /* ── Pulse AI Clinical Assistant (Mobile Chat Layout) ── */
@@ -3312,7 +3312,7 @@
   }
 
   .pulseHeaderTitle {
-    font-size: 14.5px !important;
+    font-size: 15px !important;
   }
 
   .pulseHeaderSub {
@@ -3334,7 +3334,7 @@
 
   .pulseReasoningBox {
     padding: 6px 10px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
     margin-bottom: 8px !important;
     border-radius: 8px !important;
   }
@@ -3373,17 +3373,17 @@
   }
 
   .pulseDocSpecialty {
-    font-size: 10.5px !important;
+    font-size: 11px !important;
   }
 
   .pulseDocHospital,
   .pulseDocExpRow {
-    font-size: 9.5px !important;
+    font-size: 10px !important;
   }
 
   .pulseDocBookBtnWhite {
     padding: 5px 12px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
   }
 
   /* Skeleton shimmer cards match horizontal carousel on mobile */
@@ -3438,7 +3438,7 @@
 
   .pulseChip {
     padding: 5px 12px !important;
-    font-size: 11.5px !important;
+    font-size: 12px !important;
     flex-shrink: 0 !important;
   }
 
@@ -3451,7 +3451,7 @@
   }
 
   .pulseTextInput {
-    font-size: 13.5px !important;
+    font-size: 14px !important;
   }
 
   .pulseSendBtn {
@@ -3518,7 +3518,7 @@
 
 .floatingPulseSearchText {
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.25;
   color: var(--color-text-inverse);
@@ -3933,7 +3933,7 @@
 
 .pulseDocName {
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-text-inverse);
   line-height: 1.25;
@@ -3983,7 +3983,7 @@
   background: var(--color-surface);
   color: var(--blue-brand);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 8px;
@@ -4008,7 +4008,7 @@
   background: var(--blue-600);
   color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   padding: 5.5px 8px;
   border-radius: 6px;
