@@ -465,7 +465,7 @@
     border-radius: 8px;
     border: 1px solid rgba(var(--white-rgb), 0.16);
     background: var(--black);
-    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.5);
+    box-shadow: var(--elevation-2);
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
@@ -473,7 +473,7 @@
   .storeBadge:hover {
     transform: translateY(-2px);
     border-color: rgba(var(--white-rgb), 0.35);
-    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.6), 0 0 16px rgba(var(--white-rgb), 0.12);
+    box-shadow: var(--elevation-3);
   }
 }
 
@@ -656,7 +656,7 @@
     backdrop-filter: blur(16px);
     border-radius: 99px;
     border: 1px solid rgba(var(--white-rgb), 1);
-    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.08);
+    box-shadow: var(--elevation-3);
     min-width: auto;
     margin-bottom: -24px; /* Slight overlap over the phone */
   }
@@ -751,7 +751,7 @@
     rgba(var(--white-rgb), 0.16);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
-  box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.10);
+  box-shadow: var(--elevation-3);
   white-space: nowrap;
 }
 
@@ -779,7 +779,7 @@
   border-radius: 10px;
   backdrop-filter: blur(36px) saturate(1.7);
   -webkit-backdrop-filter: blur(36px) saturate(1.7);
-  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.05);
+  box-shadow: var(--elevation-3);
   /* Slight white gradient border via the two-layer background-clip trick
      (a real border-image would square off the rounded corners) — the
      padding-box layer stays fully transparent so the glass blur behind
@@ -812,7 +812,7 @@
   flex-shrink: 0;
   border-radius: 10px;
   background: linear-gradient(180deg, #ef4e4e 0%, #fa8c8e 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(var(--white-rgb), 0.2) inset;
+  box-shadow: var(--shadow-inset-highlight);
 }
 
 .valueText {

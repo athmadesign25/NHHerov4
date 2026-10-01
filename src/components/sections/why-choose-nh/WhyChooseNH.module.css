@@ -126,7 +126,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 12px 36px rgba(var(--black-rgb), 0.16);
+  box-shadow: var(--elevation-4);
   background: #19100E;
   box-sizing: border-box;
 }
@@ -264,7 +264,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
+  box-shadow: var(--elevation-3);
   background: var(--slate-900);
   box-sizing: border-box;
 }
@@ -288,7 +288,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
+  box-shadow: var(--elevation-3);
   background: var(--slate-900);
   box-sizing: border-box;
 }
@@ -381,7 +381,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.12);
+  box-shadow: var(--elevation-3);
   background: #0a3167;
   box-sizing: border-box;
 }
@@ -470,7 +470,7 @@
 
   .cardTitle {
     font-size: var(--font-size-lg) !important;
-    line-height: 1.25 !important;
+    line-height: var(--leading-snug) !important;
     text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.4);
   }
 

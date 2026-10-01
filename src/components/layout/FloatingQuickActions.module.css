@@ -326,7 +326,7 @@
   border: 1px solid rgba(225, 216, 216, 0.40);
   background: linear-gradient(180deg, #034EA1 0%, #471F1F 100%);
   backdrop-filter: blur(12px);
-  box-shadow: 0 16px 36px rgba(var(--black-rgb), 0.35);
+  box-shadow: var(--elevation-4);
   pointer-events: none;
   box-sizing: border-box;
 }

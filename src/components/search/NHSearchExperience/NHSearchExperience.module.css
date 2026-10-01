@@ -1363,7 +1363,7 @@
   border-radius: var(--radius-full);
   background: rgba(var(--blue-brand-rgb), 0.16);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.25);
-  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.2);
+  box-shadow: var(--elevation-2);
 }
 
 .pulseAiCardText {
@@ -1472,7 +1472,7 @@
   border-radius: 8px;
   background: #0B111E;
   border: none;
-  box-shadow: 0 8px 24px -4px rgba(var(--black-rgb), 0.4);
+  box-shadow: var(--elevation-3);
   overflow: hidden;
   height: 310px;
   min-height: 310px;
@@ -1484,7 +1484,7 @@
 .refDoctorCard:hover {
   transform: translateY(-3px);
   border: none;
-  box-shadow: 0 16px 36px -6px rgba(var(--black-rgb), 0.6);
+  box-shadow: var(--elevation-4);
 }
 
 /* Full background photo covering 100% of the card - Zoomed in on face, positioned slightly above center */
@@ -1578,7 +1578,7 @@
   font-weight: 500;
   letter-spacing: 0.01em;
   pointer-events: none;
-  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.25);
+  box-shadow: var(--elevation-1);
 }
 
 .refDocExpBadgeIcon {
@@ -1707,7 +1707,7 @@
   text-decoration: none;
   flex-shrink: 0;
   align-self: flex-end;
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.2);
+  box-shadow: var(--elevation-2);
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   white-space: nowrap;
 }
@@ -1715,7 +1715,7 @@
 .refBookBtnWhite:hover {
   background: #F3F7FC;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.3);
+  box-shadow: var(--elevation-2);
 }
 
 /* Fallback full-width Book Button */
@@ -1783,7 +1783,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.25);
+  box-shadow: var(--elevation-3);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   margin-top: 14px;
@@ -1792,7 +1792,7 @@
 .refPulseRow:hover {
   transform: translateY(-1px);
   border-color: rgba(var(--white-rgb), 0.2);
-  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35);
+  box-shadow: var(--elevation-3);
 }
 
 .refPulseLeft {
@@ -2426,7 +2426,7 @@
 .pulseCuratedDoctorCard:hover {
   background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--cyan-bright-rgb), 0.35);
-  box-shadow: 0 8px 24px -6px rgba(var(--black-rgb), 0.4);
+  box-shadow: var(--elevation-3);
   transform: translateY(-1.5px);
 }
 
@@ -2532,7 +2532,7 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.25);
+  box-shadow: var(--elevation-1);
   transition: all 0.15s ease;
 }
 
@@ -2635,7 +2635,7 @@
   background: var(--color-surface);
   border: 1px solid rgba(var(--white-rgb), 0.9);
   border-radius: 20px;
-  box-shadow: 0 24px 64px -12px rgba(var(--black-rgb), 0.6);
+  box-shadow: var(--elevation-5);
   padding: 0 !important;
   overflow: hidden;
   display: flex;
@@ -2968,7 +2968,7 @@
   border: 1px solid rgba(var(--violet-600-rgb), 0.3);
   margin-top: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.05);
+  box-shadow: var(--elevation-3);
   animation: pulseSubtleGlow 2.4s ease-in-out infinite alternate;
 }
 
@@ -3329,7 +3329,7 @@
   .pulseBotBubble {
     padding: 10px 12px !important;
     font-size: var(--font-size-sm) !important;
-    line-height: 1.45 !important;
+    line-height: var(--leading-normal) !important;
   }
 
   .pulseReasoningBox {
@@ -3542,7 +3542,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  box-shadow: 0 16px 40px -8px rgba(var(--black-rgb), 0.6);
+  box-shadow: var(--elevation-4);
   padding: 22px 24px;
 }
 
@@ -3737,7 +3737,7 @@
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
   color: var(--slate-300);
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.16);
+  box-shadow: var(--elevation-2);
 }
 
 .pulseThinkingDots {
@@ -3867,7 +3867,7 @@
   border-radius: 14px;
   background: #0B111E;
   border: 1px solid rgba(var(--white-rgb), 0.1);
-  box-shadow: 0 6px 18px -3px rgba(var(--black-rgb), 0.4);
+  box-shadow: var(--elevation-3);
   overflow: hidden;
   height: 225px;
   min-height: 225px;
@@ -3878,7 +3878,7 @@
 .pulseDoctorCard:hover {
   transform: translateY(-2px);
   border-color: rgba(var(--white-rgb), 0.2);
-  box-shadow: 0 10px 24px -4px rgba(var(--black-rgb), 0.6);
+  box-shadow: var(--elevation-3);
 }
 
 .pulseDocImage {
@@ -3989,7 +3989,7 @@
   border-radius: 8px;
   text-decoration: none;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.25);
+  box-shadow: var(--elevation-2);
   transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   white-space: nowrap;
 }
@@ -3997,7 +3997,7 @@
 .pulseDocBookBtnWhite:hover {
   background: #F0F7FF;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.35);
+  box-shadow: var(--elevation-2);
 }
 
 .pulseBookBtn {
@@ -4256,9 +4256,7 @@
 [data-search-theme="white"] .stateActive {
   background: var(--color-surface) !important;
   border: 1px solid rgba(var(--slate-200-rgb), 0.9) !important;
-  box-shadow: 
-    0 24px 60px -12px rgba(var(--black-rgb), 0.16),
-    0 0 0 1px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-5) !important;
 }
 
 .themeWhite.stateActive::before,
@@ -4389,7 +4387,7 @@
   border: 1px solid rgba(203, 213, 225, 0.8) !important;
   color: var(--slate-800) !important;
   font-weight: 500 !important;
-  box-shadow: 0 1px 2px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .locationPill:hover,
@@ -4397,7 +4395,7 @@
   background: var(--color-surface) !important;
   border-color: var(--slate-400) !important;
   color: var(--slate-900) !important;
-  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.05) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .locationPinIcon,
@@ -4410,7 +4408,7 @@
 [data-search-theme="white"] .locationMenu {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 16px 36px rgba(var(--black-rgb), 0.12) !important;
+  box-shadow: var(--elevation-4) !important;
 }
 
 .themeWhite .locationMenuItem,
@@ -4523,7 +4521,7 @@
 [data-search-theme="white"] .emptyPromptSub {
   color: var(--slate-500) !important;
   font-size: var(--font-size-sm) !important;
-  line-height: 1.5 !important;
+  line-height: var(--leading-body) !important;
 }
 
 /* Guard: ensure hero landing prompt always retains its dark mode look */
@@ -4625,7 +4623,7 @@
 [data-search-theme="white"] .stateResults {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 24px 60px -15px rgba(var(--black-rgb), 0.16) !important;
+  box-shadow: var(--elevation-5) !important;
 }
 
 .themeWhite.stateResults::before,
@@ -4697,13 +4695,13 @@
   background: #0B111E !important;
   border-radius: 8px !important;
   border: none !important;
-  box-shadow: 0 4px 20px -4px rgba(var(--black-rgb), 0.12) !important;
+  box-shadow: var(--elevation-3) !important;
 }
 
 .themeWhite .refDoctorCard:hover,
 [data-search-theme="white"] .refDoctorCard:hover {
   border: none !important;
-  box-shadow: 0 10px 28px -4px rgba(var(--black-rgb), 0.20) !important;
+  box-shadow: var(--elevation-3) !important;
 }
 
 .themeWhite .refDocName,
@@ -4767,7 +4765,7 @@
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-2) !important;
   margin-top: 14px !important;
   padding: 12px 20px !important;
   width: 100% !important;
@@ -4777,14 +4775,14 @@
 [data-search-theme="white"] .refPulseRow:hover {
   background: var(--color-surface) !important;
   border-color: var(--slate-300) !important;
-  box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.08) !important;
+  box-shadow: var(--elevation-3) !important;
 }
 
 .themeWhite .refPulseIconBox,
 [data-search-theme="white"] .refPulseIconBox {
   background: var(--slate-50) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .refPulseTitle,
@@ -4812,7 +4810,7 @@
   font-weight: 500 !important;
   border-radius: 8px !important;
   padding: 8px 18px !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .refPulseBtn:hover,
@@ -4914,7 +4912,7 @@
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-800) !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.05) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .pulseBackBtn:hover,
@@ -5018,13 +5016,13 @@
 [data-search-theme="white"] .pulseDoctorCard {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 4px 16px -2px rgba(var(--black-rgb), 0.08) !important;
+  box-shadow: var(--elevation-3) !important;
 }
 
 .themeWhite .pulseDoctorCard:hover,
 [data-search-theme="white"] .pulseDoctorCard:hover {
   border-color: var(--slate-300) !important;
-  box-shadow: 0 10px 24px -4px rgba(var(--black-rgb), 0.12) !important;
+  box-shadow: var(--elevation-3) !important;
 }
 
 .themeWhite .pulseDocGradient,
@@ -5080,7 +5078,7 @@
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-700) !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
+  box-shadow: var(--elevation-1) !important;
 }
 
 .themeWhite .pulseChip:hover,
@@ -5102,13 +5100,13 @@
 [data-search-theme="white"] .pulseInputBar {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 2px 10px rgba(var(--black-rgb), 0.05) !important;
+  box-shadow: var(--elevation-2) !important;
 }
 
 .themeWhite .pulseInputBar:focus-within,
 [data-search-theme="white"] .pulseInputBar:focus-within {
   border-color: #93C5FD !important;
-  box-shadow: 0 0 0 3px rgba(var(--blue-500-rgb), 0.16) !important;
+  box-shadow: var(--shadow-focus-ring) !important;
 }
 
 .themeWhite .pulseInputAttachBtn,
@@ -5158,7 +5156,7 @@
 [data-search-theme="white"] .pulseTestCard {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.05) !important;
+  box-shadow: var(--elevation-2) !important;
 }
 
 .themeWhite .pulseTestTitle,

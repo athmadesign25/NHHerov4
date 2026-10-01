@@ -19,7 +19,7 @@
   height: 100%;
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.25);
-  box-shadow: 0 0 0 1px rgba(var(--black-rgb), 0.08);
+  box-shadow: var(--shadow-focus-ring);
   transition: width 0.2s ease, background 0.2s ease;
 }
 
