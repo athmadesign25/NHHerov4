@@ -406,7 +406,7 @@ export default function InlinePulseAICard({
                             <span>Available Today</span>
                           </span>
                           <Link
-                            href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                            href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}&ai=true`}
                             className={styles.pulseCuratedDocBookBtn}
                           >
                             <span>Book</span>

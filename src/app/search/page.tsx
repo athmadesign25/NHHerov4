@@ -1811,7 +1811,7 @@ function SearchResultsContent() {
                             <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
                               <PhoneCall size={18} />
                             </a>
-                            <Link href={`/doctors/${doc.id}/book`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Link href={`/doctors/${doc.id}/book?city=${encodeURIComponent(location !== "All" ? location : doc.city)}`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                               Book now
                             </Link>
                           </div>

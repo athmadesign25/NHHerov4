@@ -463,7 +463,7 @@ export default function PulseAIView({
 
                       {/* Right Column: Crisp White Book Button */}
                       <Link
-                        href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
+                        href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}&ai=true`}
                         className={styles.pulseDocBookBtnWhite}
                       >
                         Book

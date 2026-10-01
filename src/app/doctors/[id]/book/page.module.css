@@ -1,0 +1,291 @@
+/* ─── PAGE-LEVEL STYLES FOR BOOK APPOINTMENT ─────────────────────────────── */
+
+/* ─── NAV ────────────────────────────────────────────────────────────────── */
+.navRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-1);
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  width: fit-content;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+/* ─── STEP CONTENT ───────────────────────────────────────────────────────── */
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.stepTitle {
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.stepSubtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  margin-top: -12px;
+}
+
+/* ─── CARD CONTAINER ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.sectionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* ─── SLOT LABEL ─────────────────────────────────────────────────────────── */
+.slotLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slotLabelText {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ─── DESKTOP CTA ROW ────────────────────────────────────────────────────── */
+.desktopCta {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────────── */
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 var(--sp-5);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast), opacity var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+  outline: none;
+}
+
+.ctaPrimary:hover:not(.ctaDisabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ctaPrimary:active:not(.ctaDisabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.ctaPrimary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.ctaDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ctaFullWidth {
+  width: 100%;
+}
+
+.ctaGrow {
+  flex: 1;
+}
+
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 var(--sp-4);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  outline: none;
+}
+
+.ctaSecondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ─── CALL LINK ──────────────────────────────────────────────────────────── */
+.callLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: var(--sp-1) 0;
+  transition: opacity var(--transition-fast);
+}
+
+.callLink:hover {
+  opacity: 0.75;
+}
+
+/* ─── FEE CARD (sidebar) ─────────────────────────────────────────────────── */
+.feeCard {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feeLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.feeAmount {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.trustList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--sp-2);
+  list-style: none;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ─── STICKY FOOTER INNER ────────────────────────────────────────────────── */
+.stickyFooterInner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stickyRow {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.ctaSecondaryMobile {
+  flex-shrink: 0;
+  width: auto;
+  padding: 0 var(--sp-3);
+}
+
+.selectionChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  width: fit-content;
+}
+
+/* ─── MOBILE ADJUSTMENTS ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .desktopCta {
+    display: none; /* CTAs live in sticky footer on mobile */
+  }
+
+  .callLink {
+    display: none; /* hide on mobile (call in sticky footer context would overlap) */
+  }
+
+  .card {
+    padding: var(--sp-3);
+    gap: var(--sp-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .stepTitle {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: var(--sp-2);
+  }
+}

@@ -1,0 +1,147 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* ─── PERIOD GROUP ────────────────────────────────────────────────────────── */
+.period {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.periodHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.periodIcon {
+  display: flex;
+  align-items: center;
+  color: var(--color-warning);
+}
+
+.periodLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* ─── CHIP GRID ──────────────────────────────────────────────────────────── */
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ─── TIME CHIP ──────────────────────────────────────────────────────────── */
+.chip {
+  position: relative;
+  padding: 8px 16px;
+  min-height: 36px;
+  min-width: 80px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-card);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    color var(--transition-fast), transform var(--transition-fast);
+  outline: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip:hover:not(.chipSelected):not(.chipUnavailable) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-tint);
+  color: var(--color-primary);
+}
+
+.chip:active:not(.chipUnavailable) {
+  transform: scale(0.96);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─── SELECTED ───────────────────────────────────────────────────────────── */
+.chipSelected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* ─── UNAVAILABLE ────────────────────────────────────────────────────────── */
+.chipUnavailable {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Diagonal slash overlay for unavailable slots */
+.slashLine {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ─── EMPTY STATE ────────────────────────────────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--sp-5) var(--sp-3);
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 24px;
+}
+
+.emptyText {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.emptyHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .chipGrid {
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 8px 12px;
+    min-width: 72px;
+    font-size: 11px;
+  }
+}

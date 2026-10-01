@@ -1,0 +1,140 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3);
+  position: relative;
+}
+
+.compact {
+  background: transparent;
+  border: none;
+  padding: 0;
+  gap: var(--sp-2);
+}
+
+/* ─── PHOTO ──────────────────────────────────────────────────────────────── */
+.photoWrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-border);
+}
+
+.compact .photoWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+}
+
+.photo {
+  object-fit: cover;
+}
+
+/* ─── BODY ───────────────────────────────────────────────────────────────── */
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact .name {
+  font-size: var(--font-size-base);
+}
+
+.speciality {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ─── META ROWS ──────────────────────────────────────────────────────────── */
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ─── FEE BADGE ──────────────────────────────────────────────────────────── */
+.feeBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.feeLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.feeAmount {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .card {
+    gap: var(--sp-2);
+    padding: var(--sp-2);
+  }
+
+  .photoWrapper {
+    width: 72px;
+    height: 72px;
+  }
+
+  .name {
+    font-size: var(--font-size-base);
+  }
+
+  .feeBadge {
+    display: none; /* shown separately in mobile booking panel */
+  }
+}

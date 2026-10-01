@@ -1,0 +1,81 @@
+.track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-full);
+  padding: 4px;
+}
+
+.option {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  font-family: var(--font-family);
+  outline: none;
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─── ACTIVE PILL (animated behind text) ─────────────────────────────────── */
+.activePill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  z-index: 0;
+}
+
+/* ─── CONTENT ────────────────────────────────────────────────────────────── */
+.optionContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--transition-fast), font-weight var(--transition-fast);
+}
+
+.optionActive .optionLabel {
+  font-weight: 600;
+  color: var(--color-emergency);
+}
+
+.optionIcon {
+  filter: grayscale(1) brightness(0.4);
+  transition: filter var(--transition-fast);
+}
+
+.optionIconActive {
+  filter: none;
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .option {
+    padding: 8px 12px;
+  }
+
+  .optionLabel {
+    font-size: var(--font-size-xs);
+  }
+}
