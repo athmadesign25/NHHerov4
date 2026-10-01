@@ -46,9 +46,9 @@
     0 24px 60px -12px rgba(var(--black-rgb), 0.6),
     0 0 0 1px rgba(var(--white-rgb), 0.05),
     inset 0 1px 2px rgba(var(--white-rgb), 0.16);
-  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── State 01: Default Landing Search Composer ── */
@@ -96,7 +96,7 @@
   z-index: 4;
   opacity: 0.25;
   box-sizing: border-box;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.3s ease;
 }
 
 /* The rotating conic stroke this box used to carry is now drawn by
@@ -123,7 +123,7 @@
   pointer-events: none;
   z-index: 4;
   opacity: 0.55;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.3s ease;
   box-sizing: border-box;
 }
 
@@ -670,7 +670,7 @@
   background: rgba(var(--cyan-bright-rgb), 0.05);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.16);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   width: 100%;
   text-align: left;
 }
@@ -1073,7 +1073,7 @@
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   user-select: none;
 }
 
@@ -1249,7 +1249,7 @@
 .resultsQuerySearchIcon {
   color: var(--slate-400);
   flex-shrink: 0;
-  transition: color 0.18s ease;
+  transition: color 0.2s ease;
 }
 
 .resultsQueryLeft:focus-within .resultsQuerySearchIcon {
@@ -1312,7 +1312,7 @@
   cursor: pointer;
   white-space: nowrap;
   box-shadow: 0 2px 10px rgba(var(--blue-brand-rgb), 0.35), 0 0 12px rgba(var(--cyan-bright-rgb), 0.2);
-  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   animation: sendBtnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1476,8 +1476,8 @@
   overflow: hidden;
   height: 310px;
   min-height: 310px;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.22s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
@@ -1498,7 +1498,7 @@
   transform: scale(1.35);
   transform-origin: center 25%;
   display: block;
-  transition: transform 0.35s ease;
+  transition: transform 0.3s ease;
 }
 
 .refDoctorCard:hover .refDocFullImage {
@@ -1539,7 +1539,7 @@
   justify-content: center;
   color: rgba(var(--white-rgb), 0.85);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   padding: 0;
 }
 
@@ -1708,7 +1708,7 @@
   flex-shrink: 0;
   align-self: flex-end;
   box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.2);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   white-space: nowrap;
 }
 
@@ -1734,7 +1734,7 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 0 2px 8px rgba(29, 104, 254, 0.35);
 }
 
@@ -1882,7 +1882,7 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
@@ -1976,7 +1976,7 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
 }
 
 .pulseNudgeBtn:hover {
@@ -2420,7 +2420,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  transition: all 0.22s ease;
+  transition: all 0.2s ease;
 }
 
 .pulseCuratedDoctorCard:hover {
@@ -2863,7 +2863,7 @@
   font-size: 11.5px;
   font-weight: 400;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   user-select: none;
 }
 
@@ -3572,7 +3572,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--color-text-inverse);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
 }
 
 .pulseBackBtn:hover {
@@ -3990,7 +3990,7 @@
   text-decoration: none;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.25);
-  transition: transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
   white-space: nowrap;
 }
 
@@ -4038,7 +4038,7 @@
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
 }
 
 .pulseDocFavBtn:hover {
@@ -4144,7 +4144,7 @@
   padding: 6px 14px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 

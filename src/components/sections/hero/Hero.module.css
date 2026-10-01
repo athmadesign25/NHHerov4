@@ -2557,7 +2557,7 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 1px 4px rgba(var(--black-rgb), 0.03);
   white-space: nowrap;
 }

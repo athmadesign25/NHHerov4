@@ -338,7 +338,7 @@
   box-sizing: border-box;
   border-radius: 10px;
   transform-origin: bottom center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
   /* "Apple glass" light surface — a bright, high-saturation frosted plate.
      Without the backdrop-filter the video/frame behind is only dimmed by
@@ -439,7 +439,7 @@
    snappy 0.12s that transform gets would otherwise be the only easing
    compared against and read as too abrupt for something this size. */
 .packageCard:hover {
-  transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.1s ease-out, filter 0.3s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .packageCard::after {
@@ -466,7 +466,7 @@
   z-index: 1;
   background: linear-gradient(115deg, transparent 30%, rgba(var(--black-rgb), 0.05) 48%, transparent 66%);
   transform: translateX(-120%);
-  transition: transform 0.7s ease;
+  transition: transform 0.6s ease;
   pointer-events: none;
 }
 
@@ -614,7 +614,7 @@
      title wraps to three lines. Cancelling it here keeps the resting
      layout exactly as it was, and unwinds in step with the reveal. */
   margin-top: -24px;
-  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
 }
 
 .packageCard:hover .packageCardExtras,
@@ -622,7 +622,7 @@
   grid-template-rows: 1fr;
   opacity: 1;
   margin-top: 0;
-  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease 0.1s;
+  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease 0.1s;
 }
 
 .packageCardExtrasInner {
@@ -658,7 +658,7 @@
   box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.05);
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.28s ease, transform 0.28s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .packageCard:hover .perkPill,
@@ -737,7 +737,7 @@
   font-weight: 600;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .packageCard:hover .viewDetailsLink,
@@ -757,7 +757,7 @@
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .packageCard:hover .viewDetailsUnderline,
@@ -1225,7 +1225,7 @@
 /* Only a small bump — the direction 1 card's image appeared to grow a lot
    simply because the card itself got taller under it. */
 .packageCardCompact .packageCardImage {
-  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .packageCardCompact:hover .packageCardImage,

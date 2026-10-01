@@ -191,6 +191,28 @@
   --shadow-xl: 0 16px 48px rgba(3, 78, 162, 0.16), 0 6px 20px rgba(0, 0, 0, 0.08);
   --shadow-card-hover: 0 12px 40px rgba(3, 78, 162, 0.18);
 
+  /* Motion.
+     Durations are named by purpose, and the rule is that duration scales
+     with how far a thing travels: small/local is fast, large/entrance is
+     slow. Before this there were 18 distinct durations with no rule — the
+     variation was accidental rather than chosen.
+
+     NOTE: Framer Motion animations live in JS and cannot read these. The
+     same values are mirrored in src/lib/motion.ts; changing one means
+     changing both. That duplication is unavoidable, not an oversight. */
+  --duration-instant: 0.1s;
+  --duration-fast: 0.15s;
+  --duration-base: 0.2s;
+  --duration-moderate: 0.25s;
+  --duration-emphasis: 0.3s;
+  --duration-slow: 0.4s;
+  --duration-slower: 0.5s;
+  --duration-slowest: 0.6s;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Transitions */
   --transition-fast: 150ms ease-out;
   --transition-base: 250ms ease-out;
