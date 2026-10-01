@@ -308,7 +308,7 @@
   left: 0;
   right: 0;
   height: 220px;
-  background: linear-gradient(180deg, rgba(var(--black-rgb), 0.78) 0%, rgba(var(--black-rgb), 0.40) 48%, rgba(var(--black-rgb), 0.00) 100%);
+  background: linear-gradient(180deg, rgba(var(--black-rgb), 0.8) 0%, rgba(var(--black-rgb), 0.40) 48%, rgba(var(--black-rgb), 0.00) 100%);
   pointer-events: none;
   z-index: 2;
 }

@@ -188,14 +188,14 @@ export default function Navbar() {
           backgroundColor: isMobileMenuOpen
             ? "rgba(var(--slate-900-rgb), 0.95)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "rgba(var(--white-rgb), 0.82)" : "rgba(8, 15, 28, 0.55)")
+                ? (isOverLightBackground ? "rgba(var(--white-rgb), 0.8)" : "rgba(8, 15, 28, 0.55)")
                 : "transparent"),
           backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           borderBottom: isMobileMenuOpen
             ? "1px solid rgba(var(--white-rgb), 0.1)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "1px solid rgba(var(--black-rgb), 0.08)" : "1px solid rgba(var(--white-rgb), 0.22)")
+                ? (isOverLightBackground ? "1px solid rgba(var(--black-rgb), 0.08)" : "1px solid rgba(var(--white-rgb), 0.2)")
                 : "1px solid rgba(var(--white-rgb), 0)"),
           transition: "background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
@@ -452,23 +452,23 @@ export default function Navbar() {
                   alignItems: "center", 
                   gap: "8px",
                   background: isProfileDropdownOpen 
-                    ? (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)") 
-                    : (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)"),
+                    ? (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)") 
+                    : (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)"),
                   color: "var(--nav-fg-color)",
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",
-                  border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.45)",
+                  border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
                   borderRadius: "100px",
                   transition: "all 0.2s"
                 }}
                 onMouseEnter={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
                   }
                 }}
                 onMouseLeave={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
                   }
                 }}
               >
@@ -589,11 +589,11 @@ export default function Navbar() {
               style={{ 
                 cursor: "pointer", 
                 fontFamily: "inherit",
-                background: isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)",
+                background: isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)",
                 color: "var(--nav-fg-color)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
-                border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.45)",
+                border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
                 padding: "8px 24px",
                 borderRadius: "var(--radius-md)",
                 fontWeight: 600,
@@ -601,10 +601,10 @@ export default function Navbar() {
                 transition: "all 0.2s"
               }}
               onMouseEnter={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.22)";
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
               }}
               onMouseLeave={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.04)" : "rgba(var(--white-rgb), 0.16)";
+                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
               }}
             >
               Login

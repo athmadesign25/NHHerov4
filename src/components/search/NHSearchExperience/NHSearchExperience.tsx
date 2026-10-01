@@ -903,7 +903,7 @@ export default function NHSearchExperience({
               position: "fixed",
               inset: 0,
               background: searchTheme === "white" 
-                ? "rgba(var(--white-rgb), 0.52)" 
+                ? "rgba(var(--white-rgb), 0.5)" 
                 : "rgba(5, 10, 18, 0.50)",
               backdropFilter: searchTheme === "white" 
                 ? "blur(20px) saturate(140%)" 

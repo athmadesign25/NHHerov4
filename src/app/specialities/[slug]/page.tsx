@@ -55,14 +55,14 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh" }}>
       {/* Hero */}
       <div style={{ background: "linear-gradient(135deg, var(--color-primary-dark), var(--color-primary))", padding: "64px 0 80px", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(var(--white-rgb), 0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(var(--white-rgb), 0.03) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="container" style={{ position: "relative" }}>
-          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(var(--white-rgb), 0.65)", fontWeight: 600, fontSize: "var(--font-size-sm)", marginBottom: "var(--sp-3)" }} id="spec-back">
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(var(--white-rgb), 0.7)", fontWeight: 600, fontSize: "var(--font-size-sm)", marginBottom: "var(--sp-3)" }} id="spec-back">
             <ArrowLeft size={16} /> Home
           </Link>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--sp-3)", marginBottom: "var(--sp-3)", flexWrap: "wrap" }}>
-              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(var(--white-rgb), 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-inverse)", flexShrink: 0 }}>
+              <div style={{ width: 72, height: 72, borderRadius: "var(--radius-xl)", background: "rgba(var(--white-rgb), 0.16)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-text-inverse)", flexShrink: 0 }}>
                 <Icon size={32} />
               </div>
               <div>

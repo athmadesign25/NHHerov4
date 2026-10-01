@@ -44,7 +44,7 @@
   overscroll-behavior: contain;
   box-shadow: 
     0 24px 60px -12px rgba(var(--black-rgb), 0.6),
-    0 0 0 1px rgba(var(--white-rgb), 0.06),
+    0 0 0 1px rgba(var(--white-rgb), 0.05),
     inset 0 1px 2px rgba(var(--white-rgb), 0.16);
   transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -112,9 +112,9 @@
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(var(--white-rgb), 0.34) 0%,
+    rgba(var(--white-rgb), 0.35) 0%,
     rgba(var(--white-rgb), 0.10) 50%,
-    rgba(var(--white-rgb), 0.28) 100%
+    rgba(var(--white-rgb), 0.3) 100%
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -141,9 +141,9 @@
 
 .stateLanding:hover {
   background: rgba(22, 28, 36, 0.33);
-  border-color: rgba(var(--white-rgb), 0.18);
+  border-color: rgba(var(--white-rgb), 0.16);
   box-shadow: 
-    0 20px 48px -10px rgba(var(--black-rgb), 0.42),
+    0 20px 48px -10px rgba(var(--black-rgb), 0.4),
     inset 0 1px 2px rgba(var(--white-rgb), 0.16);
 }
 
@@ -162,7 +162,7 @@
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 20px 50px -12px rgba(var(--black-rgb), 0.38),
+    0 20px 50px -12px rgba(var(--black-rgb), 0.4),
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
@@ -176,12 +176,12 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(var(--cyan-bright-rgb), 0.38) 0deg,
-    rgba(var(--blue-brand-rgb), 0.48) 75deg,
-    rgba(var(--red-emergency-rgb), 0.22) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.4) 0deg,
+    rgba(var(--blue-brand-rgb), 0.5) 75deg,
+    rgba(var(--red-emergency-rgb), 0.2) 150deg,
     rgba(var(--cyan-bright-rgb), 0.10) 220deg,
-    rgba(var(--blue-brand-rgb), 0.32) 290deg,
-    rgba(var(--cyan-bright-rgb), 0.38) 360deg
+    rgba(var(--blue-brand-rgb), 0.3) 290deg,
+    rgba(var(--cyan-bright-rgb), 0.4) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -202,9 +202,9 @@
     from var(--border-angle, 0deg),
     rgba(var(--cyan-bright-rgb), 0.08) 0deg,
     rgba(var(--blue-brand-rgb), 0.10) 75deg,
-    rgba(var(--red-emergency-rgb), 0.04) 150deg,
-    rgba(var(--cyan-bright-rgb), 0.02) 220deg,
-    rgba(var(--blue-brand-rgb), 0.06) 290deg,
+    rgba(var(--red-emergency-rgb), 0.03) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.03) 220deg,
+    rgba(var(--blue-brand-rgb), 0.05) 290deg,
     rgba(var(--cyan-bright-rgb), 0.08) 360deg
   );
   filter: blur(10px);
@@ -225,7 +225,7 @@
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
-    0 24px 60px -15px rgba(var(--black-rgb), 0.42),
+    0 24px 60px -15px rgba(var(--black-rgb), 0.4),
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
@@ -239,12 +239,12 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(var(--cyan-bright-rgb), 0.38) 0deg,
-    rgba(var(--blue-brand-rgb), 0.48) 75deg,
-    rgba(var(--red-emergency-rgb), 0.22) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.4) 0deg,
+    rgba(var(--blue-brand-rgb), 0.5) 75deg,
+    rgba(var(--red-emergency-rgb), 0.2) 150deg,
     rgba(var(--cyan-bright-rgb), 0.10) 220deg,
-    rgba(var(--blue-brand-rgb), 0.32) 290deg,
-    rgba(var(--cyan-bright-rgb), 0.38) 360deg
+    rgba(var(--blue-brand-rgb), 0.3) 290deg,
+    rgba(var(--cyan-bright-rgb), 0.4) 360deg
   );
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
@@ -265,9 +265,9 @@
     from var(--border-angle, 0deg),
     rgba(var(--cyan-bright-rgb), 0.08) 0deg,
     rgba(var(--blue-brand-rgb), 0.10) 75deg,
-    rgba(var(--red-emergency-rgb), 0.04) 150deg,
-    rgba(var(--cyan-bright-rgb), 0.02) 220deg,
-    rgba(var(--blue-brand-rgb), 0.06) 290deg,
+    rgba(var(--red-emergency-rgb), 0.03) 150deg,
+    rgba(var(--cyan-bright-rgb), 0.03) 220deg,
+    rgba(var(--blue-brand-rgb), 0.05) 290deg,
     rgba(var(--cyan-bright-rgb), 0.08) 360deg
   );
   filter: blur(10px);
@@ -333,7 +333,7 @@
 }
 
 .headerPulseBadge:hover {
-  background: rgba(var(--white-rgb), 0.09);
+  background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--white-rgb), 0.2);
   transform: translateY(-0.5px);
 }
@@ -341,7 +341,7 @@
 .pulseBadgeText {
   font-size: 13px;
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.92);
+  color: rgba(var(--white-rgb), 0.9);
 }
 
 /* ── Pulse AI Identity (clean brand intelligence label, no button box) ── */
@@ -451,7 +451,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: clamp(18px, 1.6vw, 20px);
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.92);
+  color: rgba(var(--white-rgb), 0.9);
   letter-spacing: -0.01em;
   user-select: none;
   line-height: 1.4;
@@ -522,7 +522,7 @@
   width: 33px;
   height: 33px;
   border-radius: 8px;
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   color: var(--slate-400);
   cursor: pointer;
@@ -559,7 +559,7 @@
 
 .submitArrowBtn:hover {
   background: #0060DF;
-  border-color: rgba(var(--white-rgb), 0.28);
+  border-color: rgba(var(--white-rgb), 0.3);
   transform: scale(1.03);
   box-shadow: 0 3px 10px rgba(0, 96, 223, 0.4);
 }
@@ -582,8 +582,8 @@
   padding: 0 10px;
   border-radius: 7px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
-  background: rgba(var(--white-rgb), 0.04);
-  color: rgba(var(--white-rgb), 0.88);
+  background: rgba(var(--white-rgb), 0.03);
+  color: rgba(var(--white-rgb), 0.9);
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 13.5px;
   font-weight: 450;
@@ -616,10 +616,10 @@
   background: rgba(18, 24, 38, 0.95);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(var(--white-rgb), 0.14);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   border-radius: 12px;
   box-shadow: 
-    0 16px 36px rgba(var(--black-rgb), 0.55),
+    0 16px 36px rgba(var(--black-rgb), 0.6),
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   padding: 8px;
   z-index: 150;
@@ -667,7 +667,7 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--cyan-bright);
-  background: rgba(var(--cyan-bright-rgb), 0.06);
+  background: rgba(var(--cyan-bright-rgb), 0.05);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.16);
   cursor: pointer;
   transition: all 0.18s ease;
@@ -676,7 +676,7 @@
 }
 
 .locationCurrentAction:hover {
-  background: rgba(var(--cyan-bright-rgb), 0.14);
+  background: rgba(var(--cyan-bright-rgb), 0.16);
   border-color: rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--color-text-inverse);
 }
@@ -768,7 +768,7 @@
 }
 
 .locationScrollList::-webkit-scrollbar-thumb {
-  background: rgba(var(--white-rgb), 0.15);
+  background: rgba(var(--white-rgb), 0.16);
   border-radius: 4px;
 }
 
@@ -837,12 +837,12 @@
 
 .inlineActionBtn:focus-visible {
   color: var(--color-text-inverse);
-  background: rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.16);
   outline: none;
 }
 
 .inlineActionIcon {
-  color: rgba(var(--white-rgb), 0.82);
+  color: rgba(var(--white-rgb), 0.8);
   transition: color 0.2s ease;
 }
 
@@ -881,7 +881,7 @@
 }
 
 .landingTextAction svg {
-  color: rgba(var(--white-rgb), 0.88) !important;
+  color: rgba(var(--white-rgb), 0.9) !important;
 }
 
 .actionPill {
@@ -902,7 +902,7 @@
 
 .actionPill:hover {
   background: rgba(var(--white-rgb), 0.12);
-  border-color: rgba(var(--white-rgb), 0.24);
+  border-color: rgba(var(--white-rgb), 0.25);
   color: var(--color-text-inverse);
 }
 
@@ -981,7 +981,7 @@
 }
 
 .ghostSuffix {
-  color: rgba(var(--white-rgb), 0.38);
+  color: rgba(var(--white-rgb), 0.4);
   font-weight: 400;
   letter-spacing: -0.01em;
   pointer-events: auto;
@@ -1067,7 +1067,7 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--slate-300);
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   padding: 5px 14px;
   border-radius: var(--radius-full);
@@ -1079,7 +1079,7 @@
 
 .genericExampleChip:hover {
   color: var(--color-text-inverse);
-  background: rgba(var(--white-rgb), 0.09);
+  background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--sky-400-rgb), 0.35);
   transform: translateY(-1px);
 }
@@ -1128,7 +1128,7 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--sky-400);
-  background: rgba(var(--blue-brand-rgb), 0.22);
+  background: rgba(var(--blue-brand-rgb), 0.2);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   padding: 2.5px 10px;
   border-radius: var(--radius-full);
@@ -1158,7 +1158,7 @@
 
 .suggestionItem:hover,
 .suggestionItemActive {
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border-color: rgba(var(--white-rgb), 0.08);
   color: var(--color-text-inverse);
 }
@@ -1174,7 +1174,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 15.5px;
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.88);
+  color: rgba(var(--white-rgb), 0.9);
 }
 
 .pressEnterHint {
@@ -1304,7 +1304,7 @@
   padding: 6px 14px;
   border-radius: 8px;
   background: var(--blue-brand);
-  border: 1px solid rgba(var(--cyan-bright-rgb), 0.45);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--color-text-inverse);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12.5px;
@@ -1361,7 +1361,7 @@
   gap: 10px;
   padding: 6px 6px 6px 14px;
   border-radius: var(--radius-full);
-  background: rgba(var(--blue-brand-rgb), 0.18);
+  background: rgba(var(--blue-brand-rgb), 0.16);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.25);
   box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.2);
 }
@@ -1472,7 +1472,7 @@
   border-radius: 8px;
   background: #0B111E;
   border: none;
-  box-shadow: 0 8px 24px -4px rgba(var(--black-rgb), 0.45);
+  box-shadow: 0 8px 24px -4px rgba(var(--black-rgb), 0.4);
   overflow: hidden;
   height: 310px;
   min-height: 310px;
@@ -1530,7 +1530,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(var(--black-rgb), 0.32);
+  background: rgba(var(--black-rgb), 0.3);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb), 0.16);
@@ -1582,7 +1582,7 @@
 }
 
 .refDocExpBadgeIcon {
-  color: rgba(var(--white-rgb), 0.88);
+  color: rgba(var(--white-rgb), 0.9);
   flex-shrink: 0;
 }
 
@@ -1620,7 +1620,7 @@
   letter-spacing: -0.015em;
   line-height: 1.22;
   margin: 0;
-  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.7);
 }
 
 .refDocNameSingleLine {
@@ -1657,20 +1657,20 @@
   gap: 5px;
   font-size: 11.5px;
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.88);
+  color: rgba(var(--white-rgb), 0.9);
   margin-top: 1px;
   text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.6);
 }
 
 .refDocExpIcon {
-  color: rgba(var(--white-rgb), 0.82);
+  color: rgba(var(--white-rgb), 0.8);
   flex-shrink: 0;
 }
 
 .refDocHospital {
   font-size: 11px;
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.78);
+  color: rgba(var(--white-rgb), 0.8);
   line-height: 1.35;
   margin-top: 2px;
   text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.5);
@@ -1707,7 +1707,7 @@
   text-decoration: none;
   flex-shrink: 0;
   align-self: flex-end;
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.22);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.2);
   transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
   white-space: nowrap;
 }
@@ -1791,7 +1791,7 @@
 
 .refPulseRow:hover {
   transform: translateY(-1px);
-  border-color: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.2);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35);
 }
 
@@ -1906,7 +1906,7 @@
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   display: flex;
   align-items: center;
@@ -1969,7 +1969,7 @@
   padding: 6px 13px;
   border-radius: 6px;
   background: rgba(var(--cyan-bright-rgb), 0.1);
-  border: 1px solid rgba(var(--cyan-bright-rgb), 0.28);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--cyan-bright);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
   font-size: 12px;
@@ -1980,8 +1980,8 @@
 }
 
 .pulseNudgeBtn:hover {
-  background: rgba(var(--cyan-bright-rgb), 0.18);
-  border-color: rgba(var(--cyan-bright-rgb), 0.45);
+  background: rgba(var(--cyan-bright-rgb), 0.16);
+  border-color: rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--sky-400);
   transform: translateY(-0.5px);
 }
@@ -1990,14 +1990,14 @@
 .pulseExpandedCard {
   margin-top: 16px;
   border-radius: 16px;
-  background: radial-gradient(130% 120% at 15% 0%, rgba(var(--blue-brand-rgb), 0.32) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
+  background: radial-gradient(130% 120% at 15% 0%, rgba(var(--blue-brand-rgb), 0.3) 0%, rgba(13, 22, 42, 0.95) 45%, rgba(6, 11, 24, 0.98) 100%);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(var(--cyan-bright-rgb), 0.28);
+  border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   box-shadow: 
     0 24px 64px -16px rgba(var(--black-rgb), 0.7),
-    0 0 45px rgba(var(--blue-brand-rgb), 0.22),
-    inset 0 1px 1.5px rgba(var(--white-rgb), 0.15);
+    0 0 45px rgba(var(--blue-brand-rgb), 0.2),
+    inset 0 1px 1.5px rgba(var(--white-rgb), 0.16);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -2042,7 +2042,7 @@
   gap: 4px;
   padding: 1.5px 6px;
   border-radius: var(--radius-full);
-  background: rgba(var(--green-500-rgb), 0.15);
+  background: rgba(var(--green-500-rgb), 0.16);
   border: 1px solid rgba(var(--green-500-rgb), 0.3);
   color: #4ADE80;
   font-size: 9.5px;
@@ -2071,7 +2071,7 @@
   gap: 4px;
   padding: 5px 10px;
   border-radius: 6px;
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
@@ -2084,7 +2084,7 @@
 .pulseExpandedMinimizeBtn:hover {
   background: rgba(var(--white-rgb), 0.12);
   color: var(--color-text-inverse);
-  border-color: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.2);
 }
 
 .pulseUploadToast {
@@ -2111,7 +2111,7 @@
 }
 
 .pulseMessagesStream::-webkit-scrollbar-thumb {
-  background: rgba(var(--white-rgb), 0.15);
+  background: rgba(var(--white-rgb), 0.16);
   border-radius: 4px;
 }
 
@@ -2132,7 +2132,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(var(--cyan-bright-rgb), 0.28), rgba(var(--blue-brand-rgb), 0.15));
+  background: radial-gradient(circle at 30% 30%, rgba(var(--cyan-bright-rgb), 0.3), rgba(var(--blue-brand-rgb), 0.16));
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   display: flex;
   align-items: center;
@@ -2165,7 +2165,7 @@
 
 .pulseAiBubbleUrgent {
   background: rgba(var(--red-emergency-rgb), 0.08);
-  border-color: rgba(var(--red-emergency-rgb), 0.32);
+  border-color: rgba(var(--red-emergency-rgb), 0.3);
 }
 
 .pulseBubbleText {
@@ -2196,9 +2196,9 @@
 }
 
 .pulseContextActionBtn:hover {
-  background: rgba(var(--cyan-bright-rgb), 0.22);
+  background: rgba(var(--cyan-bright-rgb), 0.2);
   color: var(--color-text-inverse);
-  border-color: rgba(var(--cyan-bright-rgb), 0.45);
+  border-color: rgba(var(--cyan-bright-rgb), 0.4);
 }
 
 .pulseEmergencyActionBtn {
@@ -2207,7 +2207,7 @@
   gap: 4px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: rgba(var(--red-emergency-rgb), 0.18);
+  background: rgba(var(--red-emergency-rgb), 0.16);
   border: 1px solid rgba(var(--red-emergency-rgb), 0.4);
   color: #FFA3A6;
   font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
@@ -2235,7 +2235,7 @@
   gap: 4px;
   padding: 7px 12px;
   border-radius: 10px;
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
@@ -2308,13 +2308,13 @@
   gap: 8px;
   padding: 6px 8px 6px 12px;
   border-radius: 10px;
-  background: rgba(var(--white-rgb), 0.06);
-  border: 1px solid rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pulseComposerForm:focus-within {
-  border-color: rgba(var(--cyan-bright-rgb), 0.45);
+  border-color: rgba(var(--cyan-bright-rgb), 0.4);
   box-shadow: 0 0 14px rgba(var(--cyan-bright-rgb), 0.16);
 }
 
@@ -2404,13 +2404,13 @@
 }
 
 .pulseCuratedDoctorsRow::-webkit-scrollbar-thumb {
-  background: rgba(var(--white-rgb), 0.18);
+  background: rgba(var(--white-rgb), 0.16);
   border-radius: 4px;
 }
 
 .pulseCuratedDoctorCard {
   flex: 0 0 224px;
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -2424,9 +2424,9 @@
 }
 
 .pulseCuratedDoctorCard:hover {
-  background: rgba(var(--white-rgb), 0.07);
+  background: rgba(var(--white-rgb), 0.08);
   border-color: rgba(var(--cyan-bright-rgb), 0.35);
-  box-shadow: 0 8px 24px -6px rgba(var(--black-rgb), 0.45);
+  box-shadow: 0 8px 24px -6px rgba(var(--black-rgb), 0.4);
   transform: translateY(-1.5px);
 }
 
@@ -2556,7 +2556,7 @@
 .buriedResultsContainer {
   margin-top: 4px;
   border-radius: 12px;
-  background: rgba(var(--slate-900-rgb), 0.45);
+  background: rgba(var(--slate-900-rgb), 0.4);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   overflow: hidden;
   transition: border-color 0.2s ease;
@@ -2583,7 +2583,7 @@
 }
 
 .buriedResultsToggle:hover {
-  background: rgba(var(--white-rgb), 0.07);
+  background: rgba(var(--white-rgb), 0.08);
   color: var(--color-text-inverse);
 }
 
@@ -2601,7 +2601,7 @@
 .buriedCountBadge {
   font-size: 10.5px;
   color: var(--slate-400);
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   padding: 2px 7px;
   border-radius: var(--radius-full);
   border: 1px solid rgba(var(--white-rgb), 0.08);
@@ -2692,9 +2692,9 @@
 .specPillTag {
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  background: rgba(var(--white-rgb), 0.035);
-  border: 1px solid rgba(var(--white-rgb), 0.07);
-  color: rgba(var(--white-rgb), 0.82);
+  background: rgba(var(--white-rgb), 0.03);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
+  color: rgba(var(--white-rgb), 0.8);
   font-size: 12px;
   font-weight: 400;
   cursor: pointer;
@@ -2704,7 +2704,7 @@
 
 .specPillTag:hover {
   background: rgba(var(--white-rgb), 0.08);
-  border-color: rgba(var(--white-rgb), 0.14);
+  border-color: rgba(var(--white-rgb), 0.16);
   color: var(--color-text-inverse);
 }
 
@@ -2770,7 +2770,7 @@
 }
 
 .editorialItem:hover {
-  background: rgba(var(--white-rgb), 0.035);
+  background: rgba(var(--white-rgb), 0.03);
 }
 
 .editorialItem:last-child {
@@ -2794,7 +2794,7 @@
 }
 
 .editorialIconMono {
-  color: rgba(var(--white-rgb), 0.45);
+  color: rgba(var(--white-rgb), 0.4);
   transition: color 0.15s ease;
 }
 
@@ -2830,7 +2830,7 @@
 }
 
 .editorialChevron {
-  color: rgba(var(--white-rgb), 0.32);
+  color: rgba(var(--white-rgb), 0.3);
   flex-shrink: 0;
   transition: transform 0.15s ease, color 0.15s ease;
 }
@@ -2856,7 +2856,7 @@
   align-items: center;
   padding: 5px 12px;
   border-radius: var(--radius-full);
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
   font-family: var(--font-inter, "Inter", sans-serif);
@@ -2878,9 +2878,9 @@
 .shimmer {
   background: linear-gradient(
     90deg, 
-    rgba(var(--white-rgb), 0.04) 25%, 
+    rgba(var(--white-rgb), 0.03) 25%, 
     rgba(var(--white-rgb), 0.12) 50%, 
-    rgba(var(--white-rgb), 0.04) 75%
+    rgba(var(--white-rgb), 0.03) 75%
   );
   background-size: 200% 100%;
   animation: shimmerPulse 1.5s infinite ease-in-out;
@@ -2897,18 +2897,18 @@
 
 .skeletonPill {
   border-radius: var(--radius-full);
-  background-color: rgba(var(--white-rgb), 0.06);
+  background-color: rgba(var(--white-rgb), 0.05);
 }
 
 .skeletonCircle {
   border-radius: 50%;
-  background-color: rgba(var(--white-rgb), 0.06);
+  background-color: rgba(var(--white-rgb), 0.05);
   flex-shrink: 0;
 }
 
 .skeletonBar {
   border-radius: 6px;
-  background-color: rgba(var(--white-rgb), 0.06);
+  background-color: rgba(var(--white-rgb), 0.05);
 }
 
 .skeletonDoctorCard {
@@ -2917,7 +2917,7 @@
   justify-content: space-between;
   padding: 14px 16px;
   border-radius: 12px;
-  background: rgba(var(--white-rgb), 0.035);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   height: 160px;
   min-height: 160px;
@@ -2932,7 +2932,7 @@
   padding: 10px 14px;
   border-radius: 12px;
   background: rgba(var(--white-rgb), 0.03);
-  border: 1px solid rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.05);
 }
 
 .skeletonLoadingStatus {
@@ -2942,7 +2942,7 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--sky-400);
-  background: rgba(var(--blue-brand-rgb), 0.18);
+  background: rgba(var(--blue-brand-rgb), 0.16);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   padding: 4px 12px;
   border-radius: var(--radius-full);
@@ -2965,10 +2965,10 @@
   padding: 10px 16px;
   border-radius: 12px;
   background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.12) 0%, rgba(var(--violet-600-rgb), 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
-  border: 1px solid rgba(var(--violet-600-rgb), 0.28);
+  border: 1px solid rgba(var(--violet-600-rgb), 0.3);
   margin-top: 10px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.06);
+  box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.05);
   animation: pulseSubtleGlow 2.4s ease-in-out infinite alternate;
 }
 
@@ -3005,8 +3005,8 @@
 
 .themeWhite .analyzingActiveBanner,
 [data-search-theme="white"] .analyzingActiveBanner {
-  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.06) 0%, rgba(var(--violet-600-rgb), 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
-  border: 1px solid rgba(var(--violet-600-rgb), 0.22) !important;
+  background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.05) 0%, rgba(var(--violet-600-rgb), 0.05) 50%, rgba(236, 72, 153, 0.06) 100%) !important;
+  border: 1px solid rgba(var(--violet-600-rgb), 0.2) !important;
 }
 
 .themeWhite .analyzingBannerText,
@@ -3542,7 +3542,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
-  box-shadow: 0 16px 40px -8px rgba(var(--black-rgb), 0.55);
+  box-shadow: 0 16px 40px -8px rgba(var(--black-rgb), 0.6);
   padding: 22px 24px;
 }
 
@@ -3568,7 +3568,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--color-text-inverse);
   cursor: pointer;
@@ -3576,7 +3576,7 @@
 }
 
 .pulseBackBtn:hover {
-  background: rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.16);
   border-color: rgba(var(--white-rgb), 0.25);
   transform: translateX(-2px);
 }
@@ -3608,7 +3608,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--green-500);
-  background: rgba(var(--green-500-rgb), 0.14);
+  background: rgba(var(--green-500-rgb), 0.16);
   border: 1px solid rgba(var(--green-500-rgb), 0.3);
   padding: 2px 7px;
   border-radius: var(--radius-full);
@@ -3731,13 +3731,13 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   padding: 6px 14px;
   border-radius: var(--radius-full);
   font-size: 13px;
   color: var(--slate-300);
-  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.16);
 }
 
 .pulseThinkingDots {
@@ -3768,7 +3768,7 @@
 .pulseDoctorSkeletonCard {
   border-radius: 16px;
   height: 250px;
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.10);
   overflow: hidden;
   position: relative;
@@ -3794,7 +3794,7 @@
 
 .pulseSkeletonBar {
   border-radius: 6px;
-  background: rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.16);
   margin-bottom: 8px;
 }
 
@@ -3819,7 +3819,7 @@
   border-radius: 8px;
   margin-top: 6px;
   margin-bottom: 0;
-  background: rgba(var(--white-rgb), 0.18);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 @keyframes pulseShimmer {
@@ -3838,7 +3838,7 @@
   font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.65);
+  color: rgba(var(--white-rgb), 0.7);
   margin-left: 2px;
 }
 
@@ -3867,7 +3867,7 @@
   border-radius: 14px;
   background: #0B111E;
   border: 1px solid rgba(var(--white-rgb), 0.1);
-  box-shadow: 0 6px 18px -3px rgba(var(--black-rgb), 0.45);
+  box-shadow: 0 6px 18px -3px rgba(var(--black-rgb), 0.4);
   overflow: hidden;
   height: 225px;
   min-height: 225px;
@@ -3877,7 +3877,7 @@
 
 .pulseDoctorCard:hover {
   transform: translateY(-2px);
-  border-color: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.2);
   box-shadow: 0 10px 24px -4px rgba(var(--black-rgb), 0.6);
 }
 
@@ -3954,7 +3954,7 @@
 
 .pulseDocHospital {
   font-size: 10px;
-  color: rgba(var(--white-rgb), 0.78);
+  color: rgba(var(--white-rgb), 0.8);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3966,7 +3966,7 @@
   align-items: center;
   gap: 3.5px;
   font-size: 10px;
-  color: rgba(var(--white-rgb), 0.78);
+  color: rgba(var(--white-rgb), 0.8);
   margin-top: 1px;
 }
 
@@ -4029,7 +4029,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(var(--black-rgb), 0.38);
+  background: rgba(var(--black-rgb), 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb), 0.16);
@@ -4042,7 +4042,7 @@
 }
 
 .pulseDocFavBtn:hover {
-  background: rgba(var(--black-rgb), 0.65);
+  background: rgba(var(--black-rgb), 0.7);
   border-color: rgba(var(--white-rgb), 0.35);
   transform: scale(1.08);
 }
@@ -4062,7 +4062,7 @@
 .pulseCardSkeleton {
   height: 225px;
   border-radius: 14px;
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   animation: pulseSkeletonShimmer 1.5s infinite ease-in-out;
 }
@@ -4150,7 +4150,7 @@
 
 .pulseChip:hover {
   background: rgba(var(--white-rgb), 0.1);
-  border-color: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.2);
   color: var(--color-text-inverse);
 }
 
@@ -4167,7 +4167,7 @@
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
-  background: rgba(var(--white-rgb), 0.04);
+  background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   border-radius: 12px;
   padding: 6px 10px 6px 14px;
@@ -4176,7 +4176,7 @@
 
 .pulseInputBar:focus-within {
   border-color: rgba(var(--white-rgb), 0.25);
-  background: rgba(var(--white-rgb), 0.07);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 .pulseInputAttachBtn {
@@ -4257,8 +4257,8 @@
   background: var(--color-surface) !important;
   border: 1px solid rgba(var(--slate-200-rgb), 0.9) !important;
   box-shadow: 
-    0 24px 60px -12px rgba(var(--black-rgb), 0.14),
-    0 0 0 1px rgba(var(--black-rgb), 0.04) !important;
+    0 24px 60px -12px rgba(var(--black-rgb), 0.16),
+    0 0 0 1px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite.stateActive::before,
@@ -4291,7 +4291,7 @@
 .themeWhite .standaloneIconBtn:hover,
 [data-search-theme="white"] .standaloneIconBtn:hover {
   color: var(--slate-900) !important;
-  background: rgba(var(--slate-900-rgb), 0.06) !important;
+  background: rgba(var(--slate-900-rgb), 0.05) !important;
 }
 
 .themeWhite .standaloneIconBtn:focus-visible,
@@ -4320,7 +4320,7 @@
 .themeWhite .stateLanding .inlineActionBtn,
 [data-search-theme="white"] .stateLanding .inlineActionBtn,
 [data-search-theme="dark"] .stateLanding .inlineActionBtn {
-  color: rgba(var(--white-rgb), 0.92) !important;
+  color: rgba(var(--white-rgb), 0.9) !important;
   font-weight: 450 !important;
 }
 
@@ -4330,7 +4330,7 @@
 .themeWhite .stateLanding .inlineActionIcon,
 [data-search-theme="white"] .stateLanding .inlineActionIcon,
 [data-search-theme="dark"] .stateLanding .inlineActionIcon {
-  color: rgba(var(--white-rgb), 0.82) !important;
+  color: rgba(var(--white-rgb), 0.8) !important;
 }
 
 .stateLanding .inlineActionBtn:hover,
@@ -4385,7 +4385,7 @@
 /* Location Selector (White Mode) */
 .themeWhite .locationPill,
 [data-search-theme="white"] .locationPill {
-  background: rgba(var(--slate-900-rgb), 0.04) !important;
+  background: rgba(var(--slate-900-rgb), 0.03) !important;
   border: 1px solid rgba(203, 213, 225, 0.8) !important;
   color: var(--slate-800) !important;
   font-weight: 500 !important;
@@ -4397,7 +4397,7 @@
   background: var(--color-surface) !important;
   border-color: var(--slate-400) !important;
   color: var(--slate-900) !important;
-  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.06) !important;
+  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.05) !important;
 }
 
 .themeWhite .locationPinIcon,
@@ -4544,9 +4544,9 @@
 .stateLanding .locationPill,
 .themeWhite .stateLanding .locationPill,
 [data-search-theme="white"] .stateLanding .locationPill {
-  background: rgba(var(--white-rgb), 0.04) !important;
+  background: rgba(var(--white-rgb), 0.03) !important;
   border: 1px solid rgba(var(--white-rgb), 0.12) !important;
-  color: rgba(var(--white-rgb), 0.88) !important;
+  color: rgba(var(--white-rgb), 0.9) !important;
 }
 
 .stateLanding .locationPinIcon,
@@ -4573,7 +4573,7 @@
 .stateLanding .landingTextAction svg,
 .themeWhite .stateLanding .landingTextAction svg,
 [data-search-theme="white"] .stateLanding .landingTextAction svg {
-  color: rgba(var(--white-rgb), 0.88) !important;
+  color: rgba(var(--white-rgb), 0.9) !important;
 }
 
 .themeWhite .suggestionsHeader,
@@ -4625,7 +4625,7 @@
 [data-search-theme="white"] .stateResults {
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
-  box-shadow: 0 24px 60px -15px rgba(var(--black-rgb), 0.14) !important;
+  box-shadow: 0 24px 60px -15px rgba(var(--black-rgb), 0.16) !important;
 }
 
 .themeWhite.stateResults::before,
@@ -4718,12 +4718,12 @@
 
 .themeWhite .refDocExpRow,
 [data-search-theme="white"] .refDocExpRow {
-  color: rgba(var(--white-rgb), 0.88) !important;
+  color: rgba(var(--white-rgb), 0.9) !important;
 }
 
 .themeWhite .refDocHospital,
 [data-search-theme="white"] .refDocHospital {
-  color: rgba(var(--white-rgb), 0.78) !important;
+  color: rgba(var(--white-rgb), 0.8) !important;
 }
 
 .themeWhite .refBookBtnWhite,
@@ -4767,7 +4767,7 @@
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(var(--black-rgb), 0.04) !important;
+  box-shadow: 0 2px 12px rgba(var(--black-rgb), 0.03) !important;
   margin-top: 14px !important;
   padding: 12px 20px !important;
   width: 100% !important;
@@ -4777,7 +4777,7 @@
 [data-search-theme="white"] .refPulseRow:hover {
   background: var(--color-surface) !important;
   border-color: var(--slate-300) !important;
-  box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.07) !important;
+  box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.08) !important;
 }
 
 .themeWhite .refPulseIconBox,
@@ -4812,7 +4812,7 @@
   font-weight: 500 !important;
   border-radius: 8px !important;
   padding: 8px 18px !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite .refPulseBtn:hover,
@@ -4906,7 +4906,7 @@
   border: 1px solid rgba(219, 234, 254, 0.9) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  box-shadow: 0 8px 32px rgba(var(--blue-brand-rgb), 0.06), 0 2px 8px rgba(var(--black-rgb), 0.04) !important;
+  box-shadow: 0 8px 32px rgba(var(--blue-brand-rgb), 0.05), 0 2px 8px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite .pulseBackBtn,
@@ -5033,7 +5033,7 @@
     to top,
     rgba(var(--slate-900-rgb), 0.95) 0%,
     rgba(var(--slate-900-rgb), 0.85) 30%,
-    rgba(var(--slate-900-rgb), 0.45) 55%,
+    rgba(var(--slate-900-rgb), 0.4) 55%,
     rgba(var(--slate-900-rgb), 0.1) 75%,
     transparent 100%
   ) !important;
@@ -5056,12 +5056,12 @@
 
 .themeWhite .pulseDocExpRow,
 [data-search-theme="white"] .pulseDocExpRow {
-  color: rgba(var(--white-rgb), 0.75) !important;
+  color: rgba(var(--white-rgb), 0.7) !important;
 }
 
 .themeWhite .pulseDocExpIcon,
 [data-search-theme="white"] .pulseDocExpIcon {
-  color: rgba(var(--white-rgb), 0.75) !important;
+  color: rgba(var(--white-rgb), 0.7) !important;
 }
 
 .themeWhite .pulseBookBtn,
@@ -5080,7 +5080,7 @@
   background: var(--color-surface) !important;
   border: 1px solid var(--slate-200) !important;
   color: var(--slate-700) !important;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.04) !important;
+  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.03) !important;
 }
 
 .themeWhite .pulseChip:hover,
@@ -5108,7 +5108,7 @@
 .themeWhite .pulseInputBar:focus-within,
 [data-search-theme="white"] .pulseInputBar:focus-within {
   border-color: #93C5FD !important;
-  box-shadow: 0 0 0 3px rgba(var(--blue-500-rgb), 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(var(--blue-500-rgb), 0.16) !important;
 }
 
 .themeWhite .pulseInputAttachBtn,
@@ -5263,7 +5263,7 @@
   height: 240px;
   bottom: -25px;
   left: 8%;
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(var(--red-emergency-rgb), 0.38) 45%, transparent 75%);
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.80) 0%, rgba(var(--red-emergency-rgb), 0.4) 45%, transparent 75%);
   animation: featherFloatPink 7.5s ease-in-out infinite alternate;
 }
 

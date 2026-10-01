@@ -237,7 +237,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(to top,
-      rgba(var(--black-rgb), 0.72) 0%,
+      rgba(var(--black-rgb), 0.7) 0%,
       rgba(var(--black-rgb), 0.20) 60%,
       rgba(var(--black-rgb), 0) 100%);
   z-index: 3;
@@ -255,9 +255,9 @@
   height: 100%;
   background: linear-gradient(115deg,
       transparent 0%,
-      rgba(var(--white-rgb), 0.04) 25%,
-      rgba(var(--white-rgb), 0.28) 50%,
-      rgba(var(--white-rgb), 0.04) 75%,
+      rgba(var(--white-rgb), 0.03) 25%,
+      rgba(var(--white-rgb), 0.3) 50%,
+      rgba(var(--white-rgb), 0.03) 75%,
       transparent 100%);
   transform: skewX(-20deg);
   z-index: 5;
@@ -320,7 +320,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 28px;
   font-weight: 700;
-  color: rgba(var(--white-rgb), 0.72);
+  color: rgba(var(--white-rgb), 0.7);
   line-height: 1.1;
   letter-spacing: -0.01em;
   transition: color 0.3s ease;
@@ -334,7 +334,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 12px;
   font-weight: 400;
-  color: rgba(var(--white-rgb), 0.65);
+  color: rgba(var(--white-rgb), 0.7);
   line-height: 1.3;
   transition: color 0.3s ease;
 }
@@ -446,7 +446,7 @@
   padding: 12px 28px;
   border-radius: 8px;
   border: 1.5px solid rgba(var(--white-rgb), 0.5);
-  background: rgba(var(--white-rgb), 0.06);
+  background: rgba(var(--white-rgb), 0.05);
   color: var(--color-text-inverse);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 15px;
@@ -459,7 +459,7 @@
 }
 
 .viewAllBtn:hover {
-  background: rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--white-rgb), 0.16);
   border-color: var(--white);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.20);

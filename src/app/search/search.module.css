@@ -12,7 +12,7 @@
   border-radius: 12px;
   padding: 0 16px;
   height: 52px;
-  box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.15);
+  box-shadow: 0 10px 25px rgba(var(--black-rgb), 0.16);
 }
 
 .tabScroll {
@@ -136,7 +136,7 @@
 }
 
 .filterPanel:hover::-webkit-scrollbar-thumb {
-  background: rgba(var(--black-rgb), 0.15);
+  background: rgba(var(--black-rgb), 0.16);
 }
 
 @media (min-width: 1024px) {

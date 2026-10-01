@@ -127,13 +127,13 @@ export default function DoctorsPage() {
       <div style={{ background: "var(--color-primary)", padding: "48px 0 64px" }}>
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <div style={{ color: "rgba(var(--white-rgb), 0.65)", fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
+            <div style={{ color: "rgba(var(--white-rgb), 0.7)", fontSize: "var(--font-size-xs)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
               Find Your Doctor
             </div>
             <h1 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 900, color: "var(--color-text-inverse)", marginBottom: 16, letterSpacing: "-0.02em" }}>
               Our Specialist Doctors
             </h1>
-            <p style={{ color: "rgba(var(--white-rgb), 0.75)", fontSize: "var(--font-size-lg)", marginBottom: 24 }}>
+            <p style={{ color: "rgba(var(--white-rgb), 0.7)", fontSize: "var(--font-size-lg)", marginBottom: 24 }}>
               Browse 3,000+ specialists across 30+ specialities in 24 cities.
             </p>
             {/* Search Bar */}

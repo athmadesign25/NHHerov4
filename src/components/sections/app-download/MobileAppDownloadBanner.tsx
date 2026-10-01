@@ -450,7 +450,7 @@ export default function MobileAppDownloadBanner() {
                         top: 0,
                         left: 0,
                         width: "100%",
-                        backgroundColor: "rgba(var(--white-rgb), 0.55)",
+                        backgroundColor: "rgba(var(--white-rgb), 0.6)",
                         backdropFilter: "blur(20px) saturate(1.4)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                         borderRadius: "20px",

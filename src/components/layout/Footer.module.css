@@ -100,7 +100,7 @@
 .brandDesc {
   font-size: var(--font-size-sm);
   line-height: 1.7;
-  color: rgba(var(--white-rgb), 0.65);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 .contact {
@@ -114,7 +114,7 @@
   align-items: center;
   gap: 8px;
   font-size: var(--font-size-sm);
-  color: rgba(var(--white-rgb), 0.65);
+  color: rgba(var(--white-rgb), 0.7);
   transition: color var(--transition-fast);
 }
 
@@ -189,7 +189,7 @@ a.contactItem:hover {
 
 .copyright {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.45);
+  color: rgba(var(--white-rgb), 0.4);
 }
 
 .bottomLinks {
@@ -200,7 +200,7 @@ a.contactItem:hover {
 
 .bottomLink {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.45);
+  color: rgba(var(--white-rgb), 0.4);
   transition: color var(--transition-fast);
 }
 

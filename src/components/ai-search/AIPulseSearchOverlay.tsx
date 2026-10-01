@@ -338,7 +338,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                           <div
                             key={spec.id}
                             onClick={() => sendMessage(spec.name)}
-                            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(var(--white-rgb), 0.04)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "12px", cursor: "pointer" }}
+                            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 12px", background: "rgba(var(--white-rgb), 0.03)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "12px", cursor: "pointer" }}
                           >
                             <img src={spec.image || "/Specialities icons/General Medicine.svg"} alt={spec.name} style={{ width: "24px", height: "24px" }} />
                             <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-text-inverse)" }}>{spec.name}</div>
@@ -383,7 +383,7 @@ export default function AIPulseSearchOverlay({ isOpen, onClose, initialQuery = "
                           <div
                             key={t.id}
                             onClick={() => sendMessage(t.name)}
-                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(var(--white-rgb), 0.04)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "20px", fontSize: "12px", color: "var(--slate-200)", cursor: "pointer" }}
+                            style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(var(--white-rgb), 0.03)", border: "1px solid rgba(var(--white-rgb), 0.08)", borderRadius: "20px", fontSize: "12px", color: "var(--slate-200)", cursor: "pointer" }}
                           >
                             {t.name}
                           </div>

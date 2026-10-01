@@ -43,11 +43,11 @@
 /* Default (over light sections) a white wash is invisible against the pale
    glass — the tint has to go the other way, toward the label's own blue. */
 .link:hover {
-  background: rgba(var(--blue-vivid-rgb), 0.14);
+  background: rgba(var(--blue-vivid-rgb), 0.16);
 }
 
 .linkOnDark:hover {
-  background: rgba(var(--white-rgb), 0.18);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 /* Glassy blue tile: translucent tint rather than the old flat gradient,
@@ -95,7 +95,7 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(var(--white-rgb), 0.55) 50%,
+    rgba(var(--white-rgb), 0.6) 50%,
     transparent 100%
   );
   pointer-events: none;
@@ -210,7 +210,7 @@
   width: 80%;
   height: 14px;
   border-radius: 50px;
-  background-color: rgba(var(--white-rgb), 0.33);
+  background-color: rgba(var(--white-rgb), 0.35);
   filter: blur(5px);
   animation: pulseIconGlow 3s ease-in-out infinite;
 }
@@ -248,14 +248,14 @@
   width: 98px;
   padding: 10px 0;
   border-radius: 20px;
-  border: 1px solid rgba(var(--white-rgb), 0.42);
-  background: linear-gradient(168deg, rgba(var(--white-rgb), 0.16) 0%, rgba(var(--white-rgb), 0.07) 48%, rgba(var(--white-rgb), 0.12) 100%);
+  border: 1px solid rgba(var(--white-rgb), 0.4);
+  background: linear-gradient(168deg, rgba(var(--white-rgb), 0.16) 0%, rgba(var(--white-rgb), 0.08) 48%, rgba(var(--white-rgb), 0.12) 100%);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   box-shadow:
     0 12px 34px rgba(5, 20, 45, 0.20),
-    inset 0 1px 1px rgba(var(--white-rgb), 0.72),
-    inset 0 -1px 1px rgba(var(--white-rgb), 0.28),
+    inset 0 1px 1px rgba(var(--white-rgb), 0.7),
+    inset 0 -1px 1px rgba(var(--white-rgb), 0.3),
     inset 0 0 30px rgb(18 71 194 / 20%);
   display: flex;
   flex-direction: column;
@@ -360,7 +360,7 @@
   width: 56px;
   height: 56px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(var(--white-rgb), 0.24);
+  border: 1px solid rgba(var(--white-rgb), 0.25);
   background: linear-gradient(85deg, rgba(var(--black-rgb), 0.30) 37.27%, rgba(102, 102, 102, 0.30) 100.36%);
   backdrop-filter: blur(34px);
   cursor: pointer;
