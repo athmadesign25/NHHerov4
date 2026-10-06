@@ -170,7 +170,7 @@
   align-items: center;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 110px 56px 56px;
+  padding: 110px var(--space-56) var(--space-56);
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform;
@@ -232,13 +232,13 @@
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
-  gap: 44px;
+  gap: var(--space-48);
 }
 
 .uspItem {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   max-width: none;
   white-space: nowrap;
 }
@@ -259,7 +259,7 @@
 }
 
 .uspLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--color-text-inverse);
@@ -280,7 +280,7 @@
 .railLabel {
   color: #e1e1e1;
   text-align: center;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-lg);
   font-weight: 500;
   line-height: normal;
@@ -295,7 +295,7 @@
 .cardStack {
   display: grid;
   grid-template-columns: repeat(3, minmax(224px, 394px));
-  gap: 22px;
+  gap: var(--space-24);
   margin-bottom: 28px;
   width: 100%;
   justify-content: center;
@@ -404,7 +404,7 @@
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  padding: 1px;
+  padding: var(--space-1);
   background: linear-gradient(30deg, rgb(144 210 253 / 57%), rgb(235 137 137 / 36%));
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -535,10 +535,10 @@
   position: relative;
   z-index: 2;
   max-width: calc(100% - 200px);
-  padding: 28px 0 0 34px;
+  padding: var(--space-32) 0 0 var(--space-32);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-24);
   box-sizing: border-box;
   transition: max-width var(--duration-slowest) var(--ease-spring);
 }
@@ -555,7 +555,7 @@
 
 .packageCardTitle {
   color: var(--navy-ink);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xl);
   font-weight: 700;
   line-height: normal;
@@ -567,13 +567,13 @@
 .packageCardFacts {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .packageCardFact {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 /* Roundedness (8px) and the subtle inset stroke + blur now match
@@ -634,9 +634,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-8);
   border-top: 1px solid #C0BFBF;
-  padding-top: 16px;
+  padding-top: var(--space-16);
 }
 
 /* Staggered so the pills land one after the other rather than as a
@@ -644,9 +644,9 @@
    should leave together, not replay the stagger in reverse. */
 .perkPill {
   display: flex;
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-8);
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   width: fit-content;
   border-radius: 8px;
   background: rgba(var(--white-rgb), 0.10);
@@ -679,9 +679,9 @@
 
 .perkIcon {
   display: flex;
-  padding: 4px;
+  padding: var(--space-4);
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   flex-shrink: 0;
   border-radius: 30px;
   background: linear-gradient(180deg, rgba(10, 246, 124, 0.60) 0%, rgba(2, 128, 55, 0.60) 100%);
@@ -689,7 +689,7 @@
 
 .perkText {
   color: var(--darker-212121, #212121);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: normal;
@@ -702,7 +702,7 @@
 
 .factBold {
   color: var(--navy-ink);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 700;
   line-height: normal;
@@ -711,9 +711,9 @@
 
 .factLight {
   color: var(--black);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
-  font-weight: 300;
+  font-weight: 400;
   line-height: normal;
   white-space: nowrap;
 }
@@ -732,7 +732,7 @@
   z-index: 3;
   display: inline-block;
   color: var(--navy-ink);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   opacity: 0;
@@ -776,8 +776,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-32);
   margin-top: 4px;
   font-size: var(--font-size-base);
   font-weight: 600;
@@ -873,7 +873,7 @@
     height: auto;
     flex-direction: column;
     gap: 0;
-    padding: 80px 24px 64px;
+    padding: var(--space-80) var(--space-24) var(--space-64);
     justify-content: flex-start;
   }
 
@@ -888,7 +888,7 @@
   .titleGroup {
     align-items: center;
     text-align: center;
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   /* Eyebrow inherits white colour already; enforce centre alignment */
@@ -909,7 +909,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-8);
     margin-top: 32px; /* Comfortable gap from headline — enough to breathe */
     width: 100%;
   }
@@ -918,7 +918,7 @@
     flex: 1;
     flex-direction: column;  /* icon on top, label below */
     align-items: center;
-    gap: 8px;
+    gap: var(--space-8);
     white-space: normal;
     text-align: center;
   }
@@ -956,7 +956,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: var(--space-12);
     margin-bottom: 24px;
     grid-template-columns: unset;
     perspective: none;
@@ -1048,8 +1048,8 @@
     z-index: 2;
     max-width: 56%;        /* Stay clear of the image on the right */
     /* 44px bottom padding ensures the facts don't overlap the absolute-positioned View Details link */
-    padding: 16px 0 44px 16px;
-    gap: 6px;
+    padding: var(--space-16) 0 var(--space-48) var(--space-16);
+    gap: var(--space-6);
     /* Stretch full card height so View Details anchors to bottom */
     height: 100%;
     box-sizing: border-box;
@@ -1078,12 +1078,12 @@
   /* Facts: horizontal row to save vertical space */
   .packageCardFacts {
     flex-direction: column;
-    gap: 6px;
+    gap: var(--space-6);
     margin-top: 10px;      /* Pull facts up right below the subtitle */
   }
 
   .packageCardFact {
-    gap: 6px;
+    gap: var(--space-6);
   }
 
   /* Sized to the text unit beside it, not chosen independently: the two
@@ -1115,7 +1115,7 @@
 
   .factLight {
     font-size: var(--font-size-sm);
-    font-weight: 300;
+    font-weight: 400;
   }
 
   /* View Details: Always visible on mobile, positioned at the bottom left */
@@ -1160,8 +1160,8 @@
 
   .packageCardCompact .packageCardContent {
     max-width: 56%;
-    padding: 16px 0 44px 16px;
-    gap: 6px;
+    padding: var(--space-16) 0 var(--space-48) var(--space-16);
+    gap: var(--space-6);
   }
 
   /* ── Explore CTA: full-width, consistent radius ── */
@@ -1169,7 +1169,7 @@
   .exploreRow {
     width: 100%;
     margin: 8px 0 0;
-    padding: 14px 24px;
+    padding: var(--space-14) var(--space-24);
     font-size: var(--font-size-base);
     border-radius: 10px;   /* Match card border-radius */
     box-sizing: border-box;
@@ -1206,7 +1206,7 @@
 
 .packageCardCompact .packageCardContent {
   max-width: calc(100% - 150px);
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 /* Pulled back up against the title: the content column's own gap would
@@ -1215,7 +1215,7 @@
 .packageCardAudience {
   margin: calc(6px - 20px) 0 0;
   color: #3D4653;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
@@ -1305,8 +1305,8 @@
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-10);
   border-radius: 14px;
   background: rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(16px) saturate(1.4);
@@ -1316,7 +1316,7 @@
 }
 
 .directionToggleLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-2xs);
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -1326,12 +1326,12 @@
 
 .directionToggleBtn {
   width: 34px;
-  padding: 6px 0;
+  padding: var(--space-6) 0;
   border-radius: 8px;
   border: 1px solid rgba(var(--white-rgb), 0.3);
   background: rgba(var(--white-rgb), 0.08);
   color: var(--color-text-inverse);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;

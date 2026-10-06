@@ -60,7 +60,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 54px;
+  gap: var(--space-56);
   /* Pulled way back from the old clamp(72px,9vw,120px) — that, plus the
      72px breathing-room div between this section and WhyChooseNH (see
      page.tsx, now removed) and this section's own neatBackdrop fade-in,
@@ -86,7 +86,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: var(--font-size-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -174,7 +174,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: var(--space-24);
   margin-bottom: 32px;
 }
 
@@ -268,7 +268,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 /* Bottom row: Downloads + Rating sit side by side, each hugging its own
@@ -279,13 +279,13 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 .trustUnit {
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 /* Fixed-width slot the icon is centered inside, rather than sizing the
@@ -322,13 +322,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .trustLabel {
   color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
@@ -337,7 +337,7 @@
 .trustMainText {
   color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
@@ -346,7 +346,7 @@
 .trustSubtext {
   color: var(--slate-500);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
@@ -355,7 +355,7 @@
 /* Shared by .qrLabel (right) and .trustCaption (left) — same typography
    for both captions regardless of where each one sits. */
 .captionLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--slate-900);
@@ -390,7 +390,7 @@
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-radius: 10px;
-  padding: 16px;
+  padding: var(--space-16);
   border: 1px solid rgb(255 224 225 / 76%);
   box-shadow: 0 8px 24px rgba(233, 42, 45, 0.08);
 }
@@ -399,7 +399,7 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 /* App Store + Google Play badges stacked vertically beside the QR block,
@@ -416,7 +416,7 @@
      bottom edge, now that the QR image has grown closer to the card's
      full width. */
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-16);
   /* Matches the QR card's own width, which its label sets rather than the
      code — so the two columns share an edge. */
   width: 129px;
@@ -432,7 +432,7 @@
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 /* Sized so the finished card lands at the 144px the trust stack opposite
@@ -598,8 +598,8 @@
   }
 
   .contentStack {
-    padding: 48px 16px 0px;
-    gap: 80px; /* Premium breathing room between Title block and Phone block */
+    padding: var(--space-48) var(--space-16) var(--space-0);
+    gap: var(--space-80); /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
   
@@ -612,7 +612,7 @@
   /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
-    gap: 32px; /* Breathing room between CTAs, Pill, and Phone */
+    gap: var(--space-32); /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
   }
@@ -651,7 +651,7 @@
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: #111827;
-    padding: 10px 24px;
+    padding: var(--space-10) var(--space-24);
     background: rgba(var(--white-rgb), 0.85);
     backdrop-filter: blur(16px);
     border-radius: 99px;
@@ -682,7 +682,7 @@
     
     /* Solid Dark Background (Matches exact footer top color) */
     background: #061120; 
-    padding: 32px 16px 40px;
+    padding: var(--space-32) var(--space-16) var(--space-40);
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -694,7 +694,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-16);
     background: transparent;
     padding: 0;
     border: none;
@@ -736,9 +736,9 @@
    corner, layered over the neutral glass fill rather than replacing it. */
 .featurePillInner {
   display: inline-flex;
-  padding: 10px 16px;
+  padding: var(--space-10) var(--space-16);
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   border-radius: 40px;
   border: 1px solid rgba(var(--white-rgb), 0.35);
   /* Neutral glass fill, with a faint grey wash pooling at the bottom edge
@@ -757,7 +757,7 @@
 
 .featurePillText {
   color: rgba(var(--black-rgb), 0.95);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 500;
@@ -773,8 +773,8 @@
 .valueUnit {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   box-sizing: border-box;
   border-radius: 10px;
   backdrop-filter: blur(36px) saturate(1.7);
@@ -824,7 +824,7 @@
 
 .valueLabel {
   color: var(--darker-212121, #212121);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-lg);
   font-style: normal;
   font-weight: 600;
@@ -833,7 +833,7 @@
 
 .valueSubtext {
   color: #414141;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-style: normal;
   font-weight: 400;

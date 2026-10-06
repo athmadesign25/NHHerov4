@@ -18,7 +18,7 @@
 
 @media (max-width: 640px) {
   .section {
-    padding: 80px 0 48px 0;
+    padding: var(--space-80) 0 var(--space-48) 0;
   }
 }
 
@@ -40,8 +40,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 0 24px;
+  gap: var(--space-10);
+  padding: 0 var(--space-24);
 }
 
 .header :global(.section-eyebrow) {
@@ -55,7 +55,7 @@
 }
 
 .sectionTitle {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(30px, 3.2vw, 44px);
   font-weight: 800;
   color: var(--slate-900);
@@ -65,7 +65,7 @@
 }
 
 .sectionSubtitle {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(15px, 1.3vw, 18px);
   font-weight: 400;
   color: var(--slate-500);
@@ -86,7 +86,7 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 390px 390px;
-  gap: 8px;
+  gap: var(--space-8);
   width: 100%;
   box-sizing: border-box;
 }
@@ -166,17 +166,17 @@
 .heroHeaderUnit {
   position: relative;
   z-index: 10;
-  padding: 34px 34px 0 34px;
+  padding: var(--space-32) var(--space-32) 0 var(--space-32);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
   align-items: flex-start;
 }
 
 /* Title matches 30px font-size across all cards */
 .heroTitle {
   color: var(--grey-100);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-3xl);
   font-weight: 600;
   line-height: var(--leading-tight);
@@ -203,7 +203,7 @@
 /* Subtitle matches 16px font-size across all cards */
 .heroSubtitle {
   color: #D1D1D1;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 400;
   line-height: var(--leading-normal);
@@ -213,7 +213,7 @@
 .heroStatUnit {
   position: relative;
   z-index: 10;
-  padding: 0 34px 36px 34px;
+  padding: 0 var(--space-32) var(--space-40) var(--space-32);
 }
 
 /* Fixed Constant Height for Left Stroke to Prevent Jumps */
@@ -223,7 +223,7 @@
   justify-content: center;
   align-items: flex-start;
   border-left: 2px solid rgba(var(--white-rgb), 0.40);
-  padding: 0 0 0 16px;
+  padding: 0 0 0 var(--space-16);
   height: 64px;
   min-height: 64px;
   box-sizing: border-box;
@@ -231,7 +231,7 @@
 
 .heroStatValue {
   color: var(--color-text-inverse);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-3xl);
   font-weight: 700;
   line-height: var(--leading-tight);
@@ -240,7 +240,7 @@
 
 .heroStatLabel {
   color: #E1E1E1;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: var(--leading-normal);
@@ -316,16 +316,16 @@
 .cardHeaderUnit {
   position: relative;
   z-index: 10;
-  padding: 34px 34px 0 34px;
+  padding: var(--space-32) var(--space-32) 0 var(--space-32);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
   align-items: flex-start;
 }
 
 .cardTitle {
   color: var(--grey-100);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-3xl);
   font-weight: 600;
   line-height: var(--leading-tight);
@@ -353,7 +353,7 @@
 
 .cardSubtitle {
   color: #D1D1D1;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 400;
   line-height: var(--leading-normal);
@@ -404,8 +404,8 @@
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     grid-template-rows: 400px 170px 170px !important;
-    gap: 8px !important;
-    padding: 0 16px !important;
+    gap: var(--space-8) !important;
+    padding: 0 var(--space-16) !important;
   }
 
   .heroCard {
@@ -431,7 +431,7 @@
   }
 
   .heroHeaderUnit {
-    padding: 24px 24px 0 24px !important;
+    padding: var(--space-24) var(--space-24) 0 var(--space-24) !important;
   }
   
   .heroTitle {
@@ -439,7 +439,7 @@
   }
   
   .heroStatUnit {
-    padding: 0 24px 24px 24px !important;
+    padding: 0 var(--space-24) var(--space-24) var(--space-24) !important;
   }
   
   .heroStatInner {
@@ -452,8 +452,8 @@
   }
 
   .cardHeaderUnit {
-    padding: 16px 16px 0 16px !important;
-    gap: 4px !important;
+    padding: var(--space-16) var(--space-16) 0 var(--space-16) !important;
+    gap: var(--space-4) !important;
   }
 
   .cardTitle {

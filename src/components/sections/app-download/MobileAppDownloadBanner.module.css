@@ -65,7 +65,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 54px;
+  gap: var(--space-56);
   /* Pulled way back from the old clamp(72px,9vw,120px) — that, plus the
      72px breathing-room div between this section and WhyChooseNH (see
      page.tsx, now removed) and this section's own neatBackdrop fade-in,
@@ -90,7 +90,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: var(--font-size-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -178,7 +178,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: var(--space-24);
   margin-bottom: 32px;
 }
 
@@ -196,10 +196,10 @@
 .featurePill {
   display: flex;
   width: max-content;
-  padding: 10px 18px;
+  padding: var(--space-10) var(--space-20);
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-10);
   border-radius: 48px;
   border: 1.327px solid rgba(var(--slate-900-rgb), 0.10);
   background: rgba(var(--white-rgb), 0.7);
@@ -290,13 +290,13 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .trustUnit {
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 /* Fixed-width slot the icon is centered inside, rather than sizing the
@@ -333,13 +333,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .trustLabel {
   color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
@@ -348,7 +348,7 @@
 .trustMainText {
   color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
@@ -357,7 +357,7 @@
 .trustSubtext {
   color: var(--slate-500);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
@@ -374,7 +374,7 @@
 .storesCol {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 /* White glassy card, matching .featurePill's own glass treatment above —
@@ -393,7 +393,7 @@
   /* Same value on every side (was 8px/14px, a noticeably wider-than-tall
      rectangle) so the card just hugs its content evenly instead of
      reading as padded out sideways. */
-  padding: 8px;
+  padding: var(--space-8);
   border-radius: 12px;
   /* Subtle "white refraction" edge rather than a solid stroke — a soft
      white border with no shadow at all, so the card reads as glass sitting
@@ -412,8 +412,8 @@
    regenerating the source asset. */
 .qrContainer {
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
+  gap: var(--space-6);
+  padding: var(--space-8);
 }
 
 .qrImg {
@@ -576,8 +576,8 @@
   }
 
   .contentStack {
-    padding: 48px 16px 0px;
-    gap: 80px;
+    padding: var(--space-48) var(--space-16) var(--space-0);
+    gap: var(--space-80);
     /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
@@ -585,7 +585,7 @@
   .mobileTrustStack {
     display: flex;
     flex-direction: row !important;
-    gap: 8px;
+    gap: var(--space-8);
     margin-top: 32px;
     /* Matched to Health Packages */
     align-items: flex-start;
@@ -600,7 +600,7 @@
     display: flex;
     flex-direction: column !important;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-8);
     /* Matched to Health Packages */
     background: none !important;
     backdrop-filter: none !important;
@@ -655,7 +655,7 @@
   /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
-    gap: 32px;
+    gap: var(--space-32);
     /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
@@ -706,7 +706,7 @@
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: #111827;
-    padding: 10px 24px;
+    padding: var(--space-10) var(--space-24);
     background: rgba(var(--white-rgb), 0.85);
     backdrop-filter: blur(16px);
     border-radius: 99px;
@@ -750,7 +750,7 @@
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-end;
-    gap: 10px;
+    gap: var(--space-10);
     background: transparent;
     padding: 0;
     border: none;
@@ -758,7 +758,7 @@
   }
 
   .storeContainer {
-    padding: 6px;
+    padding: var(--space-6);
   }
 
   .storeBadge img {

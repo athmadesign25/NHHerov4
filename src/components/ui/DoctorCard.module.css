@@ -2,12 +2,12 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
   text-align: left;
   border-radius: 14px;
   border: 1px solid var(--slate-250);
   background: var(--blue-tint-50);
-  padding: 12px;
+  padding: var(--space-12);
   transition: background var(--duration-base), border-color var(--duration-base);
   cursor: pointer;
 }
@@ -42,7 +42,7 @@
 .doctorLoc {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-3xl);
   line-height: var(--leading-snug);
   color: var(--slate-450);

@@ -18,7 +18,7 @@
   /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
      below 1024px, where the mobile swipe carousel's own full-bleed trick
      (.mobileCarouselContainer) needs an unpadded ancestor to work. */
-  padding: 44px 16px 64px;
+  padding: var(--space-48) var(--space-16) var(--space-64);
   box-sizing: border-box;
   min-height: 900px;
   display: flex;
@@ -106,7 +106,7 @@
   width: 528px;
   height: 676px;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   flex-shrink: 0;
   position: relative;
   border-radius: 10px;
@@ -123,8 +123,8 @@
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  gap: 16px;
-  padding: 0 24px;
+  gap: var(--space-16);
+  padding: 0 var(--space-24);
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   scrollbar-width: none;
@@ -300,13 +300,13 @@
   background: rgba(var(--black-rgb), 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 10px 16px;
+  padding: var(--space-10) var(--space-16);
   border-radius: 12px;
   box-shadow: var(--elevation-3);
   text-align: center;
   max-width: 100%;
   overflow: hidden;
-  font-family: Inter, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xl);
   line-height: normal;
 }
@@ -333,7 +333,7 @@
   backdrop-filter: blur(14px);
   border: 1px solid rgba(var(--white-rgb), 0.16);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: var(--space-10) var(--space-14);
   margin-bottom: 28px;
   box-sizing: border-box;
   box-shadow: var(--elevation-3);
@@ -367,7 +367,7 @@
 
 .overviewText {
   color: var(--color-text-inverse);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-2xl);
   font-weight: 400;
   line-height: var(--leading-body);
@@ -381,7 +381,7 @@
 
 .patientName {
   color: var(--color-text-inverse);
-  font-family: Inter, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xl);
   font-style: normal;
   font-weight: 600;
@@ -394,7 +394,7 @@
 .patientSubtext {
   align-self: stretch;
   color: #E0E0E0;
-  font-family: Inter, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 400;
@@ -498,14 +498,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-24);
   border-radius: 8px;
   border: 1px solid rgba(var(--white-rgb), 0.5);
   background: rgba(var(--white-rgb), 0.05);
   backdrop-filter: blur(12px);
   color: var(--color-text-inverse);
-  font-family: Inter, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 600;
   line-height: normal;
@@ -566,7 +566,7 @@
   }
   .captionBox {
     font-size: var(--font-size-sm);
-    padding: 6px 12px;
+    padding: var(--space-6) var(--space-12);
   }
   .textUnit {
     width: calc(100% - 40px);
@@ -586,7 +586,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   margin-top: 16px;
   margin-bottom: 32px;
 }

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────────────── */
 /*
@@ -90,15 +89,32 @@
   --blue-tint-50: #eef2f7;
   --blue-tint-100: #ebf3fc;
 
-  /* Emergency red and its supporting steps. */
+  /* TWO red families, deliberately separate.
+     ------------------------------------------------------------------
+     EMERGENCY is brand signal and is RESERVED. Use it only for genuine
+     emergency affordances — the 24/7 button, the emergency number, the
+     ambulance strip. If it appears on an ordinary tab or icon it stops
+     meaning anything, which is the whole reason it cannot double as the
+     accent red. */
   --red-emergency-rgb: 237, 28, 36;
   --red-emergency: rgb(var(--red-emergency-rgb));
-  --red-emergency-tint: #fef5f5;
+  /* Pressed/hover for the above. Was --red-700, which made it look like a
+     step on the accent ramp; it is not, it is a darkened #ED1C24 and its
+     only three uses are emergency button backgrounds in the navbar. */
+  --red-emergency-dark: #c8151c;
+
+  /* ACCENT RED is the general-purpose one: destructive actions, alerts,
+     error states, a red tab or icon. This is what to reach for unless the
+     thing is literally an emergency.
+     Both new steps were already in the codebase as literals (#dc2626 x5,
+     #fef2f2 x2) — extracted, not invented. */
+  --red-50: #fef2f2;
   --red-400-rgb: 248, 113, 113;
   --red-400: rgb(var(--red-400-rgb));
   --red-500-rgb: 239, 68, 68;
   --red-500: rgb(var(--red-500-rgb));
-  --red-700: #c8151c;
+  --red-600-rgb: 220, 38, 38;
+  --red-600: rgb(var(--red-600-rgb));
 
   /* Dark surfaces used by the navy sections and the footer. */
   --navy-800: #223148;
@@ -124,14 +140,11 @@
   --color-primary: var(--blue-brand);
   --color-primary-dark: var(--blue-900);
   --color-primary-light: #EEF3FA;
-  --color-primary-mid: #1565C0;
-  /* These two kept the pre-correction channels (…, 162) after the brand blue
-     moved to 161: the sweep that fixed it globbed the component files and
-     never looked at this one, so the brand's own tints were left a shade off
-     the brand. Composing them from the channel var is what stops that class
-     of drift recurring. */
-  --color-primary-tint: rgba(var(--blue-brand-rgb), 0.08);
-  --color-primary-tint-hover: rgba(var(--blue-brand-rgb), 0.15);
+  /* --color-primary-tint and -tint-hover lived here as named stand-ins for
+     "brand blue at 8% / 15%". They are gone: composing at the call site —
+     rgba(var(--blue-brand-rgb), 0.08) — says the same thing, reads the same,
+     and does not need a new token every time a different opacity is wanted.
+     Both had zero consumers. */
 
   --color-emergency: var(--red-emergency);
   --color-emergency-light: #FFF0F0;
@@ -153,10 +166,14 @@
   --color-border-light: var(--blue-tint-50);
 
   --color-success: var(--green-500);
-  --color-warning: var(--amber-500);
 
   /* Typography */
-  --font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Inter is self-hosted by next/font (see layout.tsx), which exposes it as
+     --font-inter. globals.css also @imported Inter from Google Fonts, so the
+     family was downloaded twice and the @import was a render-blocking
+     external request — exactly what next/font exists to avoid. The @import
+     is gone; this is now the single source. */
+  --font-family: var(--font-inter), 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* 10px, for the smallest badge and overline labels. The scale previously
      bottomed out at 12px, so everything below it was written as a literal. */
   --font-size-2xs: 10px;
@@ -172,9 +189,6 @@
      section titles across PatientStories and HealthPackages had settled on
      42px independently, and the page h1 at 40px was within 2px of them. */
   --font-size-display: 42px;
-  --font-size-5xl: 48px;
-  --font-size-6xl: 60px;
-  --font-size-7xl: 72px;
 
   /* Leading, chosen by the size it accompanies rather than per instance —
      small text needs proportionally more room, display type needs less, so
@@ -193,17 +207,54 @@
   --leading-body: 1.5;
   --leading-relaxed: 1.65;
 
-  /* Spacing (8px system) */
-  --sp-1: 8px;
-  --sp-2: 16px;
-  --sp-3: 24px;
-  --sp-4: 32px;
-  --sp-5: 40px;
-  --sp-6: 48px;
-  --sp-8: 64px;
-  --sp-10: 80px;
-  --sp-12: 96px;
-  --sp-16: 128px;
+  /* ── SPACING ──────────────────────────────────────────────────────────
+     Named by the pixel value, so there is never a question of which token
+     a given gap wants. --space-12 is 12px.
+
+     The ramp is 2px-stepped up to 16px, then 4px, then 8px and wider. That
+     is deliberate and not a strict 4px or 8px grid: 6px, 10px and 14px are
+     three of the five most-used values here (115, 100 and 60 uses), and in
+     dense UI — result rows, filter chips, card meta — they are the right
+     answer. Forcing them onto a 4px grid would have churned 275
+     declarations to make the system tidier on paper and the interface
+     slightly worse.
+
+     Use the nearest step. If a value is not on the ramp, that is a prompt
+     to reconsider, not to add a token. */
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  /* Legacy aliases. --sp-N counted eights rather than pixels, so --sp-16
+     was 128px and not 16px — which is exactly the confusion the ramp above
+     removes. Kept so existing uses keep working; prefer --space-* in new
+     code. */
+  --sp-1: var(--space-8);
+  --sp-2: var(--space-16);
+  --sp-3: var(--space-24);
+  --sp-4: var(--space-32);
+  --sp-5: var(--space-40);
+  --sp-6: var(--space-48);
+  --sp-8: var(--space-64);
+  --sp-10: var(--space-80);
+  --sp-16: var(--space-128);
 
   /* Layout */
   --max-width: 1240px;

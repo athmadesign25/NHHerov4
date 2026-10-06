@@ -14,7 +14,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-family);
   background-color: var(--background);
 }
 
@@ -27,7 +27,7 @@
   align-items: flex-start;
   justify-content: space-between;
   background-color: var(--foreground);
-  padding: 120px 60px;
+  padding: 120px var(--space-64);
 }
 
 .intro {
@@ -35,7 +35,7 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: 24px;
+  gap: var(--space-24);
 }
 
 .intro h1 {
@@ -66,7 +66,7 @@
   flex-direction: row;
   width: 100%;
   max-width: 440px;
-  gap: 16px;
+  gap: var(--space-16);
   font-size: var(--font-size-sm);
 }
 
@@ -75,7 +75,7 @@
   justify-content: center;
   align-items: center;
   height: 40px;
-  padding: 0 16px;
+  padding: 0 var(--space-16);
   border-radius: 128px;
   border: 1px solid transparent;
   transition: var(--duration-base);
@@ -87,7 +87,7 @@
 a.primary {
   background: var(--text-primary);
   color: var(--background);
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 a.secondary {
@@ -109,11 +109,11 @@ a.secondary {
 
 @media (max-width: 600px) {
   .main {
-    padding: 48px 24px;
+    padding: var(--space-48) var(--space-24);
   }
 
   .intro {
-    gap: 16px;
+    gap: var(--space-16);
   }
 
   .intro h1 {

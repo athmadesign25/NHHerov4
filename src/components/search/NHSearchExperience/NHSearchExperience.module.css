@@ -55,7 +55,7 @@
 .stateLanding {
   width: min(840px, calc(100vw - 48px));
   max-width: 840px;
-  padding: 20px 24px 18px;
+  padding: var(--space-20) var(--space-24) var(--space-20);
   border-radius: 20px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.28);
@@ -76,7 +76,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: var(--space-1);
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(var(--red-emergency-rgb), 0.95) 0deg,      /* NH Red */
@@ -109,7 +109,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: var(--space-1);
   background: linear-gradient(
     135deg,
     rgba(var(--white-rgb), 0.35) 0%,
@@ -155,7 +155,7 @@
 .stateActive {
   width: min(880px, calc(100vw - 48px));
   max-width: 880px;
-  padding: 24px 28px 24px;
+  padding: var(--space-24) var(--space-32) var(--space-24);
   border-radius: 22px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.30);
@@ -173,7 +173,7 @@
   position: absolute;
   inset: -1px;
   border-radius: 23px;
-  padding: 1px;
+  padding: var(--space-1);
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(var(--cyan-bright-rgb), 0.4) 0deg,
@@ -218,7 +218,7 @@
 .stateResults {
   width: min(1080px, calc(100vw - 48px));
   max-width: 1080px;
-  padding: 26px 32px 28px;
+  padding: var(--space-24) var(--space-32) var(--space-32);
   border-radius: 22px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(22, 28, 36, 0.32);
@@ -236,7 +236,7 @@
   position: absolute;
   inset: -1px;
   border-radius: 23px;
-  padding: 1px;
+  padding: var(--space-1);
   background: conic-gradient(
     from var(--border-angle, 0deg),
     rgba(var(--cyan-bright-rgb), 0.4) 0deg,
@@ -315,14 +315,14 @@
 .headerLeftGroup {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .headerPulseBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--space-8);
+  padding: var(--space-6) var(--space-12);
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.1);
@@ -348,7 +348,7 @@
 .pulseBadge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   user-select: none;
   padding: 0;
   background: transparent;
@@ -367,7 +367,7 @@
 .pulseBars {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: var(--space-4);
   height: 12px;
 }
 
@@ -448,7 +448,7 @@
 }
 
 .landingPlaceholder {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: clamp(18px, 1.6vw, 20px);
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.9);
@@ -461,28 +461,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-16);
   width: 100%;
 }
 
 .bottomControlsLeft {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   flex-wrap: wrap;
 }
 
 .bottomControlsRight {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 
 .bottomPillsGroup {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   flex-wrap: wrap;
 }
 
@@ -579,16 +579,16 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   height: 30px;
-  padding: 0 10px;
+  padding: 0 var(--space-10);
   border-radius: 7px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(var(--white-rgb), 0.03);
   color: rgba(var(--white-rgb), 0.9);
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
-  font-weight: 450;
+  font-weight: 500;
   cursor: pointer;
   transition: background var(--duration-base) ease, border-color var(--duration-base) ease, color var(--duration-base) ease;
   user-select: none;
@@ -623,11 +623,11 @@
   box-shadow: 
     0 16px 36px rgba(var(--black-rgb), 0.6),
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
-  padding: 8px;
+  padding: var(--space-8);
   z-index: 150;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-4);
   animation: locationMenuFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: auto;
 }
@@ -663,8 +663,8 @@
 .locationCurrentAction {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-10);
   border-radius: 7px;
   font-size: var(--font-size-sm);
   font-weight: 500;
@@ -708,7 +708,7 @@
   font-size: var(--font-size-xs);
   line-height: var(--leading-normal);
   color: var(--red-400);
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-8);
   border-radius: 5px;
   background: rgba(var(--red-500-rgb), 0.08);
   margin-top: 2px;
@@ -724,8 +724,8 @@
 .locationSearchWrapper {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
+  gap: var(--space-8);
+  padding: var(--space-6) var(--space-10);
   border-radius: 7px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.10);
@@ -746,7 +746,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   color: var(--color-text-inverse);
   width: 100%;
@@ -761,8 +761,8 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-right: 2px;
+  gap: var(--space-2);
+  padding-right: var(--space-2);
 }
 
 .locationScrollList::-webkit-scrollbar {
@@ -779,7 +779,7 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--slate-500);
-  padding: 6px 8px 4px;
+  padding: var(--space-6) var(--space-8) var(--space-4);
   text-transform: uppercase;
 }
 
@@ -793,8 +793,8 @@
 .locationMenuItem {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-10);
   border-radius: 6px;
   font-size: var(--font-size-sm);
   color: var(--slate-300);
@@ -817,16 +817,16 @@
 .inlineActionBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   height: 30px;
-  padding: 0 8px;
+  padding: 0 var(--space-8);
   border-radius: 6px;
   border: none;
   background: transparent;
   color: rgba(var(--white-rgb), 0.90);
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
-  font-weight: 450;
+  font-weight: 500;
   cursor: pointer;
   transition: background var(--duration-base) ease, color var(--duration-base) ease;
   user-select: none;
@@ -856,16 +856,16 @@
 .landingTextAction {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   height: 30px;
-  padding: 0 4px;
+  padding: 0 var(--space-4);
   border: none !important;
   background: transparent !important;
   box-shadow: none !important;
   color: var(--color-text-inverse) !important;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
-  font-weight: 450;
+  font-weight: 500;
   cursor: pointer;
   transition: opacity var(--duration-base) ease;
   user-select: none;
@@ -889,8 +889,8 @@
 .actionPill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-14);
   border-radius: var(--radius-full);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   background: rgba(var(--white-rgb), 0.05);
@@ -918,9 +918,9 @@
 .activeInputRow {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-14);
   width: 100%;
-  padding: 4px 0;
+  padding: var(--space-4) 0;
 }
 
 .inputGhostWrapper {
@@ -936,9 +936,9 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: clamp(18px, 1.6vw, 20px);
-  font-weight: 450;
+  font-weight: 500;
   color: var(--color-text-inverse);
   line-height: var(--leading-normal);
   letter-spacing: -0.01em;
@@ -964,7 +964,7 @@
   display: flex;
   align-items: center;
   pointer-events: none;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: clamp(18px, 1.6vw, 20px);
   line-height: var(--leading-normal);
   letter-spacing: -0.01em;
@@ -1005,7 +1005,7 @@
   background: rgba(var(--sky-400-rgb), 0.1);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
   border-radius: 4px;
-  padding: 1px 6px;
+  padding: var(--space-1) var(--space-6);
   letter-spacing: 0.02em;
   user-select: none;
   pointer-events: auto;
@@ -1015,7 +1015,7 @@
 .activePillsRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   margin-top: 4px;
   margin-bottom: 4px;
 }
@@ -1032,7 +1032,7 @@
 /* ── Empty State Canvas (Before Typing) ── */
 .emptyCanvasPrompt {
   margin-top: 14px;
-  padding: 6px 0 10px;
+  padding: var(--space-6) 0 var(--space-10);
   display: flex;
   flex-direction: column;
   animation: fadeInEmpty 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1060,7 +1060,7 @@
 .genericCategoriesRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
@@ -1071,7 +1071,7 @@
   color: var(--slate-300);
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
-  padding: 6px 14px;
+  padding: var(--space-6) var(--space-14);
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
   cursor: pointer;
@@ -1114,11 +1114,11 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  padding: 0 4px;
+  padding: 0 var(--space-4);
 }
 
 .suggestionsHeader {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -1132,7 +1132,7 @@
   color: var(--sky-400);
   background: rgba(var(--blue-brand-rgb), 0.2);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
-  padding: 3px 10px;
+  padding: var(--space-4) var(--space-10);
   border-radius: var(--radius-full);
   letter-spacing: 0.03em;
 }
@@ -1140,14 +1140,14 @@
 .suggestionsList {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .suggestionItem {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
+  gap: var(--space-12);
+  padding: var(--space-10) var(--space-14);
   border-radius: 8px;
   background: transparent;
   border: 1px solid transparent;
@@ -1173,7 +1173,7 @@
 
 .suggestionText {
   flex: 1;
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.9);
@@ -1201,9 +1201,9 @@
 .pulseStatusRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   margin-top: 18px;
-  padding-top: 12px;
+  padding-top: var(--space-12);
   border-top: 1px solid rgba(var(--white-rgb), 0.05);
   font-size: var(--font-size-sm);
   color: var(--slate-400);
@@ -1234,7 +1234,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 16px;
+  gap: var(--space-16);
   margin: 0;
   padding: 0;
 }
@@ -1242,7 +1242,7 @@
 .resultsQueryLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   flex: 1;
   min-width: 0;
   cursor: text;
@@ -1271,12 +1271,12 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xl);
-  font-weight: 550;
+  font-weight: 600;
   color: var(--color-text-inverse);
   letter-spacing: -0.01em;
-  padding: 4px 0;
+  padding: var(--space-4) 0;
   width: 100%;
   caret-color: var(--cyan-bright);
 }
@@ -1295,20 +1295,20 @@
 .resultsQueryActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 
 .querySendBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-14);
   border-radius: 8px;
   background: var(--blue-brand);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
@@ -1345,7 +1345,7 @@
   text-transform: uppercase;
   color: var(--sky-400);
   cursor: pointer;
-  padding: 6px 12px;
+  padding: var(--space-6) var(--space-12);
   border-radius: 6px;
   transition: all var(--duration-base) ease;
   flex-shrink: 0;
@@ -1360,8 +1360,8 @@
 .pulseAiCard {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 6px 6px 14px;
+  gap: var(--space-10);
+  padding: var(--space-6) var(--space-6) var(--space-6) var(--space-14);
   border-radius: var(--radius-full);
   background: rgba(var(--blue-brand-rgb), 0.16);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.25);
@@ -1378,7 +1378,7 @@
   background: var(--blue-brand);
   border: 1px solid rgba(var(--white-rgb), 0.2);
   border-radius: var(--radius-full);
-  padding: 6px 14px;
+  padding: var(--space-6) var(--space-14);
   font-family: inherit;
   font-size: var(--font-size-xs);
   font-weight: 600;
@@ -1423,12 +1423,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: var(--space-4);
   margin-bottom: 12px;
 }
 
 .sectionEyebrowTitle {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: 0.07em;
@@ -1441,7 +1441,7 @@
 .primaryProximityNotice {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-xs);
   font-weight: 400;
   color: var(--slate-400);
@@ -1462,7 +1462,7 @@
 .refDoctorsGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--space-10);
   width: 100%;
 }
 
@@ -1568,8 +1568,8 @@
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-10);
   border-radius: var(--radius-full);
   background: rgba(var(--black-rgb), 0.40);
   backdrop-filter: blur(8px);
@@ -1593,7 +1593,7 @@
   position: relative;
   z-index: 2;
   margin-top: auto;
-  padding: 12px 14px 14px;
+  padding: var(--space-12) var(--space-14) var(--space-14);
   width: 100%;
   box-sizing: border-box;
 }
@@ -1602,7 +1602,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--space-10);
   width: 100%;
 }
 
@@ -1611,11 +1611,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
 }
 
 .refDocName {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-text-inverse);
@@ -1656,7 +1656,7 @@
 .refDocExpRow {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-xs);
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.9);
@@ -1701,10 +1701,10 @@
   justify-content: center;
   background: var(--color-surface);
   color: var(--blue-vivid);
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
-  padding: 8px 18px;
+  padding: var(--space-8) var(--space-20);
   border-radius: 8px;
   text-decoration: none;
   flex-shrink: 0;
@@ -1728,10 +1728,10 @@
   justify-content: center;
   background: #1D68FE;
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
-  padding: 10px 0;
+  padding: var(--space-10) 0;
   border-radius: 10px;
   text-decoration: none;
   border: none;
@@ -1759,7 +1759,7 @@
 .refViewAllLink {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--sky-400);
@@ -1777,8 +1777,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 20px;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-20);
   border-radius: 16px;
   position: relative;
   width: 100%;
@@ -1802,7 +1802,7 @@
 .refPulseLeft {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-14);
   min-width: 0;
   flex: 1;
 }
@@ -1834,19 +1834,19 @@
 .refPulseTextWrap {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .refPulseTitleLine {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
 .refPulseTitle {
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -1861,7 +1861,7 @@
   color: #E9D5FF;
   background: rgba(168, 85, 247, 0.22);
   border: 1px solid rgba(192, 132, 252, 0.38);
-  padding: 2px 8px;
+  padding: var(--space-2) var(--space-8);
   border-radius: var(--radius-full);
 }
 
@@ -1875,14 +1875,14 @@
 .refPulseBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   flex-shrink: 0;
-  padding: 10px 18px;
+  padding: var(--space-10) var(--space-20);
   border-radius: 8px;
   background: rgba(var(--slate-900-rgb), 0.85);
   border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
@@ -1899,7 +1899,7 @@
 .pulseNudgeLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   flex: 1;
   min-width: 0;
   position: relative;
@@ -1921,19 +1921,19 @@
 .pulseNudgeTextWrap {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .pulseNudgeTitleRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
 .pulseNudgeText {
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--slate-100);
@@ -1949,7 +1949,7 @@
   color: var(--sky-400);
   background: rgba(var(--cyan-bright-rgb), 0.08);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.2);
-  padding: 1px 6px;
+  padding: var(--space-1) var(--space-6);
   border-radius: 4px;
 }
 
@@ -1969,13 +1969,13 @@
 .pulseNudgeBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-14);
   border-radius: 6px;
   background: rgba(var(--cyan-bright-rgb), 0.1);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--cyan-bright);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
@@ -2002,10 +2002,10 @@
     0 24px 64px -16px rgba(var(--black-rgb), 0.7),
     0 0 45px rgba(var(--blue-brand-rgb), 0.2),
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.16);
-  padding: 18px;
+  padding: var(--space-20);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-14);
   position: relative;
   overflow: hidden;
 }
@@ -2014,25 +2014,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 12px;
+  gap: var(--space-12);
+  padding-bottom: var(--space-12);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
 .pulseExpandedHeaderLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .pulseExpandedTitleRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .pulseExpandedTitle {
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -2043,8 +2043,8 @@
 .pulseExpandedLiveBadge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 6px;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-6);
   border-radius: var(--radius-full);
   background: rgba(var(--green-500-rgb), 0.16);
   border: 1px solid rgba(var(--green-500-rgb), 0.3);
@@ -2072,13 +2072,13 @@
 .pulseExpandedMinimizeBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-10);
   border-radius: 6px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-300);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
@@ -2092,7 +2092,7 @@
 }
 
 .pulseUploadToast {
-  padding: 6px 12px;
+  padding: var(--space-6) var(--space-12);
   border-radius: 6px;
   background: rgba(var(--cyan-bright-rgb), 0.12);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
@@ -2106,8 +2106,8 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding-right: 4px;
+  gap: var(--space-12);
+  padding-right: var(--space-4);
 }
 
 .pulseMessagesStream::-webkit-scrollbar {
@@ -2128,7 +2128,7 @@
 .pulseAiMessageRow {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--space-10);
   width: 100%;
 }
 
@@ -2150,7 +2150,7 @@
   background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   border: none;
   border-radius: 14px 14px 2px 14px;
-  padding: 10px 14px;
+  padding: var(--space-10) var(--space-14);
   color: var(--color-text-inverse);
   font-size: var(--font-size-sm);
   line-height: var(--leading-normal);
@@ -2161,7 +2161,7 @@
   max-width: 96%;
   background: transparent;
   border: none;
-  padding: 2px 2px;
+  padding: var(--space-2) var(--space-2);
   color: var(--slate-200);
   font-size: var(--font-size-sm);
   line-height: var(--leading-body);
@@ -2179,20 +2179,20 @@
 .pulseBubbleActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--space-6);
   margin-top: 8px;
 }
 
 .pulseContextActionBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-10);
   border-radius: 6px;
   background: rgba(var(--cyan-bright-rgb), 0.12);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.3);
   color: var(--sky-400);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
@@ -2208,13 +2208,13 @@
 .pulseEmergencyActionBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-10);
   border-radius: 6px;
   background: rgba(var(--red-emergency-rgb), 0.16);
   border: 1px solid rgba(var(--red-emergency-rgb), 0.4);
   color: #FFA3A6;
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
@@ -2236,8 +2236,8 @@
 .pulseThinkingBubble {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-12);
   border-radius: 10px;
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
@@ -2273,9 +2273,9 @@
 .pulseQuickChipsRow {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   overflow-x: auto;
-  padding: 2px 0 4px;
+  padding: var(--space-2) 0 var(--space-4);
   scrollbar-width: none;
 }
 
@@ -2286,12 +2286,12 @@
 .pulseQuickChip {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  padding: var(--space-4) var(--space-10);
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
@@ -2309,8 +2309,8 @@
 .pulseComposerForm {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px 6px 12px;
+  gap: var(--space-8);
+  padding: var(--space-6) var(--space-8) var(--space-6) var(--space-12);
   border-radius: 10px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.16);
@@ -2352,7 +2352,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   color: var(--color-text-inverse);
 }
@@ -2389,17 +2389,17 @@
   font-size: var(--font-size-2xs);
   color: var(--slate-500);
   line-height: var(--leading-normal);
-  padding: 0 4px;
+  padding: 0 var(--space-4);
 }
 
 /* ── Curated Suggested Doctor Cards inside Inline Pulse AI Bubble ── */
 .pulseCuratedDoctorsRow {
   display: flex;
   align-items: stretch;
-  gap: 8px;
+  gap: var(--space-8);
   overflow-x: auto;
   margin-top: 10px;
-  padding: 2px 2px 6px;
+  padding: var(--space-2) var(--space-2) var(--space-6);
   scrollbar-width: thin;
 }
 
@@ -2419,11 +2419,11 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: var(--space-10) var(--space-12);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--space-10);
   transition: all var(--duration-base) ease;
 }
 
@@ -2437,7 +2437,7 @@
 .pulseCuratedDocTop {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .pulseCuratedDocAvatar {
@@ -2455,7 +2455,7 @@
 }
 
 .pulseCuratedDocName {
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -2477,7 +2477,7 @@
 .pulseCuratedDocHosp {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-2xs);
   color: var(--slate-400);
   margin-top: 3px;
@@ -2501,7 +2501,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
   padding-top: 0;
   border-top: none;
 }
@@ -2509,7 +2509,7 @@
 .pulseCuratedDocSlot {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-2xs);
   color: #4ADE80;
   font-weight: 500;
@@ -2525,13 +2525,13 @@
 .pulseCuratedDocBookBtn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-10);
   border-radius: 6px;
   background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.35);
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   text-decoration: none;
@@ -2549,7 +2549,7 @@
 .pulseActiveLayout {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-16);
   width: 100%;
 }
 
@@ -2575,11 +2575,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: var(--space-12) var(--space-16);
   background: rgba(var(--white-rgb), 0.03);
   border: none;
   color: var(--slate-300);
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
@@ -2594,7 +2594,7 @@
 .buriedToggleLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .buriedToggleIcon {
@@ -2606,7 +2606,7 @@
   font-size: var(--font-size-xs);
   color: var(--slate-400);
   background: rgba(var(--white-rgb), 0.05);
-  padding: 2px 8px;
+  padding: var(--space-2) var(--space-8);
   border-radius: var(--radius-full);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   margin-left: 4px;
@@ -2615,7 +2615,7 @@
 .buriedToggleRight {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   color: var(--slate-400);
   font-size: var(--font-size-xs);
 }
@@ -2629,7 +2629,7 @@
 }
 
 .buriedResultsContent {
-  padding: 16px;
+  padding: var(--space-16);
   border-top: 1px solid rgba(var(--white-rgb), 0.08);
   background: rgba(10, 15, 29, 0.4);
 }
@@ -2651,8 +2651,8 @@
   .pulseNudgeBox {
     flex-direction: column;
     align-items: flex-start;
-    padding: 12px 14px;
-    gap: 12px;
+    padding: var(--space-12) var(--space-14);
+    gap: var(--space-12);
   }
 
   .pulseNudgeAction {
@@ -2668,7 +2668,7 @@
 /* ── Secondary Results: Unboxed Open Section Using Spacing Only ── */
 .relatedSpecialtiesSection {
   margin-top: 18px;
-  padding-top: 12px;
+  padding-top: var(--space-12);
   border: none;
   background: transparent;
   border-radius: 0;
@@ -2689,12 +2689,12 @@
 .relatedTagsGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
 .specPillTag {
-  padding: 4px 10px;
+  padding: var(--space-4) var(--space-10);
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
@@ -2716,7 +2716,7 @@
 .resultsRightCol {
   display: flex;
   flex-direction: column;
-  gap: 45px;
+  gap: var(--space-48);
   min-width: 0;
   width: 100%;
 }
@@ -2738,8 +2738,8 @@
 .editorialHeaderViewAll {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-family: var(--font-inter, "Inter", sans-serif);
+  gap: var(--space-4);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   color: #7E8B9B;
@@ -2765,8 +2765,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 8px 4px;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-4);
   border-bottom: none;
   text-decoration: none;
   border-radius: 6px;
@@ -2784,7 +2784,7 @@
 .editorialItemLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   min-width: 0;
 }
 
@@ -2813,7 +2813,7 @@
 }
 
 .editorialItemTitle {
-  font-family: var(--font-inter, "Inter", sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text-inverse);
@@ -2848,7 +2848,7 @@
 .editorialPillsGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
   margin-top: 6px;
   max-height: 98px;
@@ -2858,12 +2858,12 @@
 .editorialPill {
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: var(--space-6) var(--space-12);
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   color: var(--slate-300);
-  font-family: var(--font-inter, "Inter", sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 400;
   cursor: pointer;
@@ -2919,7 +2919,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: var(--space-14) var(--space-16);
   border-radius: 12px;
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
@@ -2933,7 +2933,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: var(--space-10) var(--space-14);
   border-radius: 12px;
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.05);
@@ -2942,13 +2942,13 @@
 .skeletonLoadingStatus {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--sky-400);
   background: rgba(var(--blue-brand-rgb), 0.16);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
-  padding: 4px 12px;
+  padding: var(--space-4) var(--space-12);
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
 }
@@ -2965,8 +2965,8 @@
 .analyzingActiveBanner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
+  gap: var(--space-10);
+  padding: var(--space-10) var(--space-16);
   border-radius: 12px;
   background: linear-gradient(90deg, rgba(var(--blue-brand-rgb), 0.12) 0%, rgba(var(--violet-600-rgb), 0.10) 50%, rgba(236, 72, 153, 0.12) 100%);
   border: 1px solid rgba(var(--violet-600-rgb), 0.3);
@@ -3004,7 +3004,7 @@
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 .themeWhite .analyzingActiveBanner,
@@ -3034,12 +3034,12 @@
   .stateLanding {
     width: min(800px, calc(100vw - 32px));
     max-width: 800px;
-    padding: 18px 20px 16px;
+    padding: var(--space-20) var(--space-20) var(--space-16);
   }
 
   .resultsSplitLayout {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: var(--space-24);
   }
 }
 
@@ -3047,7 +3047,7 @@
   .stateLanding {
     width: calc(100vw - 32px);
     max-width: 100vw;
-    padding: 14px 14px 12px;
+    padding: var(--space-14) var(--space-14) var(--space-12);
     border-radius: 16px;
   }
 
@@ -3070,14 +3070,14 @@
   .landingBottomRow {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: var(--space-10);
   }
 
   .bottomControlsLeft {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-6);
     width: 100%;
   }
 
@@ -3086,7 +3086,7 @@
     align-items: center;
     justify-content: flex-end;
     width: 100%;
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   /* ── Modal Shells on Mobile ── */
@@ -3095,7 +3095,7 @@
   .statePulse {
     width: calc(100vw - 16px) !important;
     max-width: calc(100vw - 16px) !important;
-    padding: 14px 12px 16px !important;
+    padding: var(--space-14) var(--space-12) var(--space-16) !important;
     border-radius: 18px !important;
   }
 
@@ -3105,14 +3105,14 @@
 
   .resultsSplitLayout {
     grid-template-columns: 1fr !important;
-    gap: 18px !important;
+    gap: var(--space-20) !important;
     margin-top: 12px !important;
   }
 
   .doctorsGrid,
   .refDoctorsGrid {
     grid-template-columns: 1fr !important;
-    gap: 12px !important;
+    gap: var(--space-12) !important;
   }
 
   .bottomPillsGroup {
@@ -3127,9 +3127,9 @@
   /* ── Active Search Bar on Mobile ── */
   .resultsQueryBar,
   .activeQueryBar {
-    padding: 6px 10px 6px 12px !important;
+    padding: var(--space-6) var(--space-10) var(--space-6) var(--space-12) !important;
     min-height: 44px !important;
-    gap: 8px !important;
+    gap: var(--space-8) !important;
     border-radius: 12px !important;
   }
 
@@ -3148,11 +3148,11 @@
   }
 
   .activePillsRow {
-    gap: 6px !important;
+    gap: var(--space-6) !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     -webkit-overflow-scrolling: touch !important;
-    padding-bottom: 4px !important;
+    padding-bottom: var(--space-4) !important;
     scrollbar-width: none !important;
   }
 
@@ -3161,7 +3161,7 @@
   }
 
   .inlineActionBtn {
-    padding: 6px 10px !important;
+    padding: var(--space-6) var(--space-10) !important;
     font-size: var(--font-size-xs) !important;
     flex-shrink: 0 !important;
   }
@@ -3182,11 +3182,11 @@
   }
 
   .refDocOverlayContent {
-    padding: 10px 10px 12px 10px !important;
+    padding: var(--space-10) var(--space-10) var(--space-12) var(--space-10) !important;
   }
 
   .refDocBottomFlex {
-    gap: 8px !important;
+    gap: var(--space-8) !important;
   }
 
   .refDocName {
@@ -3206,7 +3206,7 @@
   }
 
   .refBookBtnWhite {
-    padding: 8px 14px !important;
+    padding: var(--space-8) var(--space-14) !important;
     font-size: var(--font-size-xs) !important;
   }
 
@@ -3224,11 +3224,11 @@
   }
 
   .editorialList {
-    gap: 6px !important;
+    gap: var(--space-6) !important;
   }
 
   .editorialItem {
-    padding: 8px 10px !important;
+    padding: var(--space-8) var(--space-10) !important;
     border-radius: 10px !important;
   }
 
@@ -3252,23 +3252,23 @@
   }
 
   .specialtiesTagsRow {
-    gap: 6px !important;
+    gap: var(--space-6) !important;
   }
 
   .specialtyPill {
-    padding: 4px 10px !important;
+    padding: var(--space-4) var(--space-10) !important;
     font-size: var(--font-size-xs) !important;
   }
 
   /* ── Ask Pulse Bottom Banner on Mobile ── */
   .refPulseRow {
-    padding: 10px 12px !important;
+    padding: var(--space-10) var(--space-12) !important;
     margin-top: 12px !important;
     border-radius: 12px !important;
   }
 
   .refPulseLeft {
-    gap: 10px !important;
+    gap: var(--space-10) !important;
   }
 
   .refPulseIconBox {
@@ -3283,7 +3283,7 @@
 
   .refPulseBadge {
     font-size: var(--font-size-2xs) !important;
-    padding: 2px 6px !important;
+    padding: var(--space-2) var(--space-6) !important;
   }
 
   .refPulseSubtext {
@@ -3296,18 +3296,18 @@
   }
 
   .refPulseBtn {
-    padding: 6px 12px !important;
+    padding: var(--space-6) var(--space-12) !important;
     font-size: var(--font-size-xs) !important;
   }
 
   /* ── Pulse AI Clinical Assistant (Mobile Chat Layout) ── */
   .pulseChatWrapper {
-    padding: 2px 0 0 !important;
+    padding: var(--space-2) 0 0 !important;
   }
 
   .pulseHeader {
-    padding: 4px 0 10px !important;
-    gap: 8px !important;
+    padding: var(--space-4) 0 var(--space-10) !important;
+    gap: var(--space-8) !important;
   }
 
   .pulseBackBtn {
@@ -3324,20 +3324,20 @@
   }
 
   .pulseUserBubble {
-    padding: 8px 12px !important;
+    padding: var(--space-8) var(--space-12) !important;
     font-size: var(--font-size-sm) !important;
     max-width: 88% !important;
     border-radius: 14px 14px 2px 14px !important;
   }
 
   .pulseBotBubble {
-    padding: 10px 12px !important;
+    padding: var(--space-10) var(--space-12) !important;
     font-size: var(--font-size-sm) !important;
     line-height: var(--leading-normal) !important;
   }
 
   .pulseReasoningBox {
-    padding: 6px 10px !important;
+    padding: var(--space-6) var(--space-10) !important;
     font-size: var(--font-size-xs) !important;
     margin-bottom: 8px !important;
     border-radius: 8px !important;
@@ -3350,11 +3350,11 @@
   /* Doctor Cards Carousel on Mobile: sleek horizontal swipe with native touch snap */
   .pulseDoctorGrid {
     display: flex !important;
-    gap: 10px !important;
+    gap: var(--space-10) !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
-    padding: 4px 2px 8px !important;
+    padding: var(--space-4) var(--space-2) var(--space-8) !important;
     margin: 0 -2px !important;
     scrollbar-width: none !important;
   }
@@ -3386,16 +3386,16 @@
   }
 
   .pulseDocBookBtnWhite {
-    padding: 6px 12px !important;
+    padding: var(--space-6) var(--space-12) !important;
     font-size: var(--font-size-xs) !important;
   }
 
   /* Skeleton shimmer cards match horizontal carousel on mobile */
   .pulseDoctorSkeletonGrid {
     display: flex !important;
-    gap: 10px !important;
+    gap: var(--space-10) !important;
     overflow-x: auto !important;
-    padding: 4px 2px 8px !important;
+    padding: var(--space-4) var(--space-2) var(--space-8) !important;
   }
 
   .pulseDoctorSkeletonCard {
@@ -3413,7 +3413,7 @@
   /* Diagnostic tests on mobile */
   .pulseTestsGrid {
     grid-template-columns: 1fr !important;
-    gap: 8px !important;
+    gap: var(--space-8) !important;
   }
 
   /* Follow-up action chips on mobile: sleek horizontal scrollable pill tray */
@@ -3428,11 +3428,11 @@
 
   .pulseChipsRow {
     display: flex !important;
-    gap: 6px !important;
+    gap: var(--space-6) !important;
     overflow-x: auto !important;
     flex-wrap: nowrap !important;
     -webkit-overflow-scrolling: touch !important;
-    padding-bottom: 4px !important;
+    padding-bottom: var(--space-4) !important;
     scrollbar-width: none !important;
   }
 
@@ -3441,15 +3441,15 @@
   }
 
   .pulseChip {
-    padding: 6px 12px !important;
+    padding: var(--space-6) var(--space-12) !important;
     font-size: var(--font-size-xs) !important;
     flex-shrink: 0 !important;
   }
 
   /* Bottom Pulse conversational input on mobile */
   .pulseInputBar {
-    padding: 6px 8px 6px 10px !important;
-    gap: 8px !important;
+    padding: var(--space-6) var(--space-8) var(--space-6) var(--space-10) !important;
+    gap: var(--space-8) !important;
     border-radius: 12px !important;
     margin-top: 8px !important;
   }
@@ -3484,7 +3484,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-6);
   width: 100%;
   user-select: none;
 }
@@ -3521,7 +3521,7 @@
 }
 
 .floatingPulseSearchText {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   line-height: var(--leading-snug);
@@ -3537,7 +3537,7 @@
 .pulseViewContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-16);
   width: 100%;
   box-sizing: border-box;
   border-radius: 18px;
@@ -3547,7 +3547,7 @@
   backdrop-filter: blur(24px) saturate(140%);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
   box-shadow: var(--elevation-4);
-  padding: 22px 24px;
+  padding: var(--space-24) var(--space-24);
 }
 
 .pulseTopBar {
@@ -3555,14 +3555,14 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding-bottom: 12px;
+  padding-bottom: var(--space-12);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
 }
 
 .pulseHeaderLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .pulseBackBtn {
@@ -3596,7 +3596,7 @@
 }
 
 .pulseHeaderTitle {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -3607,14 +3607,14 @@
 .pulseLiveBadge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   color: var(--green-500);
   background: rgba(var(--green-500-rgb), 0.16);
   border: 1px solid rgba(var(--green-500-rgb), 0.3);
-  padding: 2px 8px;
+  padding: var(--space-2) var(--space-8);
   border-radius: var(--radius-full);
   text-transform: uppercase;
 }
@@ -3631,7 +3631,7 @@
 .pulseChatInterface {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-14);
   width: 100%;
 }
 
@@ -3644,7 +3644,7 @@
 .pulseChatRowBot {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--space-10);
   min-height: 28px;
 }
 
@@ -3662,24 +3662,24 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .pulseUserQueryBubble {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: var(--space-2);
   background: #E1F0FF;
   border: 1px solid rgba(186, 230, 253, 0.9);
   border-radius: 16px 16px 4px 16px;
-  padding: 8px 14px;
+  padding: var(--space-8) var(--space-14);
   max-width: 380px;
   box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .pulseQueryText {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--blue-brand);
@@ -3695,7 +3695,7 @@
 .pulseResponseHeader {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   min-height: 36px;
 }
 
@@ -3707,7 +3707,7 @@
 }
 
 .pulseResponseText {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -3734,10 +3734,10 @@
 .pulseThinkingPill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
-  padding: 6px 14px;
+  padding: var(--space-6) var(--space-14);
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
   color: var(--slate-300);
@@ -3746,7 +3746,7 @@
 
 .pulseThinkingDots {
   display: inline-flex;
-  gap: 4px;
+  gap: var(--space-4);
   align-items: center;
 }
 
@@ -3765,7 +3765,7 @@
 .pulseDoctorSkeletonGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: var(--space-12);
   width: 100%;
 }
 
@@ -3779,7 +3779,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14px;
+  padding: var(--space-14);
   box-sizing: border-box;
 }
 
@@ -3834,12 +3834,12 @@
 .pulseChipsSection {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
   width: 100%;
 }
 
 .pulseChipsSectionLabel {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
   color: rgba(var(--white-rgb), 0.7);
@@ -3859,7 +3859,7 @@
 .pulseDoctorGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--space-12);
   width: 100%;
 }
 
@@ -3914,7 +3914,7 @@
 .pulseDocOverlayContent {
   position: relative;
   z-index: 2;
-  padding: 10px 10px 12px 10px;
+  padding: var(--space-10) var(--space-10) var(--space-12) var(--space-10);
   width: 100%;
   box-sizing: border-box;
 }
@@ -3923,20 +3923,20 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-8);
   width: 100%;
 }
 
 .pulseDocTextCol {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
   flex: 1;
 }
 
 .pulseDocName {
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -3968,7 +3968,7 @@
 .pulseDocExpRow {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-2xs);
   color: rgba(var(--white-rgb), 0.8);
   margin-top: 1px;
@@ -3986,10 +3986,10 @@
   justify-content: center;
   background: var(--color-surface);
   color: var(--blue-brand);
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
-  padding: 6px 14px;
+  padding: var(--space-6) var(--space-14);
   border-radius: 8px;
   text-decoration: none;
   flex-shrink: 0;
@@ -4011,10 +4011,10 @@
   justify-content: center;
   background: var(--blue-600);
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
-  padding: 6px 8px;
+  padding: var(--space-6) var(--space-8);
   border-radius: 6px;
   text-decoration: none;
   transition: background var(--duration-fast) ease, transform var(--duration-fast) ease;
@@ -4059,7 +4059,7 @@
 .pulseLoadingGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--space-12);
   width: 100%;
 }
 
@@ -4080,7 +4080,7 @@
 .pulseTestsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--space-12);
   width: 100%;
 }
 
@@ -4088,10 +4088,10 @@
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: 14px;
-  padding: 16px 14px;
+  padding: var(--space-16) var(--space-14);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-6);
   height: 225px;
   box-sizing: border-box;
 }
@@ -4122,7 +4122,7 @@
   color: var(--sky-400);
   background: rgba(var(--sky-400-rgb), 0.12);
   border: 1px solid rgba(var(--sky-400-rgb), 0.25);
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-8);
   border-radius: 6px;
   width: fit-content;
 }
@@ -4130,7 +4130,7 @@
 .pulseChipsRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
   width: 100%;
 }
@@ -4138,14 +4138,14 @@
 .pulseChip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-400);
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 500;
-  padding: 6px 14px;
+  padding: var(--space-6) var(--space-14);
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all var(--duration-base) ease;
@@ -4168,13 +4168,13 @@
 .pulseInputBar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   width: 100%;
   box-sizing: border-box;
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.12);
   border-radius: 12px;
-  padding: 6px 10px 6px 14px;
+  padding: var(--space-6) var(--space-10) var(--space-6) var(--space-14);
   transition: border-color var(--duration-base) ease, background var(--duration-base) ease;
 }
 
@@ -4191,7 +4191,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: var(--space-4);
   transition: color var(--duration-fast) ease;
 }
 
@@ -4205,7 +4205,7 @@
   border: none;
   outline: none;
   color: var(--color-text-inverse);
-  font-family: var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 400;
 }
@@ -4222,7 +4222,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: var(--space-4);
   transition: color var(--duration-fast) ease;
 }
 
@@ -4323,7 +4323,7 @@
 [data-search-theme="white"] .stateLanding .inlineActionBtn,
 [data-search-theme="dark"] .stateLanding .inlineActionBtn {
   color: rgba(var(--white-rgb), 0.9) !important;
-  font-weight: 450 !important;
+  font-weight: 500 !important;
 }
 
 .stateLanding .inlineActionIcon,
@@ -4771,7 +4771,7 @@
   border-radius: 16px !important;
   box-shadow: var(--elevation-2) !important;
   margin-top: 14px !important;
-  padding: 12px 20px !important;
+  padding: var(--space-12) var(--space-20) !important;
   width: 100% !important;
 }
 
@@ -4813,7 +4813,7 @@
   color: var(--slate-900) !important;
   font-weight: 500 !important;
   border-radius: 8px !important;
-  padding: 8px 18px !important;
+  padding: var(--space-8) var(--space-20) !important;
   box-shadow: var(--elevation-1) !important;
 }
 
@@ -5377,8 +5377,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 6px;
+  gap: var(--space-8);
+  padding: var(--space-14) var(--space-6);
   color: var(--color-text-inverse);
   text-decoration: none;
   background: transparent;
@@ -5441,8 +5441,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 14px 6px;
+  gap: var(--space-8);
+  padding: var(--space-14) var(--space-6);
   color: var(--color-text-inverse);
   text-decoration: none;
   background: transparent;

@@ -7,7 +7,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  padding: var(--space-1);
   box-sizing: border-box;
   overflow: hidden;
   pointer-events: none;

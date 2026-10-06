@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   height: var(--nav-height);
-  gap: 24px;
+  gap: var(--space-24);
 }
 
 .navContainer {
@@ -92,7 +92,7 @@
 .mobileActionGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .mobileSearchBtn {
@@ -116,9 +116,9 @@
 .navCityBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   height: 44px;
-  padding: 0 4px;
+  padding: 0 var(--space-4);
   background: transparent;
   border: none;
   color: var(--nav-fg-color, var(--white));
@@ -159,7 +159,7 @@
   background: transparent;
   cursor: pointer;
   padding: 0;
-  gap: 6px;
+  gap: var(--space-6);
   color: var(--nav-fg-color, var(--white));
   transition: color var(--duration-slow) ease, background var(--duration-base) ease, transform var(--duration-fast) ease;
 }
@@ -243,7 +243,7 @@
 .darkDrawerScroll {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 0 40px;
+  padding: var(--space-24) 0 var(--space-40);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -254,16 +254,16 @@
 .quickActionsGrid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .emergencyActionCard {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   background: rgba(var(--white-rgb), 0.03);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--space-16);
   text-decoration: none;
 }
 
@@ -300,7 +300,7 @@
 .primaryActionsRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .primaryActionCard {
@@ -308,10 +308,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--space-10);
   background: rgba(var(--white-rgb), 0.03);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--space-16);
   text-decoration: none;
   border: none;
   color: var(--color-text-inverse);
@@ -344,7 +344,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: var(--space-20) var(--space-24);
   border: none;
   background: none;
   text-align: left;
@@ -378,8 +378,8 @@
    as tall as its neighbours. Trimmed to keep it reading as a peer in the
    list rather than a banner at the end of it. */
 .oneHealthNavRow {
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: var(--space-14);
+  padding-bottom: var(--space-14);
 }
 
 .coreNavTitle {
@@ -407,9 +407,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-14);
   width: 100%;
-  padding: 20px 24px;
+  padding: var(--space-20) var(--space-24);
   background: none;
   border: none;
   color: var(--slate-300);
@@ -449,7 +449,7 @@
 .paneHeader {
   display: flex;
   align-items: center;
-  padding: 16px 20px;
+  padding: var(--space-16) var(--space-20);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
   background: rgba(var(--slate-900-rgb), 0.5);
   position: sticky;
@@ -461,13 +461,13 @@
 .backBtn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   background: none;
   border: none;
   color: var(--slate-400);
   font-size: var(--font-size-base);
   font-weight: 500;
-  padding: 8px 12px 8px 0;
+  padding: var(--space-8) var(--space-12) var(--space-8) 0;
   cursor: pointer;
 }
 
@@ -482,7 +482,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding-bottom: 16px;
+  padding-bottom: var(--space-16);
 }
 
 .subCategoryLabel {
@@ -491,12 +491,12 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--slate-400);
-  padding: 0 24px 8px;
+  padding: 0 var(--space-24) var(--space-8);
 }
 
 .subCategoryLink {
   display: block;
-  padding: 16px 24px;
+  padding: var(--space-16) var(--space-24);
   font-size: var(--font-size-base);
   font-weight: 500;
   color: var(--slate-100);
@@ -520,7 +520,7 @@
 .logoWrap {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 
@@ -529,7 +529,7 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-2);
   margin-left: auto;
 }
 
@@ -540,8 +540,8 @@
 .navLink {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-12);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
@@ -584,13 +584,13 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
-  padding: 6px;
+  padding: var(--space-6);
   overflow: hidden;
 }
 
 .dropdownItem {
   display: block;
-  padding: 10px 14px;
+  padding: var(--space-10) var(--space-14);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
@@ -607,18 +607,18 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 
 .phoneLink {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  padding: 6px 10px;
+  padding: var(--space-6) var(--space-10);
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast);
   white-space: nowrap;
@@ -641,7 +641,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 24px;
+  padding: var(--space-8) var(--space-24);
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -694,7 +694,7 @@
 .bookBtn {
   display: inline-flex;
   align-items: center;
-  padding: 10px 18px;
+  padding: var(--space-10) var(--space-20);
   font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-text-inverse);
@@ -707,7 +707,7 @@
 }
 
 .bookBtn:hover {
-  background: var(--red-700);
+  background: var(--red-emergency-dark);
   transform: translateY(-1px);
   --shadow-rgb: var(--red-emergency-rgb);
   box-shadow: var(--elevation-2);
@@ -718,7 +718,7 @@
 }
 
 .scrolled .bookBtn:hover {
-  background: var(--red-700);
+  background: var(--red-emergency-dark);
 }
 
 /* ── Mobile Toggle ── */
@@ -763,12 +763,12 @@
   padding: var(--sp-3);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .mobileNavLink {
   display: block;
-  padding: 14px 16px;
+  padding: var(--space-14) var(--space-16);
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-text);
@@ -794,7 +794,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px;
+  padding: var(--space-14);
   font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-text-inverse);
@@ -804,15 +804,15 @@
 }
 
 .mobileBookBtn:hover {
-  background: var(--red-700);
+  background: var(--red-emergency-dark);
 }
 
 .mobileLoginBtn {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 14px;
+  gap: var(--space-8);
+  padding: var(--space-14);
   font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-primary);
@@ -830,8 +830,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--space-8);
+  padding: var(--space-12);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -900,10 +900,10 @@
   color: var(--nav-fg-color, var(--white)) !important;
   font-size: var(--font-size-sm);
   font-weight: 500;
-  padding: 8px 4px;
+  padding: var(--space-8) var(--space-4);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   /* Smooth opacity transition */
   transition: opacity var(--duration-slow) var(--ease-spring);
   white-space: nowrap;
@@ -937,7 +937,7 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   margin: 0;
   list-style: none;
 }
@@ -950,10 +950,10 @@
   color: var(--nav-fg-color, var(--white)) !important;
   font-size: var(--font-size-sm);
   font-weight: 500;
-  padding: 8px 4px;
+  padding: var(--space-8) var(--space-4);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   transition: opacity var(--duration-emphasis) var(--ease-spring), transform var(--duration-emphasis) var(--ease-spring);
   white-space: nowrap;
   position: relative;
@@ -984,14 +984,14 @@
 .emergencyBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   cursor: pointer;
   /* Height (and radius) matched to the Login button sitting beside it —
      its own 18px icon is taller than Login's text line, so equal padding
      would not have produced equal buttons. */
   height: 35px;
   box-sizing: border-box;
-  padding: 0 14px;
+  padding: 0 var(--space-14);
   border-radius: 10px;
   text-decoration: none;
   background: rgba(var(--red-emergency-rgb), 0.16);
@@ -1092,8 +1092,8 @@
 .navLocationBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 4px;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-4);
   background: none;
   border: none;
   cursor: pointer;
@@ -1128,15 +1128,15 @@
 .themeTogglePill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px 4px 6px;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-10) var(--space-4) var(--space-6);
   border-radius: var(--radius-full);
   background: rgba(var(--white-rgb), 0.12);
   border: 1px solid rgba(var(--white-rgb), 0.2);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: var(--nav-fg-color, var(--white));
-  font-family: var(--font-inter, "Inter", sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: -0.01em;

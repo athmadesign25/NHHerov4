@@ -15,19 +15,19 @@
   justify-content: center;
   align-items: center;
   background: transparent;
-  padding: 150px 0 56px;
+  padding: 150px 0 var(--space-56);
   box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .titleSection {
-    padding: 110px 0 44px;
+    padding: 110px 0 var(--space-48);
   }
 }
 
 @media (max-width: 640px) {
   .titleSection {
-    padding: 80px 0 32px;
+    padding: var(--space-80) 0 var(--space-32);
   }
 }
 
@@ -42,7 +42,7 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--space-24);
 }
 
 /* ─── Header ────────────────────────────────────────── */
@@ -51,7 +51,7 @@
   z-index: 70;
   text-align: center;
   max-width: 1050px;
-  padding: 0 24px;
+  padding: 0 var(--space-24);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -121,7 +121,7 @@
 
 .columnsContainer {
   display: flex;
-  gap: 16px;
+  gap: var(--space-16);
   width: 100%;
   align-items: flex-start;
   box-sizing: border-box;
@@ -154,7 +154,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-16);
   box-sizing: border-box;
   will-change: transform;
   min-width: 0;
@@ -162,7 +162,7 @@
 
 /* Base Staggered Layout Offsets (Never aligned horizontally) */
 .col0 {
-  padding-top: 0px;
+  padding-top: var(--space-0);
 }
 
 .col1 {
@@ -300,11 +300,11 @@
 .cardTextWrap {
   position: relative;
   z-index: 4;
-  padding: 24px;
+  padding: var(--space-24);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: var(--space-6);
   width: 100%;
 }
 
@@ -312,12 +312,12 @@
 .cardStats {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   margin-bottom: 8px;
 }
 
 .metricValue {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-3xl);
   font-weight: 700;
   color: rgba(var(--white-rgb), 0.7);
@@ -331,7 +331,7 @@
 }
 
 .metricLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.7);
@@ -351,12 +351,12 @@
   /* Push arrow to the far right consistently */
   align-self: stretch;
   /* Force row to span the full width of the card */
-  gap: 8px;
+  gap: var(--space-8);
   width: 100%;
 }
 
 .specialityName {
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: clamp(18px, 1.8vw, 22px);
   font-weight: 700;
   color: var(--color-text-inverse);
@@ -386,7 +386,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--color-text-inverse);
@@ -442,13 +442,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-32);
   border-radius: 8px;
   border: 1.5px solid rgba(var(--white-rgb), 0.5);
   background: rgba(var(--white-rgb), 0.05);
   color: var(--color-text-inverse);
-  font-family: Inter, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 600;
   cursor: pointer;
@@ -467,34 +467,34 @@
 
 @media (max-width: 1024px) {
   .gridSection {
-    padding: 0 16px;
+    padding: 0 var(--space-16);
   }
 
   .columnsContainer {
     flex-wrap: wrap;
-    gap: 16px;
+    gap: var(--space-16);
   }
 
   .columnTrack {
     flex: 0 0 calc(50% - 8px);
-    gap: 16px;
+    gap: var(--space-16);
   }
 
   /* 2-column stagger logic */
   .col0 {
-    padding-top: 0px;
+    padding-top: var(--space-0);
   }
 
   .col1 {
-    padding-top: 60px;
+    padding-top: var(--space-64);
   }
 
   .col2 {
-    padding-top: 0px;
+    padding-top: var(--space-0);
   }
 
   .col3 {
-    padding-top: 60px;
+    padding-top: var(--space-64);
   }
 
   /* Hide stats and Explore text on mobile to reduce clutter */
@@ -529,33 +529,33 @@
 
 @media (max-width: 640px) {
   .gridSection {
-    padding: 0 12px;
+    padding: 0 var(--space-12);
   }
 
   .columnsContainer {
-    gap: 12px;
+    gap: var(--space-12);
   }
 
   .columnTrack {
     flex: 0 0 calc(50% - 6px);
-    gap: 12px;
+    gap: var(--space-12);
   }
 
   /* Tighter stagger on smaller screens */
   .col0 {
-    padding-top: 0px;
+    padding-top: var(--space-0);
   }
 
   .col1 {
-    padding-top: 40px;
+    padding-top: var(--space-40);
   }
 
   .col2 {
-    padding-top: 0px;
+    padding-top: var(--space-0);
   }
 
   .col3 {
-    padding-top: 40px;
+    padding-top: var(--space-40);
   }
 
   .specialityCard {
@@ -564,6 +564,6 @@
   }
 
   .cardTextWrap {
-    padding: 12px;
+    padding: var(--space-12);
   }
 }

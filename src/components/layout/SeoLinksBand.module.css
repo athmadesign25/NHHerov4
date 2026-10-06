@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-8);
   padding: var(--sp-2) 0;
   background: none;
   border: none;
@@ -109,7 +109,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-2);
-  padding: 24px 0;
+  padding: var(--space-24) 0;
   background: none;
   border: none;
   text-align: left;
@@ -161,7 +161,7 @@
 .link {
   display: block;
   min-width: 0;
-  padding: 8px 0;
+  padding: var(--space-8) 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   line-height: var(--leading-body);
@@ -193,10 +193,10 @@
 
 @media (max-width: 768px) {
   .masterToggle {
-    padding: 16px 0;
+    padding: var(--space-16) 0;
   }
   .groupToggle {
-    padding: 18px 0;
+    padding: var(--space-20) 0;
     font-size: var(--font-size-base);
   }
   .linkGrid {
@@ -211,7 +211,7 @@
   }
   /* Comfortable tap targets once the list is a single column. */
   .link {
-    padding: 10px 0;
+    padding: var(--space-10) 0;
   }
 }
 

@@ -15,12 +15,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-6);
   /* Fixed width, not auto: the three labels are different lengths, so an
      auto width gave each one a differently-sized hover plate. Narrower
      than the bar's own inner width, which is what leaves a margin either
      side of the highlight. */
-  padding: 10px 0;
+  padding: var(--space-10) 0;
   width: 86px;
   /* The bar is shorter than its own content while the third slot is still
      closed; without this the tiles would squeeze instead of being clipped. */
@@ -125,7 +125,7 @@
 }
 
 .actionLabel {
-  font-family: var(--font-inter, "Inter"), -apple-system, sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-xs);
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -246,7 +246,7 @@
   right: 24px;
   z-index: 9000;
   width: 98px;
-  padding: 10px 0;
+  padding: var(--space-10) 0;
   border-radius: 20px;
   border: 1px solid rgba(var(--white-rgb), 0.4);
   background: linear-gradient(168deg, rgba(var(--white-rgb), 0.16) 0%, rgba(var(--white-rgb), 0.08) 48%, rgba(var(--white-rgb), 0.12) 100%);
@@ -260,7 +260,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-2);
   box-sizing: border-box;
   overflow: hidden;
   transition: opacity var(--duration-slow) ease, transform var(--duration-moderate) var(--ease-spring);
@@ -318,10 +318,10 @@
   right: 0;
   display: flex;
   width: 259px;
-  padding: 34px 30px;
+  padding: var(--space-32) var(--space-32);
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
+  gap: var(--space-14);
   border-radius: 14px;
   border: 1px solid rgba(225, 216, 216, 0.40);
   background: linear-gradient(180deg, #034EA1 0%, #471F1F 100%);
@@ -333,7 +333,7 @@
 
 .pulseCardTitle {
   color: var(--color-text-inverse);
-  font-family: Geist, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-2xl);
   font-style: normal;
   font-weight: 500;
@@ -345,7 +345,7 @@
 
 .pulseCardSubtitle {
   color: #C1C1C1;
-  font-family: Helvetica, var(--font-sans), sans-serif;
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 400;
@@ -393,7 +393,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: var(--space-4);
   height: 18px;
   filter: drop-shadow(0 0 3px rgba(4, 16, 40, 0.55));
 }
@@ -443,7 +443,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--space-24);
   box-sizing: border-box;
 
 }
@@ -477,8 +477,8 @@
   .link {
     flex: 1;
     flex-direction: row;
-    padding: 8px;
-    gap: 8px;
+    padding: var(--space-8);
+    gap: var(--space-8);
   }
 }
 /* On desktop (>900px), FloatingQuickActions is the 3-button right sidebar.

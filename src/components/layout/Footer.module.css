@@ -9,7 +9,7 @@
 /* Emergency Strip */
 .emergencyStrip {
   background: var(--color-emergency);
-  padding: 10px 0;
+  padding: var(--space-10) 0;
 }
 
 .emergencyInner {
@@ -23,7 +23,7 @@
 .emergencyLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .emergencyDot {
@@ -48,11 +48,11 @@
 .emergencyNumber {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-text-inverse);
-  padding: 4px 14px;
+  padding: var(--space-4) var(--space-14);
   border: 2px solid rgba(var(--white-rgb), 0.4);
   border-radius: var(--radius-full);
   transition: border-color var(--transition-fast);
@@ -91,7 +91,7 @@
 .brandLogo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   margin-left: -18px;
 }
 
@@ -106,13 +106,13 @@
 .contact {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: var(--font-size-sm);
   color: rgba(var(--white-rgb), 0.7);
   transition: color var(--transition-fast);
@@ -124,7 +124,7 @@ a.contactItem:hover {
 
 .socials {
   display: flex;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
@@ -158,7 +158,7 @@ a.contactItem:hover {
 .linkList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .link {
@@ -170,7 +170,7 @@ a.contactItem:hover {
 
 .link:hover {
   color: var(--color-text-inverse);
-  padding-left: 4px;
+  padding-left: var(--space-4);
 }
 
 /* Bottom Bar */
@@ -237,8 +237,8 @@ a.contactItem:hover {
     grid-column: 1 / -1;
   }
   .bottom {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: var(--space-12);
+    padding-right: var(--space-12);
   }
   .bottomInner {
     flex-direction: column;
@@ -257,7 +257,7 @@ a.contactItem:hover {
      rule is later in the file and sets `padding` as a shorthand, so it
      would reset any left/right set earlier. Adds to .container's own 16px. */
   .main {
-    padding: 100px 12px;
+    padding: 100px var(--space-12);
   }
   .brandLogo {
     margin-left: -2px;

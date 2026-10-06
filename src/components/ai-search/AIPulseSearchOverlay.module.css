@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: var(--space-24);
 }
 
 /* ─── Panel ───────────────────────────────────────────────────────────── */
@@ -37,14 +37,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 40px 16px;
+  padding: var(--space-32) var(--space-40) var(--space-16);
   flex-shrink: 0;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .headerLogo {
@@ -93,7 +93,7 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 40px 20px;
+  padding: 0 var(--space-40) var(--space-20);
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--white-rgb), 0.16) transparent;
   display: flex;
@@ -121,7 +121,7 @@
   justify-content: center;
   text-align: center;
   margin: auto 0;
-  padding-bottom: 20px;
+  padding-bottom: var(--space-20);
 }
 
 .welcomeTitle {
@@ -144,7 +144,7 @@
   background: rgba(var(--white-rgb), 0.08);
   border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--color-text-inverse);
-  padding: 8px 18px;
+  padding: var(--space-8) var(--space-20);
   border-radius: 20px;
   font-size: var(--font-size-sm);
   font-weight: 700;
@@ -161,8 +161,8 @@
 .messagesContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px 0;
+  gap: var(--space-16);
+  padding: var(--space-16) 0;
 }
 
 .userMessage {
@@ -172,7 +172,7 @@
   font-size: var(--font-size-base);
   font-weight: 500;
   line-height: var(--leading-body);
-  padding: 10px 16px;
+  padding: var(--space-10) var(--space-16);
   border-radius: 20px 20px 4px 20px;
   max-width: 75%;
   border: 1px solid rgba(var(--white-rgb), 0.08);
@@ -180,7 +180,7 @@
 
 .assistantMessage {
   display: flex;
-  gap: 12px;
+  gap: var(--space-12);
   align-items: flex-start;
   max-width: 100%;
 }
@@ -202,7 +202,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
   min-width: 0;
 }
 
@@ -215,8 +215,8 @@
 /* ─── Typing Dots ─────────────────────────────────────────────────────── */
 .typingDots {
   display: flex;
-  gap: 6px;
-  padding: 8px 4px;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-4);
   align-items: center;
 }
 .typingDots span {
@@ -235,16 +235,16 @@
   background: rgba(var(--violet-600-rgb), 0.08);
   border: 1px solid rgba(var(--violet-600-rgb), 0.2);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--space-16);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .analysisHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   color: var(--violet-400);
   font-size: var(--font-size-xs);
   font-weight: 700;
@@ -255,7 +255,7 @@
 .analysisGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 @media (max-width: 480px) { .analysisGrid { grid-template-columns: 1fr; } }
@@ -277,7 +277,7 @@
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-8);
   margin: 2px 4px 2px 0;
 }
 
@@ -286,10 +286,10 @@
 .analysisRecommendation {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-xs);
   color: var(--slate-400);
-  padding-top: 8px;
+  padding-top: var(--space-8);
   border-top: 1px solid rgba(var(--white-rgb), 0.08);
 }
 .analysisRecommendation strong { color: var(--slate-100); }
@@ -298,7 +298,7 @@
 .doctorResults {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .doctorCard {
@@ -308,8 +308,8 @@
   background: rgba(var(--white-rgb), 0.03);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   border-radius: 20px;
-  padding: 20px;
-  gap: 16px;
+  padding: var(--space-20);
+  gap: var(--space-16);
   transition: all var(--duration-moderate) var(--ease-spring);
   min-height: 200px;
 }
@@ -322,7 +322,7 @@
 
 .doctorCardLeft {
   display: flex;
-  gap: 14px;
+  gap: var(--space-14);
   width: 100%;
   min-width: 0;
 }
@@ -343,14 +343,14 @@
 
 .doctorMeta {
   display: flex;
-  gap: 12px;
+  gap: var(--space-12);
   flex-wrap: wrap;
   margin-top: 4px;
 }
 .doctorMeta span {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   font-size: var(--font-size-xs);
   color: var(--slate-400);
 }
@@ -358,7 +358,7 @@
 .doctorRating {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   margin-top: 4px;
 }
 .doctorRating span { font-size: var(--font-size-xs); color: var(--amber-500); font-weight: 700; }
@@ -369,7 +369,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding-top: 12px;
+  padding-top: var(--space-12);
   border-top: 1px solid rgba(var(--white-rgb), 0.05);
   margin-top: auto;
 }
@@ -384,7 +384,7 @@
   color: var(--slate-900);
   border: none;
   border-radius: 20px;
-  padding: 8px 20px;
+  padding: var(--space-8) var(--space-20);
   font-size: var(--font-size-xs);
   font-weight: 700;
   cursor: pointer;
@@ -394,11 +394,11 @@
 
 /* ─── Input Section ───────────────────────────────────────────────────── */
 .inputSection {
-  padding: 16px 40px 24px;
+  padding: var(--space-16) var(--space-40) var(--space-24);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 /* ─── Chips ───────────────────────────────────────────────────────────── */
@@ -406,14 +406,14 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-12);
   border-radius: 24px;
   border: 1px solid rgba(var(--white-rgb), 0.08);
   background: rgba(var(--white-rgb), 0.03);
@@ -436,8 +436,8 @@
 .featureChip {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-16);
   border-radius: 24px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.16);
@@ -502,8 +502,8 @@
   box-shadow: 0 0 10px rgba(255, 85, 85, 0.2), 0 0 10px rgba(85, 170, 255, 0.2);
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 8px 0 8px;
+  gap: var(--space-14);
+  padding: 0 var(--space-8) 0 var(--space-8);
   transition: all var(--duration-base);
 }
 
@@ -521,7 +521,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: var(--radius-full);
-  padding: 2px;
+  padding: var(--space-2);
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.1) 60%, rgba(255, 85, 85, 0.8) 85%, #55aaff 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -536,7 +536,7 @@
   position: absolute;
   inset: -1.5px;
   border-radius: var(--radius-full);
-  padding: 2px;
+  padding: var(--space-2);
   background: conic-gradient(from var(--border-angle, 0deg), transparent 30%, rgba(255, 85, 85, 0.05) 60%, rgba(255, 85, 85, 0.4) 85%, rgba(85, 170, 255, 0.6) 100%);
   -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
@@ -569,7 +569,7 @@
   position: absolute;
   inset: -2.5px;
   border-radius: 50%;
-  padding: 2px;
+  padding: var(--space-2);
   background: conic-gradient(
     from var(--border-angle, 0deg),
     transparent 20%,
@@ -625,7 +625,7 @@
   color: var(--color-text-inverse);
   font-size: var(--font-size-lg);
   line-height: var(--leading-normal);
-  padding-right: 8px;
+  padding-right: var(--space-8);
   resize: none;
   height: 26px;
   font-family: inherit;
@@ -639,7 +639,7 @@
 .inputActions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   flex-shrink: 0;
 }
 

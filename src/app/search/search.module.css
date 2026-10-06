@@ -1,6 +1,6 @@
 .searchForm {
   display: flex;
-  gap: 12px;
+  gap: var(--space-12);
   width: 100%;
 }
 
@@ -10,7 +10,7 @@
   align-items: center;
   background: var(--color-surface);
   border-radius: 12px;
-  padding: 0 16px;
+  padding: 0 var(--space-16);
   height: 52px;
   box-shadow: var(--elevation-3);
 }
@@ -19,7 +19,7 @@
   display: flex;
   background: var(--color-bg-alt);
   overflow-x: auto;
-  padding-top: 24px;
+  padding-top: var(--space-24);
   padding-bottom: 0;
   border-bottom: none;
   margin-bottom: 24px;
@@ -44,8 +44,8 @@
 
 @media (max-width: 768px) {
   .tabScroll {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: var(--space-16);
+    padding-right: var(--space-16);
   }
 }
 
@@ -77,13 +77,13 @@
 .grid3col {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 @media (max-width: 768px) {
   .searchForm {
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-12);
   }
   
   .locationContainer {
@@ -98,7 +98,7 @@
 
 .doctorsLayout {
   display: grid;
-  gap: 32px;
+  gap: var(--space-32);
   grid-template-columns: 1fr;
   align-items: start;
 }
@@ -113,7 +113,7 @@
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  padding: 24px;
+  padding: var(--space-24);
   position: sticky;
   top: 150px;
   display: none;
@@ -165,7 +165,7 @@
 .checkboxLabel {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   margin-bottom: 10px;
   cursor: pointer;
   font-size: var(--font-size-sm);
@@ -217,7 +217,7 @@
   right: 32px;
   background: linear-gradient(180deg, #F4C430 0%, #C59B0D 100%);
   color: var(--color-text-inverse);
-  padding: 6px 16px;
+  padding: var(--space-6) var(--space-16);
   font-size: var(--font-size-sm);
   font-weight: 700;
   border-radius: 4px;
