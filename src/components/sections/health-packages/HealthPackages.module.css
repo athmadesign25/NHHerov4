@@ -170,7 +170,7 @@
   align-items: center;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 110px var(--space-56) var(--space-56);
+  padding: var(--section-y) var(--space-56) var(--space-56);
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform;

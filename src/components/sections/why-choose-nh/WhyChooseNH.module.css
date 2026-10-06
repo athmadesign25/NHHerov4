@@ -5,14 +5,14 @@
   /* Bottom trimmed well back from the old 120px — stacked with
      AppDownloadBanner's own (already-reduced) top padding, that read as
      too large a white gap between the two sections. */
-  padding: 150px 0 150px 0;
+  padding: var(--section-y) 0 var(--section-y) 0;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 @media (max-width: 1024px) {
   .section {
-    padding: 110px 0 90px 0;
+    padding: var(--section-y) 0 var(--section-y) 0;
   }
 }
 

@@ -15,13 +15,13 @@
   justify-content: center;
   align-items: center;
   background: transparent;
-  padding: 150px 0 var(--space-56);
+  padding: var(--section-y) 0 var(--space-56);
   box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .titleSection {
-    padding: 110px 0 var(--space-48);
+    padding: var(--section-y) 0 var(--space-48);
   }
 }
 

@@ -256,6 +256,25 @@
   --sp-10: var(--space-80);
   --sp-16: var(--space-128);
 
+  /* ── SECTION RHYTHM ───────────────────────────────────────────────────
+     The vertical breathing room above and below a major page section —
+     "y" being the vertical axis. One value, so the page keeps a beat as
+     you scroll instead of each section choosing its own spacing.
+
+     Before this, three steps had been arrived at independently rather
+     than chosen: 150px (CentreOfExcellence, WhyChooseNH), 110px (Health
+     Packages) and 90px (App Download). All now resolve here.
+
+     It steps down at narrower widths because 120px of air either side of
+     every section is overwhelming on a phone — roughly a third of the
+     viewport. The breakpoints match the ones the rest of the app uses.
+
+     NOT covered by this: Footer's 220px. That is the curtain-reveal
+     mechanism, where the footer's own height sets how far the reveal
+     travels and therefore how much of the App Download section stays
+     visible at the end of the page. It is a mechanism, not rhythm. */
+  --section-y: 120px;
+
   /* Layout */
   --max-width: 1240px;
   --nav-height: 72px;
@@ -331,6 +350,13 @@
   --transition-fast: 150ms ease-out;
   --transition-base: 250ms ease-out;
   --transition-slow: 400ms ease-out;
+}
+
+@media (max-width: 1024px) {
+  :root { --section-y: 96px; }
+}
+@media (max-width: 768px) {
+  :root { --section-y: 72px; }
 }
 
 /* ─── ELEVATION RAMP ──────────────────────────────────────────────────────

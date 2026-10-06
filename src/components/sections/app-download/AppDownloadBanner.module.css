@@ -67,7 +67,7 @@
      compounded into a large stretch of empty space before any content
      appeared, reading as "too much white gap" and pushing the sticky
      phone stage's own entrance later than necessary. */
-  padding: 90px clamp(24px, 6vw, 80px) 0;
+  padding: var(--section-y) clamp(24px, 6vw, 80px) 0;
   box-sizing: border-box;
 }
 
