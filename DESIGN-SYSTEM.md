@@ -90,6 +90,27 @@ Size and leading travel together. Pick the leading for the size:
 Rough guide: under 20px → `normal`/`body`/`relaxed`; 20–30px → `snug`;
 30px+ → `tight`.
 
+### Section spacing
+
+Every major section uses one of three steps for its vertical padding. Pick
+one — do not invent a fourth number.
+
+```css
+.specialitySection { padding: var(--section-y) 0; }
+```
+
+| Token | Desktop | Use for |
+|---|---|---|
+| `--section-y-lg` | 160px | A section that should feel like a moment — hero-adjacent, full-bleed feature |
+| `--section-y` | 120px | **The default.** Reach for this unless there is a reason not to |
+| `--section-y-sm` | 60px | Dense or secondary bands — a stats strip, related links, a compact CTA |
+
+They step down together at 1024px and 768px, so the relationship between
+them holds at every width. You do not need to write a media query for it.
+
+For spacing *inside* a section — between cards, rows, labels — use the
+`--space-*` ramp instead.
+
 ### Motion
 
 ```css

@@ -272,8 +272,24 @@
      NOT covered by this: Footer's 220px. That is the curtain-reveal
      mechanism, where the footer's own height sets how far the reveal
      travels and therefore how much of the App Download section stays
-     visible at the end of the page. It is a mechanism, not rhythm. */
+     visible at the end of the page. It is a mechanism, not rhythm.
+
+     Three steps, not one, so a section can be given more or less weight
+     without anyone inventing a fourth number:
+
+       --section-y-lg   a section that should feel like a moment —
+                        a hero-adjacent block, a full-bleed feature
+       --section-y      the default. Reach for this unless there is a
+                        reason not to
+       --section-y-sm   dense or secondary bands — a strip of stats, a
+                        related-links row, a compact CTA
+
+     lg and sm are currently unused: every section on the landing page is
+     on the default. They exist so the Specialities and booking pages have
+     a choice to make rather than a value to invent. */
+  --section-y-lg: 160px;
   --section-y: 120px;
+  --section-y-sm: 60px;
 
   /* Layout */
   --max-width: 1240px;
@@ -352,11 +368,21 @@
   --transition-slow: 400ms ease-out;
 }
 
+/* Section rhythm steps down together, so the relationship between the
+   three holds at every width rather than only on desktop. */
 @media (max-width: 1024px) {
-  :root { --section-y: 96px; }
+  :root {
+    --section-y-lg: 128px;
+    --section-y: 96px;
+    --section-y-sm: 48px;
+  }
 }
 @media (max-width: 768px) {
-  :root { --section-y: 72px; }
+  :root {
+    --section-y-lg: 96px;
+    --section-y: 72px;
+    --section-y-sm: 40px;
+  }
 }
 
 /* ─── ELEVATION RAMP ──────────────────────────────────────────────────────
