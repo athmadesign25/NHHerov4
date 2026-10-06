@@ -190,7 +190,7 @@
   width: 100%;
   cursor: pointer;
   box-sizing: border-box;
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-emphasis) ease;
 }
 
 .specialityCard:hover {
@@ -204,7 +204,7 @@
   height: 100%;
   object-fit: cover;
   filter: brightness(1.05) saturate(85%);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, filter 0.3s ease;
+  transition: transform var(--duration-slower) var(--ease-spring), opacity var(--duration-slow) ease, filter var(--duration-emphasis) ease;
   z-index: 1;
 }
 
@@ -221,7 +221,7 @@
   object-fit: cover;
   opacity: 0;
   filter: brightness(1.05) saturate(85%);
-  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease, transform var(--duration-slower) var(--ease-spring), filter var(--duration-emphasis) ease;
   z-index: 2;
   pointer-events: none;
 }
@@ -241,7 +241,7 @@
       rgba(var(--black-rgb), 0.20) 60%,
       rgba(var(--black-rgb), 0) 100%);
   z-index: 3;
-  transition: background 0.3s ease, opacity 0.3s ease;
+  transition: background var(--duration-emphasis) ease, opacity var(--duration-emphasis) ease;
   pointer-events: none;
 }
 
@@ -290,7 +290,7 @@
   z-index: 3;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease;
 }
 
 .specialityCard:hover::after {
@@ -323,7 +323,7 @@
   color: rgba(var(--white-rgb), 0.7);
   line-height: var(--leading-tight);
   letter-spacing: -0.01em;
-  transition: color 0.3s ease;
+  transition: color var(--duration-emphasis) ease;
 }
 
 .specialityCard:hover .metricValue {
@@ -336,7 +336,7 @@
   font-weight: 400;
   color: rgba(var(--white-rgb), 0.7);
   line-height: var(--leading-snug);
-  transition: color 0.3s ease;
+  transition: color var(--duration-emphasis) ease;
 }
 
 .specialityCard:hover .metricLabel {
@@ -362,14 +362,14 @@
   color: var(--color-text-inverse);
   line-height: var(--leading-tight);
   letter-spacing: -0.01em;
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-emphasis) ease;
 }
 
 .nameArrow {
   color: var(--color-text-inverse);
   opacity: 0;
   transform: translateX(-4px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease, transform var(--duration-emphasis) ease;
   display: none;
   /* Hidden on desktop by default */
   flex-shrink: 0;
@@ -392,7 +392,7 @@
   color: var(--color-text-inverse);
   opacity: 0;
   transform: translateY(10px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-emphasis) var(--ease-spring);
 }
 
 .specialityCard:hover .cardAction {
@@ -411,7 +411,7 @@
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .specialityCard:hover .actionUnderline {
@@ -453,7 +453,7 @@
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, transform var(--duration-base) ease, box-shadow var(--duration-base) ease;
   backdrop-filter: blur(12px);
   box-shadow: var(--elevation-3);
 }

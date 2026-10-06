@@ -401,7 +401,7 @@
   border: 1px solid rgba(100, 120, 150, 0.20);
   background: rgba(var(--white-rgb), 0.35);
   backdrop-filter: blur(16px);
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 /* QR sits stacked (image above label) at the top of the stores column,
@@ -435,7 +435,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
 
   /* Delicate framing to separate from dark background */
   border-radius: 8px;

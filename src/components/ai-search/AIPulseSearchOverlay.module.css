@@ -83,7 +83,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
   flex-shrink: 0;
 }
 .closeBtn:hover { background: rgba(var(--white-rgb), 0.12); color: var(--color-text-inverse); }
@@ -149,7 +149,7 @@
   font-size: var(--font-size-sm);
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-base);
 }
 .loginCta:hover {
   background: rgba(var(--white-rgb), 0.16);
@@ -310,7 +310,7 @@
   border-radius: 20px;
   padding: 20px;
   gap: 16px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-moderate) var(--ease-spring);
   min-height: 200px;
 }
 .doctorCard:hover { 
@@ -388,7 +388,7 @@
   font-size: var(--font-size-xs);
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-base);
 }
 .bookBtn:hover { background: rgba(var(--white-rgb), 0.9); transform: scale(1.03); }
 
@@ -421,7 +421,7 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-moderate) var(--ease-spring);
 }
 .chip:hover {
   background: rgba(var(--white-rgb), 0.08);
@@ -448,7 +448,7 @@
   box-shadow: 
     0 1px 2px rgba(var(--black-rgb), 0.05),
     inset 0 1px 0 rgba(var(--white-rgb), 0.1);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-moderate) var(--ease-spring);
   position: relative;
   overflow: hidden;
 }
@@ -459,7 +459,7 @@
   inset: 0;
   background: linear-gradient(135deg, rgba(var(--blue-500-rgb), 0.1) 0%, rgba(var(--red-500-rgb), 0.08) 50%, rgba(var(--amber-500-rgb), 0.08) 100%);
   opacity: 0.85;
-  transition: opacity 0.25s;
+  transition: opacity var(--duration-moderate);
 }
 
 .featureChip:hover {
@@ -504,7 +504,7 @@
   align-items: center;
   gap: 14px;
   padding: 0 8px 0 8px;
-  transition: all 0.2s;
+  transition: all var(--duration-base);
 }
 
 @property --border-angle {
@@ -653,7 +653,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   flex-shrink: 0;
   color: rgba(var(--white-rgb), 0.8);
 }
@@ -670,7 +670,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--duration-base);
 }
 .sendBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 .sendBtnActive {

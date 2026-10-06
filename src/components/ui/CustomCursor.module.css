@@ -11,7 +11,7 @@
   z-index: 99999;
   will-change: transform;
   mix-blend-mode: multiply;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transition: background var(--duration-moderate) ease, border-color var(--duration-moderate) ease;
 }
 
 .cursorButton {

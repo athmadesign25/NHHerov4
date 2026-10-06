@@ -8,7 +8,7 @@
   border: 1px solid var(--slate-250);
   background: var(--blue-tint-50);
   padding: 12px;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background var(--duration-base), border-color var(--duration-base);
   cursor: pointer;
 }
 .specCard:hover {

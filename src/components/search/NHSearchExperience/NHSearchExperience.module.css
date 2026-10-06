@@ -46,9 +46,9 @@
     0 24px 60px -12px rgba(var(--black-rgb), 0.6),
     0 0 0 1px rgba(var(--white-rgb), 0.05),
     inset 0 1px 2px rgba(var(--white-rgb), 0.16);
-  transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow var(--duration-emphasis) var(--ease-spring),
+              border-color var(--duration-emphasis) var(--ease-spring),
+              background var(--duration-emphasis) var(--ease-spring);
 }
 
 /* ── State 01: Default Landing Search Composer ── */
@@ -66,9 +66,9 @@
     inset 0 1px 1.5px rgba(var(--white-rgb), 0.12);
   position: relative;
   overflow: visible;
-  transition: box-shadow 0.3s ease,
-              border-color 0.3s ease,
-              background 0.3s ease;
+  transition: box-shadow var(--duration-emphasis) ease,
+              border-color var(--duration-emphasis) ease,
+              background var(--duration-emphasis) ease;
 }
 
 /* Moving Motion Gradient Border Outline (NH Red, Pulse Pink, Purple, NH Blue, Pulse Cyan, White) */
@@ -96,7 +96,7 @@
   z-index: 4;
   opacity: 0.25;
   box-sizing: border-box;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease;
 }
 
 /* The rotating conic stroke this box used to carry is now drawn by
@@ -123,7 +123,7 @@
   pointer-events: none;
   z-index: 4;
   opacity: 0.55;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease;
   box-sizing: border-box;
 }
 
@@ -328,7 +328,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.1);
   color: rgba(var(--white-rgb), 0.9);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   user-select: none;
 }
 
@@ -355,7 +355,7 @@
   border: none;
   box-shadow: none;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--duration-base) ease, transform var(--duration-base) ease;
   opacity: 0.9;
 }
 
@@ -411,7 +411,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--slate-400);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-base) var(--ease-spring);
 }
 
 .closeBtn:hover {
@@ -498,7 +498,7 @@
   border: none;
   color: rgba(var(--white-rgb), 0.85);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--duration-base) ease, color var(--duration-base) ease;
   padding: 0;
   margin: 0;
 }
@@ -526,7 +526,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.08);
   color: var(--slate-400);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--duration-base) var(--ease-spring);
 }
 
 .iconControlBtn:hover {
@@ -548,14 +548,14 @@
   border: 1px solid rgba(var(--white-rgb), 0.16);
   color: var(--color-text-inverse);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: background var(--duration-base) ease, transform var(--duration-fast) ease, box-shadow var(--duration-base) ease;
   --shadow-rgb: var(--blue-brand-rgb);
   box-shadow: var(--elevation-1);
 }
 
 .submitArrowBtn svg {
   transform: rotate(90deg);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-base) ease;
 }
 
 .submitArrowBtn:hover {
@@ -590,7 +590,7 @@
   font-size: var(--font-size-sm);
   font-weight: 450;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, color var(--duration-base) ease;
   user-select: none;
 }
 
@@ -672,7 +672,7 @@
   background: rgba(var(--cyan-bright-rgb), 0.05);
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.16);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   width: 100%;
   text-align: left;
 }
@@ -802,7 +802,7 @@
   border: none;
   text-align: left;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
   width: 100%;
 }
 
@@ -828,7 +828,7 @@
   font-size: var(--font-size-sm);
   font-weight: 450;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: background var(--duration-base) ease, color var(--duration-base) ease;
   user-select: none;
 }
 
@@ -845,7 +845,7 @@
 
 .inlineActionIcon {
   color: rgba(var(--white-rgb), 0.8);
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) ease;
 }
 
 .inlineActionBtn:hover .inlineActionIcon {
@@ -867,7 +867,7 @@
   font-size: var(--font-size-sm);
   font-weight: 450;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-base) ease;
   user-select: none;
 }
 
@@ -898,7 +898,7 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   user-select: none;
 }
 
@@ -988,7 +988,7 @@
   letter-spacing: -0.01em;
   pointer-events: auto;
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .ghostSuffix:hover {
@@ -1075,7 +1075,7 @@
   border-radius: var(--radius-full);
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   user-select: none;
 }
 
@@ -1154,7 +1154,7 @@
   text-align: left;
   font-family: inherit;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
   width: 100%;
 }
 
@@ -1251,7 +1251,7 @@
 .resultsQuerySearchIcon {
   color: var(--slate-400);
   flex-shrink: 0;
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) ease;
 }
 
 .resultsQueryLeft:focus-within .resultsQuerySearchIcon {
@@ -1314,7 +1314,7 @@
   cursor: pointer;
   white-space: nowrap;
   box-shadow: 0 2px 10px rgba(var(--blue-brand-rgb), 0.35), 0 0 12px rgba(var(--cyan-bright-rgb), 0.2);
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--duration-base) ease, background var(--duration-base) ease, box-shadow var(--duration-base) ease;
   animation: sendBtnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1347,7 +1347,7 @@
   cursor: pointer;
   padding: 6px 12px;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   flex-shrink: 0;
 }
 
@@ -1384,7 +1384,7 @@
   font-weight: 600;
   color: var(--color-text-inverse);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   white-space: nowrap;
 }
 
@@ -1478,8 +1478,8 @@
   overflow: hidden;
   height: 310px;
   min-height: 310px;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.2s ease;
+  transition: transform var(--duration-base) var(--ease-spring),
+              box-shadow var(--duration-base) ease;
   box-sizing: border-box;
 }
 
@@ -1500,7 +1500,7 @@
   transform: scale(1.35);
   transform-origin: center 25%;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-emphasis) ease;
 }
 
 .refDoctorCard:hover .refDocFullImage {
@@ -1541,7 +1541,7 @@
   justify-content: center;
   color: rgba(var(--white-rgb), 0.85);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   padding: 0;
 }
 
@@ -1710,7 +1710,7 @@
   flex-shrink: 0;
   align-self: flex-end;
   box-shadow: var(--elevation-2);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease, background var(--duration-fast) ease;
   white-space: nowrap;
 }
 
@@ -1736,7 +1736,7 @@
   text-decoration: none;
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background var(--duration-fast) ease, transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
   --shadow-rgb: var(--blue-brand-rgb);
   box-shadow: var(--elevation-1);
 }
@@ -1765,7 +1765,7 @@
   color: var(--sky-400);
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .refViewAllLink:hover {
@@ -1789,7 +1789,7 @@
   -webkit-backdrop-filter: blur(20px);
   box-shadow: var(--elevation-3);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
   margin-top: 14px;
 }
 
@@ -1886,7 +1886,7 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   white-space: nowrap;
 }
 
@@ -1980,7 +1980,7 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .pulseNudgeBtn:hover {
@@ -2082,7 +2082,7 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .pulseExpandedMinimizeBtn:hover {
@@ -2196,7 +2196,7 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
 }
 
 .pulseContextActionBtn:hover {
@@ -2218,7 +2218,7 @@
   font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
 }
 
 .pulseEmergencyActionBtn:hover {
@@ -2296,7 +2296,7 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
   flex-shrink: 0;
 }
 
@@ -2314,7 +2314,7 @@
   border-radius: 10px;
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.16);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
 }
 
 .pulseComposerForm:focus-within {
@@ -2334,7 +2334,7 @@
   border: none;
   color: var(--slate-400);
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .pulseComposerAttachBtn:hover,
@@ -2372,7 +2372,7 @@
   border: 1px solid rgba(var(--cyan-bright-rgb), 0.4);
   color: var(--color-text-inverse);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
 }
 
 .pulseComposerSendBtn:hover:not(:disabled) {
@@ -2424,7 +2424,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 10px;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .pulseCuratedDoctorCard:hover {
@@ -2537,7 +2537,7 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: var(--elevation-1);
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
 }
 
 .pulseCuratedDocBookBtn:hover {
@@ -2563,7 +2563,7 @@
   background: rgba(var(--slate-900-rgb), 0.4);
   border: 1px solid rgba(var(--white-rgb), 0.08);
   overflow: hidden;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-base) ease;
 }
 
 .buriedResultsContainer:hover {
@@ -2583,7 +2583,7 @@
   font-size: var(--font-size-xs);
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background var(--duration-base) ease;
 }
 
 .buriedResultsToggle:hover {
@@ -2621,7 +2621,7 @@
 }
 
 .buriedChevron {
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-base) ease;
 }
 
 .buriedChevronRotated {
@@ -2702,7 +2702,7 @@
   font-size: var(--font-size-xs);
   font-weight: 400;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) ease;
   user-select: none;
 }
 
@@ -2747,7 +2747,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: color 0.15s ease, transform 0.15s ease;
+  transition: color var(--duration-fast) ease, transform var(--duration-fast) ease;
 }
 
 .editorialHeaderViewAll:hover {
@@ -2770,7 +2770,7 @@
   border-bottom: none;
   text-decoration: none;
   border-radius: 6px;
-  transition: background 0.15s ease;
+  transition: background var(--duration-fast) ease;
 }
 
 .editorialItem:hover {
@@ -2799,7 +2799,7 @@
 
 .editorialIconMono {
   color: rgba(var(--white-rgb), 0.4);
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .editorialItem:hover .editorialIconMono {
@@ -2836,7 +2836,7 @@
 .editorialChevron {
   color: rgba(var(--white-rgb), 0.3);
   flex-shrink: 0;
-  transition: transform 0.15s ease, color 0.15s ease;
+  transition: transform var(--duration-fast) ease, color var(--duration-fast) ease;
 }
 
 .editorialItem:hover .editorialChevron {
@@ -2867,7 +2867,7 @@
   font-size: var(--font-size-xs);
   font-weight: 400;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   user-select: none;
 }
 
@@ -3501,7 +3501,7 @@
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-base) ease;
 }
 
 .pulseLottieContainer {
@@ -3576,7 +3576,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   color: var(--color-text-inverse);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .pulseBackBtn:hover {
@@ -3875,7 +3875,7 @@
   overflow: hidden;
   height: 225px;
   min-height: 225px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--duration-base) ease, border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
   box-sizing: border-box;
 }
 
@@ -3994,7 +3994,7 @@
   text-decoration: none;
   flex-shrink: 0;
   box-shadow: var(--elevation-2);
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  transition: transform var(--duration-fast) ease, background var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
   white-space: nowrap;
 }
 
@@ -4017,7 +4017,7 @@
   padding: 6px 8px;
   border-radius: 6px;
   text-decoration: none;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background var(--duration-fast) ease, transform var(--duration-fast) ease;
 }
 
 .pulseBookBtn:hover {
@@ -4042,7 +4042,7 @@
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .pulseDocFavBtn:hover {
@@ -4148,7 +4148,7 @@
   padding: 6px 14px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
   white-space: nowrap;
 }
 
@@ -4175,7 +4175,7 @@
   border: 1px solid rgba(var(--white-rgb), 0.12);
   border-radius: 12px;
   padding: 6px 10px 6px 14px;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color var(--duration-base) ease, background var(--duration-base) ease;
 }
 
 .pulseInputBar:focus-within {
@@ -4192,7 +4192,7 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .pulseInputAttachBtn:hover {
@@ -4223,7 +4223,7 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 
 .pulseMicBtn:hover,
@@ -4242,7 +4242,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background var(--duration-fast) ease, transform var(--duration-fast) ease;
 }
 
 .pulseSendBtn:hover {
@@ -5189,7 +5189,7 @@
   pointer-events: none;
   overflow: visible;
   z-index: 1;
-  transition: opacity 0.4s ease;
+  transition: opacity var(--duration-slow) ease;
 }
 
 .featherWhite {
@@ -5388,7 +5388,7 @@
   text-align: center;
   font-weight: 500;
   line-height: var(--leading-tight);
-  transition: opacity 0.15s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity var(--duration-fast) ease, transform var(--duration-instant) var(--ease-standard);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -5410,7 +5410,7 @@
   flex-shrink: 0;
   border-radius: 8px;
   background: rgba(var(--white-rgb), 0.12);
-  transition: background 0.15s ease;
+  transition: background var(--duration-fast) ease;
 }
 
 .fabDivider {
@@ -5452,7 +5452,7 @@
   text-align: center;
   font-weight: 500;
   line-height: var(--leading-tight);
-  transition: opacity 0.15s ease, transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity var(--duration-fast) ease, transform var(--duration-instant) var(--ease-standard);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -5474,7 +5474,7 @@
   flex-shrink: 0;
   border-radius: 8px;
   background: rgba(var(--white-rgb), 0.12);
-  transition: background 0.15s ease;
+  transition: background var(--duration-fast) ease;
 }
 
 .fabDivider {

@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
   background: var(--navy-900);
-  transition: background 0.6s ease;
+  transition: background var(--duration-slowest) ease;
 }
 
 /* JS drives width/height/border-radius (phase 1 grow-in) and transform:
@@ -338,7 +338,7 @@
   box-sizing: border-box;
   border-radius: 10px;
   transform-origin: bottom center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring), filter var(--duration-emphasis) ease, height var(--duration-slowest) var(--ease-spring);
   will-change: transform, opacity, filter;
   /* "Apple glass" light surface — a bright, high-saturation frosted plate.
      Without the backdrop-filter the video/frame behind is only dimmed by
@@ -439,7 +439,7 @@
    snappy 0.12s that transform gets would otherwise be the only easing
    compared against and read as too abrupt for something this size. */
 .packageCard:hover {
-  transition: transform 0.1s ease-out, filter 0.3s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-instant) ease-out, filter var(--duration-emphasis) ease, height var(--duration-slowest) var(--ease-spring);
 }
 
 .packageCard::after {
@@ -448,7 +448,7 @@
   inset: 0;
   z-index: 1;
   background: rgba(var(--black-rgb), 0);
-  transition: background 0.3s ease;
+  transition: background var(--duration-emphasis) ease;
   pointer-events: none;
 }
 
@@ -476,7 +476,7 @@
 .packageCard:hover::before,
 .packageCard:focus-visible::before {
   transform: translateX(120%);
-  transition: transform 0.6s ease;
+  transition: transform var(--duration-slowest) ease;
 }
 
 /* Width reduced 20% alongside the card (260px -> 208px) to stay in
@@ -498,7 +498,7 @@
   object-position: left center;
   /* Lifts the artwork off the card's own glass a little. */
   filter: drop-shadow(0 6px 16px rgba(var(--slate-900-rgb), 0.20));
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width var(--duration-slowest) var(--ease-spring);
   z-index: 0;
 }
 
@@ -543,7 +543,7 @@
   flex-direction: column;
   gap: 24px;
   box-sizing: border-box;
-  transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-width var(--duration-slowest) var(--ease-spring);
 }
 
 /* Widened on hover — the facts need room to sit side by side, and the
@@ -617,7 +617,7 @@
      title wraps to three lines. Cancelling it here keeps the resting
      layout exactly as it was, and unwinds in step with the reveal. */
   margin-top: -24px;
-  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  transition: grid-template-rows var(--duration-slowest) var(--ease-spring), margin-top var(--duration-slowest) var(--ease-spring), opacity var(--duration-moderate) ease;
 }
 
 .packageCard:hover .packageCardExtras,
@@ -625,7 +625,7 @@
   grid-template-rows: 1fr;
   opacity: 1;
   margin-top: 0;
-  transition: grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease 0.1s;
+  transition: grid-template-rows var(--duration-slowest) var(--ease-spring), margin-top var(--duration-slowest) var(--ease-spring), opacity var(--duration-emphasis) ease var(--duration-instant);
 }
 
 .packageCardExtrasInner {
@@ -661,7 +661,7 @@
   box-shadow: var(--elevation-2);
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease, transform var(--duration-emphasis) ease;
 }
 
 .packageCard:hover .perkPill,
@@ -672,12 +672,12 @@
 
 .packageCard:hover .perkPill:nth-child(1),
 .packageCard:focus-visible .perkPill:nth-child(1) {
-  transition-delay: 0.18s;
+  transition-delay: var(--duration-base);
 }
 
 .packageCard:hover .perkPill:nth-child(2),
 .packageCard:focus-visible .perkPill:nth-child(2) {
-  transition-delay: 0.3s;
+  transition-delay: var(--duration-emphasis);
 }
 
 .perkIcon {
@@ -740,7 +740,7 @@
   font-weight: 600;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-emphasis) var(--ease-spring), transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .packageCard:hover .viewDetailsLink,
@@ -760,7 +760,7 @@
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .packageCard:hover .viewDetailsUnderline,
@@ -790,7 +790,7 @@
   border: 1.5px solid rgba(var(--white-rgb), 0.5);
   background: rgba(var(--white-rgb), 0.05);
   backdrop-filter: blur(12px);
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
   will-change: transform, opacity;
 }
 
@@ -951,7 +951,7 @@
 /* Only a small bump — the direction 1 card's image appeared to grow a lot
    simply because the card itself got taller under it. */
 .packageCardCompact .packageCardImage {
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width var(--duration-slow) var(--ease-spring);
 }
 
 .packageCardCompact:hover .packageCardImage,
@@ -1061,7 +1061,7 @@
   font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .directionToggleBtn:hover {

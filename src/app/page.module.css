@@ -78,7 +78,7 @@
   padding: 0 16px;
   border-radius: 128px;
   border: 1px solid transparent;
-  transition: 0.2s;
+  transition: var(--duration-base);
   cursor: pointer;
   width: fit-content;
   font-weight: 500;
