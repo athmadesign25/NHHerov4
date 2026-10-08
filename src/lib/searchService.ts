@@ -276,16 +276,22 @@ const SPECIALITY_JPEG_MAP: Record<string, string> = {
   "Surgical Gastroenterology": "/Specialities icons/Gastroenterology.jpeg",
 };
 
-// Deterministic pool of male/female doctor photos keyed by entityId
+// Deterministic pool of real male/female doctor photos (No cartoon avatars)
 const MALE_DOCTOR_PHOTOS = [
-  "/assets/doctor_1.png",
-  "/assets/doctor_2.png",
+  "/assets/hero_doctor.png",
+  "/doctors/doc_devi_shetty.jpg",
   "/assets/doctor_3.png",
-  "/images/misc/doctor_avatar_male_v2.png",
+  "/doctors/doc_bagirath.jpg",
+  "/assets/doctor_1.png",
+  "/doctors/doc_vivek.jpg",
+  "/doc2.png",
+  "/doc4.png",
 ];
 const FEMALE_DOCTOR_PHOTOS = [
-  "/images/misc/doctor_avatar_female_v2.png",
-  "/assets/doctor_1.png",
+  "/doctors/doc_ananya.jpg",
+  "/assets/doctor_2.png",
+  "/doc1.png",
+  "/doc3.png",
 ];
 
 function getDoctorPhotoById(doctorName: string, entityId: number): string {

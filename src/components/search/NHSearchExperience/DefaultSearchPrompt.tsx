@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, MotionValue, AnimatePresence } from "framer-motion";
-import { Paperclip, Mic, ArrowRight, User, Heart, X, Square, Pause, FileText, Check, Clock } from "lucide-react";
+import { Paperclip, Mic, ArrowRight, User, Heart, X, Square, Pause, FileText, Check, Clock, CalendarCheck, Activity } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
@@ -109,6 +110,7 @@ export default function DefaultSearchPrompt({
   controlsMarginBottom,
   controlsOverflow,
 }: DefaultSearchPromptProps) {
+  const router = useRouter();
   const isWhite = searchTheme === "white";
 
   // Voice Interaction Machine
@@ -596,6 +598,13 @@ export default function DefaultSearchPrompt({
                   if (e.key === "Enter") {
                     e.preventDefault();
                     handleSendVoice();
+                  } else if (e.key === "Escape") {
+                    handleClearVoice();
+                  }
+                }}
+                onBlur={() => {
+                  if (!transcribedText.trim()) {
+                    setVoiceMode("idle");
                   }
                 }}
                 placeholder="Describe your symptoms..."
@@ -603,28 +612,16 @@ export default function DefaultSearchPrompt({
                 aria-label="Transcribed voice health query"
               />
 
-              <div className={styles.transcribedActions}>
-                {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
+              {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
+                <div className={styles.transcribedActions}>
                   <span 
                     className={styles.transcribedWordLimitError}
                     role="alert"
                   >
                     500 words limit reached
                   </span>
-                )}
-                <span className={styles.transcribedBadge}>
-                  <Mic size={11} /> Voice
-                </span>
-                <button
-                  type="button"
-                  className={styles.transcribedClearBtn}
-                  onClick={handleClearVoice}
-                  title="Clear and re-record"
-                  aria-label="Clear voice input"
-                >
-                  <X size={13} />
-                </button>
-              </div>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -710,6 +707,34 @@ export default function DefaultSearchPrompt({
                 selectedLocation={selectedLocation}
                 onSelectLocation={onSelectLocation}
               />
+
+              {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
+              <button
+                type="button"
+                className={styles.insideActionPill}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/doctors");
+                }}
+                title="Book Doctor Appointment"
+              >
+                <CalendarCheck size={14} className={styles.insideActionIcon} />
+                <span>Book Appointment</span>
+              </button>
+
+              {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
+              <button
+                type="button"
+                className={styles.insideActionPill}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelectActionPill("symptoms");
+                }}
+                title="Book Tests & Health Checkups"
+              >
+                <Activity size={14} className={styles.insideActionIcon} />
+                <span>Book Tests &amp; Checkups</span>
+              </button>
             </div>
 
             {/* Right side controls: splits into Send + Mic */}

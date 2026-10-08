@@ -18,7 +18,7 @@ export default function DoctorCard({ doc, searchQuery = "", onClick }: DoctorCar
     >
       <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", width: "100%" }}>
         <img
-          src={doc.photo || "/images/misc/doctor_avatar_male.png"}
+          src={doc.photo || "/assets/doctor_1.png"}
           alt={doc.name}
           className={styles.doctorPhoto}
         />

@@ -58,47 +58,113 @@ export default function TertiaryResults({
     return <Shield size={15} className={styles.editorialIconMono} />;
   };
 
+  const hasTreatments = displayedTreatments.length > 0;
+  const hasArticles = displayedArticles.length > 0;
+
+  const defaultArticles: ArticleItemData[] = [
+    {
+      id: "a-guide-1",
+      title: "When to seek emergency medical attention",
+      readTime: "4 min read",
+      category: "Emergency Care",
+      iconType: "emergency",
+    },
+    {
+      id: "a-guide-2",
+      title: "Choosing the right specialist for your condition",
+      readTime: "5 min read",
+      category: "Patient Guide",
+      iconType: "document",
+    },
+    {
+      id: "a-guide-3",
+      title: "Annual preventive health checkup packages",
+      readTime: "6 min read",
+      category: "Preventive Care",
+      iconType: "article",
+    },
+  ];
+
+  const effectiveArticles = hasArticles ? displayedArticles : defaultArticles;
+  const effectiveSpecialties = displayedSpecialties.length > 0 
+    ? displayedSpecialties 
+    : ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"];
+
   const treatmentsViewAllHref = `/search?tab=treatments${query ? `&q=${encodeURIComponent(query)}` : ""}`;
   const articlesViewAllHref = `/search?tab=articles${query ? `&q=${encodeURIComponent(query)}` : ""}`;
 
   return (
     <div className={styles.resultsRightCol} aria-label="Supporting discovery and editorial care">
-      {/* 1. Treatments & Procedures Section */}
-      <div className={styles.editorialSection}>
-        <div className={styles.editorialHeadingRow}>
-          <span className={styles.sectionEyebrowTitle}>TREATMENTS & PROCEDURES</span>
-          <Link href={treatmentsViewAllHref} className={styles.editorialHeaderViewAll}>
-            <span>View all</span>
-            <ArrowRight size={11} />
-          </Link>
-        </div>
+      {/* 1. Treatments & Procedures Section (or Emergency Directory if empty) */}
+      {hasTreatments ? (
+        <div className={styles.editorialSection}>
+          <div className={styles.editorialHeadingRow}>
+            <span className={styles.sectionEyebrowTitle}>TREATMENTS &amp; PROCEDURES</span>
+            <Link href={treatmentsViewAllHref} className={styles.editorialHeaderViewAll}>
+              <span>View all</span>
+              <ArrowRight size={11} />
+            </Link>
+          </div>
 
-        <div className={styles.editorialList}>
-          {displayedTreatments.map((t) => (
-            <Link
-              key={t.id}
-              href={`/search?tab=treatments&q=${encodeURIComponent(t.title)}`}
-              className={styles.editorialItem}
-            >
+          <div className={styles.editorialList}>
+            {displayedTreatments.map((t) => (
+              <Link
+                key={t.id}
+                href={`/search?tab=treatments&q=${encodeURIComponent(t.title)}`}
+                className={styles.editorialItem}
+              >
+                <div className={styles.editorialItemLeft}>
+                  <span className={styles.editorialIconBox}>
+                    {renderTreatmentIcon(t.iconType)}
+                  </span>
+                  <div className={styles.editorialMeta}>
+                    <div className={styles.editorialItemTitle}>{t.title}</div>
+                    <div className={styles.editorialItemSub}>{t.subtitle}</div>
+                  </div>
+                </div>
+                <ChevronRight size={14} className={styles.editorialChevron} />
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className={styles.editorialSection}>
+          <div className={styles.editorialHeadingRow}>
+            <span className={styles.sectionEyebrowTitle}>24/7 CARE HELPLINE</span>
+          </div>
+          <div className={styles.editorialList}>
+            <a href="tel:18602080208" className={styles.editorialItem}>
               <div className={styles.editorialItemLeft}>
                 <span className={styles.editorialIconBox}>
-                  {renderTreatmentIcon(t.iconType)}
+                  <AlertCircle size={15} className={styles.editorialIconMono} />
                 </span>
                 <div className={styles.editorialMeta}>
-                  <div className={styles.editorialItemTitle}>{t.title}</div>
-                  <div className={styles.editorialItemSub}>{t.subtitle}</div>
+                  <div className={styles.editorialItemTitle}>Hospital Helpline</div>
+                  <div className={styles.editorialItemSub}>1860 208 0208 • 24x7 Available</div>
                 </div>
               </div>
               <ChevronRight size={14} className={styles.editorialChevron} />
-            </Link>
-          ))}
+            </a>
+            <a href="tel:1062" className={styles.editorialItem}>
+              <div className={styles.editorialItemLeft}>
+                <span className={styles.editorialIconBox}>
+                  <Shield size={15} className={styles.editorialIconMono} />
+                </span>
+                <div className={styles.editorialMeta}>
+                  <div className={styles.editorialItemTitle}>Ambulance Dispatch</div>
+                  <div className={styles.editorialItemSub}>Dial 1062 • Emergency Response</div>
+                </div>
+              </div>
+              <ChevronRight size={14} className={styles.editorialChevron} />
+            </a>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 2. Related Articles Section */}
       <div className={styles.editorialSection}>
         <div className={styles.editorialHeadingRow}>
-          <span className={styles.sectionEyebrowTitle}>RELATED ARTICLES</span>
+          <span className={styles.sectionEyebrowTitle}>RELATED ARTICLES &amp; GUIDANCE</span>
           <Link href={articlesViewAllHref} className={styles.editorialHeaderViewAll}>
             <span>View all</span>
             <ArrowRight size={11} />
@@ -106,7 +172,7 @@ export default function TertiaryResults({
         </div>
 
         <div className={styles.editorialList}>
-          {displayedArticles.map((art, idx) => (
+          {effectiveArticles.map((art, idx) => (
             <Link
               key={art.id}
               href={`/search?tab=articles&q=${encodeURIComponent(art.title)}`}
@@ -130,10 +196,10 @@ export default function TertiaryResults({
       </div>
 
       {/* 3. Related Specialties & Care Section */}
-      {displayedSpecialties.length > 0 && (
+      {effectiveSpecialties.length > 0 && (
         <div className={styles.editorialSection}>
           <div className={styles.editorialHeadingRow}>
-            <span className={styles.sectionEyebrowTitle}>RELATED SPECIALTIES & CARE</span>
+            <span className={styles.sectionEyebrowTitle}>RELATED SPECIALTIES &amp; CARE</span>
             <Link href="/specialities" className={styles.editorialHeaderViewAll}>
               <span>View all</span>
               <ArrowRight size={11} />
@@ -141,7 +207,7 @@ export default function TertiaryResults({
           </div>
 
           <div className={styles.editorialPillsGroup}>
-            {displayedSpecialties.map((spec) => (
+            {effectiveSpecialties.map((spec) => (
               <button
                 key={spec}
                 type="button"

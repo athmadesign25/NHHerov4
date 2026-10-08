@@ -53,7 +53,7 @@ const doctorsData = [
       hospital: "Today, 02:30 PM",
       video: "Today, 10:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,950",
   },
   {
@@ -72,7 +72,7 @@ const doctorsData = [
       hospital: "Tomorrow, 11:00 AM",
       video: "Tomorrow, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,200",
     isExecutive: true,
   },
@@ -92,7 +92,7 @@ const doctorsData = [
       hospital: "Today, 05:30 PM",
       video: "Tomorrow, 09:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,000",
   },
   {
@@ -111,7 +111,7 @@ const doctorsData = [
       hospital: "Tomorrow, 01:00 PM",
       video: "Today, 03:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,000",
   },
   {
@@ -130,7 +130,7 @@ const doctorsData = [
       hospital: "Tue, 10:30 AM",
       video: "Tomorrow, 06:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,800",
   },
   {
@@ -149,7 +149,7 @@ const doctorsData = [
       hospital: "Today, 04:30 PM",
       video: "Today, 07:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹900",
   },
   {
@@ -168,7 +168,7 @@ const doctorsData = [
       hospital: "Tomorrow, 10:00 AM",
       video: "Tomorrow, 04:30 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹800",
   },
   {
@@ -187,7 +187,7 @@ const doctorsData = [
       hospital: "Mon, 11:30 AM",
       video: "Mon, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,500",
     isExecutive: true,
   },
@@ -207,7 +207,7 @@ const doctorsData = [
       hospital: "Today, 02:00 PM",
       video: "26 Jan, 11:00 AM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,500",
   },
   {
@@ -226,7 +226,7 @@ const doctorsData = [
       hospital: "Today, 03:00 PM",
       video: "Today, 05:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,100",
   },
   {
@@ -245,7 +245,7 @@ const doctorsData = [
       hospital: "Tomorrow, 09:30 AM",
       video: "Tomorrow, 12:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,800",
   },
   {
@@ -264,7 +264,7 @@ const doctorsData = [
       hospital: "Today, 02:00 PM",
       video: "Today, 05:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹750",
   },
   {
@@ -283,7 +283,7 @@ const doctorsData = [
       hospital: "Tomorrow, 10:30 AM",
       video: "Tomorrow, 03:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,800",
   },
   {
@@ -302,7 +302,7 @@ const doctorsData = [
       hospital: "Today, 04:00 PM",
       video: "Today, 08:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,200",
   },
   {
@@ -321,7 +321,7 @@ const doctorsData = [
       hospital: "Tue, 09:00 AM",
       video: "Tomorrow, 01:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,000",
   },
   {
@@ -340,7 +340,7 @@ const doctorsData = [
       hospital: "Today, 11:00 AM",
       video: "26 Jan, 10:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹900",
   },
   {
@@ -359,7 +359,7 @@ const doctorsData = [
       hospital: "Today, 12:30 PM",
       video: "Today, 05:30 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,200",
     isExecutive: true,
   },
@@ -379,7 +379,7 @@ const doctorsData = [
       hospital: "Today, 09:00 AM",
       video: "Today, 11:00 AM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,500",
   },
   {
@@ -398,7 +398,7 @@ const doctorsData = [
       hospital: "29 Jan, 10:00 AM",
       video: "29 Jan, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,600",
   },
   {
@@ -417,7 +417,7 @@ const doctorsData = [
       hospital: "Tomorrow, 04:00 PM",
       video: "Tomorrow, 06:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,100",
   },
   {
@@ -436,7 +436,7 @@ const doctorsData = [
       hospital: "Today, 10:00 AM",
       video: "Today, 02:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,000",
   }
 ];

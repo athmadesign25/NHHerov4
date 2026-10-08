@@ -26,6 +26,7 @@ import {
   MAX_SEARCH_WORDS
 } from "./searchData";
 import { analyzePulseIntent } from "./pulseClinicalEngine";
+import { playFemaleEmpatheticVoice } from "./voiceSynthesizer";
 
 /**
  * Formal Search Experience State Machine:
@@ -142,27 +143,27 @@ export default function NHSearchExperience({
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
   const startWidth = isMobile ? Math.min(winSize.w - 32, 600) : (anchorRect?.width || Math.min(840, winSize.w - 48));
-  const startHeight = anchorRect ? (isMobile ? 114 : Math.max(120, anchorRect.height)) : (isMobile ? 114 : 120);
+  const startHeight = anchorRect ? (isMobile ? 114 : Math.max(132, anchorRect.height)) : (isMobile ? 114 : 132);
   const startTop = isMobile 
     ? (winSize.h > 0 ? winSize.h - 36 - startHeight : 500)
     : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
   const startLeft = isMobile ? Math.round((winSize.w - startWidth) / 2) : (anchorRect?.left || Math.round((winSize.w - startWidth) / 2));
 
   // Apple Spotlight Bottom Floating Island Dimensions
-  const bubbleSize = isPhone ? 40 : 46;
+  const bubbleSize = isPhone ? 46 : 46;
   const bubbleGap = isPhone ? 8 : 10;
   const bubblesCount = 3;
-  const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * bubblesCount);
+  const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
   
   const spotlightWidth = isMobile 
-    ? Math.max(160, Math.min(240, winSize.w - 32 - bubblesTotalWidth - 10)) 
+    ? Math.max(130, Math.min(200, winSize.w - 32 - bubblesTotalWidth - bubbleGap)) 
     : 360;
-  const spotlightHeight = isPhone ? 42 : 46;
-  const islandTotalWidth = spotlightWidth + bubblesTotalWidth;
+  const spotlightHeight = isPhone ? 46 : 46;
+  const islandTotalWidth = spotlightWidth + bubbleGap + bubblesTotalWidth;
   const islandLeft = Math.round((winSize.w - islandTotalWidth) / 2);
 
   // Raised above the bottom edge by the height of the compact search for an elevated floating dock
-  const bottomClearance = isMobile ? 32 : 56;
+  const bottomClearance = isMobile ? 38 : 56;
   const targetTop = winSize.h > 0 ? winSize.h - bottomClearance - spotlightHeight : 600;
   const targetLeft = islandLeft;
 
@@ -195,46 +196,47 @@ export default function NHSearchExperience({
     }
   });
 
+  // Intermediate centered pill width & left position (Stage 1)
+  const centerPillWidth = isMobile ? Math.max(240, winSize.w - 32) : 380;
+  const centerPillLeft = Math.round((winSize.w - centerPillWidth) / 2);
+
   // Choreography:
-  // 1. Search bar rapidly minimizes in width & height, rounding into a pill, and glides down to dock
-  const composerTop = useTransform(activeProgress, [0.04, 0.32], [startTop, targetTop]);
-  const composerLeft = useTransform(activeProgress, [0.04, 0.32], [startLeft, targetLeft]);
-  const composerWidth = useTransform(activeProgress, [0.02, 0.26], [startWidth, spotlightWidth]);
-  const composerHeight = useTransform(activeProgress, [0.02, 0.24], [startHeight, spotlightHeight]);
-  const composerRadius = useTransform(activeProgress, [0.02, 0.24], [20, 9999]);
-  const composerPaddingX = useTransform(activeProgress, [0.02, 0.24], [24, 14]);
-  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.24], [22, 0]);
-  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.24], [18, 0]);
+  // Stage 1 (0.02 -> 0.16): Search bar shrinks and glides down to centered position
+  // Stage 2 (0.16 -> 0.30): Centered search bar gets pushed to the left, reduces width, and pops out water-drop bubbles to the right
+  const composerTop = useTransform(activeProgress, [0.04, 0.18, 0.30], [startTop, targetTop, targetTop]);
+  const composerLeft = useTransform(activeProgress, [0.04, 0.16, 0.30], [startLeft, centerPillLeft, targetLeft]);
+  const composerWidth = useTransform(activeProgress, [0.02, 0.16, 0.30], [startWidth, centerPillWidth, spotlightWidth]);
+  const composerHeight = useTransform(activeProgress, [0.02, 0.16], [startHeight, spotlightHeight]);
+  const composerRadius = useTransform(activeProgress, [0.02, 0.16], [20, 9999]);
+  const composerPaddingX = useTransform(activeProgress, [0.02, 0.16], [22, 14]);
+  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.16], [18, 0]);
+  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.16], [12, 0]);
 
   // Content cross-fades inside Search Bar
   const promptOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
-  const spotlightOpacity = useTransform(activeProgress, [0.12, 0.24], [0, 1]);
+  const spotlightOpacity = useTransform(activeProgress, [0.12, 0.22], [0, 1]);
 
-  // 2. Button 1: "Book Appointment" physically morphs into Bubble 1
-  const btn1Top = useTransform(activeProgress, [0.04, 0.32], [heroBtnTop, targetTop]);
-  const btn1Left = useTransform(activeProgress, [0.04, 0.32], [heroBtn1Left, dockBtn1Left]);
-  const btn1Width = useTransform(activeProgress, [0.04, 0.24], [heroBtn1Width, bubbleSize]);
-  const btn1Height = useTransform(activeProgress, [0.04, 0.24], [heroBtnHeight, spotlightHeight]);
-  const btn1Radius = useTransform(activeProgress, [0.04, 0.24], [heroBtnRadius, 9999]);
-  const btn1TextOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
-  const btn1TextWidth = useTransform(activeProgress, [0.02, 0.14], [130, 0]);
-  const btn1TextMargin = useTransform(activeProgress, [0.02, 0.14], [8, 0]);
-  const btn1PaddingX = useTransform(activeProgress, [0.04, 0.24], [16, 0]);
+  // 2. WATER-DROP BUBBLE EJECTION (Stage 2: 0.16 -> 0.36):
+  // Origin: As search bar shifts left from centerPillLeft, bubbles emerge from its right edge!
+  const splitStartLeft = centerPillLeft + centerPillWidth - 10;
 
-  // 3. Button 2: "Book Tests & Checkups" physically morphs into Bubble 2
-  const btn2Top = useTransform(activeProgress, [0.04, 0.32], [heroBtnTop, targetTop]);
-  const btn2Left = useTransform(activeProgress, [0.04, 0.32], [heroBtn2Left, dockBtn2Left]);
-  const btn2Width = useTransform(activeProgress, [0.04, 0.24], [heroBtn2Width, bubbleSize]);
-  const btn2Height = useTransform(activeProgress, [0.04, 0.24], [heroBtnHeight, spotlightHeight]);
-  const btn2Radius = useTransform(activeProgress, [0.04, 0.24], [heroBtnRadius, 9999]);
-  const btn2TextOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
-  const btn2TextWidth = useTransform(activeProgress, [0.02, 0.14], [168, 0]);
-  const btn2TextMargin = useTransform(activeProgress, [0.02, 0.14], [8, 0]);
-  const btn2PaddingX = useTransform(activeProgress, [0.04, 0.24], [16, 0]);
+  // Water-Bubble 1 (Book Appointment): Ejects out as search pill gets pushed left
+  const btn1Top = useTransform(activeProgress, [0.16, 0.28], [targetTop, targetTop]);
+  const btn1Left = useTransform(activeProgress, [0.16, 0.28], [splitStartLeft, dockBtn1Left]);
+  const btn1Opacity = useTransform(activeProgress, [0.16, 0.22], [0, 1]);
+  const btn1Scale = useTransform(activeProgress, [0.16, 0.24, 0.30], [0.15, 1.25, 1.0]);
 
-  // 4. Bubble 3 (QR Code App Download): scales and fades into position beside Bubble 2 as they dock
-  const btn3Opacity = useTransform(activeProgress, [0.18, 0.32], [0, 1]);
-  const btn3Scale = useTransform(activeProgress, [0.18, 0.32], [0.4, 1.0]);
+  // Water-Bubble 2 (Book Tests & Checkups): Ejects right after Bubble 1
+  const btn2Top = useTransform(activeProgress, [0.20, 0.32], [targetTop, targetTop]);
+  const btn2Left = useTransform(activeProgress, [0.20, 0.32], [splitStartLeft, dockBtn2Left]);
+  const btn2Opacity = useTransform(activeProgress, [0.20, 0.26], [0, 1]);
+  const btn2Scale = useTransform(activeProgress, [0.20, 0.28, 0.34], [0.15, 1.25, 1.0]);
+
+  // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2
+  const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
+  const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
+  const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
+  const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
 
   // Secondary buttons and prompt cross-fades
   const controlsOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
@@ -505,7 +507,7 @@ export default function NHSearchExperience({
     setSearchState("results");
   };
 
-  // Voice Submit: Directly opens Pulse AI clinical intelligence in the result view
+  // Voice Submit: Triggers analyzing screen, speaks "Getting you the right care" female voice, then populates results
   const handleVoiceSubmit = async (transcript: string) => {
     captureOrigin();
     const currentScroll = typeof window !== "undefined"
@@ -518,10 +520,21 @@ export default function NHSearchExperience({
     setQuery(targetQuery);
     setPulseInitialQuery(targetQuery);
 
-    // Concurrently fetch matching doctors for this clinical symptom
+    // Step 1: Transition into analyzing screen
+    setSearchState("skeleton");
+    onOpenChange?.(true);
+
+    // Step 2: Speak warm female empathetic audio voice: "Getting you the right care"
+    playFemaleEmpatheticVoice("Getting you the right care");
+
+    // Step 3: Concurrently fetch matching doctors and hold analyzing screen until voice audio completes (~1900ms)
     try {
       const triage = analyzePulseIntent(targetQuery, [], selectedLocation);
-      const matchedResults = await getSearchResults(triage.searchQueryForApi || targetQuery, selectedLocation);
+      const [matchedResults] = await Promise.all([
+        getSearchResults(triage.searchQueryForApi || targetQuery, selectedLocation),
+        new Promise((resolve) => setTimeout(resolve, 1950)),
+      ]);
+
       if (matchedResults && matchedResults.doctors.length > 0) {
         setResultsData(matchedResults);
       }
@@ -529,9 +542,8 @@ export default function NHSearchExperience({
       console.warn("Failed fetching voice matching results:", e);
     }
 
-    // Directly open Pulse AI in the results page with smooth spring transition
+    // Step 4: After voice output finishes, populate the results!
     setSearchState("pulse");
-    onOpenChange?.(true);
   };
 
   // Document Submit: Directly opens Pulse AI to understand and explain attached health report
@@ -808,20 +820,20 @@ export default function NHSearchExperience({
       {/* ── Unified Morphing Action Buttons (Hero Pill Buttons -> Docked Circular Bubbles) ── */}
       {hasScroll && searchState === "landing" && (
         <>
-          {/* Button 1: Book Appointment -> Morphs into Docked Bubble 1 */}
+          {/* Water-Bubble 1: Book Appointment -> Ejects out into Docked Bubble 1 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
             style={{
               position: "fixed",
               top: btn1Top,
               left: btn1Left,
-              width: btn1Width,
-              height: btn1Height,
-              borderRadius: btn1Radius,
-              paddingLeft: btn1PaddingX,
-              paddingRight: btn1PaddingX,
-              pointerEvents: "auto",
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn1Opacity,
+              scale: btn1Scale,
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
               zIndex: 9990,
             }}
             onClick={(e) => {
@@ -833,33 +845,24 @@ export default function NHSearchExperience({
             <div className={styles.morphingActionIcon}>
               <CalendarCheck size={18} strokeWidth={2.0} />
             </div>
-            <motion.span
-              className={styles.morphingActionText}
-              style={{
-                opacity: btn1TextOpacity,
-                width: btn1TextWidth,
-                marginLeft: btn1TextMargin,
-              }}
-            >
-              Book Appointment
-            </motion.span>
             <span className={styles.bubbleTooltip}>Book Appointment</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>Book Appt</span>}
           </motion.button>
 
-          {/* Button 2: Book Tests & Checkups -> Morphs into Docked Bubble 2 */}
+          {/* Water-Bubble 2: Book Tests & Checkups -> Ejects out into Docked Bubble 2 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
             style={{
               position: "fixed",
               top: btn2Top,
               left: btn2Left,
-              width: btn2Width,
-              height: btn2Height,
-              borderRadius: btn2Radius,
-              paddingLeft: btn2PaddingX,
-              paddingRight: btn2PaddingX,
-              pointerEvents: "auto",
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn2Opacity,
+              scale: btn2Scale,
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
               zIndex: 9990,
             }}
             onClick={(e) => {
@@ -874,33 +877,24 @@ export default function NHSearchExperience({
             <div className={styles.morphingActionIcon}>
               <Activity size={18} strokeWidth={2.0} />
             </div>
-            <motion.span
-              className={styles.morphingActionText}
-              style={{
-                opacity: btn2TextOpacity,
-                width: btn2TextWidth,
-                marginLeft: btn2TextMargin,
-              }}
-            >
-              Book Tests & Checkups
-            </motion.span>
             <span className={styles.bubbleTooltip}>Book Tests & Checkups</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>Book Tests</span>}
           </motion.button>
 
-          {/* Bubble 3: QR Code App Download -> Scales in beside Bubble 2 as they dock */}
+          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${styles.morphingActionBtnDocked} ${isQrOpen ? styles.qrBubbleActive : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
             style={{
               position: "fixed",
-              top: targetTop,
-              left: dockBtn3Left,
+              top: btn3Top,
+              left: btn3Left,
               width: bubbleSize,
               height: spotlightHeight,
               borderRadius: 9999,
               opacity: btn3Opacity,
               scale: btn3Scale,
-              pointerEvents: isDocked ? "auto" : "none",
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
               zIndex: 9990,
             }}
             onClick={(e) => {
@@ -913,6 +907,7 @@ export default function NHSearchExperience({
               <QrCode size={19} strokeWidth={2.2} />
             </div>
             <span className={styles.bubbleTooltip}>Download NH Care App</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>NH App</span>}
           </motion.button>
         </>
       )}
@@ -985,41 +980,7 @@ export default function NHSearchExperience({
         )}
       </AnimatePresence>
 
-      {/* Fallback Google-style quick action buttons below search box (when no scroll is active or on initial SSR) */}
-      {!hasScroll && searchState === "landing" && (
-        <div className={styles.outsideActionRow}>
-          <button
-            type="button"
-            className={styles.outsideActionCard}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push("/doctors");
-            }}
-          >
-            <div className={`${styles.outsideActionIconWrap} ${styles.outsideDoctorIconWrap}`}>
-              <CalendarCheck size={17} className={styles.outsideDoctorIcon} strokeWidth={2.2} />
-            </div>
-            <span className={styles.outsideActionTitle}>Book Appointment</span>
-          </button>
 
-          <button
-            type="button"
-            className={styles.outsideActionCard}
-            onClick={(e) => {
-              e.stopPropagation();
-              captureOrigin();
-              setActivePill("symptoms");
-              setSearchState("active");
-              setQuery("Book health checkup and lab tests");
-            }}
-          >
-            <div className={`${styles.outsideActionIconWrap} ${styles.outsideSymptomsIconWrap}`}>
-              <Activity size={17} className={styles.outsideSymptomsIcon} strokeWidth={2.2} />
-            </div>
-            <span className={styles.outsideActionTitle}>Book Tests & Checkups</span>
-          </button>
-        </div>
-      )}
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}

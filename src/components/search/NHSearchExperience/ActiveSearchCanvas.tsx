@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { 
   Paperclip, Mic, ArrowRight, X, 
   User, Heart, Sparkles, CornerDownLeft, Command,
-  Activity, Bone, Brain
+  Activity, Bone, Brain, AlertCircle, Stethoscope, SearchX
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
@@ -94,7 +94,9 @@ export default function ActiveSearchCanvas({
     query.trim().toLowerCase() === "k" || 
     query.trim().toLowerCase() === "kn" || 
     query.trim().toLowerCase() === "knee" || 
-    query.trim().toLowerCase().startsWith("knee p");
+    query.trim().toLowerCase().startsWith("knee p") ||
+    query.trim().toLowerCase().startsWith("xy") ||
+    query.trim().toLowerCase().startsWith("xz");
 
   const prediction = isHardcodedScenario 
     ? (localPrediction || livePrediction)
@@ -338,41 +340,93 @@ export default function ActiveSearchCanvas({
       {/* ── LIVE PREDICTIVE SECTION (When user types any character) ── */}
       {prediction && (
         <div className={styles.suggestionsSection}>
-          <div className={styles.suggestionsHeaderRow}>
-            <span className={styles.suggestionsHeader}>Suggested predictions</span>
-          </div>
-
-          {prediction.suggestions.length > 0 && (
-            <div className={styles.suggestionsList} role="listbox">
-              {prediction.suggestions.slice(0, 4).map((sug, idx) => (
-                <button
-                  key={sug}
-                  type="button"
-                  className={`${styles.suggestionItem} ${
-                    selectedSugIndex === idx ? styles.suggestionItemActive : ""
-                  }`}
-                  onClick={() => onSubmit(sug)}
-                  onMouseEnter={() => setSelectedSugIndex(idx)}
-                  role="option"
-                  aria-selected={selectedSugIndex === idx}
-                >
-                  <ArrowRight size={14} className={styles.suggestionArrow} />
-                  <span className={styles.suggestionText}>
-                    {sug}
-                  </span>
-                  <span className={styles.pressEnterHint}>
-                    <CornerDownLeft size={12} />
-                  </span>
-                </button>
-              ))}
+          {prediction.status === "error" ? (
+            <div className={styles.predictiveErrorTray}>
+              <div className={styles.predictiveErrorHeader}>
+                <AlertCircle size={15} className={styles.predictiveAlertIcon} />
+                <span>Directory connection issue</span>
+              </div>
+              <p className={styles.predictiveTrayTip}>
+                Press <strong>Enter ↵</strong> to search, or tap a primary department below:
+              </p>
+              <div className={styles.predictiveTrayChipsRow}>
+                {["Cardiology", "Orthopaedics", "Neurology", "General Medicine"].map((spec) => (
+                  <button
+                    key={spec}
+                    type="button"
+                    className={styles.predictiveTrayChip}
+                    onClick={() => {
+                      onQueryChange(spec);
+                      onSubmit(spec);
+                    }}
+                  >
+                    {spec}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
+          ) : prediction.status === "empty" || prediction.suggestions.length === 0 ? (
+            <div className={styles.predictiveEmptyTray}>
+              <div className={styles.predictiveEmptyHeader}>
+                <Sparkles size={14} className={styles.sparkleIcon} />
+                <span>No suggestions for &ldquo;{query}&rdquo;</span>
+              </div>
+              <p className={styles.predictiveTrayTip}>
+                Press <strong>Enter ↵</strong> to search full directory, or choose a department:
+              </p>
+              <div className={styles.predictiveTrayChipsRow}>
+                {["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology"].map((spec) => (
+                  <button
+                    key={spec}
+                    type="button"
+                    className={styles.predictiveTrayChip}
+                    onClick={() => {
+                      onQueryChange(spec);
+                      onSubmit(spec);
+                    }}
+                  >
+                    {spec}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={styles.suggestionsHeaderRow}>
+                <span className={styles.suggestionsHeader}>Suggested predictions</span>
+              </div>
 
-          {/* Pulse AI Status */}
-          <div className={styles.pulseStatusRow}>
-            <span className={styles.sparkleIcon}>✦</span>
-            <span>Pulse understands what you&apos;re trying to say</span>
-          </div>
+              <div className={styles.suggestionsList} role="listbox">
+                {prediction.suggestions.slice(0, 4).map((sug, idx) => (
+                  <button
+                    key={sug}
+                    type="button"
+                    className={`${styles.suggestionItem} ${
+                      selectedSugIndex === idx ? styles.suggestionItemActive : ""
+                    }`}
+                    onClick={() => onSubmit(sug)}
+                    onMouseEnter={() => setSelectedSugIndex(idx)}
+                    role="option"
+                    aria-selected={selectedSugIndex === idx}
+                  >
+                    <ArrowRight size={14} className={styles.suggestionArrow} />
+                    <span className={styles.suggestionText}>
+                      {sug}
+                    </span>
+                    <span className={styles.pressEnterHint}>
+                      <CornerDownLeft size={12} />
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Pulse AI Status */}
+              <div className={styles.pulseStatusRow}>
+                <span className={styles.sparkleIcon}>✦</span>
+                <span>Pulse understands what you&apos;re trying to say</span>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

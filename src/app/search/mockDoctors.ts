@@ -15,7 +15,7 @@ export const searchDoctorsData = [
       hospital: "Today, 02:30 PM",
       video: "Today, 10:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,950",
   },
   {
@@ -34,7 +34,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 11:00 AM",
       video: "Tomorrow, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,200",
     isExecutive: true,
   },
@@ -54,7 +54,7 @@ export const searchDoctorsData = [
       hospital: "Today, 05:30 PM",
       video: "Tomorrow, 09:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,000",
   },
   {
@@ -73,7 +73,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 01:00 PM",
       video: "Today, 03:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,000",
   },
   {
@@ -92,7 +92,7 @@ export const searchDoctorsData = [
       hospital: "Tue, 10:30 AM",
       video: "Tomorrow, 06:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,800",
   },
   {
@@ -111,7 +111,7 @@ export const searchDoctorsData = [
       hospital: "Today, 04:30 PM",
       video: "Today, 07:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹900",
   },
   {
@@ -130,7 +130,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 10:00 AM",
       video: "Tomorrow, 04:30 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹800",
   },
   {
@@ -149,7 +149,7 @@ export const searchDoctorsData = [
       hospital: "Mon, 11:30 AM",
       video: "Mon, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,500",
     isExecutive: true,
   },
@@ -169,7 +169,7 @@ export const searchDoctorsData = [
       hospital: "Today, 02:00 PM",
       video: "26 Jan, 11:00 AM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,500",
   },
   {
@@ -188,7 +188,7 @@ export const searchDoctorsData = [
       hospital: "Today, 03:00 PM",
       video: "Today, 05:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,100",
   },
   {
@@ -207,7 +207,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 09:30 AM",
       video: "Tomorrow, 12:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,800",
   },
   {
@@ -226,7 +226,7 @@ export const searchDoctorsData = [
       hospital: "Today, 02:00 PM",
       video: "Today, 05:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹750",
   },
   {
@@ -245,7 +245,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 10:30 AM",
       video: "Tomorrow, 03:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,800",
   },
   {
@@ -264,7 +264,7 @@ export const searchDoctorsData = [
       hospital: "Today, 04:00 PM",
       video: "Today, 08:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,200",
   },
   {
@@ -283,7 +283,7 @@ export const searchDoctorsData = [
       hospital: "Tue, 09:00 AM",
       video: "Tomorrow, 01:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,000",
   },
   {
@@ -302,7 +302,7 @@ export const searchDoctorsData = [
       hospital: "Today, 11:00 AM",
       video: "26 Jan, 10:00 AM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹900",
   },
   {
@@ -321,7 +321,7 @@ export const searchDoctorsData = [
       hospital: "Today, 12:30 PM",
       video: "Today, 05:30 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹2,200",
     isExecutive: true,
   },
@@ -341,7 +341,7 @@ export const searchDoctorsData = [
       hospital: "Today, 09:00 AM",
       video: "Today, 11:00 AM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,500",
   },
   {
@@ -360,7 +360,7 @@ export const searchDoctorsData = [
       hospital: "29 Jan, 10:00 AM",
       video: "29 Jan, 04:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,600",
   },
   {
@@ -379,7 +379,7 @@ export const searchDoctorsData = [
       hospital: "Tomorrow, 04:00 PM",
       video: "Tomorrow, 06:00 PM"
     },
-    img: "/images/misc/doctor_avatar_female_v2.png",
+    img: "/doctors/doc_ananya.jpg",
     fee: "₹1,100",
   },
   {
@@ -398,7 +398,7 @@ export const searchDoctorsData = [
       hospital: "Today, 10:00 AM",
       video: "Today, 02:00 PM"
     },
-    img: "/images/misc/doctor_avatar_male_v2.png",
+    img: "/assets/hero_doctor.png",
     fee: "₹1,000",
   }
 ];
