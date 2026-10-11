@@ -386,7 +386,7 @@ export default function InlinePulseAICard({
                             alt={doc.name}
                             className={styles.pulseCuratedDocAvatar}
                             onError={(e) => {
-                              (e.target as HTMLImageElement).src = "/images/misc/doctor_avatar_male.png";
+                              (e.target as HTMLImageElement).src = "/assets/doctor_1.png";
                             }}
                           />
                           <div className={styles.pulseCuratedDocMeta}>

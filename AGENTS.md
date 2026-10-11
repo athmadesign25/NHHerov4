@@ -34,7 +34,7 @@ This is a **Narayana Health (NH) hospital website redesign** built with Next.js 
 Node.js is NOT installed globally on this machine. Use the portable installation:
 
 ```bash
-export PATH="/Users/a919418/Downloads/NH Website Redesign Concept 2/nh-website/node-v20.18.0-darwin-x64/bin:$PATH"
+export PATH="/Users/a374590/Desktop/NH website main/.node-portable/bin:$PATH"
 ```
 
 Always prefix commands with this PATH export before running `npm`, `node`, or `npx`.

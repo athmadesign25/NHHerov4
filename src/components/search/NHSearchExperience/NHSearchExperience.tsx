@@ -1,27 +1,32 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, animate, MotionValue } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { Search, X, CalendarCheck, Activity, QrCode, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
-import calendarCheckAnimation from "../../../../public/assets/calendar-check.json";
-import nhAppIconAnimation from "../../../../public/assets/nh-app-icon.json";
 import styles from "./NHSearchExperience.module.css";
 import DefaultSearchPrompt from "./DefaultSearchPrompt";
-import { searchDockProgress } from "./dockProgress";
 import ActiveSearchCanvas from "./ActiveSearchCanvas";
 import SearchResultsCanvas from "./SearchResultsCanvas";
 import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
-import LiquidMetalEdge from "@/components/ui/LiquidMetalEdge";
+import AnimatedGradientWaves from "./AnimatedGradientWaves";
 import { 
   getSearchResults, 
   SearchResultsData, 
-  CARDIOLOGY_RESULTS 
+  CARDIOLOGY_RESULTS,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
 } from "./searchData";
+import { analyzePulseIntent } from "./pulseClinicalEngine";
+import { playFemaleEmpatheticVoice } from "./voiceSynthesizer";
 
 /**
  * Formal Search Experience State Machine:
@@ -70,7 +75,7 @@ export default function NHSearchExperience({
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
 
   // Search Experience Theme: "dark" (default) or "white" (simulated Figma experience)
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("white");
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
 
   useEffect(() => {
     // Check initial search theme from localStorage or data-search-theme attribute
@@ -104,335 +109,240 @@ export default function NHSearchExperience({
   }, []);
 
   const isMobile = winSize.w <= 900;
+  const router = useRouter();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
+  const [isQrOpen, setIsQrOpen] = useState(false);
+
+  // Close QR code popover when clicking outside
+  useEffect(() => {
+    if (!isQrOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(`.${styles.qrPopoverCard}`) && !target.closest(`.${styles.morphingActionBtn}`) && !target.closest(`.${styles.islandBubble}`)) {
+        setIsQrOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => window.removeEventListener("mousedown", handleClickOutside);
+  }, [isQrOpen]);
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
   const defaultProgress = useMotionValue(0);
   const baseProgress = scrollProgress || defaultProgress;
+
+  // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
+  // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
   const activeProgress = isMobile ? fastMobileProgress : baseProgress;
 
   // Starting dimensions (Hero anchor)
-  const startWidth = anchorRect?.width || Math.min(840, winSize.w - 48);
-  const startHeight = anchorRect ? (isMobile ? 130 : anchorRect.height) : (isMobile ? 130 : 136);
+  const isPhone = winSize.w <= 640;
+  const startWidth = isMobile ? Math.min(winSize.w - 32, 600) : (anchorRect?.width || Math.min(840, winSize.w - 48));
+  const startHeight = anchorRect ? (isMobile ? 114 : Math.max(132, anchorRect.height)) : (isMobile ? 114 : 132);
   const startTop = isMobile 
     ? (winSize.h > 0 ? winSize.h - 36 - startHeight : 500)
     : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
-  const startLeft = anchorRect?.left || Math.round((winSize.w - startWidth) / 2);
+  const startLeft = isMobile ? Math.round((winSize.w - startWidth) / 2) : (anchorRect?.left || Math.round((winSize.w - startWidth) / 2));
 
-  // Minimized search card size
-  const compactWidth = isMobile ? winSize.w - 32 : 100;
-  const compactHeight = isMobile ? 80 : 100;
-  const compactRadius = 18;
+  // Apple Spotlight Bottom Floating Island Dimensions
+  const bubbleSize = isPhone ? 46 : 46;
+  const bubbleGap = isPhone ? 8 : 10;
+  const bubblesCount = 3;
+  const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
+  
+  const spotlightWidth = isMobile 
+    ? Math.max(130, Math.min(200, winSize.w - 32 - bubblesTotalWidth - bubbleGap)) 
+    : 360;
+  const spotlightHeight = isPhone ? 46 : 46;
+  const islandTotalWidth = spotlightWidth + bubbleGap + bubblesTotalWidth;
+  const islandLeft = Math.round((winSize.w - islandTotalWidth) / 2);
 
-  const squareLeft = Math.round((winSize.w - compactWidth) / 2);
-  const squareTopInPlace = Math.round(startTop + (startHeight - compactHeight) / 2);
+  // Raised above the bottom edge by the height of the compact search for an elevated floating dock
+  const bottomClearance = isMobile ? 38 : 56;
+  const targetTop = winSize.h > 0 ? winSize.h - bottomClearance - spotlightHeight : 600;
+  const targetLeft = islandLeft;
 
-  // Where the composer is actually going: the floating bar's own Pulse
-  // tile, measured rather than computed. The old arithmetic here assumed
-  // the bar was positioned from the composer (top: squareTopInPlace - 202),
-  // but the bar is simply centred in the viewport — so the composer was
-  // landing ~250px below the slot it was supposed to be entering, which is
-  // why the handoff could only ever be a cross-fade.
-  const [pulseTarget, setPulseTarget] = useState<{
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-  } | null>(null);
+  // Hero Outside Buttons Dimensions & Starting Coordinates
+  const heroBtn1Width = isPhone ? 156 : 180;
+  const heroBtn2Width = isPhone ? 188 : 218;
+  const heroBtnGap = isPhone ? 8 : 12;
+  const heroRowWidth = heroBtn1Width + heroBtnGap + heroBtn2Width;
+  const heroRowLeft = Math.round(startLeft + (startWidth - heroRowWidth) / 2);
 
-  useEffect(() => {
-    const measure = () => {
-      const el = document.getElementById("floating-pulse-target");
-      const container = document.querySelector(
-        ".global-floating-quick-actions"
-      ) as HTMLElement | null;
-      if (!el || !container) return;
+  const heroBtn1Left = heroRowLeft;
+  const heroBtn2Left = heroRowLeft + heroBtn1Width + heroBtnGap;
+  const heroBtnTop = startTop + startHeight + 14;
+  const heroBtnHeight = isPhone ? 38 : 40;
+  const heroBtnRadius = 12;
 
-      // The bar is parked off-screen by a transform until it is shown, and
-      // sits short-and-raised until its third slot has opened — both are
-      // forced to their final state here, so what gets measured is where
-      // the tile ends up rather than where it currently is.
-      const originalTransform = container.style.transform;
-      const originalTransition = container.style.transition;
-      const originalMarginTop = container.style.marginTop;
-      const originalHeight = container.style.height;
-      container.style.transition = "none";
-      container.style.transform =
-        window.innerWidth < 900 ? "translateY(0)" : "translateY(-50%) translateX(0)";
-      container.style.marginTop = "0px";
-      container.style.height = "auto";
-
-      const rect = el.getBoundingClientRect();
-      if (rect.height > 0) {
-        setPulseTarget({
-          top: Math.round(rect.top),
-          left: Math.round(rect.left),
-          width: Math.round(rect.width),
-          height: Math.round(rect.height),
-        });
-      }
-
-      container.style.transform = originalTransform;
-      container.style.marginTop = originalMarginTop;
-      container.style.height = originalHeight;
-      void container.offsetHeight;
-      container.style.transition = originalTransition;
-    };
-
-    measure();
-    // Below 900px the bar is display:none and there is nothing to measure;
-    // the settle pass covers the case where the bar mounts after this does.
-    const settle = setTimeout(measure, 800);
-    window.addEventListener("resize", measure);
-    return () => {
-      clearTimeout(settle);
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  const targetButton3Top = isMobile
-    ? Math.round(winSize.h - 36 - compactHeight)
-    : pulseTarget?.top ?? squareTopInPlace;
-
-  const targetButton3Left = isMobile
-    ? Math.round(winSize.w - 16 - compactWidth)
-    : pulseTarget?.left ?? (winSize.w - 124);
-
-  // The composer finishes at the slot's own size, not at the 100x100 it
-  // crosses the screen as — otherwise it is a card sitting on a tile
-  // rather than the tile itself.
-  const targetWidth = isMobile ? compactWidth : pulseTarget?.width ?? compactWidth;
-  const targetHeight = isMobile ? compactHeight : pulseTarget?.height ?? compactHeight;
-  const targetRadius = isMobile || !pulseTarget ? compactRadius : 14;
-
-  // Broadcast fab-target-top so FloatingQuickActions places Button 3 at exact squareTopInPlace
-  useEffect(() => {
-    if (typeof window !== "undefined" && squareTopInPlace > 0) {
-      const fabTop = squareTopInPlace - 202;
-      document.documentElement.style.setProperty("--fab-target-top", `${fabTop}px`);
-      document.documentElement.style.setProperty("--compact-search-top", `${squareTopInPlace}px`);
-      window.dispatchEvent(new CustomEvent("nh:search-pos-update", { detail: { fabTop, squareTopInPlace } }));
-    }
-  }, [squareTopInPlace]);
+  // Docked Buttons Target Coordinates (flanking the Spotlight pill at the bottom dock)
+  const dockBtn1Left = targetLeft + spotlightWidth + bubbleGap;
+  const dockBtn2Left = dockBtn1Left + bubbleSize + bubbleGap;
+  const dockBtn3Left = dockBtn2Left + bubbleSize + bubbleGap;
 
   const [isMorphing, setIsMorphing] = useState(false);
 
-  // Scrolling down plays the full multi-stage glide into the FAB, same as
-  // always. Scrolling back up used to replay that same glide in reverse —
-  // the composer visibly flying back across the screen. It doesn't need
-  // to: past this cut, reversing just holds position at the FAB's own
-  // slot (matching wherever main.tsx's absorbed tile currently sits); once
-  // scroll crosses back below it, the composer cuts straight to its hero
-  // anchor, the same way it looks on first load. REVERSE_CUT matches the
-  // floating bar's own appear/disappear threshold, so the two hand off at
-  // the same instant rather than at two different points.
-  const REVERSE_CUT = 0.45;
-  const reversingRef = useRef(false);
-  const lastActiveProgressRef = useRef(0);
-
   useMotionValueEvent(activeProgress, "change", (latest) => {
     setIsMorphing(latest > 0.02);
-    const docked = latest >= 0.84;
+    const docked = latest >= 0.08;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
-
-    const delta = latest - lastActiveProgressRef.current;
-    if (delta < -0.0008) reversingRef.current = true;
-    else if (delta > 0.0008) reversingRef.current = false;
-    lastActiveProgressRef.current = latest;
   });
 
-  // The channel every geometry/appearance transform below reads instead of
-  // activeProgress directly: identical to it while scrolling down, but a
-  // hard step while scrolling up, so there is nothing in between to crawl
-  // through on the way back.
-  const positionProgress = useTransform(activeProgress, (v) =>
-    reversingRef.current ? (v > REVERSE_CUT ? 1 : 0) : v
-  );
+  // Intermediate centered pill width & left position (Stage 1)
+  const centerPillWidth = isMobile ? Math.max(240, winSize.w - 32) : 380;
+  const centerPillLeft = Math.round((winSize.w - centerPillWidth) / 2);
 
   // Choreography:
-  // Phase 1 [0.02 - 0.14]: Search bar shrinks in place to 100x100 glassmorphic card at center (squareLeft, squareTopInPlace)
-  // Phase 2 [0.14 - 0.54]: WAITS at center position with dark glassmorphism while hero scales & side panel appears with 2 buttons
-  // Phase 3 [0.54 - 0.84]: HORIZONTAL GLIDE: glides straight across horizontally to targetButton3Left at constant squareTopInPlace
-  // Phase 4 [0.84 - 0.88]: DOCKS & MERGES into 3rd slot, side panel expands to 3 buttons
-  const targetTopRange = isMobile
-    ? [startTop, startTop + (targetButton3Top - startTop) * 0.15, startTop + (targetButton3Top - startTop) * 0.63, targetButton3Top]
-    : [startTop, squareTopInPlace, squareTopInPlace, targetButton3Top];
-  const composerTop = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetTopRange);
+  // Stage 1 (0.02 -> 0.16): Search bar shrinks and glides down to centered position
+  // Stage 2 (0.16 -> 0.30): Centered search bar gets pushed to the left, reduces width, and pops out water-drop bubbles to the right
+  const composerTop = useTransform(activeProgress, [0.04, 0.18, 0.30], [startTop, targetTop, targetTop]);
+  const composerLeft = useTransform(activeProgress, [0.04, 0.16, 0.30], [startLeft, centerPillLeft, targetLeft]);
+  const composerWidth = useTransform(activeProgress, [0.02, 0.16, 0.30], [startWidth, centerPillWidth, spotlightWidth]);
+  const composerHeight = useTransform(activeProgress, [0.02, 0.16], [startHeight, spotlightHeight]);
+  const composerRadius = useTransform(activeProgress, [0.02, 0.16], [20, 9999]);
+  const composerPaddingX = useTransform(activeProgress, [0.02, 0.16], [22, 14]);
+  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.16], [18, 0]);
+  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.16], [12, 0]);
 
-  const targetLeftRange = isMobile
-    ? [startLeft, startLeft + (targetButton3Left - startLeft) * 0.15, startLeft + (targetButton3Left - startLeft) * 0.63, targetButton3Left]
-    : [startLeft, squareLeft, squareLeft, targetButton3Left];
-  const composerLeft = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetLeftRange);
+  // Content cross-fades inside Search Bar
+  const promptOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
+  const spotlightOpacity = useTransform(activeProgress, [0.12, 0.22], [0, 1]);
 
-  const targetWidthRange = isMobile
-    ? [startWidth, startWidth + (compactWidth - startWidth) * 0.15, startWidth + (compactWidth - startWidth) * 0.63, compactWidth]
-    : [startWidth, compactWidth, compactWidth, targetWidth];
-  const composerWidth = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetWidthRange);
+  // 2. WATER-DROP BUBBLE EJECTION (Stage 2: 0.16 -> 0.36):
+  // Origin: As search bar shifts left from centerPillLeft, bubbles emerge from its right edge!
+  const splitStartLeft = centerPillLeft + centerPillWidth - 10;
 
-  const targetHeightRange = isMobile
-    ? [startHeight, startHeight + (compactHeight - startHeight) * 0.15, startHeight + (compactHeight - startHeight) * 0.63, compactHeight]
-    : [startHeight, compactHeight, compactHeight, targetHeight];
-  const composerHeight = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetHeightRange);
+  // Water-Bubble 1 (Book Appointment): Ejects out as search pill gets pushed left
+  const btn1Top = useTransform(activeProgress, [0.16, 0.28], [targetTop, targetTop]);
+  const btn1Left = useTransform(activeProgress, [0.16, 0.28], [splitStartLeft, dockBtn1Left]);
+  const btn1Opacity = useTransform(activeProgress, [0.16, 0.22], [0, 1]);
+  const btn1Scale = useTransform(activeProgress, [0.16, 0.24, 0.30], [0.15, 1.25, 1.0]);
 
-  const targetRadiusRange = isMobile
-    ? [20, 20 + (compactRadius - 20) * 0.15, 20 + (compactRadius - 20) * 0.63, compactRadius]
-    : [20, compactRadius, compactRadius, targetRadius];
-  const composerRadius = useTransform(positionProgress, [0.02, 0.14, 0.54, 0.84], targetRadiusRange);
+  // Water-Bubble 2 (Book Tests & Checkups): Ejects right after Bubble 1
+  const btn2Top = useTransform(activeProgress, [0.20, 0.32], [targetTop, targetTop]);
+  const btn2Left = useTransform(activeProgress, [0.20, 0.32], [splitStartLeft, dockBtn2Left]);
+  const btn2Opacity = useTransform(activeProgress, [0.20, 0.26], [0, 1]);
+  const btn2Scale = useTransform(activeProgress, [0.20, 0.28, 0.34], [0.15, 1.25, 1.0]);
 
-  const composerPaddingX = useTransform(
-    positionProgress,
-    [0.02, 0.14],
-    [24, 0]
-  );
-
-  const composerPaddingY = useTransform(
-    positionProgress,
-    [0.02, 0.14],
-    [20, 0]
-  );
-
-  // Water droplet squash & stretch during horizontal motion [0.54 -> 0.84]
-  const dropletScaleX = useTransform(
-    positionProgress,
-    [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
-    [1.0, 1.0, 1.15, 1.08, 0.95, 1.0]
-  );
-
-  const dropletScaleY = useTransform(
-    positionProgress,
-    [0.0, 0.54, 0.62, 0.74, 0.84, 0.88],
-    [1.0, 1.0, 0.88, 0.94, 1.06, 1.0]
-  );
-
-  // Background layers adaptation:
-  // 1) Dark glassmorphism layer (same like main search box)
-  const darkGlassOpacity = useTransform(
-    positionProgress, 
-    [0.0, 0.02, 0.54, 0.84], 
-    [1, 1, 1, 0]
-  );
-
-  // 2) Side button frosted glass layer (adapts during horizontal movement 0.54 -> 0.84)
-  const sideButtonBgOpacity = useTransform(
-    positionProgress, 
-    [0.54, 0.84], 
-    [0, 1]
-  );
-
-  // Text color adaptation: white/dark in glassmorphism -> blue in side button style
-  const textColor = useTransform(
-    positionProgress,
-    [0.54, 0.84],
-    [searchTheme === "white" ? "#1E293B" : "#FFFFFF", "#0B5DF4"]
-  );
+  // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2
+  const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
+  const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
+  const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
+  const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(positionProgress, [0.02, 0.08], [1, 0]);
-  const controlsHeight = useTransform(positionProgress, [0.02, 0.09], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(positionProgress, [0.02, 0.09], ["32px", "0px"]);
-  const promptOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
-  const controlsOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+  const controlsOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], [isMobile ? "14px" : "18px", "0px"]);
 
-  // Minimized search content (Pulse Lottie + text below) fades in as prompt fades out
-  const minimizedSearchOpacity = useTransform(positionProgress, [0.04, 0.12], [0, 1]);
+  // Moving gradient border around landing search bar edges (vibrant 0.95 on landing, refined 0.40 on docked pill)
+  const landingBorderOpacity = searchTheme === "white" ? 0.75 : 0.95;
+  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.10, 0.32], [landingBorderOpacity, 0.65, 0.40]);
 
-  // Moving gradient border around landing search bar edges (vibrant 0.65 on white, 0.25 on dark, fades smoothly on scroll compress)
-  const landingBorderOpacity = searchTheme === "white" ? 0.65 : 0.25;
-  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.02, 0.10], [landingBorderOpacity, landingBorderOpacity, 0]);
+  // Translucent dark glass for default landing prompt, smoothly deepening only as it docks into the bottom pill
+  const composerBg = useTransform(
+    activeProgress,
+    [0.0, 0.12, 0.32],
+    [
+      "rgba(22, 28, 36, 0.28)",
+      "rgba(22, 28, 36, 0.45)",
+      "rgba(20, 26, 36, 0.72)"
+    ]
+  );
 
-  // ─── Hero entrance ───
-  // The composer used to be painted at full strength from the first frame,
-  // before the headline above it had resolved — which left it sitting on an
-  // otherwise empty hero looking stranded rather than like part of the
-  // stack. It now holds off until the headline has read, then rises into
-  // its place under it.
-  //
-  // The hold is most of the headline's own sweep: TextSweepEffect eases
-  // hard out of the gate (cubic-bezier 0.2, 0, 0.3, 0.3), so by this point
-  // the line has essentially arrived and the rest of its 2.6s is polish —
-  // waiting for the literal end of the sweep would leave the hero empty
-  // long enough to read as a stall instead of a sequence.
-  const ENTRANCE_HOLD_MS = 1100;
-  const ENTRANCE_MS = 700;
-
-  // Only the hero instance waits: everything else (the page-level search)
-  // has no hero above it to come after.
-  const entranceProgress = useMotionValue(hasScroll ? 0 : 1);
+  // Section-aware contextual placeholder for docked Spotlight Search
+  const [dockedPlaceholder, setDockedPlaceholder] = useState("Search doctors, symptoms, packages...");
 
   useEffect(() => {
-    if (!hasScroll) return;
-    // Loaded already scrolled (a refresh mid-page, or a restored position):
-    // the headline is not on screen to be waited for, and holding here
-    // would mean holding the docked tile back too.
-    if (typeof window !== "undefined" && window.scrollY > 40) {
-      entranceProgress.set(1);
-      return;
-    }
-    if (prefersReducedMotion) {
-      entranceProgress.set(1);
-      return;
-    }
-    const controls = animate(entranceProgress, 1, {
-      duration: ENTRANCE_MS / 1000,
-      delay: ENTRANCE_HOLD_MS / 1000,
-      ease: [0.16, 1, 0.3, 1],
-    });
-    return () => controls.stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasScroll, prefersReducedMotion]);
+    const handleSectionScroll = () => {
+      if (typeof window === "undefined") return;
+      const vh = window.innerHeight;
 
-  const entranceOpacity = useTransform(entranceProgress, [0, 1], [0, 1]);
-  // Rises into place rather than dropping in, so it reads as arriving under
-  // the headline rather than falling past it.
-  const entranceY = useTransform(entranceProgress, [0, 1], [22, 0]);
-  const entranceFilter = useTransform(
-    entranceProgress,
-    (v) => `blur(${((1 - v) * 10).toFixed(2)}px)`
-  );
+      const coeEl = document.getElementById("centre-of-excellence") || document.querySelector('[class*="gridSection"]');
+      const healthEl = document.getElementById("health-packages");
+      const whyEl = document.getElementById("WhyChooseNH_section");
 
-  // Published for the floating bar, which opens its own third slot against
-  // it — the bar grows downward as the composer arrives, so the composer is
-  // absorbed into an opening space rather than dissolved on top of a tile
-  // that was already sitting there.
-  // Published for the floating bar as positionProgress, not raw
-  // activeProgress — otherwise the bar's own slot would replay its
-  // opening/closing exactly in step with the composer's reverse crawl,
-  // which is the animation this is removing.
-  useMotionValueEvent(positionProgress, "change", (v) => searchDockProgress.set(v));
+      const isElementInView = (el: Element | null) => {
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= vh * 0.65 && rect.bottom >= vh * 0.25;
+      };
 
-  // At the end of merge, morphShellOpacity fades out into the static docked button in FloatingQuickActions
-  const morphShellOpacity = useTransform(positionProgress, [0.84, 0.88], [1, 0]);
-  // Multiplied, not chosen between: the entrance and the dock own different
-  // ends of the same scroll and either one reaching 0 has to win.
-  const shellOpacity = useTransform(
-    [morphShellOpacity, entranceOpacity] as MotionValue<number>[],
-    ([morph, entrance]: number[]) => morph * entrance
-  );
-  // Declared here because main references it without ever defining it: the
-  // mobile quick actions come up exactly as the composer's own chrome goes.
-  const fabOpacity = useTransform(activeProgress, [isMobile ? 0.25 : 0.30, isMobile ? 0.50 : 0.45], [0, 1]);
-  const dockedMobile = isDocked && isMobile;
-  const composerOverflow = useTransform(positionProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+      if (isElementInView(whyEl)) {
+        setDockedPlaceholder("Search hospitals & network...");
+      } else if (isElementInView(healthEl)) {
+        setDockedPlaceholder("Search health checkups & tests...");
+      } else if (isElementInView(coeEl)) {
+        setDockedPlaceholder("Search by speciality...");
+      } else {
+        setDockedPlaceholder(isMobile ? "Search Narayana Health..." : "Search doctors, symptoms, packages...");
+      }
+    };
+
+    window.addEventListener("scroll", handleSectionScroll, { passive: true });
+    handleSectionScroll();
+    return () => window.removeEventListener("scroll", handleSectionScroll);
+  }, [isMobile]);
+
+  const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 1]);
+  const composerOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
+  const controlsOverflow = useTransform(activeProgress, (latest) => (latest > 0.02 ? "hidden" : "visible"));
 
   // Primary search state
   const [searchState, setSearchState] = useState<SearchState>(initialState);
   const [query, setQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(initialLocation);
   const [activePill, setActivePill] = useState<"doctor" | "symptoms" | null>(null);
+  const [attachedReportFile, setAttachedReportFile] = useState<{ name: string; size?: number } | null>(null);
 
   // Suggestions & Results
   const [resultsData, setResultsData] = useState<SearchResultsData>(CARDIOLOGY_RESULTS);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const landingShellRef = useRef<HTMLDivElement>(null);
+  const savedScrollY = useRef(0);
+  const [originRect, setOriginRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
+
+  const captureOrigin = () => {
+    if (landingShellRef.current) {
+      const rect = landingShellRef.current.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setOriginRect({
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        });
+      }
+    }
+  };
+
+  // Activate search (Landing → Active)
+  const handleActivate = (customScroll?: number) => {
+    captureOrigin();
+    const currentScroll = typeof customScroll === "number"
+      ? customScroll
+      : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
+    savedScrollY.current = currentScroll;
+    setQuery(""); // Always show active empty search state when launched
+    setSearchState("active");
+    onOpenChange?.(true);
+  };
+
+  // Close search (Active/Results → Landing)
+  const handleClose = () => {
+    setSearchState("landing");
+    setActivePill(null);
+    onOpenChange?.(false);
+  };
 
   // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
   useEffect(() => {
@@ -468,8 +378,6 @@ export default function NHSearchExperience({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [searchState]);
 
-  // Track previous scroll position to freeze and restore
-  const savedScrollY = useRef(0);
 
   // Freeze background page scroll when search overlay is open, and restore when closed
   useEffect(() => {
@@ -498,37 +406,21 @@ export default function NHSearchExperience({
       // 3. Freeze document scroll
       const originalBodyOverflow = document.body.style.overflow;
       const originalHtmlOverflow = document.documentElement.style.overflow;
-      const originalBodyTouchAction = document.body.style.touchAction;
 
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
 
-      // 4. Intercept wheel, touchmove and page-scrolling keys
-      const preventBackgroundScroll = (e: WheelEvent | TouchEvent) => {
+      // Prevent background scrolling only when interacting outside the active modal (e.g. on backdrop)
+      const preventBackdropScroll = (e: WheelEvent | TouchEvent) => {
         const target = e.target as HTMLElement | null;
-
-        // Check if event target is inside the portaled active search modal
         const modalEl = document.getElementById("nh-active-search-modal");
-        if (modalEl && modalEl.contains(target)) {
-          // If inside an intentionally scrollable area within the modal, allow internal scrolling
-          const scrollable = target?.closest(`.${styles.searchShell}, .${styles.resultsRightCol}`) as HTMLElement | null;
-          if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
-            if (e instanceof WheelEvent) {
-              const isScrollingUp = e.deltaY < 0;
-              const isScrollingDown = e.deltaY > 0;
-              const isAtTop = scrollable.scrollTop <= 0;
-              const isAtBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
 
-              if ((isScrollingUp && isAtTop) || (isScrollingDown && isAtBottom)) {
-                if (e.cancelable) e.preventDefault();
-              }
-            }
-            return;
-          }
+        // If event is inside the search modal, never intercept or block it
+        if (modalEl && (modalEl === target || modalEl.contains(target))) {
+          return;
         }
 
-        // Outside modal (backdrop or background) — strictly prevent scrolling
+        // Outside modal (backdrop or background) — prevent background leakage
         if (e.cancelable) {
           e.preventDefault();
         }
@@ -537,24 +429,27 @@ export default function NHSearchExperience({
       const preventScrollKeys = (e: KeyboardEvent) => {
         const target = e.target as HTMLElement | null;
         if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
+        // If inside modal, allow space, PageUp, PageDown, arrow keys for scrolling
+        const modalEl = document.getElementById("nh-active-search-modal");
+        if (modalEl && modalEl.contains(target)) return;
+
         if ([" ", "PageUp", "PageDown", "End", "Home"].includes(e.key)) {
           e.preventDefault();
         }
       };
 
-      window.addEventListener("wheel", preventBackgroundScroll, { passive: false });
-      window.addEventListener("touchmove", preventBackgroundScroll, { passive: false });
+      window.addEventListener("wheel", preventBackdropScroll, { passive: false });
+      window.addEventListener("touchmove", preventBackdropScroll, { passive: false });
       window.addEventListener("keydown", preventScrollKeys, { passive: false });
 
       return () => {
         // Restore document styles
         document.body.style.overflow = originalBodyOverflow;
         document.documentElement.style.overflow = originalHtmlOverflow;
-        document.body.style.touchAction = originalBodyTouchAction;
 
         // Remove event listeners
-        window.removeEventListener("wheel", preventBackgroundScroll);
-        window.removeEventListener("touchmove", preventBackgroundScroll);
+        window.removeEventListener("wheel", preventBackdropScroll);
+        window.removeEventListener("touchmove", preventBackdropScroll);
         window.removeEventListener("keydown", preventScrollKeys);
 
         // Resume Lenis smooth scroll and restore exact scroll position
@@ -570,9 +465,14 @@ export default function NHSearchExperience({
     }
   }, [searchState !== "landing"]);
 
-  // Handle Query typing
+  // Handle Query typing (enforces max 500 words limit)
   const handleQueryChange = useCallback((newQuery: string) => {
-    setQuery(newQuery);
+    const words = countWords(newQuery);
+    if (words > MAX_SEARCH_WORDS) {
+      setQuery(enforceWordLimit(newQuery, MAX_SEARCH_WORDS));
+    } else {
+      setQuery(newQuery);
+    }
   }, []);
 
   // Open Pulse AI Workspace
@@ -588,37 +488,89 @@ export default function NHSearchExperience({
     onOpenChange?.(false);
   };
 
-  // Activate search (Landing → Active)
-  const handleActivate = (customScroll?: number) => {
-    const currentScroll = typeof customScroll === "number"
-      ? customScroll
-      : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
-    savedScrollY.current = currentScroll;
-    setQuery(""); // Always show active empty search state when launched
-    setSearchState("active");
-    onOpenChange?.(true);
-  };
-
   // Submit query (Active → Skeleton Loading → Results)
   const handleSubmit = async (searchQuery: string) => {
-    const targetQuery = searchQuery.trim() || "I have chest pain and need a doctor";
+    const targetQuery = enforceWordLimit(searchQuery.trim() || "I have chest pain and need a doctor", MAX_SEARCH_WORDS);
     setQuery(targetQuery);
     
-    // Step 1: Immediately transition to realistic skeleton state
+    // Step 1: Transition to Pulse AI clinical intelligence analyzing state
     setSearchState("skeleton");
     
-    // Guard against any unexpected error (network, parsing, etc.) leaving the
-    // modal stuck on the skeleton state or bouncing back to landing.
-    try {
-      const results = await getSearchResults(targetQuery, selectedLocation);
+    // Step 2: AI clinical intelligence matching delay (1100ms)
+    const [results] = await Promise.all([
+      getSearchResults(targetQuery, selectedLocation),
+      new Promise((resolve) => setTimeout(resolve, 1100)),
+    ]);
 
-      // Step 2: Smoothly reveal final results as soon as they're ready
-      setResultsData(results);
-    } catch (err) {
-      console.error("[NHSearchExperience] Search submit failed:", err);
-    } finally {
-      setSearchState("results");
+    // Step 3: Smoothly reveal final results
+    setResultsData(results);
+    setSearchState("results");
+  };
+
+  // Voice Submit: Triggers analyzing screen, speaks "Getting you the right care" female voice, then populates results
+  const handleVoiceSubmit = async (transcript: string) => {
+    captureOrigin();
+    const currentScroll = typeof window !== "undefined"
+      ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0)
+      : 0;
+    savedScrollY.current = currentScroll;
+
+    const rawQuery = transcript.trim() || "I have chest pain and shortness of breath since morning";
+    const targetQuery = enforceWordLimit(rawQuery, MAX_SEARCH_WORDS);
+    setQuery(targetQuery);
+    setPulseInitialQuery(targetQuery);
+
+    // Step 1: Transition into analyzing screen
+    setSearchState("skeleton");
+    onOpenChange?.(true);
+
+    // Step 2: Speak warm female empathetic audio voice: "Getting you the right care"
+    playFemaleEmpatheticVoice("Getting you the right care");
+
+    // Step 3: Concurrently fetch matching doctors and hold analyzing screen until voice audio completes (~1900ms)
+    try {
+      const triage = analyzePulseIntent(targetQuery, [], selectedLocation);
+      const [matchedResults] = await Promise.all([
+        getSearchResults(triage.searchQueryForApi || targetQuery, selectedLocation),
+        new Promise((resolve) => setTimeout(resolve, 1950)),
+      ]);
+
+      if (matchedResults && matchedResults.doctors.length > 0) {
+        setResultsData(matchedResults);
+      }
+    } catch (e) {
+      console.warn("Failed fetching voice matching results:", e);
     }
+
+    // Step 4: After voice output finishes, populate the results!
+    setSearchState("pulse");
+  };
+
+  // Document Submit: Directly opens Pulse AI to understand and explain attached health report
+  const handleDocumentSubmit = async (file: { name: string; size?: number }, prompt: string) => {
+    captureOrigin();
+    const currentScroll = typeof window !== "undefined"
+      ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0)
+      : 0;
+    savedScrollY.current = currentScroll;
+
+    const targetQuery = prompt || "Understand my health report";
+    setQuery(targetQuery);
+    setPulseInitialQuery(targetQuery);
+    setAttachedReportFile(file);
+
+    try {
+      const triage = analyzePulseIntent(targetQuery, [], selectedLocation);
+      const matchedResults = await getSearchResults(triage.searchQueryForApi || targetQuery, selectedLocation);
+      if (matchedResults && matchedResults.doctors.length > 0) {
+        setResultsData(matchedResults);
+      }
+    } catch (e) {
+      console.warn("Failed fetching report matching doctors:", e);
+    }
+
+    setSearchState("pulse");
+    onOpenChange?.(true);
   };
 
   // Edit search (Results → Active)
@@ -637,15 +589,9 @@ export default function NHSearchExperience({
     }
   };
 
-  // Close search (Active/Results → Landing)
-  const handleClose = () => {
-    setSearchState("landing");
-    setActivePill(null);
-    onOpenChange?.(false);
-  };
-
   // Handle quick action pill clicks
   const handleSelectActionPill = (pill: "doctor" | "symptoms") => {
+    captureOrigin();
     setActivePill(pill);
     setSearchState("active");
     if (pill === "doctor") {
@@ -704,12 +650,7 @@ export default function NHSearchExperience({
       ? styles.statePulse
       : styles.stateResults;
 
-  // Portaled to the body once docked on mobile. The wrapper is fixed, but
-  // it renders inside the hero, whose own transform makes it the containing
-  // block and bounds its stacking context — so past the hero the docked bar
-  // painted at the right coordinates yet behind the following sections.
-  const experience = (
-
+  return (
     <div 
       className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`} 
       data-search-theme={searchTheme}
@@ -730,18 +671,22 @@ export default function NHSearchExperience({
     >
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
-        layout
+        ref={landingShellRef}
         className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${styles.themeDark}`}
         data-search-theme="dark"
         onClick={() => {
-          handleActivate();
+          if (hasScroll) {
+            handleActivate();
+          }
         }}
-        // Replaces the rotating conic-gradient stroke this box used to
-        // carry (see .stateLanding::before, now disabled). Inherits the
-        // shell's radius, so it stays a correct ring while the radius
-        // animates through the morph to the docked square.
         style={
-          hasScroll && searchState === "landing"
+          searchState !== "landing"
+            ? {
+                visibility: "hidden",
+                pointerEvents: "none",
+                opacity: 0,
+              }
+            : hasScroll
             ? {
                 position: "fixed",
                 top: composerTop,
@@ -749,16 +694,11 @@ export default function NHSearchExperience({
                 width: composerWidth,
                 height: composerHeight,
                 borderRadius: composerRadius,
-                scaleX: dropletScaleX,
-                scaleY: dropletScaleY,
                 paddingLeft: composerPaddingX,
                 paddingRight: composerPaddingX,
-                paddingTop: composerPaddingY,
-                paddingBottom: composerPaddingY,
-                // Keep opacity at 1 permanently on mobile across all folds:
-                opacity: isMobile ? 1 : shellOpacity,
-                y: entranceY,
-                filter: entranceFilter,
+                paddingTop: composerPaddingTop,
+                paddingBottom: composerPaddingBottom,
+                opacity: isMobile ? 1 : morphShellOpacity,
                 maxWidth: "none",
                 minWidth: 0,
                 minHeight: 0,
@@ -769,96 +709,107 @@ export default function NHSearchExperience({
                 marginLeft: 0,
                 boxSizing: "border-box",
                 zIndex: 9990,
-                pointerEvents: isDocked && !dockedMobile ? "none" : "auto",
+                pointerEvents: "auto",
                 overflow: composerOverflow,
-                cursor: dockedMobile ? "default" : "pointer",
+                cursor: "pointer",
                 background: "transparent",
                 border: "none",
                 boxShadow: "none",
               }
-            : searchState !== "landing"
-            ? {
-                display: "none",
-                pointerEvents: "none",
-              }
             : undefined
         }
         transition={{
-          layout: { duration: prefersReducedMotion ? 0.1 : 0.42, ease: [0.16, 1, 0.3, 1] },
           duration: prefersReducedMotion ? 0.1 : 0.35,
           ease: [0.16, 1, 0.3, 1],
         }}
       >
-        <LiquidMetalEdge borderWidth={2} speed={0.45} repetition={4} distortion={0.12} />
-        {hasScroll && (
-          <div className="hideOnDesktop">
-            {/* The 3 Action Buttons that fade in as the search UI fades out */}
-            <motion.div 
-              style={{ opacity: fabOpacity, pointerEvents: isDocked ? "auto" : "none" }}
-              className={styles.mobileFabContent}
-            >
-              <a className={styles.fabLink} href="/find-a-doctor" onClick={(e) => e.stopPropagation()}>
-                <span className={styles.fabIconWrap}>
-                  <span style={{ width: "20px", height: "20px", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Lottie
-                      animationData={calendarCheckAnimation}
-                      loop={false}
-                      autoplay
-                      style={{ width: 31, height: 31, flexShrink: 0 }}
-                      aria-hidden
-                    />
-                  </span>
-                </span>
-                <span>Book<br/>Appointment</span>
-              </a>
-              <div className={styles.fabDivider} aria-hidden="true" />
-              <button
-                type="button"
-                className={styles.fabLink}
-                style={{ border: "none" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } }));
-                  }
-                }}
-              >
-                {/* Same Search glyph the desktop bar uses, in this bar's own
-                    tile rather than the animated pulse square — which also
-                    drops the hardcoded FloatingQuickActions_* class strings
-                    this markup used to borrow from another CSS module. */}
-                <span className={styles.fabIconWrap}>
-                  <Search size={18} strokeWidth={2.2} aria-hidden />
-                </span>
-                <span>Search<br/>Anything</span>
-              </button>
-              <div className={styles.fabDivider} aria-hidden="true" />
-              <a className={styles.fabLink} href="#app-download-banner" onClick={(e) => e.stopPropagation()}>
-                <span className={styles.fabIconWrap}>
-                  <Lottie
-                    animationData={nhAppIconAnimation}
-                    loop={false}
-                    autoplay
-                    style={{ width: 22, height: 22, flexShrink: 0 }}
-                    aria-hidden
-                  />
-                </span>
-                <span>Download<br/>NH Care App</span>
-              </a>
-            </motion.div>
-          </div>
+        {/* Layer 1: Dark glass background layer for composer & docked spotlight pill */}
+        {hasScroll && searchState === "landing" && (
+          <motion.div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "inherit",
+              background: composerBg,
+              backdropFilter: "blur(24px) saturate(140%)",
+              WebkitBackdropFilter: "blur(24px) saturate(140%)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
+              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.16)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
         )}
 
-        <DefaultSearchPrompt isMobile={isMobile}
+        {/* Animated Motion Gradient Border Outline */}
+        {hasScroll && searchState === "landing" && (
+          <motion.div
+            className={styles.animatedBorderOutline}
+            style={{
+              opacity: gradientBorderOpacity,
+            }}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Apple Spotlight Content (fades in as search morphs into bottom pill) */}
+        {hasScroll && searchState === "landing" && (
+          <motion.div 
+            className={styles.spotlightContent}
+            style={{ 
+              position: "absolute",
+              inset: 0,
+              opacity: spotlightOpacity, 
+              pointerEvents: isDocked ? "auto" : "none",
+              zIndex: 10,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleActivate();
+            }}
+          >
+            <div className={styles.spotlightLeft}>
+              <div className={styles.spotlightIconWrapper}>
+                <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                  <defs>
+                    <linearGradient id="nhSearchPillGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00C4FF" />
+                      <stop offset="35%" stopColor="#8B5CF6" />
+                      <stop offset="70%" stopColor="#FF2E93" />
+                      <stop offset="100%" stopColor="#ED1C24" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <Search size={17} className={styles.spotlightSearchIcon} strokeWidth={2.5} />
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={dockedPlaceholder}
+                  initial={{ opacity: 0, y: 3 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -3 }}
+                  transition={{ duration: 0.22, ease: "easeOut" }}
+                  className={styles.spotlightPlaceholder}
+                >
+                  {dockedPlaceholder}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+
+        <DefaultSearchPrompt
           onActivate={handleActivate}
+          onVoiceSubmit={handleVoiceSubmit}
+          onDocumentSubmit={handleDocumentSubmit}
           selectedLocation={selectedLocation}
           onSelectLocation={handleSelectLocation}
           onSelectActionPill={handleSelectActionPill}
           onOpenPulse={() => handleOpenPulse()}
           searchTheme="dark"
+          isMobile={isMobile}
           promptOpacity={hasScroll ? promptOpacity : undefined}
-          minimizedSearchOpacity={hasScroll ? minimizedSearchOpacity : undefined}
-          textColor={hasScroll ? textColor : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
@@ -866,185 +817,442 @@ export default function NHSearchExperience({
         />
       </motion.div>
 
-      {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
-      {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
-      {mounted && searchState !== "landing" && createPortal(
-        <div
-          id="nh-search-overlay-root"
-          data-lenis-prevent="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 99999,
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            paddingTop: (searchState === "results" || searchState === "skeleton" || searchState === "pulse")
-              ? "max(20px, 3vh)"
-              : "max(60px, 12vh)",
-            paddingBottom: "24px",
-            paddingLeft: "16px",
-            paddingRight: "16px",
-            boxSizing: "border-box",
-            pointerEvents: "auto",
-          }}
-        >
-          {/* Backdrop with translucent blur and stationary background freeze */}
-          <motion.div
-            key="search-backdrop"
-            data-backdrop="true"
-            data-lenis-prevent="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: "easeOut" }}
-            onClick={handleClose}
+      {/* ── Unified Morphing Action Buttons (Hero Pill Buttons -> Docked Circular Bubbles) ── */}
+      {hasScroll && searchState === "landing" && (
+        <>
+          {/* Water-Bubble 1: Book Appointment -> Ejects out into Docked Bubble 1 */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
             style={{
               position: "fixed",
-              inset: 0,
-              background: searchTheme === "white" 
-                ? "rgba(255, 255, 255, 0.52)" 
-                : "rgba(5, 10, 18, 0.50)",
-              backdropFilter: searchTheme === "white" 
-                ? "blur(20px) saturate(140%)" 
-                : "blur(14px)",
-              WebkitBackdropFilter: searchTheme === "white" 
-                ? "blur(20px) saturate(140%)" 
-                : "blur(14px)",
-              zIndex: 1,
-              touchAction: "none",
+              top: btn1Top,
+              left: btn1Left,
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn1Opacity,
+              scale: btn1Scale,
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
+              zIndex: 9990,
             }}
-          />
-
-          {/* Modal Wrapper holding the Card and its Ambient Glow Around Effect */}
-          <div
-            className={styles.modalWithAmbientWrap}
-            data-search-theme={searchTheme}
-            style={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-              width: Math.min(
-                (searchState === "results" || searchState === "skeleton") 
-                  ? 1080 
-                  : searchState === "pulse" 
-                  ? 1000 
-                  : 880, 
-                winSize.w - 32
-              ),
-              maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
-              zIndex: 2,
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push("/doctors");
             }}
+            aria-label="Book Appointment"
           >
-            {/* ── Soft Feathered Random Diffused Motion Glow Behind Card ── */}
-            <div className={`${styles.cardFeatheredGlowWrap} ${searchTheme === "white" ? styles.featherWhite : styles.featherDark}`} aria-hidden="true">
-              <div className={styles.featherMeshWash} />
-              <div className={`${styles.featherLobe} ${styles.featherLobeCyan}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobePurple}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobeBlue}`} />
-              <div className={`${styles.featherLobe} ${styles.featherLobePink}`} />
+            <div className={styles.morphingActionIcon}>
+              <CalendarCheck size={18} strokeWidth={2.0} />
             </div>
-            <motion.div
-              layout
-              id="nh-active-search-modal"
-              className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
-              data-search-theme={searchTheme}
-              data-lenis-prevent="true"
-              initial={{ opacity: 0, scale: 0.96, y: -10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -10 }}
-              transition={{ duration: prefersReducedMotion ? 0.1 : 0.28, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                position: "relative",
-                zIndex: 2,
-                width: "100%",
-                maxHeight: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "92vh" : "85vh",
-                height: searchState === "pulse" ? "min(760px, 88vh)" : undefined,
-                overflowY: searchState === "pulse" ? "hidden" : "auto",
-                overscrollBehavior: "contain",
-                margin: 0,
-                boxSizing: "border-box",
-              }}
-            >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {searchState === "active" && (
-                <motion.div
-                  key="active"
-                  initial={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.97, filter: "blur(4px)" }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <ActiveSearchCanvas
-                    query={query}
-                    onQueryChange={handleQueryChange}
-                    onSubmit={handleSubmit}
-                    onClose={handleClose}
-                    selectedLocation={selectedLocation}
-                    onSelectLocation={handleSelectLocation}
-                    activePill={activePill}
-                    onSelectActionPill={handleSelectActionPill}
-                  />
-                </motion.div>
-              )}
+            <span className={styles.bubbleTooltip}>Book Appointment</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>Book Appt</span>}
+          </motion.button>
 
-              {searchState === "skeleton" && (
-                <motion.div
-                  key="skeleton"
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <SkeletonResultsCanvas query={query} />
-                </motion.div>
-              )}
+          {/* Water-Bubble 2: Book Tests & Checkups -> Ejects out into Docked Bubble 2 */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            style={{
+              position: "fixed",
+              top: btn2Top,
+              left: btn2Left,
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn2Opacity,
+              scale: btn2Scale,
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
+              zIndex: 9990,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              captureOrigin();
+              setActivePill("symptoms");
+              setSearchState("active");
+              setQuery("Book health checkup and lab tests");
+            }}
+            aria-label="Book Tests & Checkups"
+          >
+            <div className={styles.morphingActionIcon}>
+              <Activity size={18} strokeWidth={2.0} />
+            </div>
+            <span className={styles.bubbleTooltip}>Book Tests & Checkups</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>Book Tests</span>}
+          </motion.button>
 
-              {searchState === "results" && (
-                <motion.div
-                  key="results"
-                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <SearchResultsCanvas
-                    query={query || "I have chest pain and need a doctor"}
-                    results={resultsData}
-                    onEditSearch={handleEditSearch}
-                    onSubmit={handleSubmit}
-                    onClose={handleClose}
-                    selectedLocation={selectedLocation}
-                    onSelectLocation={handleSelectLocation}
-                    onSelectSpecialtyTag={handleSelectSpecialtyTag}
-                    onAskPulse={handleAskPulse}
-                  />
-                </motion.div>
-              )}
+          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
+          <motion.button
+            type="button"
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
+            style={{
+              position: "fixed",
+              top: btn3Top,
+              left: btn3Left,
+              width: bubbleSize,
+              height: spotlightHeight,
+              borderRadius: 9999,
+              opacity: btn3Opacity,
+              scale: btn3Scale,
+              pointerEvents: isDocked || isMorphing ? "auto" : "none",
+              zIndex: 9990,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsQrOpen((prev) => !prev);
+            }}
+            aria-label="Download NH Care App (QR Code)"
+          >
+            <div className={styles.morphingActionIcon}>
+              <QrCode size={19} strokeWidth={2.2} />
+            </div>
+            <span className={styles.bubbleTooltip}>Download NH Care App</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>NH App</span>}
+          </motion.button>
+        </>
+      )}
 
-              {searchState === "pulse" && (
-                <motion.div
-                  key="pulse"
-                  initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.98, y: 10 }}
-                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}
-                >
-                  <PulseAIView
-                    query={pulseInitialQuery || query}
-                    selectedLocation={selectedLocation}
-                    doctors={resultsData.doctors}
-                    onBack={handleBackToResults}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+      {/* ── QR Code Popover Card ── */}
+      <AnimatePresence>
+        {isQrOpen && searchState === "landing" && (
+          <motion.div
+            className={styles.qrPopoverCard}
+            style={{
+              bottom: bottomClearance + spotlightHeight + 12,
+              left: Math.min(
+                winSize.w - 266,
+                Math.max(16, dockBtn3Left - 190)
+              ),
+            }}
+            initial={{ opacity: 0, y: 12, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.94 }}
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className={styles.qrHeader}>
+              <div className={styles.qrTitleGroup}>
+                <span className={styles.qrAppTitle}>Narayana Health App</span>
+                <span className={styles.qrAppSubtitle}>Scan with phone camera to install</span>
+              </div>
+              <button
+                type="button"
+                className={styles.qrCloseBtn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsQrOpen(false);
+                }}
+                aria-label="Close QR Code Popover"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <div className={styles.qrImageWrapper}>
+              <Image
+                src="/app-download-QR.png"
+                alt="Scan to download NH Care App"
+                width={124}
+                height={124}
+                className={styles.qrCodeImage}
+                priority
+              />
+            </div>
+
+            <div className={styles.qrStoreBadges}>
+              <a
+                href="https://apps.apple.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.storeBadgeLink}
+              >
+                App Store
+              </a>
+              <a
+                href="https://play.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.storeBadgeLink}
+              >
+                Google Play
+              </a>
+            </div>
           </motion.div>
-        </div>
-      </div>,
-      document.body
-    )}
+        )}
+      </AnimatePresence>
+
+
+
+      {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
+      {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {searchState !== "landing" && (() => {
+            const isPhone = winSize.w <= 640;
+            const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
+            const modalTargetTop = typeof window !== "undefined"
+              ? (isPhone 
+                  ? (isCompactModal ? 10 : 16)
+                  : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
+              : 100;
+            const modalTargetWidth = typeof window !== "undefined"
+              ? (isPhone
+                  ? Math.min(600, winSize.w - 16)
+                  : Math.min(
+                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? 1120 : 880,
+                      winSize.w - 32
+                    ))
+              : 880;
+
+            const originDeltaY = originRect ? Math.round(originRect.top - modalTargetTop) : 0;
+            const originScale = originRect && modalTargetWidth > 0
+              ? Math.min(1, Math.max(0.86, originRect.width / modalTargetWidth))
+              : 0.96;
+
+            return (
+              <div
+                id="nh-search-overlay-root"
+                key="nh-search-overlay-root"
+                data-lenis-prevent="true"
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  zIndex: 99999,
+                  display: "flex",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  paddingTop: isPhone
+                    ? (isCompactModal ? "8px" : "16px")
+                    : (isCompactModal ? "max(14px, 2vh)" : "max(60px, 12vh)"),
+                  paddingBottom: isPhone ? "8px" : "18px",
+                  paddingLeft: isPhone ? "8px" : "16px",
+                  paddingRight: isPhone ? "8px" : "16px",
+                  boxSizing: "border-box",
+                  pointerEvents: "auto",
+                }}
+              >
+                {/* Backdrop with translucent blur and stationary background freeze (40% white overlay with blur on freeze screen) */}
+                <motion.div
+                  key="search-backdrop"
+                  data-backdrop="true"
+                  data-lenis-prevent="true"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: prefersReducedMotion ? 0.1 : 0.32, ease: "easeOut" }}
+                  onClick={handleClose}
+                  style={{
+                    position: "fixed",
+                    inset: 0,
+                    background: searchTheme === "white" 
+                      ? "rgba(255, 255, 255, 0.40)" 
+                      : "rgba(5, 10, 18, 0.55)",
+                    backdropFilter: searchTheme === "white" 
+                      ? "blur(12px)" 
+                      : "blur(14px)",
+                    WebkitBackdropFilter: searchTheme === "white" 
+                      ? "blur(12px)" 
+                      : "blur(14px)",
+                    zIndex: 1,
+                    touchAction: "none",
+                  }}
+                />
+
+                {/* ── Layer 2: Animated Gradient Waves Background (Hidden on white theme to keep 40% translucent frosted freeze screen) ── */}
+                {searchTheme !== "white" && (
+                  <motion.div
+                    key="animated-gradient-waves-bg"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    style={{
+                      position: "fixed",
+                      inset: 0,
+                      zIndex: 2,
+                      pointerEvents: "none",
+                      overflow: "hidden",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <AnimatedGradientWaves
+                      colorStops={["#0A25C9", "#7C3AED", "#EC4899"]}
+                      amplitude={1.35}
+                      blend={0.5}
+                      speed={0.85}
+                      opacity={0.92}
+                    />
+                  </motion.div>
+                )}
+
+                {/* ── Layer 3: Modal Wrapper holding the Search Viewport (On top of translucent backdrop) ── */}
+                <div
+                  className={styles.modalWithAmbientWrap}
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    justifyContent: "center",
+                    width: modalTargetWidth,
+                    height: (searchState === "results" || searchState === "skeleton") 
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                      : searchState === "pulse" 
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                      : undefined,
+                    maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                    zIndex: 3,
+                  }}
+                >
+                  <motion.div
+                    id="nh-active-search-modal"
+                    className={`${styles.searchShell} ${stateClass} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
+                    data-search-theme={searchTheme}
+                    data-lenis-prevent="true"
+                    initial={{
+                      opacity: 0.85,
+                      y: originDeltaY,
+                      scale: originScale,
+                      borderRadius: 20,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      borderRadius: isPhone ? 18 : 24,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: originDeltaY,
+                      scale: originScale,
+                      borderRadius: 20,
+                    }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0.1 : 0.42,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    style={{
+                      position: "relative",
+                      zIndex: 2,
+                      width: "100%",
+                      height: (searchState === "results" || searchState === "skeleton") 
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                        : searchState === "pulse" 
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                        : undefined,
+                      maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                      display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,
+                      flexDirection: "column",
+                      overflow: "hidden",
+                      overscrollBehavior: "contain",
+                      margin: 0,
+                      boxSizing: "border-box",
+                      transformOrigin: "center top",
+                    }}
+                  >
+                    <AnimatePresence mode="wait">
+                      {searchState === "active" && (
+                        <motion.div
+                          key="active"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.25, ease: "easeOut" }}
+                          style={{ width: "100%" }}
+                        >
+                          <ActiveSearchCanvas
+                            query={query}
+                            onQueryChange={handleQueryChange}
+                            onSubmit={handleSubmit}
+                            onClose={handleClose}
+                            selectedLocation={selectedLocation}
+                            onSelectLocation={handleSelectLocation}
+                            activePill={activePill}
+                            onSelectActionPill={handleSelectActionPill}
+                          />
+                        </motion.div>
+                      )}
+
+                      {searchState === "skeleton" && (
+                        <motion.div
+                          key="skeleton"
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.98 }}
+                          transition={{ duration: 0.22, ease: "easeOut" }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            minHeight: 0,
+                            flex: 1,
+                          }}
+                        >
+                          <SkeletonResultsCanvas
+                            query={query}
+                            selectedLocation={selectedLocation}
+                            onClose={handleClose}
+                            onSelectLocation={handleSelectLocation}
+                          />
+                        </motion.div>
+                      )}
+
+                      {searchState === "results" && (
+                        <motion.div
+                          key="results"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            minHeight: 0,
+                            flex: 1,
+                          }}
+                        >
+                          <SearchResultsCanvas
+                            query={query || "I have chest pain and need a doctor"}
+                            results={resultsData}
+                            onEditSearch={handleEditSearch}
+                            onSubmit={handleSubmit}
+                            onClose={handleClose}
+                            selectedLocation={selectedLocation}
+                            onSelectLocation={handleSelectLocation}
+                            onSelectSpecialtyTag={handleSelectSpecialtyTag}
+                            onAskPulse={handleAskPulse}
+                          />
+                        </motion.div>
+                      )}
+
+                      {searchState === "pulse" && (
+                        <motion.div
+                          key="pulse"
+                          initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.98, y: 10 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", minHeight: 0, flex: 1, overflow: "hidden" }}
+                        >
+                          <PulseAIView
+                            query={pulseInitialQuery || query}
+                            selectedLocation={selectedLocation}
+                            doctors={resultsData.doctors}
+                            onBack={handleBackToResults}
+                            onClose={handleClose}
+                            attachedFile={attachedReportFile}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </div>
+              </div>
+            );
+          })()}
+        </AnimatePresence>,
+        document.body
+      )}
 
       {/* Existing Pulse AI Workspace (When opened while docked in compact size or via Pulse trigger) */}
       {mounted && isPulseWorkspaceOpen && createPortal(
@@ -1056,6 +1264,4 @@ export default function NHSearchExperience({
       )}
     </div>
   );
-
-  return dockedMobile && mounted ? createPortal(experience, document.body) : experience;
 }
