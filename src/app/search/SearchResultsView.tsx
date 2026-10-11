@@ -655,6 +655,41 @@ function SearchResultsContent() {
     selectedGender, selectedLanguage
   ]);
 
+  const getDoctorBookingUrl = (
+    docItem: any,
+    modeOverride?: "hospital" | "video",
+    timeOverride?: string
+  ) => {
+    const mode =
+      modeOverride || (consultationType === "Video Consultation" ? "video" : "hospital");
+    const params = new URLSearchParams();
+    params.set("mode", mode);
+
+    const city = location !== "All" ? location : docItem.city;
+    if (city) params.set("city", city);
+
+    if (docItem.hospital) params.set("hospital", docItem.hospital);
+
+    if (selectedAvailability.includes("Available Today")) {
+      params.set("date", "today");
+    } else if (selectedAvailability.includes("Available Tomorrow")) {
+      params.set("date", "tomorrow");
+    }
+
+    if (timeOverride) {
+      params.set("time", timeOverride);
+    } else {
+      const slotString =
+        mode === "video" ? docItem.availability?.video : docItem.availability?.hospital;
+      if (slotString && typeof slotString === "string" && slotString.includes(",")) {
+        const extractedTime = slotString.split(",")[1]?.trim();
+        if (extractedTime) params.set("time", extractedTime);
+      }
+    }
+
+    return `/doctors/${docItem.id}/book?${params.toString()}`;
+  };
+
   // Sync sticky tabs position with Navbar visibility
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -1477,15 +1512,23 @@ function SearchResultsContent() {
 
                         <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 12, marginBottom: 16 }}>
                           {consultationType !== "Video Consultation" && (
-                            <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                            <Link
+                              href={getDoctorBookingUrl(doc, "hospital")}
+                              style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap", textDecoration: "none", transition: "transform 0.15s ease", cursor: "pointer" }}
+                              title={`Book Hospital Visit with ${doc.name}`}
+                            >
                               <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} />
                               {doc.availability.hospital}
-                            </div>
+                            </Link>
                           )}
-                          <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                          <Link
+                            href={getDoctorBookingUrl(doc, "video")}
+                            style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap", textDecoration: "none", transition: "transform 0.15s ease", cursor: "pointer" }}
+                            title={`Book Video Consultation with ${doc.name}`}
+                          >
                             <Image src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={16} height={16} />
                             {doc.availability.video}
-                          </div>
+                          </Link>
                         </div>
 
                         <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
@@ -1496,10 +1539,10 @@ function SearchResultsContent() {
                             <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>onwards</span>
                           </div>
                           <div style={{ display: "flex", gap: 8 }}>
-                            <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
+                            <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }} aria-label={`Call ${doc.name}`}>
                               <PhoneCall size={18} />
                             </a>
-                            <Link href={`/doctors/${doc.id}/book?city=${encodeURIComponent(location !== "All" ? location : doc.city)}`} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <Link href={getDoctorBookingUrl(doc)} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                               Book now
                             </Link>
                           </div>

@@ -359,7 +359,7 @@ export default function PrimaryResults({
       {/* Clean View all doctors Link */}
       <div className={styles.refViewAllRow}>
         <Link
-          href={`/doctors?q=${encodeURIComponent(query)}&city=${encodeURIComponent(selectedLocation)}`}
+          href={`/search/doctors?q=${encodeURIComponent(query)}&city=${encodeURIComponent(selectedLocation)}`}
           className={styles.refViewAllLink}
         >
           <span>View all doctors ({doctors.length > 8 ? `${doctors.length}+` : doctors.length})</span>

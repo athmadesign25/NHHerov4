@@ -70,6 +70,9 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
 
   const modeParam = searchParams.get("mode");
   const cityParam = searchParams.get("city");
+  const hospitalParam = searchParams.get("hospital");
+  const dateParam = searchParams.get("date");
+  const timeParam = searchParams.get("time");
   const aiParam = searchParams.get("ai");
 
   const initialConsultationType: ConsultationType =
@@ -80,8 +83,14 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
     doctor.locations ?? [{ name: doctor.hospital, city: doctor.city }]
   ).map((loc) => ({ value: loc.name, label: loc.name, city: loc.city }));
 
-  // Pre-select hospital matching city param if present
-  const initialHospital = cityParam
+  // Pre-select hospital: match hospitalParam first, then cityParam, then first hospital
+  const initialHospital = hospitalParam
+    ? hospitals.find(
+        (h) =>
+          h.value.toLowerCase().includes(hospitalParam.toLowerCase()) ||
+          hospitalParam.toLowerCase().includes(h.value.toLowerCase())
+      )?.value ?? hospitals[0]?.value ?? ""
+    : cityParam
     ? hospitals.find((h) =>
         h.city.toLowerCase().includes(cityParam.toLowerCase())
       )?.value ?? hospitals[0]?.value ?? ""
@@ -106,8 +115,20 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
       setSelectedHospital(initialHospital);
     }
     const dates = generateDates();
-    if (!state.selectedDate && dates[0]) {
-      setSelectedDate(dates[0].fullDate);
+    if (!state.selectedDate) {
+      if (dateParam === "today" && dates[0]) {
+        setSelectedDate(dates[0].fullDate);
+      } else if (dateParam === "tomorrow" && dates[1]) {
+        setSelectedDate(dates[1].fullDate);
+      } else if (dateParam && dates.some((d) => d.fullDate === dateParam)) {
+        setSelectedDate(dateParam);
+      } else if (dates[0]) {
+        setSelectedDate(dates[0].fullDate);
+      }
+    }
+    if (!state.selectedTime && timeParam) {
+      const decodedTime = decodeURIComponent(timeParam);
+      setSelectedTime(decodedTime);
     }
   }, []); // mount-only — intentional
 

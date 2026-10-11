@@ -3,12 +3,14 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import DoctorVideoGallery from "@/components/seo-marketing/DoctorVideoGallery/DoctorVideoGallery";
 import DoctorFAQ from "@/components/seo-marketing/DoctorFAQ/DoctorFAQ";
 import RequestCallbackCTA from "@/components/seo-marketing/RequestCallbackCTA/RequestCallbackCTA";
+import { searchDoctorsData } from "@/app/search/mockDoctors";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -125,9 +127,51 @@ function SectionHeading({ title }: { title: string }) {
   return <h2 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", marginBottom: 20, letterSpacing: "-0.01em" }}>{title}</h2>;
 }
 
+function getDoctorDetail(slug: string) {
+  if (doctors[slug]) return doctors[slug];
+  const match = searchDoctorsData.find((d) => d.id === slug);
+  if (!match) return null;
+  return {
+    name: match.name,
+    speciality: match.speciality,
+    subSpeciality: match.degrees,
+    hospital: match.hospital,
+    city: match.city,
+    locations: [
+      { name: match.hospital, city: match.city }
+    ],
+    experienceYears: match.experience,
+    rating: match.rating,
+    reviews: match.reviews,
+    img: match.img,
+    fee: match.fee,
+    about: `${match.name} is a renowned ${match.speciality} consultant at Narayana Health (${match.hospital}, ${match.city}) with over ${match.experience} of dedicated clinical excellence.`,
+    specialities: [
+      { name: match.speciality, subtext: match.degrees || "Consultant Specialist" }
+    ],
+    languages: [
+      { name: "English", script: "A" },
+      { name: "Hindi", script: "अ" }
+    ],
+    education: [
+      { title: match.degrees || "MBBS, MD", institution: "Premier Medical Institute" }
+    ],
+    experience: [
+      { role: `Senior ${match.speciality} Consultant`, hospital: match.hospital }
+    ],
+    awards: [
+      { title: "Clinical Excellence in Patient Care", subtitle: "Narayana Health" }
+    ],
+    expertise: [match.speciality, "Diagnostic Assessment", "Comprehensive Outpatient Care"]
+  };
+}
+
 export default function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = React.use(params);
-  const doc = doctors[slug] || doctors["dr-rajiv-menon"];
+  const doc = getDoctorDetail(slug);
+  if (!doc) {
+    notFound();
+  }
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
   const [selectedDate, setSelectedDate] = useState("27");
