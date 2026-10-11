@@ -2247,7 +2247,7 @@ function SearchResultsContent() {
               )}
 
               {/* SPECIALTIES PANEL */}
-              {activeTab === "specialty" && (
+              {activeTab === "specialties" && (
                 <div className={styles.doctorsLayout}>
                   {/* Left Sidebar Filters */}
                   <div className={styles.filterPanel} data-lenis-prevent="true">

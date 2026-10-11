@@ -9,6 +9,14 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
 import styles from "./Navbar.module.css";
 
+function EmergencyIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 256 256">
+      <path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM134.68,87.89C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0c0-27.4-20.07-51.43-46.68-55.89a8,8,0,1,0-2.64,15.78ZM216,200V176H40v24H216Z"></path>
+    </svg>
+  );
+}
+
 const MOCK_FAMILY_MEMBERS = [
   { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
@@ -78,6 +86,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
+  const [searchDocked, setSearchDocked] = useState(false);
   const isOverLightRef = useRef(false);
   const lastScrollY = useRef(0);
 
@@ -118,6 +127,7 @@ export default function Navbar() {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      setSearchDocked(currentScrollY >= window.innerHeight * 0.65);
 
       if (currentScrollY > 20) {
         setScrolled(true);
@@ -376,7 +386,6 @@ export default function Navbar() {
 
           </ul>
         </div>
-<<<<<<< HEAD
         <div style={{ display: "flex", alignItems: "center", gap: "24px" }} className={styles.desktopOnly}>
           <AnimatePresence>
             {searchDocked && (
