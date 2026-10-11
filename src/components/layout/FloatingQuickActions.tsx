@@ -250,7 +250,7 @@ export default function FloatingQuickActions() {
         <Link
           ref={linkRef0}
           className={`${styles.link} ${darkLinks[0] ? styles.linkOnDark : ""}`}
-          href="/find-a-doctor"
+          href="/search/doctors"
           onMouseEnter={calendarHover.onMouseEnter}
           onMouseLeave={calendarHover.onMouseLeave}
         >

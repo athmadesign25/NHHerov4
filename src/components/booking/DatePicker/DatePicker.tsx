@@ -8,7 +8,7 @@ import styles from "./DatePicker.module.css";
 
 interface DatePickerProps {
   dates: DateSlot[];
-  selectedDate: string; // "DD"
+  selectedDate: string; // "YYYY-MM-DD" (DateSlot.fullDate)
   onSelect: (date: string) => void;
 }
 
@@ -24,14 +24,14 @@ export default function DatePicker({ dates, selectedDate, onSelect }: DatePicker
   }, []);
 
   const resetToToday = useCallback(() => {
-    onSelect(dates[0]?.date ?? "");
+    onSelect(dates[0]?.fullDate ?? "");
     if (scrollRef.current) {
       scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
     }
   }, [dates, onSelect]);
 
   const activeMonth =
-    dates.find((d) => d.date === selectedDate)?.month ?? dates[0]?.month ?? "";
+    dates.find((d) => d.fullDate === selectedDate)?.month ?? dates[0]?.month ?? "";
 
   return (
     <div className={styles.wrapper}>
@@ -86,7 +86,7 @@ export default function DatePicker({ dates, selectedDate, onSelect }: DatePicker
           aria-label="Available dates"
         >
           {dates.map((d, index) => {
-            const isSelected = selectedDate === d.date;
+            const isSelected = selectedDate === d.fullDate;
             const isToday = index === 0;
 
             return (
@@ -94,7 +94,7 @@ export default function DatePicker({ dates, selectedDate, onSelect }: DatePicker
                 key={d.fullDate}
                 type="button"
                 onClick={(e) => {
-                  onSelect(d.date);
+                  onSelect(d.fullDate);
                   e.currentTarget.scrollIntoView({
                     behavior: "smooth",
                     block: "nearest",

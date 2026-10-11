@@ -882,7 +882,7 @@ export default function HealthPackages() {
                   </div>
 
                   <Link
-                    href="/health-packages"
+                    href="/search/health-packages"
                     ref={(el) => { railItemRefs.current[railSlots.indexOf("explore")] = el; }}
                     className={styles.exploreRow}
                   >

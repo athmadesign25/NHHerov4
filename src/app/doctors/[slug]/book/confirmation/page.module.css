@@ -156,6 +156,7 @@
   transition: background var(--transition-fast), transform var(--transition-fast);
   white-space: nowrap;
   outline: none;
+  text-decoration: none;
   min-width: 160px;
 }
 

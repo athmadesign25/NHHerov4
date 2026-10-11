@@ -42,7 +42,7 @@ export interface BookingState {
   step: BookingStep;
   consultationType: ConsultationType;
   selectedHospital: string;
-  selectedDate: string;   // "DD"
+  selectedDate: string;   // "YYYY-MM-DD" (DateSlot.fullDate)
   selectedTime: string;   // "09:15 AM"
   patient: PatientDetails;
   isAuthModalOpen: boolean;

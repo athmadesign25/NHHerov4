@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { SEARCH_TABS as TABS, getSearchTabFromPathname, buildSearchUrl } from "@/features/search/searchTabs";
 import Image from "next/image";
 import Link from "next/link";
+import { searchDoctorsData as doctorsData } from "./mockDoctors";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./search.module.css";
 import { searchHealthcare, getCityId, NH_CITIES, type NormalizedResults } from "@/lib/searchService";
@@ -36,410 +38,7 @@ const ALL_SPECIALTIES = [
   "Dentist"
 ];
 
-const doctorsData = [
-  {
-    id: "dr-1",
-    name: "Dr. Rajiv Menon",
-    speciality: "Cardiologist",
-    degrees: "MBBS, MD (General Medicine)",
-    hospital: "Mazumdar Shaw Medical Centre",
-    hospitalCount: "+1",
-    city: "Bangalore",
-    experience: "22 Years",
-    rating: 4.9,
-    reviews: 1240,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 02:30 PM",
-      video: "Today, 10:00 AM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,950",
-  },
-  {
-    id: "dr-2",
-    name: "Dr. Priya Sharma",
-    speciality: "Neurologist",
-    degrees: "MBBS, MD, DM (Neurology)",
-    hospital: "NH Kolkata",
-    hospitalCount: "",
-    city: "Kolkata",
-    experience: "15 Years",
-    rating: 4.8,
-    reviews: 890,
-    available: "Next Available: Tomorrow",
-    availability: {
-      hospital: "Tomorrow, 11:00 AM",
-      video: "Tomorrow, 04:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,200",
-    isExecutive: true,
-  },
-  {
-    id: "dr-3",
-    name: "Dr. Arun Krishnan",
-    speciality: "Oncologist",
-    degrees: "MBBS, MS, MCh (Surgical Oncology)",
-    hospital: "NH Bangalore",
-    hospitalCount: "+2",
-    city: "Bangalore",
-    experience: "28 Years",
-    rating: 4.9,
-    reviews: 2100,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 05:30 PM",
-      video: "Tomorrow, 09:00 AM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹2,000",
-  },
-  {
-    id: "dr-4",
-    name: "Dr. Sunita Patel",
-    speciality: "Orthopaedics",
-    degrees: "MBBS, MS (Orthopaedics)",
-    hospital: "NH Ahmedabad",
-    hospitalCount: "",
-    city: "Ahmedabad",
-    experience: "18 Years",
-    rating: 4.7,
-    reviews: 560,
-    available: "Available Today",
-    availability: {
-      hospital: "Tomorrow, 01:00 PM",
-      video: "Today, 03:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,000",
-  },
-  {
-    id: "dr-5",
-    name: "Dr. Mohammed Raza",
-    speciality: "Cardiologist",
-    degrees: "MBBS, MD, DM (Cardiology)",
-    hospital: "NH Mumbai",
-    hospitalCount: "+1",
-    city: "Mumbai",
-    experience: "20 Years",
-    rating: 4.8,
-    reviews: 980,
-    available: "Next Available: Day After",
-    availability: {
-      hospital: "Tue, 10:30 AM",
-      video: "Tomorrow, 06:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,800",
-  },
-  {
-    id: "dr-6",
-    name: "Dr. Ananya Roy",
-    speciality: "Neurologist",
-    degrees: "MBBS, MD (Medicine)",
-    hospital: "NH Kolkata",
-    hospitalCount: "",
-    city: "Kolkata",
-    experience: "12 Years",
-    rating: 4.6,
-    reviews: 430,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 04:30 PM",
-      video: "Today, 07:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹900",
-  },
-  {
-    id: "dr-7",
-    name: "Dr. Sandeep Kumar",
-    speciality: "Orthopedic Surgery",
-    degrees: "MBBS, MS (Orthopedics), Fellowship in Joint Replacement",
-    hospital: "NH Guwahati",
-    hospitalCount: "",
-    city: "Guwahati",
-    experience: "16 Years",
-    rating: 4.5,
-    reviews: 320,
-    available: "Available Tomorrow",
-    availability: {
-      hospital: "Tomorrow, 10:00 AM",
-      video: "Tomorrow, 04:30 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹800",
-  },
-  {
-    id: "dr-8",
-    name: "Dr. Vikram Singh",
-    speciality: "Interventional Cardiology",
-    degrees: "MBBS, MD, DM (Cardiology), FACC",
-    hospital: "NH Jaipur",
-    hospitalCount: "+1",
-    city: "Jaipur",
-    experience: "25 Years",
-    rating: 4.9,
-    reviews: 1540,
-    available: "Next Available: Monday",
-    availability: {
-      hospital: "Mon, 11:30 AM",
-      video: "Mon, 04:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹2,500",
-    isExecutive: true,
-  },
-  {
-    id: "dr-9",
-    name: "Dr. Meera Nanda",
-    speciality: "Medical Oncology",
-    degrees: "MBBS, MD, DM (Medical Oncology)",
-    hospital: "NH Delhi",
-    hospitalCount: "",
-    city: "Delhi",
-    experience: "19 Years",
-    rating: 4.7,
-    reviews: 845,
-    available: "No Slots Available",
-    availability: {
-      hospital: "Today, 02:00 PM",
-      video: "26 Jan, 11:00 AM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,500",
-  },
-  {
-    id: "dr-10",
-    name: "Dr. Sameer Desai",
-    speciality: "Pediatric Cardiology",
-    degrees: "MBBS, MD (Pediatrics), FNB (Pediatric Cardiology)",
-    hospital: "NH Mumbai",
-    hospitalCount: "+2",
-    city: "Mumbai",
-    experience: "14 Years",
-    rating: 4.8,
-    reviews: 670,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 03:00 PM",
-      video: "Today, 05:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,100",
-  },
-  {
-    id: "dr-11",
-    name: "Dr. Kavita Reddy",
-    speciality: "Surgical Oncology",
-    degrees: "MBBS, MS, MCh (Surgical Oncology)",
-    hospital: "NH Bangalore",
-    hospitalCount: "",
-    city: "Bangalore",
-    experience: "21 Years",
-    rating: 4.9,
-    reviews: 1120,
-    available: "Available Tomorrow",
-    availability: {
-      hospital: "Tomorrow, 09:30 AM",
-      video: "Tomorrow, 12:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,800",
-  },
-  {
-    id: "dr-12",
-    name: "Dr. Ananya Sharma",
-    speciality: "Joint Replacement",
-    degrees: "MBBS, MS (Orthopedics)",
-    hospital: "NH Shimoga",
-    hospitalCount: "",
-    city: "Shimoga",
-    experience: "12 Years",
-    rating: 4.6,
-    reviews: 450,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 02:00 PM",
-      video: "Today, 05:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹750",
-  },
-  {
-    id: "dr-13",
-    name: "Dr. Rahul Verma",
-    speciality: "Neuro Surgery",
-    degrees: "MBBS, MS, MCh (Neurosurgery)",
-    hospital: "NH Dharwad",
-    hospitalCount: "",
-    city: "Dharwad",
-    experience: "22 Years",
-    rating: 4.8,
-    reviews: 1100,
-    available: "Next Available: Tomorrow",
-    availability: {
-      hospital: "Tomorrow, 10:30 AM",
-      video: "Tomorrow, 03:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,800",
-  },
-  {
-    id: "dr-14",
-    name: "Dr. Siddharth Rao",
-    speciality: "Interventional Cardiology",
-    degrees: "MBBS, MD, DM (Cardiology)",
-    hospital: "NH Ahmedabad",
-    hospitalCount: "+1",
-    city: "Ahmedabad",
-    experience: "18 Years",
-    rating: 4.7,
-    reviews: 890,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 04:00 PM",
-      video: "Today, 08:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,200",
-  },
-  {
-    id: "dr-15",
-    name: "Dr. Sneha Patil",
-    speciality: "Medical Oncology",
-    degrees: "MBBS, MD (Medicine), DM (Oncology)",
-    hospital: "NH Kolar",
-    hospitalCount: "",
-    city: "Kolar",
-    experience: "15 Years",
-    rating: 4.9,
-    reviews: 650,
-    available: "Available Tomorrow",
-    availability: {
-      hospital: "Tue, 09:00 AM",
-      video: "Tomorrow, 01:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,000",
-  },
-  {
-    id: "dr-16",
-    name: "Dr. Kunal Basu",
-    speciality: "Pediatric Cardiology",
-    degrees: "MBBS, MD, Fellowship in Pediatric Cardiology",
-    hospital: "NH Barasat",
-    hospitalCount: "",
-    city: "Barasat",
-    experience: "11 Years",
-    rating: 4.5,
-    reviews: 210,
-    available: "Next Available: Thursday",
-    availability: {
-      hospital: "Today, 11:00 AM",
-      video: "26 Jan, 10:00 AM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹900",
-  },
-  {
-    id: "dr-17",
-    name: "Dr. Amitab Ghosh",
-    speciality: "Surgical Oncology",
-    degrees: "MBBS, MS, MCh (Surgical Oncology)",
-    hospital: "NH Jamshedpur",
-    hospitalCount: "+2",
-    city: "Jamshedpur",
-    experience: "26 Years",
-    rating: 4.9,
-    reviews: 1800,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 12:30 PM",
-      video: "Today, 05:30 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹2,200",
-    isExecutive: true,
-  },
-  {
-    id: "dr-18",
-    name: "Dr. Ritu Singh",
-    speciality: "Orthopedic Surgery",
-    degrees: "MBBS, MS (Orthopedics)",
-    hospital: "NH Gurugram",
-    hospitalCount: "",
-    city: "Gurugram",
-    experience: "14 Years",
-    rating: 4.7,
-    reviews: 740,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 09:00 AM",
-      video: "Today, 11:00 AM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,500",
-  },
-  {
-    id: "dr-19",
-    name: "Dr. Tariq Khan",
-    speciality: "Neuro Surgery",
-    degrees: "MBBS, MS, MCh (Neurosurgery)",
-    hospital: "NH Howrah",
-    hospitalCount: "+1",
-    city: "Howrah",
-    experience: "20 Years",
-    rating: 4.8,
-    reviews: 1300,
-    available: "No Slots Available",
-    availability: {
-      hospital: "29 Jan, 10:00 AM",
-      video: "29 Jan, 04:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,600",
-  },
-  {
-    id: "dr-20",
-    name: "Dr. Priti Gowda",
-    speciality: "Joint Replacement",
-    degrees: "MBBS, MS (Orthopedics)",
-    hospital: "NH Mysore",
-    hospitalCount: "",
-    city: "Mysore",
-    experience: "17 Years",
-    rating: 4.6,
-    reviews: 580,
-    available: "Available Tomorrow",
-    availability: {
-      hospital: "Tomorrow, 04:00 PM",
-      video: "Tomorrow, 06:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_female_v2.png",
-    fee: "₹1,100",
-  },
-  {
-    id: "dr-21",
-    name: "Dr. Vivek Anand",
-    speciality: "Interventional Cardiology",
-    degrees: "MBBS, MD, DM (Cardiology)",
-    hospital: "NH Hosur",
-    hospitalCount: "",
-    city: "Hosur",
-    experience: "13 Years",
-    rating: 4.7,
-    reviews: 490,
-    available: "Available Today",
-    availability: {
-      hospital: "Today, 10:00 AM",
-      video: "Today, 02:00 PM"
-    },
-    img: "/images/misc/doctor_avatar_male_v2.png",
-    fee: "₹1,000",
-  }
-];
+
 
 
 const hospitalsData = [
@@ -765,16 +364,11 @@ const articlesData = [
   },
 ];
 
-const TABS = [
-  { id: "doctors", label: "Doctors", countKey: "doctors" },
-  { id: "specialties", label: "Specialty", countKey: "specialties" },
-  { id: "packages_tests", label: "Health Packages & Tests", countKey: "packages_tests" },
-  { id: "treatments", label: "Treatments & Procedures", countKey: "treatments" },
-  { id: "articles", label: "Articles & Blogs", countKey: "articles" },
-];
+// TABS imported from searchTabs
 
 function SearchResultsContent() {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const router = useRouter();
   
   const initialQuery =
@@ -786,7 +380,15 @@ function SearchResultsContent() {
   const initialLocation = initialCityName || searchParams.get("location") || "All";
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
-  const [activeTab, setActiveTab] = useState("doctors");
+
+  // Tab state driven by URL instead of useState
+  const activeTabObj = getSearchTabFromPathname(pathname);
+  const activeTab = activeTabObj.id;
+  
+  const setActiveTab = (tabId: string) => {
+    const nextUrl = buildSearchUrl({ tab: tabId as any, q: query, location });
+    window.history.pushState(null, "", nextUrl);
+  };
 
   // Filter State
   const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
@@ -879,13 +481,13 @@ function SearchResultsContent() {
     }
 
     setLocation(initialCityName || searchParams.get("location") || "All");
-    setActiveTab("doctors");
+    // Tab state is now driven by URL, so we don't force it back to "doctors" on params change
   }, [initialQuery, initialCityName, searchParams]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search?q=${encodeURIComponent(query.trim())}&location=${encodeURIComponent(location)}`);
-    setActiveTab("doctors");
+    const nextUrl = buildSearchUrl({ tab: activeTab as any, q: query.trim(), location });
+    router.push(nextUrl);
   };
 
   // Filter logic for each category
@@ -1040,124 +642,210 @@ function SearchResultsContent() {
 
   const shouldGroupFilters = activeDynamicFiltersCount > 5;
 
+  // Infinite Scroll for Doctors
+  const [visibleDoctorsCount, setVisibleDoctorsCount] = useState(16);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setVisibleDoctorsCount(16);
+  }, [
+    query, location, consultationType, 
+    selectedSpecialties, selectedHospitals, 
+    selectedAvailability, selectedExpertise, 
+    selectedGender, selectedLanguage
+  ]);
+
+  // Sync sticky tabs position with Navbar visibility
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Matches Navbar.tsx logic exactly
+      if (currentScrollY < 120) {
+        setIsNavVisible(true);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      const delta = currentScrollY - lastScrollY.current;
+      if (Math.abs(delta) < 12) return;
+
+      if (delta > 0) {
+        setIsNavVisible(false);
+      } else {
+        setIsNavVisible(true);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (activeTab !== "doctors" || displayDoctors.length <= visibleDoctorsCount) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        // Since it's all frontend data, we load heavily and quickly
+        setVisibleDoctorsCount(prev => Math.min(prev + 16, displayDoctors.length));
+      }
+    }, { threshold: 0, rootMargin: "1200px" });
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [activeTab, displayDoctors.length, visibleDoctorsCount]);
+
   return (
-    <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
-      {/* Top Search Banner */}
-      <div style={{ background: "linear-gradient(to bottom, #FFFFFF 0%, var(--color-bg-alt) 100%)", padding: "24px 0 24px", color: "var(--color-text)" }}>
-        <div className="container">
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div>
-              <Breadcrumbs theme="light" items={[
-                { label: "Home", href: "/" },
-                { label: "Search Results" }
-              ]} />
-            </div>
+    <div style={{ paddingTop: 0, minHeight: "100vh", background: "var(--color-bg-card)" }}>
+      {/* Unified Dynamic Sticky Header */}
+      <div style={{ 
+        position: "sticky", 
+        top: 0, 
+        zIndex: 40,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+        display: "flex",
+        flexDirection: "column"
+      }}>
+        
+        {/* Dynamic Spacer to reserve space for the Navbar when visible */}
+        <motion.div 
+          initial={false}
+          animate={{ height: isNavVisible ? "var(--nav-height)" : 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          style={{ width: "100%", pointerEvents: "none" }}
+        />
 
-            <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
-              <div style={{ position: "relative", flex: 1 }}>
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search doctors, hospitals, packages, tests, conditions..."
-                  style={{
-                    width: "100%",
-                    height: 52,
-                    padding: "0 48px 0 52px",
-                    borderRadius: 26,
-                    border: "none",
-                    outline: "none",
-                    fontSize: 16,
-                    color: "#1E293B",
-                    fontWeight: 500,
-                    boxShadow: "var(--shadow-sm)",
-                  }}
-                />
-                {query && (
-                  <button 
-                    type="button" 
-                    onClick={() => setQuery("")}
-                    style={{ position: "absolute", right: 20, top: 16, background: "none", border: "none", cursor: "pointer", color: "#94A3B8" }}
-                  >
-                    <X size={20} />
-                  </button>
-                )}
-                <Search 
-                  size={20} 
-                  style={{ position: "absolute", left: 20, top: 16, color: "#94A3B8" }} 
-                />
+        {/* Collapsible Search Banner */}
+        <AnimatePresence>
+          {isNavVisible && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              style={{ overflow: "hidden", background: "linear-gradient(to bottom, #FFFFFF 0%, var(--color-bg-alt) 100%)", position: "relative", zIndex: 41 }}
+            >
+              <div style={{ paddingTop: 16, paddingBottom: 16, color: "var(--color-text)" }}>
+                <div className="container">
+                  <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
+                    <div style={{ position: "relative", flex: 1 }}>
+                      <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Search doctors, hospitals, packages, tests, conditions..."
+                        style={{
+                          width: "100%",
+                          height: 52,
+                          padding: "0 48px 0 52px",
+                          borderRadius: 26,
+                          border: "none",
+                          outline: "none",
+                          fontSize: 16,
+                          color: "#1E293B",
+                          fontWeight: 500,
+                          boxShadow: "var(--shadow-sm)",
+                          background: "#FFFFFF"
+                        }}
+                      />
+                      {query && (
+                        <button 
+                          type="button" 
+                          onClick={() => setQuery("")}
+                          style={{ position: "absolute", right: 20, top: 16, background: "none", border: "none", cursor: "pointer", color: "#94A3B8" }}
+                        >
+                          <X size={20} />
+                        </button>
+                      )}
+                      <Search 
+                        size={20} 
+                        style={{ position: "absolute", left: 20, top: 16, color: "#94A3B8" }} 
+                      />
+                    </div>
+                  </form>
+                </div>
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            </form>
+        {/* Always Visible Tabs */}
+        <div style={{ background: "var(--color-bg-alt)", borderBottom: "1px solid var(--color-border)" }}>
+          <div className="container">
+            <div className={styles.tabScroll} style={{ marginBottom: 0 }}>
+              {TABS.map((tab) => {
+                const isActive = activeTab === tab.id;
+                const count = counts[tab.countKey];
+                return (
+                  <button
+                    key={tab.id}
+                    className={isActive ? styles.activeTab : ""}
+                    onClick={() => setActiveTab(tab.id)}
+                    style={{
+                      position: "relative",
+                      padding: "12px 18px",
+                      background: isActive 
+                        ? "linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box, linear-gradient(to bottom, var(--color-emergency, #EF4444) 0%, var(--color-bg-alt) 70%) border-box" 
+                        : "var(--color-bg-alt)",
+                      border: "1px solid transparent",
+                      borderBottom: "1px solid transparent",
+                      borderRadius: "16px 16px 0 0",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: isActive ? "#000000" : "#64748B",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginBottom: -1,
+                      transition: "all 0.2s ease",
+                    }}
+                  >
+                    {tab.label}
+                    <span 
+                      style={{ 
+                        fontSize: 11, 
+                        background: isActive ? "rgba(3, 78, 162, 0.08)" : "#E2E8F0", 
+                        color: isActive ? "#000000" : "#64748B",
+                        padding: "2px 6px",
+                        borderRadius: 10,
+                        fontWeight: 500
+                      }}
+                    >
+                      {count}
+                    </span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="activeTabUnderline"
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: "calc(50% - 18px)",
+                          width: 36,
+                          height: 2,
+                          background: "var(--color-emergency, #EF4444)",
+                          borderRadius: 4,
+                        }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Tabs and Content Wrapper */}
-      <div className="container" style={{ paddingTop: 0, paddingBottom: 24 }}>
-        {/* Horizontal Navigation Filters */}
-        <div className={styles.tabScroll}>
-          {TABS.map((tab) => {
-            const isActive = activeTab === tab.id;
-            const count = counts[tab.countKey];
-            return (
-              <button
-                key={tab.id}
-                className={isActive ? styles.activeTab : ""}
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  position: "relative",
-                  padding: "12px 18px",
-                  background: isActive 
-                    ? "linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box, linear-gradient(to bottom, var(--color-emergency, #EF4444) 0%, var(--color-bg-alt) 70%) border-box" 
-                    : "var(--color-bg-alt)",
-                  border: "1px solid transparent",
-                  borderBottom: "1px solid transparent",
-                  borderRadius: "16px 16px 0 0",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: isActive ? "#000000" : "#64748B",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: -1,
-                  transition: "all 0.2s ease",
-                }}
-              >
-                {tab.label}
-                <span 
-                  style={{ 
-                    fontSize: 11, 
-                    background: isActive ? "rgba(3, 78, 162, 0.08)" : "#E2E8F0", 
-                    color: isActive ? "#000000" : "#64748B",
-                    padding: "2px 6px",
-                    borderRadius: 10,
-                    fontWeight: 500
-                  }}
-                >
-                  {count}
-                </span>
-                {isActive && (
-                  <motion.div 
-                    layoutId="activeTabUnderline"
-                    style={{
-                      position: "absolute",
-                      bottom: 0,
-                      left: "calc(50% - 18px)",
-                      width: 36,
-                      height: 2,
-                      background: "var(--color-emergency, #EF4444)",
-                      borderRadius: 4,
-                    }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Tab Content Panels */}
+      {/* Tab Content Panels */}
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 24 }}>
         <div>
           <AnimatePresence mode="wait">
             <motion.div
@@ -1686,7 +1374,7 @@ function SearchResultsContent() {
                         </motion.div>
                       ))
                     ) : (
-                      displayDoctors.map((doc) => (
+                      displayDoctors.slice(0, visibleDoctorsCount).map((doc) => (
                     <div 
                       key={doc.id}
                       style={{ 
@@ -1820,6 +1508,15 @@ function SearchResultsContent() {
                     </div>
                   )))}
                   {displayDoctors.length === 0 && !isFiltering && <EmptyState category="doctors" />}
+                  {displayDoctors.length > visibleDoctorsCount && (
+                    <div ref={loadMoreRef} style={{ padding: "20px", display: "flex", justifyContent: "center", gridColumn: "1 / -1" }}>
+                      <div className={styles.loadingDots}>
+                        <span className={styles.dot}></span>
+                        <span className={styles.dot}></span>
+                        <span className={styles.dot}></span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 </div>
                 </div>

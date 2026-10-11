@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Calendar, Clock, MapPin, Video, User, Edit2, CheckCircle2 } from "lucide-react";
 import type { BookingDoctorSummary, BookingState } from "@/features/booking/types";
+import { formatBookingDate } from "@/features/booking/format";
 import styles from "./BookingSummary.module.css";
 
 interface BookingSummaryProps {
@@ -76,7 +77,7 @@ export default function BookingSummary({
             <Calendar size={15} className={styles.detailIcon} aria-hidden />
             <div>
               <span className={styles.detailLabel}>Date</span>
-              <span className={styles.detailValue}>{selectedDate}</span>
+              <span className={styles.detailValue}>{formatBookingDate(selectedDate)}</span>
             </div>
           </li>
           <li className={styles.detailItem}>

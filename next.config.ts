@@ -14,12 +14,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/find-a-doctor',
-        destination: '/search?q=Doctor&location=All',
+        destination: '/search/doctors',
         permanent: false,
       },
       {
         source: '/book',
-        destination: '/search?q=Doctor&location=All',
+        destination: '/search/doctors',
         permanent: false,
       },
     ];

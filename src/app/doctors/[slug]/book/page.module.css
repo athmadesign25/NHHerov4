@@ -1,0 +1,479 @@
+/* ─── PAGE-LEVEL STYLES — BOOK APPOINTMENT (Toshib Layout) ──────────────── */
+
+/* ─── PAGE WRAPPER ───────────────────────────────────────────────────────── */
+.page {
+  padding-top: var(--nav-height);
+  min-height: 100dvh;
+  background: var(--color-bg, #f8fafc);
+  padding-bottom: 100px; /* clearance for mweb sticky footer */
+}
+
+/* ─── CONTAINER ──────────────────────────────────────────────────────────── */
+.container {
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+}
+
+/* ─── NAV ROW ────────────────────────────────────────────────────────────── */
+.navRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding-top: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  width: fit-content;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+}
+
+/* ─── 2-COLUMN GRID ──────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 560px;
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+/* ─── LEFT PANEL — DOCTOR SUMMARY ───────────────────────────────────────── */
+.doctorPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  position: sticky;
+  top: calc(var(--nav-height) + var(--sp-4));
+}
+
+/* Doctor Card */
+.doctorCard {
+  background: var(--color-bg-card, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  display: flex;
+  gap: var(--sp-4);
+  align-items: flex-start;
+  box-shadow: var(--shadow-sm);
+}
+
+.doctorImgWrap {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-subtle, #f1f5f9);
+}
+
+.doctorImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.doctorName {
+  font-size: clamp(17px, 1.5vw, 22px);
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.doctorSpec {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.doctorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.starIcon {
+  color: #f59e0b;
+}
+
+.metaMuted {
+  color: var(--color-text-tertiary, #94a3b8);
+}
+
+/* Fee Card */
+.feeCard {
+  background: var(--color-bg-card, #fff);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feeLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.feeAmount {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.trustList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: var(--sp-2);
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  animation: trustFade 0.25s ease-out;
+}
+
+.trustCheck {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+@keyframes trustFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trustList { animation: none; }
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ─── RIGHT PANEL — BOOKING ──────────────────────────────────────────────── */
+.bookingPanel {
+  background: var(--color-bg-card, #fff);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── AI BANNER ──────────────────────────────────────────────────────────── */
+.aiBanner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: linear-gradient(to right, #eef2ff, #e0e7ff);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 12px 16px;
+}
+
+.aiBannerIcon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: #c7d2fe;
+  color: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.aiBannerTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 2px;
+}
+
+.aiBannerBody {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── SECTIONS ───────────────────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.section:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionIcon {
+  color: var(--color-text-secondary);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ─── CTA BLOCK ──────────────────────────────────────────────────────────── */
+.ctaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* Primary CTA */
+.ctaPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  letter-spacing: -0.01em;
+}
+
+.ctaPrimary:hover:not(.ctaDisabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ctaPrimary:active:not(.ctaDisabled) {
+  transform: translateY(0);
+}
+
+.ctaPrimary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.ctaDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ctaFullWidth {
+  width: 100%;
+}
+
+/* Explains why the primary CTA is disabled */
+.ctaHint {
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* Outline CTA (Call for Enquiry) */
+.ctaOutline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  letter-spacing: -0.01em;
+}
+
+.ctaOutline:hover {
+  background: var(--color-primary-light, #eff6ff);
+}
+
+/* ─── MWEB STICKY FOOTER ─────────────────────────────────────────────────── */
+.stickyFooter {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: var(--color-bg-card, #fff);
+  border-top: 1px solid var(--color-border);
+  padding: 12px var(--sp-4) max(16px, env(safe-area-inset-bottom));
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectionChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  width: fit-content;
+}
+
+.callLinkMobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────────────────────── */
+
+/* Tablet: collapse to single column */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .doctorPanel {
+    position: static;
+  }
+
+  /* Flip order: booking panel first on tablet/mweb */
+  .bookingPanel {
+    order: -1;
+  }
+}
+
+/* Mobile: show sticky footer, hide inline CTAs */
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 140px;
+  }
+
+  .container {
+    padding: 0 var(--sp-3);
+  }
+
+  .navRow {
+    padding-top: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+
+  .stickyFooter {
+    display: flex;
+  }
+
+  .ctaBlock {
+    display: none; /* CTAs live in the sticky footer on mobile */
+  }
+
+  .doctorCard {
+    flex-direction: row;
+    gap: var(--sp-3);
+  }
+
+  .doctorImgWrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .bookingPanel {
+    padding: var(--sp-4);
+    gap: var(--sp-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--sp-2);
+  }
+
+  .bookingPanel {
+    padding: var(--sp-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .doctorCard {
+    padding: var(--sp-3);
+    border-radius: var(--radius-lg);
+  }
+}

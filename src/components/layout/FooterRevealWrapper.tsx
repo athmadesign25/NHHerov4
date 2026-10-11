@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 import SeoLinksBand from "./SeoLinksBand";
 
@@ -72,6 +73,9 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
   const [footerHeight, setFooterHeight] = useState(0);
   const [pinned, setPinned] = useState(false);
 
+  const pathname = usePathname();
+  const isSearchPage = pathname?.startsWith("/search") ?? false;
+
   useEffect(() => {
     const footerEl = footerRef.current;
     if (!footerEl) return;
@@ -81,13 +85,8 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       setFooterHeight(height);
       // The real constraint is only whether the unit fits on screen: pinned
       // to `bottom: 0`, anything taller than the viewport puts its own top
-      // permanently out of reach. The previous `- 80` was breathing room on
-      // top of that, and it quietly cost the effect entirely — Footer alone
-      // is ~847px, so the buffer already demanded a ~927px viewport, and the
-      // collapsed band's ~50px pushed the bar to ~977px. Ordinary laptop
-      // windows sit between those two numbers, which is why the curtain kept
-      // vanishing on real screens while measuring fine in a tall one.
-      setPinned(height > 0 && height <= window.innerHeight);
+      // permanently out of reach. 
+      setPinned(height > 0 && height <= window.innerHeight && !isSearchPage);
     };
 
     measure();
@@ -98,7 +97,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [isSearchPage]);
 
   return (
     <>

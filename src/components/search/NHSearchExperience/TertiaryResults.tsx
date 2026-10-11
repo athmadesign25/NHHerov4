@@ -67,7 +67,7 @@ export default function TertiaryResults({
           {displayedTreatments.map((t) => (
             <Link
               key={t.id}
-              href={`/search?q=${encodeURIComponent(t.title)}`}
+              href={`/search/treatments?q=${encodeURIComponent(t.title)}`}
               className={styles.editorialItem}
             >
               <div className={styles.editorialItemLeft}>
@@ -99,7 +99,7 @@ export default function TertiaryResults({
           {displayedArticles.map((art, idx) => (
             <Link
               key={art.id}
-              href={`/search?q=${encodeURIComponent(art.title)}`}
+              href={`/search/articles?q=${encodeURIComponent(art.title)}`}
               className={styles.editorialItem}
             >
               <div className={styles.editorialItemLeft}>

@@ -26,9 +26,6 @@
   white-space: nowrap;
   scrollbar-width: none;
   width: 100vw;
-  position: sticky;
-  top: 68px; /* Navbar inner height is 68px */
-  z-index: 40;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   padding-left: calc(50vw - 50% + 24px); /* Fallback padding to align with container */
@@ -245,4 +242,28 @@
   right: 0;
   border-top: 6px solid #8B6508;
   border-right: 6px solid transparent;
+}
+
+.loadingDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+}
+
+.loadingDots .dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loadingDots .dot:nth-child(1) { animation-delay: -0.32s; }
+.loadingDots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
 }

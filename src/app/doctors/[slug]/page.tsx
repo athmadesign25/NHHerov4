@@ -6,6 +6,9 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import DoctorVideoGallery from "@/components/seo-marketing/DoctorVideoGallery/DoctorVideoGallery";
+import DoctorFAQ from "@/components/seo-marketing/DoctorFAQ/DoctorFAQ";
+import RequestCallbackCTA from "@/components/seo-marketing/RequestCallbackCTA/RequestCallbackCTA";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -19,7 +22,7 @@ const doctors: Record<string, {
   awards: { title: string; subtitle: string }[];
   expertise: string[];
 }> = {
-  "dr-1": {
+  "dr-rajiv-menon": {
     name: "Dr. Rajiv Menon", speciality: "Cardiology", subSpeciality: "Interventional Cardiology",
     hospital: "NH Bangalore — Mazumdar Shaw", city: "Bengaluru",
     locations: [
@@ -122,9 +125,9 @@ function SectionHeading({ title }: { title: string }) {
   return <h2 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", marginBottom: 20, letterSpacing: "-0.01em" }}>{title}</h2>;
 }
 
-export default function DoctorDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = React.use(params);
-  const doc = doctors[id] || doctors["dr-1"];
+export default function DoctorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = React.use(params);
+  const doc = doctors[slug] || doctors["dr-rajiv-menon"];
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
   const [selectedDate, setSelectedDate] = useState("27");
@@ -292,6 +295,12 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
 
             </motion.div>
+
+            {/* SEO & Marketing Components */}
+            <DoctorVideoGallery doctorName={doc.name} />
+            <DoctorFAQ doctorName={doc.name} />
+            <RequestCallbackCTA />
+
           </div>
 
           {/* Right — Booking Card */}
@@ -307,7 +316,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             </p>
 
             <Link
-              href={`/doctors/${id}/book?mode=hospital`}
+              href={`/doctors/${slug}/book?mode=hospital`}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -332,7 +341,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
             </Link>
 
             <Link
-              href={`/doctors/${id}/book?mode=video`}
+              href={`/doctors/${slug}/book?mode=video`}
               style={{
                 display: "flex",
                 alignItems: "center",

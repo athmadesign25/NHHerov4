@@ -215,43 +215,43 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("find-a-doctor")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link className={styles.navLink} href="/search">
+            <Link className={styles.navLink} href="/search/doctors">
               Find a Doctor<ChevronDown size={14} />
             </Link>
             {activeDropdown === "find-a-doctor" && (
               <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Top Specialties</div>
-                  <Link href="/search?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
-                  <Link href="/search?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
-                  <Link href="/search?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
-                  <Link href="/search?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
-                  <Link href="/search?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
+                  <Link href="/search/doctors?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
+                  <Link href="/search/doctors?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
+                  <Link href="/search/doctors?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
+                  <Link href="/search/doctors?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
+                  <Link href="/search/doctors?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Surgical Specialists</div>
-                  <Link href="/search?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
-                  <Link href="/search?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
-                  <Link href="/search?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
-                  <Link href="/search?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
+                  <Link href="/search/doctors?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
+                  <Link href="/search/doctors?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
+                  <Link href="/search/doctors?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
+                  <Link href="/search/doctors?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Internal Medicine</div>
-                  <Link href="/search?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
-                  <Link href="/search?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
-                  <Link href="/search?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
-                  <Link href="/search?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
+                  <Link href="/search/doctors?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
+                  <Link href="/search/doctors?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
+                  <Link href="/search/doctors?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
+                  <Link href="/search/doctors?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Other Specialists</div>
-                  <Link href="/search?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
-                  <Link href="/search?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
-                  <Link href="/search?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
-                  <Link href="/search?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
-                  <Link href="/search?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
+                  <Link href="/search/doctors?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
+                  <Link href="/search/doctors?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
+                  <Link href="/search/doctors?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
+                  <Link href="/search/doctors?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
+                  <Link href="/search/doctors?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/search" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <Link href="/search/doctors" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -263,7 +263,7 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("hospitals")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link className={styles.navLink} href="/hospitals">
+            <Link className={styles.navLink} href="/search/hospitals">
               Hospitals & Clinics<ChevronDown size={14} />
             </Link>
             {activeDropdown === "hospitals" && (
@@ -295,7 +295,7 @@ export default function Navbar() {
                   <Link href="/hospitals/bangladesh-helpdesk" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bangladesh<br />Helpdesk</Link>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/hospitals" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <Link href="/search/hospitals" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -307,7 +307,7 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("specialities")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link className={styles.navLink} href="/specialities">
+            <Link className={styles.navLink} href="/search/specialities">
               Treatment & Specialities<ChevronDown size={14} />
             </Link>
             {activeDropdown === "specialities" && (
@@ -337,7 +337,7 @@ export default function Navbar() {
                   <Link href="/specialities/sports-medicine" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Sports Medicine</Link>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <Link href="/search/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -349,7 +349,7 @@ export default function Navbar() {
             onMouseEnter={() => setActiveDropdown("health-checks")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <Link className={styles.navLink} href="/health-checks">
+            <Link className={styles.navLink} href="/search/health-packages">
               Health Checkups<ChevronDown size={14} />
             </Link>
             {activeDropdown === "health-checks" && (
@@ -373,7 +373,7 @@ export default function Navbar() {
                   </div>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/health-checks" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <Link href="/search/health-packages" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
                   </Link>
                 </div>
@@ -818,18 +818,18 @@ export default function Navbar() {
                   <div className={styles.darkDrawerScroll}>
                     <div className={styles.subCategoryGroup}>
                       <div className={styles.subCategoryLabel}>Top Specialties</div>
-                      <Link href="/search?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
-                      <Link href="/search?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
-                      <Link href="/search?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
-                      <Link href="/search?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
-                      <Link href="/search?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
+                      <Link href="/search/doctors?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
+                      <Link href="/search/doctors?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
+                      <Link href="/search/doctors?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
+                      <Link href="/search/doctors?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
+                      <Link href="/search/doctors?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
                     </div>
                     <div className={styles.subCategoryGroup}>
                       <div className={styles.subCategoryLabel}>Surgical Specialists</div>
-                      <Link href="/search?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
-                      <Link href="/search?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
-                      <Link href="/search?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
-                      <Link href="/search?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
+                      <Link href="/search/doctors?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
+                      <Link href="/search/doctors?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
+                      <Link href="/search/doctors?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
+                      <Link href="/search/doctors?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
                     </div>
                   </div>
                 </motion.div>

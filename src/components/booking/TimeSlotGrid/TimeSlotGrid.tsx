@@ -2,8 +2,22 @@
 
 import React from "react";
 import { CloudSun, Sun, Moon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { TimeSlot, SlotPeriod } from "@/features/booking/types";
 import styles from "./TimeSlotGrid.module.css";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.04 }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 interface TimeSlotGridProps {
   slots: TimeSlot[];
@@ -54,33 +68,42 @@ export default function TimeSlotGrid({ slots, selectedTime, onSelect }: TimeSlot
               <span className={styles.periodLabel}>{label}</span>
             </div>
 
-            <div className={styles.chipGrid}>
-              {periodSlots.map((slot) => {
-                const isSelected = selectedTime === slot.time;
-                return (
-                  <button
-                    key={slot.time}
-                    type="button"
-                    onClick={() => slot.available && onSelect(slot.time)}
-                    className={[
-                      styles.chip,
-                      isSelected ? styles.chipSelected : "",
-                      !slot.available ? styles.chipUnavailable : "",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    aria-pressed={isSelected}
-                    aria-label={`${slot.time}${!slot.available ? " – unavailable" : ""}`}
-                    disabled={!slot.available}
-                  >
-                    {slot.time}
-                    {!slot.available && (
-                      <span className={styles.slashLine} aria-hidden />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+            <motion.div 
+              variants={container} 
+              initial="hidden" 
+              animate="show" 
+              className={styles.chipGrid}
+            >
+              <AnimatePresence mode="popLayout">
+                {periodSlots.map((slot) => {
+                  const isSelected = selectedTime === slot.time;
+                  return (
+                    <motion.button
+                      key={slot.time}
+                      variants={item}
+                      layout
+                      type="button"
+                      onClick={() => slot.available && onSelect(slot.time)}
+                      className={[
+                        styles.chip,
+                        isSelected ? styles.chipSelected : "",
+                        !slot.available ? styles.chipUnavailable : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      aria-pressed={isSelected}
+                      aria-label={`${slot.time}${!slot.available ? " – unavailable" : ""}`}
+                      disabled={!slot.available}
+                    >
+                      {slot.time}
+                      {!slot.available && (
+                        <span className={styles.slashLine} aria-hidden />
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
           </div>
         );
       })}

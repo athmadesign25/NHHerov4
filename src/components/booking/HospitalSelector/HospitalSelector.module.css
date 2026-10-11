@@ -27,17 +27,21 @@
   justify-content: space-between;
   gap: var(--sp-1);
   padding: 12px 16px;
-  background: var(--color-bg-card);
-  border: 1.5px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--radius-full);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   cursor: pointer;
   font-family: var(--font-family);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: all var(--transition-fast);
   outline: none;
 }
 
 .trigger:hover {
+  background: #FFFFFF;
   border-color: var(--color-primary);
+  box-shadow: 0 6px 20px rgba(3, 78, 162, 0.1);
 }
 
 .trigger:focus-visible {
@@ -91,12 +95,13 @@
   top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: var(--color-bg-card);
-  border: 1.5px solid var(--color-primary);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-primary);
   border-radius: var(--radius-lg);
   padding: 6px;
   z-index: 100;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   list-style: none;
   max-height: 240px;
   overflow-y: auto;
