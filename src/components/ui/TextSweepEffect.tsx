@@ -13,6 +13,7 @@ export default function TextSweepEffect({
   delayMs = 0,
   className = "",
   finalColor = "#000000",
+  sweepColor = "#034EA2",
   active,
 }: {
   words: string[];
@@ -21,6 +22,7 @@ export default function TextSweepEffect({
   holdMs?: number;
   className?: string;
   finalColor?: string;
+  sweepColor?: string;
   active?: boolean;
 }) {
   const word = words?.[0] ?? "";
@@ -28,7 +30,7 @@ export default function TextSweepEffect({
   const gradient = `
     linear-gradient(90deg,
       ${finalColor} 0%, ${finalColor} 40%,
-      #034EA2 48%,
+      ${sweepColor} 48%,
       #ED1C24 56%,
       transparent 64%, transparent 100%
     )

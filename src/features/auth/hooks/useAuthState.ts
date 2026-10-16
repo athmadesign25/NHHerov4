@@ -1,21 +1,25 @@
 import { useState, useEffect } from "react";
 
 export function useAuthState() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem("isLoggedIn");
-      setIsUserLoggedIn(stored !== "false");
-    }
-    
-    const handleLoginChange = () => {
-      const stored = sessionStorage.getItem("isLoggedIn");
-      setIsUserLoggedIn(stored !== "false");
+    const checkStatus = () => {
+      if (typeof window !== "undefined") {
+        const local = localStorage.getItem("isLoggedIn") === "true";
+        const session = sessionStorage.getItem("isLoggedIn") === "true";
+        setIsUserLoggedIn(local || session);
+      }
     };
-    
-    window.addEventListener("login-state-changed", handleLoginChange);
-    return () => window.removeEventListener("login-state-changed", handleLoginChange);
+
+    checkStatus();
+
+    window.addEventListener("login-state-changed", checkStatus);
+    window.addEventListener("storage", checkStatus);
+    return () => {
+      window.removeEventListener("login-state-changed", checkStatus);
+      window.removeEventListener("storage", checkStatus);
+    };
   }, []);
 
   return { isUserLoggedIn, setIsUserLoggedIn };

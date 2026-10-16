@@ -341,9 +341,9 @@ export default function PrimaryResults({
                       </div>
                     </div>
 
-                    {/* Right Side: White Book Button */}
+                    {/* Right Side: White Book Button → opens Doctor Profile page with inline fallback data */}
                     <Link
-                      href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                      href={`/doctors/${doc.id}?name=${encodeURIComponent(doc.name)}&specialty=${encodeURIComponent(doc.speciality)}&hospital=${encodeURIComponent(doc.hospital)}&experience=${encodeURIComponent(doc.experience)}&city=${encodeURIComponent(doc.city)}&img=${encodeURIComponent(doc.image)}`}
                       className={styles.refBookBtnWhite}
                     >
                       Book

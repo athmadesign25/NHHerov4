@@ -2,12 +2,10 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #f1f5f9;
+  border: none;
   border-radius: var(--radius-full);
   padding: 4px;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .option {
@@ -16,14 +14,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: var(--radius-full);
   border: none;
   background: transparent;
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-fast);
   font-family: var(--font-family);
   outline: none;
+}
+
+.option:hover:not(.optionActive) {
+  background: rgba(15, 23, 42, 0.03);
 }
 
 .option:focus-visible {
@@ -35,9 +37,10 @@
 .activePill {
   position: absolute;
   inset: 0;
-  background: #FFFFFF;
+  background: #ffffff;
+  border: none;
   border-radius: var(--radius-full);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
   z-index: 0;
 }
 
@@ -51,34 +54,45 @@
 }
 
 .optionLabel {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  color: #475569;
   white-space: nowrap;
   transition: color var(--transition-fast), font-weight var(--transition-fast);
 }
 
-.optionActive .optionLabel {
-  font-weight: 600;
-  color: var(--color-emergency);
+.option:hover:not(.optionActive) .optionLabel {
+  color: #0f172a;
+}
+
+.optionHospitalActive .optionLabel {
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.optionVideoActive .optionLabel {
+  font-weight: 700;
+  color: #034ea2;
 }
 
 .optionIcon {
-  filter: grayscale(1) brightness(0.4);
-  transition: filter var(--transition-fast);
+  opacity: 0.65;
+  filter: grayscale(1) brightness(0.2);
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
 }
 
 .optionIconActive {
+  opacity: 1;
   filter: none;
 }
 
 /* ─── MOBILE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .option {
-    padding: 8px 12px;
+    padding: 9px 14px;
   }
 
   .optionLabel {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-xs, 12px);
   }
 }

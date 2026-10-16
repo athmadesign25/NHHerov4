@@ -1477,3 +1477,14 @@ export function formatAudioDuration(seconds: number): string {
   const s = seconds % 60;
   return `${m}:${s < 10 ? "0" : ""}${s}`;
 }
+
+/**
+ * Flat list of all DoctorCardData entries across every static search result dataset.
+ * Used by the doctor profile page to resolve search-experience doctor IDs (e.g. "doc-devi-shetty")
+ * into profile objects so that BOOK CTA → /doctors/[id] always renders a real page.
+ */
+export const allSearchDataDoctors: DoctorCardData[] = [
+  ...(SEMANTIC_C_RESULTS?.doctors ?? []),
+  ...(CARDIOLOGY_RESULTS?.doctors ?? []),
+  ...(ORTHOPAEDICS_RESULTS?.doctors ?? []),
+];

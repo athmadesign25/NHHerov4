@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Suspense } from "react";
+import React, { useState, useEffect, useRef, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SEARCH_TABS as TABS, getSearchTabFromPathname, buildSearchUrl } from "@/features/search/searchTabs";
 import Image from "next/image";
@@ -12,9 +12,22 @@ import { searchHealthcare, getCityId, NH_CITIES, type NormalizedResults } from "
 import { 
   Search, X, User, Building2, Activity, ShieldCheck, 
   FileText, Calendar, Star, MapPin, Clock, ArrowRight, ShieldAlert,
-  ChevronRight, ChevronDown, Building, Video, PhoneCall, ArrowRightLeft, Filter
+  ChevronRight, ChevronDown, Building, Video, PhoneCall, ArrowRightLeft, Filter, Briefcase, ArrowUpDown
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+// Design iteration preview (dev/stakeholder only — see features/design-preview)
+import { useDesignVariant } from "@/features/design-preview/useDesignVariant";
+import DesignSwitcher from "@/features/design-preview/DesignSwitcher";
+import Design1TopSection from "./designs/Design1TopSection";
+import Design1ControlsBar from "./designs/Design1ControlsBar";
+import Design2TopSection from "./designs/Design2TopSection";
+import Design2BookingControls from "./designs/Design2BookingControls";
+import DoctorCardD2 from "./designs/DoctorCardD2";
+import DoctorCardCompact from "./designs/DoctorCardCompact";
+import DoctorCardOriginal from "./designs/DoctorCardOriginal";
+import Design3SearchResults from "./designs/d3/Design3SearchResults";
+import LoginModal from "@/features/auth/LoginModal";
+import { useAuthState } from "@/features/auth/hooks/useAuthState";
 
 // Mock Data
 const ALL_SPECIALTIES = [
@@ -371,6 +384,30 @@ function SearchResultsContent() {
   const pathname = usePathname();
   const router = useRouter();
   
+  const { isUserLoggedIn } = useAuthState();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [pendingBookingUrl, setPendingBookingUrl] = useState<string | null>(null);
+
+  const handleDoctorBookingClick = (e: React.MouseEvent, targetUrl: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isUserLoggedIn) {
+      setPendingBookingUrl(targetUrl);
+      setIsLoginModalOpen(true);
+    } else {
+      router.push(targetUrl);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    setIsLoginModalOpen(false);
+    if (pendingBookingUrl) {
+      const url = pendingBookingUrl;
+      setPendingBookingUrl(null);
+      router.push(url);
+    }
+  };
+
   const initialQuery =
     searchParams.get("q") || searchParams.get("search") || searchParams.get("query") || "";
   const initialCityId = searchParams.get("cityId");
@@ -404,9 +441,34 @@ function SearchResultsContent() {
   const [selectedPackageHospitals, setSelectedPackageHospitals] = useState<string[]>([]);
   const [selectedPackageType, setSelectedPackageType] = useState<string[]>([]);
 
+  // Adidas & Nike Style Collapsible Filter Accordions
+  const [openFilters, setOpenFilters] = useState<Record<string, boolean>>({
+    specialty: true,
+    hospital: true,
+    availability: true,
+    expertise: false,
+    gender: false,
+    language: false,
+  });
+
+  const toggleFilterAccordion = (key: string) => {
+    setOpenFilters((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   const [specLimit, setSpecLimit] = useState(8);
   const [isFiltering, setIsFiltering] = useState(false);
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
+  const [sortBy, setSortBy] = useState<"relevance" | "experience" | "fee_asc" | "fee_desc">("relevance");
+  const [isEarliestSlotActive, setIsEarliestSlotActive] = useState(false);
+
+  // ─── Design iteration preview ───────────────────────────────────────────
+  const designVariant = useDesignVariant("search-top");
+  const isD1 = designVariant === "d1";
+  const isD2c = designVariant === "d2c";
+  const isD2 = designVariant === "d2" || isD2c;
 
   // --- API integration ---
   const [apiData, setApiData] = useState<NormalizedResults | null>(null);
@@ -582,6 +644,40 @@ function SearchResultsContent() {
       }))
     : filteredDoctors;
 
+  // Sorted doctors for Phase 2 dynamic sorting
+  const sortedDoctors = useMemo(() => {
+    const list = [...displayDoctors];
+    if (isD2 && isEarliestSlotActive) {
+      return list.sort((a, b) => {
+        const scoreA = a.available === "Available Today" ? 2 : a.available === "Available Tomorrow" ? 1 : 0;
+        const scoreB = b.available === "Available Today" ? 2 : b.available === "Available Tomorrow" ? 1 : 0;
+        return scoreB - scoreA;
+      });
+    }
+    if (sortBy === "experience") {
+      return list.sort((a, b) => {
+        const expA = parseInt(a.experience || "0", 10) || 0;
+        const expB = parseInt(b.experience || "0", 10) || 0;
+        return expB - expA;
+      });
+    }
+    if (sortBy === "fee_asc") {
+      return list.sort((a, b) => {
+        const feeA = parseInt((a.fee || "").replace(/[^0-9]/g, ""), 10) || 0;
+        const feeB = parseInt((b.fee || "").replace(/[^0-9]/g, ""), 10) || 0;
+        return feeA - feeB;
+      });
+    }
+    if (sortBy === "fee_desc") {
+      return list.sort((a, b) => {
+        const feeA = parseInt((a.fee || "").replace(/[^0-9]/g, ""), 10) || 0;
+        const feeB = parseInt((b.fee || "").replace(/[^0-9]/g, ""), 10) || 0;
+        return feeB - feeA;
+      });
+    }
+    return list;
+  }, [displayDoctors, sortBy, isD2, isEarliestSlotActive]);
+
   // Treatments & Procedures tab — treatments first
   const displayTreatments = useApiData
     ? [
@@ -641,6 +737,38 @@ function SearchResultsContent() {
     selectedLanguage.length;
 
   const shouldGroupFilters = activeDynamicFiltersCount > 5;
+
+  const activeFilterItems = [
+    ...(shouldGroupFilters && selectedSpecialties.length > 1 
+      ? [{ label: `Speciality (${selectedSpecialties.length})`, remove: () => setSelectedSpecialties([]) }] 
+      : selectedSpecialties.map(val => ({ label: val, remove: () => toggleFilter(setSelectedSpecialties, val) }))),
+    ...(shouldGroupFilters && selectedHospitals.length > 1 
+      ? [{ label: `Hospital (${selectedHospitals.length})`, remove: () => setSelectedHospitals([]) }] 
+      : selectedHospitals.map(val => ({ label: val, remove: () => toggleFilter(setSelectedHospitals, val) }))),
+    ...(shouldGroupFilters && selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").length > 1 
+      ? [{ label: `Availability (${selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").length})`, remove: () => setSelectedAvailability(prev => prev.filter(v => v === "Available Today" || v === "Available Tomorrow")) }] 
+      : selectedAvailability.filter(v => v !== "Available Today" && v !== "Available Tomorrow").map(val => ({ label: val, remove: () => toggleFilter(setSelectedAvailability, val) }))),
+    ...(shouldGroupFilters && selectedExpertise.length > 1 
+      ? [{ label: `Expertise (${selectedExpertise.length})`, remove: () => setSelectedExpertise([]) }] 
+      : selectedExpertise.map(val => ({ label: val, remove: () => toggleFilter(setSelectedExpertise, val) }))),
+    ...(shouldGroupFilters && selectedGender.length > 1 
+      ? [{ label: `Gender (${selectedGender.length})`, remove: () => setSelectedGender([]) }] 
+      : selectedGender.map(val => ({ label: val, remove: () => toggleFilter(setSelectedGender, val) }))),
+    ...(shouldGroupFilters && selectedLanguage.length > 1 
+      ? [{ label: `Language (${selectedLanguage.length})`, remove: () => setSelectedLanguage([]) }] 
+      : selectedLanguage.map(val => ({ label: val, remove: () => toggleFilter(setSelectedLanguage, val) })))
+  ];
+
+  const handleResetAllFilters = () => {
+    setSelectedSpecialties([]);
+    setSelectedHospitals([]);
+    setSelectedAvailability([]);
+    setSelectedExpertise([]);
+    setSelectedGender([]);
+    setSelectedLanguage([]);
+    setIsFiltering(true);
+    setTimeout(() => setIsFiltering(false), 300);
+  };
 
   // Infinite Scroll for Doctors
   const [visibleDoctorsCount, setVisibleDoctorsCount] = useState(16);
@@ -738,8 +866,72 @@ function SearchResultsContent() {
     return () => observer.disconnect();
   }, [activeTab, displayDoctors.length, visibleDoctorsCount]);
 
+  // Design 1 & 2: tablet/mobile filters drawer (reuses the existing filter panel)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const filtersDrawerOpen = (isD1 || isD2) && mobileFiltersOpen && activeTab === "doctors";
+  const quickAvailabilityCount = selectedAvailability.filter(
+    (v) => v === "Available Today" || v === "Available Tomorrow"
+  ).length;
+
+  useEffect(() => {
+    if (!filtersDrawerOpen) return;
+    const html = document.documentElement;
+    const prevOverflow = html.style.overflow;
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    html.style.overflow = "hidden";
+    lenis?.stop();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileFiltersOpen(false);
+    };
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onViewport = () => desktop.matches && setMobileFiltersOpen(false);
+    window.addEventListener("keydown", onKey);
+    desktop.addEventListener("change", onViewport);
+    return () => {
+      html.style.overflow = prevOverflow;
+      lenis?.start();
+      window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onViewport);
+    };
+  }, [filtersDrawerOpen]);
+
   return (
-    <div style={{ paddingTop: 0, minHeight: "100vh", background: "var(--color-bg-card)" }}>
+    <div style={{
+      paddingTop: 0,
+      minHeight: "100vh",
+      background: isD2
+        ? "linear-gradient(160deg, #F7F6F2 0%, #EDF3FF 55%, #F7F6F2 100%)"
+        : "var(--color-bg-card)",
+      position: "relative",
+    }}>
+      {isD1 ? (
+        <Design1TopSection
+          query={query}
+          onQueryChange={setQuery}
+          onSubmit={handleSearchSubmit}
+          isNavVisible={isNavVisible}
+          tabs={TABS}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          counts={counts}
+          showFiltersButton={activeTab === "doctors"}
+          activeFiltersCount={activeDynamicFiltersCount + quickAvailabilityCount}
+          onOpenFilters={() => setMobileFiltersOpen(true)}
+        />
+      ) : isD2 ? (
+        <Design2TopSection
+          query={query}
+          onQueryChange={setQuery}
+          onSubmit={handleSearchSubmit}
+          location={location}
+          onLocationChange={setLocation}
+          isNavVisible={isNavVisible}
+          showFiltersButton={activeTab === "doctors"}
+          activeFiltersCount={activeDynamicFiltersCount + quickAvailabilityCount + (isEarliestSlotActive ? 1 : 0)}
+          onOpenFilters={() => setMobileFiltersOpen(true)}
+        />
+      ) : (
+      <>
       {/* Unified Dynamic Sticky Header */}
       <div style={{ 
         position: "sticky", 
@@ -769,7 +961,7 @@ function SearchResultsContent() {
               style={{ overflow: "hidden", background: "linear-gradient(to bottom, #FFFFFF 0%, var(--color-bg-alt) 100%)", position: "relative", zIndex: 41 }}
             >
               <div style={{ paddingTop: 16, paddingBottom: 16, color: "var(--color-text)" }}>
-                <div className="container">
+                <div className={styles.searchContainer}>
                   <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
                     <div style={{ position: "relative", flex: 1 }}>
                       <input
@@ -814,7 +1006,7 @@ function SearchResultsContent() {
 
         {/* Always Visible Tabs */}
         <div style={{ background: "var(--color-bg-alt)", borderBottom: "1px solid var(--color-border)" }}>
-          <div className="container">
+          <div className={styles.searchContainer}>
             <div className={styles.tabScroll} style={{ marginBottom: 0 }}>
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
@@ -878,9 +1070,11 @@ function SearchResultsContent() {
           </div>
         </div>
       </div>
+      </>
+      )}
 
       {/* Tab Content Panels */}
-      <div className="container" style={{ paddingTop: 24, paddingBottom: 24 }}>
+      <div className={styles.searchContainer} style={{ paddingTop: 20, paddingBottom: 24 }}>
         <div>
           <AnimatePresence mode="wait">
             <motion.div
@@ -893,215 +1087,518 @@ function SearchResultsContent() {
               {/* DOCTORS PANEL */}
               {activeTab === "doctors" && (
                 <div className={styles.doctorsLayout}>
+                  {/* Design 1: drawer backdrop (< 1024px) */}
+                  {filtersDrawerOpen && (
+                    <div
+                      className={styles.filterDrawerBackdrop}
+                      onClick={() => setMobileFiltersOpen(false)}
+                      aria-hidden
+                    />
+                  )}
+
                   {/* Left Sidebar Filters */}
-                  <div className={styles.filterPanel} data-lenis-prevent="true">
-                    {/* Specialty Filter */}
-                    {/* Specialty Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Specialty</h4>
-                        {selectedSpecialties.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedSpecialties([]);
-                              setSpecLimit(8);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontSize: "var(--font-size-sm)", fontWeight: 600, cursor: "pointer", padding: 0 }}
-                          >
-                            Clear
-                          </button>
-                        )}
+                  <div
+                    className={`${styles.filterPanel} ${filtersDrawerOpen ? styles.filterDrawerOpen : ""}`}
+                    data-lenis-prevent="true"
+                    {...(filtersDrawerOpen ? { role: "dialog", "aria-modal": true, "aria-label": "Filters" } : {})}
+                  >
+                    {filtersDrawerOpen && <div className={styles.filterDrawerHandle} aria-hidden />}
+                    <div className={styles.filterPanelHeader}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        <Filter size={15} color="var(--color-primary)" />
+                        <span className={styles.filterPanelTitle}>Filters</span>
                       </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        {ALL_SPECIALTIES.slice(0, specLimit).map((spec) => (
-                          <label key={spec} className={styles.checkboxLabel}>
-                            <input 
-                              type="checkbox" 
-                              className={styles.checkboxInput}
-                              checked={selectedSpecialties.includes(spec)}
-                              onChange={() => toggleFilter(setSelectedSpecialties, spec)}
-                            />
-                            {spec}
-                          </label>
-                        ))}
-                        {specLimit < ALL_SPECIALTIES.length && (
-                          <button 
-                            onClick={() => setSpecLimit(ALL_SPECIALTIES.length)}
-                            style={{ 
-                              background: "none", 
-                              border: "none", 
-                              color: "var(--color-primary)", 
-                              fontWeight: 600, 
-                              textAlign: "left", 
-                              cursor: "pointer", 
-                              padding: 0, 
-                              marginTop: 4, 
-                              fontSize: "var(--font-size-sm)" 
-                            }}
-                          >
-                            + {ALL_SPECIALTIES.length - specLimit} more
-                          </button>
-                        )}
-                      </div>
+                      {filtersDrawerOpen && (
+                        <button
+                          type="button"
+                          className={styles.filterDrawerClose}
+                          onClick={() => setMobileFiltersOpen(false)}
+                          aria-label="Close filters"
+                        >
+                          <X size={18} aria-hidden />
+                        </button>
+                      )}
+                      {(selectedSpecialties.length > 0 || selectedHospitals.length > 0 || selectedAvailability.length > 0 || selectedExpertise.length > 0 || selectedGender.length > 0 || selectedLanguage.length > 0) && (
+                        <button
+                          onClick={() => {
+                            setSelectedSpecialties([]);
+                            setSelectedHospitals([]);
+                            setSelectedAvailability([]);
+                            setSelectedExpertise([]);
+                            setSelectedGender([]);
+                            setSelectedLanguage([]);
+                            setIsFiltering(true);
+                            setTimeout(() => setIsFiltering(false), 300);
+                          }}
+                          className={styles.resetAllBtn}
+                        >
+                          Reset All
+                        </button>
+                      )}
                     </div>
 
-                    {/* Hospital Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Hospital</h4>
-                        {selectedHospitals.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedHospitals([]);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontSize: "var(--font-size-sm)", fontWeight: 600, cursor: "pointer", padding: 0 }}
-                          >
-                            Clear
-                          </button>
-                        )}
-                      </div>
-                      {["Narayana Health City", "Mazumdar Shaw Medical Center", "MSMC Clinic"].map((hosp) => (
-                        <label key={hosp} className={styles.checkboxLabel}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.checkboxInput}
-                            checked={selectedHospitals.includes(hosp)}
-                            onChange={() => toggleFilter(setSelectedHospitals, hosp)}
+                    {/* Specialty Filter Accordion (Adidas / Nike Style) */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("specialty")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.specialty}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Specialty</span>
+                          {selectedSpecialties.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedSpecialties.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedSpecialties.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedSpecialties([]);
+                                setSpecLimit(8);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.specialty ? styles.filterAccordionChevronOpen : ""}`}
                           />
-                          {hosp}
-                        </label>
-                      ))}
-                    </div>
-
-                    {/* Availability Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Availability</h4>
-                        {selectedAvailability.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedAvailability([]);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontSize: "var(--font-size-sm)", fontWeight: 600, cursor: "pointer", padding: 0 }}
-                          >
-                            Clear
-                          </button>
-                        )}
+                        </div>
                       </div>
-                      {["Available Today", "Available Tomorrow", "Next 7 Days"].map((avail) => (
-                        <label key={avail} className={styles.checkboxLabel}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.checkboxInput}
-                            checked={selectedAvailability.includes(avail)}
-                            onChange={() => toggleFilter(setSelectedAvailability, avail)}
-                          />
-                          {avail}
-                        </label>
-                      ))}
-                    </div>
-
-                    {/* Expertise Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Expertise</h4>
-                        {selectedExpertise.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedExpertise([]);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                      <AnimatePresence initial={false}>
+                        {openFilters.specialty && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
                           >
-                            Clear <X size={12} />
-                          </button>
+                            <div className={styles.filterAccordionBody}>
+                              {ALL_SPECIALTIES.slice(0, specLimit).map((spec) => (
+                                <label key={spec} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedSpecialties.includes(spec)}
+                                    onChange={() => toggleFilter(setSelectedSpecialties, spec)}
+                                  />
+                                  {spec}
+                                </label>
+                              ))}
+                              {specLimit < ALL_SPECIALTIES.length && (
+                                <button 
+                                  onClick={() => setSpecLimit(ALL_SPECIALTIES.length)}
+                                  style={{ 
+                                    background: "none", 
+                                    border: "none", 
+                                    color: "var(--color-primary)", 
+                                    fontWeight: 600, 
+                                    textAlign: "left", 
+                                    cursor: "pointer", 
+                                    padding: 0, 
+                                    marginTop: 4, 
+                                    fontSize: "var(--font-size-sm)" 
+                                  }}
+                                >
+                                  + {ALL_SPECIALTIES.length - specLimit} more
+                                </button>
+                              )}
+                            </div>
+                          </motion.div>
                         )}
-                      </div>
-                      {["Orthopedic Surgery", "Joint Replacement", "Interventional Cardiology", "Pediatric Cardiology", "Medical Oncology", "Surgical Oncology", "Neuro Surgery"].map((exp) => (
-                        <label key={exp} className={styles.checkboxLabel}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.checkboxInput}
-                            checked={selectedExpertise.includes(exp)}
-                            onChange={() => toggleFilter(setSelectedExpertise, exp)}
-                          />
-                          {exp}
-                        </label>
-                      ))}
+                      </AnimatePresence>
                     </div>
 
-                    {/* Gender Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Gender</h4>
-                        {selectedGender.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedGender([]);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                    {/* Hospital Filter Accordion */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("hospital")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.hospital}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Hospital</span>
+                          {selectedHospitals.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedHospitals.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedHospitals.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedHospitals([]);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.hospital ? styles.filterAccordionChevronOpen : ""}`}
+                          />
+                        </div>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {openFilters.hospital && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
                           >
-                            Clear <X size={12} />
-                          </button>
+                            <div className={styles.filterAccordionBody}>
+                              {["Narayana Health City", "Mazumdar Shaw Medical Center", "MSMC Clinic"].map((hosp) => (
+                                <label key={hosp} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedHospitals.includes(hosp)}
+                                    onChange={() => toggleFilter(setSelectedHospitals, hosp)}
+                                  />
+                                  {hosp}
+                                </label>
+                              ))}
+                            </div>
+                          </motion.div>
                         )}
-                      </div>
-                      {["Male", "Female", "Any"].map((gender) => (
-                        <label key={gender} className={styles.checkboxLabel}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.checkboxInput}
-                            checked={selectedGender.includes(gender)}
-                            onChange={() => toggleFilter(setSelectedGender, gender)}
-                          />
-                          {gender}
-                        </label>
-                      ))}
+                      </AnimatePresence>
                     </div>
 
-                    {/* Language Filter */}
-                    <div className={styles.filterGroup}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                        <h4 className={styles.filterTitle} style={{ marginBottom: 0 }}>Language</h4>
-                        {selectedLanguage.length > 0 && (
-                          <button
-                            onClick={() => {
-                              setSelectedLanguage([]);
-                              setIsFiltering(true);
-                              setTimeout(() => setIsFiltering(false), 300);
-                            }}
-                            style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-emergency)", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: 0 }}
+                    {/* Availability Filter Accordion */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("availability")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.availability}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Availability</span>
+                          {selectedAvailability.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedAvailability.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedAvailability.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedAvailability([]);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.availability ? styles.filterAccordionChevronOpen : ""}`}
+                          />
+                        </div>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {openFilters.availability && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
                           >
-                            Clear <X size={12} />
-                          </button>
+                            <div className={styles.filterAccordionBody}>
+                              {["Available Today", "Available Tomorrow", "Next 7 Days"].map((avail) => (
+                                <label key={avail} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedAvailability.includes(avail)}
+                                    onChange={() => toggleFilter(setSelectedAvailability, avail)}
+                                  />
+                                  {avail}
+                                </label>
+                              ))}
+                            </div>
+                          </motion.div>
                         )}
-                      </div>
-                      {["English", "Hindi", "Kannada", "Bengali", "Marathi"].map((lang) => (
-                        <label key={lang} className={styles.checkboxLabel}>
-                          <input 
-                            type="checkbox" 
-                            className={styles.checkboxInput}
-                            checked={selectedLanguage.includes(lang)}
-                            onChange={() => toggleFilter(setSelectedLanguage, lang)}
-                          />
-                          {lang}
-                        </label>
-                      ))}
+                      </AnimatePresence>
                     </div>
 
+                    {/* Expertise Filter Accordion */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("expertise")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.expertise}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Expertise</span>
+                          {selectedExpertise.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedExpertise.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedExpertise.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedExpertise([]);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.expertise ? styles.filterAccordionChevronOpen : ""}`}
+                          />
+                        </div>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {openFilters.expertise && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div className={styles.filterAccordionBody}>
+                              {["Orthopedic Surgery", "Joint Replacement", "Interventional Cardiology", "Pediatric Cardiology", "Medical Oncology", "Surgical Oncology", "Neuro Surgery"].map((exp) => (
+                                <label key={exp} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedExpertise.includes(exp)}
+                                    onChange={() => toggleFilter(setSelectedExpertise, exp)}
+                                  />
+                                  {exp}
+                                </label>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
 
+                    {/* Gender Filter Accordion */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("gender")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.gender}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Gender</span>
+                          {selectedGender.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedGender.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedGender.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedGender([]);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.gender ? styles.filterAccordionChevronOpen : ""}`}
+                          />
+                        </div>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {openFilters.gender && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div className={styles.filterAccordionBody}>
+                              {["Male", "Female", "Any"].map((gender) => (
+                                <label key={gender} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedGender.includes(gender)}
+                                    onChange={() => toggleFilter(setSelectedGender, gender)}
+                                  />
+                                  {gender}
+                                </label>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Language Filter Accordion */}
+                    <div className={styles.filterAccordionItem}>
+                      <div 
+                        className={styles.filterAccordionHeader}
+                        onClick={() => toggleFilterAccordion("language")}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={openFilters.language}
+                      >
+                        <div className={styles.filterAccordionTitleWrap}>
+                          <span className={styles.filterAccordionTitle}>Language</span>
+                          {selectedLanguage.length > 0 && (
+                            <span className={styles.filterBadgeCount}>{selectedLanguage.length}</span>
+                          )}
+                        </div>
+                        <div className={styles.filterAccordionRight}>
+                          {selectedLanguage.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLanguage([]);
+                                setIsFiltering(true);
+                                setTimeout(() => setIsFiltering(false), 300);
+                              }}
+                              className={styles.filterSectionClearBtn}
+                            >
+                              Clear
+                            </button>
+                          )}
+                          <ChevronDown
+                            size={16}
+                            className={`${styles.filterAccordionChevron} ${openFilters.language ? styles.filterAccordionChevronOpen : ""}`}
+                          />
+                        </div>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {openFilters.language && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{ overflow: "hidden" }}
+                          >
+                            <div className={styles.filterAccordionBody}>
+                              {["English", "Hindi", "Kannada", "Bengali", "Marathi"].map((lang) => (
+                                <label key={lang} className={styles.checkboxLabel}>
+                                  <input 
+                                    type="checkbox" 
+                                    className={styles.checkboxInput}
+                                    checked={selectedLanguage.includes(lang)}
+                                    onChange={() => toggleFilter(setSelectedLanguage, lang)}
+                                  />
+                                  {lang}
+                                </label>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    {filtersDrawerOpen && (
+                      <div className={styles.filterDrawerFooter}>
+                        <button
+                          id="search-filters-apply"
+                          type="button"
+                          className={styles.filterDrawerApply}
+                          onClick={() => setMobileFiltersOpen(false)}
+                        >
+                          Show {sortedDoctors.length} {sortedDoctors.length === 1 ? "doctor" : "doctors"}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Main Grid Content Area */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                    {isD1 ? (
+                      <Design1ControlsBar
+                        consultationType={consultationType}
+                        onConsultationTypeChange={(type) => {
+                          if (consultationType !== type) {
+                            setConsultationType(type);
+                            setIsFiltering(true);
+                            setTimeout(() => setIsFiltering(false), 300);
+                          }
+                        }}
+                        selectedAvailability={selectedAvailability}
+                        onToggleAvailability={(val) => toggleFilter(setSelectedAvailability, val)}
+                        activeFilterItems={activeFilterItems}
+                        sortBy={sortBy}
+                        onSortByChange={(sort) => {
+                          setSortBy(sort);
+                          setIsFiltering(true);
+                          setTimeout(() => setIsFiltering(false), 200);
+                        }}
+                        location={location}
+                        onLocationChange={(loc) => setLocation(loc)}
+                        totalDoctorsCount={sortedDoctors.length}
+                        hasActiveFilters={activeDynamicFiltersCount > 0 || quickAvailabilityCount > 0}
+                        onResetAllFilters={handleResetAllFilters}
+                        query={query}
+                      />
+                    ) : isD2 ? (
+                      <Design2BookingControls
+                        consultationType={consultationType}
+                        onConsultationTypeChange={(type) => {
+                          if (consultationType !== type) {
+                            setConsultationType(type);
+                            setIsFiltering(true);
+                            setTimeout(() => setIsFiltering(false), 300);
+                          }
+                        }}
+                        selectedAvailability={selectedAvailability}
+                        onToggleAvailability={(val) => toggleFilter(setSelectedAvailability, val)}
+                        isEarliestSlotActive={isEarliestSlotActive}
+                        onToggleEarliestSlot={() => {
+                          setIsEarliestSlotActive((prev) => !prev);
+                          setIsFiltering(true);
+                          setTimeout(() => setIsFiltering(false), 200);
+                        }}
+                        activeFilterItems={activeFilterItems}
+                        location={location}
+                        totalDoctorsCount={sortedDoctors.length}
+                        hasActiveFilters={activeDynamicFiltersCount > 0 || quickAvailabilityCount > 0 || isEarliestSlotActive}
+                        onResetAllFilters={() => {
+                          handleResetAllFilters();
+                          setIsEarliestSlotActive(false);
+                        }}
+                      />
+                    ) : (
+                      <>
                     {/* Top Control Bar (Pills + Location) */}
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%", gap: 16 }}>
                       {/* Active Filter Pills (Left Side) */}
@@ -1319,57 +1816,78 @@ function SearchResultsContent() {
                       ))}
                       </div>
 
-                      {/* Location Pill (Right Side) */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ffffff", border: "1px solid var(--color-border)", borderRadius: 16, padding: "0 8px 0 12px", height: 32, flexShrink: 0, position: "relative" }}>
-                        <MapPin size={14} color="var(--color-primary)" />
-                        <select
-                          value={location}
-                          onChange={(e) => setLocation(e.target.value)}
-                          style={{
-                            appearance: "none",
-                            WebkitAppearance: "none",
-                            border: "none",
-                            background: "transparent",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            color: "var(--color-primary)",
-                            cursor: "pointer",
-                            outline: "none",
-                            paddingRight: 16
-                          }}
-                        >
-                          <option value="All">All Locations</option>
-                          <option value="Bangalore">Bangalore</option>
-                          <option value="Guwahati">Guwahati</option>
-                          <option value="Dharwad">Dharwad</option>
-                          <option value="Shimoga">Shimoga</option>
-                          <option value="Ahmedabad">Ahmedabad</option>
-                          <option value="Jaipur">Jaipur</option>
-                          <option value="Kolar">Kolar</option>
-                          <option value="Mumbai">Mumbai</option>
-                          <option value="Raipur">Raipur</option>
-                          <option value="Kolkata">Kolkata</option>
-                          <option value="Davangere">Davangere</option>
-                          <option value="Barasat">Barasat</option>
-                          <option value="Jamshedpur">Jamshedpur</option>
-                          <option value="Gurugram">Gurugram</option>
-                          <option value="Howrah">Howrah</option>
-                          <option value="Delhi">Delhi</option>
-                          <option value="Mysore">Mysore</option>
-                          <option value="Hosur">Hosur</option>
-                        </select>
-                        <ChevronDown size={14} color="var(--color-primary)" style={{ position: "absolute", right: 8, pointerEvents: "none" }} />
+                      {/* Controls: Sort & Location (Right Side) */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                        {/* Sort Dropdown */}
+                        <div className={styles.sortPill}>
+                          <ArrowUpDown size={13} color="var(--color-primary)" />
+                          <select
+                            value={sortBy}
+                            onChange={(e) => {
+                              setSortBy(e.target.value as any);
+                              setIsFiltering(true);
+                              setTimeout(() => setIsFiltering(false), 200);
+                            }}
+                            className={styles.sortSelect}
+                            aria-label="Sort doctors"
+                          >
+                            <option value="relevance">Sort: Relevance</option>
+                            <option value="experience">Experience: High to Low</option>
+                            <option value="fee_asc">Fee: Low to High</option>
+                            <option value="fee_desc">Fee: High to Low</option>
+                          </select>
+                          <ChevronDown size={13} color="var(--color-primary)" className={styles.sortChevron} />
+                        </div>
+
+                        {/* Location Pill */}
+                        <div className={styles.locationPill}>
+                          <MapPin size={13} color="var(--color-primary)" />
+                          <select
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className={styles.locationSelect}
+                            aria-label="Filter by location"
+                          >
+                            <option value="All">All Locations</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Guwahati">Guwahati</option>
+                            <option value="Dharwad">Dharwad</option>
+                            <option value="Shimoga">Shimoga</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Kolar">Kolar</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Raipur">Raipur</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Davangere">Davangere</option>
+                            <option value="Barasat">Barasat</option>
+                            <option value="Jamshedpur">Jamshedpur</option>
+                            <option value="Gurugram">Gurugram</option>
+                            <option value="Howrah">Howrah</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Mysore">Mysore</option>
+                            <option value="Hosur">Hosur</option>
+                          </select>
+                          <ChevronDown size={13} color="var(--color-primary)" className={styles.sortChevron} />
+                        </div>
                       </div>
                     </div>
 
                     {/* Search Summary Text */}
                     {activeTab === "doctors" && (
-                      <div style={{ fontSize: 15, color: "#334155", fontWeight: 500, padding: "4px 0 0px", marginBottom: -12 }}>
-                        Showing results for {consultationType === "Video Consultation" ? "video consultations" : "hospital visits"} in {location === "All" ? "all locations" : `${location} location`}
+                      <div className={styles.resultsSummaryBar}>
+                        <div className={styles.resultsSummaryLeft}>
+                          <span className={styles.resultsCountBadge}>{sortedDoctors.length} Doctors</span>
+                          <span className={styles.resultsSummaryText}>
+                            available for {consultationType === "Video Consultation" ? "video consultations" : "hospital visits"} in {location === "All" ? "all locations" : `${location}`}
+                          </span>
+                        </div>
                       </div>
                     )}
+                    </>
+                    )}
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(330px, 1fr))", gap: 20 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: isD2c ? "repeat(auto-fill, minmax(min(100%, 300px), 1fr))" : "repeat(auto-fill, minmax(320px, 1fr))", gap: 20 }}>
                     {isFiltering ? (
                       Array.from({ length: 4 }).map((_, i) => (
                         <motion.div 
@@ -1410,146 +1928,38 @@ function SearchResultsContent() {
                       ))
                     ) : (
                       displayDoctors.slice(0, visibleDoctorsCount).map((doc) => (
-                    <div 
-                      key={doc.id}
-                      style={{ 
-                        background: "var(--color-bg-card)", 
-                        border: "1px solid var(--color-border)", 
-                        borderRadius: 16, 
-                        overflow: "visible", // Changed to visible for the ribbon folds to show
-                        boxShadow: "var(--shadow-sm)",
-                        position: "relative" // Added position relative for the absolute ribbon
-                      }}
-                    >
-                      {(doc as any).isExecutive && (
-                        <div style={{ position: "absolute", top: -4, right: 20, zIndex: 10, width: 88, height: 24 }}>
-                          <Image src="/Appointment/Executive tag.svg" alt="Executive" width={88} height={24} />
-                          <div style={{ position: "absolute", inset: 0, overflow: "hidden", WebkitMaskImage: "url('/Appointment/Executive tag.svg')", maskImage: "url('/Appointment/Executive tag.svg')", WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}>
-                            <motion.div
-                              initial={{ x: "-150%" }}
-                              animate={{ x: "250%" }}
-                              transition={{
-                                repeat: Infinity,
-                                duration: 2.5,
-                                ease: "easeInOut",
-                                repeatDelay: 2
-                              }}
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                bottom: 0,
-                                width: "40%",
-                                background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent)",
-                                transform: "skewX(-20deg)"
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {/* Top Section */}
-                      <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 18, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
-                        <div style={{ display: "flex", gap: 16 }}>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                            <Link href={`/doctors/${doc.id}`} style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}>
-                              <motion.div whileHover="hover" initial="initial" style={{ width: "100%", height: "100%", position: "relative" }}>
-                                <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
-                                <motion.div 
-                                  variants={{
-                                    initial: { opacity: 0, y: 10 },
-                                    hover: { opacity: 1, y: 0 }
-                                  }}
-                                  transition={{ duration: 0.2 }}
-                                  style={{
-                                    position: "absolute",
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))",
-                                    color: "#ffffff",
-                                    fontSize: 9,
-                                    fontWeight: 600,
-                                    padding: "20px 4px 4px 4px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                  }}
-                                >
-                                  View profile <ChevronRight size={10} style={{ marginLeft: 2 }} />
-                                </motion.div>
-                              </motion.div>
-                            </Link>
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                            <Link href={`/doctors/${doc.id}`} style={{ textDecoration: "none" }}>
-                              <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", transition: "color 0.15s", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                {doc.name}
-                              </h3>
-                            </Link>
-                            <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.speciality}</p>
-                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: doc.name.length > 22 ? 1 : 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.degrees}</p>
-                            <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-secondary)", marginTop: 2, fontWeight: 500 }}>{doc.experience}</p>
-                            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 4 }}>
-                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>English</span>
-                              <span style={{ fontSize: 10, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 400 }}>Hindi</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bottom Section */}
-                      <div style={{ padding: 18 }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
-                          <MapPin size={16} style={{ color: "var(--color-text-secondary)", flexShrink: 0, marginTop: 2 }} />
-                          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            {doc.hospital} {doc.hospitalCount && <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>{doc.hospitalCount}</span>}
-                          </p>
-                        </div>
-                        
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                          <Clock size={16} style={{ color: "var(--color-text-secondary)" }} />
-                          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)" }}>Next available at</p>
-                        </div>
-
-                        <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 12, marginBottom: 16 }}>
-                          {consultationType !== "Video Consultation" && (
-                            <Link
-                              href={getDoctorBookingUrl(doc, "hospital")}
-                              style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap", textDecoration: "none", transition: "transform 0.15s ease", cursor: "pointer" }}
-                              title={`Book Hospital Visit with ${doc.name}`}
-                            >
-                              <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} />
-                              {doc.availability.hospital}
-                            </Link>
-                          )}
-                          <Link
-                            href={getDoctorBookingUrl(doc, "video")}
-                            style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap", textDecoration: "none", transition: "transform 0.15s ease", cursor: "pointer" }}
-                            title={`Book Video Consultation with ${doc.name}`}
-                          >
-                            <Image src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={16} height={16} />
-                            {doc.availability.video}
-                          </Link>
-                        </div>
-
-                        <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
-
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div style={{ display: "flex", flexDirection: "column" }}>
-                            <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{doc.fee}</span>
-                            <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>onwards</span>
-                          </div>
-                          <div style={{ display: "flex", gap: 8 }}>
-                            <a href={`tel:+919876543210`} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }} aria-label={`Call ${doc.name}`}>
-                              <PhoneCall size={18} />
-                            </a>
-                            <Link href={getDoctorBookingUrl(doc)} style={{ height: 44, padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                              Book now
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )))}
+                        isD2c ? (
+                          <DoctorCardCompact
+                            key={doc.id}
+                            doc={doc}
+                            showHospitalSlot={consultationType !== "Video Consultation"}
+                            hospitalUrl={getDoctorBookingUrl(doc, "hospital")}
+                            videoUrl={getDoctorBookingUrl(doc, "video")}
+                            bookUrl={getDoctorBookingUrl(doc)}
+                            onBookingClick={handleDoctorBookingClick}
+                          />
+                        ) : isD2 ? (
+                          <DoctorCardD2
+                            key={doc.id}
+                            doc={doc as any}
+                            showHospitalSlot={consultationType !== "Video Consultation"}
+                            hospitalUrl={getDoctorBookingUrl(doc, "hospital")}
+                            videoUrl={getDoctorBookingUrl(doc, "video")}
+                            bookUrl={getDoctorBookingUrl(doc)}
+                            onBookingClick={handleDoctorBookingClick}
+                          />
+                        ) : (
+                          <DoctorCardOriginal
+                            key={doc.id}
+                            doc={doc as any}
+                            showHospitalSlot={consultationType !== "Video Consultation"}
+                            hospitalUrl={getDoctorBookingUrl(doc, "hospital")}
+                            videoUrl={getDoctorBookingUrl(doc, "video")}
+                            bookUrl={getDoctorBookingUrl(doc)}
+                            onBookingClick={handleDoctorBookingClick}
+                          />
+                        )
+                      )))}
                   {displayDoctors.length === 0 && !isFiltering && <EmptyState category="doctors" />}
                   {displayDoctors.length > visibleDoctorsCount && (
                     <div ref={loadMoreRef} style={{ padding: "20px", display: "flex", justifyContent: "center", gridColumn: "1 / -1" }}>
@@ -2480,6 +2890,16 @@ function SearchResultsContent() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Dev/stakeholder preview only — renders nothing in production */}
+      <DesignSwitcher scope="search-top" />
+
+      {/* Auth Modal for doctor booking flow */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </div>
   );
 }
@@ -2494,10 +2914,18 @@ function EmptyState({ category }: { category: string }) {
   );
 }
 
+function SearchPreviewContent() {
+  const variant = useDesignVariant("search-top");
+  if (variant === "d3") {
+    return <Design3SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  return <SearchResultsContent />;
+}
+
 export default function SearchResultsPage() {
   return (
     <Suspense fallback={<div style={{ paddingTop: "120px", textAlign: "center" }}>Loading search results...</div>}>
-      <SearchResultsContent />
+      <SearchPreviewContent />
     </Suspense>
   );
 }

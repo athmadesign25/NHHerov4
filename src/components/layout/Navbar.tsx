@@ -18,9 +18,9 @@ function EmergencyIcon({ size = 18 }: { size?: number }) {
 }
 
 const MOCK_FAMILY_MEMBERS = [
-  { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
+  { id: 1, name: "Aditya", img: "https://i.pravatar.cc/150?img=11" },
   { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
-  { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
+  { id: 3, name: "Hazel", img: "https://i.pravatar.cc/150?img=5" },
   { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },
 ];
 
@@ -62,11 +62,25 @@ export default function Navbar() {
     }
   }, [isMobileMenuOpen]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("Aditya");
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
-    }
-  }, []);
+    const checkLogin = () => {
+      if (typeof window !== 'undefined') {
+        const authed = 
+          localStorage.getItem('isLoggedIn') === 'true' || 
+          sessionStorage.getItem('isLoggedIn') === 'true';
+        setIsLoggedIn(authed);
+        setUserName(localStorage.getItem('userName') || "Aditya");
+      }
+    };
+    checkLogin();
+    window.addEventListener('login-state-changed', checkLogin);
+    window.addEventListener('storage', checkLogin);
+    return () => {
+      window.removeEventListener('login-state-changed', checkLogin);
+      window.removeEventListener('storage', checkLogin);
+    };
+  }, [pathname]);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const [activeUserId, setActiveUserId] = useState(1);
@@ -441,6 +455,7 @@ export default function Navbar() {
             type="button"
             onClick={handleToggleSearchTheme}
             className={styles.searchThemeToggle}
+            data-search-theme-toggle
             title={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
             aria-label={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
           >
@@ -458,20 +473,17 @@ export default function Navbar() {
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
               <button 
-                onClick={() => {
-                  setIsProfileDropdownOpen(!isProfileDropdownOpen);
-                  if (isProfileDropdownOpen) setIsMembersExpanded(false);
-                }}
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 className={styles.loginBtnResponsive}
                 style={{ 
                   cursor: "pointer", 
                   fontFamily: "inherit", 
-                  padding: "6px 12px 6px 6px", 
+                  padding: "8px 16px", 
                   display: "flex", 
                   alignItems: "center", 
                   gap: "8px",
                   background: isProfileDropdownOpen 
-                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)") 
+                    ? (isOverLightBackground ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.22)") 
                     : (isOverLightBackground ? "rgba(15, 23, 42, 0.04)" : "rgba(255, 255, 255, 0.16)"),
                   color: "var(--nav-fg-color)",
                   backdropFilter: "blur(12px)",
@@ -482,7 +494,7 @@ export default function Navbar() {
                 }}
                 onMouseEnter={(e) => { 
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.1)" : "rgba(255, 255, 255, 0.22)";
+                    e.currentTarget.style.background = isOverLightBackground ? "rgba(15, 23, 42, 0.08)" : "rgba(255, 255, 255, 0.22)";
                   }
                 }}
                 onMouseLeave={(e) => { 
@@ -491,8 +503,8 @@ export default function Navbar() {
                   }
                 }}
               >
-                <img src={activeUser.img} alt={activeUser.name} style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover" }} />
-                <span style={{ fontWeight: 600, fontSize: "15px" }}>{activeUser.name}</span>
+                <User size={18} strokeWidth={2} />
+                <span style={{ fontWeight: 600, fontSize: "15px" }}>{userName}</span>
                 <ChevronDown size={16} strokeWidth={2.5} style={{ opacity: 0.7, transform: isProfileDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
               </button>
               
@@ -501,103 +513,88 @@ export default function Navbar() {
                   position: "absolute",
                   top: "calc(100% + 8px)",
                   right: 0,
-                  width: "240px",
+                  width: "210px",
                   background: "#ffffff",
                   borderRadius: "16px",
-                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.04)",
                   border: "1px solid var(--color-border, #e2e8f0)",
                   overflow: "hidden",
                   zIndex: 50,
                   display: "flex",
-                  flexDirection: "column"
+                  flexDirection: "column",
+                  padding: "10px 8px",
+                  gap: "4px"
                 }}>
-                  <div style={{ padding: "12px 8px", borderBottom: "1px solid var(--color-border, #e2e8f0)", background: "#f8fafc" }}>
-                    <div style={{ padding: "0 8px 8px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <h4 style={{ margin: 0, fontSize: "12px", color: "var(--color-text-secondary, #475569)", textTransform: "uppercase", letterSpacing: "0.5px" }}>Switch Accounts</h4>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: isMembersExpanded ? "300px" : "none", overflowY: "auto" }}>
-                      {MOCK_FAMILY_MEMBERS.slice(0, isMembersExpanded ? MOCK_FAMILY_MEMBERS.length : 3).map((member) => {
-                        const isActive = member.id === activeUserId;
-                        return (
-                          <button 
-                            key={member.id}
-                            onClick={() => {
-                              setActiveUserId(member.id);
-                              setIsProfileDropdownOpen(false);
-                              setIsMembersExpanded(false);
-                            }}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                              padding: "8px",
-                              background: isActive ? "#e0efff" : "transparent",
-                              border: "none",
-                              borderRadius: "8px",
-                              cursor: "pointer",
-                              transition: "background 0.2s"
-                            }}
-                            onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "#f1f5f9" }}
-                            onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent" }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                              <img src={member.img} alt={member.name} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
-                              <span style={{ fontSize: "14px", fontWeight: isActive ? 600 : 500, color: isActive ? "var(--color-primary)" : "var(--color-text, #0f172a)" }}>
-                                {member.name} {isActive && "(You)"}
-                              </span>
-                            </div>
-                            {isActive && <Check size={16} color="var(--color-primary)" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {MOCK_FAMILY_MEMBERS.length > 3 && (
-                      <button 
-                        onClick={() => setIsMembersExpanded(!isMembersExpanded)}
-                        style={{ 
-                          marginTop: "8px", 
-                          padding: "8px", 
-                          width: "100%", 
-                          background: "none", 
-                          border: "none", 
-                          color: "var(--color-primary)", 
-                          fontSize: "13px", 
-                          fontWeight: 600, 
-                          cursor: "pointer",
-                          textAlign: "center"
-                        }}
-                      >
-                        {isMembersExpanded ? "View fewer members" : `View all ${MOCK_FAMILY_MEMBERS.length} members`}
-                      </button>
-                    )}
-                  </div>
-                  
-                  <div style={{ padding: "8px" }}>
-                    <Link href="/profile" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, #0f172a)", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <User size={18} style={{ color: "var(--color-text-secondary, #475569)" }} /> My account
-                    </Link>
-                    <Link href="/bookings" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, #0f172a)", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <CalendarCheck size={18} style={{ color: "var(--color-text-secondary, #475569)" }} /> My bookings
-                    </Link>
-                    <Link href="/records" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, #0f172a)", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <FileText size={18} style={{ color: "var(--color-text-secondary, #475569)" }} /> Health records
-                    </Link>
-                  </div>
-                  
-                  <div style={{ borderTop: "1px solid var(--color-border, #e2e8f0)", padding: "8px" }}>
-                    <button 
-                      onClick={() => {
-                        setIsProfileDropdownOpen(false);
-                        setIsLoggedIn(false); localStorage.removeItem('isLoggedIn');
-                      }}
-                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, #ef4444)", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }} 
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"} 
-                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                    >
-                      <LogOut size={18} /> Sign out
-                    </button>
-                  </div>
+                  <Link 
+                    href="/bookings" 
+                    onClick={() => setIsProfileDropdownOpen(false)} 
+                    style={{ 
+                      display: "block", 
+                      padding: "10px 14px", 
+                      color: "#0f172a", 
+                      textDecoration: "none", 
+                      fontSize: "15px", 
+                      fontWeight: 600, 
+                      borderRadius: "10px", 
+                      transition: "background 0.15s" 
+                    }} 
+                    onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"} 
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    My Consultations
+                  </Link>
+                  <Link 
+                    href="/records" 
+                    onClick={() => setIsProfileDropdownOpen(false)} 
+                    style={{ 
+                      display: "block", 
+                      padding: "10px 14px", 
+                      color: "#0f172a", 
+                      textDecoration: "none", 
+                      fontSize: "15px", 
+                      fontWeight: 600, 
+                      borderRadius: "10px", 
+                      transition: "background 0.15s" 
+                    }} 
+                    onMouseEnter={(e) => e.currentTarget.style.background = "#f8fafc"} 
+                    onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+                  >
+                    My Tests
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      setIsProfileDropdownOpen(false);
+                      localStorage.removeItem('isLoggedIn');
+                      sessionStorage.removeItem('isLoggedIn');
+                      localStorage.removeItem('userName');
+                      setIsLoggedIn(false);
+                      window.dispatchEvent(new Event('login-state-changed'));
+                    }}
+                    style={{ 
+                      width: "100%", 
+                      display: "block", 
+                      padding: "10px 14px", 
+                      color: "var(--color-emergency, #ED1C24)", 
+                      background: "transparent", 
+                      border: "none", 
+                      fontSize: "15px", 
+                      fontWeight: 600, 
+                      borderRadius: "10px", 
+                      cursor: "pointer", 
+                      textAlign: "left",
+                      transition: "background 0.15s, color 0.15s" 
+                    }} 
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#fef2f2";
+                      e.currentTarget.style.color = "#dc2626";
+                    }} 
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "var(--color-emergency, #ED1C24)";
+                    }}
+                  >
+                    Logout
+                  </button>
                 </div>
               )}
             </div>
@@ -984,7 +981,16 @@ export default function Navbar() {
           </div>
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => { setIsLoggedIn(true); localStorage.setItem('isLoggedIn', 'true'); }} />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLoginSuccess={() => { 
+          setIsLoggedIn(true); 
+          setUserName("Aditya");
+          localStorage.setItem('isLoggedIn', 'true'); 
+          localStorage.setItem('userName', 'Aditya');
+        }} 
+      />
     </nav>
   );
 }

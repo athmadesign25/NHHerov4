@@ -1072,7 +1072,7 @@ export default function SearchResultsCanvas({
                             </div>
 
                             <Link
-                              href={`/doctors/${turn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                              href={`/doctors/${turn.doctor.id}?name=${encodeURIComponent(turn.doctor.name)}&specialty=${encodeURIComponent(turn.doctor.speciality)}&hospital=${encodeURIComponent(turn.doctor.hospital)}&experience=${encodeURIComponent(turn.doctor.experience)}&city=${encodeURIComponent(turn.doctor.city)}&img=${encodeURIComponent(turn.doctor.image)}`}
                               className={styles.refBookBtnWhite}
                             >
                               Book
@@ -1215,7 +1215,7 @@ export default function SearchResultsCanvas({
                                   </div>
 
                                   <Link
-                                    href={`/doctors/${activeTurn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                                    href={`/doctors/${activeTurn.doctor.id}?name=${encodeURIComponent(activeTurn.doctor.name)}&specialty=${encodeURIComponent(activeTurn.doctor.speciality)}&hospital=${encodeURIComponent(activeTurn.doctor.hospital)}&experience=${encodeURIComponent(activeTurn.doctor.experience)}&city=${encodeURIComponent(activeTurn.doctor.city)}&img=${encodeURIComponent(activeTurn.doctor.image)}`}
                                     className={styles.refBookBtnWhite}
                                   >
                                     Book

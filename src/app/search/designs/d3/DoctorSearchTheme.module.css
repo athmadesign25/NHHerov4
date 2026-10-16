@@ -1,0 +1,47 @@
+/* Scoped to this preview and its portalled dialogs; no global palette overrides. */
+.theme {
+  --d3-ui-accent: #034EA1;
+  --d3-ui-accent-hover: var(--color-primary-dark);
+  --d3-ui-brand-accent: var(--color-emergency);
+  --d3-ui-action: var(--d3-ui-accent);
+  --d3-ui-action-hover: color-mix(in srgb, var(--d3-ui-accent) 92%, var(--color-text));
+  --d3-ui-action-pressed: color-mix(in srgb, var(--d3-ui-accent) 84%, var(--color-text));
+  /* Red marks selection, with enough contrast against the translucent surfaces. */
+  --d3-ui-selection: color-mix(in srgb, var(--d3-ui-brand-accent) 88%, var(--color-text));
+  --d3-ui-selection-label: color-mix(in srgb, var(--d3-ui-brand-accent) 78%, var(--color-text));
+  --d3-ui-selection-hover: color-mix(in srgb, var(--d3-ui-brand-accent) 72%, var(--color-text));
+  --d3-ui-selection-pressed: color-mix(in srgb, var(--d3-ui-brand-accent) 66%, var(--color-text));
+  --d3-ui-selection-border-hover: var(--d3-ui-selection);
+  --d3-ui-selection-border-pressed: var(--d3-ui-selection);
+  --d3-ui-selection-surface: color-mix(in srgb, var(--d3-ui-brand-accent) 5%, var(--color-bg-card));
+  --d3-ui-selection-surface-hover: color-mix(in srgb, var(--d3-ui-brand-accent) 6%, var(--color-bg-card));
+  --d3-ui-selection-surface-pressed: color-mix(in srgb, var(--d3-ui-brand-accent) 8%, var(--color-bg-card));
+  --d3-ui-neutral-ink: var(--color-text-secondary);
+  --d3-ui-ink-hover: color-mix(in srgb, var(--color-text-secondary) 45%, var(--color-text));
+  --d3-ui-ink-pressed: var(--color-text);
+  --d3-ui-mode-track: #F2F5FA;
+  --d3-ui-neutral-border: color-mix(in srgb, var(--color-border) 80%, var(--color-text-secondary));
+  --d3-ui-focus: var(--color-text-secondary);
+  --d3-ui-border: var(--color-border);
+  --d3-ui-text: var(--color-text-secondary);
+  --d3-ui-hover: color-mix(in srgb, var(--color-text) 2%, var(--color-bg-card));
+  --d3-ui-pressed: color-mix(in srgb, var(--color-text) 4%, var(--color-bg-card));
+  --d3-ui-fast: 150ms cubic-bezier(.22, 1, .36, 1);
+  --d3-ui-base: 250ms cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Opt-in scopes keep existing doctor cards and the global navigation unchanged. */
+.theme [data-d3-ui] :is(button, a):focus-visible,
+.theme[data-d3-ui] :is(button, a):focus-visible {
+  outline: 2px solid var(--d3-ui-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme { --d3-ui-fast: 0ms; --d3-ui-base: 0ms; }
+}
+
+@media (forced-colors: active) {
+  .theme [data-d3-ui] :is(button, a):focus-visible,
+  .theme[data-d3-ui] :is(button, a):focus-visible { outline-color: Highlight; }
+}

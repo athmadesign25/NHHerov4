@@ -1,30 +1,61 @@
 export const searchDoctorsData = [
   {
     "id": "dr-1",
-    "name": "Dr. Rajiv Menon",
+    "name": "Dr. Devi Prasad Shetty",
     "speciality": "Cardiologist",
-    "degrees": "MBBS, MD (Cardiologist)",
-    "hospital": "Narayana Health City",
+    "degrees": "MS, FRCS (Cardiac Surgery)",
+    "hospital": "Narayana Health City, Bangalore",
+    "hospitals": [
+      "Narayana Health City, Bangalore",
+      "Mazumdar Shaw Medical Centre, Bangalore"
+    ],
     "hospitalCount": "+1",
     "city": "Bangalore",
-    "experience": "11 Years",
-    "rating": 4.1,
-    "reviews": 143,
+    "experience": "35+ Years",
+    "rating": 4.9,
+    "reviews": 1284,
     "available": "Available Today",
     "availability": {
       "hospital": "Today, 10:30 AM",
       "video": "Today, 02:00 PM"
     },
-    "img": "/images/misc/doctor_avatar_male_v2.png",
+    "img": "/doctors/doc_devi_shetty.jpg",
     "fee": "₹1050",
-    "isExecutive": false
+    "isExecutive": true
+  },
+  {
+    "id": "dr-ashley",
+    "name": "Dr. Ashley Lucien Joseph D Cruz",
+    "speciality": "General Surgeon",
+    "degrees": "MBBS, MS, MCh, FRCS (Paediatric Surgery)",
+    "hospital": "Mazumdar Shaw Medical Centre, Bangalore",
+    "hospitals": [
+      "Mazumdar Shaw Medical Centre, Bangalore",
+      "Narayana Health City, Bangalore"
+    ],
+    "hospitalCount": "+1",
+    "city": "Bangalore",
+    "experience": "32+ Years",
+    "rating": 4.9,
+    "reviews": 842,
+    "available": "Available Tomorrow",
+    "availability": {
+      "hospital": "Tomorrow, 11:30 AM",
+      "video": ""
+    },
+    "img": "/assets/doctor_1.png",
+    "fee": "₹1200",
+    "isExecutive": true
   },
   {
     "id": "dr-2",
     "name": "Dr. Priya Sharma",
     "speciality": "Cardiologist",
     "degrees": "MBBS, MD (Cardiologist)",
-    "hospital": "Narayana Health City",
+    "hospital": "Mazumdar Shaw Medical Centre, Bangalore",
+    "hospitals": [
+      "Mazumdar Shaw Medical Centre, Bangalore"
+    ],
     "hospitalCount": "",
     "city": "Bangalore",
     "experience": "12 Years",
@@ -32,10 +63,10 @@ export const searchDoctorsData = [
     "reviews": 186,
     "available": "Available Tomorrow",
     "availability": {
-      "hospital": "Tomorrow, 11:00 AM",
+      "hospital": "",
       "video": "Tomorrow, 04:00 PM"
     },
-    "img": "/images/misc/doctor_avatar_female_v2.png",
+    "img": "/doc2.png",
     "fee": "₹1100",
     "isExecutive": false
   },
@@ -44,7 +75,11 @@ export const searchDoctorsData = [
     "name": "Dr. Arun Krishnan",
     "speciality": "Orthopaedician",
     "degrees": "MBBS, MD (Orthopaedician)",
-    "hospital": "Narayana Health City",
+    "hospital": "Narayana Health City, Bangalore",
+    "hospitals": [
+      "Narayana Health City, Bangalore",
+      "SRCC Children's Hospital, Mumbai"
+    ],
     "hospitalCount": "+1",
     "city": "Bangalore",
     "experience": "13 Years",
@@ -55,7 +90,7 @@ export const searchDoctorsData = [
       "hospital": "Today, 10:30 AM",
       "video": "Today, 02:00 PM"
     },
-    "img": "/images/misc/doctor_avatar_male_v2.png",
+    "img": "/doctors/doc_bagirath.jpg",
     "fee": "₹1150",
     "isExecutive": false
   },
@@ -73,7 +108,7 @@ export const searchDoctorsData = [
     "available": "Available Tomorrow",
     "availability": {
       "hospital": "Tomorrow, 11:00 AM",
-      "video": "Tomorrow, 04:00 PM"
+      "video": ""
     },
     "img": "/images/misc/doctor_avatar_female_v2.png",
     "fee": "₹1200",
@@ -90,10 +125,10 @@ export const searchDoctorsData = [
     "experience": "15 Years",
     "rating": 4.5,
     "reviews": 315,
-    "available": "Available Today",
+    "available": "Check Availability",
     "availability": {
-      "hospital": "Today, 10:30 AM",
-      "video": "Today, 02:00 PM"
+      "hospital": "",
+      "video": ""
     },
     "img": "/images/misc/doctor_avatar_male_v2.png",
     "fee": "₹1250",
@@ -112,7 +147,7 @@ export const searchDoctorsData = [
     "reviews": 358,
     "available": "Available Tomorrow",
     "availability": {
-      "hospital": "Tomorrow, 11:00 AM",
+      "hospital": "",
       "video": "Tomorrow, 04:00 PM"
     },
     "img": "/images/misc/doctor_avatar_female_v2.png",
@@ -153,7 +188,7 @@ export const searchDoctorsData = [
     "available": "Available Tomorrow",
     "availability": {
       "hospital": "Tomorrow, 11:00 AM",
-      "video": "Tomorrow, 04:00 PM"
+      "video": ""
     },
     "img": "/images/misc/doctor_avatar_female_v2.png",
     "fee": "₹1400",

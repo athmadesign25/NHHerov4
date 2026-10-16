@@ -14,16 +14,16 @@ import {
   Languages,
   Calendar,
   Check,
-  User,
+  Info,
 } from "lucide-react";
 
 // Components
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import ConsultationToggle from "@/components/booking/ConsultationToggle/ConsultationToggle";
+import MemberSelector, { type FamilyMember } from "@/components/booking/MemberSelector/MemberSelector";
 import HospitalSelector from "@/components/booking/HospitalSelector/HospitalSelector";
 import DatePicker from "@/components/booking/DatePicker/DatePicker";
 import TimeSlotGrid from "@/components/booking/TimeSlotGrid/TimeSlotGrid";
-import PatientDetailsForm from "@/components/booking/PatientDetailsForm/PatientDetailsForm";
 
 // State & types
 import {
@@ -31,13 +31,14 @@ import {
   generateDates,
   generateTimeSlots,
 } from "@/features/booking/useBookingState";
-import { getBookingDoctor } from "@/features/booking/doctors";
+import { getBookingDoctor, getDesign3BookingDoctor } from "@/features/booking/doctors";
 import { formatBookingDate } from "@/features/booking/format";
 import { saveBooking } from "@/features/booking/bookingStore";
 import type { BookingDoctorSummary, ConsultationType } from "@/features/booking/types";
 
 // Auth
 import LoginModal from "@/features/auth/LoginModal";
+import { useAuthState } from "@/features/auth/hooks/useAuthState";
 
 import styles from "./page.module.css";
 
@@ -47,17 +48,12 @@ const MODE_COPY: Record<ConsultationType, { feeLabel: string; trust: string[] }>
   hospital: {
     feeLabel: "Hospital Visit Fee",
     trust: [
-      "Verified credentials",
-      "Free cancellation up to 2 hrs before",
       "Pay at the hospital",
     ],
   },
   video: {
     feeLabel: "Video Consultation Fee",
     trust: [
-      "Verified credentials",
-      "Secure video link sent by SMS & email",
-      "Free cancellation up to 2 hrs before",
       "Pay online before the call",
     ],
   },
@@ -106,11 +102,34 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
     openAuthModal,
     closeAuthModal,
     isStep1Valid,
-    isStep2Valid,
   } = useBookingState({ initialConsultationType, initialHospital });
+
+  const { isUserLoggedIn } = useAuthState();
+
+  const [selectedMember, setSelectedMember] = useState<FamilyMember>({
+    id: 1,
+    name: "Aditya",
+    relation: "self",
+    age: "32",
+    gender: "male",
+  });
+
+  const handleSelectMember = (member: FamilyMember) => {
+    setSelectedMember(member);
+    setPatientField("name", member.name);
+    setPatientField("relation", member.relation);
+    setPatientField("age", member.age || "");
+    setPatientField("gender", member.gender || "");
+  };
 
   // Populate defaults on mount
   useEffect(() => {
+    // Set initial patient to default member
+    setPatientField("name", selectedMember.name);
+    setPatientField("relation", selectedMember.relation);
+    setPatientField("age", selectedMember.age || "");
+    setPatientField("gender", selectedMember.gender || "");
+
     if (!state.selectedHospital && initialHospital) {
       setSelectedHospital(initialHospital);
     }
@@ -137,22 +156,15 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
 
   const modeCopy = MODE_COPY[state.consultationType];
 
-  // Booking is allowed once slot + patient details are complete.
-  const canBook = isStep1Valid && isStep2Valid;
+  // Booking is allowed once slot is selected (Toshib flow).
+  const canBook = isStep1Valid;
   const blockReason = canBook
     ? ""
     : !state.selectedDate
       ? "Select a date to continue"
-      : !state.selectedTime
-        ? "Select a time slot to continue"
-        : "Enter patient name, age and gender to continue";
+      : "Select a time slot to continue";
 
-  const handleBookClick = () => {
-    if (canBook) openAuthModal();
-  };
-
-  const handleLoginSuccess = () => {
-    closeAuthModal();
+  const proceedToBooking = () => {
     // Persist once; the confirmation page reads it back by reference, so the URL
     // carries no patient data and a refresh shows the same booking.
     const record = saveBooking({
@@ -163,8 +175,8 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
       hospital: state.consultationType === "hospital" ? state.selectedHospital : "",
       date: state.selectedDate,
       time: state.selectedTime,
-      patientName: state.patient.name.trim(),
-      relation: state.patient.relation,
+      patientName: selectedMember.name.trim() || state.patient?.name?.trim() || "Patient",
+      relation: selectedMember.relation || state.patient?.relation || "self",
       fee: doctor.fee,
     });
     router.push(
@@ -172,99 +184,160 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
     );
   };
 
+  const handleBookClick = () => {
+    if (!canBook) return;
+    if (!isUserLoggedIn) {
+      // User is not logged in: ask for login
+      openAuthModal();
+    } else {
+      // User is already logged in: proceed directly to booking confirmation
+      proceedToBooking();
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    closeAuthModal();
+    proceedToBooking();
+  };
+
   return (
     <>
       <div className={styles.page}>
         <div className={styles.container}>
 
-          {/* ─── BREADCRUMB + BACK ─────────────────────────── */}
+          {/* ─── BREADCRUMBS ─────────────────────────── */}
           <div className={styles.navRow}>
             <Breadcrumbs
               theme="light"
               items={[
                 { label: "Home", href: "/" },
-                { label: "Doctors", href: "/search?q=Dr.&location=All" },
+                { label: "Doctors", href: "/search/doctors" },
                 { label: doctor.name, href: `/doctors/${slug}` },
                 { label: "Book Appointment" },
               ]}
             />
-            <Link href={`/doctors/${slug}`} className={styles.backLink}>
-              <ArrowLeft size={16} aria-hidden />
-              Back to Profile
-            </Link>
           </div>
 
           {/* ─── MAIN 2-COLUMN GRID ───────────────────────── */}
           <div className={styles.grid}>
 
-            {/* ── LEFT: Doctor Summary ── */}
+            {/* ── LEFT: Combined Doctor & Booking Summary Card ── */}
             <motion.aside
               className={styles.doctorPanel}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Doctor Card */}
-              <div className={styles.doctorCard}>
-                <div className={styles.doctorImgWrap}>
-                  <Image
-                    src={doctor.img}
-                    alt={doctor.name}
-                    width={96}
-                    height={96}
-                    className={styles.doctorImg}
-                  />
-                </div>
-                <div className={styles.doctorInfo}>
-                  <h1 className={styles.doctorName}>{doctor.name}</h1>
-                  <p className={styles.doctorSpec}>
-                    {doctor.speciality}
-                    {doctor.subSpeciality ? ` · ${doctor.subSpeciality}` : ""}
-                  </p>
-                  <div className={styles.doctorMeta}>
-                    <span className={styles.metaItem}>
-                      <Star size={13} className={styles.starIcon} aria-hidden />
-                      {doctor.rating}{" "}
-                      <span className={styles.metaMuted}>
-                        ({doctor.reviews?.toLocaleString()} reviews)
-                      </span>
-                    </span>
-                    <span className={styles.metaItem}>
-                      <Clock3 size={13} aria-hidden />
-                      {doctor.experienceYears} Experience
-                    </span>
-                    <span className={styles.metaItem}>
-                      <MapPin size={13} aria-hidden />
-                      {doctor.hospital}, {doctor.city}
-                    </span>
-                    {doctor.languages && doctor.languages.length > 0 && (
+              <div className={styles.unifiedCard}>
+                {/* Doctor Header */}
+                <div className={styles.docHeader}>
+                  <div className={styles.doctorImgWrap}>
+                    <Image
+                      src={doctor.img}
+                      alt={doctor.name}
+                      width={80}
+                      height={80}
+                      className={styles.doctorImg}
+                      priority
+                    />
+                  </div>
+                  <div className={styles.doctorInfo}>
+                    <h1 className={styles.doctorName}>{doctor.name}</h1>
+                    <p className={styles.doctorSpec}>
+                      {doctor.speciality}
+                      {doctor.subSpeciality ? ` · ${doctor.subSpeciality}` : ""}
+                    </p>
+                    <div className={styles.doctorMeta}>
                       <span className={styles.metaItem}>
-                        <Languages size={13} aria-hidden />
-                        {doctor.languages.join(", ")}
+                        <Star size={13} className={styles.starIcon} aria-hidden />
+                        {doctor.rating}{" "}
+                        <span className={styles.metaMuted}>
+                          ({doctor.reviews?.toLocaleString()} reviews)
+                        </span>
                       </span>
-                    )}
+                      <span className={styles.metaItem}>
+                        <Clock3 size={13} aria-hidden />
+                        {doctor.experienceYears} Experience
+                      </span>
+                      <span className={styles.metaItem}>
+                        <MapPin size={13} aria-hidden />
+                        {state.consultationType === "hospital" && state.selectedHospital
+                          ? state.selectedHospital
+                          : `${doctor.hospital}, ${doctor.city}`}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Fee + Trust (mode-aware) */}
-              <div className={styles.feeCard}>
-                <div className={styles.feeRow}>
-                  <span className={styles.feeLabel}>{modeCopy.feeLabel}</span>
-                  <span className={styles.feeAmount}>{doctor.fee}</span>
+                <div className={styles.cardDivider} />
+
+                {/* Mode-aware Fee Section */}
+                <div className={styles.feeSection}>
+                  <div className={styles.feeInfo}>
+                    <div className={styles.feeLabel}>{modeCopy.feeLabel}</div>
+                    <div className={styles.feeSubtext}>
+                      <Check size={13} className={styles.trustCheck} aria-hidden />
+                      <span>{modeCopy.trust[0] || "Pay at the hospital"}</span>
+                    </div>
+                  </div>
+                  <div className={styles.feeAmount}>{doctor.fee}</div>
                 </div>
-                <ul key={state.consultationType} className={styles.trustList}>
-                  {modeCopy.trust.map((point) => (
-                    <li key={point} className={styles.trustItem}>
-                      <Check size={14} className={styles.trustCheck} aria-hidden />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+
+                {/* Selected Slot Summary */}
+                <div className={styles.slotSelectedSummary}>
+                  <div className={styles.slotSummaryHeader}>
+                    <div className={styles.slotDateText}>
+                      <Calendar size={14} className={styles.slotCalendarIcon} aria-hidden />
+                      <span>
+                        {state.selectedDate ? formatBookingDate(state.selectedDate, "short") : "Select date"}
+                      </span>
+                    </div>
+                    {state.selectedTime ? (
+                      <span className={styles.slotTimeBadge}>{state.selectedTime}</span>
+                    ) : (
+                      <span className={styles.slotPendingBadge}>Select slot</span>
+                    )}
+                  </div>
+                  <div className={styles.slotPatientText}>
+                    Patient: <strong>{selectedMember.name}</strong> ({selectedMember.relation})
+                  </div>
+                </div>
+
+                {/* Upfront Primary CTA on Left Card */}
+                <div className={styles.leftCardCtaBlock}>
+                  {blockReason && (
+                    <div className={styles.ctaHint} role="status" aria-live="polite">
+                      <Info size={13} className={styles.ctaHintIcon} aria-hidden />
+                      <span>{blockReason}</span>
+                    </div>
+                  )}
+                  <button
+                    id="book-appointment-btn"
+                    type="button"
+                    className={[
+                      styles.ctaPrimary,
+                      !canBook ? styles.ctaDisabled : "",
+                    ].join(" ")}
+                    disabled={!canBook}
+                    onClick={handleBookClick}
+                    aria-label="Book appointment"
+                  >
+                    Book Appointment
+                  </button>
+                  <a
+                    href="tel:18001030"
+                    id="doctor-call-btn"
+                    className={styles.ctaOutline}
+                    aria-label="Call for enquiry"
+                  >
+                    <Phone size={15} aria-hidden />
+                    Call for Enquiry
+                  </a>
+                </div>
               </div>
             </motion.aside>
 
-            {/* ── RIGHT: Booking Panel ── */}
+            {/* ── RIGHT: Streamlined Booking Controls ── */}
             <motion.div
               className={styles.bookingPanel}
               initial={{ opacity: 0, y: 16 }}
@@ -287,16 +360,24 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
               )}
 
               {/* Consultation Type Toggle */}
-              <div className={styles.section}>
+              <div className={styles.bookingSection}>
                 <ConsultationToggle
                   value={state.consultationType}
                   onChange={setConsultationType}
                 />
               </div>
 
-              {/* Hospital Selector (only for hospital visits) */}
+              {/* Member Selector */}
+              <div className={styles.bookingSection}>
+                <MemberSelector
+                  selectedMemberId={selectedMember.id}
+                  onSelectMember={handleSelectMember}
+                />
+              </div>
+
+              {/* Hospital Selector */}
               {state.consultationType === "hospital" && (
-                <div className={styles.section}>
+                <div className={styles.bookingSection}>
                   <HospitalSelector
                     hospitals={hospitals}
                     value={state.selectedHospital}
@@ -305,12 +386,8 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
                 </div>
               )}
 
-              {/* Date Picker */}
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <Calendar size={17} className={styles.sectionIcon} aria-hidden />
-                  <span className={styles.sectionTitle}>Select date</span>
-                </div>
+              {/* Single Date Picker (No duplicate outer header) */}
+              <div className={`${styles.bookingSection} ${styles.sectionDivider}`}>
                 <DatePicker
                   dates={dates}
                   selectedDate={state.selectedDate}
@@ -318,53 +395,13 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
                 />
               </div>
 
-              {/* Time Slots */}
-              <div className={styles.section}>
+              {/* Time Slots (available only, no strikethrough) */}
+              <div className={`${styles.bookingSection} ${styles.sectionDivider}`}>
                 <TimeSlotGrid
                   slots={timeSlots}
                   selectedTime={state.selectedTime}
                   onSelect={setSelectedTime}
                 />
-              </div>
-
-              {/* Patient Details */}
-              <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                  <User size={17} className={styles.sectionIcon} aria-hidden />
-                  <span className={styles.sectionTitle}>Patient details</span>
-                </div>
-                <PatientDetailsForm value={state.patient} onChange={setPatientField} />
-              </div>
-
-              {/* CTAs */}
-              <div className={styles.ctaBlock}>
-                <button
-                  id="book-appointment-btn"
-                  type="button"
-                  className={[
-                    styles.ctaPrimary,
-                    !canBook ? styles.ctaDisabled : "",
-                  ].join(" ")}
-                  disabled={!canBook}
-                  onClick={handleBookClick}
-                  aria-label="Book appointment"
-                >
-                  Book Appointment
-                </button>
-                {blockReason && (
-                  <p className={styles.ctaHint} role="status" aria-live="polite">
-                    {blockReason}
-                  </p>
-                )}
-                <a
-                  href="tel:18001030"
-                  id="doctor-call-btn"
-                  className={styles.ctaOutline}
-                  aria-label="Call for enquiry"
-                >
-                  <Phone size={15} aria-hidden />
-                  Call for Enquiry
-                </a>
               </div>
             </motion.div>
           </div>
@@ -419,14 +456,16 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
 // ─── PAGE EXPORT (wraps inner in Suspense for useSearchParams) ────────────────
 export default function BookingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = React.use(params);
-
-  // Unknown doctor → 404. Never fall back to a different doctor.
-  const doctor = getBookingDoctor(slug);
-  if (!doctor) notFound();
-
   return (
     <Suspense fallback={<div style={{ minHeight: "100dvh", paddingTop: "var(--nav-height)" }} />}>
-      <BookingPageInner slug={slug} doctor={doctor} />
+      <BookingPreviewRoute slug={slug} />
     </Suspense>
   );
+}
+
+function BookingPreviewRoute({ slug }: { slug: string }) {
+  const searchParams = useSearchParams();
+  const doctor = searchParams.get("design") === "d3" ? getDesign3BookingDoctor(slug) : getBookingDoctor(slug);
+  if (!doctor) notFound();
+  return <BookingPageInner slug={slug} doctor={doctor} />;
 }

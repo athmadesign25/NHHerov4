@@ -1,0 +1,121 @@
+.root {
+  --refinement-focus-inset: calc(var(--sp-1) / 2);
+  position: relative;
+  min-width: 0;
+  margin-inline: calc(var(--refinement-focus-inset) * -1);
+  margin-block: calc(var(--refinement-focus-inset) * -1);
+  overflow-anchor: none;
+}
+
+.viewport {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--refinement-focus-inset);
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--sp-6);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.viewport::-webkit-scrollbar { display: none; }
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: max-content;
+  min-width: max-content;
+  flex-wrap: nowrap;
+}
+
+.content > * { flex-shrink: 0; }
+.endSpace { display: none; }
+.root[data-overflow="true"] .endSpace { display: block; width: calc(var(--sp-6) - var(--sp-2)); }
+
+.affordance {
+  position: absolute;
+  z-index: 1;
+  inset-block: 0;
+  display: flex;
+  align-items: center;
+  width: var(--sp-8);
+  padding-inline: var(--refinement-focus-inset);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--d3-ui-fast, var(--transition-fast)), visibility var(--d3-ui-fast, var(--transition-fast));
+}
+
+.affordance[data-visible="true"] { visibility: visible; opacity: 1; }
+.previous { inset-inline-start: 0; justify-content: flex-start; }
+.next { inset-inline-end: 0; justify-content: flex-end; }
+/* Hide clipped controls beneath the translucent arrows, without painting a patch. */
+.root:has(.previous[data-visible="true"]) { --refinement-mask-start: transparent; }
+.root:has(.next[data-visible="true"]) { --refinement-mask-end: transparent; }
+.viewport {
+  --refinement-edge: calc(var(--sp-6) - var(--sp-1) / 2);
+  mask-image: linear-gradient(to right, var(--refinement-mask-start, var(--color-text-inverse)) var(--refinement-edge), var(--color-text-inverse) var(--sp-6), var(--color-text-inverse) calc(100% - var(--sp-6)), var(--refinement-mask-end, var(--color-text-inverse)) calc(100% - var(--refinement-edge)));
+  -webkit-mask-image: linear-gradient(to right, var(--refinement-mask-start, var(--color-text-inverse)) var(--refinement-edge), var(--color-text-inverse) var(--sp-6), var(--color-text-inverse) calc(100% - var(--sp-6)), var(--refinement-mask-end, var(--color-text-inverse)) calc(100% - var(--refinement-edge)));
+}
+
+
+.affordance button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: calc(var(--sp-6) - var(--sp-1) / 2);
+  min-height: calc(var(--sp-6) - var(--sp-1) / 2);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+  pointer-events: auto;
+  transition: color var(--d3-ui-fast, var(--transition-fast));
+}
+
+.affordance button::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--sp-1) / 2);
+  border: 1px solid var(--color-border);
+  border-radius: inherit;
+  background: var(--d3-control-surface, var(--color-bg-card));
+  pointer-events: none;
+  transition: background-color var(--d3-ui-fast, var(--transition-fast)), border-color var(--d3-ui-fast, var(--transition-fast));
+}
+
+.affordance button svg { position: relative; width: var(--font-size-base); height: var(--font-size-base); }
+.affordance button:disabled { pointer-events: none; color: var(--color-text-muted); }
+.affordance button:disabled::before { border-color: var(--color-border); background: var(--d3-control-muted, var(--color-bg-alt)); }
+.affordance button:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: 2px; }
+
+@media (hover: hover) {
+  .affordance button:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+}
+
+.affordance button:not(:disabled):active { color: var(--d3-ui-ink-pressed, var(--color-text)); }
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .affordance button::before { inset: calc(var(--sp-1) * .75); }
+}
+
+@media (max-width: 639px) {
+  .content { gap: var(--sp-1); }
+  .root[data-overflow="true"] .endSpace { width: calc(var(--sp-6) - var(--sp-1)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .affordance, .affordance button, .affordance button::before { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .affordance button::before { background: ButtonFace; border-color: ButtonText; }
+  .affordance button:not(:disabled):is(:hover, :active)::before { background: ButtonFace; border-color: Highlight; }
+  .affordance button:focus-visible { outline-color: Highlight; }
+  .affordance button:disabled { color: GrayText; }
+  .affordance button:disabled::before { background: ButtonFace; border-color: GrayText; }
+}

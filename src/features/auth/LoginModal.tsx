@@ -11,9 +11,11 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess?: () => void;
+  /** Opt-in keyboard/modal behaviour for the Design 3 preview. */
+  manageFocus?: boolean;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false }: LoginModalProps) {
   const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -22,6 +24,33 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!manageFocus || !isOpen || !mounted || !modalRef.current) return;
+    const modal = modalRef.current;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const background = Array.from(document.body.children).filter((element): element is HTMLElement => element instanceof HTMLElement && !element.contains(modal));
+    const previousInert = background.map((element) => element.inert);
+    background.forEach((element) => { element.inert = true; });
+    const focusable = () => Array.from(modal.querySelectorAll<HTMLElement>('button, input, select, a[href], [tabindex]'))
+      .filter((element) => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0);
+    (modal.querySelector<HTMLInputElement>('input') ?? focusable()[0])?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); onClose(); }
+      if (event.key !== 'Tab') return;
+      const elements = focusable();
+      const first = elements[0]; const last = elements.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    modal.addEventListener('keydown', onKey);
+    return () => {
+      modal.removeEventListener('keydown', onKey);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      trigger?.focus({ preventScroll: true });
+    };
+  }, [manageFocus, isOpen, mounted, onClose]);
 
   const handleContinue = () => {
     if (activeTab === "mobile") {
@@ -34,22 +63,32 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   };
 
   const handleVerify = () => {
-    if (isVerifying) return;
-    setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      if (onLoginSuccess) onLoginSuccess();
-      onClose();
-    }, 1500);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("isLoggedIn", "true");
+      sessionStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", "Aditya");
+      window.dispatchEvent(new Event("login-state-changed"));
+    }
+    if (onLoginSuccess) onLoginSuccess();
+    onClose();
   };
 
   const handleOtpChange = (index: number, value: string) => {
     if (value && !/^\d+$/.test(value)) return;
+    const digit = value.substring(value.length - 1);
     const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1);
+    newOtp[index] = digit;
     setOtp(newOtp);
-    if (value && index < 5) {
+
+    if (digit && index < 5) {
       otpRefs.current[index + 1]?.focus();
+    }
+
+    // Auto verify once 6th digit is typed or all 6 digits are populated
+    if (digit && (index === 5 || newOtp.every((d) => d.trim() !== ""))) {
+      setTimeout(() => {
+        handleVerify();
+      }, 50);
     }
   };
 
@@ -58,6 +97,24 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       otpRefs.current[index - 1]?.focus();
     } else if (e.key === "Enter") {
       handleVerify();
+    }
+  };
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+    const newOtp = [...otp];
+    for (let i = 0; i < 6; i++) {
+      newOtp[i] = pasted[i] || "";
+    }
+    setOtp(newOtp);
+    if (pasted.length === 6) {
+      setTimeout(() => {
+        handleVerify();
+      }, 50);
+    } else {
+      otpRefs.current[pasted.length]?.focus();
     }
   };
   
@@ -144,7 +201,11 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={styles.modalContainer}
+            ref={modalRef}
+            role={manageFocus ? "dialog" : undefined}
+            aria-modal={manageFocus ? true : undefined}
+            aria-label={manageFocus ? "Login or register to book an appointment" : undefined}
+            className={`${styles.modalContainer} ${manageFocus ? styles.accessibleDialog : ""}`}
           >
             {/* Image Column */}
             <div className={styles.imageColumn}>
@@ -166,6 +227,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "24px" }}>
               <button 
                 onClick={onClose}
+                aria-label={manageFocus ? "Close login" : undefined}
                 style={{ 
                   background: "var(--color-bg-alt, #f8fafc)", 
                   border: "none", 
@@ -303,6 +365,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                       {/* Phone Input */}
                       <input 
                         type="tel"
+                        aria-label={manageFocus ? "Mobile number" : undefined}
                         maxLength={10}
                         placeholder="Enter your mobile number"
                         value={mobileNumber}
@@ -341,6 +404,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Email ID</label>
                     <input 
                       type="email"
+                      aria-label={manageFocus ? "Email address" : undefined}
                       placeholder="Enter your email address"
                       style={{
                         width: "100%",
@@ -385,6 +449,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
               {/* Google Button */}
               <button
+                type="button"
+                onClick={handleVerify}
                 style={{
                   width: "100%",
                   padding: "14px",
@@ -430,11 +496,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           key={i}
                           ref={(el) => { otpRefs.current[i] = el; }}
                           type="text"
+                          aria-label={manageFocus ? `Verification code digit ${i + 1}` : undefined}
                           inputMode="numeric"
                           maxLength={1}
                           value={otp[i]}
                           onChange={(e) => handleOtpChange(i, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                          onPaste={handleOtpPaste}
                           style={{
                             width: "48px",
                             height: "56px",

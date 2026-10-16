@@ -464,7 +464,9 @@ export async function searchHealthcare(
     return cached.data;
   }
 
-  const existing = inFlightCache.get(cacheKey);
+  // Requests with a caller-owned signal must not share another caller's
+  // cancellation (including a previous, now-aborted search for the same text).
+  const existing = signal ? undefined : inFlightCache.get(cacheKey);
   if (existing) return existing;
 
   const url = new URL("/api/search", window.location.origin);
@@ -477,14 +479,14 @@ export async function searchHealthcare(
 
     const raw: RawApiResponse = await res.json();
     const normalized = normalizeSearchResponse(raw);
-    resultCache.set(cacheKey, { data: normalized, expiresAt: Date.now() + RESULT_CACHE_TTL_MS });
+    if (!signal?.aborted) resultCache.set(cacheKey, { data: normalized, expiresAt: Date.now() + RESULT_CACHE_TTL_MS });
     return normalized;
   })();
 
-  inFlightCache.set(cacheKey, request);
+  if (!signal) inFlightCache.set(cacheKey, request);
   try {
     return await request;
   } finally {
-    inFlightCache.delete(cacheKey);
+    if (inFlightCache.get(cacheKey) === request) inFlightCache.delete(cacheKey);
   }
 }

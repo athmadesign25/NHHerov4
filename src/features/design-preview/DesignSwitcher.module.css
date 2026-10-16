@@ -1,0 +1,177 @@
+/* Dev-preview styling: deliberately NOT the NH brand look (dark, mono, dashed). */
+.root {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sp-1);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px 0 12px;
+  border-radius: var(--radius-full);
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  background: rgba(15, 17, 26, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #e6e8ef;
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  opacity: 0.72;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.pill:hover,
+.pill:focus-visible,
+.pill[aria-expanded="true"] {
+  opacity: 1;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+}
+
+.pill:focus-visible {
+  outline: 2px solid #a5b4fc;
+  outline-offset: 2px;
+}
+
+.tag {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #fbbf24;
+  color: #1a1a2e;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.pillLabel {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chevron {
+  transition: transform var(--transition-fast);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  width: 248px;
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  background: rgba(15, 17, 26, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.32);
+  color: #e6e8ef;
+  animation: menuIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom right;
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.menuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9aa0b4;
+}
+
+.scope {
+  color: #fbbf24;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.item:hover:not(:disabled),
+.item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.item:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.itemActive {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fde68a;
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.itemNote {
+  font-size: 10.5px;
+  color: #9aa0b4;
+}
+
+.footnote {
+  margin: 4px 8px 4px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  font-size: 9.5px;
+  color: #6b7186;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu { animation: none; }
+  .pill, .chevron { transition: none; }
+}
+
+@media print {
+  .root { display: none; }
+}
+
+/* Never cover modal UI (e.g. the filters bottom sheet's CTA) */
+:global(body:has([aria-modal="true"])) .root {
+  display: none;
+}

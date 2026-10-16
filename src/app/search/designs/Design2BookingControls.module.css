@@ -1,0 +1,282 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ── Primary Controls Bar ───────────────────────────────── */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ── Consultation Type Segmented Toggle ─────────────────── */
+.toggleTrack {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: #F1F5F9;
+  border-radius: var(--radius-full);
+  padding: 4px;
+  border: 1px solid #E2E8F0;
+}
+
+.toggleBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 18px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: #64748B;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.toggleBtn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.toggleBtnActive {
+  color: var(--color-emergency);
+}
+
+.toggleThumb {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  z-index: 1;
+}
+
+.toggleContent {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toggleIcon {
+  display: block;
+  flex-shrink: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.toggleIconMuted {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* ── Urgency & Availability Levers (No Sort Dropdown) ───── */
+.urgencyCluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.urgencyPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #475569;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.urgencyPill:hover {
+  border-color: #CBD5E1;
+  background: #F8FAFC;
+  color: #1E293B;
+}
+
+.urgencyPill:active {
+  transform: scale(0.97);
+}
+
+/* Earliest Slot Pill (Smart Priority Sorter) */
+.earliestPill {
+  border-color: #CBD5E1;
+}
+
+.zapIcon {
+  color: #F59E0B;
+}
+
+.earliestActive {
+  background: #FFFBEB !important;
+  border-color: #F59E0B !important;
+  color: #B45309 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+.earliestActive .zapIcon {
+  color: #D97706;
+}
+
+/* Today & Tomorrow Active States */
+.todayActive,
+.tomorrowActive {
+  background: #FEF2F2 !important;
+  border-color: #FCA5A5 !important;
+  color: var(--color-emergency) !important;
+  box-shadow: 0 2px 8px rgba(237, 28, 36, 0.15);
+}
+
+/* ── Dynamic Active Filters Row ─────────────────────────── */
+.activeFiltersRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+
+.activeFiltersLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 8px 0 12px;
+  border-radius: var(--radius-full);
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chipRemove {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.chipRemove:hover {
+  background: #CBD5E1;
+  color: #0F172A;
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.resetBtn:hover {
+  color: #023E83;
+  text-decoration: underline;
+}
+
+/* ── Results Summary — Clean & Minimal Typography ──────── */
+.summaryBar {
+  padding: 4px 0 6px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.summaryText {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.countText {
+  color: #0F172A;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.summaryText strong {
+  color: #0F172A;
+  font-weight: 600;
+}
+
+.earliestTag {
+  color: #D97706;
+  font-weight: 600;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .toggleTrack {
+    width: 100%;
+  }
+
+  .toggleBtn {
+    flex: 1;
+  }
+
+  .urgencyCluster {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .urgencyPill {
+    flex: 1;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}

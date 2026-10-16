@@ -8,10 +8,11 @@
 .fieldLabel {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-text);
+  gap: 8px;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 500;
+  color: var(--color-text, #0f172a);
+  margin-bottom: 8px;
 }
 
 /* ─── CUSTOM DROPDOWN (desktop) ──────────────────────────────────────────── */
@@ -22,37 +23,35 @@
 
 .trigger {
   width: 100%;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--sp-1);
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-full);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  padding: 0 16px;
+  background: #ffffff;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  border-radius: 100px;
   cursor: pointer;
   font-family: var(--font-family);
-  transition: all var(--transition-fast);
+  transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
 }
 
 .trigger:hover {
-  background: #FFFFFF;
-  border-color: var(--color-primary);
-  box-shadow: 0 6px 20px rgba(3, 78, 162, 0.1);
+  background: #ffffff;
+  border-color: var(--color-primary, #034EA2);
 }
 
 .trigger:focus-visible {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-tint);
+  border-color: var(--color-primary, #034EA2);
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.12);
 }
 
 .triggerOpen {
-  border-color: var(--color-primary);
-  border-bottom-left-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
+  border-color: var(--color-primary, #034EA2);
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.12);
+  border-radius: 100px;
 }
 
 .triggerText {
@@ -70,7 +69,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 360px;
+  max-width: 100%;
 }
 
 .triggerCity {
@@ -92,18 +91,17 @@
 /* ─── DROPDOWN LIST ──────────────────────────────────────────────────────── */
 .list {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-lg);
-  padding: 6px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 8px;
   z-index: 100;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   list-style: none;
-  max-height: 240px;
+  max-height: 260px;
   overflow-y: auto;
 }
 

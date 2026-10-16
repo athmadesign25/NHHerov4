@@ -35,7 +35,12 @@ export default function ConsultationToggle({ value, onChange }: ConsultationTogg
           <button
             key={opt.value}
             id={`consultation-toggle-${opt.value}`}
-            className={[styles.option, isActive ? styles.optionActive : ""].join(" ")}
+            className={[
+              styles.option,
+              isActive ? styles.optionActive : "",
+              isActive && opt.value === "hospital" ? styles.optionHospitalActive : "",
+              isActive && opt.value === "video" ? styles.optionVideoActive : "",
+            ].filter(Boolean).join(" ")}
             onClick={() => onChange(opt.value)}
             aria-pressed={isActive}
             type="button"

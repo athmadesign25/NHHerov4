@@ -18,6 +18,9 @@
   flex-direction: column;
 }
 
+.accessibleDialog { max-height: calc(100dvh - var(--sp-4)); overflow-y: auto; overscroll-behavior: contain; }
+.accessibleDialog :is(input, button, a):focus-visible { outline: 2px solid var(--color-primary) !important; outline-offset: 2px; }
+
 .imageColumn {
   flex: 1;
   position: relative;

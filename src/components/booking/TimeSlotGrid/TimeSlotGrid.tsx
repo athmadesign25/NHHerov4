@@ -42,7 +42,7 @@ export default function TimeSlotGrid({ slots, selectedTime, onSelect }: TimeSlot
     period,
     label,
     icon,
-    slots: slots.filter((s) => s.period === period),
+    slots: slots.filter((s) => s.period === period && s.available),
   }));
 
   const hasAnySlots = slots.some((s) => s.available);
@@ -66,6 +66,9 @@ export default function TimeSlotGrid({ slots, selectedTime, onSelect }: TimeSlot
             <div className={styles.periodHeader}>
               <span className={styles.periodIcon}>{icon}</span>
               <span className={styles.periodLabel}>{label}</span>
+              <span style={{ fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", marginLeft: "auto", fontWeight: 500 }}>
+                {periodSlots.length} {periodSlots.length === 1 ? "slot" : "slots"}
+              </span>
             </div>
 
             <motion.div 
@@ -83,22 +86,17 @@ export default function TimeSlotGrid({ slots, selectedTime, onSelect }: TimeSlot
                       variants={item}
                       layout
                       type="button"
-                      onClick={() => slot.available && onSelect(slot.time)}
+                      onClick={() => onSelect(slot.time)}
                       className={[
                         styles.chip,
                         isSelected ? styles.chipSelected : "",
-                        !slot.available ? styles.chipUnavailable : "",
                       ]
                         .filter(Boolean)
                         .join(" ")}
                       aria-pressed={isSelected}
-                      aria-label={`${slot.time}${!slot.available ? " – unavailable" : ""}`}
-                      disabled={!slot.available}
+                      aria-label={slot.time}
                     >
                       {slot.time}
-                      {!slot.available && (
-                        <span className={styles.slashLine} aria-hidden />
-                      )}
                     </motion.button>
                   );
                 })}
