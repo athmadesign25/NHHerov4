@@ -719,22 +719,13 @@ export default function DefaultSearchPrompt({
                 title="Book Doctor Appointment"
               >
                 <CalendarCheck size={14} className={styles.insideActionIcon} />
-                <span>Book Appointment</span>
+                {/* Two labels, one shown per width. Left to truncate, the
+                    full one became "Book ..." on a phone, which is an
+                    ellipsis where the verb's object should be. */}
+                <span className={styles.pillLabelFull}>Book Appointment</span>
+                <span className={styles.pillLabelShort}>Book Appt</span>
               </button>
 
-              {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
-              <button
-                type="button"
-                className={styles.insideActionPill}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelectActionPill("symptoms");
-                }}
-                title="Book Tests & Health Checkups"
-              >
-                <Activity size={14} className={styles.insideActionIcon} />
-                <span>Book Tests &amp; Checkups</span>
-              </button>
             </div>
 
             {/* Right side controls: splits into Send + Mic */}

@@ -488,6 +488,11 @@
   margin-top: auto;
 }
 
+/* The pill's label swaps at the breakpoint rather than truncating. */
+.pillLabelShort {
+  display: none;
+}
+
 .bottomControlsLeft {
   display: flex;
   align-items: center;
@@ -4520,6 +4525,40 @@
     flex: 1 !important;
     min-width: 0 !important;
     overflow: hidden !important;
+    /* The base rule wraps, which is what stacked the location selector
+       and the appointment pill into a column and made the row three
+       deep. They sit on one line and the pill truncates instead. */
+    flex-wrap: nowrap !important;
+  }
+
+  /* The short label is what makes it fit; shrinking is the backstop for
+     a long city name. flex-shrink: 0 held the pill at full width and the
+     row's overflow clipped the end of it instead. */
+  .insideActionPill,
+  .locationChip {
+    min-width: 0 !important;
+  }
+  /* The icon goes, the words stay. Measured, the row wanted about 15px
+     more than it had: the location chip at 124, the pill at 106, the
+     attach button at 23 and two gaps, against 250. Dropping the pill's
+     icon returns 20 of those — and the island already carries a
+     calendar, so the mark was saying it twice. */
+  .insideActionIcon {
+    display: none !important;
+  }
+  .insideActionPill span {
+    white-space: nowrap !important;
+  }
+  .locationChip span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+  .pillLabelFull {
+    display: none !important;
+  }
+  .pillLabelShort {
+    display: inline !important;
   }
 
   .bottomControlsRight {
@@ -8616,8 +8655,10 @@
   .bubbleTooltip {
     display: none;
   }
+  /* The hover tooltip is the label now. These sat under every bubble
+     permanently, which is three captions in a dock 46px tall. */
   .mwebBubbleTag {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     position: absolute;

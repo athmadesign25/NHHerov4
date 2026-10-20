@@ -163,7 +163,9 @@ export default function NHSearchExperience({
       bannerCollapse.get,
       bannerCollapse.getServerSnapshot,
     ) === "island";
-  const bubblesCount = bannerBubble ? 4 : 3;
+  // Two utilities, three with a collapsed banner. "Book Tests" was a
+  // third and is gone — the search field itself is the way to that.
+  const bubblesCount = bannerBubble ? 3 : 2;
   const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
   
   const spotlightWidth = isMobile 
@@ -195,7 +197,6 @@ export default function NHSearchExperience({
   const dockBtn1Left = targetLeft + spotlightWidth + bubbleGap;
   const dockBtn2Left = dockBtn1Left + bubbleSize + bubbleGap;
   const dockBtn3Left = dockBtn2Left + bubbleSize + bubbleGap;
-  const dockBtn4Left = dockBtn3Left + bubbleSize + bubbleGap;
 
   const [isMorphing, setIsMorphing] = useState(false);
 
@@ -248,8 +249,6 @@ export default function NHSearchExperience({
   const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
   const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
   // Last in the row, and last to arrive.
-  const btn4Top = useTransform(activeProgress, [0.26, 0.38], [targetTop, targetTop]);
-  const btn4Left = useTransform(activeProgress, [0.26, 0.38], [splitStartLeft, dockBtn4Left]);
   const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
   const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
 
@@ -864,10 +863,10 @@ export default function NHSearchExperience({
             {isDocked && <span className={styles.mwebBubbleTag}>Book Appt</span>}
           </motion.button>
 
-          {/* Water-Bubble 2: Book Tests & Checkups -> Ejects out into Docked Bubble 2 */}
+          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
             style={{
               position: "fixed",
               top: btn2Top,
@@ -877,38 +876,6 @@ export default function NHSearchExperience({
               borderRadius: 9999,
               opacity: btn2Opacity,
               scale: btn2Scale,
-              pointerEvents: isDocked || isMorphing ? "auto" : "none",
-              zIndex: 9990,
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              captureOrigin();
-              setActivePill("symptoms");
-              setSearchState("active");
-              setQuery("Book health checkup and lab tests");
-            }}
-            aria-label="Book Tests & Checkups"
-          >
-            <div className={styles.morphingActionIcon}>
-              <Activity size={18} strokeWidth={2.0} />
-            </div>
-            <span className={styles.bubbleTooltip}>Book Tests & Checkups</span>
-            {isDocked && <span className={styles.mwebBubbleTag}>Book Tests</span>}
-          </motion.button>
-
-          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
-          <motion.button
-            type="button"
-            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
-            style={{
-              position: "fixed",
-              top: btn3Top,
-              left: btn3Left,
-              width: bubbleSize,
-              height: spotlightHeight,
-              borderRadius: 9999,
-              opacity: btn3Opacity,
-              scale: btn3Scale,
               pointerEvents: isDocked || isMorphing ? "auto" : "none",
               zIndex: 9990,
             }}
@@ -936,8 +903,8 @@ export default function NHSearchExperience({
               className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
               style={{
                 position: "fixed",
-                top: btn4Top,
-                left: btn4Left,
+                top: btn3Top,
+                left: btn3Left,
                 width: bubbleSize,
                 height: spotlightHeight,
                 borderRadius: 9999,
@@ -971,7 +938,7 @@ export default function NHSearchExperience({
               bottom: bottomClearance + spotlightHeight + 12,
               left: Math.min(
                 winSize.w - 266,
-                Math.max(16, dockBtn3Left - 190)
+                Math.max(16, dockBtn2Left - 190)
               ),
             }}
             initial={{ opacity: 0, y: 12, scale: 0.92 }}

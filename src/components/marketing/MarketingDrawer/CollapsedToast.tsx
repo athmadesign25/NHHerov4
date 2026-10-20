@@ -52,7 +52,7 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
       transition={{ duration: 0.5, ease: ease.spring }}
     >
       <span className={styles.iconWrap}>
-        <AnnouncementIcon size={isMobile ? 14 : 28} gradient={isMobile} />
+        <AnnouncementIcon size={isMobile ? 20 : 28} gradient={isMobile} />
       </span>
       <span className={styles.copy}>
         {lines.map((p) => (

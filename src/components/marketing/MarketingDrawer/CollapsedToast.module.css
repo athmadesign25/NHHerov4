@@ -88,10 +88,13 @@
     /* Under the navbar, which publishes its own height. */
     top: calc(var(--nav-height) + var(--space-12));
     right: var(--space-12);
-    width: 126px;
-    height: 34px;
-    padding: 0 var(--space-6);
-    gap: var(--space-6);
+    /* Scaled up from the spec's 126x34. At that size it read as a system
+       notification rather than part of the page, and the headline had
+       about twenty characters per line to work with before clamping. */
+    width: 200px;
+    height: 48px;
+    padding: 0 var(--space-8);
+    gap: var(--space-8);
     border-radius: var(--radius-sm);
     border: 1px solid hsl(0deg 0% 100% / 0.9);
     background: linear-gradient(
@@ -114,10 +117,10 @@
   /* The mark on a lit plate — top-left highlight, deep blue underneath,
      with an inner rim so it reads as raised rather than printed. */
   .iconWrap {
-    width: 22px;
-    height: 22px;
-    padding: var(--space-4);
-    border-radius: 2.75px;
+    width: 32px;
+    height: 32px;
+    padding: var(--space-6);
+    border-radius: var(--radius-sm);
     background: linear-gradient(
       156deg,
       hsl(214deg 99.8836% 70.4534%) 22.83%,
@@ -144,7 +147,7 @@
 
   .line {
     display: inline;
-    font-size: var(--font-size-2xs);
+    font-size: var(--font-size-xs);
     font-weight: 500;
     line-height: normal;
     letter-spacing: 0;
