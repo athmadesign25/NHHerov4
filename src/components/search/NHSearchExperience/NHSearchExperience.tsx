@@ -945,7 +945,6 @@ export default function NHSearchExperience({
                 scale: btn3Scale,
                 pointerEvents: isDocked || isMorphing ? "auto" : "none",
                 zIndex: 9990,
-                color: "var(--red-emergency)",
               }}
               onClick={(e) => {
                 e.stopPropagation();

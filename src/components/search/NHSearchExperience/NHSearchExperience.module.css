@@ -8345,6 +8345,15 @@
   transform: scale(1.06);
 }
 
+/* The announcement keeps the accent red rather than the dock's white.
+   It is an alert sitting among utilities, and it has to be findable at
+   a glance. The rule is needed because .morphingActionIcon sets colour
+   on the icon itself, which beats anything inherited from the button. */
+[data-banner-bubble] .morphingActionIcon,
+[data-banner-bubble]:hover .morphingActionIcon {
+  color: var(--red-emergency);
+}
+
 .morphingActionText {
   display: inline-block;
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
