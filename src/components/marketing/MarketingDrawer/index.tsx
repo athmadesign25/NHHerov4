@@ -36,7 +36,7 @@ export default function MarketingDrawerLab() {
   // drawer's effect tore down and re-ran on each control-panel keystroke —
   // briefly releasing the scroll lock and restarting paused videos.
   // What the banner left behind, if anything.
-  const [collapsed, setCollapsed] = useState<"toast" | null>(null);
+  const [collapsed, setCollapsed] = useState<"toast" | "island" | null>(null);
   // Where the panel should shrink to. Measured at close time, so the morph
   // lands on the real collapsed element rather than an assumed position.
   const [morphTo, setMorphTo] = useState<{ x: number; y: number; width: number } | null>(null);
@@ -52,15 +52,35 @@ export default function MarketingDrawerLab() {
 
     // Measure the destination BEFORE the drawer leaves.
     //
-    // Only the toast now. It is not mounted yet, so its resting box is
-    // derived from the same values its stylesheet uses — 274px wide,
-    // 24px in from the bottom-left.
+    // toast: not mounted yet, so its resting box comes from the same
+    // values its stylesheet uses — 274px wide, 24px in from the
+    // bottom-left.
     //
-    // The "fab" destination is gone with the floating action bar. When
-    // the collapse is re-pointed at the search experience's bottom
-    // island, this is where its box gets measured.
-    const w = Math.min(274, window.innerWidth - 24);
-    const target = { x: 24, y: window.innerHeight - 24 - 36, width: w };
+    // island: the dock's fourth bubble does not exist yet either, and
+    // adding it also widens the island, so every bubble shifts left. The
+    // target is derived from the island's own geometry rather than read
+    // off the current three-bubble row, which would aim one slot short.
+    let target: { x: number; y: number; width: number };
+    if (mode === "island") {
+      const dock = document.querySelector<HTMLElement>("[data-banner-bubble]");
+      const r = dock?.getBoundingClientRect();
+      if (r) {
+        target = { x: r.left, y: r.top + r.height / 2, width: r.width };
+      } else {
+        // The island is 46px bubbles with a 10px gap, raised 56px off the
+        // bottom. A fourth bubble lands half a slot right of centre.
+        const size = 46;
+        const gap = 10;
+        target = {
+          x: window.innerWidth / 2 + (size + gap),
+          y: window.innerHeight - 56 - size / 2,
+          width: size,
+        };
+      }
+    } else {
+      const w = Math.min(274, window.innerWidth - 24);
+      target = { x: 24, y: window.innerHeight - 24 - 36, width: w };
+    }
 
     // morphTo must land in a render where the drawer is still OPEN.
     // AnimatePresence snapshots an exiting child's props from the last
@@ -72,7 +92,10 @@ export default function MarketingDrawerLab() {
     // The collapsed form appears only once the panel has finished arriving,
     // so the two never overlap — it has to read as one object changing
     // shape, not a handover.
-    window.setTimeout(() => setCollapsed(mode), 540);
+    window.setTimeout(() => {
+      if (mode === "island") bannerCollapse.show("island");
+      setCollapsed(mode);
+    }, 540);
   }, []);
 
   // Re-opening clears whatever it collapsed into.

@@ -32,7 +32,7 @@ type Props = {
 };
 
 const ORIENTATIONS: Orientation[] = ["vertical", "horizontal"];
-const COLLAPSE: CollapseMode[] = ["none", "toast"];
+const COLLAPSE: CollapseMode[] = ["none", "toast", "island"];
 const KINDS: FieldKind[] = ["name", "phone", "custom"];
 
 function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {

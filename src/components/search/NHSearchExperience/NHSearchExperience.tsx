@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
+import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
@@ -152,7 +154,16 @@ export default function NHSearchExperience({
   // Apple Spotlight Bottom Floating Island Dimensions
   const bubbleSize = isPhone ? 46 : 46;
   const bubbleGap = isPhone ? 8 : 10;
-  const bubblesCount = 3;
+  // A collapsed marketing banner takes a fourth slot in the dock. The
+  // island widens to make room rather than the bubble overlapping the
+  // spotlight, which is why the count is read here rather than at render.
+  const bannerBubble =
+    useSyncExternalStore(
+      bannerCollapse.subscribe,
+      bannerCollapse.get,
+      bannerCollapse.getServerSnapshot,
+    ) === "island";
+  const bubblesCount = bannerBubble ? 4 : 3;
   const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
   
   const spotlightWidth = isMobile 
@@ -184,6 +195,7 @@ export default function NHSearchExperience({
   const dockBtn1Left = targetLeft + spotlightWidth + bubbleGap;
   const dockBtn2Left = dockBtn1Left + bubbleSize + bubbleGap;
   const dockBtn3Left = dockBtn2Left + bubbleSize + bubbleGap;
+  const dockBtn4Left = dockBtn3Left + bubbleSize + bubbleGap;
 
   const [isMorphing, setIsMorphing] = useState(false);
 
@@ -235,6 +247,9 @@ export default function NHSearchExperience({
   // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2
   const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
   const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
+  // Last in the row, and last to arrive.
+  const btn4Top = useTransform(activeProgress, [0.26, 0.38], [targetTop, targetTop]);
+  const btn4Left = useTransform(activeProgress, [0.26, 0.38], [splitStartLeft, dockBtn4Left]);
   const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
   const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
 
@@ -909,6 +924,42 @@ export default function NHSearchExperience({
             <span className={styles.bubbleTooltip}>Download NH Care App</span>
             {isDocked && <span className={styles.mwebBubbleTag}>NH App</span>}
           </motion.button>
+
+          {/* Water-Bubble 4: a collapsed marketing banner. Present only
+              while a banner has something to come back to, so the dock is
+              three bubbles wide the rest of the time. It re-opens the
+              banner through the same global hook the bar used. */}
+          {bannerBubble && (
+            <motion.button
+              type="button"
+              data-banner-bubble
+              className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+              style={{
+                position: "fixed",
+                top: btn4Top,
+                left: btn4Left,
+                width: bubbleSize,
+                height: spotlightHeight,
+                borderRadius: 9999,
+                opacity: btn3Opacity,
+                scale: btn3Scale,
+                pointerEvents: isDocked || isMorphing ? "auto" : "none",
+                zIndex: 9990,
+                color: "var(--red-emergency)",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                (window as unknown as { __reopenBanner?: () => void }).__reopenBanner?.();
+              }}
+              aria-label="Announcement"
+            >
+              <div className={styles.morphingActionIcon}>
+                <AnnouncementIcon size={19} />
+              </div>
+              <span className={styles.bubbleTooltip}>Announcement</span>
+              {isDocked && <span className={styles.mwebBubbleTag}>News!</span>}
+            </motion.button>
+          )}
         </>
       )}
 

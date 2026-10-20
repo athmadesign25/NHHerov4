@@ -15,12 +15,11 @@
 export type Orientation = "horizontal" | "vertical";
 
 /**
- * "fab" is gone with the floating action bar itself — the search
- * experience's bottom island replaces it, and re-pointing the collapse
- * at the island is a separate piece of work. Until then the banner
- * either leaves nothing behind or leaves the toast.
+ * Where the banner goes when it is closed. "island" is what used to be
+ * "fab": the floating action bar is gone, and the search experience's
+ * bottom dock inherited the slot.
  */
-export type CollapseMode = "none" | "toast";
+export type CollapseMode = "none" | "toast" | "island";
 
 export type ColorOption = {
   id: string;
