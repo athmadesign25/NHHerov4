@@ -403,7 +403,11 @@ export default function Hero() {
               ref={heroAnchorRef}
               style={{
                 width: "min(840px, calc(100vw - 48px))",
-                height: 136,
+                // 132 + 64 from chetan_work: the composer grew a row of
+                // morphing action pills, so the anchor it measures itself
+                // against had to move up to leave room.
+                height: 132,
+                marginBottom: 64,
                 pointerEvents: "none",
                 opacity: 0,
               }}

@@ -3,12 +3,29 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { 
-  Paperclip, Mic, ArrowRight, ArrowUp, X, 
-  User, Heart, Sparkles, CornerDownLeft, Command
+  Paperclip, Mic, ArrowRight, X, 
+  User, Heart, Sparkles, CornerDownLeft, Command,
+  Activity, Bone, Brain, AlertCircle, Stethoscope, SearchX
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { PredictiveState, getPredictiveCompletion, fetchLiveApiPredictions } from "./searchData";
 import LocationSelector from "./LocationSelector";
+import { 
+  PredictiveState, 
+  getPredictiveCompletion, 
+  fetchLiveApiPredictions,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
+} from "./searchData";
+
+const MOBILE_POPULAR_SEARCHES = [
+  { label: "Cardiologist", query: "Cardiologist near me", icon: Heart },
+  { label: "Chest pain", query: "I have chest pain", icon: Activity },
+  { label: "Orthopaedic", query: "Orthopaedic doctor", icon: Bone },
+  { label: "Knee pain", query: "I have knee pain", icon: Activity },
+  { label: "Neurologist", query: "Neurologist specialist", icon: Brain },
+  { label: "Pediatrician", query: "Pediatrician near me", icon: User },
+];
 
 interface ActiveSearchCanvasProps {
   query: string;
@@ -77,7 +94,9 @@ export default function ActiveSearchCanvas({
     query.trim().toLowerCase() === "k" || 
     query.trim().toLowerCase() === "kn" || 
     query.trim().toLowerCase() === "knee" || 
-    query.trim().toLowerCase().startsWith("knee p");
+    query.trim().toLowerCase().startsWith("knee p") ||
+    query.trim().toLowerCase().startsWith("xy") ||
+    query.trim().toLowerCase().startsWith("xz");
 
   const prediction = isHardcodedScenario 
     ? (localPrediction || livePrediction)
@@ -179,15 +198,30 @@ export default function ActiveSearchCanvas({
             className={styles.activeTextInput}
             value={query}
             onChange={(e) => {
-              onQueryChange(e.target.value);
+              const val = e.target.value;
+              const words = countWords(val);
+              if (words > MAX_SEARCH_WORDS) {
+                onQueryChange(enforceWordLimit(val, MAX_SEARCH_WORDS));
+              } else {
+                onQueryChange(val);
+              }
               setSelectedSugIndex(-1);
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Start typing a symptom, condition, specialty or doctor..."
+            placeholder="Start typing symptom, specialty or doctor..."
             aria-label="Search symptoms, conditions or doctors"
             autoComplete="off"
             spellCheck="false"
           />
+
+          {/* Out-of-Word-Limit Error Indicator (Shown ONLY when limit is reached) */}
+          {countWords(query) >= MAX_SEARCH_WORDS && (
+            <div className={styles.inputEndAdornment}>
+              <span className={styles.inputWordLimitError} role="alert">
+                500 words limit reached
+              </span>
+            </div>
+          )}
 
           {/* Inline ghost predictive sentence overlay */}
           {prediction && query.length > 0 && (
@@ -227,7 +261,7 @@ export default function ActiveSearchCanvas({
             }
           }}
         >
-          <ArrowUp size={16} strokeWidth={2.5} />
+          <ArrowRight size={16} strokeWidth={2.5} />
         </button>
       </div>
 
@@ -276,47 +310,123 @@ export default function ActiveSearchCanvas({
           <p className={styles.emptyPromptSub}>
             Start typing a symptom, condition, specialty, procedure or doctor name.
           </p>
+
+          {/* Mobile quick-tap popular categories and conditions */}
+          <div className={styles.mobileQuickTray}>
+            <span className={styles.mobileQuickLabel}>Popular searches</span>
+            <div className={styles.mobileQuickChips}>
+              {MOBILE_POPULAR_SEARCHES.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className={styles.mobileQuickChip}
+                    onClick={() => {
+                      onQueryChange(item.query);
+                      onSubmit(item.query);
+                    }}
+                  >
+                    <Icon size={13} className={styles.mobileQuickChipIcon} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </motion.div>
       )}
 
       {/* ── LIVE PREDICTIVE SECTION (When user types any character) ── */}
       {prediction && (
         <div className={styles.suggestionsSection}>
-          <div className={styles.suggestionsHeaderRow}>
-            <span className={styles.suggestionsHeader}>Suggested predictions</span>
-          </div>
-
-          {prediction.suggestions.length > 0 && (
-            <div className={styles.suggestionsList} role="listbox">
-              {prediction.suggestions.slice(0, 4).map((sug, idx) => (
-                <button
-                  key={sug}
-                  type="button"
-                  className={`${styles.suggestionItem} ${
-                    selectedSugIndex === idx ? styles.suggestionItemActive : ""
-                  }`}
-                  onClick={() => onSubmit(sug)}
-                  onMouseEnter={() => setSelectedSugIndex(idx)}
-                  role="option"
-                  aria-selected={selectedSugIndex === idx}
-                >
-                  <ArrowRight size={14} className={styles.suggestionArrow} />
-                  <span className={styles.suggestionText}>
-                    {sug}
-                  </span>
-                  <span className={styles.pressEnterHint}>
-                    <CornerDownLeft size={12} />
-                  </span>
-                </button>
-              ))}
+          {prediction.status === "error" ? (
+            <div className={styles.predictiveErrorTray}>
+              <div className={styles.predictiveErrorHeader}>
+                <AlertCircle size={15} className={styles.predictiveAlertIcon} />
+                <span>Directory connection issue</span>
+              </div>
+              <p className={styles.predictiveTrayTip}>
+                Press <strong>Enter ↵</strong> to search, or tap a primary department below:
+              </p>
+              <div className={styles.predictiveTrayChipsRow}>
+                {["Cardiology", "Orthopaedics", "Neurology", "General Medicine"].map((spec) => (
+                  <button
+                    key={spec}
+                    type="button"
+                    className={styles.predictiveTrayChip}
+                    onClick={() => {
+                      onQueryChange(spec);
+                      onSubmit(spec);
+                    }}
+                  >
+                    {spec}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
+          ) : prediction.status === "empty" || prediction.suggestions.length === 0 ? (
+            <div className={styles.predictiveEmptyTray}>
+              <div className={styles.predictiveEmptyHeader}>
+                <Sparkles size={14} className={styles.sparkleIcon} />
+                <span>No suggestions for &ldquo;{query}&rdquo;</span>
+              </div>
+              <p className={styles.predictiveTrayTip}>
+                Press <strong>Enter ↵</strong> to search full directory, or choose a department:
+              </p>
+              <div className={styles.predictiveTrayChipsRow}>
+                {["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology"].map((spec) => (
+                  <button
+                    key={spec}
+                    type="button"
+                    className={styles.predictiveTrayChip}
+                    onClick={() => {
+                      onQueryChange(spec);
+                      onSubmit(spec);
+                    }}
+                  >
+                    {spec}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={styles.suggestionsHeaderRow}>
+                <span className={styles.suggestionsHeader}>Suggested predictions</span>
+              </div>
 
-          {/* Pulse AI Status */}
-          <div className={styles.pulseStatusRow}>
-            <span className={styles.sparkleIcon}>✦</span>
-            <span>Pulse understands what you&apos;re trying to say</span>
-          </div>
+              <div className={styles.suggestionsList} role="listbox">
+                {prediction.suggestions.slice(0, 4).map((sug, idx) => (
+                  <button
+                    key={sug}
+                    type="button"
+                    className={`${styles.suggestionItem} ${
+                      selectedSugIndex === idx ? styles.suggestionItemActive : ""
+                    }`}
+                    onClick={() => onSubmit(sug)}
+                    onMouseEnter={() => setSelectedSugIndex(idx)}
+                    role="option"
+                    aria-selected={selectedSugIndex === idx}
+                  >
+                    <ArrowRight size={14} className={styles.suggestionArrow} />
+                    <span className={styles.suggestionText}>
+                      {sug}
+                    </span>
+                    <span className={styles.pressEnterHint}>
+                      <CornerDownLeft size={12} />
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Pulse AI Status */}
+              <div className={styles.pulseStatusRow}>
+                <span className={styles.sparkleIcon}>✦</span>
+                <span>Pulse understands what you&apos;re trying to say</span>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -14,7 +14,13 @@
 /** The banner's shape. It is always centred; only the proportion varies. */
 export type Orientation = "horizontal" | "vertical";
 
-export type CollapseMode = "none" | "toast" | "fab";
+/**
+ * "fab" is gone with the floating action bar itself — the search
+ * experience's bottom island replaces it, and re-pointing the collapse
+ * at the island is a separate piece of work. Until then the banner
+ * either leaves nothing behind or leaves the toast.
+ */
+export type CollapseMode = "none" | "toast";
 
 export type ColorOption = {
   id: string;

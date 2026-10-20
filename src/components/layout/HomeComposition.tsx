@@ -11,7 +11,6 @@ import MobileHealthPackages from "@/components/sections/health-packages/MobileHe
 import PatientStories from "@/components/sections/patient-stories/PatientStories";
 import AppDownloadBanner from "@/components/sections/app-download/AppDownloadBanner";
 import MobileAppDownloadBanner from "@/components/sections/app-download/MobileAppDownloadBanner";
-import FloatingQuickActions from "@/components/layout/FloatingQuickActions";
 import { LayoutGroup } from "framer-motion";
 
 function GlobalNeatBackground() {
@@ -198,8 +197,6 @@ export default function HomeComposition({ children }: { children?: React.ReactNo
   return (
     <LayoutGroup>
       <div style={{ position: "relative", width: "100%", overflowX: "clip", background: "transparent" }}>
-        <FloatingQuickActions />
-
         {/* Master container with seamless background extending behind Hero, CentreOfExcellence AND PatientStories */}
         <div style={{ position: "relative", width: "100%", background: "transparent", zIndex: 10 }}>
 

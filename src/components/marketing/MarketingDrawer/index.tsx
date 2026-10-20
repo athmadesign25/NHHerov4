@@ -36,7 +36,7 @@ export default function MarketingDrawerLab() {
   // drawer's effect tore down and re-ran on each control-panel keystroke —
   // briefly releasing the scroll lock and restarting paused videos.
   // What the banner left behind, if anything.
-  const [collapsed, setCollapsed] = useState<"toast" | "fab" | null>(null);
+  const [collapsed, setCollapsed] = useState<"toast" | null>(null);
   // Where the panel should shrink to. Measured at close time, so the morph
   // lands on the real collapsed element rather than an assumed position.
   const [morphTo, setMorphTo] = useState<{ x: number; y: number; width: number } | null>(null);
@@ -52,36 +52,15 @@ export default function MarketingDrawerLab() {
 
     // Measure the destination BEFORE the drawer leaves.
     //
-    // toast: it is not mounted yet, so its resting box is derived from the
-    // same values its stylesheet uses — 274px wide, 24px in from the
-    // bottom-left.
+    // Only the toast now. It is not mounted yet, so its resting box is
+    // derived from the same values its stylesheet uses — 274px wide,
+    // 24px in from the bottom-left.
     //
-    // fab: the bar's RESTING box, not its current one. getBoundingClientRect
-    // includes transforms, and near the top of the page the bar is parked
-    // off-stage by translateX(50px) — so reading the rect aimed the morph
-    // 50px right of where the tile actually settles. The bar is
-    // `position: fixed; top: 50%; right: Npx` with translateY(-50%), so the
-    // resting box follows from its own size and that one offset.
-    let target: { x: number; y: number; width: number };
-    if (mode === "fab") {
-      const bar = document.querySelector<HTMLElement>(
-        '[class*="FloatingQuickActions_container"]',
-      );
-      if (bar) {
-        const right = parseFloat(getComputedStyle(bar).right) || 24;
-        const w = bar.offsetWidth;
-        const h = bar.offsetHeight;
-        const top = window.innerHeight / 2 - h / 2;
-        // Aimed at the bottom of the bar: that is where the new tile grows,
-        // since it is appended rather than inserted.
-        target = { x: window.innerWidth - right - w, y: top + h - 40, width: w };
-      } else {
-        target = { x: window.innerWidth - 110, y: window.innerHeight / 2, width: 86 };
-      }
-    } else {
-      const w = Math.min(274, window.innerWidth - 24);
-      target = { x: 24, y: window.innerHeight - 24 - 36, width: w };
-    }
+    // The "fab" destination is gone with the floating action bar. When
+    // the collapse is re-pointed at the search experience's bottom
+    // island, this is where its box gets measured.
+    const w = Math.min(274, window.innerWidth - 24);
+    const target = { x: 24, y: window.innerHeight - 24 - 36, width: w };
 
     // morphTo must land in a render where the drawer is still OPEN.
     // AnimatePresence snapshots an exiting child's props from the last
@@ -93,10 +72,7 @@ export default function MarketingDrawerLab() {
     // The collapsed form appears only once the panel has finished arriving,
     // so the two never overlap — it has to read as one object changing
     // shape, not a handover.
-    window.setTimeout(() => {
-      if (mode === "fab") bannerCollapse.show("fab");
-      setCollapsed(mode);
-    }, 540);
+    window.setTimeout(() => setCollapsed(mode), 540);
   }, []);
 
   // Re-opening clears whatever it collapsed into.

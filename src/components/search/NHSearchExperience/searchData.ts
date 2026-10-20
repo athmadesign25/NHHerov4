@@ -36,6 +36,7 @@ export interface DoctorCardData {
   city: string;
   availableToday?: boolean;
   consultationType?: "in-person" | "video" | "both";
+  isVideoConsult?: boolean;
   distanceNote?: string;
 }
 
@@ -74,6 +75,9 @@ export interface SearchResultsData {
   relatedSpecialties: string[];
   treatments: TreatmentItemData[];
   articles: ArticleItemData[];
+  status?: "success" | "empty" | "error";
+  errorMessage?: string;
+  didYouMean?: string;
 }
 
 export interface PredictiveState {
@@ -86,6 +90,8 @@ export interface PredictiveState {
   /** Inferred healthcare intent */
   intent: "cardiology" | "orthopaedics" | "general";
   intentLabel: string;
+  status?: "success" | "empty" | "error";
+  errorMessage?: string;
 }
 
 // Direct NH Hospital Hubs (State A: Local Options Available)
@@ -293,6 +299,30 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
     "chest pain specialist near me",
   ];
 
+  // ── SIMULATION TRIGGERS: XY (Empty State) & XZ (Error State) ──
+  if (clean === "xy" || clean.startsWith("xy")) {
+    return {
+      fullText: "",
+      suffix: "",
+      suggestions: [],
+      intent: "general",
+      intentLabel: "Empty State Simulation",
+      status: "empty",
+    };
+  }
+
+  if (clean === "xz" || clean.startsWith("xz")) {
+    return {
+      fullText: "",
+      suffix: "",
+      suggestions: [],
+      intent: "general",
+      intentLabel: "Connection Error Simulation",
+      status: "error",
+      errorMessage: "Unable to connect to live suggestion service",
+    };
+  }
+
   if (clean === "c") {
     const target = "cardiologist near me";
     return {
@@ -460,12 +490,158 @@ export function getPredictiveCompletion(typedText: string): PredictiveState | nu
 // RESULTS DATASETS FOR BOTH DEMO SCENARIOS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+export const SEMANTIC_C_RESULTS: SearchResultsData = {
+  categoryTitle: "RECOMMENDED DOCTORS",
+  proximityTier: "local",
+  proximityMessage: "Showing care near Bangalore",
+  matchCountText: "Showing care near Bangalore",
+  pulseRecommendationText: "Want a more personalised recommendation?",
+  doctors: [
+    {
+      id: "doc-chythanya",
+      name: "Dr. Chythanya D C",
+      speciality: "Endocrinology, Diabetes & Metabol...",
+      hospital: "Narayana Multispeciality Hospital, Mysore",
+      experience: "20 yrs of experience",
+      image: "/assets/doctor_3.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-umesha",
+      name: "Dr. Umesha C",
+      speciality: "Orthopaedic Surgery",
+      hospital: "Narayana Multispeciality Hospital, Mysore",
+      experience: "16 yrs of experience",
+      image: "/doctors/doc_devi_shetty.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-deepak-kittur",
+      name: "Dr. Deepak Kittur C",
+      speciality: "Surgical Oncology",
+      hospital: "Sahyadri Narayana Multispeciality...",
+      experience: "23 yrs of experience",
+      image: "/assets/hero_doctor.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-rashmi-hanchinal",
+      name: "Dr. Rashmi C Hanchinal",
+      speciality: "Obstetrics & Gynaecology",
+      hospital: "Sahyadri Narayana Multispeciality...",
+      experience: "12 yrs of experience",
+      image: "/doctors/doc_ananya.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-shashidhar-c",
+      name: "Dr. Shashidhar S C",
+      speciality: "Cardiac Surgery & Interventions",
+      hospital: "Narayana Health City, Bangalore",
+      experience: "21 yrs of experience",
+      image: "/assets/doctor_1.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-kavitha-c",
+      name: "Dr. Kavitha Chivukula C",
+      speciality: "Pediatric Cardiology",
+      hospital: "Narayana Multispeciality Hospital",
+      experience: "16 yrs of experience",
+      image: "/assets/doctor_2.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sanjay-c",
+      name: "Dr. Sanjay Mehrotra C",
+      speciality: "Director & Senior Cardiologist",
+      hospital: "Narayana Institute of Cardiac Sciences",
+      experience: "26 yrs of experience",
+      image: "/doctors/doc_vivek.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-colin-c",
+      name: "Dr. Colin John C",
+      speciality: "Adult & Pediatric Cardiac Surgery",
+      hospital: "Mazumdar Shaw Medical Center",
+      experience: "28 yrs of experience",
+      image: "/doctors/doc_bagirath.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+  ],
+  treatments: [
+    {
+      id: "t-ent-1",
+      title: "Hearing aids and cochlear implants",
+      subtitle: "E.N.T Procedure",
+      iconType: "activity",
+    },
+    {
+      id: "t-cardio-vsd",
+      title: "Surgical Closure of Ventricular Sept...",
+      subtitle: "Cardiology Procedure",
+      iconType: "heart",
+    },
+    {
+      id: "t-cardio-avsd",
+      title: "AVSD (AV Canal) Repair",
+      subtitle: "Cardiology Procedure",
+      iconType: "heart",
+    },
+    {
+      id: "t-cardio-bex",
+      title: "Bex–Nikaidoh Procedure",
+      subtitle: "Cardiology Procedure",
+      iconType: "activity",
+    },
+  ],
+  articles: [
+    {
+      id: "a-ligament",
+      title: "Round Ligament Pain: What Does It ...",
+      readTime: "5 min read",
+      category: "Obstetrics & Gynaecology",
+      iconType: "document",
+    },
+    {
+      id: "a-rare-diseases",
+      title: "Rare Diseases: Rare But Not Invisible",
+      readTime: "6 min read",
+      category: "Cardiology",
+      iconType: "emergency",
+    },
+  ],
+  relatedSpecialties: [
+    "Acute Care Medicine & Anaesthesiology",
+    "Cardiac Sciences",
+    "Clinical Support Services",
+    "Endocrinology, Diabetes & Metabolic Medicine",
+  ],
+};
+
 export const CARDIOLOGY_RESULTS: SearchResultsData = {
   categoryTitle: "Recommended doctors",
   proximityTier: "local",
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
-  pulseRecommendationText: "Want a more personalised recommendation?",
+  pulseRecommendationText: "Personalise recommendation",
   doctors: [
     {
       id: "doc-devi-shetty",
@@ -507,6 +683,50 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
       hospital: "Mazumdar Shaw Medical Center",
       experience: "18 years experience",
       image: "/doctors/doc_vivek.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-shashidhar",
+      name: "Dr. Shashidhar S.",
+      speciality: "Cardiac Surgeon",
+      hospital: "Narayana Health City",
+      experience: "21 years experience",
+      image: "/assets/doctor_1.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-kavitha",
+      name: "Dr. Kavitha Chivukula",
+      speciality: "Pediatric Cardiologist",
+      hospital: "Narayana Multispeciality Hospital",
+      experience: "16 years experience",
+      image: "/assets/doctor_2.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sanjay",
+      name: "Dr. Sanjay Mehrotra",
+      speciality: "Director & Senior Cardiologist",
+      hospital: "Narayana Institute of Cardiac Sciences",
+      experience: "26 years experience",
+      image: "/assets/doctor_3.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-colin",
+      name: "Dr. Colin John",
+      speciality: "Adult & Pediatric Cardiac Surgery",
+      hospital: "Mazumdar Shaw Medical Center",
+      experience: "28 years experience",
+      image: "/assets/hero_doctor.png",
       city: "Bangalore",
       availableToday: true,
       consultationType: "both",
@@ -582,7 +802,7 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
   proximityTier: "local",
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
-  pulseRecommendationText: "Get customise recommendation with Pulse ai",
+  pulseRecommendationText: "Personalise recommendation",
   doctors: [
     {
       id: "doc-prakash",
@@ -624,6 +844,50 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
       hospital: "Narayana Multispeciality Hospital",
       experience: "11 years experience",
       image: "/assets/doctor_2.png",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sridhar",
+      name: "Dr. M. K. Sridhar",
+      speciality: "Senior Joint Replacement Surgeon",
+      hospital: "Narayana Health City",
+      experience: "24 years experience",
+      image: "/doctors/doc_bagirath.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-balaji",
+      name: "Dr. R. Balaji",
+      speciality: "Spine & Orthopaedic Specialist",
+      hospital: "Mazumdar Shaw Medical Center",
+      experience: "19 years experience",
+      image: "/doctors/doc_devi_shetty.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-sneha",
+      name: "Dr. Sneha Hegde",
+      speciality: "Knee & Shoulder Specialist",
+      hospital: "Narayana Multispeciality Hospital",
+      experience: "15 years experience",
+      image: "/doctors/doc_ananya.jpg",
+      city: "Bangalore",
+      availableToday: true,
+      consultationType: "both",
+    },
+    {
+      id: "doc-rajesh",
+      name: "Dr. Rajesh Kumar",
+      speciality: "Trauma & Reconstructive Surgeon",
+      hospital: "Narayana Health City",
+      experience: "18 years experience",
+      image: "/assets/hero_doctor.png",
       city: "Bangalore",
       availableToday: true,
       consultationType: "both",
@@ -766,17 +1030,18 @@ export function mapApiResultsToSearchData(
       city: proximity.tier === "videoOnly" ? "Narayana Telehealth" : location,
       availableToday: doc.apptEnabled || doc.walkinEnabled || true,
       consultationType: consultType,
+      isVideoConsult: proximity.tier === "videoOnly" || consultType === "video",
       distanceNote: proximity.tier === "expanded100km" ? `${proximity.distanceKm || 38} km away` : undefined,
     };
   });
 
-  // Ensure we have at least 4 doctor cards so the 2x2 grid is balanced
-  if (mappedDocs.length > 0 && mappedDocs.length < 4) {
+  // Ensure we have at least 8 doctor cards so the list is richly scrollable
+  if (mappedDocs.length > 0 && mappedDocs.length < 8) {
     const fallbackList = cleanQ.includes("knee") || cleanQ.includes("ortho") 
       ? ORTHOPAEDICS_RESULTS.doctors 
       : CARDIOLOGY_RESULTS.doctors;
     for (const fb of fallbackList) {
-      if (mappedDocs.length >= 4) break;
+      if (mappedDocs.length >= 8) break;
       if (!mappedDocs.some((d) => d.name === fb.name)) {
         mappedDocs.push({
           ...fb,
@@ -859,7 +1124,7 @@ export function mapApiResultsToSearchData(
     proximityTier: proximity.tier,
     proximityMessage: proximity.contextMessage,
     matchCountText: proximity.contextMessage,
-    pulseRecommendationText: "Want a more personalised recommendation?",
+    pulseRecommendationText: "Personalise recommendation",
     doctors: mappedDocs,
     relatedSpecialties: Array.from(specSet).slice(0, 8),
     treatments: mappedTreatments,
@@ -878,6 +1143,76 @@ export async function getSearchResults(
   const clean = query.toLowerCase().trim();
   const proximity = getProximityContext(location);
 
+  // ── SIMULATION TRIGGER 1: XZ (Connection / API Error Stage) ──
+  if (clean === "xz" || clean.startsWith("xz")) {
+    return {
+      categoryTitle: "Search Service Unavailable",
+      proximityTier: proximity.tier,
+      proximityMessage: "Unable to retrieve doctor schedules",
+      matchCountText: "0 matching doctors",
+      pulseRecommendationText: "Service temporarily unavailable",
+      doctors: [],
+      relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "General Medicine"],
+      treatments: [],
+      articles: [],
+      status: "error",
+      errorMessage: "We're experiencing a temporary connection issue while searching our directory. Please try again or reach our 24/7 care desk.",
+    };
+  }
+
+  // ── SIMULATION TRIGGER 2: XY (Semantic Empty State / Zero Results) ──
+  if (clean === "xy" || clean.startsWith("xy")) {
+    return {
+      categoryTitle: `No matches found for "${query}"`,
+      proximityTier: proximity.tier,
+      proximityMessage: `No doctors found near ${location}`,
+      matchCountText: "0 matching results",
+      pulseRecommendationText: "Describe your symptoms to Pulse AI",
+      doctors: [],
+      relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"],
+      treatments: [],
+      articles: [],
+      status: "empty",
+    };
+  }
+
+  // ── SIMULATION TRIGGERS FOR DOCTOR COUNT (1, 2, 3) ──
+  if (clean === "1" || clean.startsWith("1 doctor")) {
+    return {
+      ...SEMANTIC_C_RESULTS,
+      categoryTitle: "Recommended doctor",
+      proximityTier: proximity.tier,
+      proximityMessage: proximity.contextMessage,
+      matchCountText: "1 doctor available",
+      status: "success",
+      doctors: [SEMANTIC_C_RESULTS.doctors[0]],
+    };
+  }
+
+  if (clean === "2" || clean.startsWith("2 doctor")) {
+    return {
+      ...SEMANTIC_C_RESULTS,
+      categoryTitle: "Recommended doctors",
+      proximityTier: proximity.tier,
+      proximityMessage: proximity.contextMessage,
+      matchCountText: "2 doctors available",
+      status: "success",
+      doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 2),
+    };
+  }
+
+  if (clean === "3" || clean.startsWith("3 doctor")) {
+    return {
+      ...SEMANTIC_C_RESULTS,
+      categoryTitle: "Recommended doctors",
+      proximityTier: proximity.tier,
+      proximityMessage: proximity.contextMessage,
+      matchCountText: "3 doctors available",
+      status: "success",
+      doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 3),
+    };
+  }
+
   // 1. Attempt to query live healthcare search API
   try {
     const cityId = getCityId(location);
@@ -887,24 +1222,84 @@ export async function getSearchResults(
       apiResults &&
       (apiResults.doctors.length > 0 ||
         apiResults.specialities.length > 0 ||
-        apiResults.subSpecialities.length > 0 ||
         apiResults.procedures.length > 0 ||
-        apiResults.treatments.length > 0 ||
-        apiResults.blogs.length > 0)
+        apiResults.treatments.length > 0)
     ) {
-      return mapApiResultsToSearchData(apiResults, query, location);
+      const mapped = mapApiResultsToSearchData(apiResults, query, location);
+      return {
+        ...mapped,
+        status: "success",
+      };
     }
   } catch (err) {
     console.warn("Live search API returned error, gracefully falling back to simulation data:", err);
   }
 
   // 2. Curated Simulation Fallback
+  if (clean === "c" || clean === "ch" || clean.includes("chythanya") || clean.includes("umesha") || clean.includes("hanchinal")) {
+    return {
+      ...SEMANTIC_C_RESULTS,
+      proximityTier: proximity.tier,
+      proximityMessage: proximity.contextMessage,
+      matchCountText: proximity.contextMessage,
+      status: "success",
+      doctors: SEMANTIC_C_RESULTS.doctors.map((doc) => ({
+        ...doc,
+        city: location,
+      })),
+    };
+  }
+
   const isOrtho =
     clean.includes("knee") ||
     clean.includes("ortho") ||
     clean.includes("joint") ||
     clean.includes("bone") ||
     clean.startsWith("k");
+
+  const isCardio =
+    clean.includes("cardio") ||
+    clean.includes("heart") ||
+    clean.includes("chest") ||
+    clean.includes("angio") ||
+    clean.includes("ecg") ||
+    clean.includes("bypass") ||
+    clean.includes("cardiac") ||
+    clean === "c" ||
+    clean === "ch";
+
+  const isKnownDoctorOrSymptom =
+    clean.includes("doctor") ||
+    clean.includes("shetty") ||
+    clean.includes("devi") ||
+    clean.includes("ananya") ||
+    clean.includes("vivek") ||
+    clean.includes("menon") ||
+    clean.includes("raghuraman") ||
+    clean.includes("fever") ||
+    clean.includes("cough") ||
+    clean.includes("pain") ||
+    clean.includes("headache") ||
+    clean.includes("neuro") ||
+    clean.includes("brain") ||
+    clean.includes("cancer") ||
+    clean.includes("pediatric");
+
+  // If query is an unrecognised typo / gibberish with no medical tokens:
+  if (!isOrtho && !isCardio && !isKnownDoctorOrSymptom && clean.length > 0) {
+    return {
+      categoryTitle: `No matches found for "${query}"`,
+      proximityTier: proximity.tier,
+      proximityMessage: `No doctors found near ${location}`,
+      matchCountText: "0 matching results",
+      pulseRecommendationText: "Describe your symptoms to Pulse AI",
+      doctors: [],
+      relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"],
+      treatments: [],
+      articles: [],
+      status: "empty",
+    };
+  }
 
   const baseResults = isOrtho ? ORTHOPAEDICS_RESULTS : CARDIOLOGY_RESULTS;
   const categoryTitle = isOrtho ? "Recommended orthopaedic doctors" : "Recommended doctors";
@@ -942,6 +1337,7 @@ export async function getSearchResults(
     proximityTier: proximity.tier,
     proximityMessage: proximity.contextMessage,
     matchCountText: proximity.contextMessage,
+    status: "success",
     doctors: tailoredDoctors,
   };
 }
@@ -1043,4 +1439,41 @@ export async function fetchLiveApiPredictions(
   } catch {
     return null;
   }
+}
+
+/**
+ * ═════════════════════════════════════════════════════════════════════════════════
+ * SEARCH LIMITS & UTILITIES (AUDIO: 3 MIN MAX | TEXT INPUT: 500 WORDS MAX)
+ * ═════════════════════════════════════════════════════════════════════════════════
+ */
+export const MAX_SEARCH_WORDS = 500;
+export const MAX_AUDIO_DURATION_SECONDS = 180; // 3 minutes maximum limit
+
+/**
+ * Accurately count words separated by whitespace
+ */
+export function countWords(text: string): number {
+  const trimmed = text.trim();
+  if (!trimmed) return 0;
+  return trimmed.split(/\s+/).filter(Boolean).length;
+}
+
+/**
+ * Clamp text to maximum words allowed
+ */
+export function enforceWordLimit(text: string, maxWords: number = MAX_SEARCH_WORDS): string {
+  const trimmed = text.trim();
+  if (!trimmed) return text;
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ");
+}
+
+/**
+ * Format elapsed seconds into mm:ss format
+ */
+export function formatAudioDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s < 10 ? "0" : ""}${s}`;
 }
