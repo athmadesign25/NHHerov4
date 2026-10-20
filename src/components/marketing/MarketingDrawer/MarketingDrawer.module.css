@@ -160,6 +160,23 @@
   box-sizing: border-box;
 }
 
+/* On desktop the media box IS the panel; mobile turns it into the top
+   half of a stack. Either way it is the positioned parent that
+   next/image's `fill` needs. */
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* The wash that carries the panel's gradient up into the photograph.
+   Empty on desktop, where the scrim already does this job. */
+.mediaFade {
+  display: none;
+}
+
 .imageTall,
 .imageWide {
   object-fit: cover;
@@ -384,47 +401,150 @@
    as the vertical one — same content, one shape. The rules for .wide stay
    only so a desktop window dragged narrow does not flash the old
    side-by-side mid-resize. */
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   One shape, stacked: image on top, copy beneath, on a panel that sits
+   over the gradient scene. The component forces the vertical layout here
+   regardless of orientation, so .wide never applies — the rules below
+   name both only so a desktop window dragged narrow does not flash the
+   side-by-side mid-resize. */
 @media (max-width: 768px) {
   .tall,
   .wide {
-    width: var(--mob-w);
-    height: var(--mob-h);
+    /* The design's 314×548 is the RESTING size, not a cage. A headline,
+       a description, two fields and two buttons do not fit in 548px
+       beside an image worth looking at — pinned at that height, either
+       the buttons scrolled out of reach or they sat on top of the
+       fields. So the height is a floor and a ceiling instead: it opens
+       at 548 and grows toward the viewport only as far as the content
+       actually needs, and never past the screen. */
+    width: min(314px, calc(100vw - var(--space-48)));
+    height: auto;
+    min-height: min(548px, calc(100dvh - var(--space-96)));
+    max-height: calc(100dvh - var(--space-96));
+    border-radius: var(--radius-md);
+    border: 1px solid var(--white);
+    /* The design's gradient, verbatim. At 357deg the -11% stop is at the
+       BOTTOM, so the coloured end of this is the strip under the copy and
+       everything from 34.86% upward — the part the image covers — is a
+       flat #a8cbf3. That flat value is deliberately the same colour the
+       image's own overlay fades to, which is what makes the photograph
+       and the panel meet in a wash instead of at an edge.
+
+       token-ok: the panel gradient's own stops. The nearest token to
+       #a8cbf3 is --slate-300 at ΔRGB 41, which is a different colour. */
+    background: linear-gradient(
+      357deg,
+      hsl(212deg 75.2375% 66.8247%) -11%,
+      var(--slate-100) 6.49%,
+      hsl(212deg 86.6667% 97.0588%) 25.05%,
+      #a8cbf3 34.86%
+    );
+    --shadow-rgb: var(--black-rgb);
+    box-shadow: 0 12px 30px 0 rgba(var(--black-rgb), 0.36);
+  }
+
+  /* The stack. With no copy at all the media is the only child and takes
+     the whole panel, which is the image-only case. */
+  .panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .media {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    /* A floor, so a long form cannot squeeze the artwork down to a
+       stripe. Below this the panel scrolls instead of shrinking it. */
+    min-height: 180px;
+    border-radius: 0;
+  }
+
+  /* The overlay that takes the panel's gradient into the photograph.
+     Same stop as the panel's, so the seam between them disappears. */
+  .mediaFade {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      171deg,
+      /* token-ok: the image overlay's own stops, from the design */
+      rgba(107, 166, 234, 0) 65.04%,
+      #a8cbf3 90.85%
+    );
   }
 
   .contentTall,
   .contentWide {
-    left: 0;
-    right: 0;
-    top: auto;
-    bottom: 0;
+    position: static;
     width: auto;
-    justify-content: flex-end;
-    padding: var(--space-20);
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-12);
+    padding: var(--space-16) var(--space-20) var(--space-24);
+    /* No cap: the panel grows for this instead. It still scrolls if the
+       viewport is too short to grow into. */
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
   }
 
-  .content { gap: var(--space-12); }
   .headline {
     max-width: 100%;
-    /* The desktop size would take four lines of a 92vw panel and leave
-       no room for anything under it. */
     font-size: var(--font-size-2xl);
+    font-weight: 500;
+    line-height: var(--leading-snug);
   }
-  .description { font-size: var(--font-size-sm); }
 
-  /* Full width and stacked, so a thumb has the whole row to hit and the
-     two never end up sharing one cramped line. */
-  .fields { max-width: 100%; }
-  .ctaRow { flex-direction: column; align-items: stretch; width: 100%; }
+  .description {
+    max-width: 100%;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Full width and stacked, so a thumb has the whole row to hit. */
+  .fields {
+    max-width: 100%;
+  }
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    /* Pinned to the foot of the scrolling column. A headline, a
+       description, two fields and two buttons do not fit in 548px
+       alongside an image worth looking at — something has to scroll, and
+       it must not be the thing you are being asked to press. The copy
+       scrolls underneath these instead. */
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    padding-top: var(--space-10);
+    /* Fades the scrolling copy out behind the buttons rather than
+       letting it slide under a hard edge. */
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--white-rgb), 0) 0%,
+      hsl(212deg 86.6667% 97.0588%) 28%
+    );
+  }
   .cta,
-  .ctaSecondary { width: 100%; }
+  .ctaSecondary {
+    width: 100%;
+  }
 
-  /* No flank to stand beside and no room above, so the control goes to
-     the viewport's top-right. */
+  /* On top of the panel rather than beside it — there is no flank on a
+     phone, and the design puts it above. */
+  /* Above the panel, centred. Driven by the panel's measured height
+     because that height is no longer a constant — the fallback only
+     matters for the frame before the first measurement lands. */
   .closeTall,
   .closeWide {
-    left: auto;
-    right: var(--space-16);
-    top: var(--space-16);
+    left: 50%;
+    right: auto;
+    translate: -50% 0;
+    top: calc(50% - var(--banner-panel-h, 548px) / 2 - var(--space-40));
   }
 }
 

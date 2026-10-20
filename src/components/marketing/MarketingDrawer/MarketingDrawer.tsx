@@ -26,6 +26,7 @@ import {
   resolve,
 } from "./types";
 import { useIsMobile } from "./useIsMobile";
+import BannerScene, { SCENE_LEAD } from "./BannerScene";
 
 type Props = {
   open: boolean;
@@ -178,6 +179,33 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
     setPanelBox({ left: r.left, top: r.top, width: r.width, height: r.height });
   }, [morphTo]);
 
+  /**
+   * The panel's height, published for the close button to sit above.
+   *
+   * On mobile the panel grows with its content, so the close cannot be
+   * placed from a constant — positioned against the design's 548px it
+   * ended up inside the panel, on top of the artwork, as soon as a form
+   * made the panel taller. Measured, it stays put whatever the content.
+   */
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!open || !el) {
+      document.documentElement.style.removeProperty("--banner-panel-h");
+      return;
+    }
+    const publish = () =>
+      document.documentElement.style.setProperty("--banner-panel-h", `${el.offsetHeight}px`);
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty("--banner-panel-h");
+    };
+    // `open` only. Layout changes from content or breakpoint come
+    // through the ResizeObserver, which is what it is there for.
+  }, [open]);
+
   const morphExit =
     morphTo && panelBox
       ? {
@@ -204,6 +232,11 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
   const fields = config.form.fields.slice(0, 2);
   const ctas = [config.cta.primary, config.cta.secondary];
   const hasCta = ctas.some((c) => c.enabled);
+  // With every block switched off the panel is just the artwork, so the
+  // copy column is not rendered at all — kept, it contributed only its
+  // own padding and left a dead strip beneath the image.
+  const hasContent =
+    config.headline.enabled || config.description.enabled || config.form.enabled || hasCta;
 
   return (
     <AnimatePresence>
@@ -218,6 +251,8 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
             exit={{ opacity: 0, transition: { duration: morphTo ? 0.6 : 0.4 } }}
             transition={{ duration: 0.4, ease: ease.out }}
           />
+
+          {isMobile && <BannerScene />}
 
           <motion.div
             className={styles.glowFrame}
@@ -253,19 +288,34 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
                 transition: { duration: 0.46, ease: ease.out },
               }
             }
-            transition={{ duration: 0.92, delay: GLOW_LEAD, ease: [0.22, 1, 0.3, 1] as const }}
+            transition={{
+              duration: isMobile ? 0.7 : 0.92,
+              // On mobile the scene arrives first and the panel steps onto
+              // it; on desktop the page's edge glow plays that part.
+              delay: isMobile ? SCENE_LEAD : GLOW_LEAD,
+              ease: [0.22, 1, 0.3, 1] as const,
+            }}
           >
             <div className={styles.traceBorder} aria-hidden />
 
-            <Image
-              key={art.src}
-              src={art.src}
-              alt={art.alt}
-              fill
-              sizes={wide ? "(max-width: 768px) 96vw, 70vw" : "(max-width: 768px) 92vw, 34vw"}
-              className={wide ? styles.imageWide : styles.imageTall}
-              priority
-            />
+            {/* The image needs a positioned box of its own. On desktop
+                that box is the whole panel; on mobile it is a flex row
+                above the copy, which is what lets the stack work without
+                a second <Image>. */}
+            <div className={styles.media}>
+              <Image
+                key={art.src}
+                src={art.src}
+                alt={art.alt}
+                fill
+                sizes={wide ? "(max-width: 768px) 96vw, 70vw" : "(max-width: 768px) 92vw, 34vw"}
+                className={wide ? styles.imageWide : styles.imageTall}
+                priority
+              />
+              {/* Carries the panel's gradient up into the photograph so the
+                  two meet in a wash rather than at a line. */}
+              <span className={styles.mediaFade} aria-hidden />
+            </div>
 
             {/* No type on the panel means nothing to make readable, and an
                 image composed with its own copy only gets obscured. */}
@@ -273,6 +323,7 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
               <div className={styles.innerOverlay} style={{ background: scrimFade }} aria-hidden />
             )}
 
+            {hasContent && (
             <div
               className={`${styles.content} ${wide ? styles.contentWide : styles.contentTall}`}
               data-drawer-scrollable
@@ -309,6 +360,10 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
               {/* Form and buttons are one block, because the buttons are
                   what submits the form — a gap between them would read as
                   two unrelated things. */}
+              {/* Nothing to submit and nothing to press means no form at
+                  all — an empty one still carries its padding, which left
+                  a dead strip under an image-only banner. */}
+              {(config.form.enabled || hasCta) && (
               <form
                 className={styles.actions}
                 // Prototype: there is no endpoint yet, and nothing here is
@@ -378,7 +433,9 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
                   </motion.div>
                 )}
               </form>
+              )}
             </div>
+            )}
           </motion.div>
 
           <motion.button
