@@ -33,7 +33,7 @@ type Props = {
 
 const ORIENTATIONS: Orientation[] = ["vertical", "horizontal"];
 const COLLAPSE: CollapseMode[] = ["none", "toast", "island"];
-const KINDS: FieldKind[] = ["name", "phone", "custom"];
+const KINDS: FieldKind[] = ["text", "phone"];
 
 function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
@@ -279,7 +279,7 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
                           }
                           className={k === f.kind ? styles.segOn : styles.segOff}
                         >
-                          {k}
+                          {FIELD_PRESETS[k].name}
                         </button>
                       ))}
                     </div>
@@ -299,7 +299,10 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
                 <button
                   className={styles.add}
                   onClick={() =>
-                    setFields([...fields, { id: `f${Date.now()}`, kind: "custom", label: "Label" }])
+                    setFields([
+                      ...fields,
+                      { id: `f${Date.now()}`, kind: "text", label: FIELD_PRESETS.text.label },
+                    ])
                   }
                 >
                   <Plus size={12} /> add field

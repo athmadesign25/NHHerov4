@@ -1,18 +1,6 @@
 /* Marketing banner. A centred card over a blurred page — it was a drawer
    arriving from a chosen edge, and the edge is no longer a choice. */
 
-@property --drawer-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-@keyframes drawerTrace {
-  to {
-    --drawer-angle: 360deg;
-  }
-}
-
 .scrim {
   position: fixed;
   inset: 0;
@@ -129,35 +117,6 @@
   width: min(56%, 560px);
   justify-content: center;
   padding-left: var(--space-48);
-}
-
-.traceBorder {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(
-    from var(--drawer-angle, 0deg),
-    rgba(var(--red-emergency-rgb), 0.95) 0deg,
-    rgba(255, 46, 147, 0.9) 55deg,
-    rgba(var(--violet-600-rgb), 0.9) 115deg,
-    rgba(var(--blue-brand-rgb), 0.95) 175deg,
-    rgba(var(--cyan-bright-rgb), 0.95) 235deg,
-    /* --blue-500-rgb, not --blue-600: the latter is stored as a hex, and
-       rgba(var(--blue-600), …) is invalid CSS — which silently killed the
-       whole gradient, so the border rendered as nothing at all. */
-    rgba(var(--blue-500-rgb), 0.95) 295deg,
-    rgba(var(--red-emergency-rgb), 0.95) 360deg
-  );
-  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
-  mask-composite: exclude;
-  animation: drawerTrace 7.5s linear infinite;
-  pointer-events: none;
-  opacity: 0.55;
-  box-sizing: border-box;
 }
 
 /* On desktop the media box IS the panel; mobile turns it into the top
@@ -289,26 +248,46 @@
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
+  position: relative;
 }
 
-/* A real label, above the input and bound to it. The placeholder repeats
-   it for the sighted, but a placeholder alone disappears on focus and is
-   not an accessible name. */
+/* The label IS the placeholder at rest, then shrinks into the corner
+   once the field is focused or holds anything. One piece of text doing
+   both jobs, so nothing is lost on focus the way a real placeholder is. */
 .fieldLabel {
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  line-height: var(--leading-snug);
-  letter-spacing: 0.02em;
+  position: absolute;
+  left: var(--space-14);
+  top: 50%;
+  translate: 0 -50%;
+  transform-origin: left center;
+  pointer-events: none;
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--slate-400);
+  transition:
+    translate var(--duration-fast) var(--ease-out),
+    scale var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+/* :placeholder-shown is false the moment there is a value, so these two
+   together mean "focused, or holding something". */
+.input:focus + .fieldLabel,
+.input:not(:placeholder-shown) + .fieldLabel {
+  translate: 0 -168%;
+  scale: 0.78;
   color: var(--color-text-secondary);
+  font-weight: 600;
 }
 
 .input {
   width: 100%;
+  /* Medium: comfortably over the 44px touch minimum without the airiness
+     of a 56px form field, which on a banner reads as a different page. */
   min-height: 48px;
-  padding: 0 var(--space-14);
+  /* Room above the text for the label to move into. */
+  padding: var(--space-16) var(--space-14) var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: rgba(var(--white-rgb), 0.92);
@@ -319,8 +298,10 @@
     box-shadow var(--duration-fast) var(--ease-out);
 }
 
+/* The real placeholder is a single space and must never be seen — the
+   label is doing that job. */
 .input::placeholder {
-  color: var(--slate-400);
+  color: transparent;
 }
 
 .input:focus {
@@ -417,7 +398,10 @@
        fields. So the height is a floor and a ceiling instead: it opens
        at 548 and grows toward the viewport only as far as the content
        actually needs, and never past the screen. */
-    width: min(314px, calc(100vw - var(--space-48)));
+    /* Half the margin it had: 314 is the design size, but on a 16 Pro
+       there is room to spare and the gutter was taking width the
+       artwork could use. */
+    width: min(360px, calc(100vw - var(--space-24)));
     height: auto;
     min-height: min(548px, calc(100dvh - var(--space-96)));
     max-height: calc(100dvh - var(--space-96));
@@ -456,7 +440,7 @@
     flex: 1 1 auto;
     /* A floor, so a long form cannot squeeze the artwork down to a
        stripe. Below this the panel scrolls instead of shrinking it. */
-    min-height: 180px;
+    min-height: 220px;
     border-radius: 0;
   }
 
@@ -467,11 +451,17 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
+    /* Straight down and ending AT the edge, not short of it.
+       The design's 171deg tilt left one corner of the seam paler than
+       the other, and stopping at 90.85% left a last few pixels of
+       un-faded photograph against the panel — visible as a hairline cut
+       whenever the media box changed height, which it now does.
+       token-ok: the overlay's end colour is the panel gradient's own. */
     background: linear-gradient(
-      171deg,
-      /* token-ok: the image overlay's own stops, from the design */
-      rgba(107, 166, 234, 0) 65.04%,
-      #a8cbf3 90.85%
+      180deg,
+      rgba(168, 203, 243, 0) 55%,
+      rgba(168, 203, 243, 0.72) 86%,
+      #a8cbf3 100%
     );
   }
 
@@ -481,10 +471,15 @@
     width: auto;
     flex: 0 0 auto;
     justify-content: flex-start;
+    /* The headline and buttons stay centred; the form does not. A label
+       centred over its own input reads as a caption rather than as the
+       name of the thing below it. */
     align-items: center;
     text-align: center;
-    gap: var(--space-12);
-    padding: var(--space-16) var(--space-20) var(--space-24);
+    gap: var(--space-10);
+    /* Tighter than before, which is where the extra image height comes
+       from — the copy was padded like a page rather than a card. */
+    padding: var(--space-12) var(--space-16) var(--space-16);
     /* No cap: the panel grows for this instead. It still scrolls if the
        viewport is too short to grow into. */
     flex: 0 1 auto;
@@ -507,6 +502,8 @@
   /* Full width and stacked, so a thumb has the whole row to hit. */
   .fields {
     max-width: 100%;
+    width: 100%;
+    text-align: left;
   }
   .ctaRow {
     flex-direction: column;
@@ -549,6 +546,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .traceBorder { animation: none; }
   .glowFrame { display: none; }
 }

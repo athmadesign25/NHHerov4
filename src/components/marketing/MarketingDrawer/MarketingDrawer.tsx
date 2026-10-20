@@ -41,19 +41,25 @@ type Props = {
   morphTo?: { x: number; y: number; width: number } | null;
 };
 
-/** Supplied mark for the return action. */
-function ReturnIcon({ size = 18 }: { size?: number }) {
+/** Supplied mark for the close action. */
+function CloseIcon({ size = 20 }: { size?: number }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
       viewBox="0 0 256 256"
-      fill="currentColor"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={16}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden
       focusable="false"
     >
-      <path d="M232,144a64.07,64.07,0,0,1-64,64H80a8,8,0,0,1,0-16h88a48,48,0,0,0,0-96H88v40a8,8,0,0,1-13.66,5.66l-48-48a8,8,0,0,1,0-11.32l48-48A8,8,0,0,1,88,40V80h80A64.07,64.07,0,0,1,232,144Z" />
+      <line x1="160" y1="96" x2="96" y2="160" />
+      <line x1="96" y1="96" x2="160" y2="160" />
+      <circle cx="128" cy="128" r="96" />
     </svg>
   );
 }
@@ -296,8 +302,6 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
               ease: [0.22, 1, 0.3, 1] as const,
             }}
           >
-            <div className={styles.traceBorder} aria-hidden />
-
             {/* The image needs a positioned box of its own. On desktop
                 that box is the whole panel; on mobile it is a flex row
                 above the copy, which is what lets the stack work without
@@ -383,9 +387,6 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
                       const id = `banner-field-${f.id}`;
                       return (
                         <div key={f.id} className={styles.field}>
-                          <label className={styles.fieldLabel} htmlFor={id}>
-                            {f.label || preset.label}
-                          </label>
                           <input
                             id={id}
                             name={f.kind}
@@ -395,9 +396,32 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
                             inputMode={preset.inputMode}
                             maxLength={preset.maxLength}
                             pattern={preset.pattern}
-                            placeholder={f.label || preset.label}
+                            // A single space, not the label. The label is
+                            // the placeholder until the field is used, and
+                            // :placeholder-shown is what tells CSS which of
+                            // the two it is being right now — an empty
+                            // string would never count as shown.
+                            placeholder=" "
+                            onInput={
+                              preset.digitsOnly
+                                ? (e) => {
+                                    // Stripped as it is typed rather than
+                                    // validated on submit, so a pasted
+                                    // "+91 98765 43210" simply cannot
+                                    // leave non-digits in the field.
+                                    const el = e.currentTarget;
+                                    const clean = el.value
+                                      .replace(/\D/g, "")
+                                      .slice(0, preset.maxLength);
+                                    if (el.value !== clean) el.value = clean;
+                                  }
+                                : undefined
+                            }
                             required
                           />
+                          <label className={styles.fieldLabel} htmlFor={id}>
+                            {f.label || preset.label}
+                          </label>
                         </div>
                       );
                     })}
@@ -447,7 +471,7 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
             exit={{ opacity: 0, y: 8 }}
             transition={{ delay: GLOW_LEAD + 0.4, duration: 0.35, ease: ease.out }}
           >
-            <ReturnIcon size={18} />
+            <CloseIcon size={20} />
             <span className={styles.closeLabel}>Back to homepage</span>
           </motion.button>
         </>

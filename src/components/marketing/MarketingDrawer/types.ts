@@ -42,10 +42,15 @@ export type HeadlinePart = {
 /**
  * A form field. `kind` chooses the input's behaviour — its type, its
  * autofill hint, its keyboard and its length cap — while `label` stays
- * free text, so "Phone" can become "WhatsApp number" without the field
- * stopping being a phone number as far as the browser is concerned.
+ * free text, so "Phone Number" can become "WhatsApp number" without the
+ * field stopping being a phone number as far as the browser is
+ * concerned.
+ *
+ * Two kinds, not three. "custom" was a third, which only meant "a text
+ * field whose label I typed myself" — but every text field's label is
+ * already free text, so it was a kind that did nothing.
  */
-export type FieldKind = "name" | "phone" | "custom";
+export type FieldKind = "text" | "phone";
 
 export type FormField = {
   id: string;
@@ -130,25 +135,38 @@ export const MAX_FIELDS = 2;
 export const FIELD_PRESETS: Record<
   FieldKind,
   {
+    /** What the control panel calls it, and the label a new field opens with. */
+    name: string;
     label: string;
     type: string;
     autoComplete: string;
     inputMode?: "text" | "numeric" | "tel";
     maxLength?: number;
     pattern?: string;
+    /** Digits only, enforced as you type rather than only on submit. */
+    digitsOnly?: boolean;
   }
 > = {
-  name: { label: "Name", type: "text", autoComplete: "name", inputMode: "text", maxLength: 60 },
+  text: {
+    name: "Text",
+    label: "Name",
+    type: "text",
+    autoComplete: "name",
+    inputMode: "text",
+    maxLength: 60,
+  },
   phone: {
-    label: "Phone",
+    name: "Phone Number",
+    label: "Phone Number",
     type: "tel",
     autoComplete: "tel",
     inputMode: "numeric",
-    // Ten digits, which is what an Indian mobile number is.
+    // Ten digits, which is what an Indian mobile number is. Anything
+    // that is not a digit never makes it into the field.
     maxLength: 10,
     pattern: "[0-9]{10}",
+    digitsOnly: true,
   },
-  custom: { label: "Label", type: "text", autoComplete: "off", inputMode: "text", maxLength: 60 },
 };
 
 export const resolve = (id: string) =>
@@ -188,8 +206,8 @@ export const DEFAULT_CONFIG: BannerConfig = {
   form: {
     enabled: false,
     fields: [
-      { id: "f1", kind: "name", label: "Name" },
-      { id: "f2", kind: "phone", label: "Phone" },
+      { id: "f1", kind: "text", label: "Name" },
+      { id: "f2", kind: "phone", label: "Phone Number" },
     ],
   },
   cta: {
