@@ -75,11 +75,86 @@
   letter-spacing: -0.01em;
 }
 
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   A different object, not a smaller one: a 126px chip top-right under
+   the nav. At 274px the desktop toast took a third of a phone's width.
+
+   token-ok throughout — these are the design's own values and the
+   nearest palette entries are 30 to 50 ΔRGB away. */
 @media (max-width: 768px) {
   .toast {
-    left: var(--space-12);
+    left: auto;
+    bottom: auto;
+    /* Under the navbar, which publishes its own height. */
+    top: calc(var(--nav-height) + var(--space-12));
     right: var(--space-12);
-    bottom: var(--space-12);
-    width: auto;
+    width: 126px;
+    height: 34px;
+    padding: 0 var(--space-6);
+    gap: var(--space-6);
+    border-radius: var(--radius-sm);
+    border: 1px solid hsl(0deg 0% 100% / 0.9);
+    background: linear-gradient(
+      98deg,
+      hsl(212deg 100% 74.1098%) -1.32%,
+      #d0e6ff 12.66%,
+      var(--slate-100) 36.23%,
+      #86beff 84.35%
+    );
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
   }
+
+  .toast:hover {
+    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
+    transform: none;
+  }
+
+  /* The mark on a lit plate — top-left highlight, deep blue underneath,
+     with an inner rim so it reads as raised rather than printed. */
+  .iconWrap {
+    width: 22px;
+    height: 22px;
+    padding: var(--space-4);
+    border-radius: 2.75px;
+    background: linear-gradient(
+      156deg,
+      hsl(214deg 99.8836% 70.4534%) 22.83%,
+      hsl(214deg 100% 31.8453%) 84.78%
+    );
+    box-shadow:
+      0 2px 5px 0 hsl(224deg 88.4277% 28.2865% / 0.34),
+      0 0 3px 0 hsl(221deg 100% 57.1674% / 0.2) inset;
+    color: var(--white);
+  }
+
+  /* The parts run together as one paragraph here, and the CLAMP lives on
+     the paragraph. Left as separate blocks they each clamped to two
+     lines of their own, so a three-part headline produced six lines in a
+     34px chip. */
+  .copy {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    gap: 0;
+    min-width: 0;
+  }
+
+  .line {
+    display: inline;
+    font-size: var(--font-size-2xs);
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0;
+    text-shadow: 0 4px 34px rgba(var(--black-rgb), 0.44);
+  }
+
+  /* The space that `display: inline` on a flex child does not give you. */
+  .line + .line::before {
+    content: " ";
+  }
+
+
 }

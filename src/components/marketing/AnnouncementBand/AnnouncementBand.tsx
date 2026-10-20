@@ -16,7 +16,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import CloseIcon from "@/components/marketing/CloseIcon";
+import { useIsMobile } from "@/components/marketing/MarketingDrawer/useIsMobile";
 import { ease } from "@/lib/motion";
 import styles from "./AnnouncementBand.module.css";
 
@@ -26,7 +27,7 @@ export type BandConfig = {
 };
 
 export const DEFAULT_BAND: BandConfig = {
-  message: "Robotic knee replacement is now available at NH Multispecialty Hospital, HSR.",
+  message: "Walk-in blood donation drive at HSR Clinic, 2 Nov, 10am\u20134pm.",
   link: { label: "Talk to our team", href: "/appointment" },
 };
 
@@ -44,6 +45,10 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
   const [pulsing, setPulsing] = useState(true);
   const [atTop, setAtTop] = useState(true);
   const bandRef = useRef<HTMLElement>(null);
+  // The phone gets a marquee instead of a static line: 330px cannot hold
+  // a sentence at a readable size, and truncating an announcement is
+  // worse than scrolling it.
+  const isMobile = useIsMobile();
 
   // The band belongs to the hero, not to the page. Once you are reading a
   // section it has had its turn, and the navbar is the only thing that
@@ -145,13 +150,29 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
             )}
           </AnimatePresence>
 
-          {/* data-text duplicates the copy into a ::after that carries the
-              hover wipe. The sweep is a gradient clipped to glyphs, and a
-              gradient needs its own box to travel across — it cannot be
-              applied to the live text without replacing its colour. */}
-          <p className={styles.message} data-text={config.message}>
-            {config.message}
-          </p>
+          {isMobile ? (
+            /* Two copies, scrolling as one strip. A single copy leaves a
+               gap the width of the band every time it wraps; the second
+               is what makes it continuous, which is why the track
+               travels exactly -50% and no further. */
+            <div className={styles.marquee}>
+              <div className={styles.marqueeTrack}>
+                <span className={styles.marqueeItem}>{config.message}</span>
+                <span className={styles.marqueeItem} aria-hidden>
+                  {config.message}
+                </span>
+              </div>
+            </div>
+          ) : (
+            /* data-text duplicates the copy into a ::after that carries
+               the hover wipe. The sweep is a gradient clipped to glyphs,
+               and a gradient needs its own box to travel across — it
+               cannot be applied to the live text without replacing its
+               colour. */
+            <p className={styles.message} data-text={config.message}>
+              {config.message}
+            </p>
+          )}
 
           <div className={styles.actions}>
             {/* Accent red, not --red-emergency: that one is reserved for
@@ -166,7 +187,7 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
               onClick={() => setOpen(false)}
               aria-label="Dismiss announcement"
             >
-              <X size={16} strokeWidth={2} />
+              <CloseIcon size={18} />
             </button>
           </div>
         </motion.aside>

@@ -25,6 +25,7 @@ import {
   needsScrim,
   resolve,
 } from "./types";
+import CloseIcon from "@/components/marketing/CloseIcon";
 import { useIsMobile } from "./useIsMobile";
 import BannerScene, { SCENE_LEAD } from "./BannerScene";
 
@@ -40,29 +41,6 @@ type Props = {
    */
   morphTo?: { x: number; y: number; width: number } | null;
 };
-
-/** Supplied mark for the close action. */
-function CloseIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 256 256"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={16}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      focusable="false"
-    >
-      <line x1="160" y1="96" x2="96" y2="160" />
-      <line x1="96" y1="96" x2="160" y2="160" />
-      <circle cx="128" cy="128" r="96" />
-    </svg>
-  );
-}
 
 /** The glow leads, the panel follows. */
 const GLOW_LEAD = 0.5;

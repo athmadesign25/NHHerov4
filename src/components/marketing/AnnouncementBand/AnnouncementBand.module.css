@@ -305,35 +305,128 @@
   }
 }
 
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   48px, edge to edge, with the message travelling right to left. The
+   page below it is a rounded canvas, so the band reads as the surface
+   the canvas is sitting on rather than a strip stuck to its top.
+
+   token-ok throughout this block: these are the design's own gradient
+   stops and the nearest palette entries are 30+ ΔRGB away. */
 @media (max-width: 768px) {
   .band {
-    /* Height goes auto so a wrapped message is not clipped. The navbar
-       follows it, because --band-height is measured rather than assumed. */
-    height: auto;
-    min-height: 62px;
-    gap: var(--space-8);
-    padding: var(--space-10) var(--space-8) var(--space-10) var(--space-16);
+    height: 48px;
+    padding: 0;
+    background: linear-gradient(
+      98deg,
+      hsl(212deg 100% 74.1098%) 5.33%,
+      hsl(212deg 100% 90.8804%) 32.47%,
+      var(--slate-100) 63.93%,
+      hsl(212deg 100% 76.2094%) 96.13%
+    );
   }
-  .message {
-    /* Two lines, then ellipsis. A four-line band is a page, not a band. */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+
+  /* The brand lattice, scaled down to the band's own height and kept to
+     the two ends so the moving text never crosses it. */
+  .pattern {
+    background-size: auto 100%;
+    background-position: left -40px top, right -40px top;
+    opacity: 0.7;
+  }
+  .pattern::before,
+  .pattern::after {
+    width: 96px;
+    background-size: auto 100%;
+  }
+
+  /* ── the marquee ── */
+  .marquee {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
     overflow: hidden;
+    /* Edge to edge. Capped at 330 it was inset from the band, so the
+       text was cut at the cap rather than at the band's edge and the
+       fades sat in the middle of a plain strip. */
+    width: 100%;
   }
-  /* The link drops below the fold of a narrow band; the message itself
-     carries the announcement and the close stays reachable. */
+
+  .marqueeTrack {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    height: 100%;
+    /* -50% is exactly one copy. Any other value and the seam between
+       the two shows as a jump. */
+    animation: bandMarquee 18s linear infinite;
+    will-change: transform;
+  }
+
+  .marqueeItem {
+    padding-right: var(--space-40);
+    white-space: nowrap;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: 0;
+    color: var(--color-text);
+    text-shadow: 0 4px 34px rgba(var(--black-rgb), 0.44);
+  }
+
+  /* The ends the text runs out of and into.
+
+     A mask on the strip, not a gradient laid over it. The band's
+     background is itself a gradient, so an overlay had to guess the
+     colour underneath it at each edge — and guessed wrong, leaving a
+     paler patch with the text still legible through it. Masking fades
+     the TEXT to transparent instead, which is correct whatever is
+     behind it. The right side is wider because the close sits in it. */
+  .marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 56px),
+      transparent calc(100% - 8px)
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 56px),
+      transparent calc(100% - 8px)
+    );
+  }
+
+  /* Sits where the text has already faded out. */
+  .close {
+    position: absolute;
+    right: var(--space-4);
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 3;
+    width: 28px;
+    height: 28px;
+    color: var(--blue-brand);
+  }
+
+  .actions {
+    position: static;
+  }
+
+  /* The link has nowhere to go beside a moving line. */
   .link {
     display: none;
   }
-  .pattern {
-    opacity: 0.4;
+}
+
+@keyframes bandMarquee {
+  from {
+    transform: translateX(0);
   }
-  /* No hover on touch, and .message becomes a -webkit-box for the line
-     clamp — an absolutely positioned duplicate inside one is not worth
-     the risk for an effect nobody on this breakpoint can trigger. */
-  .message::after {
-    display: none;
+  to {
+    transform: translateX(-50%);
   }
 }
 

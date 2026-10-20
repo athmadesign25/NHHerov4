@@ -16,6 +16,7 @@
  */
 
 import { motion } from "framer-motion";
+import { useIsMobile } from "./useIsMobile";
 import { ease } from "@/lib/motion";
 import AnnouncementIcon from "./AnnouncementIcon";
 import styles from "./CollapsedToast.module.css";
@@ -27,6 +28,10 @@ type Props = {
 };
 
 export default function CollapsedToast({ parts, onExpand }: Props) {
+  // The phone gets a different object, not a smaller one: a 126px chip
+  // top-right under the nav, with the mark on a lit plate. At 274px the
+  // desktop toast took a third of a phone's width.
+  const isMobile = useIsMobile();
   // A banner whose artwork carries its own type has no headline to lend
   // the toast, so the toast falls back to the generic label rather than
   // collapsing to an icon with nothing beside it.
@@ -39,13 +44,15 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
       type="button"
       className={styles.toast}
       onClick={onExpand}
-      initial={{ opacity: 0, scale: 0.6, y: 24 }}
+      // Arrives from its own corner: up from the bottom-left on desktop,
+      // down from under the nav on a phone.
+      initial={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.6, y: 24 }}
+      exit={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
       transition={{ duration: 0.5, ease: ease.spring }}
     >
       <span className={styles.iconWrap}>
-        <AnnouncementIcon size={28} />
+        <AnnouncementIcon size={isMobile ? 14 : 28} gradient={isMobile} />
       </span>
       <span className={styles.copy}>
         {lines.map((p) => (
