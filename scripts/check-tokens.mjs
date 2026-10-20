@@ -122,8 +122,22 @@ function scan(file, tokens) {
     .replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "))
     .split("\n");
 
-  const exemptAt = (i) =>
-    EXEMPT.test(lines[i] ?? "") || EXEMPT.test(lines[i - 1] ?? "");
+  // A token-ok comment covers its own line, the line under it, and the
+  // rest of the rule it introduces. Authors write it above the selector,
+  // not above each declaration, and a marker that does not cover the
+  // block it obviously refers to just trains people to repeat it.
+  const exemptLines = new Set();
+  lines.forEach((l, i) => {
+    if (!EXEMPT.test(l)) return;
+    exemptLines.add(i);
+    exemptLines.add(i + 1);
+    for (let j = i + 1; j < lines.length; j++) {
+      exemptLines.add(j);
+      if (lines[j].includes("}")) break;      // end of the rule
+      if (j - i > 60) break;                  // runaway guard
+    }
+  });
+  const exemptAt = (i) => exemptLines.has(i);
 
   masked.forEach((line, i) => {
     if (!line.trim() || exemptAt(i)) return;
@@ -217,9 +231,22 @@ function targets() {
     console.error(`  (no ref ${base} — falling back to --all)\n`);
     return targets.call(null, (process.argv.push("--all"), undefined));
   }
-  return execSync(`git diff --name-only ${base}...HEAD`, { cwd: ROOT })
-    .toString().trim().split("\n")
-    .filter((f) => f && /\.(module\.css|tsx)$/.test(f) && existsSync(path.join(ROOT, f)));
+  // Committed work AND the working tree. Looking only at `base...HEAD`
+  // meant the check passed silently on everything you had not committed
+  // yet, which is the state you are in when you would actually run it.
+  const sets = [
+    `git diff --name-only ${base}...HEAD`,
+    "git diff --name-only HEAD",      // unstaged
+    "git diff --name-only --cached",  // staged
+    "git ls-files --others --exclude-standard", // new, untracked
+  ];
+  const seen = new Set();
+  for (const cmd of sets) {
+    for (const f of execSync(cmd, { cwd: ROOT }).toString().trim().split("\n")) {
+      if (f && /\.(module\.css|tsx)$/.test(f) && existsSync(path.join(ROOT, f))) seen.add(f);
+    }
+  }
+  return [...seen];
 }
 
 /* ── new tokens since the base ───────────────────────────────────────── */
