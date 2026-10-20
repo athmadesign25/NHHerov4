@@ -7,7 +7,9 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "sync:coworkers": "bash scripts/safe-sync.sh"
+    "sync:coworkers": "bash scripts/safe-sync.sh",
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "check:tokens:all": "node scripts/check-tokens.mjs --all --full"
   },
   "dependencies": {
     "@firecms/neat": "^1.0.2",

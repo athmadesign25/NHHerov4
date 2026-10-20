@@ -212,15 +212,51 @@ than inventing a local fix:
 
 ---
 
+## The checker
+
+```bash
+npm run check:tokens          # just what your branch changed, vs main
+npm run check:tokens:all      # the whole of src/, every finding
+```
+
+It reads the tokens out of `globals.css`, finds raw values in your CSS and
+tells you which token to use. It never rewrites anything. What it reports:
+
+| | meaning | effect |
+|---|---|---|
+| **exact** | the literal IS a token's value, spelled out | **fails** — there is no argument for this |
+| **close** | within ΔRGB 10, 1px, or 15% of a token | warns, names the token |
+| **no match** | nothing in the system is near it | listed only, so a reviewer sees it |
+| **no channel** | matches a token, but used at opacity and that token has no `-rgb` | listed — nothing to change in your file |
+| **new token** | a `--name` that is not on main | listed, with a nudge to say why in the PR |
+
+The last two matter. `rgba(var(--pink-500), 0.2)` does not work, because
+`--pink-500` is a hex rather than a channel — so the checker will not tell
+you to do something impossible. And adding a token is allowed; adding one
+without anyone noticing is what this prevents.
+
+If a value genuinely cannot be a token, say so on the line:
+
+```css
+color: #8b5cf6; /* token-ok: Pulse AI accent spectrum */
+```
+
+Use that sparingly and always with a reason. Shader props, SVG presentation
+attributes and Framer `animate` props are the honest cases — none of them
+resolve `var()`.
+
+---
+
 ## Before you open a PR
 
+- [ ] `npm run check:tokens` passes
 - [ ] No raw hex, `rgba()`, px font sizes or durations in your CSS
 - [ ] Size and leading set together
 - [ ] Hover steps the elevation ramp
 - [ ] Checked at 375 / 768 / 1024 / 1440
 - [ ] No horizontal scroll at 375
 - [ ] Focus visible on every interactive element, on light **and** dark
-- [ ] Any new token appears correctly in `/ds-lab`
+- [ ] Any new token appears correctly in `/ds-lab`, and the PR says why it exists
 
 ---
 
