@@ -56,7 +56,15 @@
   padding: 22px 24px 18px;
   border-radius: 20px;
   border: 1px solid rgba(var(--white-rgb), 0.12);
-  background: rgba(22, 28, 36, 0.28);
+  /* 0.72, not 0.28.
+     The copy inside is white at 0.88. At 0.28 the panel is mostly
+     whatever is behind it, so the text read fine over the dark hero and
+     dropped to 1.7:1 over a light section — legibility depended on where
+     you happened to be on the page. Composited over white, 0.64 is the
+     alpha at which white-on-panel reaches 4.5:1; 0.72 leaves margin and
+     still reads as glass, because the backdrop blur is doing that work
+     rather than the transparency. */
+  background: rgba(var(--slate-900-rgb), 0.72);
   backdrop-filter: blur(24px) saturate(125%);
   -webkit-backdrop-filter: blur(24px) saturate(125%);
   box-shadow: 
