@@ -76,16 +76,19 @@ export default function NHSearchExperience({
   const [mounted, setMounted] = useState(false);
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
 
-  // Search Experience Theme: "dark" (default) or "white" (simulated Figma experience)
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
+  // Search Experience Theme. Light is the default; the dark variant is
+  // still reachable through the same localStorage key, attribute and
+  // event, so nothing that used to set it has stopped working.
+  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("white");
 
   useEffect(() => {
     // Check initial search theme from localStorage or data-search-theme attribute
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("nh_search_theme") as "dark" | "white" | null;
       const docAttr = document.documentElement.getAttribute("data-search-theme") as "dark" | "white" | null;
-      if (savedTheme === "white" || docAttr === "white") {
-        setSearchTheme("white");
+      // Only an explicit "dark" moves off the default now.
+      if (savedTheme === "dark" || docAttr === "dark") {
+        setSearchTheme("dark");
       }
     }
 
@@ -1060,15 +1063,13 @@ export default function NHSearchExperience({
                   style={{
                     position: "fixed",
                     inset: 0,
-                    background: searchTheme === "white" 
-                      ? "rgba(255, 255, 255, 0.40)" 
-                      : "rgba(5, 10, 18, 0.55)",
-                    backdropFilter: searchTheme === "white" 
-                      ? "blur(12px)" 
-                      : "blur(14px)",
-                    WebkitBackdropFilter: searchTheme === "white" 
-                      ? "blur(12px)" 
-                      : "blur(14px)",
+                    // Always the dark scrim, whichever way the panel is
+                    // themed. The white theme used to dim the page with a
+                    // 40% WHITE wash, which washed the homepage out to
+                    // near-nothing instead of holding it behind the panel.
+                    background: "rgba(5, 10, 18, 0.55)",
+                    backdropFilter: "blur(14px)",
+                    WebkitBackdropFilter: "blur(14px)",
                     zIndex: 1,
                     touchAction: "none",
                   }}

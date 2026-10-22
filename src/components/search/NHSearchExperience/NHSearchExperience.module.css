@@ -4824,8 +4824,10 @@
     color: rgba(var(--white-rgb), 0.45);
   }
 
+  /* Slate-900 at 0.5 came to 3.41:1 on the white panel, under the 4.5
+     AA floor for a 12px label. The semantic secondary ink clears it. */
   .themeWhite .mobileQuickLabel {
-    color: rgba(var(--slate-900-rgb), 0.5);
+    color: var(--color-text-secondary);
   }
 
   .mobileQuickChips {
@@ -6155,6 +6157,7 @@
 /* ── 2. Active Search Canvas (White Mode) ── */
 .themeWhite.stateActive,
 .themeWhite .stateActive,
+[data-search-theme="white"].stateActive,
 [data-search-theme="white"] .stateActive {
   background: var(--white) !important;
   border: 1px solid rgba(var(--slate-200-rgb), 0.9) !important;
@@ -6165,9 +6168,13 @@
 
 .themeWhite.stateActive::before,
 .themeWhite.stateActive::after,
+.themeWhite.stateActive::before,
 .themeWhite .stateActive::before,
+.themeWhite.stateActive::after,
 .themeWhite .stateActive::after,
+[data-search-theme="white"].stateActive::before,
 [data-search-theme="white"] .stateActive::before,
+[data-search-theme="white"].stateActive::after,
 [data-search-theme="white"] .stateActive::after {
   display: none !important;
 }
@@ -6251,35 +6258,47 @@
 }
 
 /* Quick Actions in Active Modal (White Mode only) */
+.themeWhite.stateActive .inlineActionBtn,
 .themeWhite .stateActive .inlineActionBtn,
+[data-search-theme="white"].stateActive .inlineActionBtn,
 [data-search-theme="white"] .stateActive .inlineActionBtn {
   color: var(--slate-700) !important;
   font-weight: 500 !important;
 }
 
+.themeWhite.stateActive .inlineActionBtn:hover,
 .themeWhite .stateActive .inlineActionBtn:hover,
+[data-search-theme="white"].stateActive .inlineActionBtn:hover,
 [data-search-theme="white"] .stateActive .inlineActionBtn:hover {
   background: rgba(var(--blue-brand-rgb), 0.08) !important;
   color: var(--blue-brand) !important;
 }
 
+.themeWhite.stateActive .inlineActionIcon,
 .themeWhite .stateActive .inlineActionIcon,
+[data-search-theme="white"].stateActive .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionIcon {
   color: var(--slate-500) !important;
 }
 
+.themeWhite.stateActive .inlineActionBtn:hover .inlineActionIcon,
 .themeWhite .stateActive .inlineActionBtn:hover .inlineActionIcon,
+[data-search-theme="white"].stateActive .inlineActionBtn:hover .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionBtn:hover .inlineActionIcon {
   color: var(--blue-brand) !important;
 }
 
+.themeWhite.stateActive .inlineActionBtnActive,
 .themeWhite .stateActive .inlineActionBtnActive,
+[data-search-theme="white"].stateActive .inlineActionBtnActive,
 [data-search-theme="white"] .stateActive .inlineActionBtnActive {
   background: rgba(var(--blue-brand-rgb), 0.10) !important;
   color: var(--blue-brand) !important;
 }
 
+.themeWhite.stateActive .inlineActionBtnActive .inlineActionIcon,
 .themeWhite .stateActive .inlineActionBtnActive .inlineActionIcon,
+[data-search-theme="white"].stateActive .inlineActionBtnActive .inlineActionIcon,
 [data-search-theme="white"] .stateActive .inlineActionBtnActive .inlineActionIcon {
   color: var(--blue-brand) !important;
 }
@@ -6524,6 +6543,7 @@
 /* ── 3. Search Results Canvas (White Mode) ── */
 .themeWhite.stateResults,
 .themeWhite .stateResults,
+[data-search-theme="white"].stateResults,
 [data-search-theme="white"] .stateResults {
   background: var(--white) !important;
   border: 1px solid var(--slate-200) !important;
@@ -6532,9 +6552,13 @@
 
 .themeWhite.stateResults::before,
 .themeWhite.stateResults::after,
+.themeWhite.stateResults::before,
 .themeWhite .stateResults::before,
+.themeWhite.stateResults::after,
 .themeWhite .stateResults::after,
+[data-search-theme="white"].stateResults::before,
 [data-search-theme="white"] .stateResults::before,
+[data-search-theme="white"].stateResults::after,
 [data-search-theme="white"] .stateResults::after {
   display: none !important;
 }
@@ -6818,6 +6842,7 @@
 /* ── 4. Pulse AI View (Screenshot 1 Match in White Mode) ── */
 .themeWhite.statePulse,
 .themeWhite .statePulse,
+[data-search-theme="white"].statePulse,
 [data-search-theme="white"] .statePulse {
   background: transparent !important;
   border: none !important;
