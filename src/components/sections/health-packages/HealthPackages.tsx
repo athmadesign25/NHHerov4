@@ -263,10 +263,6 @@ export default function HealthPackages() {
   // applyState for why these can briefly differ on entry into "full".
   const stickyIsLightRef = useRef(false);
   const lightSwitchTimeoutRef = useRef<number | null>(null);
-  // Set true for exactly the applyState tick where the section commits
-  // from "growing" to "full" (frame starts its snap-to-100% transition) —
-  // read once by the light-switch logic below, then cleared.
-  const justCommittedRef = useRef(false);
   // True only once the forward reveal has fully settled (elapsed reached
   // totalAutoMs) — gates the mouse-follow tilt handlers below so they
   // never fight the entrance animation's own inline-style writes to the
@@ -396,6 +392,7 @@ export default function HealthPackages() {
         if (frame) frame.style.transition = "";
         if (grid) grid.style.transition = "";
         if (bgVideo) bgVideo.style.transition = "";
+        snapTimeoutRef.current = null;
       }, SNAP_TRANSITION_MS + 60);
     };
 
@@ -426,7 +423,6 @@ export default function HealthPackages() {
         const wasFull = sectionPhaseRef.current === "full";
         if (!wasFull && p1raw >= GROW_COMMIT_FRACTION) {
           sectionPhaseRef.current = "full";
-          justCommittedRef.current = true;
           enableFrameSnapTransition();
           startAutoForward();
         } else if (wasFull && p1raw < GROW_RELEASE_FRACTION) {
@@ -479,53 +475,44 @@ export default function HealthPackages() {
         setTextRevealed(true);
       }
 
-      // Page bg swaps to light once the frame fully covers the viewport —
-      // hidden behind the opaque photo, so the switch is never seen, and
-      // it's already light by the time the exit shrink reveals the edges
-      // again. Fully reversible on scroll-up.
-      //
-      // p1 only reaches LIGHT_SWITCH_THRESHOLD "for real" during the
-      // continuous growing phase (frame tracking raw scroll 1:1, no
-      // transition on it) — at that point the frame's own box genuinely
-      // is that size already, so switching immediately is safe. But the
-      // OTHER way p1 hits 1 is via `isFull` snapping it there the instant
-      // the section commits to "full" (see above) — at that exact tick
-      // the frame hasn't visually grown to 100% yet, it's only just
-      // started a SNAP_TRANSITION_MS CSS transition toward it. Flipping
-      // the bg to light on that same tick showed light through the
-      // still-growing frame's edges for the transition's duration (the
-      // reported white flash). So: only switch to light immediately when
-      // arriving there via real scroll progress; when arriving via the
-      // commit-snap, wait for the snap transition to finish first. The
-      // reverse (light -> dark) direction has no equivalent gap — it must
-      // still be instant, since the release-snap shrinks the frame away
-      // from full coverage and any delay there would show light bg through
-      // the gap instead.
+      // Keep the dark backing until the grow transition has actually settled.
+      // Scroll ticks must not cancel a pending handoff or apply it early.
       const stickyViewport = stickyViewportRef.current;
       const nextIsLight = p1 >= LIGHT_SWITCH_THRESHOLD;
       const applyBg = (light: boolean) => {
         stickyIsLightRef.current = light;
         if (stickyViewport) {
-          stickyViewport.style.backgroundColor = light ? "var(--color-bg, #fafcfc)" : "#031224";
+          stickyViewport.style.backgroundColor = light ? "var(--color-bg)" : "var(--navy-900)";
         }
       };
-      if (lightSwitchTimeoutRef.current) {
-        window.clearTimeout(lightSwitchTimeoutRef.current);
-        lightSwitchTimeoutRef.current = null;
-      }
-      if (nextIsLight && !stickyIsLightRef.current) {
-        if (justCommittedRef.current) {
-          lightSwitchTimeoutRef.current = window.setTimeout(() => {
-            lightSwitchTimeoutRef.current = null;
-            applyBg(true);
-          }, SNAP_TRANSITION_MS);
+      if (!nextIsLight) {
+        if (lightSwitchTimeoutRef.current !== null) {
+          cancelAnimationFrame(lightSwitchTimeoutRef.current);
+          lightSwitchTimeoutRef.current = null;
+        }
+        applyBg(false);
+      } else if (!stickyIsLightRef.current && lightSwitchTimeoutRef.current === null) {
+        if (snapTimeoutRef.current !== null) {
+          const finishHandoff = () => {
+            if (sectionPhaseRef.current !== "full" || !stickyViewport) {
+              lightSwitchTimeoutRef.current = null;
+              return;
+            }
+            const bounds = frame.getBoundingClientRect();
+            const viewport = stickyViewport.getBoundingClientRect();
+            const radius = Number.parseFloat(getComputedStyle(frame).borderTopLeftRadius);
+            if (bounds.width >= viewport.width && bounds.height >= viewport.height && radius === 0) {
+              lightSwitchTimeoutRef.current = null;
+              applyBg(true);
+            } else {
+              lightSwitchTimeoutRef.current = requestAnimationFrame(finishHandoff);
+            }
+          };
+          lightSwitchTimeoutRef.current = requestAnimationFrame(finishHandoff);
         } else {
           applyBg(true);
         }
-      } else if (!nextIsLight && stickyIsLightRef.current) {
-        applyBg(false);
       }
-      justCommittedRef.current = false;
     };
 
     const computeProgress = () => {
@@ -676,7 +663,7 @@ export default function HealthPackages() {
       observer?.disconnect();
       if (autoRafRef.current) cancelAnimationFrame(autoRafRef.current);
       if (snapTimeoutRef.current) window.clearTimeout(snapTimeoutRef.current);
-      if (lightSwitchTimeoutRef.current) window.clearTimeout(lightSwitchTimeoutRef.current);
+      if (lightSwitchTimeoutRef.current) cancelAnimationFrame(lightSwitchTimeoutRef.current);
       if (pingPongRafRef.current) cancelAnimationFrame(pingPongRafRef.current);
     };
   }, [railSlots.length]);

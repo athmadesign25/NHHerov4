@@ -128,11 +128,11 @@ export default function MobileWhyChooseNH() {
           >
             BEST IN HEALTHCARE
           </motion.div>
-          <h2 className={styles.sectionTitle}>
+          <h2 className={`mobile-section-title ${styles.sectionTitle}`}>
             <TextSweepEffect words={["Why Choose Narayana Health?"]} sweepMs={1200} />
           </h2>
           <motion.p
-            className={styles.sectionSubtitle}
+            className={`mobile-section-subtitle ${styles.sectionSubtitle}`}
             initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
             whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
             viewport={{ once: true, margin: "-80px" }}

@@ -2673,3 +2673,9 @@
   flex-direction: column;
   gap: var(--space-8);
 }
+.headlineMobile { display: none; }
+@media (max-width: 768px) {
+  .headlineDesktop { display: none; }
+  .headlineMobile { display: block; }
+  .headlineMobile > div { white-space: nowrap; }
+}

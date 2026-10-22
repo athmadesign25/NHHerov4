@@ -1,11 +1,10 @@
-/* Pale-blue SEO link band that sits below the footer. Light on purpose —
-   it reads as a separate utility strip against the footer's dark ground. */
+/* Dark utility band continuing the footer surface. */
 .band {
   position: relative;
   z-index: 1;
   width: 100%;
-  background: var(--color-primary-light);
-  border-top: 1px solid rgba(var(--blue-brand-rgb), 0.08);
+  background: radial-gradient(75% 55% at 50% 0%, rgba(var(--blue-brand-rgb), 0.3), transparent), var(--navy-900);
+  border-top: 1px solid rgba(var(--white-rgb), 0.16);
 }
 
 .srOnly {
@@ -30,7 +29,7 @@
   padding: var(--sp-2) 0;
   background: none;
   border: none;
-  color: var(--color-primary);
+  color: var(--color-text-inverse);
   font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -72,7 +71,7 @@
    on, reading as a stray highlight rather than feedback for anything. */
 @media (hover: hover) and (pointer: fine) {
   .masterToggle:hover {
-    color: var(--color-primary-dark);
+    color: var(--white);
   }
 
   .masterToggle:hover .masterLabel::after {
@@ -96,11 +95,11 @@
 
 .groups {
   padding-bottom: var(--sp-2);
-  border-top: 1px solid rgba(var(--blue-brand-rgb), 0.10);
+  border-top: 1px solid rgba(var(--white-rgb), 0.16);
 }
 
 .group + .group {
-  border-top: 1px solid rgba(var(--blue-brand-rgb), 0.10);
+  border-top: 1px solid rgba(var(--white-rgb), 0.16);
 }
 
 .groupToggle {
@@ -113,7 +112,7 @@
   background: none;
   border: none;
   text-align: left;
-  color: var(--color-text);
+  color: var(--color-text-inverse);
   font-family: var(--font-family);
   font-size: var(--font-size-lg);
   font-weight: 600;
@@ -131,13 +130,13 @@
    above. */
 @media (hover: hover) and (pointer: fine) {
   .groupToggle:hover {
-    color: var(--color-primary);
+    color: var(--color-text-inverse);
   }
 }
 
 .groupChevron {
   flex: 0 0 auto;
-  color: var(--color-primary);
+  color: var(--color-text-inverse);
   transition: transform var(--transition-base);
 }
 
@@ -162,7 +161,7 @@
   display: block;
   min-width: 0;
   padding: var(--space-8) 0;
-  color: var(--color-text-secondary);
+  color: var(--slate-200);
   font-size: var(--font-size-sm);
   line-height: var(--leading-body);
   transition: color var(--transition-fast);
@@ -171,14 +170,14 @@
 /* Keyboard focus keeps the affordance on every pointer type; the :hover
    half is gated to hover-capable pointers below. */
 .link:focus-visible {
-  color: var(--color-primary);
+  color: var(--color-text-inverse);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
-    color: var(--color-primary);
+    color: var(--color-text-inverse);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -221,3 +220,8 @@
     transition: none;
   }
 }
+
+.panel { background: transparent; }
+.masterToggle:focus-visible,
+.groupToggle:focus-visible,
+.link:focus-visible { outline-color: var(--white); }

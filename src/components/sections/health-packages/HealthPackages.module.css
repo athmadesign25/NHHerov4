@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
   background: var(--navy-900);
-  transition: background var(--duration-slowest) ease;
+  /* The covered handoff is instant, including reversal before shrinking. */
 }
 
 /* JS drives width/height/border-radius (phase 1 grow-in) and transform:

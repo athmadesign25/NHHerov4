@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
   background: var(--navy-900);
-  transition: background var(--duration-slowest) ease;
+  /* The covered handoff is instant, including reversal before shrinking. */
 }
 
 /* JS drives width/height/border-radius (phase 1 grow-in) and transform:
@@ -1352,4 +1352,64 @@
   .directionToggle {
     display: none;
   }
+}
+
+/* Touch feedback stays on the selected card; artwork remains anchored. */
+@media (max-width: 1024px) {
+  .packageCard,
+  .packageCard:hover,
+  .packageCard:focus-visible {
+    border: none;
+  }
+  .packageCardCompact .packageCardImage,
+  .packageCardCompact:hover .packageCardImage,
+  .packageCardCompact:focus-visible .packageCardImage {
+    width: 52%;
+    transform: none;
+    transition: none;
+  }
+  .packageCardCompact .packageCardShimmer { z-index: 4; }
+  .packageCardCompact:hover .packageCardShimmer { opacity: 0; }
+  .packageCardCompact:hover .packageCardShimmer::after { animation: none; }
+  .packageCardCompact.packageCardPressed .packageCardShimmer,
+  .packageCardCompact:focus-visible .packageCardShimmer { opacity: 1; }
+  .packageCardCompact.packageCardPressed .packageCardShimmer::after,
+  .packageCardCompact:focus-visible .packageCardShimmer::after {
+    animation: mobileCardShimmer var(--duration-slower) var(--ease-out);
+  }
+  .uspLabel { font-size: var(--font-size-xs); line-height: var(--leading-body); }
+}
+@keyframes mobileCardShimmer {
+  from { transform: translateX(0) skewX(-18deg); }
+  to { transform: translateX(350%) skewX(-18deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .packageCardCompact.packageCardPressed .packageCardShimmer::after,
+  .packageCardCompact:focus-visible .packageCardShimmer::after { animation: none; }
+}
+
+@media (max-width: 1024px) {
+  .packageCard:hover::before,
+  .packageCard:focus-visible::before,
+  .packageCard:hover::after,
+  .packageCard:focus-visible::after { display: none; }
+  .packageCard:focus-visible { transform: none !important; outline-color: var(--blue-brand); }
+  .packageCardCompact:hover .packageCardContent,
+  .packageCardCompact:focus-visible .packageCardContent { max-width: 56%; }
+  .titleGroup { padding-inline: var(--space-8); }
+}
+
+@media (max-width: 1024px) {
+  .viewDetailsLink {
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    line-height: var(--leading-body);
+    color: var(--color-primary);
+  }
+}
+
+@media (max-width: 900px) {
+  .stickyViewport { background: var(--navy-900); }
+  .frame { width: 76%; }
 }

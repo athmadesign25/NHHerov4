@@ -734,3 +734,39 @@ body.pulse-maximized nav { display: none !important; opacity: 0; pointer-events:
   .hideOnMobile { display: none !important; }
   .hideOnDesktop { display: block !important; }
 }
+
+/* Shared mobile section typography; card rails keep their own gutters. */
+@media (max-width: 1024px) {
+  .mobile-section-title {
+    font-family: var(--font-family);
+    font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-4xl)) !important;
+    font-weight: 800;
+    line-height: var(--leading-tight) !important;
+    letter-spacing: -0.025em;
+    white-space: normal;
+    max-width: 100%;
+    text-wrap: balance;
+  }
+  .mobile-section-subtitle {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base) !important;
+    font-weight: 400;
+    line-height: var(--leading-body) !important;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    text-wrap: pretty;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-eyebrow,
+  .mobile-section-eyebrow {
+    font-family: var(--font-family);
+    font-size: var(--font-size-xs) !important;
+    font-weight: 700;
+    line-height: var(--leading-normal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}

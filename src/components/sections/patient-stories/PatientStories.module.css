@@ -602,3 +602,15 @@
   border-radius: 6px;
   background: rgba(var(--white-rgb), 0.9);
 }
+
+@media (max-width: 1024px) {
+  .header {
+    box-sizing: border-box;
+    width: 100%;
+    padding-inline: var(--space-32);
+  }
+}
+
+@media (max-width: 1024px) {
+  .headerContainer { padding-inline: 0; }
+}

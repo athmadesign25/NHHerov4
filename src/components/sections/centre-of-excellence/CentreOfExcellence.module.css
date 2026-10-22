@@ -92,10 +92,7 @@
   opacity: 1;
 }
 
-.subtitleLine {
-  display: block;
-  will-change: transform, opacity, filter;
-}
+
 
 /* ─── 4-Column Track Architecture (Podium Layout: Full-Bleed End-to-End) ─── */
 .gridSection {
@@ -566,4 +563,15 @@
   .cardTextWrap {
     padding: var(--space-12);
   }
+}
+@media (max-width: 1024px) {
+  .header {
+    box-sizing: border-box;
+    width: 100%;
+    padding-inline: var(--space-32);
+  }
+}
+
+@media (max-width: 1024px) {
+  .centerContent { padding-inline: 0; }
 }

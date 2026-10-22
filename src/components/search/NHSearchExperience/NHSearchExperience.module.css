@@ -8678,7 +8678,7 @@
     height: 46px;
   }
   .bubbleTooltip {
-    display: none;
+    display: block;
   }
   /* The hover tooltip is the label now. These sat under every bubble
      permanently, which is three captions in a dock 46px tall. */
@@ -9758,4 +9758,11 @@
   border-color: rgba(139, 92, 246, 0.4);
   color: var(--sky-400);
   box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.3);
+}
+
+.morphingActionBtn:focus-visible .bubbleTooltip,
+.morphingActionBtnDocked:focus-visible .bubbleTooltip,
+.islandBubble:focus-visible .bubbleTooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

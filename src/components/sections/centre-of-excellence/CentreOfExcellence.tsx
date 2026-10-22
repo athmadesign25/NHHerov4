@@ -270,30 +270,19 @@ export default function CentreOfExcellence() {
               CENTRES OF EXCELLENCE
             </motion.div>
 
-            <h2 className={styles.sectionTitle}>
+            <h2 className={`mobile-section-title ${styles.sectionTitle}`}>
               <TextSweepEffect words={["40+ Specialties, World-class care"]} className={styles.titleGroup} sweepMs={1200} />
             </h2>
 
-            <p className={styles.sectionSubtitle}>
-              <motion.span
-                className={styles.subtitleLine}
-                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              >
-                Integrated expertise across tertiary and quaternary care,
-              </motion.span>
-              <motion.span
-                className={styles.subtitleLine}
-                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              >
-                delivered through one trusted network.
-              </motion.span>
-            </p>
+            <motion.p
+              className={`mobile-section-subtitle ${styles.sectionSubtitle}`}
+              initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            >
+              Integrated expertise across tertiary and quaternary care, delivered through one trusted network.
+            </motion.p>
           </div>
         </div>
       </section>
