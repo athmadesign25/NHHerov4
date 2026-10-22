@@ -247,15 +247,16 @@
    as a lit glass tile rather than a flat colored square. */
 .uspIconBox {
   display: flex;
-  width: 34px;
-  height: 34px;
-  justify-content: center;
+  width: var(--space-32);
+  height: var(--space-32);
   align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  border-radius: 9.067px;
-  background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--blue-brand), var(--blue-500));
   box-shadow: var(--shadow-inset-highlight);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
 }
 
 .uspLabel {
@@ -581,17 +582,16 @@
    visibly a different, flatter shape than the USP row's icon chips). */
 .packageCardFactIcon {
   display: flex;
-  width: 34px;
-  height: 34px;
+  width: var(--space-32);
+  height: var(--space-32);
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 9.067px;
-  /* Deeper/more saturated than a light wash — against the white glass
-     card a 0.20-alpha tint read as too pale to register as a chip. */
-  background: linear-gradient(180deg, rgb(238 30 38 / 85%) 0%, rgb(168 9 9 / 76%) 100%);
-  box-shadow: 0 1px 0 1px rgba(var(--red-400-rgb), 0.1) inset;
-  backdrop-filter: blur(6px);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--red-500), var(--red-400));
+  box-shadow: var(--shadow-inset-highlight);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
 }
 
 .packageCardFactText {
@@ -1092,9 +1092,9 @@
      the row reading as one object rather than a chip floating against
      taller text. Radius and glyph scale with it (26->32 is ~1.23x). */
   .packageCardFactIcon {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
+    width: var(--space-32);
+    height: var(--space-32);
+    border-radius: var(--radius-md);
   }
 
   .packageCardFactIcon svg {

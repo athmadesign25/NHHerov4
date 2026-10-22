@@ -322,15 +322,13 @@
 /* A link, not a pill. The underline is the affordance, so there is no
    plate to position — just type sitting against the scrim. */
 .close {
+  composes: iconButton from "../CloseButton.module.css";
   position: fixed;
   z-index: 2147482200;
-  display: inline-flex;
-  align-items: center;
   gap: var(--space-8);
+  /* The shared class zeroes padding for L2's bare icon; this one has a
+     label beside it and wants the vertical room back. */
   padding: var(--space-8) 0;
-  border: none;
-  background: none;
-  color: var(--color-text-inverse);
   font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -366,7 +364,8 @@
 /* Tall: beside the panel on the right, level with its top edge. */
 .closeTall {
   left: calc(50% + var(--tall-w) / 2 + var(--space-20));
-  top: calc(50% - var(--tall-h) / 2);
+  top: 50%;
+  translate: 0 -50%;
 }
 
 /* Wide: above the panel, right edges aligned. Positioned with `right`

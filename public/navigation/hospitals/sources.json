@@ -1,0 +1,30 @@
+{
+  "checked": "2026-10-22",
+  "directory": "https://www.narayanahealth.org/hospitals-clinics",
+  "photos": [
+    {
+      "label": "Mazumdar Shaw Medical Centre, Bangalore",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/bangalore/mazumdar-shaw-medical-centre-bommasandra",
+      "image": "/navigation/hospitals/bangalore.webp",
+      "city": "Bangalore"
+    },
+    {
+      "label": "Rabindranath Tagore International Institute of Cardiac Sciences, Kolkata",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/kolkata/rabindranath-tagore-international-institute-cardiac-sciences",
+      "image": "/navigation/hospitals/kolkata.webp",
+      "city": "Kolkata"
+    },
+    {
+      "label": "NH-Jaipur Health City",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/jaipur/narayana-multispeciality-hospital-jaipur",
+      "image": "/navigation/hospitals/jaipur.webp",
+      "city": "Jaipur"
+    },
+    {
+      "label": "Narayana Superspeciality Hospital, Gurugram",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/gurugram/narayana-superspeciality-hospital-gurugram",
+      "image": "/navigation/hospitals/gurugram.webp",
+      "city": "Gurugram"
+    }
+  ]
+}

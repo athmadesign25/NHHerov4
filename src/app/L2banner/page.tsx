@@ -12,12 +12,13 @@
 import HomeComposition from "@/components/layout/HomeComposition";
 import AnnouncementBand from "@/components/marketing/AnnouncementBand/AnnouncementBand";
 import styles from "./L2banner.module.css";
+import bandStyles from "@/components/marketing/AnnouncementBand/AnnouncementBand.module.css";
 
 export default function L2BannerPage() {
   return (
     /* The wrapper is what gets the rounded top on a phone, so the band
        behind shows through the corners. Desktop ignores it entirely. */
-    <div className={styles.canvas}>
+    <div className={`${styles.canvas} ${bandStyles.mobileBackdrop}`}>
       {/* Two elements, not one: the outer carries the band's colour and
           the inner carries the radius, so the corner notch has something
           to reveal. On a single element the rounded top sat inside the

@@ -14,16 +14,7 @@
   gap: var(--space-24);
   height: 62px;
   overflow: hidden;
-  /* Supplied as a design value, so the stops are literals rather than
-     palette tokens. Opaque in its own right — an earlier version layered
-     a low-alpha tint over a white base and the top edge came out almost
-     transparent, with the hero video playing through it. */
-  background: linear-gradient(
-    90deg,
-    hsl(211.0345deg 93.8758% 93.5979%) 23.08%,
-    hsl(211.519deg 100% 86.5554%) 50.68%,
-    #dfeefe 87.5%
-  );
+  background: var(--slate-100);
   /* The gutter the navbar's own container uses, so the message's first
      character lines up with the left edge of the logo. The right side is
      deliberately NOT symmetrical — the close sits closer to the edge than
@@ -31,6 +22,65 @@
   padding-left: max(4vw, 40px);
   padding-right: var(--space-12);
   font-family: var(--font-family);
+}
+
+/* The existing gradient arrives as a growing, sliding surface under
+   the artwork and copy, then remains in its original resting position. */
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* token-ok: supplied as a design value, so the stops are literals
+     rather than palette tokens. Opaque in its own right — an earlier
+     version layered a low-alpha tint over a white base and the top edge
+     came out almost transparent, with the hero video playing through it.
+
+     The edges fade continuously into the pale ground. On the right the
+     blue finishes within 48px of the edge, before the red link begins. */
+  background: linear-gradient(
+    90deg,
+    hsl(212deg 100% 74.1098%) 0,
+    hsl(212deg 100% 90.8804%) var(--space-96),
+    var(--slate-100) 50%,
+    hsl(212deg 100% 90.8804%) calc(100% - var(--space-48)),
+    hsl(212deg 100% 76.2094%) 100%
+  );
+  transform-origin: left center;
+  animation: bandGradientEntry calc(var(--duration-slowest) * 2) var(--ease-out) both;
+}
+
+/* Each desktop half enters from its own edge. Both use the full-width
+   resting gradient, cropped at its neutral centre to preserve the paint. */
+.band::after { display: none; }
+@media (min-width: 769px) {
+  .band::before,
+  .band::after {
+    background-size: 200% 100%;
+    animation-play-state: paused;
+  }
+  .band::before { right: 50%; background-position: left center; }
+  .band::after {
+    display: block;
+    left: 50%;
+    background-position: right center;
+    transform-origin: right center;
+    animation-name: bandGradientEntryRight;
+  }
+  .band[data-entered="true"]::before,
+  .band[data-entered="true"]::after { animation-play-state: running; }
+}
+
+@keyframes bandGradientEntryRight {
+  from { opacity: 0; transform: translateX(var(--space-48)) scaleX(0.85); }
+  to { opacity: 1; transform: translateX(0) scaleX(1); }
+}
+
+@keyframes bandGradientEntry {
+  from { opacity: 0; transform: translateX(calc(-1 * var(--space-48))) scaleX(0.85); }
+  to { opacity: 1; transform: translateX(0) scaleX(1); }
 }
 
 /* ─── Inner edge ─────────────────────────────────────────────────────────
@@ -109,56 +159,6 @@
   right: 0;
   background-position: left center;
   transform: scaleX(-1);
-}
-
-/* ─── Arrival pulse ──────────────────────────────────────────────────────
-   Runs along the top AND bottom edges of the band. At the two ENDS it was
-   doing almost nothing visible — a 24%-wide bloom on a strip this short has
-   very little room to bloom in, and it fell where nobody was looking. The
-   long edges are full-width runs either side of the copy.
-
-   Both are driven by one opacity keyframe on the wrapper, halved from the
-   single-edge version: two edges at full strength stopped reading as an
-   accent and started reading as a stripe. One pass on load, then gone. */
-.pulse {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  will-change: opacity;
-}
-
-.pulseTop,
-.pulseBottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  /* Taller than the line it sits on, so it is a glow rising off the edge
-     rather than a coloured border. */
-  height: 18px;
-  /* The colour run is shared; only the falloff direction differs, which is
-     what the mask handles. */
-  background:
-    linear-gradient(
-      to right,
-      rgba(var(--cyan-bright-rgb), 0.9) 0%,
-      rgba(var(--blue-brand-rgb), 0.75) 22%,
-      rgba(var(--violet-600-rgb), 0.6) 45%,
-      rgba(var(--red-500-rgb), 0.7) 72%,
-      rgba(var(--cyan-bright-rgb), 0.85) 100%
-    );
-}
-
-.pulseTop {
-  top: 0;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-}
-
-.pulseBottom {
-  bottom: 0;
-  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 0%, transparent 100%);
 }
 
 /* ─── Copy ──────────────────────────────────────────────────────────── */
@@ -272,9 +272,7 @@
 
 /* ─── Close ──────────────────────────────────────────────────────────── */
 .close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  composes: iconButton from "../CloseButton.module.css";
   /* Smaller than the 44px rule and sitting outside the content gutter:
      this is a dismiss, not a destination, and it should not read as
      equal in weight to the link beside it. The band's own 62px height
@@ -282,18 +280,11 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  border: none;
   border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-.close:hover {
-  background: rgba(var(--blue-brand-rgb), 0.07);
-  color: var(--color-text);
+  /* The band's ground is a light blue gradient, so the plate is brand
+     blue rather than the white default — white on white would leave the
+     hover with nothing to show. */
+  --close-plate: rgba(var(--blue-brand-rgb), 0.22);
 }
 
 @media (max-width: 1024px) {
@@ -313,9 +304,21 @@
    token-ok throughout this block: these are the design's own gradient
    stops and the nearest palette entries are 30+ ΔRGB away. */
 @media (max-width: 768px) {
+  /* Its own gradient again. The base rule pins the blue to a 52px cap so
+     it clears the link, but there is no link down here — the marquee
+     runs the full width and the close is the only thing at the end. So
+     the phone keeps the softer ramp across the whole band, which is what
+     the design asked for. */
   .band {
     height: 48px;
     padding: 0;
+
+  }
+
+  /* One paint source for the strip and the backing exposed by both
+     hero corners. The shared height keeps the angled gradient aligned. */
+  .band::before,
+  .mobileBackdrop {
     background: linear-gradient(
       98deg,
       hsl(212deg 100% 74.1098%) 5.33%,
@@ -323,6 +326,8 @@
       var(--slate-100) 63.93%,
       hsl(212deg 100% 76.2094%) 96.13%
     );
+    background-size: 100% calc(var(--space-48) + var(--radius-xl));
+    background-repeat: no-repeat;
   }
 
   /* The brand lattice, scaled down to the band's own height and kept to
@@ -408,7 +413,6 @@
     z-index: 3;
     width: 28px;
     height: 28px;
-    color: var(--blue-brand);
   }
 
   .actions {
@@ -431,8 +435,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulse {
-    display: none;
+  .band::before,
+  .band::after {
+    animation: none;
   }
   .message::after {
     display: none;

@@ -625,8 +625,8 @@
     border-radius: 9.067px;
     background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
     box-shadow: var(--shadow-inset-highlight);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
   }
 
   /* Exact match of HealthPackages .uspLabel layout, with dark color for light bg */

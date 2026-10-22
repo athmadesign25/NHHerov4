@@ -1,0 +1,8 @@
+/* Campaign artwork values supplied for the announcement tile; not new system tokens. */
+.tile {
+  border-radius: var(--radius-sm);
+  /* token-ok: supplied campaign gradient */
+  background: linear-gradient(156deg, hsl(214deg 99.8836% 70.4534%) 22.83%, hsl(214deg 100% 31.8453%) 84.78%);
+  /* token-ok: supplied campaign tile shadow */
+  box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
+}

@@ -9,9 +9,7 @@
  * publishes its own height as `--band-height` on <html>, which is the one
  * value the navbar reads to move down.
  *
- * Entrance is a single pulse at the two ends, then nothing. It runs once
- * per page load and is not repeatable from the UI — the band is an object
- * that was already there, not one that keeps arriving.
+ * The blue background grows and slides into its resting gradient on entry.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -31,9 +29,6 @@ export const DEFAULT_BAND: BandConfig = {
   link: { label: "Talk to our team", href: "/appointment" },
 };
 
-/** How long the arrival pulse lives, start to gone. */
-const PULSE_MS = 4600;
-
 /**
  * How far down the page the band survives. Past this it is gone, and
  * scrolling back up anywhere below the hero brings back the navbar alone.
@@ -42,7 +37,7 @@ const SCROLL_OUT = 24;
 
 export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: BandConfig }) {
   const [open, setOpen] = useState(true);
-  const [pulsing, setPulsing] = useState(true);
+  const [gradientReady, setGradientReady] = useState(false);
   const [atTop, setAtTop] = useState(true);
   const bandRef = useRef<HTMLElement>(null);
   // The phone gets a marquee instead of a static line: 330px cannot hold
@@ -92,18 +87,18 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
     };
   }, []);
 
-  // Once, on mount. Not on close, not on reopen — there is no reopen.
-  useEffect(() => {
-    const t = window.setTimeout(() => setPulsing(false), PULSE_MS);
-    return () => window.clearTimeout(t);
-  }, []);
-
   return (
     <AnimatePresence>
       {shown && (
         <motion.aside
           ref={bandRef}
           className={styles.band}
+          data-entered={gradientReady}
+          onAnimationComplete={(target) => {
+            if (typeof target === "object" && "y" in target && target.y === 0) {
+              setGradientReady(true);
+            }
+          }}
           role="region"
           aria-label="Announcement"
           initial={{ y: "-100%" }}
@@ -111,44 +106,12 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
           exit={{ y: "-100%", transition: { duration: 0.35, ease: ease.out } }}
           transition={{ duration: 0.6, ease: ease.out }}
         >
-          {/* Pattern, inner shading and pulse all sit under the copy and
+          {/* Pattern and inner shading sit under the copy and
               take no pointer events, so the band stays one flat row to
               click through. */}
           <span className={styles.pattern} aria-hidden />
           <span className={styles.innerEdge} aria-hidden />
 
-          <AnimatePresence>
-            {pulsing && (
-              <motion.span
-                className={styles.pulse}
-                aria-hidden
-                initial={{ opacity: 0 }}
-                // Breathes twice and leaves, rather than fading once — a
-                // single ramp over four seconds reads as a slow gradient
-                // rather than as something announcing itself.
-                //
-                // Halved from [0, 1, 0.55, 0.9, 0] when the second edge
-                // arrived — running both at full strength turned an accent
-                // into a stripe across the top of the page — then taken
-                // down another 20%.
-                animate={{ opacity: [0, 0.4, 0.22, 0.36, 0] }}
-                // Its own exit transition. Without one Framer reuses the
-                // `transition` prop below, so the span spent another 4.6s
-                // animating from 0 opacity to 0 opacity — invisible, but
-                // it kept a will-change layer alive for twice as long as
-                // the pulse itself.
-                exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                transition={{
-                  duration: PULSE_MS / 1000,
-                  times: [0, 0.14, 0.42, 0.62, 1],
-                  ease: "easeInOut",
-                }}
-              >
-                <span className={styles.pulseTop} />
-                <span className={styles.pulseBottom} />
-              </motion.span>
-            )}
-          </AnimatePresence>
 
           {isMobile ? (
             /* Two copies, scrolling as one strip. A single copy leaves a

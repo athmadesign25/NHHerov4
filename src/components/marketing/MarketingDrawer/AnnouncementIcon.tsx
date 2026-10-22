@@ -1,54 +1,108 @@
+"use client";
+
 /**
- * The collapsed banner's mark.
+ * The collapsed banner's mark, shared by the toast and the island tile.
  *
- * Two renderings of the same megaphone. `currentColor` is the default,
- * so the toast and the island tile each tint it from their own context —
- * the artwork arrived with a literal #000000, which would have been
- * black in both.
+ * The artwork and the animation are animate-ui's hugeicons megaphone,
+ * ported rather than installed. `npx shadcn add` wants a components.json
+ * and would set Tailwind up in a project whose rules forbid it, and the
+ * registry entry pulls `@animate-ui/react` plus `motion` — a second copy
+ * of the same engine `framer-motion` already gives us. The paths and the
+ * keyframes below are the library's, unchanged; only the plumbing is
+ * ours.
  *
- * `gradient` is the mobile toast's version, where the mark sits on a
- * deep blue plate and is lit from the top left. The gradient is part of
- * the artwork rather than a UI colour, so it is not tokenised.
+ * This icon is STROKED, where the one it replaces was filled. So the
+ * brand gradient is applied to `stroke`, and `fill` stays none — putting
+ * that gradient on the fill would flood the whole glyph.
+ *
+ * `currentColor` is the default, so the toast and the island tile each
+ * tint it from their own context. `gradient` is the mobile toast's
+ * version, where the mark sits on a deep blue plate and is lit from the
+ * top left; the gradient is part of the artwork rather than a UI colour,
+ * so it is not tokenised. Its coordinates are the previous icon's,
+ * scaled by 24/15 for the new viewBox.
  *
  * The gradient id comes from useId rather than a module counter. Two of
  * these on one page sharing an id would have the second silently reuse
- * the first one's fill, and a counter incremented during render is both
- * a render side effect and wrong under SSR, where the server and client
- * would disagree on the number.
+ * the first one's stroke, and a counter incremented during render is
+ * both a render side effect and wrong under SSR, where the server and
+ * client would disagree on the number.
  */
 
 import { useId } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { duration, ease } from "@/lib/motion";
+
+/* Slow grow-and-tilt cycle with a pause, derived from motion tokens. */
+const beat = {
+  duration: duration.slowest * 4,
+  ease: ease.standard,
+  repeat: Infinity,
+  repeatDelay: duration.slowest * 2,
+} as const;
+
+const horn = {
+  initial: { scale: 1, rotate: 0, transformOrigin: "50% 50%" },
+  animate: {
+    scale: [1, 1.08, 1.12, 1.06, 1],
+    rotate: [0, -8, 6, -3, 0],
+    transformOrigin: "50% 50%",
+    transition: beat,
+  },
+};
+
+const lines = {
+  initial: { opacity: 1, x: 0 },
+  animate: {
+    opacity: [1, 0.25, 1, 0.25, 1],
+    x: [0, 0.6, 0, 0.6, 0],
+    transition: beat,
+  },
+};
 
 export default function AnnouncementIcon({
   size = 32,
-  gradient = false,
+  gradient = true,
 }: {
   size?: number;
   gradient?: boolean;
 }) {
   const id = `announcement-grad-${useId()}`;
+  const reducedMotion = useReducedMotion();
   return (
-    <svg
+    <motion.svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      viewBox="0 0 15 15"
+      viewBox="0 0 24 24"
       fill="none"
+      stroke={gradient ? `url(#${id})` : "currentColor"}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      initial="initial"
+      animate={reducedMotion ? "initial" : "animate"}
       aria-hidden
       focusable="false"
     >
-      <path
-        d="M11.1027 3.99771H8.89351C8.73198 3.98827 5.91715 3.79011 3.23666 1.54202C3.10722 1.43331 2.94944 1.36379 2.78186 1.34164C2.61428 1.31949 2.44386 1.34562 2.29062 1.41697C2.13738 1.48832 2.00768 1.60191 1.91676 1.74441C1.82584 1.88692 1.77747 2.05241 1.77734 2.22144V11.1028C1.77737 11.2719 1.82566 11.4374 1.91653 11.58C2.00741 11.7226 2.13711 11.8363 2.29037 11.9077C2.44363 11.9791 2.61409 12.0053 2.78172 11.9831C2.94935 11.961 3.10718 11.8915 3.23666 11.7827C5.33321 10.0242 7.5108 9.52023 8.43834 9.37924V11.14C8.43815 11.2863 8.47413 11.4304 8.54309 11.5595C8.61204 11.6886 8.71182 11.7987 8.83356 11.8799L9.44415 12.2868C9.56217 12.3655 9.69734 12.4149 9.83835 12.4307C9.97936 12.4465 10.1221 12.4282 10.2546 12.3775C10.3871 12.3268 10.5056 12.2451 10.6 12.1392C10.6945 12.0333 10.7622 11.9063 10.7974 11.7689L11.4508 9.30652C12.1262 9.22355 12.7442 8.8853 13.1782 8.36117C13.6121 7.83703 13.8291 7.16672 13.7846 6.48771C13.7401 5.80869 13.4374 5.17245 12.9388 4.70945C12.4401 4.24645 11.7832 3.9918 11.1027 3.99771ZM9.93706 11.5407V11.5468L9.32647 11.14V9.3265H10.5255L9.93706 11.5407ZM11.1027 8.43837H9.32647V4.88584H11.1027C11.5738 4.88584 12.0256 5.07298 12.3587 5.4061C12.6919 5.73921 12.879 6.19101 12.879 6.66211C12.879 7.1332 12.6919 7.585 12.3587 7.91811C12.0256 8.25123 11.5738 8.43837 11.1027 8.43837Z"
-        fill={gradient ? `url(#${id})` : "currentColor"}
-      />
+      <motion.g variants={horn}>
+        <path d="M9 14V6H6C5.07003 6 4.60504 6 4.22354 6.10222C3.18827 6.37962 2.37962 7.18827 2.10222 8.22354C2 8.60504 2 9.07003 2 10C2 10.93 2 11.395 2.10222 11.7765C2.37962 12.8117 3.18827 13.6204 4.22354 13.8978C4.60504 14 5.07003 14 6 14H9Z" />
+        <path d="M9 14L9.96466 18.8233C9.98816 18.9408 10 19.0604 10 19.1802V19.3411C10 20.2573 9.25728 21 8.34109 21C7.55885 21 6.8829 20.4536 6.719 19.6887L5.5 14" />
+        <path d="M10 6H9V14H10C11.2982 14 12.5614 14.4211 13.6 15.2L15.747 16.8103C15.9112 16.9334 16.111 17 16.3162 17C16.7246 17 17.0909 16.7404 17.2088 16.3495C17.5537 15.2067 18 13.2728 18 10C18 6.72718 17.5537 4.79327 17.2088 3.65054C17.0909 3.25961 16.7246 3 16.3162 3C16.111 3 15.9112 3.06658 15.747 3.18974L13.6 4.8C12.5614 5.57893 11.2982 6 10 6Z" />
+      </motion.g>
+      <motion.g variants={lines}>
+        <path d="M21 9.99996H22" />
+        <path d="M20.5 6.00109L21.5 5.40637" />
+        <path d="M20.5 14L21.5 14.6481" />
+      </motion.g>
       {gradient && (
         <defs>
           <linearGradient
             id={id}
-            x1="4.60547"
-            y1="3.83398"
-            x2="8.10547"
-            y2="12.334"
+            x1="7.36875"
+            y1="6.13437"
+            x2="12.96875"
+            y2="19.7344"
             gradientUnits="userSpaceOnUse"
           >
             <stop stopColor="white" />
@@ -56,6 +110,6 @@ export default function AnnouncementIcon({
           </linearGradient>
         </defs>
       )}
-    </svg>
+    </motion.svg>
   );
 }
