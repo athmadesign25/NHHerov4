@@ -176,6 +176,14 @@
   will-change: transform;
 }
 
+/* Reserve the dock's bottom offset, its height and a clear gap above it.
+   Moving the bottom-anchored stack preserves its internal card/CTA spacing. */
+@media (min-width: 1100px) {
+  .grid {
+    padding-bottom: calc(var(--space-56) + var(--space-48) + var(--space-64));
+  }
+}
+
 .textBlock {
   display: flex;
   flex-direction: column;
@@ -1077,5 +1085,22 @@
 @media (max-width: 1024px) {
   .directionToggle {
     display: none;
+  }
+}
+
+/* Compact the vertical layout on shorter laptops while keeping the title below the navbar. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .grid { padding-top: calc(var(--space-96) + var(--space-16)); }
+  .textBlock { margin-bottom: calc(-1 * var(--space-16)); }
+  .title { font-size: var(--font-size-4xl); }
+  .uspList { margin-top: var(--space-12); }
+  .railLabel { margin-bottom: var(--space-12); }
+  .cardStack { margin-bottom: var(--space-12); }
+  .packageCardCompact .packageCardContent { padding-top: var(--space-20); }
+  .packageCardSlotCompact,
+  .packageCardCompact,
+  .packageCardCompact:hover,
+  .packageCardCompact:focus-visible {
+    height: calc(var(--space-128) + var(--space-64));
   }
 }

@@ -16,7 +16,7 @@
   transition: box-shadow var(--duration-base) var(--ease-out);
 }
 .image { object-fit: cover; object-position: center; transition: transform var(--duration-slow) var(--ease-out); }
-.wash { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(var(--white-rgb), 0.95), rgba(var(--white-rgb), 0.85) 38%, rgba(var(--white-rgb), 0.16) 75%, transparent); }
+.wash { position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--grey-100) 90%, var(--amber-500)), color-mix(in srgb, var(--grey-100) 90%, var(--amber-500)) 32%, transparent 90%); }
 .name { position: relative; font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; }
 .tile:hover { box-shadow: var(--elevation-2); }
 .tile:hover .image { transform: scale(1.04); }

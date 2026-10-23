@@ -8,7 +8,7 @@ import { useReducedMotion } from "framer-motion";
 import { HOSPITAL_CITIES, HOSPITAL_SLIDES } from "./hospital-data";
 import styles from "./HospitalMegaMenu.module.css";
 
-const cityColumns = [[0], [1, 6, 14], [2, 4, 12, 5], [3, 10, 9], [7, 8, 11, 13]];
+const cityColumns = [[0, 5, 7, 13], [1, 6, 14, 4, 2], [3, 10, 9, 8, 11, 12]];
 
 export default function HospitalMegaMenu({ onNavigate }: { onNavigate: () => void }) {
   const reduced = useReducedMotion();
@@ -33,7 +33,7 @@ export default function HospitalMegaMenu({ onNavigate }: { onNavigate: () => voi
           if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false);
         }}>
         {HOSPITAL_SLIDES.map((slide, index) => <div key={slide.city} className={`${styles.photo} ${index === active ? styles.visible : ""}`} aria-hidden="true">
-          <Image src={slide.image} alt="" fill sizes="(min-width: 1100px) 75vw, 100vw" loading="eager" />
+          <Image src={slide.image} alt="" fill sizes="(min-width: 1600px) 384px, 25vw" loading="eager" />
         </div>)}
         <div className={styles.wash} aria-hidden="true" />
         <div className={styles.caption} aria-live="off">

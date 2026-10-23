@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, X, User, CalendarCheck, FileText, LogOut, Check } from "lucide-react";
 import styles from "./Navbar.module.css";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import { TriangleAlert } from "@/components/animate-ui/icons/hugeicons/triangle-alert";
 
+import MobileMegaMenu from "./navigation/MobileMegaMenu";
 import DesktopMegaMenu from "./navigation/DesktopMegaMenu";
 import { DESKTOP_NAV_ITEMS } from "./navigation/menu-data";
 
@@ -24,6 +25,7 @@ const MOCK_FAMILY_MEMBERS = [
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const lastMenuIndex = useRef(0);
   const [menuDirection, setMenuDirection] = useState(1);
@@ -48,6 +50,7 @@ export default function Navbar() {
       const inset = firstLink.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(firstLink).paddingLeft);
       nav.style.setProperty("--desktop-menu-inset", `${inset}px`);
       if (window.innerWidth < 1100) setActiveDropdown(null);
+      else setIsMobileMenuOpen(false);
     };
     measure();
     window.addEventListener("resize", measure);
@@ -66,8 +69,7 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", dismiss);
   }, [activeDropdown]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activePane, setActivePane] = useState<string>('main');
+  const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), [setIsMobileMenuOpen]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Search theme state ("dark" | "white") for stakeholder simulation
@@ -83,11 +85,6 @@ export default function Navbar() {
   }, []);
 
 
-  useEffect(() => {
-    if (!isMobileMenuOpen) {
-      setTimeout(() => setActivePane('main'), 300); // Reset pane when drawer closes
-    }
-  }, [isMobileMenuOpen]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -200,6 +197,9 @@ export default function Navbar() {
   return (
     <nav
       ref={navRef}
+      role={isMobileMenuOpen ? "dialog" : undefined}
+      aria-modal={isMobileMenuOpen || undefined}
+      aria-labelledby={isMobileMenuOpen ? "mobile-menu-title" : undefined}
       className={activeDropdown ? styles.menuOpen : undefined}
       onMouseLeave={() => setActiveDropdown(null)}
       onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActiveDropdown(null); }}
@@ -527,6 +527,7 @@ export default function Navbar() {
               className={styles.appleHamburgerBtn}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation-menu"
             >
               <span className={`${styles.hamburgerLine} ${styles.lineTop} ${isMobileMenuOpen ? styles.lineTopOpen : ""}`} />
               <span className={`${styles.hamburgerLine} ${styles.lineBottom} ${isMobileMenuOpen ? styles.lineBottomOpen : ""}`} />
@@ -537,235 +538,9 @@ export default function Navbar() {
 
       {activeDropdown && <DesktopMegaMenu activeMenu={activeDropdown} direction={menuDirection} onNavigate={() => setActiveDropdown(null)} />}
 
-      {/* ─── Premium Dark Mode Mobile Menu (Sliding Panes) ─── */}
+      {/* Local mobile-menu exploration; the closed navbar stays unchanged. */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className={styles.darkDrawerOverlay}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <AnimatePresence mode="wait">
-
-              {/* --- MAIN PANE --- */}
-              {activePane === 'main' && (
-                <motion.div
-                  key="main"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "-20%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "-20%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.darkDrawerScroll}>
-
-                    {/* Main Unified Navigation List */}
-                    <motion.div
-                      className={styles.coreNavList}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <CalendarCheck size={18} color="#94a3b8" />
-                          <span className={styles.coreNavTitle}>Book Visit</span>
-                        </div>
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </Link>
-
-                      <button onClick={() => setActivePane('search')} className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <Search size={18} color="#94a3b8" />
-                          <span className={styles.coreNavTitle}>Find Doctor</span>
-                        </div>
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </button>
-
-                      {[
-                        { title: "Treatments & Specialities", pane: "specialities", icon: <Stethoscope size={18} color="#94a3b8" /> },
-                        { title: "Health Checkups", pane: "health-checks", icon: <Activity size={18} color="#94a3b8" /> },
-                        { title: "Hospitals & Clinics", href: "/hospitals", icon: <Building2 size={18} color="#94a3b8" /> },
-                        { title: "International Patients", href: "/international-patients", icon: <Globe size={18} color="#94a3b8" /> },
-                      ].map((item) => (
-                        <Fragment key={item.title}>
-                          {item.pane ? (
-                            <button onClick={() => setActivePane(item.pane)} className={styles.coreNavLink}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                {item.icon}
-                                <span className={styles.coreNavTitle}>{item.title}</span>
-                              </div>
-                              <ChevronRight size={20} className={styles.coreNavChevron} />
-                            </button>
-                          ) : (
-                            <Link href={item.href!} onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                {item.icon}
-                                <span className={styles.coreNavTitle}>{item.title}</span>
-                              </div>
-                              <ChevronRight size={20} className={styles.coreNavChevron} />
-                            </Link>
-                          )}
-                        </Fragment>
-                      ))}
-
-                      <a href="tel:18003090309" className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <Phone size={18} color="#f87171" />
-                          <span className={styles.coreNavTitle} style={{ color: "var(--red-400)" }}>24/7 Emergency (1800 309 0309)</span>
-                        </div>
-                      </a>
-
-                      {/* Carries no title text: the lockup spells the brand
-                          out itself, so a "Narayana One Health" label beside
-                          it would just say the same thing twice. */}
-                      <a
-                        href="https://www.narayanaone.health/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`${styles.coreNavLink} ${styles.oneHealthNavRow}`}
-                        aria-label="Narayana One Health (opens in a new tab)"
-                      >
-                        <Image
-                          src="/narayana_one_health_logo.svg"
-                          alt="Narayana One Health"
-                          width={91}
-                          height={100}
-                          className={styles.oneHealthNavLogo}
-                        />
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </a>
-                    </motion.div>
-
-                    {/* Bottom Utility Dock */}
-                    <motion.div
-                      className={styles.utilityDock}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <button onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} className={styles.utilityRow}>
-                        <div className={styles.utilityIconWrap}><User size={16} /></div>
-                        <span>Login</span>
-                      </button>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: FIND A DOCTOR (SEARCH) --- */}
-              {activePane === 'search' && (
-                <motion.div
-                  key="search"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Find a Doctor</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Top Specialties</div>
-                      <Link href="/search?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
-                      <Link href="/search?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
-                      <Link href="/search?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
-                      <Link href="/search?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
-                      <Link href="/search?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Surgical Specialists</div>
-                      <Link href="/search?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
-                      <Link href="/search?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
-                      <Link href="/search?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
-                      <Link href="/search?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: SPECIALITIES --- */}
-              {activePane === 'specialities' && (
-                <motion.div
-                  key="specialities"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Specialities</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Heart Care</div>
-                      <Link href="/specialities/cardiology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiology</Link>
-                      <Link href="/specialities/cardiac-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgery</Link>
-                      <Link href="/specialities/vascular-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgery</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Brain & Spine</div>
-                      <Link href="/specialities/neurology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurology</Link>
-                      <Link href="/specialities/neurosurgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurosurgery</Link>
-                      <Link href="/specialities/spine-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Spine Surgery</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Bones & Joints</div>
-                      <Link href="/specialities/orthopaedics" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedics</Link>
-                      <Link href="/specialities/joint-replacement" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Joint Replacement</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: HEALTH CHECKUPS --- */}
-              {activePane === 'health-checks' && (
-                <motion.div
-                  key="health-checks"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Health Checkups</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>For Women</div>
-                      <Link href="/specialities/vital-care-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 40 years)</Link>
-                      <Link href="/specialities/prime-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (40-45 years)</Link>
-                      <Link href="/specialities/enhanced-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>For Men</div>
-                      <Link href="/specialities/vital-care-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 35 years)</Link>
-                      <Link href="/specialities/prime-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (35-45 years)</Link>
-                      <Link href="/specialities/enhanced-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-            </AnimatePresence>
-          </motion.div>
-        )}
+        {isMobileMenuOpen && <MobileMegaMenu onClose={closeMobileMenu} onLogin={() => { closeMobileMenu(); setIsLoginModalOpen(true); }} />}
       </AnimatePresence>
 
       {isSearchOpen && (

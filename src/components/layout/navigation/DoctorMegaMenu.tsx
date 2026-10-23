@@ -5,13 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorMegaMenu.module.css";
 import DoctorLocations from "./DoctorLocations";
+import { DOCTOR_SPECIALTIES as specialties } from "./doctor-specialties";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 
-const specialties = [
-  ["Cardiologists", "Neurologists", "Orthopedists", "Endocrinologists", "Rheumatologists", "Urologists", "Gastroenterologists", "Pulmonologists", "Dermatologists", "Oncologists", "Psychiatrists"],
-  ["Cardiac Surgeons", "Orthopedic Surgeons", "Ophthalmologists", "Nephrologists", "Pediatricians", "General Surgeons", "ENT Specialists", "Plastic Surgeons", "Vascular Surgeons", "Gynecologists"],
-  ["Neurosurgeons", "Radiation Oncologists", "Medical Oncologists", "Transplant Specialists", "Internal Medicine Specialists"],
-];
 const splitColumns = (items: string[]) => {
   const length = Math.ceil(items.length / 3);
   return Array.from({ length: 3 }, (_, index) => items.slice(index * length, (index + 1) * length));
