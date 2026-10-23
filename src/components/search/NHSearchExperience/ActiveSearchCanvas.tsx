@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { 
   Paperclip, Mic, ArrowRight, X, 
   User, Heart, Sparkles, CornerDownLeft, Command,
-  Activity, Bone, Brain, AlertCircle, Stethoscope, SearchX
+  Activity, Bone, Brain, AlertCircle, Stethoscope, SearchX,
+  Clock
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
@@ -51,6 +52,64 @@ export default function ActiveSearchCanvas({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
   const [livePrediction, setLivePrediction] = useState<PredictiveState | null>(null);
+
+  // Recent Searches (History for logged in user, cache for guest user)
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isLogged = localStorage.getItem("isLoggedIn") === "true" || sessionStorage.getItem("isLoggedIn") === "true";
+    const storageKey = isLogged ? "nh_user_search_history" : "nh_guest_search_history";
+    
+    const fallbackSeed = isLogged
+      ? ["Dr. Devi Prasad Shetty", "Cardiologist near me", "Lipid profile test", "Knee replacement surgery"]
+      : ["Cardiologist in Bangalore", "Chest pain symptoms", "Orthopaedic doctor", "Pediatrician near me"];
+
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setRecentSearches(parsed.slice(0, 4));
+          return;
+        }
+      }
+    } catch {
+      // fallback to seed
+    }
+
+    setRecentSearches(fallbackSeed.slice(0, 4));
+  }, []);
+
+  const saveSearchToHistory = (itemQuery: string) => {
+    const clean = itemQuery.trim();
+    if (!clean || typeof window === "undefined") return;
+    const isLogged = localStorage.getItem("isLoggedIn") === "true" || sessionStorage.getItem("isLoggedIn") === "true";
+    const storageKey = isLogged ? "nh_user_search_history" : "nh_guest_search_history";
+
+    setRecentSearches((prev) => {
+      const next = [clean, ...prev.filter((q) => q.toLowerCase() !== clean.toLowerCase())].slice(0, 4);
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(next));
+      } catch {
+        // ignore storage error
+      }
+      return next;
+    });
+  };
+
+  const handleClearHistory = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (typeof window === "undefined") return;
+    const isLogged = localStorage.getItem("isLoggedIn") === "true" || sessionStorage.getItem("isLoggedIn") === "true";
+    const storageKey = isLogged ? "nh_user_search_history" : "nh_guest_search_history";
+    try {
+      localStorage.setItem(storageKey, JSON.stringify([]));
+    } catch {
+      // ignore
+    }
+    setRecentSearches([]);
+  };
 
   // Compute immediate local prediction (0ms for demo speed)
   const localPrediction: PredictiveState | null = query.trim()
@@ -125,12 +184,17 @@ export default function ActiveSearchCanvas({
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (prediction && selectedSugIndex >= 0 && prediction.suggestions[selectedSugIndex]) {
-        onSubmit(prediction.suggestions[selectedSugIndex]);
+        const target = prediction.suggestions[selectedSugIndex];
+        saveSearchToHistory(target);
+        onSubmit(target);
       } else if (query.trim()) {
+        saveSearchToHistory(query.trim());
         onSubmit(query.trim());
       } else if (prediction && prediction.fullText) {
+        saveSearchToHistory(prediction.fullText);
         onSubmit(prediction.fullText);
       } else {
+        saveSearchToHistory("Cardiologist near me");
         onSubmit("Cardiologist near me");
       }
     } else if (e.key === "ArrowDown" && prediction) {
@@ -144,8 +208,15 @@ export default function ActiveSearchCanvas({
         prev > 0 ? prev - 1 : prediction.suggestions.length - 1
       );
     } else if (e.key === "Escape") {
-      e.preventDefault();
-      onClose();
+      if (query.length > 0 || activePill) {
+        e.preventDefault();
+        e.stopPropagation();
+        onQueryChange("");
+        inputRef.current?.focus();
+      } else {
+        e.preventDefault();
+        onClose();
+      }
     }
   };
 
@@ -214,12 +285,28 @@ export default function ActiveSearchCanvas({
             spellCheck="false"
           />
 
-          {/* Out-of-Word-Limit Error Indicator (Shown ONLY when limit is reached) */}
-          {countWords(query) >= MAX_SEARCH_WORDS && (
+          {/* Out-of-Word-Limit Error Indicator & Clear / Undo Button */}
+          {(countWords(query) >= MAX_SEARCH_WORDS || query.length > 0) && (
             <div className={styles.inputEndAdornment}>
-              <span className={styles.inputWordLimitError} role="alert">
-                500 words limit reached
-              </span>
+              {countWords(query) >= MAX_SEARCH_WORDS && (
+                <span className={styles.inputWordLimitError} role="alert">
+                  500 words limit reached
+                </span>
+              )}
+              {query.length > 0 && (
+                <button
+                  type="button"
+                  className={styles.inputClearBtn}
+                  aria-label="Clear search input"
+                  title="Clear search"
+                  onClick={() => {
+                    onQueryChange("");
+                    inputRef.current?.focus();
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
           )}
 
@@ -250,18 +337,23 @@ export default function ActiveSearchCanvas({
           className={styles.submitArrowBtn}
           aria-label="Submit search"
           onClick={() => {
-            if (prediction && selectedSugIndex >= 0) {
-              onSubmit(prediction.suggestions[selectedSugIndex]);
+            if (prediction && selectedSugIndex >= 0 && prediction.suggestions[selectedSugIndex]) {
+              const target = prediction.suggestions[selectedSugIndex];
+              saveSearchToHistory(target);
+              onSubmit(target);
             } else if (query.trim()) {
+              saveSearchToHistory(query.trim());
               onSubmit(query.trim());
-            } else if (prediction) {
+            } else if (prediction && prediction.fullText) {
+              saveSearchToHistory(prediction.fullText);
               onSubmit(prediction.fullText);
             } else {
+              saveSearchToHistory("Cardiologist near me");
               onSubmit("Cardiologist near me");
             }
           }}
         >
-          <ArrowRight size={16} strokeWidth={2.5} />
+          <ArrowRight size={16} strokeWidth={2.0} />
         </button>
       </div>
 
@@ -284,18 +376,32 @@ export default function ActiveSearchCanvas({
           type="button"
           className={`${styles.inlineActionBtn} ${activePill === "doctor" ? styles.inlineActionBtnActive : ""}`}
           onClick={() => onSelectActionPill("doctor")}
+          aria-pressed={activePill === "doctor"}
+          title={activePill === "doctor" ? "Click to undo selection" : "Find a doctor"}
         >
           <User size={14} className={styles.inlineActionIcon} />
           <span>Find a doctor</span>
+          {activePill === "doctor" && (
+            <span className={styles.inlineActionUndoWrap} title="Undo" aria-hidden="true">
+              <X size={11} className={styles.inlineActionUndoIcon} />
+            </span>
+          )}
         </button>
 
         <button
           type="button"
           className={`${styles.inlineActionBtn} ${activePill === "symptoms" ? styles.inlineActionBtnActive : ""}`}
           onClick={() => onSelectActionPill("symptoms")}
+          aria-pressed={activePill === "symptoms"}
+          title={activePill === "symptoms" ? "Click to undo selection" : "Describe my symptoms"}
         >
           <Heart size={14} className={styles.inlineActionIcon} />
           <span>Describe my symptoms</span>
+          {activePill === "symptoms" && (
+            <span className={styles.inlineActionUndoWrap} title="Undo" aria-hidden="true">
+              <X size={11} className={styles.inlineActionUndoIcon} />
+            </span>
+          )}
         </button>
       </motion.div>
 
@@ -307,33 +413,64 @@ export default function ActiveSearchCanvas({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.32, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className={styles.emptyPromptSub}>
-            Start typing a symptom, condition, specialty, procedure or doctor name.
-          </p>
+          {/* Either Recent Searches or Popular Searches (not both stacked) */}
+          {recentSearches.length > 0 ? (
+            <div className={styles.recentHistorySection}>
+              <div className={styles.recentHistoryHeader}>
+                <span className={styles.recentHistoryLabel}>Recent searches</span>
+                <button
+                  type="button"
+                  className={styles.recentHistoryClearBtn}
+                  onClick={handleClearHistory}
+                  title="Clear recent searches"
+                >
+                  Clear
+                </button>
+              </div>
 
-          {/* Mobile quick-tap popular categories and conditions */}
-          <div className={styles.mobileQuickTray}>
-            <span className={styles.mobileQuickLabel}>Popular searches</span>
-            <div className={styles.mobileQuickChips}>
-              {MOBILE_POPULAR_SEARCHES.map((item) => {
-                const Icon = item.icon;
-                return (
+              <div className={styles.historyFastTagsRow}>
+                {recentSearches.slice(0, 4).map((item) => (
                   <button
-                    key={item.label}
+                    key={item}
                     type="button"
-                    className={styles.mobileQuickChip}
+                    className={styles.historyFastTag}
                     onClick={() => {
-                      onQueryChange(item.query);
-                      onSubmit(item.query);
+                      saveSearchToHistory(item);
+                      onQueryChange(item);
+                      onSubmit(item);
                     }}
                   >
-                    <Icon size={13} className={styles.mobileQuickChipIcon} />
-                    <span>{item.label}</span>
+                    <Clock size={12} className={styles.fastTagIcon} />
+                    <span>{item}</span>
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className={styles.mobileQuickTray}>
+              <span className={styles.mobileQuickLabel}>Popular searches</span>
+              <div className={styles.mobileQuickChips}>
+                {MOBILE_POPULAR_SEARCHES.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      className={styles.mobileQuickChip}
+                      onClick={() => {
+                        saveSearchToHistory(item.query);
+                        onQueryChange(item.query);
+                        onSubmit(item.query);
+                      }}
+                    >
+                      <Icon size={13} className={styles.mobileQuickChipIcon} />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
 
@@ -343,12 +480,9 @@ export default function ActiveSearchCanvas({
           {prediction.status === "error" ? (
             <div className={styles.predictiveErrorTray}>
               <div className={styles.predictiveErrorHeader}>
-                <AlertCircle size={15} className={styles.predictiveAlertIcon} />
                 <span>Directory connection issue</span>
+                <span className={styles.predictiveEmptyAction}>— Press Enter to retry</span>
               </div>
-              <p className={styles.predictiveTrayTip}>
-                Press <strong>Enter ↵</strong> to search, or tap a primary department below:
-              </p>
               <div className={styles.predictiveTrayChipsRow}>
                 {["Cardiology", "Orthopaedics", "Neurology", "General Medicine"].map((spec) => (
                   <button
@@ -368,12 +502,9 @@ export default function ActiveSearchCanvas({
           ) : prediction.status === "empty" || prediction.suggestions.length === 0 ? (
             <div className={styles.predictiveEmptyTray}>
               <div className={styles.predictiveEmptyHeader}>
-                <Sparkles size={14} className={styles.sparkleIcon} />
                 <span>No suggestions for &ldquo;{query}&rdquo;</span>
+                <span className={styles.predictiveEmptyAction}>— Press Enter to search</span>
               </div>
-              <p className={styles.predictiveTrayTip}>
-                Press <strong>Enter ↵</strong> to search full directory, or choose a department:
-              </p>
               <div className={styles.predictiveTrayChipsRow}>
                 {["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology"].map((spec) => (
                   <button
@@ -404,7 +535,10 @@ export default function ActiveSearchCanvas({
                     className={`${styles.suggestionItem} ${
                       selectedSugIndex === idx ? styles.suggestionItemActive : ""
                     }`}
-                    onClick={() => onSubmit(sug)}
+                    onClick={() => {
+                      saveSearchToHistory(sug);
+                      onSubmit(sug);
+                    }}
                     onMouseEnter={() => setSelectedSugIndex(idx)}
                     role="option"
                     aria-selected={selectedSugIndex === idx}

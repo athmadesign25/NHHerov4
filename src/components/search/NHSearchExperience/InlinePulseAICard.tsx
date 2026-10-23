@@ -440,7 +440,7 @@ export default function InlinePulseAICard({
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
-                <span style={{ fontSize: 11.5, color: "#94A3B8", marginLeft: 6 }}>
+                <span className={styles.pulseThinkingText}>
                   Pulse AI is analyzing specialists…
                 </span>
               </div>

@@ -375,13 +375,7 @@ export default function Hero() {
             {/* Layout spacer reserving the search composer's position in the hero stack */}
             <div
               ref={heroAnchorRef}
-              style={{
-                width: "min(840px, calc(100vw - 48px))",
-                height: 132,
-                marginBottom: 64,
-                pointerEvents: "none",
-                opacity: 0,
-              }}
+              className={styles.heroAnchorSpacer}
               aria-hidden="true"
             />
           </div>

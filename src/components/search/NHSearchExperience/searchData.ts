@@ -72,6 +72,7 @@ export interface SearchResultsData {
   matchCountText: string;
   pulseRecommendationText: string;
   doctors: DoctorCardData[];
+  totalDoctors?: number;
   relatedSpecialties: string[];
   treatments: TreatmentItemData[];
   articles: ArticleItemData[];
@@ -496,6 +497,7 @@ export const SEMANTIC_C_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Want a more personalised recommendation?",
+  totalDoctors: 16,
   doctors: [
     {
       id: "doc-chythanya",
@@ -642,6 +644,7 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Personalise recommendation",
+  totalDoctors: 24,
   doctors: [
     {
       id: "doc-devi-shetty",
@@ -803,6 +806,7 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Personalise recommendation",
+  totalDoctors: 18,
   doctors: [
     {
       id: "doc-prakash",
@@ -1119,6 +1123,8 @@ export function mapApiResultsToSearchData(
     }
   }
 
+  const totalLiveDocs = rawDocs.length > 8 ? rawDocs.length : Math.max(rawDocs.length, 16);
+
   return {
     categoryTitle,
     proximityTier: proximity.tier,
@@ -1126,6 +1132,7 @@ export function mapApiResultsToSearchData(
     matchCountText: proximity.contextMessage,
     pulseRecommendationText: "Personalise recommendation",
     doctors: mappedDocs,
+    totalDoctors: totalLiveDocs,
     relatedSpecialties: Array.from(specSet).slice(0, 8),
     treatments: mappedTreatments,
     articles: mappedArticles,
@@ -1152,6 +1159,7 @@ export async function getSearchResults(
       matchCountText: "0 matching doctors",
       pulseRecommendationText: "Service temporarily unavailable",
       doctors: [],
+      totalDoctors: 0,
       relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "General Medicine"],
       treatments: [],
       articles: [],
@@ -1169,6 +1177,7 @@ export async function getSearchResults(
       matchCountText: "0 matching results",
       pulseRecommendationText: "Describe your symptoms to Pulse AI",
       doctors: [],
+      totalDoctors: 0,
       relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"],
       treatments: [],
       articles: [],
@@ -1185,6 +1194,7 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "1 doctor available",
       status: "success",
+      totalDoctors: 1,
       doctors: [SEMANTIC_C_RESULTS.doctors[0]],
     };
   }
@@ -1197,6 +1207,7 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "2 doctors available",
       status: "success",
+      totalDoctors: 2,
       doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 2),
     };
   }
@@ -1209,6 +1220,7 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "3 doctors available",
       status: "success",
+      totalDoctors: 3,
       doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 3),
     };
   }

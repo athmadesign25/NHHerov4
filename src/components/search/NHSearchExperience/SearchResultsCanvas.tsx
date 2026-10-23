@@ -828,6 +828,12 @@ export default function SearchResultsCanvas({
     });
   };
 
+  const isZeroResults =
+    !isPulseActive &&
+    (currentResults.status === "empty" ||
+      currentResults.doctors.length === 0 ||
+      currentResults.status === "error");
+
   return (
     <div className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
@@ -837,7 +843,7 @@ export default function SearchResultsCanvas({
       />
 
       {/* ── 1. Top Header Row: Location Dropdown + Close Button ── */}
-      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 10 }}>
+      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 60 }}>
         <div className={styles.headerLeftGroup}>
           <LocationSelector
             selectedLocation={selectedLocation}
@@ -865,7 +871,7 @@ export default function SearchResultsCanvas({
         {showTopSearchBar && (
           <motion.div
             key="topQueryBarGroup"
-            style={{ position: "relative", zIndex: 10, width: "100%" }}
+            style={{ position: "relative", zIndex: 1, width: "100%" }}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0, overflow: "hidden" }}
@@ -928,7 +934,7 @@ export default function SearchResultsCanvas({
       {/* ALWAYS mounted so layout, dimensions, and scroll transitions are 100% reliable */}
       <div 
         ref={unifiedScrollRef}
-        className={styles.unifiedResultsScrollArea}
+        className={`${styles.unifiedResultsScrollArea} ${isPulseActive ? styles.unifiedResultsScrollAreaActive : ""}`}
         data-lenis-prevent="true"
         style={{
           position: "relative",
@@ -936,8 +942,8 @@ export default function SearchResultsCanvas({
           overflowY: isPulseActive ? "auto" : "hidden",
         }}
       >
-        {/* Mobile Viewport Segmented Control */}
-        {!isRequerying && (
+        {/* Mobile Viewport Segmented Control (Hidden when zero results) */}
+        {!isRequerying && !isZeroResults && (
           <div className={styles.mobileSegmentedControl} role="tablist" aria-label="Search results views">
             <button
               type="button"
@@ -966,6 +972,24 @@ export default function SearchResultsCanvas({
             query={inputValue.trim() || activeQuery}
             selectedLocation={selectedLocation}
           />
+        ) : isZeroResults ? (
+          <div className={styles.resultsEmptyLayout}>
+            <PrimaryResults
+              doctors={currentResults.doctors}
+              totalDoctors={currentResults.totalDoctors}
+              selectedLocation={selectedLocation}
+              proximityMessage={currentResults.proximityMessage}
+              proximityTier={currentResults.proximityTier}
+              query={activeQuery}
+              status={currentResults.status}
+              errorMessage={currentResults.errorMessage}
+              onRetry={() => handleTopSearchSubmit()}
+              onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
+              onAskPulse={(customPrompt?: string) => {
+                handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
+              }}
+            />
+          </div>
         ) : (
           <div className={styles.resultsSplitLayout} data-mobile-tab={mobileTab}>
             {/* ── LEFT COLUMN: Recommended Doctors ── */}
@@ -981,12 +1005,13 @@ export default function SearchResultsCanvas({
                 aria-label="Doctors list"
                 style={
                   isPulseActive
-                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0 }
-                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 110 }
+                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0, maskImage: "none", WebkitMaskImage: "none" }
+                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 90 }
                 }
               >
                 <PrimaryResults
                   doctors={currentResults.doctors}
+                  totalDoctors={currentResults.totalDoctors}
                   selectedLocation={selectedLocation}
                   proximityMessage={currentResults.proximityMessage}
                   proximityTier={currentResults.proximityTier}
@@ -995,16 +1020,11 @@ export default function SearchResultsCanvas({
                   errorMessage={currentResults.errorMessage}
                   onRetry={() => handleTopSearchSubmit()}
                   onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
-                  onAskPulse={() => {
-                    handleSendPulsePrompt(`Help me understand care options for ${activeQuery}`);
+                  onAskPulse={(customPrompt?: string) => {
+                    handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
                   }}
                 />
               </div>
-
-              {/* White gradient fade with background blur below small Pulse bar in non-active mode */}
-              {!isPulseActive && (
-                <div className={styles.pulseBottomGradientFade} aria-hidden="true" />
-              )}
             </div>
 
             {/* ── RIGHT COLUMN: Treatments, Articles & Specialties (Steady & Static) ── */}
@@ -1265,103 +1285,86 @@ export default function SearchResultsCanvas({
         )}
       </div>
 
-      {/* ── Gradient Fade across the bottom dock when active in chat mode ── */}
-      {isPulseActive && (
-        <div className={styles.pulseDockActiveGradientFade} aria-hidden="true" />
-      )}
-
-      {/* ── Aurora Glow Field extending upward from bottom dock in Empty State ── */}
-      {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
-        <div className={styles.pulseAuroraGlowField} aria-hidden="true" />
+      {/* ── Progressive Feathered Backdrop Gradient & Blur behind Floating Pulse Bar ── */}
+      {!isZeroResults && (
+        <div 
+          className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact}`} 
+          aria-hidden="true" 
+        />
       )}
 
       {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
-      {/* Small in non-active mode over doctor cards, expands smoothly to 100% full width in active mode */}
-      <div 
-        className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
-        style={{ zIndex: 25 }}
-      >
+      {/* Hidden when zero results (since empty state itself has the clean Pulse AI bridge and top input is present) */}
+      {!isZeroResults && (
         <div 
-          className={styles.floatingPulseDockCol}
-          style={{ width: "100%", maxWidth: "100%" }}
+          className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
+          style={{ zIndex: 25 }}
         >
-          {/* Subtle Nudge when in Empty State */}
-          {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
-            <motion.button
-              type="button"
-              className={styles.pulseDockNudgePill}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => {
-                pulseInputRef.current?.focus();
-              }}
-            >
-              <Sparkles size={13} className={styles.pulseDockNudgeIcon} />
-              <span>Can&apos;t find your condition? Describe symptoms to Pulse AI below</span>
-            </motion.button>
-          )}
-
-          <form 
-            className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+          <div 
+            className={styles.floatingPulseDockCol}
             style={{ width: "100%", maxWidth: "100%" }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendPulsePrompt();
-            }}
           >
-          {/* Round Blue Plus Button */}
-          <button
-            type="button"
-            className={styles.floatingPulsePlusBtn}
-            onClick={() => pulseInputRef.current?.focus()}
-            aria-label="New Prompt"
-            title="Ask Pulse"
-          >
-            <Plus size={18} strokeWidth={2.4} />
-          </button>
-
-          {/* Input Field */}
-          <input
-            ref={pulseInputRef}
-            type="text"
-            className={styles.floatingPulseInput}
-            placeholder="Ask Pulse ai"
-            value={pulseInput}
-            onChange={(e) => setPulseInput(e.target.value)}
-            aria-label="Ask Pulse AI"
-          />
-
-          {/* Right Action: Send Button (if text entered) or Mic Icon */}
-          {pulseInput.trim().length > 0 ? (
-            <button
-              type="submit"
-              className={styles.floatingPulseSendBtn}
-              aria-label="Send prompt"
-              title="Send to Pulse AI"
-            >
-              <Send size={15} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-              onClick={() => {
-                setIsListening((prev) => !prev);
-                if (!isListening) {
-                  setPulseInput("Tell me more about Dr Pradeep kumar");
-                  pulseInputRef.current?.focus();
-                }
+            <form 
+              className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+              style={{ width: "100%", maxWidth: "100%" }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendPulsePrompt();
               }}
-              aria-label="Voice input"
-              title={isListening ? "Listening..." : "Speak to Pulse AI"}
             >
-              <Mic size={19} />
-            </button>
-          )}
-        </form>
-      </div>
+              {/* Round Blue Plus Button */}
+              <button
+                type="button"
+                className={styles.floatingPulsePlusBtn}
+                onClick={() => pulseInputRef.current?.focus()}
+                aria-label="New Prompt"
+                title="Ask Pulse"
+              >
+                <Plus size={18} strokeWidth={2.0} />
+              </button>
+
+              {/* Input Field */}
+              <input
+                ref={pulseInputRef}
+                type="text"
+                className={styles.floatingPulseInput}
+                placeholder="Ask Pulse ai"
+                value={pulseInput}
+                onChange={(e) => setPulseInput(e.target.value)}
+                aria-label="Ask Pulse AI"
+              />
+
+              {/* Right Action: Send Button (if text entered) or Mic Icon */}
+              {pulseInput.trim().length > 0 ? (
+                <button
+                  type="submit"
+                  className={styles.floatingPulseSendBtn}
+                  aria-label="Send prompt"
+                  title="Send to Pulse AI"
+                >
+                  <Send size={15} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+                  onClick={() => {
+                    setIsListening((prev) => !prev);
+                    if (!isListening) {
+                      setPulseInput("Tell me more about Dr Pradeep kumar");
+                      pulseInputRef.current?.focus();
+                    }
+                  }}
+                  aria-label="Voice input"
+                  title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                >
+                  <Mic size={19} />
+                </button>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
 );
 }
