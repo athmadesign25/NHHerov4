@@ -1,0 +1,71 @@
+/* The gradient scene behind the mobile banner.
+   Sizes and colours are from the design. Three of the four colours have
+   no near equivalent in the palette (ΔRGB 33 to 58), so they stay
+   literal and say why. */
+
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482010;
+  pointer-events: none;
+  /* Keeps the 80px blurs from bleeding past the viewport and forcing a
+     scrollbar on a phone. */
+  overflow: hidden;
+}
+
+.fieldTop,
+.fieldLeft,
+.fieldRight {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  /* Declared once, never animated — a blur this wide is the expensive
+     part, and animating it would re-rasterise every frame. Only the
+     transform and opacity move. */
+  filter: blur(80px);
+  will-change: transform, opacity;
+}
+
+/* The key light, centred above the panel. */
+.fieldTop {
+  width: 330px;
+  height: 340px;
+  top: -4%;
+  left: 50%;
+  margin-left: -165px;
+  background: var(--blue-brand);
+}
+
+/* token-ok: the scene's own palette — no token within ΔRGB 32 of either */
+.fieldLeft {
+  width: 330px;
+  height: 258px;
+  bottom: -6%;
+  left: -14%;
+  background: #f54764;
+}
+
+/* token-ok: as above, and deliberately cyan rather than --cyan-bright */
+.fieldRight {
+  width: 175px;
+  height: 164px;
+  bottom: 2%;
+  right: -6%;
+  background: #0ba5ec;
+}
+
+/* Above this width the page has its own edge glow and the scene would be
+   two treatments doing the same job. */
+@media (min-width: 769px) {
+  .scene {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fieldTop,
+  .fieldLeft,
+  .fieldRight {
+    will-change: auto;
+  }
+}

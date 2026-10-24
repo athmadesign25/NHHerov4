@@ -260,7 +260,7 @@ export default function CentreOfExcellence() {
         <div className={styles.centerContent}>
           <div className={styles.header} id="CentreOfExcellence_header">
             <motion.div
-              style={{ color: "#000000", marginBottom: "28px" }}
+              style={{ color: "var(--black)", marginBottom: "28px" }}
               className="section-eyebrow"
               initial={{ opacity: 0, y: 10, filter: "blur(14px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}

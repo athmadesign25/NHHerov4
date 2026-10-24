@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   height: 260vh;
-  background: #031224;
+  background: var(--navy-900);
 }
 
 /* stickyViewport is what's actually visible while pinned (this element's
@@ -24,8 +24,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #031224;
-  transition: background 0.6s ease;
+  background: var(--navy-900);
+  transition: background var(--duration-slowest) ease;
 }
 
 /* JS drives width/height/border-radius (phase 1 grow-in) and transform:
@@ -36,7 +36,7 @@
   height: 72%;
   border-radius: 26px;
   overflow: hidden;
-  background: #031224;
+  background: var(--navy-900);
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform, width, height, border-radius;
@@ -90,26 +90,26 @@
 
 .titleBlurLayer1 {
   backdrop-filter: blur(22px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 32%, rgba(0, 0, 0, 0) 46%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 32%, rgba(var(--black-rgb), 0) 46%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 32%, rgba(var(--black-rgb), 0) 46%);
 }
 
 .titleBlurLayer2 {
   backdrop-filter: blur(12px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 54%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 40%, rgba(var(--black-rgb), 0) 54%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 40%, rgba(var(--black-rgb), 0) 54%);
 }
 
 .titleBlurLayer3 {
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 48%, rgba(0, 0, 0, 0) 62%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 48%, rgba(var(--black-rgb), 0) 62%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 48%, rgba(var(--black-rgb), 0) 62%);
 }
 
 .titleBlurLayer4 {
   backdrop-filter: blur(3px);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 56%, rgba(0, 0, 0, 0) 70%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 56%, rgba(var(--black-rgb), 0) 70%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 1) 0%, rgba(var(--black-rgb), 1) 56%, rgba(var(--black-rgb), 0) 70%);
 }
 
 /* Always-on decorative wash spanning the full frame: a red accent sweep
@@ -152,8 +152,8 @@
   right: 0;
   height: 50%;
   background: linear-gradient(78deg, #051632 11.51%, rgba(15, 67, 152, 0) 57.66%);
-  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
-  mask-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 40%);
+  -webkit-mask-image: linear-gradient(rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 1) 40%);
+  mask-image: linear-gradient(rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 1) 40%);
   opacity: 0;
   pointer-events: none;
   z-index: 3;
@@ -170,7 +170,7 @@
   align-items: center;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 110px 56px 56px;
+  padding: var(--section-y) var(--space-56) var(--space-56);
   box-sizing: border-box;
   transform-origin: center top;
   will-change: transform;
@@ -180,7 +180,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   will-change: transform;
 }
 
@@ -208,15 +208,15 @@
 }
 
 .eyebrowUnit :global(.section-eyebrow) {
-  color: #ffffff;
+  color: var(--color-text-inverse);
 }
 
 .title {
-  font-size: 42px;
+  font-size: var(--font-size-display);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: var(--leading-tight);
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   text-align: center;
   max-width: none;
   margin: 0;
@@ -232,13 +232,13 @@
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
-  gap: 44px;
+  gap: var(--space-48);
 }
 
 .uspItem {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   max-width: none;
   white-space: nowrap;
 }
@@ -254,17 +254,17 @@
   flex-shrink: 0;
   border-radius: 9.067px;
   background: linear-gradient(180deg, rgba(8, 109, 223, 0.60) 0%, rgba(4, 63, 133, 0.60) 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  box-shadow: var(--shadow-inset-highlight);
   backdrop-filter: blur(6px);
 }
 
 .uspLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
   font-weight: 500;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   text-align: left;
-  line-height: 1.3;
+  line-height: var(--leading-snug);
   white-space: nowrap;
 }
 
@@ -280,8 +280,8 @@
 .railLabel {
   color: #e1e1e1;
   text-align: center;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
   font-weight: 500;
   line-height: normal;
   margin: 0 0 20px;
@@ -295,7 +295,7 @@
 .cardStack {
   display: grid;
   grid-template-columns: repeat(3, minmax(224px, 394px));
-  gap: 22px;
+  gap: var(--space-24);
   margin-bottom: 28px;
   width: 100%;
   justify-content: center;
@@ -338,7 +338,7 @@
   box-sizing: border-box;
   border-radius: 10px;
   transform-origin: bottom center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring), filter var(--duration-emphasis) ease, height var(--duration-slowest) var(--ease-spring);
   will-change: transform, opacity, filter;
   /* "Apple glass" light surface — a bright, high-saturation frosted plate.
      Without the backdrop-filter the video/frame behind is only dimmed by
@@ -359,7 +359,7 @@
 }
 
 .packageCard:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 2px solid rgba(var(--white-rgb), 0.6);
   outline-offset: 2px;
 }
 
@@ -381,15 +381,15 @@
    variants only carry the per-card elevation they always differed by
    (V2, the middle/featured card, sits on a wider, deeper shadow). */
 .packageCardV1 {
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+  box-shadow: var(--elevation-3);
 }
 
 .packageCardV2 {
-  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: var(--elevation-4);
 }
 
 .packageCardV3 {
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.10);
+  box-shadow: var(--elevation-3);
 }
 
 /* Dedicated gradient-border ring — a separate element (not ::before/
@@ -404,9 +404,9 @@
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  padding: 1px;
+  padding: var(--space-1);
   background: linear-gradient(30deg, rgb(144 210 253 / 57%), rgb(235 137 137 / 36%));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -439,7 +439,7 @@
    snappy 0.12s that transform gets would otherwise be the only easing
    compared against and read as too abrupt for something this size. */
 .packageCard:hover {
-  transition: transform 0.12s ease-out, filter 0.35s ease, height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-instant) ease-out, filter var(--duration-emphasis) ease, height var(--duration-slowest) var(--ease-spring);
 }
 
 .packageCard::after {
@@ -447,14 +447,14 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0, 0, 0, 0);
-  transition: background 0.3s ease;
+  background: rgba(var(--black-rgb), 0);
+  transition: background var(--duration-emphasis) ease;
   pointer-events: none;
 }
 
 .packageCard:hover::after,
 .packageCard:focus-visible::after {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(var(--black-rgb), 0.05);
 }
 
 /* Shimmer sweep — subtle, and (being a plain :hover/::before pair) only
@@ -464,9 +464,9 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(115deg, transparent 30%, rgba(0, 0, 0, 0.06) 48%, transparent 66%);
+  background: linear-gradient(115deg, transparent 30%, rgba(var(--black-rgb), 0.05) 48%, transparent 66%);
   transform: translateX(-120%);
-  transition: transform 0.7s ease;
+  transition: transform var(--duration-slowest) ease;
   pointer-events: none;
 }
 
@@ -493,8 +493,8 @@
   object-fit: cover;
   object-position: left center;
   /* Lifts the artwork off the card's own glass a little. */
-  filter: drop-shadow(0 6px 16px rgba(15, 23, 42, 0.20));
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 6px 16px rgba(var(--slate-900-rgb), 0.20));
+  transition: width var(--duration-slowest) var(--ease-spring);
   z-index: 0;
 }
 
@@ -535,12 +535,12 @@
   position: relative;
   z-index: 2;
   max-width: calc(100% - 200px);
-  padding: 28px 0 0 34px;
+  padding: var(--space-32) 0 0 var(--space-32);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-24);
   box-sizing: border-box;
-  transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-width var(--duration-slowest) var(--ease-spring);
 }
 
 /* Widened on hover — the facts need room to sit side by side, and the
@@ -554,9 +554,9 @@
 }
 
 .packageCardTitle {
-  color: #1A1A2E;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 20px;
+  color: var(--navy-ink);
+  font-family: var(--font-family);
+  font-size: var(--font-size-xl);
   font-weight: 700;
   line-height: normal;
   margin: 0;
@@ -567,13 +567,13 @@
 .packageCardFacts {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .packageCardFact {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 /* Roundedness (8px) and the subtle inset stroke + blur now match
@@ -590,7 +590,7 @@
   /* Deeper/more saturated than a light wash — against the white glass
      card a 0.20-alpha tint read as too pale to register as a chip. */
   background: linear-gradient(180deg, rgb(238 30 38 / 85%) 0%, rgb(168 9 9 / 76%) 100%);
-  box-shadow: 0 1.133px 0 1.133px rgb(232 134 134 / 10%) inset;
+  box-shadow: 0 1px 0 1px rgba(var(--red-400-rgb), 0.1) inset;
   backdrop-filter: blur(6px);
 }
 
@@ -614,7 +614,7 @@
      title wraps to three lines. Cancelling it here keeps the resting
      layout exactly as it was, and unwinds in step with the reveal. */
   margin-top: -24px;
-  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  transition: grid-template-rows var(--duration-slowest) var(--ease-spring), margin-top var(--duration-slowest) var(--ease-spring), opacity var(--duration-moderate) ease;
 }
 
 .packageCard:hover .packageCardExtras,
@@ -622,7 +622,7 @@
   grid-template-rows: 1fr;
   opacity: 1;
   margin-top: 0;
-  transition: grid-template-rows 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease 0.1s;
+  transition: grid-template-rows var(--duration-slowest) var(--ease-spring), margin-top var(--duration-slowest) var(--ease-spring), opacity var(--duration-emphasis) ease var(--duration-instant);
 }
 
 .packageCardExtrasInner {
@@ -634,9 +634,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-8);
   border-top: 1px solid #C0BFBF;
-  padding-top: 16px;
+  padding-top: var(--space-16);
 }
 
 /* Staggered so the pills land one after the other rather than as a
@@ -644,21 +644,21 @@
    should leave together, not replay the stagger in reverse. */
 .perkPill {
   display: flex;
-  padding: 4px 8px;
+  padding: var(--space-4) var(--space-8);
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   width: fit-content;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.10);
   /* Not in the spec, but 10% white over a light card is invisible on its
      own — the blur and hairline edge are what make it read as the glass
      chip it's drawn as. */
   backdrop-filter: blur(12px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.4);
+  box-shadow: var(--elevation-2);
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 0.28s ease, transform 0.28s ease;
+  transition: opacity var(--duration-emphasis) ease, transform var(--duration-emphasis) ease;
 }
 
 .packageCard:hover .perkPill,
@@ -669,19 +669,19 @@
 
 .packageCard:hover .perkPill:nth-child(1),
 .packageCard:focus-visible .perkPill:nth-child(1) {
-  transition-delay: 0.18s;
+  transition-delay: var(--duration-base);
 }
 
 .packageCard:hover .perkPill:nth-child(2),
 .packageCard:focus-visible .perkPill:nth-child(2) {
-  transition-delay: 0.3s;
+  transition-delay: var(--duration-emphasis);
 }
 
 .perkIcon {
   display: flex;
-  padding: 4px;
+  padding: var(--space-4);
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   flex-shrink: 0;
   border-radius: 30px;
   background: linear-gradient(180deg, rgba(10, 246, 124, 0.60) 0%, rgba(2, 128, 55, 0.60) 100%);
@@ -689,8 +689,8 @@
 
 .perkText {
   color: var(--darker-212121, #212121);
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 500;
   line-height: normal;
   white-space: nowrap;
@@ -701,19 +701,19 @@
 }
 
 .factBold {
-  color: #1A1A2E;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  color: var(--navy-ink);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   line-height: normal;
   white-space: nowrap;
 }
 
 .factLight {
-  color: #000000;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
-  font-weight: 300;
+  color: var(--black);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
   line-height: normal;
   white-space: nowrap;
 }
@@ -731,13 +731,13 @@
   bottom: 28px;
   z-index: 3;
   display: inline-block;
-  color: #1A1A2E;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  color: var(--navy-ink);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-emphasis) var(--ease-spring), transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .packageCard:hover .viewDetailsLink,
@@ -757,7 +757,7 @@
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .packageCard:hover .viewDetailsUnderline,
@@ -776,30 +776,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 28px;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-32);
   margin-top: 4px;
-  font-size: 15px;
+  font-size: var(--font-size-base);
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text-inverse);
   text-decoration: none;
   border-radius: 8px;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(var(--white-rgb), 0.5);
+  background: rgba(var(--white-rgb), 0.05);
   backdrop-filter: blur(12px);
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
   will-change: transform, opacity;
 }
 
 .exploreRow:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: #ffffff;
+  background: rgba(var(--white-rgb), 0.16);
+  border-color: var(--white);
   transform: translateY(-2px) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--elevation-3);
 }
 
 .exploreRow:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 2px solid rgba(var(--white-rgb), 0.6);
   outline-offset: 2px;
 }
 
@@ -838,7 +838,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #000000;
+    background: var(--black);
     opacity: 0;
     pointer-events: none;
     z-index: 0;
@@ -873,7 +873,7 @@
     height: auto;
     flex-direction: column;
     gap: 0;
-    padding: 80px 24px 64px;
+    padding: var(--space-80) var(--space-24) var(--space-64);
     justify-content: flex-start;
   }
 
@@ -888,7 +888,7 @@
   .titleGroup {
     align-items: center;
     text-align: center;
-    gap: 8px;
+    gap: var(--space-8);
   }
 
   /* Eyebrow inherits white colour already; enforce centre alignment */
@@ -900,7 +900,7 @@
   .title {
     font-size: clamp(26px, 7.5vw, 36px);
     text-align: center;
-    line-height: 1.15;
+    line-height: var(--leading-tight);
     letter-spacing: -0.02em;
   }
 
@@ -909,7 +909,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--space-8);
     margin-top: 32px; /* Comfortable gap from headline — enough to breathe */
     width: 100%;
   }
@@ -918,15 +918,15 @@
     flex: 1;
     flex-direction: column;  /* icon on top, label below */
     align-items: center;
-    gap: 8px;
+    gap: var(--space-8);
     white-space: normal;
     text-align: center;
   }
 
   .uspLabel {
     white-space: normal;
-    font-size: 12px;
-    line-height: 1.35;
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-normal);
     text-align: center;
   }
 
@@ -944,10 +944,10 @@
   .railLabel {
     align-self: flex-start;
     text-align: left;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 600;
     margin: 0 0 14px;
-    color: rgba(255, 255, 255, 0.80);
+    color: rgba(var(--white-rgb), 0.80);
     letter-spacing: 0.01em;
   }
 
@@ -956,7 +956,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: var(--space-12);
     margin-bottom: 24px;
     grid-template-columns: unset;
     perspective: none;
@@ -985,10 +985,10 @@
     height: 172px; /* Restore premium card height */
     max-width: none;
     /* Solid opaque white card surface */
-    background: #FFFFFF;
+    background: var(--color-surface);
     /* Premium Apple-like elevation: soft shadow + hairline border */
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid rgba(var(--black-rgb), 0.03);
+    box-shadow: var(--elevation-3);
     border-radius: 10px;
     /* JS applyAutoReveal drives transform/opacity/filter for card entrance —
        do NOT override with !important. Cards start invisible; JS fades them in. */
@@ -1011,7 +1011,11 @@
     right: 0;
     bottom: 0;
     object-fit: cover;
-    object-position: center center;
+    /* Anchored left, not centred: `cover` trims the horizontal overflow, and
+       centring split that trim across both edges — which cut into the
+       artwork's left side (most visibly on Healthy Heart). Anchoring left
+       keeps that edge intact and takes the whole crop off the right. */
+    object-position: left center;
     filter: none;          /* Remove drop-shadow on mobile — cleaner */
     z-index: 1;            /* Ensure image sits above the solid white card background */
     background: transparent;
@@ -1026,13 +1030,16 @@
     object-position: 30% center;
   }
 
-  /* Bone health (short image): bottom-anchor matches artwork composition */
+  /* Bone health (short image): top-anchored vertically to match the
+     artwork's composition, and left-anchored horizontally for the same
+     reason as the base rule above — centred, its left side was being
+     cropped away. */
   .packageCardImageShort {
     width: 52%;
     height: 100%;
     top: 0;
     bottom: 0;
-    object-position: center top;
+    object-position: left top;
   }
 
   /* ── Card content: left column, clear of image zone ── */
@@ -1041,8 +1048,8 @@
     z-index: 2;
     max-width: 56%;        /* Stay clear of the image on the right */
     /* 44px bottom padding ensures the facts don't overlap the absolute-positioned View Details link */
-    padding: 16px 0 44px 16px;
-    gap: 6px;
+    padding: var(--space-16) 0 var(--space-48) var(--space-16);
+    gap: var(--space-6);
     /* Stretch full card height so View Details anchors to bottom */
     height: 100%;
     box-sizing: border-box;
@@ -1052,16 +1059,16 @@
   }
 
   .packageCardTitle {
-    font-size: 15px;
+    font-size: var(--font-size-base);
     font-weight: 700;
-    line-height: 1.25;
+    line-height: var(--leading-snug);
     white-space: normal;
-    color: #1A1A2E;
+    color: var(--navy-ink);
     margin: 0;
   }
 
   .packageCardAudience {
-    font-size: 11px;
+    font-size: var(--font-size-xs);
     font-weight: 400;
     margin: 0;
     white-space: normal;
@@ -1071,34 +1078,44 @@
   /* Facts: horizontal row to save vertical space */
   .packageCardFacts {
     flex-direction: column;
-    gap: 6px;
+    gap: var(--space-6);
     margin-top: 10px;      /* Pull facts up right below the subtitle */
   }
 
   .packageCardFact {
-    gap: 6px;
+    gap: var(--space-6);
   }
 
-  /* Shrink the icon chip slightly for the compact card */
+  /* Sized to the text unit beside it, not chosen independently: the two
+     stacked lines measured 26px together at 11/10px and the chip matched
+     at 26px. At 14/13px that unit is ~33px, so the chip follows to keep
+     the row reading as one object rather than a chip floating against
+     taller text. Radius and glyph scale with it (26->32 is ~1.23x). */
   .packageCardFactIcon {
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
   }
 
   .packageCardFactIcon svg {
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
   }
 
+  /* 11/10px rendered as the smallest type anywhere in the mweb layout and
+     sat well under a comfortable reading size on a phone. 14/13px puts the
+     pair on the scale the rest of mweb already uses (14px is its most
+     common size, and the audience line above is already 14px), keeping the
+     original 1px step between value and label. The card has the room: the
+     content column runs ~115px of its ~188px usable height at rest. */
   .factBold {
-    font-size: 11px;
+    font-size: var(--font-size-sm);
     font-weight: 700;
   }
 
   .factLight {
-    font-size: 10px;
-    font-weight: 300;
+    font-size: var(--font-size-sm);
+    font-weight: 400;
   }
 
   /* View Details: Always visible on mobile, positioned at the bottom left */
@@ -1110,13 +1127,19 @@
     opacity: 1;
     transform: none;
     z-index: 3;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
     font-weight: 700;
     color: #5F6977; /* Premium dark grey */
   }
   
+  /* Shown permanently rather than hidden: on desktop this wipes in on
+     hover, which touch never triggers, so mobile was left with no underline
+     at all. Held at full width with the transition dropped, since there is
+     no hover state here for it to animate between. */
   .viewDetailsUnderline {
-    display: none; /* Remove underline on mobile */
+    display: block;
+    transform: scaleX(1);
+    transition: none;
   }
 
   /* ── Compact variant height override ── */
@@ -1132,13 +1155,13 @@
 
   .packageCardCompact .packageCardTitle {
     white-space: normal;
-    font-size: 15px;
+    font-size: var(--font-size-base);
   }
 
   .packageCardCompact .packageCardContent {
     max-width: 56%;
-    padding: 16px 0 44px 16px;
-    gap: 6px;
+    padding: var(--space-16) 0 var(--space-48) var(--space-16);
+    gap: var(--space-6);
   }
 
   /* ── Explore CTA: full-width, consistent radius ── */
@@ -1146,8 +1169,8 @@
   .exploreRow {
     width: 100%;
     margin: 8px 0 0;
-    padding: 14px 24px;
-    font-size: 15px;
+    padding: var(--space-14) var(--space-24);
+    font-size: var(--font-size-base);
     border-radius: 10px;   /* Match card border-radius */
     box-sizing: border-box;
   }
@@ -1178,12 +1201,12 @@
    for a 2-line title, so the subtitle sits directly beneath it. */
 .packageCardCompact .packageCardTitle {
   white-space: nowrap;
-  font-size: 19px;
+  font-size: var(--font-size-xl);
 }
 
 .packageCardCompact .packageCardContent {
   max-width: calc(100% - 150px);
-  gap: 20px;
+  gap: var(--space-20);
 }
 
 /* Pulled back up against the title: the content column's own gap would
@@ -1192,8 +1215,8 @@
 .packageCardAudience {
   margin: calc(6px - 20px) 0 0;
   color: #3D4653;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
@@ -1202,7 +1225,7 @@
 /* Only a small bump — the direction 1 card's image appeared to grow a lot
    simply because the card itself got taller under it. */
 .packageCardCompact .packageCardImage {
-  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width var(--duration-slow) var(--ease-spring);
 }
 
 .packageCardCompact:hover .packageCardImage,
@@ -1245,9 +1268,9 @@
   width: 55%;
   background: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(var(--white-rgb), 0) 0%,
+    rgba(var(--white-rgb), 0.6) 50%,
+    rgba(var(--white-rgb), 0) 100%
   );
   transform: skewX(-18deg);
 }
@@ -1282,46 +1305,46 @@
   z-index: 40;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-10);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(var(--white-rgb), 0.12);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
+  box-shadow: var(--elevation-3);
 }
 
 .directionToggleLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 10px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-2xs);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 .directionToggleBtn {
   width: 34px;
-  padding: 6px 0;
+  padding: var(--space-6) 0;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
+  border: 1px solid rgba(var(--white-rgb), 0.3);
+  background: rgba(var(--white-rgb), 0.08);
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .directionToggleBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 .directionToggleBtnActive {
-  background: #FFFFFF;
-  border-color: #FFFFFF;
+  background: var(--color-surface);
+  border-color: var(--white);
   color: #0B1B33;
 }
 

@@ -163,7 +163,7 @@ export default function DoctorsPage() {
         </div>
       </div>
 
-      <div className="container" style={{ padding: "32px var(--sp-3)", display: "grid", gridTemplateColumns: "260px 1fr", gap: "var(--sp-4)", alignItems: "start" }}>
+      <div className="container" style={{ paddingTop: 32, paddingBottom: 32, display: "grid", gridTemplateColumns: "260px 1fr", gap: "var(--sp-4)", alignItems: "start" }}>
         {/* Sidebar */}
         <aside style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "#fff", borderRadius: "var(--radius-xl)", border: "1px solid var(--color-border-light)", padding: "var(--sp-3)", boxShadow: "var(--shadow-md)" }}>
           <div style={{ fontSize: "var(--font-size-base)", fontWeight: 700, color: "var(--color-text)", marginBottom: "var(--sp-3)", display: "flex", alignItems: "center", gap: 8 }}>

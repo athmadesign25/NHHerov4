@@ -7,7 +7,11 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "sync:coworkers": "bash scripts/safe-sync.sh"
+    "sync:coworkers": "bash scripts/safe-sync.sh",
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "check:tokens:all": "node scripts/check-tokens.mjs --all --full",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@firecms/neat": "^1.0.2",
@@ -21,12 +25,27 @@
     "sharp": "^0.35.3"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "latest",
+    "@oxc-parser/binding-darwin-x64": "^0.151.0",
+    "@storybook/addon-a11y": "^10.6.0",
+    "@storybook/addon-docs": "^10.6.0",
+    "@storybook/addon-mcp": "^10.6.0",
+    "@storybook/addon-vitest": "^10.6.0",
+    "@storybook/nextjs-vite": "^10.6.0",
+    "@storybook/test": "^8.6.15",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser-playwright": "latest",
+    "@vitest/coverage-v8": "latest",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
-    "typescript": "^5"
+    "eslint-plugin-storybook": "^10.6.0",
+    "playwright": "latest",
+    "storybook": "^10.6.0",
+    "typescript": "^5",
+    "vite": "latest",
+    "vitest": "latest"
   },
   "overrides": {
     "postcss": "^8.5.10"

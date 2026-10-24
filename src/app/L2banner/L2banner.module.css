@@ -1,0 +1,25 @@
+/* The rounded canvas, mobile only.
+   The page starts below the band with rounded top corners, so what shows
+   in the notch either side is the band's own colour — the band reads as
+   the surface the page is resting on rather than a strip stuck on top. */
+
+@media (max-width: 768px) {
+  /* The backing. Its padding sits behind the fixed band, and its colour
+     is what the inner element's corners reveal. */
+  .canvas {
+    padding-top: var(--band-height, 48px);
+    /* The stop the band's gradient holds at its lower edge, so the two
+       read as one surface.
+       token-ok: the band's own gradient colour. */
+    background: hsl(212deg 100% 90.8804%);
+  }
+
+  /* The page itself. Rounded at the top and clipped, which is what the
+     radius needs — the hero is sticky inside it, so the corner cannot be
+     put on the hero. */
+  .inner {
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: var(--radius-xl);
+    overflow: clip;
+  }
+}

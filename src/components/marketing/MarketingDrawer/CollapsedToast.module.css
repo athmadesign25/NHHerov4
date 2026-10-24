@@ -1,0 +1,163 @@
+/* Collapsed banner. Spec'd at 274px wide with 12px/14px padding and a
+   10px gap; everything maps onto existing tokens rather than new ones. */
+
+.toast {
+  position: fixed;
+  left: var(--space-24);
+  bottom: var(--space-24);
+  z-index: 2147481800;
+  display: flex;
+  width: 274px;
+  padding: var(--space-12) var(--space-14);
+  align-items: center;
+  gap: var(--space-12);
+  border-radius: var(--radius-md);
+  /* Glass, not a flat card. A translucent surface over a real blur, with a
+     light top border and a darker bottom one so the edge catches — the
+     opaque version read as a notification sitting ON the page rather than
+     a piece of the same interface. */
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--white-rgb), 0.86),
+    rgba(var(--white-rgb), 0.7)
+  );
+  backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
+  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
+  border: 1px solid rgba(var(--white-rgb), 0.7);
+  border-bottom-color: rgba(var(--navy-900-rgb), 0.08);
+  box-shadow: var(--elevation-3), inset 0 1px 0 rgba(var(--white-rgb), 0.6);
+  font-family: var(--font-family);
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.toast:hover {
+  box-shadow: var(--elevation-4), inset 0 1px 0 rgba(var(--white-rgb), 0.6);
+  transform: translateY(-2px);
+}
+
+/* 44px plate holding the 28px mark. */
+.iconWrap {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  padding: var(--space-8);
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: rgba(var(--red-emergency-rgb), 0.1);
+  color: var(--red-emergency);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  /* Without this a long headline pushes the box past its 274px. */
+  min-width: 0;
+}
+
+/* One line per headline part, in that part's own colour, so the toast
+   carries the banner's wording and its emphasis.
+
+   Spec'd at 700/16px, which on a glass surface read as shouting. 600 at
+   14px keeps the weight relationship without the density, and three
+   stacked lines at 14 still clear the 48px icon beside them. No clipping
+   or nowrap: the parts already carry the writer's line breaks, so there
+   is nothing to truncate. */
+.line {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.01em;
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   A different object, not a smaller one: a 126px chip top-right under
+   the nav. At 274px the desktop toast took a third of a phone's width.
+
+   token-ok throughout — these are the design's own values and the
+   nearest palette entries are 30 to 50 ΔRGB away. */
+@media (max-width: 768px) {
+  .toast {
+    left: auto;
+    bottom: auto;
+    /* Under the navbar, which publishes its own height. */
+    top: calc(var(--nav-height) + var(--space-12));
+    right: var(--space-12);
+    /* Scaled up from the spec's 126x34. At that size it read as a system
+       notification rather than part of the page, and the headline had
+       about twenty characters per line to work with before clamping. */
+    width: 200px;
+    height: 48px;
+    padding: 0 var(--space-8);
+    gap: var(--space-8);
+    border-radius: var(--radius-sm);
+    border: 1px solid hsl(0deg 0% 100% / 0.9);
+    background: linear-gradient(
+      98deg,
+      hsl(212deg 100% 74.1098%) -1.32%,
+      #d0e6ff 12.66%,
+      var(--slate-100) 36.23%,
+      #86beff 84.35%
+    );
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
+  }
+
+  .toast:hover {
+    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
+    transform: none;
+  }
+
+  /* The mark on a lit plate — top-left highlight, deep blue underneath,
+     with an inner rim so it reads as raised rather than printed. */
+  .iconWrap {
+    width: 32px;
+    height: 32px;
+    padding: var(--space-6);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(
+      156deg,
+      hsl(214deg 99.8836% 70.4534%) 22.83%,
+      hsl(214deg 100% 31.8453%) 84.78%
+    );
+    box-shadow:
+      0 2px 5px 0 hsl(224deg 88.4277% 28.2865% / 0.34),
+      0 0 3px 0 hsl(221deg 100% 57.1674% / 0.2) inset;
+    color: var(--white);
+  }
+
+  /* The parts run together as one paragraph here, and the CLAMP lives on
+     the paragraph. Left as separate blocks they each clamped to two
+     lines of their own, so a three-part headline produced six lines in a
+     34px chip. */
+  .copy {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    gap: 0;
+    min-width: 0;
+  }
+
+  .line {
+    display: inline;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0;
+    text-shadow: 0 4px 34px rgba(var(--black-rgb), 0.44);
+  }
+
+  /* The space that `display: inline` on a flex child does not give you. */
+  .line + .line::before {
+    content: " ";
+  }
+
+
+}

@@ -707,7 +707,7 @@
 .aryaRemoveBtn {
   font-size: 11.5px;
   font-weight: 600;
-  color: #dc2626;
+  color: var(--red-600);
   background: none;
   border: none;
   cursor: pointer;
@@ -1750,7 +1750,7 @@
   border: 1.5px solid;
 }
 
-.findingIconRed   { background: #fef2f2; color: #ef4444; border-color: #fca5a5; }
+.findingIconRed   { background: var(--red-50); color: #ef4444; border-color: #fca5a5; }
 .findingIconAmber { background: #fffbeb; color: #d97706; border-color: #fcd34d; }
 .findingIconGreen { background: #f0fdf4; color: #16a34a; border-color: #86efac; }
 
@@ -1919,7 +1919,7 @@
   letter-spacing: 0.05em;
 }
 .urgency_high {
-  background: #fef2f2;
+  background: var(--red-50);
   color: #ef4444;
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
@@ -2107,7 +2107,7 @@
 .modalCloseBtn:hover { background: #e2e8f0; }
 .modalBrand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
 .modalBrandLogo {
-  width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #ef4444, #dc2626);
+  width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #ef4444, var(--red-600));
   display: flex; align-items: center; justify-content: center;
 }
 .modalBrandName { font-size: 17px; font-weight: 800; color: #1e293b; letter-spacing: -0.02em; }
@@ -2605,12 +2605,12 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 }
 .cancelledAlertStrip {
-  background: #fef2f2;
+  background: var(--red-50);
   border-bottom: 1px solid #fecaca;
   padding: 10px 16px;
   font-size: 12px;
   font-weight: 700;
-  color: #dc2626;
+  color: var(--red-600);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -4035,7 +4035,7 @@
   color: #0f172a;
   font-size: 12.5px;
   font-weight: 600;
-  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-family: var(--font-family);
   cursor: pointer;
   transition: all 0.18s ease;
   line-height: 1;

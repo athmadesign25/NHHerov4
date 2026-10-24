@@ -1,0 +1,550 @@
+/* Marketing banner. A centred card over a blurred page — it was a drawer
+   arriving from a chosen edge, and the edge is no longer a choice. */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482000;
+  /* Lighter than the dark-overlay era: the panel is now a light surface,
+     and the old 0.44 black made the whole page read as switched off. */
+  background: rgba(var(--navy-900-rgb), 0.34);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+}
+
+/* ─── Edge glow ───────────────────────────────────────────────────────────
+   Announces the entrance by lighting all four edges, so the page itself
+   feels lit from outside. Blue and red, breathing.
+
+   There was a second, brighter layer on the edge the drawer arrived from.
+   The banner is centred now, so there is no arrival edge for it to mark.
+
+   Not blurred by `filter` any more — a 60px blur behind an already
+   16px-blurred scrim is what made this read as a faint haze. The gradients
+   are soft by construction instead, so the colour survives. */
+.glowFrame {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482050;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* All four edges. An inset radial leaves the middle clear, so it reads as
+   rim light rather than a wash over the page. */
+.glowAll {
+  position: absolute;
+  inset: -2%;
+  /* Radii are deliberately small on the axis that points inward — 16% of
+     the width from the sides, 16% of the height from top and bottom. The
+     first version used 42% and 40%, which meant opposite edges met in the
+     middle and the whole thing read as a wash over the page rather than
+     rim light. The falloff is steep for the same reason. */
+  background:
+    radial-gradient(16% 58% at 0% 50%, rgba(var(--blue-brand-rgb), 0.85) 0%, rgba(var(--blue-500-rgb), 0.4) 34%, transparent 66%),
+    radial-gradient(16% 58% at 100% 50%, rgba(var(--blue-brand-rgb), 0.85) 0%, rgba(var(--blue-500-rgb), 0.4) 34%, transparent 66%),
+    radial-gradient(54% 16% at 50% 0%, rgba(var(--red-emergency-rgb), 0.7) 0%, rgba(255, 46, 147, 0.36) 36%, transparent 68%),
+    radial-gradient(54% 16% at 50% 100%, rgba(var(--red-emergency-rgb), 0.7) 0%, rgba(255, 46, 147, 0.36) 36%, transparent 68%);
+}
+
+/* ─── Panel ─────────────────────────────────────────────────────────────── */
+
+.panel {
+  position: fixed;
+  z-index: 2147482100;
+  /* Centred, not docked. Position was a control and is not any more. */
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--slate-50);
+  box-shadow: var(--elevation-5);
+}
+
+/* Declared on both, because the close button is a sibling of the panel
+   and has to line up with one of its edges. One set of numbers, two
+   consumers — a second copy in the close rules would drift. */
+.panel,
+.close {
+  /* The caps. Each is a ceiling in px and a ceiling against the viewport,
+     so the panel never outgrows either the design or the screen. The
+     image is rendered with `fill`, which needs a definite box, so these
+     are the box — content that exceeds it scrolls inside .content rather
+     than stretching the panel. */
+  --tall-w: min(520px, 92vw);
+  --tall-h: min(760px, 86vh);
+  --wide-w: min(1040px, 92vw);
+  --wide-h: min(560px, 76vh);
+  /* Mobile has one shape, so one pair. Taller than the desktop vertical
+     in viewport terms because there is no room beside anything. */
+  --mob-w: min(440px, 92vw);
+  --mob-h: min(640px, 86dvh);
+}
+
+.tall {
+  width: var(--tall-w);
+  height: var(--tall-h);
+}
+
+.wide {
+  width: var(--wide-w);
+  height: var(--wide-h);
+}
+
+.content {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-16);
+  padding: var(--space-32);
+  /* Keeps long CMS copy inside the frame instead of running to the edge. */
+  max-width: 100%;
+}
+
+.contentTall {
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.contentWide {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: min(56%, 560px);
+  justify-content: center;
+  padding-left: var(--space-48);
+}
+
+/* On desktop the media box IS the panel; mobile turns it into the top
+   half of a stack. Either way it is the positioned parent that
+   next/image's `fill` needs. */
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* The wash that carries the panel's gradient up into the photograph.
+   Empty on desktop, where the scrim already does this job. */
+.mediaFade {
+  display: none;
+}
+
+.imageTall,
+.imageWide {
+  object-fit: cover;
+  z-index: 0;
+}
+/* Subject sits upper-middle in the tall asset, centre in the wide one. */
+.imageTall { object-position: 50% 28%; }
+.imageWide { object-position: 60% 50%; }
+
+.innerOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+
+.headline {
+  /* A hard ceiling on line length. Without it a long CMS headline runs to
+     the panel edge and collides with the image. */
+  max-width: 18ch;
+  /* Fixed. Size was a control; it is not any more — a headline that can be
+     any of five sizes is five different banners. */
+  font-size: var(--font-size-40);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+}
+
+/* Every part is its own line. The break-after toggle is gone. */
+.headlineLine { display: block; }
+
+.description {
+  max-width: 38ch;
+  font-size: var(--font-size-base);
+  line-height: var(--leading-body);
+}
+
+/* ─── CTA ─────────────────────────────────────────────────────────────
+   Two at most, and never two of these. The style is not a choice the
+   writer makes: the first button is filled, the second is outlined, and
+   which is which follows from the slot it sits in. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-32);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  --shadow-rgb: var(--blue-brand-rgb);
+  background: var(--blue-brand);
+  color: var(--color-text-inverse);
+  box-shadow: var(--elevation-2);
+  transition: background var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+.cta:hover {
+  background: var(--blue-700);
+  box-shadow: var(--elevation-3);
+}
+
+/* The quieter half of the pair: same size and same alignment, no fill.
+   Two filled buttons side by side is two buttons nobody presses. */
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-24);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(var(--white-rgb), 0.7);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+.ctaSecondary:hover {
+  background: var(--white);
+  border-color: var(--slate-400);
+}
+
+/* ─── Form and buttons ───────────────────────────────────────────────────
+   One block. The buttons submit the form, so a gap between them would
+   read as two unrelated things sharing a corner. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  width: 100%;
+  min-width: 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  /* Two short fields never need the full width of a wide panel, and a
+     60ch input next to a 18ch headline looks like a different page. */
+  max-width: 320px;
+}
+
+.field {
+  position: relative;
+}
+
+/* The label IS the placeholder at rest, then shrinks into the corner
+   once the field is focused or holds anything. One piece of text doing
+   both jobs, so nothing is lost on focus the way a real placeholder is. */
+.fieldLabel {
+  position: absolute;
+  left: var(--space-14);
+  top: 50%;
+  translate: 0 -50%;
+  transform-origin: left center;
+  pointer-events: none;
+  font-size: var(--font-size-base);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--slate-400);
+  transition:
+    translate var(--duration-fast) var(--ease-out),
+    scale var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+/* :placeholder-shown is false the moment there is a value, so these two
+   together mean "focused, or holding something". */
+.input:focus + .fieldLabel,
+.input:not(:placeholder-shown) + .fieldLabel {
+  translate: 0 -168%;
+  scale: 0.78;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  /* Medium: comfortably over the 44px touch minimum without the airiness
+     of a 56px form field, which on a banner reads as a different page. */
+  min-height: 48px;
+  /* Room above the text for the label to move into. */
+  padding: var(--space-16) var(--space-14) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(var(--white-rgb), 0.92);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  transition: border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* The real placeholder is a single space and must never be seen — the
+   label is doing that job. */
+.input::placeholder {
+  color: transparent;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--blue-brand);
+  box-shadow: var(--shadow-focus-ring);
+}
+
+.ctaRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  flex-wrap: wrap;
+}
+
+/* ─── Close ───────────────────────────────────────────────────────────── */
+
+/* A link, not a pill. The underline is the affordance, so there is no
+   plate to position — just type sitting against the scrim. */
+.close {
+  position: fixed;
+  z-index: 2147482200;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+  border: none;
+  background: none;
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  /* It stands on the scrim over whatever section the page was showing,
+     so the ground beneath it is not a known colour. The shadow is what
+     keeps it legible over a bright frame. */
+  text-shadow: 0 1px 10px rgba(var(--navy-900-rgb), 0.55);
+}
+
+.closeLabel {
+  position: relative;
+}
+
+.closeLabel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.close:hover .closeLabel::after,
+.close:focus-visible .closeLabel::after {
+  transform: scaleX(1);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+/* Tall: beside the panel on the right, level with its top edge. */
+.closeTall {
+  left: calc(50% + var(--tall-w) / 2 + var(--space-20));
+  top: calc(50% - var(--tall-h) / 2);
+}
+
+/* Wide: above the panel, right edges aligned. Positioned with `right`
+   rather than a translate, because Framer owns this element's transform. */
+.closeWide {
+  right: calc(50% - var(--wide-w) / 2);
+  top: calc(50% - var(--wide-h) / 2 - var(--space-40));
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   One layout, stacked. The component forces `wide` to false below this
+   width, so .wide is never applied here and the horizontal banner arrives
+   as the vertical one — same content, one shape. The rules for .wide stay
+   only so a desktop window dragged narrow does not flash the old
+   side-by-side mid-resize. */
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   One shape, stacked: image on top, copy beneath, on a panel that sits
+   over the gradient scene. The component forces the vertical layout here
+   regardless of orientation, so .wide never applies — the rules below
+   name both only so a desktop window dragged narrow does not flash the
+   side-by-side mid-resize. */
+@media (max-width: 768px) {
+  .tall,
+  .wide {
+    /* The design's 314×548 is the RESTING size, not a cage. A headline,
+       a description, two fields and two buttons do not fit in 548px
+       beside an image worth looking at — pinned at that height, either
+       the buttons scrolled out of reach or they sat on top of the
+       fields. So the height is a floor and a ceiling instead: it opens
+       at 548 and grows toward the viewport only as far as the content
+       actually needs, and never past the screen. */
+    /* Half the margin it had: 314 is the design size, but on a 16 Pro
+       there is room to spare and the gutter was taking width the
+       artwork could use. */
+    width: min(360px, calc(100vw - var(--space-24)));
+    height: auto;
+    min-height: min(548px, calc(100dvh - var(--space-96)));
+    max-height: calc(100dvh - var(--space-96));
+    border-radius: var(--radius-md);
+    border: 1px solid var(--white);
+    /* The design's gradient, verbatim. At 357deg the -11% stop is at the
+       BOTTOM, so the coloured end of this is the strip under the copy and
+       everything from 34.86% upward — the part the image covers — is a
+       flat #a8cbf3. That flat value is deliberately the same colour the
+       image's own overlay fades to, which is what makes the photograph
+       and the panel meet in a wash instead of at an edge.
+
+       token-ok: the panel gradient's own stops. The nearest token to
+       #a8cbf3 is --slate-300 at ΔRGB 41, which is a different colour. */
+    background: linear-gradient(
+      357deg,
+      hsl(212deg 75.2375% 66.8247%) -11%,
+      var(--slate-100) 6.49%,
+      hsl(212deg 86.6667% 97.0588%) 25.05%,
+      #a8cbf3 34.86%
+    );
+    --shadow-rgb: var(--black-rgb);
+    box-shadow: 0 12px 30px 0 rgba(var(--black-rgb), 0.36);
+  }
+
+  /* The stack. With no copy at all the media is the only child and takes
+     the whole panel, which is the image-only case. */
+  .panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .media {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    /* A floor, so a long form cannot squeeze the artwork down to a
+       stripe. Below this the panel scrolls instead of shrinking it. */
+    min-height: 220px;
+    border-radius: 0;
+  }
+
+  /* The overlay that takes the panel's gradient into the photograph.
+     Same stop as the panel's, so the seam between them disappears. */
+  .mediaFade {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Straight down and ending AT the edge, not short of it.
+       The design's 171deg tilt left one corner of the seam paler than
+       the other, and stopping at 90.85% left a last few pixels of
+       un-faded photograph against the panel — visible as a hairline cut
+       whenever the media box changed height, which it now does.
+       token-ok: the overlay's end colour is the panel gradient's own. */
+    background: linear-gradient(
+      180deg,
+      rgba(168, 203, 243, 0) 55%,
+      rgba(168, 203, 243, 0.72) 86%,
+      #a8cbf3 100%
+    );
+  }
+
+  .contentTall,
+  .contentWide {
+    position: static;
+    width: auto;
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    /* The headline and buttons stay centred; the form does not. A label
+       centred over its own input reads as a caption rather than as the
+       name of the thing below it. */
+    align-items: center;
+    text-align: center;
+    gap: var(--space-10);
+    /* Tighter than before, which is where the extra image height comes
+       from — the copy was padded like a page rather than a card. */
+    padding: var(--space-12) var(--space-16) var(--space-16);
+    /* No cap: the panel grows for this instead. It still scrolls if the
+       viewport is too short to grow into. */
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .headline {
+    max-width: 100%;
+    font-size: var(--font-size-2xl);
+    font-weight: 500;
+    line-height: var(--leading-snug);
+  }
+
+  .description {
+    max-width: 100%;
+    font-size: var(--font-size-sm);
+  }
+
+  /* Full width and stacked, so a thumb has the whole row to hit. */
+  .fields {
+    max-width: 100%;
+    width: 100%;
+    text-align: left;
+  }
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    /* Pinned to the foot of the scrolling column. A headline, a
+       description, two fields and two buttons do not fit in 548px
+       alongside an image worth looking at — something has to scroll, and
+       it must not be the thing you are being asked to press. The copy
+       scrolls underneath these instead. */
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    padding-top: var(--space-10);
+    /* Fades the scrolling copy out behind the buttons rather than
+       letting it slide under a hard edge. */
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--white-rgb), 0) 0%,
+      hsl(212deg 86.6667% 97.0588%) 28%
+    );
+  }
+  .cta,
+  .ctaSecondary {
+    width: 100%;
+  }
+
+  /* On top of the panel rather than beside it — there is no flank on a
+     phone, and the design puts it above. */
+  /* Above the panel, centred. Driven by the panel's measured height
+     because that height is no longer a constant — the fallback only
+     matters for the frame before the first measurement lands. */
+  .closeTall,
+  .closeWide {
+    left: 50%;
+    right: auto;
+    translate: -50% 0;
+    top: calc(50% - var(--banner-panel-h, 548px) / 2 - var(--space-40));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glowFrame { display: none; }
+}

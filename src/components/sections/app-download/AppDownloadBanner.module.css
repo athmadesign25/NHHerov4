@@ -35,8 +35,8 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(0, 0, 0, 0.5) 45%, #000 78%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 12%, rgba(var(--black-rgb), 0.5) 45%, var(--black) 78%, var(--black) 100%);
 }
 
 /* justify-content:flex-end (not space-between) packs topTextBlock and
@@ -60,14 +60,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 54px;
+  gap: var(--space-56);
   /* Pulled way back from the old clamp(72px,9vw,120px) — that, plus the
      72px breathing-room div between this section and WhyChooseNH (see
      page.tsx, now removed) and this section's own neatBackdrop fade-in,
      compounded into a large stretch of empty space before any content
      appeared, reading as "too much white gap" and pushing the sticky
      phone stage's own entrance later than necessary. */
-  padding: 90px clamp(24px, 6vw, 80px) 0;
+  padding: var(--section-y) clamp(24px, 6vw, 80px) 0;
   box-sizing: border-box;
 }
 
@@ -86,11 +86,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: var(--space-8);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #034EA2;
+  color: var(--blue-brand);
   margin-bottom: 12px;
   text-transform: uppercase;
   text-align: center;
@@ -99,7 +99,7 @@
 .eyebrowLine {
   width: 24px;
   height: 2px;
-  background: var(--color-emergency, #ED1C24);
+  background: var(--color-emergency, var(--red-emergency));
   border-radius: 2px;
   display: block;
 }
@@ -107,8 +107,8 @@
 .title {
   font-size: clamp(30px, 4vw, 52px);
   font-weight: 800;
-  color: #0F172A;
-  line-height: 1.15;
+  color: var(--slate-900);
+  line-height: var(--leading-tight);
   letter-spacing: -0.02em;
   /* No margin-bottom here — the title-to-pill distance is fully owned by
      .contentStack's own `gap` now, so an extra margin here would just be
@@ -131,7 +131,7 @@
    spans, just one element spanning the full phrase). */
 .titleHighlightBase {
   display: inline-block;
-  color: var(--color-emergency, #ED1C24);
+  color: var(--color-emergency, var(--red-emergency));
 }
 
 .titleHighlightWrap {
@@ -151,8 +151,8 @@
   inset: 0;
   display: inline-block;
   white-space: nowrap;
-  color: var(--color-emergency, #ED1C24);
-  background-image: linear-gradient(90deg, #ED1C24 0%, #A8151B 50%, #ED1C24 100%);
+  color: var(--color-emergency, var(--red-emergency));
+  background-image: linear-gradient(90deg, var(--red-emergency) 0%, #A8151B 50%, var(--red-emergency) 100%);
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
@@ -174,7 +174,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: var(--space-24);
   margin-bottom: 32px;
 }
 
@@ -189,7 +189,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: linear-gradient(173deg, #4582F3 5.22%, #0B5DF4 118.69%);
+  background: linear-gradient(173deg, #4582F3 5.22%, var(--blue-vivid) 118.69%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,14 +197,14 @@
 }
 
 .pillIcon {
-  color: #ffffff;
+  color: var(--color-text-inverse);
 }
 
 .pillText {
-  color: #0F172A;
-  font-size: 17px;
+  color: var(--slate-900);
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--leading-tight);
   white-space: nowrap;
 }
 
@@ -268,7 +268,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 /* Bottom row: Downloads + Rating sit side by side, each hugging its own
@@ -279,13 +279,13 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 .trustUnit {
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
 }
 
 /* Fixed-width slot the icon is centered inside, rather than sizing the
@@ -322,32 +322,32 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .trustLabel {
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
 }
 
 .trustMainText {
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: normal;
 }
 
 .trustSubtext {
-  color: #64748B;
+  color: var(--slate-500);
   text-align: left;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: normal;
 }
@@ -355,10 +355,10 @@
 /* Shared by .qrLabel (right) and .trustCaption (left) — same typography
    for both captions regardless of where each one sits. */
 .captionLabel {
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: #0F172A;
+  color: var(--slate-900);
   text-align: center;
   line-height: normal;
 }
@@ -390,7 +390,7 @@
   backdrop-filter: blur(28px) saturate(1.6);
   -webkit-backdrop-filter: blur(28px) saturate(1.6);
   border-radius: 10px;
-  padding: 16px;
+  padding: var(--space-16);
   border: 1px solid rgb(255 224 225 / 76%);
   box-shadow: 0 8px 24px rgba(233, 42, 45, 0.08);
 }
@@ -399,7 +399,7 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--space-16);
 }
 
 /* App Store + Google Play badges stacked vertically beside the QR block,
@@ -416,7 +416,7 @@
      bottom edge, now that the QR image has grown closer to the card's
      full width. */
   justify-content: center;
-  gap: 16px;
+  gap: var(--space-16);
   /* Matches the QR card's own width, which its label sets rather than the
      code — so the two columns share an edge. */
   width: 129px;
@@ -432,7 +432,7 @@
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
 }
 
 /* Sized so the finished card lands at the 144px the trust stack opposite
@@ -455,7 +455,7 @@
   flex: 0 0 auto;
   width: 100%;
   opacity: 0.8;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform var(--duration-base) ease, opacity var(--duration-base) ease;
 }
 
 /* Store badge framing from main (PR #13) — mweb only, per the desktop
@@ -463,17 +463,17 @@
 @media (max-width: 1024px) {
   .storeBadge {
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: #000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(var(--white-rgb), 0.16);
+    background: var(--black);
+    box-shadow: var(--elevation-2);
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform var(--duration-base) ease, box-shadow var(--duration-base) ease, border-color var(--duration-base) ease;
   }
 
   .storeBadge:hover {
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.35);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 255, 255, 0.12);
+    border-color: rgba(var(--white-rgb), 0.35);
+    box-shadow: var(--elevation-3);
   }
 }
 
@@ -516,7 +516,7 @@
   width: 310px;
   height: 464px;
   overflow: hidden;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 30px 60px rgba(var(--black-rgb), 0.35));
 }
 
 .phoneImg {
@@ -598,21 +598,21 @@
   }
 
   .contentStack {
-    padding: 48px 16px 0px;
-    gap: 80px; /* Premium breathing room between Title block and Phone block */
+    padding: var(--space-48) var(--space-16) var(--space-0);
+    gap: var(--space-80); /* Premium breathing room between Title block and Phone block */
     justify-content: flex-start !important;
   }
   
   .title {
     white-space: normal;
-    font-size: 36px;
-    line-height: 1.1;
+    font-size: var(--font-size-4xl);
+    line-height: var(--leading-tight);
   }
   
   /* Reset bottom row to stack cleanly */
   .bottomRow {
     flex-direction: column;
-    gap: 32px; /* Breathing room between CTAs, Pill, and Phone */
+    gap: var(--space-32); /* Breathing room between CTAs, Pill, and Phone */
     align-items: center;
     width: 100%;
   }
@@ -648,15 +648,15 @@
     position: relative;
     z-index: 20;
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: #111827;
-    padding: 10px 24px;
-    background: rgba(255, 255, 255, 0.85);
+    padding: var(--space-10) var(--space-24);
+    background: rgba(var(--white-rgb), 0.85);
     backdrop-filter: blur(16px);
     border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 1);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(var(--white-rgb), 1);
+    box-shadow: var(--elevation-3);
     min-width: auto;
     margin-bottom: -24px; /* Slight overlap over the phone */
   }
@@ -682,7 +682,7 @@
     
     /* Solid Dark Background (Matches exact footer top color) */
     background: #061120; 
-    padding: 32px 16px 40px;
+    padding: var(--space-32) var(--space-16) var(--space-40);
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -694,7 +694,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-16);
     background: transparent;
     padding: 0;
     border: none;
@@ -736,29 +736,29 @@
    corner, layered over the neutral glass fill rather than replacing it. */
 .featurePillInner {
   display: inline-flex;
-  padding: 10px 16px;
+  padding: var(--space-10) var(--space-16);
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   border-radius: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
   /* Neutral glass fill, with a faint grey wash pooling at the bottom edge
      (rather than a flat tint) so the pill reads as lit from above, plus a
      soft shadow to lift it off the backdrop now that it's no longer
      leaning on the old blue tint for separation. */
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 100%),
-    rgba(3, 78, 162, 0.10),
-    rgba(255, 255, 255, 0.14);
+    linear-gradient(180deg, rgba(var(--black-rgb), 0) 0%, rgba(var(--black-rgb), 0.05) 100%),
+    rgba(var(--blue-brand-rgb), 0.10),
+    rgba(var(--white-rgb), 0.16);
   backdrop-filter: blur(32px) saturate(1.9);
   -webkit-backdrop-filter: blur(32px) saturate(1.9);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+  box-shadow: var(--elevation-3);
   white-space: nowrap;
 }
 
 .featurePillText {
-  color: rgba(0, 0, 0, 0.94);
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 16px;
+  color: rgba(var(--black-rgb), 0.95);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -773,13 +773,13 @@
 .valueUnit {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   box-sizing: border-box;
   border-radius: 10px;
   backdrop-filter: blur(36px) saturate(1.7);
   -webkit-backdrop-filter: blur(36px) saturate(1.7);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--elevation-3);
   /* Slight white gradient border via the two-layer background-clip trick
      (a real border-image would square off the rounded corners) — the
      padding-box layer stays fully transparent so the glass blur behind
@@ -787,8 +787,8 @@
      gradient, and only shows through the 1px border ring. */
   border: 1px solid transparent;
   background:
-    linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)) padding-box,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.12) 100%) border-box;
+    linear-gradient(rgba(var(--black-rgb), 0), rgba(var(--black-rgb), 0)) padding-box,
+    linear-gradient(180deg, rgba(var(--white-rgb), 0.7) 0%, rgba(var(--white-rgb), 0.12) 100%) border-box;
 }
 
 /* Top "India's Most Trusted" unit spans the full width of the stack (the
@@ -812,7 +812,7 @@
   flex-shrink: 0;
   border-radius: 10px;
   background: linear-gradient(180deg, #ef4e4e 0%, #fa8c8e 100%);
-  box-shadow: 0 1.133px 0 1.133px rgba(255, 255, 255, 0.22) inset;
+  box-shadow: var(--shadow-inset-highlight);
 }
 
 .valueText {
@@ -824,8 +824,8 @@
 
 .valueLabel {
   color: var(--darker-212121, #212121);
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 18px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-lg);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -833,8 +833,8 @@
 
 .valueSubtext {
   color: #414141;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 14px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
   font-style: normal;
   font-weight: 400;
   line-height: normal;

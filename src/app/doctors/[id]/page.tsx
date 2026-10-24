@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, CheckCircle2, CloudSun, Sun, RotateCcw, Video, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, MapPin, Clock, Phone, PhoneCall, Calendar, ArrowLeft, ArrowRight, CheckCircle2, CloudSun, Sun, Moon, RotateCcw, Video, ChevronLeft, ChevronRight, ChevronDown, User, Plus } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { searchDoctorsData } from "../../search/mockDoctors";
+import { searchHealthcare, type NormalizedDoctor } from "@/lib/searchService";
+import { useSearchParams, useRouter } from "next/navigation";
+import AddPatientModal from "@/components/ui/AddPatientModal";
+import LoginModal from "@/components/auth/LoginModal";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -94,9 +99,101 @@ const doctors: Record<string, {
     awards: [{ title: "Outstanding Surgeon", subtitle: "Oncology Association, 2019" }],
     expertise: ["Robotic Cancer Surgery", "Gastrointestinal Oncology", "Breast Cancer", "Melanoma"]
   },
+  "dr-4": {
+    name: "Dr. Ananya Sharma", speciality: "Cardiology", subSpeciality: "Pediatric Cardiology",
+    hospital: "SRCC Children's Hospital", city: "Mumbai",
+    experienceYears: "12 Years", rating: 4.7, reviews: 185, img: "/assets/doctor_1.png",
+    fee: "₹1,000",
+    about: "Dr. Ananya Sharma is a dedicated pediatric cardiologist focused on congenital heart defects and early interventions in neonates.",
+    specialities: [{ name: "Cardiology", subtext: "Pediatric Cardiology" }],
+    languages: [{ name: "English", script: "A" }, { name: "Hindi", script: "अ" }, { name: "Marathi", script: "म" }],
+    education: [{ title: "MBBS", institution: "Grant Medical College" }, { title: "MD Pediatrics", institution: "KEM Hospital" }],
+    experience: [{ role: "Consultant Pediatric Cardiologist", hospital: "SRCC Children's Hospital" }],
+    awards: [{ title: "Young Achiever Award", subtitle: "Pediatric Society, 2021" }],
+    expertise: ["Fetal Echocardiography", "Neonatal Interventions", "Congenital Heart Defects"]
+  },
+  "dr-5": {
+    name: "Dr. Sameer Desai", speciality: "Orthopedics", subSpeciality: "Joint Replacement",
+    hospital: "NH Health City", city: "Bengaluru",
+    experienceYears: "20 Years", rating: 4.6, reviews: 290, img: "/assets/doctor_2.png",
+    fee: "₹1,500",
+    about: "Dr. Sameer Desai specializes in complex joint replacement surgeries and sports medicine, helping athletes recover from severe injuries.",
+    specialities: [{ name: "Orthopedics", subtext: "Joint Replacement | Sports Medicine" }],
+    languages: [{ name: "English", script: "A" }, { name: "Kannada", script: "ಕ" }],
+    education: [{ title: "MBBS", institution: "BMCRI" }, { title: "MS Orthopedics", institution: "AIIMS" }],
+    experience: [{ role: "Head of Orthopedics", hospital: "NH Health City" }],
+    awards: [{ title: "Excellence in Orthopedics", subtitle: "Medical Council, 2018" }],
+    expertise: ["Knee Replacement", "Hip Replacement", "Arthroscopy"]
+  },
+  "dr-6": {
+    name: "Dr. Vikram Singh", speciality: "Urology", subSpeciality: "Robotic Urology",
+    hospital: "RTIICS", city: "Kolkata",
+    experienceYears: "18 Years", rating: 4.9, reviews: 420, img: "/assets/doctor_3.png",
+    fee: "₹1,200",
+    about: "Dr. Vikram Singh is a pioneer in robotic urological surgeries and renal transplants.",
+    specialities: [{ name: "Urology", subtext: "Robotic Surgery | Renal Transplant" }],
+    languages: [{ name: "English", script: "A" }, { name: "Bengali", script: "ব" }],
+    education: [{ title: "MBBS", institution: "Calcutta Medical College" }, { title: "MCh Urology", institution: "PGIMER" }],
+    experience: [{ role: "Senior Urologist", hospital: "RTIICS" }],
+    awards: [{ title: "Best Robotic Surgeon", subtitle: "Urological Society of India, 2022" }],
+    expertise: ["Prostatectomy", "Renal Transplant", "Laser Lithotripsy"]
+  },
+  "dr-7": {
+    name: "Dr. Neha Patel", speciality: "Dermatology", subSpeciality: "Aesthetic Dermatology",
+    hospital: "SRCC Children's Hospital", city: "Mumbai",
+    experienceYears: "14 Years", rating: 4.8, reviews: 350, img: "/assets/doctor_1.png",
+    fee: "₹900",
+    about: "Dr. Neha Patel is known for her advanced aesthetic treatments and laser skin therapies.",
+    specialities: [{ name: "Dermatology", subtext: "Aesthetic Dermatology" }],
+    languages: [{ name: "English", script: "A" }, { name: "Gujarati", script: "ગ" }],
+    education: [{ title: "MBBS", institution: "KEM Hospital" }, { title: "MD Dermatology", institution: "Sion Hospital" }],
+    experience: [{ role: "Consultant Dermatologist", hospital: "Apollo Spectra" }],
+    awards: [{ title: "Best Dermatologist", subtitle: "Skin Care Association, 2019" }],
+    expertise: ["Laser Hair Removal", "Acne Treatment", "Anti-aging Treatments"]
+  },
+  "dr-8": {
+    name: "Dr. Rohan Kapoor", speciality: "Gastroenterology", subSpeciality: "Hepatology",
+    hospital: "NH Bangalore — Mazumdar Shaw", city: "Bengaluru",
+    experienceYears: "25 Years", rating: 4.9, reviews: 1500, img: "/assets/doctor_2.png",
+    fee: "₹1,800",
+    about: "Dr. Rohan Kapoor is an expert hepatologist handling complex liver diseases and transplant cases.",
+    specialities: [{ name: "Gastroenterology", subtext: "Hepatology | Liver Transplant" }],
+    languages: [{ name: "English", script: "A" }, { name: "Hindi", script: "अ" }],
+    education: [{ title: "MBBS", institution: "AFMC" }, { title: "DM Gastroenterology", institution: "SGPGI" }],
+    experience: [{ role: "Director of Hepatology", hospital: "NH Bangalore" }],
+    awards: [{ title: "Lifetime Achievement", subtitle: "Liver Foundation, 2023" }],
+    expertise: ["Liver Cirrhosis", "Hepatitis", "Liver Transplant"]
+  }
 };
 
+
+const MOCK_FAMILY_MEMBERS = [
+  { id: 1, name: "Vikram", img: "https://i.pravatar.cc/150?img=11" },
+  { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
+  { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
+  { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },
+];
+
 const slots = ["9:00 AM", "10:30 AM", "11:00 AM", "2:00 PM", "3:30 PM", "4:00 PM"];
+
+const generateDates = (daysCount: number) => {
+  const dates = [];
+  const today = new Date();
+  
+  const formatterDay = new Intl.DateTimeFormat('en-US', { weekday: 'short' });
+  const formatterMonth = new Intl.DateTimeFormat('en-US', { month: 'short' });
+  
+  for (let i = 0; i < daysCount; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    dates.push({
+      date: String(d.getDate()).padStart(2, '0'),
+      day: formatterDay.format(d),
+      month: formatterMonth.format(d).toUpperCase()
+    });
+  }
+  return dates;
+};
 
 function ExpandableList({ items, renderItem, initialCount = 3 }: { items: any[], renderItem: (item: any, i: number) => React.ReactNode, initialCount?: number }) {
   const [expanded, setExpanded] = useState(false);
@@ -124,13 +221,81 @@ function SectionHeading({ title }: { title: string }) {
 
 export default function DoctorDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
-  const doc = doctors[id] || doctors["dr-1"];
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const nameParam = searchParams.get("n");
+
+  const [apiDoc, setApiDoc] = useState<NormalizedDoctor | null>(null);
+
+  useEffect(() => {
+    if (nameParam) {
+      searchHealthcare(nameParam, null).then((res) => {
+        if (res) {
+          const found = res.doctors.find((d) => d.id.toString() === id);
+          if (found) setApiDoc(found);
+        }
+      }).catch(console.error);
+    }
+  }, [nameParam, id]);
+
+  const baseDoc = doctors[id] || doctors["dr-1"];
+  const searchDoc = searchDoctorsData.find((d: any) => d.id === id);
+  
+  const doc = {
+    ...baseDoc,
+    name: apiDoc?.name || searchDoc?.name || nameParam || (doctors[id] ? baseDoc.name : `Doctor ${id}`),
+    speciality: apiDoc?.speciality || searchDoc?.speciality || baseDoc.speciality,
+    img: apiDoc?.photo || searchDoc?.img || baseDoc.img,
+    city: searchDoc?.city || baseDoc.city, // api doesn't return city directly
+    hospital: apiDoc?.hospital || searchDoc?.hospital || baseDoc.hospital,
+    experienceYears: (apiDoc as any)?.experience ? `${(apiDoc as any).experience} Years` : (searchDoc?.experience || baseDoc.experienceYears),
+  };
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
-  const [selectedDate, setSelectedDate] = useState("27");
+  const [isConsultationExpanded, setIsConsultationExpanded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [activeUserId, setActiveUserId] = useState(1);
+  const [isMembersExpanded, setIsMembersExpanded] = useState(false);
+  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [familyMembers, setFamilyMembers] = useState(MOCK_FAMILY_MEMBERS);
+  const activeUser = familyMembers.find(m => m.id === activeUserId) || familyMembers[0];
+  const membersDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (membersDropdownRef.current && !membersDropdownRef.current.contains(event.target as Node)) {
+        setIsMembersExpanded(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [actualDates] = useState(() => generateDates(15));
+  const [selectedDate, setSelectedDate] = useState(actualDates[0].date);
   const [selectedTime, setSelectedTime] = useState("09:15 AM");
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+
+  useEffect(() => {
+    setIsLoadingSlots(true);
+    const timer = setTimeout(() => {
+      setIsLoadingSlots(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [consultationType, selectedDate]);
+
+  const activeMonth = actualDates.find(d => d.date === selectedDate)?.month || actualDates[0].month;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const similarScrollRef = useRef<HTMLDivElement>(null);
   
   const scrollDates = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -138,9 +303,35 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
       scrollContainerRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
     }
   };
+
+  const scrollSimilar = (direction: "left" | "right") => {
+    if (similarScrollRef.current) {
+      const scrollAmount = 300;
+      similarScrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const articlesScrollRef = useRef<HTMLDivElement>(null);
+  
+  const scrollArticles = (direction: "left" | "right") => {
+    if (articlesScrollRef.current) {
+      const scrollAmount = 300;
+      articlesScrollRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const getOrdinalSuffix = (n: number) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+  const selectedDateObj = actualDates.find(d => d.date === selectedDate) || actualDates[0];
+  const formattedDateStr = `${getOrdinalSuffix(parseInt(selectedDate))} ${selectedDateObj.month.charAt(0) + selectedDateObj.month.slice(1).toLowerCase()} | ${selectedTime}`;
+
   return (
+    <>
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
-      <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
+      <div className="container" style={{ paddingTop: "var(--sp-4)", paddingBottom: "var(--sp-4)" }}>
         <Breadcrumbs 
           theme="light"
           items={[
@@ -150,18 +341,30 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
           ]}
         />
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "var(--sp-4)", alignItems: "start" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "24px", marginBottom: "32px" }}>
+          <button 
+            onClick={() => window.history.back()} 
+            style={{ width: "40px", height: "40px", borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", margin: 0, letterSpacing: "-0.01em" }}>Select date & slot</h1>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 550px", gap: "var(--sp-4)", alignItems: "start" }}>
           {/* Left Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
             
-            {/* Top Profile Card */}
+            {/* Unified Top Profile and Details Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              style={{ background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", boxShadow: "var(--shadow-sm)", overflow: "hidden" }}
+              style={{ background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", boxShadow: "var(--shadow-sm)", overflow: "hidden", display: "flex", flexDirection: "column" }}
             >
-              <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
+              <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: "24px 32px" }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
                   <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
                     <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
@@ -185,11 +388,9 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                 </div>
               </div>
-            </motion.div>
 
-            {/* Rich Details Sections */}
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.45 }}
-              style={{ background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", padding: "32px", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", gap: 40 }}>
+              {/* Rich Details Sections */}
+              <div style={{ padding: "32px", display: "flex", flexDirection: "column", gap: 40 }}>
               
               {/* About (Keeping this as a clean intro block) */}
               {doc.about && (
@@ -291,21 +492,17 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 </div>
               </div>
 
+              </div>
             </motion.div>
           </div>
 
-          {/* Right — Booking Card */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", padding: "var(--sp-4)", boxShadow: "var(--shadow-sm)" }}
-          >
+          {/* Right Column - Booking Slots */}
+          <div style={{ position: "sticky", top: "calc(var(--nav-height) + 24px)", background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", padding: "var(--sp-4)", boxShadow: "var(--shadow-sm)" }}>
             {/* Consultation Type Toggle */}
             <div style={{ 
               display: "flex", 
               alignItems: "center",
-              background: "#E2E8F0", 
+              background: "#F1F5F9", 
               borderRadius: 24, 
               padding: 4, 
               gap: 4,
@@ -317,12 +514,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   position: "relative",
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
                   padding: "6px 16px",
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
                   color: consultationType === "Hospital Visit" ? "var(--color-emergency)" : "#475569",
-                  fontWeight: 600,
+                  fontWeight: consultationType === "Hospital Visit" ? 600 : 500,
                   cursor: "pointer",
                   outline: "none"
                 }}
@@ -330,28 +529,12 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 {consultationType === "Hospital Visit" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: "#ffffff",
-                      borderRadius: 20,
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                      zIndex: 0
-                    }}
+                    style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
                 <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-                  <Image 
-                    src="/Appointment/Hospital_visit.svg" 
-                    alt="Hospital Visit" 
-                    width={16} 
-                    height={16} 
-                    style={{ 
-                      filter: consultationType === "Hospital Visit" ? "none" : "grayscale(1) brightness(0)",
-                      transition: "var(--transition-fast)"
-                    }} 
-                  />
+                  <Image src="/Appointment/Hospital_visit.svg" alt="Hospital Visit" width={16} height={16} style={{ filter: consultationType === "Hospital Visit" ? "none" : "grayscale(1) brightness(0)" }} />
                   Hospital Visit
                 </span>
               </button>
@@ -362,12 +545,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   position: "relative",
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: "center",
+                  flex: 1,
                   padding: "6px 16px",
                   borderRadius: 20,
                   border: "none",
                   background: "transparent",
                   color: consultationType === "Video Consultation" ? "var(--color-emergency)" : "#475569",
-                  fontWeight: 500,
+                  fontWeight: consultationType === "Video Consultation" ? 600 : 500,
                   cursor: "pointer",
                   outline: "none"
                 }}
@@ -375,73 +560,52 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 {consultationType === "Video Consultation" && (
                   <motion.div
                     layoutId="activeConsultation"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background: "#ffffff",
-                      borderRadius: 20,
-                      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                      zIndex: 0
-                    }}
+                    style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
                 <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 8 }}>
-                  <Image 
-                    src="/Appointment/Video_consultation.svg" 
-                    alt="Video Consultation" 
-                    width={16} 
-                    height={16} 
-                    style={{ 
-                      filter: consultationType === "Video Consultation" ? "none" : "grayscale(1) brightness(0)",
-                      transition: "var(--transition-fast)"
-                    }} 
-                  />
-                  Video Consultation
+                  <Image src="/Appointment/Video_consultation.svg" alt="Video Consultation" width={16} height={16} style={{ filter: consultationType === "Video Consultation" ? "none" : "grayscale(1) brightness(0)" }} />
+                  Video Consult
                 </span>
               </button>
             </div>
 
-            {/* Hospital Selector (Only for Hospital Visit) */}
-            {consultationType === "Hospital Visit" && (
-              <div style={{ marginBottom: 24 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-base)", color: "var(--color-text)", fontWeight: 500, marginBottom: 12 }}>
-                  <MapPin size={18} style={{ color: "var(--color-text)" }} />
-                  Select Hospital
-                </div>
-                <div style={{ position: "relative" }}>
-                  <select 
-                    style={{
-                      width: "100%",
-                      padding: "12px 36px 12px 16px",
-                      borderRadius: "100px",
-                      border: "1.5px solid var(--color-border)",
-                      background: "transparent",
-                      fontSize: "var(--font-size-sm)",
-                      color: "var(--color-text)",
-                      fontFamily: "inherit",
-                      appearance: "none",
-                      outline: "none",
-                      cursor: "pointer",
-                      fontWeight: 500,
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden"
-                    }}
-                    defaultValue={doc.hospital}
-                  >
-                    <option value={doc.hospital}>{doc.hospital}</option>
-                    <option value="nh-health-city">NH Health City, Bangalore</option>
-                    <option value="rnt-hospital">Rabindranath Tagore International Institute, Kolkata</option>
-                  </select>
-                  <div style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", display: "flex" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--color-text-secondary)" }}>
-                      <path d="m6 9 6 6 6-6"/>
-                    </svg>
+
+            {/* Hospital Selector */}
+            <AnimatePresence initial={false}>
+              {consultationType === "Hospital Visit" && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0, marginBottom: 0 }} 
+                  animate={{ height: "auto", opacity: 1, marginBottom: 24 }} 
+                  exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-base)", color: "var(--color-text)", fontWeight: 500, marginBottom: 12 }}>
+                    <MapPin size={18} style={{ color: "var(--color-text)" }} />
+                    Select hospital
                   </div>
-                </div>
-              </div>
-            )}
+                  <div style={{ position: "relative" }}>
+                    <select 
+                      style={{
+                        width: "100%", padding: "12px 36px 12px 16px", borderRadius: 100, border: "1.5px solid var(--color-border)", background: "transparent",
+                        fontSize: "var(--font-size-sm)", color: "var(--color-text)", outline: "none", cursor: "pointer", fontWeight: 500, appearance: "none",
+                        textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden"
+                      }}
+                      defaultValue={doc.hospital}
+                    >
+                      <option value={doc.hospital}>{doc.hospital}</option>
+                      <option value="nh-health-city">NH Health City, Bangalore</option>
+                    </select>
+                    <div style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", display: "flex", alignItems: "center" }}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--color-text-secondary)" }}>
+                        <path d="m6 9 6 6 6-6"/>
+                      </svg>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Date Selector */}
             <div style={{ marginBottom: 32 }}>
@@ -451,15 +615,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                   Select date
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <button 
-                    onClick={() => {
-                      setSelectedDate("24");
-                      if (scrollContainerRef.current) {
-                        scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-                      }
-                    }}
-                    style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", padding: 0 }}
-                  >
+                  <button onClick={() => {
+                    setSelectedDate(actualDates[0].date);
+                    if (scrollContainerRef.current) scrollContainerRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                  }} style={{ display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", cursor: "pointer", padding: 0 }}>
                     <RotateCcw size={14} /> Today
                   </button>
                   <div style={{ width: 1, height: 16, background: "var(--color-border)", margin: "0 4px" }} />
@@ -474,45 +633,29 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
 
               <div style={{ display: "flex", alignItems: "stretch", gap: 12 }}>
                 <div style={{ background: "#F1F5F9", borderRadius: 12, padding: "0 8px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>FEB</span>
+                  <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 700, color: "var(--color-text-secondary)", transform: "rotate(-90deg)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>{activeMonth}</span>
                 </div>
-                <div ref={scrollContainerRef} style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none" }} className="hide-scrollbar">
+                <div ref={scrollContainerRef} style={{ display: "flex", gap: 12, overflowX: "auto", flex: 1, paddingBottom: 4, scrollbarWidth: "none", msOverflowStyle: "none", scrollSnapType: "x mandatory" }} className="hide-scrollbar">
                   <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
-                  {[
-                    { date: "24", day: "Mon" },
-                    { date: "25", day: "Tue" },
-                    { date: "26", day: "Wed" },
-                    { date: "27", day: "Thu" },
-                    { date: "28", day: "Fri" },
-                    { date: "01", day: "Sat" },
-                    { date: "02", day: "Sun" },
-                    { date: "03", day: "Mon" },
-                    { date: "04", day: "Tue" }
-                  ].map((d, i) => (
+                  {actualDates.map((d, index) => (
                     <button
-                      key={d.date}
-                      onClick={() => setSelectedDate(d.date)}
+                      key={index}
+                      onClick={(e) => {
+                        setSelectedDate(d.date);
+                        e.currentTarget.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+                      }}
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 4,
-                        padding: "8px 0",
-                        width: 52,
-                        flexShrink: 0,
+                        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, padding: "8px 0", width: 52, flexShrink: 0,
                         border: selectedDate === d.date ? "1.5px solid var(--color-primary)" : "1.5px solid transparent",
-                        borderRadius: 12,
-                        background: "transparent",
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                        position: "relative"
+                        borderRadius: 12, background: "transparent",
+                        cursor: "pointer", transition: "all 0.2s",
+                        position: "relative",
+                        scrollSnapAlign: "start"
                       }}
                     >
                       <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 600, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text)" }}>{d.date}</span>
                       <span style={{ fontSize: "var(--font-size-xs)", fontWeight: 500, color: selectedDate === d.date ? "var(--color-primary)" : "var(--color-text-secondary)" }}>{d.day}</span>
-                      {/* Vertical separator between items */}
-                      {i !== 0 && (
+                      {index !== 0 && (
                         <div style={{ position: "absolute", left: -6, top: "20%", height: "60%", width: 1, background: "var(--color-border-light)" }} />
                       )}
                     </button>
@@ -533,22 +676,21 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
                   <CloudSun size={16} style={{ color: "#F59E0B" }} /> Morning
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                  {["09:15 AM", "09:45 AM", "10:15 AM", "10:45 AM", "11:15 AM", "11:45 AM"].map((slot) => (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {isLoadingSlots ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <motion.div key={i} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 0.5, repeatType: "reverse" }} style={{ width: 80, height: 34, borderRadius: 100, background: "#F1F5F9" }} />
+                    ))
+                  ) : (consultationType === "Hospital Visit" ? ["09:15 AM", "09:45 AM", "10:15 AM", "10:45 AM", "11:15 AM", "11:45 AM"] : ["09:30 AM", "10:00 AM", "11:00 AM", "11:30 AM"]).map((slot) => (
                     <button 
                       key={slot} 
                       onClick={() => setSelectedTime(slot)}
                       style={{ 
-                        padding: "10px 4px", 
-                        border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
-                        borderRadius: "100px", 
-                        fontSize: "var(--font-size-xs)", 
-                        fontWeight: 600, 
-                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
-                        cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
-                        fontFamily: "var(--font-family)", 
-                        transition: "all 0.15s" 
+                        padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
+                        borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
+                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        fontFamily: "inherit"
                       }}
                     >
                       {slot}
@@ -562,22 +704,21 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
                   <Sun size={16} style={{ color: "#F59E0B" }} /> Afternoon
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                  {["12:45 PM", "01:15 PM", "01:45 PM", "02:15 PM", "02:45 PM", "03:15 PM"].map((slot) => (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {isLoadingSlots ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <motion.div key={i} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 0.5, repeatType: "reverse" }} style={{ width: 80, height: 34, borderRadius: 100, background: "#F1F5F9" }} />
+                    ))
+                  ) : (consultationType === "Hospital Visit" ? ["12:45 PM", "01:15 PM", "02:15 PM"] : ["12:00 PM", "02:00 PM"]).map((slot) => (
                     <button 
                       key={slot} 
                       onClick={() => setSelectedTime(slot)}
                       style={{ 
-                        padding: "10px 4px", 
-                        border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
-                        borderRadius: "100px", 
-                        fontSize: "var(--font-size-xs)", 
-                        fontWeight: 600, 
-                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
-                        cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
-                        fontFamily: "var(--font-family)", 
-                        transition: "all 0.15s" 
+                        padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
+                        borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
+                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        fontFamily: "inherit"
                       }}
                     >
                       {slot}
@@ -587,26 +728,25 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
 
               {/* Evening */}
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 24 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", marginBottom: 12 }}>
-                  <CloudSun size={16} style={{ color: "#F59E0B" }} /> Evening
+                  <Moon size={16} style={{ color: "#F59E0B" }} /> Evening
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                  {["04:45 PM"].map((slot) => (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {isLoadingSlots ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <motion.div key={i} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} transition={{ repeat: Infinity, duration: 0.5, repeatType: "reverse" }} style={{ width: 80, height: 34, borderRadius: 100, background: "#F1F5F9" }} />
+                    ))
+                  ) : (consultationType === "Hospital Visit" ? ["05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM"] : ["04:00 PM", "04:30 PM", "05:00 PM", "07:00 PM"]).map((slot) => (
                     <button 
                       key={slot} 
                       onClick={() => setSelectedTime(slot)}
                       style={{ 
-                        padding: "10px 4px", 
-                        border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
-                        borderRadius: "100px", 
-                        fontSize: "var(--font-size-xs)", 
-                        fontWeight: 600, 
-                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", 
-                        cursor: "pointer", 
-                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", 
-                        fontFamily: "var(--font-family)", 
-                        transition: "all 0.15s" 
+                        padding: "8px 16px", border: selectedTime === slot ? "1.5px solid var(--color-primary)" : "1.5px solid var(--color-border)", 
+                        borderRadius: 100, fontSize: "var(--font-size-xs)", fontWeight: 600, 
+                        color: selectedTime === slot ? "var(--color-primary)" : "var(--color-text)", cursor: "pointer", 
+                        background: selectedTime === slot ? "var(--color-primary-light)" : "#fff", transition: "all 0.15s",
+                        fontFamily: "inherit"
                       }}
                     >
                       {slot}
@@ -616,19 +756,264 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ id: str
               </div>
             </div>
 
-            <button id="book-appointment-btn" style={{ width: "100%", padding: "14px", background: "var(--color-primary)", color: "#fff", fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: "100px", border: "none", cursor: "pointer", fontFamily: "var(--font-family)", marginBottom: 10, transition: "background 0.15s, transform 0.15s" }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
-            >
-              Book Appointment
-            </button>
-            <a href="tel:18001030" id="doctor-call-btn" style={{ width: "100%", padding: "12px", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", fontWeight: 600, fontSize: "var(--font-size-sm)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "background-color 0.15s" }}>
-              <PhoneCall size={15} />
-              Call for Enquiry
-            </a>
-          </motion.div>
+            <div style={{ position: "sticky", bottom: -1, background: "var(--color-bg-card)", zIndex: 10, paddingTop: "16px", paddingBottom: "12px" }}>
+              {/* Smooth fade out mask for scrolling slots */}
+              <div style={{ position: "absolute", top: -32, left: 0, right: 0, height: 32, background: "linear-gradient(to top, var(--color-bg-card), transparent)", pointerEvents: "none" }} />
+              
+              <button 
+                id="book-appointment-btn"
+                onClick={() => {
+                  if (isLoggedIn) {
+                    const qs = new URLSearchParams({
+                      doctorId: id,
+                      date: formattedDateStr.split(' | ')[0],
+                      time: selectedTime,
+                      needsPatientSelection: "true"
+                    }).toString();
+                    router.push(`/booking/summary?${qs}`);
+                  } else {
+                    setIsLoginModalOpen(true);
+                  }
+                }}
+                style={{ width: "100%", height: 52, boxSizing: "border-box", background: "var(--color-primary)", color: "#fff", borderRadius: 100, border: "none", cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ width: 130, flexShrink: 0 }}>
+                    {isLoggedIn ? (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 4 }}>
+                        <div style={{ fontSize: "14px", fontWeight: 500, color: "rgba(255, 255, 255, 0.9)", whiteSpace: "nowrap" }}>{formattedDateStr}</div>
+                      </div>
+                    ) : (
+                      <div style={{ fontSize: "14px", fontWeight: 500, color: "rgba(255,255,255,0.9)", whiteSpace: "nowrap" }}>
+                        {formattedDateStr}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.3)" }} />
+                </div>
+                
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
+                  Book now
+                </div>
+                
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "absolute", right: 24, display: "flex", alignItems: "center" }}
+                >
+                  <ArrowRight size={20} />
+                </motion.div>
+              </button>
+              <a href="tel:08067506838" id="doctor-call-btn" style={{ width: "100%", height: 52, boxSizing: "border-box", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)", borderRadius: "100px", display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "0 24px", position: "relative", transition: "background-color 0.15s", textDecoration: "none" }}
+                 onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; }}
+                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ width: 130, flexShrink: 0, display: "flex", alignItems: "center", gap: 8, fontSize: "16px", fontWeight: 500, lineHeight: 1 }}>
+                    <PhoneCall size={20} />
+                    08067506838
+                  </div>
+                  <div style={{ width: 1, height: 24, background: "var(--color-primary)", opacity: 0.3 }} />
+                </div>
+                
+                <div style={{ flex: 1, display: "flex", justifyContent: "flex-start", alignItems: "center", fontSize: "16px", fontWeight: 700, paddingLeft: 24 }}>
+                  Call for Enquiry
+                </div>
+                
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{ position: "absolute", right: 24, display: "flex", alignItems: "center" }}
+                >
+                  <ArrowRight size={20} />
+                </motion.div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Articles / Blogs */}
+        <div style={{ marginTop: "var(--sp-8)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
+            <h2 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em" }}>Articles by {doc.name}</h2>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button onClick={() => scrollArticles("left")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronLeft size={20} />
+              </button>
+              <button onClick={() => scrollArticles("right")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+          
+          <div style={{ position: "relative" }}>
+            <div ref={articlesScrollRef} className="hide-scrollbar" style={{ display: "flex", gap: "var(--sp-4)", overflowX: "auto", paddingBottom: "var(--sp-4)", scrollSnapType: "x mandatory", scrollbarWidth: "none", paddingRight: "100px" }}>
+              {[
+                { id: 1, title: "Understanding Heart Arrhythmias and Palpitations", date: "Oct 12, 2023", readTime: "5 min read", img: "/assets/hospital_1.png", category: "Heart Health" },
+                { id: 2, title: "Post-Surgery Recovery: What to Expect in the First Week", date: "Nov 04, 2023", readTime: "4 min read", img: "/assets/hospital_2.png", category: "Surgery" },
+                { id: 3, title: "The Role of Diet in Managing High Blood Pressure", date: "Dec 18, 2023", readTime: "6 min read", img: "/assets/hospital_3.png", category: "Diet & Nutrition" },
+                { id: 4, title: "Signs and Symptoms of Heart Attack", date: "Jan 05, 2024", readTime: "7 min read", img: "/assets/hospital_1.png", category: "Heart Health" },
+              ].map((blog) => (
+                <div key={blog.id} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "hidden", boxShadow: "var(--shadow-sm)", cursor: "pointer", position: "relative", minWidth: 400, width: 400, flexShrink: 0, scrollSnapAlign: "start", display: "flex", flexDirection: "column", transition: "transform 0.2s" }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-lg)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-sm)"; }}
+                >
+                  <div style={{ width: "100%", height: "240px", position: "relative", padding: "16px" }}>
+                    <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "12px", overflow: "hidden" }}>
+                      <Image src={blog.img} alt={blog.title} fill style={{ objectFit: "cover" }} sizes="320px" />
+                    </div>
+                  </div>
+                  <div style={{ padding: "0px 20px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                      <span style={{ fontSize: "10px", color: "var(--color-primary)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>{blog.category}</span>
+                      <span style={{ fontSize: "11px", color: "rgb(148, 163, 184)" }}>{blog.date}</span>
+                    </div>
+                    <h3 style={{ fontSize: "16px", fontWeight: 700, color: "rgb(30, 41, 59)", lineHeight: 1.4, marginBottom: "8px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      {blog.title}
+                    </h3>
+                    <p style={{ fontSize: "13px", color: "rgb(100, 116, 139)", lineHeight: 1.5, marginBottom: "16px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      Learn from top specialists about the warning signs and lifestyle changes to safeguard your health.
+                    </p>
+                    <div style={{ marginTop: "auto" }}>
+                      <div style={{ height: "1px", background: "var(--color-border)", margin: "16px 0px" }}></div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                        <span style={{ color: "rgb(71, 85, 105)" }}>By <strong style={{ color: "var(--color-text)" }}>{doc.name}</strong></span>
+                        <span style={{ color: "rgb(148, 163, 184)", display: "flex", alignItems: "center", gap: "4px" }}>
+                          <Clock size={12} /> {blog.readTime}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Right gradient mask */}
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: "var(--sp-4)", width: "80px", background: "linear-gradient(to right, transparent, var(--color-bg-card))", pointerEvents: "none" }} />
+          </div>
+        </div>
+
+        {/* Similar Doctors */}
+        <div style={{ marginTop: "var(--sp-8)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
+            <h2 style={{ fontSize: "var(--font-size-xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em" }}>Similar Doctors</h2>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button onClick={() => scrollSimilar("left")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronLeft size={20} />
+              </button>
+              <button onClick={() => scrollSimilar("right")} style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}>
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+          
+          <div style={{ position: "relative" }}>
+            <div ref={similarScrollRef} className="hide-scrollbar" style={{ display: "flex", gap: "var(--sp-4)", overflowX: "auto", paddingBottom: "var(--sp-4)", scrollSnapType: "x mandatory", scrollbarWidth: "none", paddingRight: "100px" }}>
+              <style dangerouslySetInnerHTML={{ __html: `.hide-scrollbar::-webkit-scrollbar { display: none; }` }} />
+              
+              {Object.entries(doctors).filter(([docId]) => docId !== id).map(([docId, doc]) => (
+                <div key={docId} style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)", borderRadius: "16px", overflow: "visible", boxShadow: "var(--shadow-sm)", position: "relative", minWidth: 400, width: 400, flexShrink: 0, scrollSnapAlign: "start" }}>
+                  <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: "18px", borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
+                    <div style={{ display: "flex", gap: "16px" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px", flexShrink: 0 }}>
+                        <Link style={{ position: "relative", width: "120px", height: "120px", borderRadius: "12px", overflow: "hidden", background: "var(--color-border)", display: "block" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
+                          <div style={{ width: "100%", height: "100%", position: "relative" }}>
+                            <Image alt={doc.name} loading="lazy" decoding="async" fill style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, objectFit: "cover", color: "transparent" }} sizes="100vw" src={doc.img} />
+                            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0, 0, 0, 0.5))", color: "#ffffff", fontSize: "9px", fontWeight: 600, padding: "20px 4px 4px 4px", display: "flex", justifyContent: "center", alignItems: "center", opacity: 0, transform: "translateY(10px)" }}>
+                              View profile 
+                              <ChevronRight size={10} style={{ marginLeft: "2px" }} />
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                        <Link style={{ textDecoration: "none" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
+                          <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: "4px", cursor: "pointer", transition: "color 0.15s", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.name}</h3>
+                        </Link>
+                        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.speciality}</p>
+                        <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", textOverflow: "ellipsis" }}>MBBS, MD (General Medicine)</p>
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "6px" }}>
+                          <span style={{ fontSize: "12px", background: "#FFFFFF", padding: "2px 8px", borderRadius: "12px", color: "#475569", fontWeight: 500 }}>{doc.experienceYears}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ padding: "18px" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginBottom: "12px" }}>
+                      <MapPin size={16} style={{ color: "var(--color-text-secondary)", flexShrink: 0, marginTop: "2px" }} />
+                      <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{doc.hospital} <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>+1</span></p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+                      <Clock size={16} style={{ color: "var(--color-text-secondary)" }} />
+                      <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)" }}>Next available at</p>
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: "12px", marginBottom: "16px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: "20px", fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                        <img alt="Hospital Visit" loading="lazy" width="16" height="16" src="/Appointment/Hospital_visit.svg" />
+                        Available Today
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px", background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: "20px", fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                        <img alt="Video Consultation" loading="lazy" width="16" height="16" src="/Appointment/Video_consultation.svg" />
+                        Today, 10:00 AM
+                      </div>
+                    </div>
+                    <div style={{ height: "1px", background: "var(--color-border)", margin: "16px 0" }}></div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{doc.fee}</span>
+                        <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: "4px", lineHeight: 1 }}>onwards</span>
+                      </div>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <a href="tel:18001030" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "44px", height: "44px", borderRadius: "22px", border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
+                          <PhoneCall size={18} />
+                        </a>
+                        <Link style={{ height: "44px", padding: "0 24px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: "22px", fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", transition: "var(--transition-fast)", display: "flex", alignItems: "center", justifyContent: "center" }} href={`/doctors/${docId}?n=${encodeURIComponent(doc.name)}`}>
+                          Book now
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Right side fade overlay */}
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: "var(--sp-4)", width: "120px", background: "linear-gradient(to right, transparent, var(--color-bg-card))", pointerEvents: "none" }} />
+          </div>
+        </div>
+
         </div>
       </div>
-    </div>
+      
+      <AddPatientModal 
+        isOpen={isAddPatientModalOpen} 
+        onClose={() => setIsAddPatientModalOpen(false)} 
+        onAddPatient={(name) => {
+          const newMember = {
+            id: familyMembers.length + 1,
+            name,
+            img: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`
+          };
+          setFamilyMembers(prev => [...prev, newMember]);
+          setActiveUserId(newMember.id);
+        }}
+      />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLoginSuccess={() => { 
+          setIsLoggedIn(true); 
+          localStorage.setItem('isLoggedIn', 'true');
+          const qs = new URLSearchParams({
+            doctorId: id,
+            date: formattedDateStr.split(' | ')[0],
+            time: selectedTime,
+            needsPatientSelection: "true"
+          }).toString();
+          router.push(`/booking/summary?${qs}`);
+        }} 
+      />
+    </>
   );
 }

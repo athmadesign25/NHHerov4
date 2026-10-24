@@ -5,9 +5,9 @@ import { MapPin, ChevronDown, Navigation, Search, Check, Loader2 } from "lucide-
 import styles from "./NHSearchExperience.module.css";
 import {
   NH_LOCAL_HUBS,
+  NH_ALL_CITIES,
   findClosestNHHub,
 } from "./searchData";
-import { fetchCities } from "@/lib/searchService";
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -25,25 +25,17 @@ export default function LocationSelector({
   const [isDetecting, setIsDetecting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [cities, setCities] = useState<{id: number, name: string}[]>([]);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchCities().then((data) => {
-      if (data && data.length > 0) {
-        setCities(data);
-      }
-    });
-  }, []);
-
-  // Check available viewport space to open upward if near screen bottom
+  // Check available viewport space to open upward ONLY if pressed against the very bottom of the screen
   useEffect(() => {
     if (isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - rect.bottom;
-      if (spaceBelow < 280 && rect.top > spaceBelow) {
+      // The dropdown height is around 220px. Only flip upward if space below is genuinely insufficient (< 180px) AND there is ample room above (> 260px)
+      if (spaceBelow < 180 && rect.top > 260) {
         setOpenUpward(true);
       } else {
         setOpenUpward(false);
@@ -142,8 +134,8 @@ export default function LocationSelector({
 
   // Filter cities based on search term
   const filteredCities = searchTerm.trim()
-    ? cities.filter((city) =>
-        city.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+    ? NH_ALL_CITIES.filter((city) =>
+        city.toLowerCase().includes(searchTerm.trim().toLowerCase())
       )
     : [];
 
@@ -159,7 +151,7 @@ export default function LocationSelector({
     if (e.key === "Enter") {
       e.preventDefault();
       if (filteredCities.length > 0) {
-        handleSelectCity(filteredCities[0].name);
+        handleSelectCity(filteredCities[0]);
       } else if (searchTerm.trim()) {
         // Allow custom city entry
         handleSelectCity(searchTerm.trim());
@@ -253,17 +245,17 @@ export default function LocationSelector({
               {filteredCities.length > 0 ? (
                 filteredCities.map((city) => (
                   <button
-                    key={city.id}
+                    key={city}
                     type="button"
                     className={`${styles.locationMenuItem} ${
-                      city.name.toLowerCase() === selectedLocation.toLowerCase()
+                      city.toLowerCase() === selectedLocation.toLowerCase()
                         ? styles.locationMenuItemSelected
                         : ""
                     }`}
-                    onClick={(e) => handleSelectCity(city.name, e)}
+                    onClick={(e) => handleSelectCity(city, e)}
                   >
-                    <span>{city.name}</span>
-                    {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
+                    <span>{city}</span>
+                    {city.toLowerCase() === selectedLocation.toLowerCase() && (
                       <Check size={13} style={{ marginLeft: "auto", color: "#034EA2" }} />
                     )}
                   </button>
@@ -281,20 +273,20 @@ export default function LocationSelector({
           ) : (
             /* Standard Hub Cities List + Proximity State Demos */
             <div className={styles.locationScrollList}>
-              <div className={styles.locationMenuHeader}>AVAILABLE CITIES</div>
-              {(cities.length > 0 ? cities : NH_LOCAL_HUBS.map((c, i) => ({ id: i, name: c }))).map((city) => (
+              <div className={styles.locationMenuHeader}>POPULAR HUBS</div>
+              {NH_LOCAL_HUBS.map((city) => (
                 <button
-                  key={city.id}
+                  key={city}
                   type="button"
                   className={`${styles.locationMenuItem} ${
-                    city.name.toLowerCase() === selectedLocation.toLowerCase()
+                    city.toLowerCase() === selectedLocation.toLowerCase()
                       ? styles.locationMenuItemSelected
                       : ""
                   }`}
-                  onClick={(e) => handleSelectCity(city.name, e)}
+                  onClick={(e) => handleSelectCity(city, e)}
                 >
-                  <span>{city.name}</span>
-                  {city.name.toLowerCase() === selectedLocation.toLowerCase() && (
+                  <span>{city}</span>
+                  {city.toLowerCase() === selectedLocation.toLowerCase() && (
                     <Check size={13} style={{ marginLeft: "auto", color: "#034EA2" }} />
                   )}
                 </button>
