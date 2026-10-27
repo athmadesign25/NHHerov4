@@ -1007,7 +1007,6 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
   };
 
   const [isTabsPinned, setIsTabsPinned] = useState(false);
-  const [isRefreshedAtPinned, setIsRefreshedAtPinned] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const tabsSentinelRef = useRef<HTMLDivElement>(null);
   const footerSentinelRef = useRef<HTMLDivElement>(null);
@@ -1016,26 +1015,11 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
     const sentinel = tabsSentinelRef.current;
     if (!sentinel) return;
 
-    // Detect if this page load was a browser refresh / reload
-    let wasReloaded = false;
-    if (typeof performance !== "undefined") {
-      const navEntries = performance.getEntriesByType?.("navigation");
-      if (navEntries && navEntries.length > 0) {
-        wasReloaded = (navEntries[0] as PerformanceNavigationTiming).type === "reload";
-      } else if ((window.performance as any)?.navigation?.type === 1) {
-        wasReloaded = true;
-      }
-    }
-
     // Check immediate position on mount
     const rect = sentinel.getBoundingClientRect();
     const isInitiallyPastTop = rect.top <= 70;
-
     if (isInitiallyPastTop) {
       setIsTabsPinned(true);
-      if (wasReloaded) {
-        setIsRefreshedAtPinned(true);
-      }
     }
 
     const observer = new IntersectionObserver(
@@ -1043,9 +1027,6 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
         // Sentinel must be scrolled above the top of the viewport (or under navbar) to pin
         const isPastTop = !entry.isIntersecting && entry.boundingClientRect.top <= 70;
         setIsTabsPinned(isPastTop);
-        if (!isPastTop) {
-          setIsRefreshedAtPinned(false);
-        }
       },
       { root: null, threshold: 0 }
     );
@@ -1112,7 +1093,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
   const subCardShadow = useTransform(scrollYProgress, [0, 1], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 16px rgba(0, 0, 0, 0.04)"]);
   const subTitleColor = useTransform(scrollYProgress, [0, 1], ["#ffffff", "#1A1A2E"]);
   const subDescColor = useTransform(scrollYProgress, [0, 1], ["rgba(255, 255, 255, 0.7)", "#4A5568"]);
-  const subArrowColor = useTransform(scrollYProgress, [0, 1], ["#93C5FD", "#034EA2"]);
+  const subArrowColor = useTransform(scrollYProgress, [0, 1], ["#ffffff", "#034EA2"]);
   const subIconBg = useTransform(scrollYProgress, [0, 1], ["rgba(237, 28, 36, 0.2)", "rgba(237, 28, 36, 0.08)"]);
 
   const proceduresTrackRef = useRef<HTMLDivElement>(null);
@@ -1317,30 +1298,12 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
 
         {/* Circular Programme Navigation Tabs */}
         <motion.div 
-          key={isRefreshedAtPinned ? "refreshed-pinned-tabs" : "normal-tabs"}
           data-theme={isTabsPinned ? navTheme : undefined}
-          className={`${styles.programmeTabsWrapper} ${isTabsPinned ? `${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark}` : ""} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""} ${isRefreshedAtPinned ? styles.programmeTabsRefreshedReveal : ""}`}
-          initial={
-            isRefreshedAtPinned
-              ? { opacity: 0, y: -36, filter: "blur(10px)" }
-              : { opacity: 0, y: 20, filter: "blur(8px)" }
-          }
-          animate={
-            isRefreshedAtPinned
-              ? { opacity: 1, y: 0, filter: "blur(0px)" }
-              : undefined
-          }
-          whileInView={
-            !isRefreshedAtPinned
-              ? { opacity: 1, y: 0, filter: "blur(0px)" }
-              : undefined
-          }
+          className={`${styles.programmeTabsWrapper} ${isTabsPinned ? `${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark}` : ""} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""}`}
+          initial={isTabsPinned ? false : { opacity: 0, y: 20, filter: "blur(8px)" }}
+          whileInView={isTabsPinned ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={
-            isRefreshedAtPinned
-              ? { duration: 0.65, delay: 0.15, ease: [0.16, 1, 0.3, 1] }
-              : { duration: 0.6, delay: 0.35, ease: "easeOut" }
-          }
+          transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}
         >
           {isTabsPinned && (
             <div className={styles.pinnedToggleGroup}>
@@ -1881,7 +1844,7 @@ export default function SpecialityPage({ params }: { params: Promise<{ slug: str
       })}
 
       {/* Sleek Medically Reviewed Band above footer */}
-      <MedicallyReviewedBand />
+      <MedicallyReviewedBand specialityName={currentSpec?.name || "Cancer Care / Oncology"} />
 
       {/* Footer Sentinel to detect when bottom of page content reaches footer */}
       <div ref={footerSentinelRef} style={{ height: "0px", width: "100%", pointerEvents: "none", opacity: 0 }} />

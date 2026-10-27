@@ -99,11 +99,20 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
                 />
               </div>
 
-              {/* Glassmorphic Gradient Overlay over bottom half */}
+              {/* Top and Bottom Gradient Overlays */}
+              <div className={styles.topOverlay} />
               <div className={styles.bottomOverlay} />
 
               {/* Card Body Layered over Image */}
               <div className={styles.cardBody}>
+                <div className={styles.headerRow}>
+                  <span className={styles.cardAction}>
+                    Explore
+                    <span className={styles.actionUnderline} aria-hidden />
+                  </span>
+                  <span className={styles.index}>{String(index + 1).padStart(2, "0")}</span>
+                </div>
+
                 <div className={styles.bottomContent}>
                   <div className={styles.cardContent}>
                     <h3 className={styles.testTitle} title={test.name}>

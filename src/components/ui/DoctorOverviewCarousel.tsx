@@ -7,7 +7,6 @@ import {
   X,
   ArrowLeft,
   ArrowRight,
-  CheckCircle,
 } from "lucide-react";
 import styles from "./DoctorOverviewCarousel.module.css";
 
@@ -102,6 +101,7 @@ export default function DoctorOverviewCarousel() {
 
   const currentItem = DOCTOR_VIDEOS[currentIndex];
   const totalItems = DOCTOR_VIDEOS.length;
+  const nextItem = currentIndex < totalItems - 1 ? DOCTOR_VIDEOS[currentIndex + 1] : null;
 
   const isPrevDisabled = currentIndex === 0;
   const isNextDisabled = currentIndex === totalItems - 1;
@@ -238,33 +238,30 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
                 <div className={styles.videoBottomContent}>
                   <h3 className={styles.videoTitle}>{currentItem.title}</h3>
                 </div>
-
-                {/* Integrated Doctor Information & Quick Action Row — Overlaid with blur over video thumbnail */}
-                <div className={styles.infoPanel}>
-                  <div className={styles.doctorProfile}>
-                    <img
-                      src={currentItem.doctor.avatar}
-                      alt={currentItem.doctor.name}
-                      className={styles.doctorAvatar}
-                    />
-                    <div className={styles.doctorMeta}>
-                      <div className={styles.doctorNameRow}>
-                        <h4 className={styles.doctorName}>{currentItem.doctor.name}</h4>
-                        <span className={styles.verifiedBadge} title="Verified Medical Specialist">
-                          <CheckCircle size={15} fill="currentColor" stroke="rgba(3, 18, 36, 0.9)" />
-                        </span>
-                      </div>
-                      <p className={styles.doctorRole}>{currentItem.doctor.role}</p>
-                      <p className={styles.doctorHospital}>
-                        <span>{currentItem.doctor.hospital}</span>
-                        <span className={styles.hospitalDot} />
-                        <span>{currentItem.doctor.experience}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </>
             )}
+          </div>
+
+          {/* Doctor Information Bar — Positioned outside the video container */}
+          <div className={styles.doctorProfileBar}>
+            <div className={styles.doctorProfile}>
+              <img
+                src={currentItem.doctor.avatar}
+                alt={currentItem.doctor.name}
+                className={styles.doctorAvatar}
+              />
+              <div className={styles.doctorMeta}>
+                <div className={styles.doctorNameRow}>
+                  <h4 className={styles.doctorName}>{currentItem.doctor.name}</h4>
+                </div>
+                <p className={styles.doctorRole}>{currentItem.doctor.role}</p>
+                <p className={styles.doctorHospital}>
+                  <span>{currentItem.doctor.hospital}</span>
+                  <span className={styles.hospitalDot} />
+                  <span>{currentItem.doctor.experience}</span>
+                </p>
+              </div>
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>
@@ -288,6 +285,42 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
             ))}
           </div>
         </div>
+
+        {/* Active & Next Video Readability Indication (Text Only, Matching ModernCarousel) */}
+        <div className={styles.readingAidContainer}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentItem?.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={styles.readingAidContent}
+            >
+              {/* Active Video Title */}
+              <span className={styles.activeTitle} title={currentItem?.title}>
+                {currentItem?.title}
+              </span>
+
+              {/* Next Video Title */}
+              {nextItem && (
+                <button
+                  type="button"
+                  className={styles.readingAidNext}
+                  onClick={goToNext}
+                  title={`Go to ${nextItem.title}`}
+                >
+                  <span className={styles.readingAidDivider}>/</span>
+                  <span className={styles.nextTitle} title={nextItem.title}>
+                    {nextItem.title}
+                  </span>
+                  <ArrowRight size={12} className={styles.nextArrowIcon} />
+                </button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
         <div className={styles.navButtons}>
           <button 
             type="button"

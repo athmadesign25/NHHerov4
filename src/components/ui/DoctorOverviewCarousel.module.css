@@ -78,8 +78,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 240px;
-  background: linear-gradient(0deg, rgba(3, 18, 36, 0.92) 0%, rgba(3, 18, 36, 0.6) 55%, rgba(3, 18, 36, 0) 100%);
+  height: 140px;
+  background: linear-gradient(0deg, rgba(3, 18, 36, 0.88) 0%, rgba(3, 18, 36, 0.45) 60%, rgba(3, 18, 36, 0) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -184,7 +184,7 @@
 /* Bottom Title on Video (positioned cleanly above the doctor info row) */
 .videoBottomContent {
   position: absolute;
-  bottom: calc(var(--space-24, 24px) + 52px + var(--space-28, 28px));
+  bottom: var(--space-20, 20px);
   left: var(--space-24, 24px);
   right: var(--space-24, 24px);
   z-index: 3;
@@ -233,23 +233,14 @@
   transform: scale(1.08);
 }
 
-/* ─── Doctor Info Panel (No Background — Direct Transparent Overlay) ─── */
-.infoPanel {
-  position: absolute;
-  bottom: var(--space-24, 24px);
-  left: var(--space-24, 24px);
-  right: var(--space-24, 24px);
-  z-index: 4;
-  padding: 0;
+/* ─── Doctor Information Bar (Outside Video Container) ─── */
+.doctorProfileBar {
+  padding: var(--space-16, 16px) var(--space-24, 24px);
+  background: var(--color-surface, #ffffff);
+  border-top: 1px solid var(--color-border, #E2E8F0);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: var(--space-20, 20px);
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  justify-content: space-between;
   box-sizing: border-box;
 }
 
@@ -261,19 +252,20 @@
 }
 
 .doctorAvatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full, 9999px);
   object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid var(--color-border-light, #EEF2F7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-border-light, #EEF2F7);
 }
 
 .doctorMeta {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .doctorNameRow {
@@ -283,31 +275,25 @@
 }
 
 .doctorName {
-  font-size: var(--font-size-lg, 18px);
+  font-size: var(--font-size-base, 16px);
   font-weight: 700;
-  color: var(--white, #ffffff);
+  color: var(--color-text, #1A1A2E);
   margin: 0;
   line-height: 1.25;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-.verifiedBadge {
-  display: inline-flex;
-  align-items: center;
-  color: var(--sky-400, #38BDF8);
-}
 
 .doctorRole {
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
-  color: var(--sky-400, #38BDF8);
+  color: var(--color-primary, #034EA1);
   margin: 0;
   line-height: 1.35;
 }
 
 .doctorHospital {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb, 255, 255, 255), 0.75);
+  color: var(--color-text-secondary, #64748B);
   margin: 0;
   display: flex;
   align-items: center;
@@ -317,8 +303,8 @@
 .hospitalDot {
   width: 4px;
   height: 4px;
-  border-radius: 50%;
-  background: rgba(var(--white-rgb, 255, 255, 255), 0.4);
+  border-radius: var(--radius-full, 9999px);
+  background: var(--slate-300, #CBD5E1);
 }
 
 /* Action Area (Consultation & External Link) */
@@ -403,6 +389,79 @@
   background-color: var(--color-primary, #034EA1);
 }
 
+/* ─── Active & Next Video Readability Indication (Pure Text, No Labels) ─── */
+.readingAidContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0 var(--space-16, 16px);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.readingAidContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6, 6px);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.activeTitle {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  color: var(--color-text, #1A1A2E);
+  max-width: clamp(140px, 20vw, 280px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readingAidDivider {
+  color: var(--slate-300, #CBD5E1);
+  font-size: var(--font-size-xs, 12px);
+  margin: 0 var(--space-4, 4px);
+  user-select: none;
+}
+
+.readingAidNext {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4, 4px);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-secondary, #64748B);
+  font-size: var(--font-size-sm, 14px);
+  min-width: 0;
+  transition: color var(--duration-fast, 150ms) ease;
+}
+
+.readingAidNext:hover {
+  color: var(--color-primary, #034EA1);
+}
+
+.nextTitle {
+  font-weight: 500;
+  color: inherit;
+  font-size: var(--font-size-sm, 14px);
+  max-width: clamp(120px, 18vw, 260px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nextArrowIcon {
+  flex-shrink: 0;
+  transition: transform var(--duration-fast, 150ms) ease;
+}
+
+.readingAidNext:hover .nextArrowIcon {
+  transform: translateX(2px);
+}
+
 .navButtons {
   display: flex;
   gap: var(--space-12, 12px);
@@ -438,12 +497,12 @@
 /* ─── Responsive Adjustments ─── */
 @media (max-width: 768px) {
   .videoWrapper {
-    min-height: 440px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
+    min-height: unset;
   }
 
   .bottomOverlay {
-    height: 300px;
+    height: 120px;
   }
 
   .topBar {
@@ -466,11 +525,10 @@
   .playButton {
     width: 54px;
     height: 54px;
-    top: 36%;
   }
 
   .videoBottomContent {
-    bottom: calc(var(--space-14, 14px) + 120px + var(--space-18, 18px));
+    bottom: var(--space-14, 14px);
     left: var(--space-14, 14px);
     right: var(--space-14, 14px);
   }
@@ -480,17 +538,8 @@
     line-height: 1.3;
   }
 
-  .infoPanel {
-    bottom: var(--space-14, 14px);
-    left: var(--space-14, 14px);
-    right: var(--space-14, 14px);
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-    gap: var(--space-10, 10px);
-    background: transparent;
-    border: none;
-    box-shadow: none;
+  .doctorProfileBar {
+    padding: var(--space-12, 12px) var(--space-16, 16px);
   }
 
   .doctorAvatar {
@@ -499,7 +548,7 @@
   }
 
   .doctorName {
-    font-size: 15px;
+    font-size: var(--font-size-sm, 14px);
   }
 
   .doctorRole {
@@ -508,6 +557,8 @@
 
   .doctorHospital {
     font-size: 11px;
+    flex-wrap: wrap;
+    gap: var(--space-4, 4px) var(--space-6, 6px);
   }
 
   .doctorProfile {
@@ -528,5 +579,40 @@
 
   .navigationWrapper {
     margin-top: var(--space-16, 16px);
+    flex-wrap: wrap;
+    gap: var(--space-12, 12px);
+    align-items: center;
+  }
+
+  .readingAidContainer {
+    order: -1;
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0;
+    justify-content: flex-start;
+  }
+
+  .readingAidContent {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  .activeTitle,
+  .nextTitle {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activeTitle {
+    max-width: 125px;
+    font-size: var(--font-size-xs, 12px);
+  }
+
+  .nextTitle {
+    max-width: 115px;
+    font-size: var(--font-size-xs, 12px);
   }
 }

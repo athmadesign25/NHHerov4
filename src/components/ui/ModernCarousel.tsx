@@ -97,6 +97,8 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
   
   const activeIndex = items.findIndex(item => item.id === activeId);
   const totalItems = items.length;
+  const activeItem = items[activeIndex];
+  const nextItem = activeIndex < totalItems - 1 ? items[activeIndex + 1] : null;
 
   const isPrevDisabled = activeIndex <= 0;
   const isNextDisabled = activeIndex >= totalItems - 1;
@@ -318,10 +320,49 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
                 key={idx} 
                 className={`${styles.indicatorBar} ${idx === activeIndex ? styles.indicatorBarActive : ''}`}
                 onClick={() => setActiveId(items[idx].id)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Go to ${items[idx].title}`}
               />
             ))}
           </div>
         </div>
+
+        {/* Active & Next Card Readability Indication (Text Only, No Labels) */}
+        <div className={styles.readingAidContainer}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeItem?.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={styles.readingAidContent}
+            >
+              {/* Active Card Title */}
+              <span className={styles.activeTitle} title={activeItem?.title}>
+                {activeItem?.title}
+              </span>
+
+              {/* Next Card Title (No "Next:" label text) */}
+              {nextItem && (
+                <button
+                  type="button"
+                  className={styles.readingAidNext}
+                  onClick={handleNext}
+                  title={`Go to ${nextItem.title}`}
+                >
+                  <span className={styles.readingAidDivider}>/</span>
+                  <span className={styles.nextTitle} title={nextItem.title}>
+                    {nextItem.title}
+                  </span>
+                  <ArrowRight size={12} className={styles.nextArrowIcon} />
+                </button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
         <div className={styles.navButtons}>
           <button 
             className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`} 

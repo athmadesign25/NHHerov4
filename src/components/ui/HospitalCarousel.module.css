@@ -179,6 +179,13 @@
   z-index: 1;
 }
 
+.imageSlide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .image {
   object-fit: cover;
   transition: transform 0.7s var(--ease-spring);
@@ -186,6 +193,49 @@
 
 .card:hover .image {
   transform: scale(1.06);
+}
+
+/* Floating top indicators for hospital photo carousel */
+.imageIndicators {
+  position: absolute;
+  top: var(--space-16);
+  left: var(--space-20);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.indicatorPill {
+  position: relative;
+  height: 3.5px;
+  width: 18px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--white-rgb), 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--duration-moderate) var(--ease-out);
+}
+
+.indicatorPill::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: -4px;
+  right: -4px;
+}
+
+.indicatorPill:hover {
+  background: rgba(var(--white-rgb), 0.7);
+}
+
+.indicatorPillActive {
+  background: var(--white);
+  width: 28px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Subtle dark gradient all over for contrast + dense blur glassmorphism over bottom 65% */
@@ -252,17 +302,55 @@
   color: var(--sky-400);
 }
 
+.addressRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration-base) var(--ease-out);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.addressRow:hover {
+  opacity: 0.95;
+}
+
+.addressRow:hover .mapPinIcon {
+  color: var(--sky-300);
+  transform: scale(1.15) translateY(-1px);
+}
+
+.addressRow:hover .hospitalAddress {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mapPinIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: var(--sky-400);
+  transition: transform var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+
 .hospitalAddress {
   font-family: var(--font-family);
   font-size: var(--font-size-sm);
   line-height: var(--leading-body);
-  color: rgba(var(--white-rgb), 0.80);
+  color: rgba(var(--white-rgb), 0.82);
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
   text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.6);
+  transition: color var(--duration-base) var(--ease-out);
 }
 
 .cardActions {

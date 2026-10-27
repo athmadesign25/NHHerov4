@@ -3,6 +3,7 @@ export interface HospitalItem {
   name: string;
   address: string;
   image: string;
+  images?: string[];
   href: string;
   appointmentHref: string;
   phone: string;
@@ -14,6 +15,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Mazumdar Shaw Medical Centre, Bangalore",
     address: "258/A, Bommasandra Industrial Area, Hosur Road, Anekal Taluk Bangalore, Karnataka - 560099",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/KztpC4GYDq70ncLAFLSv.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/KztpC4GYDq70ncLAFLSv.png",
+      "/assets/hospital_interior_3.jpg",
+      "/assets/hospital_exterior_2.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/mazumdar-shaw-medical-centre-bommasandra",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=38",
     phone: "08069266140",
@@ -23,6 +29,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Multispeciality Hospital, HSR Bangalore",
     address: "Basant Health Centre Building, No-1, 18th main (Opp.HSR Club), Sector 3, HSR Layout Bangalore, Karnataka - 560102",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/aRn89LPQ7p1zMCysRFNO.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/aRn89LPQ7p1zMCysRFNO.png",
+      "/assets/hospital_interior_1.jpg",
+      "/assets/hospital_exterior_1.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-hospital-hsr-bangalore",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=32",
     phone: "08069266140",
@@ -32,6 +43,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Chandapura",
     address: "1st Floor, 425/426, Chandapura- Anekal Rd, near Surya City, above Pizza hut, Iggalur, Suryanagar Phase I, Chandapura, Bengaluru, Andapura, Karnataka 560081",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/X9LPjGaxsejoIT5Aracu.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/X9LPjGaxsejoIT5Aracu.png",
+      "/assets/hospital_interior_4.jpg",
+      "/assets/hospital_3.png",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-clinicchandapura",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1518",
     phone: "08069266140",
@@ -41,6 +57,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Kanakapura Road",
     address: "P.N.Towers, Site No.04, Narayana Nagar, Kanakapura Main Rd, Doddakallasandra, Uttarahalli Hobli, Bengaluru, Karnataka 560062",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/0JYJkQyPXnbIfpfugzxE.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/0JYJkQyPXnbIfpfugzxE.png",
+      "/assets/hospital_interior_5.jpg",
+      "/assets/hospital_exterior_3.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-clinic-kanakapura",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1810",
     phone: "08069266140",
@@ -50,6 +71,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Health City, International Wing",
     address: "258/A, Bommasandra Industrial Area, Anekal Taluk, Hosur Road Bangalore, Karnataka - 560099",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/IZDfHNBQPDDr8xXnifex.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/IZDfHNBQPDDr8xXnifex.png",
+      "/assets/hospital_interior_2.jpg",
+      "/assets/hospital_1.png",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-health-city-international-wing",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=55",
     phone: "08069266140",
@@ -59,6 +85,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Institute of Cardiac Sciences, Bangalore",
     address: "258/A, Bommasandra Industrial Area, Anekal Taluk, Hosur Road Bangalore, Karnataka - 560099",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/gjdktEVS3ZedbGj9vxIt.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/gjdktEVS3ZedbGj9vxIt.png",
+      "/assets/hospital_interior_3.jpg",
+      "/assets/hospital_2.png",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-institute-cardiac-sciences-bommasandra",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=121",
     phone: "08069266140",
@@ -68,6 +99,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, HSR Layout",
     address: "459, Sector 4, HSR Layout, Bengaluru, Karnataka 560102",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/7VLUoOV5XveF032qbL1b.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/7VLUoOV5XveF032qbL1b.png",
+      "/assets/hospital_interior_4.jpg",
+      "/assets/hospital_exterior_3.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-clinic-hsr-layout",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1413",
     phone: "08069266140",
@@ -77,6 +113,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Electronic City",
     address: "E-City 1 (Velankani): Shop No. 5,6,7 SJR Equinox Retail, Opp. Gate No. 3 Velankani Information Systems Pvt. Ltd Electronic City Phase – 1, Karnataka - 560100",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/IpzMkJGpvFtxTOr7yPAD.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/IpzMkJGpvFtxTOr7yPAD.png",
+      "/assets/hospital_interior_1.jpg",
+      "/assets/hospital_exterior_2.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-electronic-city-niladri-road",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1134",
     phone: "08069266140",
@@ -86,6 +127,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Sarjapur",
     address: "Above HDFC Bank, 83/3 Doddakannelli, Sarjapura Main Road Bangalore, Karnataka - 560035",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/lKw02W7fec1ULE3NFBcN.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/lKw02W7fec1ULE3NFBcN.png",
+      "/assets/hospital_interior_5.jpg",
+      "/assets/hospital_3.png",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-sarjapura",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1137",
     phone: "08069266140",
@@ -95,6 +141,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, JP Nagar",
     address: "734, 5th Main Rd, Sarakki Industrial Layout, 3rd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/JK9SNJbsNOCWIFrsyV6T.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/JK9SNJbsNOCWIFrsyV6T.png",
+      "/assets/hospital_interior_2.jpg",
+      "/assets/hospital_exterior_1.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-clinic-jp-nagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1729",
     phone: "08069266140",
@@ -104,6 +155,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Harlur Road",
     address: "1st Floor, Haralur Main Rd, below Cult Fit, HSR Extension, Reliable Residency Layout Phase 3, Reliable Tranquil Layout, HSR Layout, Bengaluru, Karnataka 560102",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/mx1SGnI99gMCzaw2P2HM.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/mx1SGnI99gMCzaw2P2HM.png",
+      "/assets/hospital_interior_4.jpg",
+      "/assets/hospital_1.png",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-clinic-harlur-road",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1350",
     phone: "08069266140",
@@ -113,6 +169,11 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     name: "Narayana Clinic, Jayanagar",
     address: "1st Floor, Uday House, Opposite Jain temple 4th Block, Jayanagar Bangalore, Karnataka - 560011",
     image: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/QiHPO9fJ1zysLG0voLsT.png",
+    images: [
+      "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/QiHPO9fJ1zysLG0voLsT.png",
+      "/assets/hospital_interior_1.jpg",
+      "/assets/hospital_exterior_2.jpg",
+    ],
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-jayanagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1139",
     phone: "08069266140",
