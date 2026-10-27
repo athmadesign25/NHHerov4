@@ -9,7 +9,10 @@ import {
   X, 
   ArrowUpRight, 
   PhoneCall,
-  Calendar
+  Calendar,
+  Clock,
+  Activity,
+  RotateCcw
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -35,11 +38,12 @@ const ORGAN_FILTER_OPTIONS = [
   { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
 ];
 
-// Secondary credentials on right hero column (calm, non-distracting metrics)
+// Secondary credentials on right hero column (calm, non-distracting 4 parameters)
 const HERO_ANALYTICS_PARAMETERS = [
   { value: 400, suffix: "+", label: "Surgical Procedures" },
   { value: 30, suffix: "+", label: "Medical Specialities" },
   { staticValue: "98.6%", label: "Clinical Safety Score" },
+  { staticValue: "1L+", label: "Transplants & Complex Surgeries" },
 ];
 
 export default function TreatmentsLibraryPage() {
@@ -87,19 +91,11 @@ export default function TreatmentsLibraryPage() {
     };
   }, [selectedOrgan, searchQuery]);
 
-  // Compute dynamic feedback text matching clinical semantics
-  const feedbackText = useMemo(() => {
-    if (searchQuery.trim()) {
-      return `Here based on your search for "${searchQuery}" this are the results`;
-    }
-    if (selectedOrgan) {
-      const currentOpt = ORGAN_FILTER_OPTIONS.find((s) => s.value === selectedOrgan);
-      if (currentOpt) {
-        return `Here based on your selection for treatment under ${currentOpt.label.toLowerCase()} section this are the results`;
-      }
-    }
-    return "Here based on your selection for clinical treatments and procedures this are the results";
-  }, [selectedOrgan, searchQuery]);
+  const currentOrganLabel = useMemo(() => {
+    if (!selectedOrgan) return null;
+    const match = ORGAN_FILTER_OPTIONS.find((s) => s.value === selectedOrgan);
+    return match ? match.label : selectedOrgan;
+  }, [selectedOrgan]);
 
   const handleToggleOrgan = (val: string) => {
     // Clicking active organ toggles it off, clicking another selects it
@@ -160,20 +156,8 @@ export default function TreatmentsLibraryPage() {
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
             </p>
 
-            {/* Compressed Pill Search with Pulse Moving Gradient Outline, Glow Spotlight & Live Result Count */}
+            {/* Compressed Pill Search with Visible Gradient Outline, Glow Spotlight & Live Result Count */}
             <div className={styles.heroSearchContainer}>
-              {/* Pulse AI Search Gradient Definition for Search Icon */}
-              <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
-                <defs>
-                  <linearGradient id="nhPulseSearchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00C4FF" />
-                    <stop offset="35%" stopColor="#8B5CF6" />
-                    <stop offset="70%" stopColor="#FF2E93" />
-                    <stop offset="100%" stopColor="#ED1C24" />
-                  </linearGradient>
-                </defs>
-              </svg>
-
               <div className={styles.searchBoxWrap}>
                 <div className={styles.searchBox}>
                   <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
@@ -211,7 +195,7 @@ export default function TreatmentsLibraryPage() {
             </div>
           </div>
 
-          {/* Right Column: Secondary Credential Numbers (Toned down, non-distracting) */}
+          {/* Right Column: Secondary Credential Numbers (4 parameters, balanced hierarchy) */}
           <div className={styles.heroRightCol}>
             {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
               <div key={index} className={styles.statBlock}>
@@ -258,11 +242,37 @@ export default function TreatmentsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW & QUICK API PULSE BAR ─────────────── */}
+      {/* ─── DYNAMIC FEEDBACK TEXT ROW (HIGHLIGHTING ORGAN & RESULT COUNT) ─── */}
       <div className={styles.feedbackTextRow}>
-        <p className={styles.feedbackText}>
-          {feedbackText}
-        </p>
+        <div className={styles.feedbackTextWrapper}>
+          <p className={styles.feedbackText}>
+            {searchQuery.trim() ? (
+              <>
+                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+              </>
+            ) : selectedOrgan ? (
+              <>
+                Here based on your selection for treatment under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+              </>
+            ) : (
+              <>
+                Here based on your selection for clinical treatments & procedures &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
+              </>
+            )}
+          </p>
+
+          {(selectedOrgan || searchQuery.trim()) && (
+            <button 
+              type="button" 
+              className={styles.clearFilterChip} 
+              onClick={handleResetFilters}
+              aria-label="Clear active filter"
+            >
+              <RotateCcw size={12} />
+              <span>Reset filter</span>
+            </button>
+          )}
+        </div>
 
         {isApiLoading && (
           <div className={styles.apiPulseBar}>
@@ -331,16 +341,31 @@ export default function TreatmentsLibraryPage() {
                       </p>
                     </div>
 
-                    {/* Two Decision Buttons: Find doctors & Read more ↗ (Hover on desktop / Always visible on iPad & mobile) */}
-                    <div className={styles.cardActions}>
-                      <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
-                        Find doctors
-                      </Link>
+                    {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Hover Decision Action Buttons */}
+                    <div className={styles.cardBottomSlot}>
+                      {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover) */}
+                      <div className={styles.cardRestingMeta}>
+                        <span className={styles.metaBadge}>
+                          <Clock size={11} className={styles.metaIcon} />
+                          <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
+                        </span>
+                        <span className={styles.metaBadge}>
+                          <Activity size={11} className={styles.metaIcon} />
+                          <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
+                        </span>
+                      </div>
 
-                      <Link href={detailUrl} className={styles.cardDetailBtn}>
-                        <span>Read more</span>
-                        <ArrowUpRight size={13} className={styles.pillBtnArrow} />
-                      </Link>
+                      {/* Hover Action Buttons: Find doctors & Read more ↗ (Revealed on hover on desktop / Always available on iPad & mobile) */}
+                      <div className={styles.cardActions}>
+                        <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
+                          Find doctors
+                        </Link>
+
+                        <Link href={detailUrl} className={styles.cardDetailBtn}>
+                          <span>Read more</span>
+                          <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </motion.article>
@@ -350,27 +375,40 @@ export default function TreatmentsLibraryPage() {
         )}
       </main>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT ────────────────────────────────────────── */}
+      {/* ─── BOTTOM TRUST HIGHLIGHT (SECOND OPINION BOARD WITH TEAM VISUAL) ─── */}
       <section className={styles.trustBanner}>
-        <div className={styles.trustTextGroup}>
-          <div className={styles.trustEyebrow}>Narayana Health Clinical Standards</div>
+        <div className={styles.trustLeft}>
+          <div className={styles.trustEyebrow}>MULTI-DISCIPLINARY SURGICAL BOARD</div>
           <h3 className={styles.trustTitle}>
             Looking for a surgical second opinion or cost estimate?
           </h3>
           <p className={styles.trustDesc}>
-            Our multidisciplinary surgical boards review complex diagnoses and recommend minimally invasive alternatives with transparent, all-inclusive pricing.
+            Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing.
           </p>
+
+          <div className={styles.trustActions}>
+            <a href="tel:18003090309" className={styles.trustSecondaryBtn}>
+              <PhoneCall size={15} />
+              <span>1800 309 0309</span>
+            </a>
+            <Link href="/book-appointment" className={styles.trustPrimaryBtn}>
+              <Calendar size={15} />
+              <span>Request Second Opinion</span>
+            </Link>
+          </div>
         </div>
 
-        <div className={styles.trustActions}>
-          <a href="tel:18003090309" className={styles.trustSecondaryBtn}>
-            <PhoneCall size={15} />
-            <span>1800 309 0309</span>
-          </a>
-          <Link href="/book-appointment" className={styles.trustPrimaryBtn}>
-            <Calendar size={15} />
-            <span>Book Consultation</span>
-          </Link>
+        <div className={styles.trustVisualCol}>
+          <div className={styles.trustImageFrame}>
+            <Image
+              src="/top-medical-experts.png"
+              alt="Narayana Health multidisciplinary surgical board"
+              fill
+              sizes="(max-width: 900px) 100vw, 340px"
+              className={styles.trustImage}
+            />
+            <div className={styles.trustImageOverlay} />
+          </div>
         </div>
       </section>
 

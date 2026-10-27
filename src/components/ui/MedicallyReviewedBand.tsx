@@ -46,7 +46,6 @@ export default function MedicallyReviewedBand({
             </div>
             <div className={styles.badgeTextGroup}>
               <div className={styles.statusRow}>
-                <span className={styles.pulseDot} />
                 <span className={styles.reviewLabel}>Medically Reviewed</span>
               </div>
               <span className={styles.reviewDate}>
