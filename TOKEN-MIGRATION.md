@@ -1,286 +1,206 @@
 # Moving your branch onto the design tokens
 
-For everyone with a feature branch started before the token system landed.
-You do not need to understand the token system to follow this — the tools
-name every change, and your agent does the typing.
+For anyone whose branch started before the token system landed.
 
-Budget an afternoon. Nothing here can damage your work: step 1 makes a copy
-and everything happens on the copy.
+You run two prompts. The agent does the git, the merge and the conversion.
+You answer three questions along the way. You should not need to type a git
+command unless something goes wrong.
+
+Budget an afternoon. Nothing here can damage your work — the first thing
+the agent does is make a copy, and everything happens on the copy.
 
 ---
 
 ## Three ground rules
 
-**1. You never push to `main`.** You push your copy branch; Nahid reviews
-and merges. If an agent offers to push to `main`, say no.
+**1. Nothing is ever pushed to `main`.** Not by you, not by the agent. You
+push your copy branch at the end; Nahid reviews and merges.
 
-**2. The merge only goes one way: `main` → your copy.** Nothing you do here
-reaches `main` until someone reviews it.
+**2. The merge only goes one way: `main` → your copy.**
 
 **3. This changes how values are written, not how anything behaves.**
 `#034EA2` becoming `var(--blue-brand)` is the same colour with a name. If
-something looks or works differently afterwards, that is a mistake to
-report — not something you have to accept.
+anything looks or works differently afterwards, that is a mistake to
+report — not something to accept.
 
 ---
 
-## The one idea that makes this easy
+## Why the order matters
 
-**Merge `main` in first. Tokenise second.**
+**`main` is merged in first, then your code is converted.**
 
-Once `main` is merged, every shared page — homepage, hero, navbar — arrives
+Once `main` is in, every shared page — homepage, hero, navbar — arrives
 *already converted*. The only hard-coded values left anywhere are the ones
-you wrote. So you never have to answer "is this bit mine?" — after the
-merge, anything the checker flags is yours by definition.
+you wrote. So nobody has to judge "is this bit mine?" — after the merge,
+whatever the checker flags is yours by definition.
 
-Do it the other way round and your agent will cheerfully reconvert the
-entire homepage, which is already done, and you will fight the conflicts
-twice.
+The other way round, the agent reconverts the entire homepage, which is
+already done, and you fight the same conflicts twice.
 
 ---
 
 ## Before you start
 
-```bash
-node -v          # needs v20+. If "command not found", install Node 20.
-git remote -v    # find the line with NHHerov4 — that first word is your
-                 # remote name. Almost certainly `origin`.
-```
+Check Node is installed — in a terminal, `node -v` should print v20 or
+higher. If it says "command not found", install Node 20 from nodejs.org.
+
+Then open the project in your agent (Claude Code, Cursor, whatever you
+use) and paste **Prompt 1**.
 
 ---
 
-## Step 1 — Make a safety copy
+## What happens
 
-```bash
-git checkout YOUR-BRANCH
-git pull
-git checkout -b YOUR-BRANCH-tokens
-```
-
-Your original branch is now frozen. If any of this goes wrong you delete
-the copy and lose nothing.
-
----
-
-## Step 2 — Write down what you own
-
-**Do this before merging, while your branch is still clean.** Afterwards it
-is a pile of conflicts and much harder to see what was yours.
-
-Git will list what you have touched:
-
-```bash
-git fetch origin main
-git diff --name-only $(git merge-base origin/main HEAD)...HEAD \
-  | grep -E '\.(tsx|ts|module\.css)$' | sed 's|/[^/]*$||' | sort | uniq -c | sort -rn
-```
-
-That prints your folders with a file count each. Use it to fill in:
-
-```
-I OWN:           the search experience, including its mobile variants
-MY FILES:        src/components/search/**, src/components/ui/DoctorCard.tsx
-I DID NOT BUILD: everything else in this repo.
-```
-
-The list is a starting point, not the answer — it includes files you only
-wired your feature into. **Owning a file means you would be the person to
-fix it if it broke.** Touching the homepage to plug your feature in does
-not make the homepage yours.
-
-If you genuinely cannot tell, call it not-yours. Taking `main`'s version of
-something that was actually yours is one command to undo. The other way
-round quietly deletes someone's week.
-
-Keep these three lines open — you paste them into Prompt A.
-
----
-
-## Step 3 — Bring `main` in
-
-```bash
-git merge origin/main
-```
-
-Git stops and lists what it could not merge alone. That is normal — those
-are files both you and `main` changed. Roughly what to expect:
-
-| branch | your files | likely conflicts |
+| | who | what |
 |---|---|---|
-| `chetan_work` | 62 | 27 |
-| `toshib_work` | 117 | 73 |
-| `aditya3_work` | 130 | 29 |
-| `aditya_work` | 10 | 10 |
-| `aditya2_branch` | 4 | 3 |
-
-Escape hatch at any point: `git merge --abort` puts you back to the start
-of this step with nothing lost.
-
----
-
-## Step 4 — Resolve the conflicts
-
-Paste **Prompt A**, with your three lines from step 2 in it. Its rules:
-
-- **Not yours** → take `main`'s version whole.
-- **Yours, `main` left it alone** → keep yours.
-- **Yours, and `main` changed it too** → **stop and ask a human.**
-
-That last case is the one that matters: two people built on the same thing.
-No rule resolves it, and an agent that picks a side silently destroys
-someone's work. The prompt makes it list these and wait. Bring that list to
-Nahid.
-
-```bash
-git add -A
-git commit -m "Merge main into YOUR-BRANCH-tokens"
-```
+| **Prompt 1** | agent | makes the copy branch, lists your files, proposes your scope |
+| **Checkpoint 1** | **you** | confirm or correct the scope |
+| | agent | merges `main`, sorts the conflicts, stops |
+| **Checkpoint 2** | **you** | decide the contested files (see below) |
+| **Prompt 2** | agent | resolves conflicts, converts your values to tokens |
+| **Checkpoint 3** | **you** | click through the site and confirm it looks the same |
+| | you | push the copy branch, tell Nahid |
 
 ---
 
-## Step 5 — See what is left
+### Checkpoint 1 — your scope
 
-```bash
-npm install
-npm run check:tokens
-```
-
-The first line is your scope:
+The agent will propose something like:
 
 ```
-Design-token check — 14 file(s) vs origin/main
+I OWN: the search experience, including its mobile variants
+MY FILES: src/components/search/**, src/components/ui/DoctorCard.tsx
 ```
 
-**Those files are your work and only your work.** If that number is in the
-hundreds, step 3 did not finish — ask Nahid before continuing.
+It builds this from the files you touched, which **over-counts** — it
+includes files you only wired your feature into. Cut those.
 
-| grade | meaning | what to do |
-|---|---|---|
-| **EXACT** | a token has exactly this value | **must fix** — the only grade that fails |
-| **NEAR** | very close to a token | use it unless it visibly changes the design |
-| **NEW** | you added a token to `globals.css` | don't — see Prompt B rule 1 |
-| **CHANNEL** | `rgba()` of a colour with no `-rgb` variant | leave it, mention it to Nahid |
+**Owning a file means you would be the person to fix it if it broke.**
+Touching the homepage to plug your feature in does not make the homepage
+yours. If you genuinely cannot tell, call it not-yours: taking `main`'s
+version of something that was actually yours is one command to undo, the
+other way round quietly deletes someone's week.
 
-Do **not** run `check:tokens:all` — that scans everything, including work
-already finished, and buries yours.
+### Checkpoint 2 — the contested files
 
----
+The agent sorts every conflict into three buckets:
 
-## Step 6 — Tokenise
+- **A — not yours** → takes `main`'s version
+- **B — yours, `main` left it alone** → keeps yours
+- **C — yours, and `main` changed it too** → **stops and asks you**
 
-Paste **Prompt B**. Then re-run `npm run check:tokens` until it prints:
+C means two people built on the same thing. No rule resolves that, and an
+agent that picks a side silently destroys someone's work. **Take the C list
+to Nahid.** Do not work through it alone, especially if it is long.
 
-```
-OK — nothing that already has a name is written out longhand.
-```
+### Checkpoint 3 — does it still look right?
 
----
-
-## Step 7 — Look at it
-
-```bash
-npm run dev
-```
-
-**http://localhost:3005** — note 3005, not 3000. Click through your
+The agent gives you a URL (it will be `localhost:3005`). Click through your
 feature. This was a swap of values for names, so it should look identical.
-If something shifted, a "near" token was not near enough: tell the agent
-which element and have it restore the original with a `token-ok` note.
+If something shifted, tell the agent which element — a "near" token was not
+near enough, and it should restore the original with a `token-ok` note.
 
-**/ds-lab** shows every token with its live value.
-
----
-
-## Step 8 — Push the copy
-
-```bash
-git push -u origin YOUR-BRANCH-tokens
-```
-
-Tell Nahid. Your original branch is still untouched.
+`localhost:3005/ds-lab` shows every token with its live value.
 
 ---
 
 # The prompts
 
-Use them as written — the restrictions are the point. An agent given
+Use them as written. The restrictions are the point — an agent given
 "tokenise my branch" without them will add tokens, reconvert finished
-files, and nudge your design to make the check pass.
+files, and adjust your design to make the check pass.
 
-Both start by reading this file, so the agent gets the full context rather
-than only what you pasted. When an agent says it is done, run
-`npm run check:tokens` yourself — it takes two seconds and is the only
-thing that actually knows.
-
-## Prompt A — resolve the merge conflicts
-
-Replace the two CAPS lines with yours from step 2.
+## Prompt 1 — set up and merge
 
 ```
-Read TOKEN-MIGRATION.md in the repo root and follow it.
+Read TOKEN-MIGRATION.md in the repo root and follow it. You are moving my
+branch onto this project's design-token system.
 
-I merged origin/main into my branch and there are conflicts. main is the
-source of truth for shared code — it is on the design-token system, my
-branch is not.
+Do these in order and STOP where it says stop.
 
-I OWN: <WHAT YOU OWN, IN PLAIN WORDS>
-MY FILES: <PATHS YOU BUILT>
-Everything else in the repo is not mine.
+1. Tell me which branch I am on and whether I have uncommitted changes. If
+   I do, stop and ask me what to do with them.
 
-Sort every conflicted file:
-A. Not mine -> take main's version of the whole file. This always includes
-   src/app/globals.css, whatever my scope says.
-B. Mine, and main did not change it -> keep mine.
-C. Mine AND main changed it too -> STOP. Do not choose. Leave it
-   conflicted and untouched.
+2. Find the git remote whose URL contains NHHerov4 and use that name
+   throughout (probably "origin"). Fetch its main.
 
-Reply first with a table of every conflicted file and its bucket, with the
-C files listed separately under "NEEDS A HUMAN DECISION". Then wait for me.
+3. Create a copy branch named <my-current-branch>-tokens and switch to it.
+   This copy is the safety net: my original branch must stay untouched for
+   the rest of this.
 
-After I confirm, resolve A and B only. If unsure, it is C.
+4. Show me the files I have changed, grouped by folder with counts:
+   git diff --name-only $(git merge-base <remote>/main HEAD)...HEAD
 
-Never run anything that can discard work: no reset --hard, no force push,
-no push to main.
+5. From that, propose my scope in this form, then STOP and wait:
+      I OWN: <my feature, in plain words>
+      MY FILES: <paths>
+   That list over-counts — it includes files I only wired my feature into,
+   which are NOT mine. Owning a file means I would be the one to fix it if
+   it broke. Wait for me to confirm or correct it before going on.
+
+6. Once I confirm, merge <remote>/main into the copy branch.
+
+7. Sort every conflicted file into:
+   A. Not mine -> take main's version of the whole file. This always
+      includes src/app/globals.css, whatever my scope says.
+   B. Mine, and main did not change it -> keep mine.
+   C. Mine AND main changed the same feature -> do not touch it. A human
+      decides.
+   Show me a table of every conflicted file and its bucket, with the C
+   files listed separately under "NEEDS A HUMAN DECISION". Then STOP.
+
+Never push to main. Never use reset --hard, force push, or anything else
+that can discard work. If you are unsure which bucket a file is, it is C.
+If anything looks wrong, stop and tell me rather than working around it.
 ```
 
-## Prompt B — convert my work to tokens
+## Prompt 2 — resolve and convert
 
 ```
-Convert my code to this project's design tokens.
+Continue the token migration. Read TOKEN-MIGRATION.md if you have not.
 
-Read TOKEN-MIGRATION.md, DESIGN-SYSTEM.md and AGENTS.md in the repo root
-first, then run:
+1. Resolve the bucket A and B conflicts as agreed. Leave every bucket C
+   file exactly as it is unless I have told you otherwise. Commit the
+   merge.
 
-    npm run check:tokens
+2. Run: npm install && npm run check:tokens
+   Tell me how many files it lists. If it is far more than my own file
+   list from the setup step, STOP — the merge went wrong and I need to
+   look before you edit anything.
 
-It lists only the files I changed versus main. Edit those and nothing else,
-even if you spot hard-coded values elsewhere — that work is already done.
+3. The files it lists are the whole job. Edit those and nothing else, even
+   if you notice hard-coded values elsewhere — that work is already done.
 
 Rules:
-1. Never add a token to globals.css. If nothing fits, leave the value and
-   put /* token-ok: <why> */ above it, then list it for me. Flagging is the
-   right outcome, not a failure.
-2. Use the nearest EXISTING token; prefer semantic (--color-text-secondary)
-   over primitive (--slate-600). The checker names the match — use it.
-3. Nothing may look different. If the nearest token would visibly shift a
-   colour, size or spacing, do not use it — token-ok it instead.
-4. Opacity composes: rgba(var(--white-rgb), 0.08). Do not invent alphas.
-5. Framer Motion cannot read CSS variables — import from src/lib/motion.ts.
-   Literals are correct in shader props and SVG attributes (stroke=,
-   stopColor=); mark those token-ok.
+- Never add a token to src/app/globals.css. If nothing fits, leave the
+  value and put /* token-ok: <why> */ above it, then list it for me.
+  Flagging is the right outcome, not a failure.
+- Use the nearest EXISTING token; prefer semantic (--color-text-secondary)
+  over primitive (--slate-600). The checker names the match — use it.
+- Nothing may look different. If the nearest token would visibly shift a
+  colour, size or spacing, do not use it — token-ok it instead.
+- Opacity composes: rgba(var(--white-rgb), 0.08). Do not invent alphas.
+- Framer Motion cannot read CSS variables — import from src/lib/motion.ts.
+  Literals are correct in shader props and SVG attributes (stroke=,
+  stopColor=); mark those token-ok.
 
-One file at a time. Re-run the check after each and show me before moving
-on. At the end: the files you changed, and every token-ok with its reason.
+Work one file at a time, re-running npm run check:tokens after each, and
+show me the result before moving on.
+
+4. When it prints "OK — nothing that already has a name is written out
+   longhand", start the dev server and give me the URL so I can look.
+
+5. Do not push anything. Tell me when it is ready and I will push it
+   myself.
 ```
 
 ---
 
 ## Reasonable things to worry about
 
-**"Will merging `main` overwrite my search / booking flow?"** Not if you
-did step 2. Your files are bucket B and are kept. The real risk is where
-`main` changed the same feature — bucket C, where the prompt stops rather
-than guesses. If your C list is long, do not push through it alone.
+**"Will merging `main` overwrite my search / booking flow?"** Not if your
+scope is right at checkpoint 1 — your files are bucket B and are kept. The
+real risk is bucket C, where the agent stops rather than guesses.
 
 **"Later, when my branch goes into `main`, does this undo my feature?"**
 No. That merge is separate, after review, and carries your feature *into*
@@ -288,7 +208,7 @@ No. That merge is separate, after review, and carries your feature *into*
 
 **"I don't know tokens well enough to judge the replacements."** You do not
 need to. The checker names the exact token every time. Your judgement is
-needed for one question, in step 7: does it still look right?
+needed for one question, at checkpoint 3: does it still look right?
 
 **"The agent wants to add a token because nothing fits."** Say no. A
 `token-ok` comment is the correct outcome and takes ten seconds. A new
@@ -297,14 +217,20 @@ one — and that is Nahid's call, not the agent's.
 
 ---
 
-## If you get stuck
+## If something goes wrong
 
-| problem | fix |
+Escape hatches, for when the agent is stuck or you want out:
+
+| problem | type this |
 |---|---|
-| "Cannot compare against..." | `git fetch origin main`, try again |
-| checker lists hundreds of files | step 3 did not finish — `git merge --abort` and redo |
-| page looks different after tokenising | a "near" token was not near enough; restore the original with `token-ok` |
-| the merge is a disaster | `git merge --abort`, or delete the copy and start from step 1 |
+| the merge is a mess, start it over | `git merge --abort` |
+| start the whole thing over | `git merge --abort`, then `git checkout YOUR-BRANCH` and delete the copy |
+| "Cannot compare against..." | `git fetch origin main`, then retry |
+| agent lists hundreds of files | the merge did not finish — `git merge --abort` and redo |
+| the page looks different | tell the agent which element; it restores the value with `token-ok` |
 
-Starting over costs an hour. It never costs your work — that is what step 1
-is for.
+Starting over costs an hour. It never costs your work — that is what the
+copy branch is for.
+
+Never run `npm run check:tokens:all` — it scans the whole codebase,
+including work already finished, and buries yours.
