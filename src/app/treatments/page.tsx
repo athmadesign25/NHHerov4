@@ -134,31 +134,42 @@ export default function TreatmentsLibraryPage() {
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
             </p>
 
-            {/* Clean Frosted Pill Search Input matching text block width */}
+            {/* Compressed Pill Search with Gradient Outline, Glow Spotlight & Live Result Count */}
             <div className={styles.heroSearchContainer}>
-              <div className={styles.searchBox}>
-                <Search size={16} className={styles.searchIcon} />
-                <input
-                  type="text"
-                  placeholder="Search treatments, surgery or condition..."
-                  className={styles.searchInput}
-                  value={searchQuery}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    startTransition(() => setSearchQuery(val));
-                  }}
-                  aria-label="Search treatments and procedures"
-                />
-                {searchQuery && (
-                  <button
-                    className={styles.clearSearchBtn}
-                    onClick={() => setSearchQuery("")}
-                    aria-label="Clear search input"
-                  >
-                    <X size={15} />
-                  </button>
-                )}
+              <div className={styles.searchBoxWrap}>
+                <div className={styles.searchBox}>
+                  <Search size={18} strokeWidth={1.8} className={styles.searchIcon} />
+                  <input
+                    type="text"
+                    placeholder="Search treatments, surgery or condition..."
+                    className={styles.searchInput}
+                    value={searchQuery}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      startTransition(() => setSearchQuery(val));
+                    }}
+                    aria-label="Search treatments, surgery or condition"
+                  />
+                  {searchQuery && (
+                    <button
+                      className={styles.clearSearchBtn}
+                      onClick={() => setSearchQuery("")}
+                      aria-label="Clear search input"
+                    >
+                      <X size={15} />
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {/* Dynamic result count displayed immediately below search when typing */}
+              {searchQuery.trim().length > 0 && (
+                <div className={styles.searchCountFeedback}>
+                  <span>
+                    Showing <strong className={styles.searchCountHighlight}>{filteredItems.length}</strong> {filteredItems.length === 1 ? "result" : "results"} for &ldquo;{searchQuery}&rdquo;
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -274,13 +285,13 @@ export default function TreatmentsLibraryPage() {
                     </p>
                   </div>
 
-                  {/* Two Buttons Side-by-Side: Find doctors & Explore Procedure ↗ */}
+                  {/* Two Decision Buttons: Find doctors & Read more ↗ (Hover on desktop / Always visible on iPad & mobile) */}
                   <div className={styles.cardActions}>
-                    <Link href={doctorsUrl} className={styles.pillBtn}>
+                    <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
                       Find doctors
                     </Link>
 
-                    <Link href={detailUrl} className={styles.pillBtn}>
+                    <Link href={detailUrl} className={styles.cardDetailBtn}>
                       <span>Read more</span>
                       <ArrowUpRight size={13} className={styles.pillBtnArrow} />
                     </Link>

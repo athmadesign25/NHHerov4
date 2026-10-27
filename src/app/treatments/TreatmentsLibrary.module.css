@@ -109,37 +109,86 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* ─── SEARCH INPUT (MATCHING TEXT BLOCK WIDTH) ──────────────────────────── */
+/* ─── SEARCH INPUT (COMPRESSED PILL WITH GRADIENT OUTLINE & SPOTLIGHT) ──── */
 .heroSearchContainer {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
-  max-width: 600px;
+  max-width: 580px;
+  position: relative;
+}
+
+/* Gradient outline wrapper stroke */
+.searchBoxWrap {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-full, 9999px);
+  padding: 1.5px; /* Vivid gradient stroke */
+  background: linear-gradient(
+    115deg,
+    #a855f7 0%,
+    #7c3aed 35%,
+    #6366f1 70%,
+    #ec4899 100%
+  );
+  box-shadow: 0 0 24px -2px rgba(168, 85, 247, 0.42),
+              0 8px 26px rgba(0, 0, 0, 0.45);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Ambient purple spotlight aura behind the search pill */
+.searchBoxWrap::before {
+  content: "";
+  position: absolute;
+  inset: -14px -18px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(168, 85, 247, 0.38) 0%,
+    rgba(99, 102, 241, 0.16) 50%,
+    transparent 74%
+  );
+  filter: blur(14px);
+  z-index: -1;
+  border-radius: var(--radius-full, 9999px);
+  pointer-events: none;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.searchBoxWrap:hover {
+  box-shadow: 0 0 32px 0px rgba(168, 85, 247, 0.58),
+              0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.searchBoxWrap:focus-within {
+  background: linear-gradient(
+    115deg,
+    #c084fc 0%,
+    #818cf8 40%,
+    #e879f9 75%,
+    #a855f7 100%
+  );
+  box-shadow: 0 0 38px 2px rgba(168, 85, 247, 0.72),
+              0 12px 36px rgba(0, 0, 0, 0.6);
 }
 
 .searchBox {
   width: 100%;
   display: flex;
   align-items: center;
-  background: rgba(30, 24, 60, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(147, 112, 219, 0.35);
+  background: rgba(13, 10, 26, 0.86);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-radius: var(--radius-full, 9999px);
-  padding: 9px 22px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.searchBox:focus-within {
-  background: rgba(45, 35, 90, 0.65);
-  border-color: rgba(168, 85, 247, 0.7);
-  box-shadow: 0 12px 36px rgba(124, 58, 237, 0.35);
+  padding: 0 18px;
+  height: 48px;
+  box-sizing: border-box;
 }
 
 .searchIcon {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.78);
   flex-shrink: 0;
+  margin-right: 4px;
 }
 
 .searchInput {
@@ -147,13 +196,14 @@
   background: none;
   border: none;
   outline: none;
-  font-size: 15px;
+  font-size: 14.5px;
   color: #ffffff;
-  padding: 6px 14px;
+  padding: 6px 10px;
+  letter-spacing: -0.01em;
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .clearSearchBtn {
@@ -165,10 +215,44 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
+  border-radius: 50%;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .clearSearchBtn:hover {
   color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ─── LIVE SEARCH RESULT COUNT INDICATOR (WHEN TYPING) ──────────────────── */
+.searchCountFeedback {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(226, 218, 255, 0.92);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 16px;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  animation: feedbackFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.searchCountHighlight {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+@keyframes feedbackFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ─── RIGHT COLUMN: LIGHTWEIGHT NUMBER TYPOGRAPHY (FROM USER INSTRUCTION) ── */
@@ -463,14 +547,103 @@
   overflow: hidden;
 }
 
-/* Two Action Buttons side-by-side */
+/* ─── TWO ACTION BUTTONS (DESKTOP HOVER / IPAD & MOBILE ALWAYS VISIBLE) ─── */
 .cardActions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: auto;
+  padding-top: 10px;
 }
 
+/* Desktop: hidden at rest, revealed smoothly on card hover to take decision */
+@media (min-width: 1025px) and (hover: hover) {
+  .cardActions {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .procedureCard:hover .cardActions,
+  .procedureCard:focus-within .cardActions {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+/* iPad, Tablets & Mobile (mweb): always available as requested */
+@media (max-width: 1024px), (hover: none) {
+  .cardActions {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+/* Decision Button 1 (Secondary): Find doctors */
+.cardDoctorBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cardDoctorBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Decision Button 2 (Primary): Read more ↗ */
+.cardDetailBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 9px 12px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  color: #ffffff;
+  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cardDetailBtn:hover {
+  background: linear-gradient(135deg, #023d82 0%, #104e9c 100%);
+  border-color: #ffffff;
+  box-shadow: 0 6px 18px rgba(3, 78, 162, 0.5);
+  transform: translateY(-1px);
+}
+
+.pillBtnArrow {
+  transition: transform 0.2s ease;
+}
+
+.cardDetailBtn:hover .pillBtnArrow {
+  transform: translate(2px, -2px);
+}
+
+/* General pill button fallback */
 .pillBtn {
   display: inline-flex;
   align-items: center;
@@ -493,14 +666,6 @@
   background: rgba(255, 255, 255, 0.18);
   border-color: #ffffff;
   transform: translateY(-1px);
-}
-
-.pillBtnArrow {
-  transition: transform 0.2s ease;
-}
-
-.pillBtn:hover .pillBtnArrow {
-  transform: translate(2px, -2px);
 }
 
 /* ─── EMPTY STATE ────────────────────────────────────────────────────────── */
