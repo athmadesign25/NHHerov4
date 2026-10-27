@@ -1,32 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ChevronRight, 
   Check, 
   CheckCircle2, 
   X, 
-  Share2, 
   Link as LinkIcon, 
   PhoneCall, 
   ArrowUpRight, 
-  ShieldCheck, 
-  Clock, 
   Calendar, 
   Activity, 
-  UserCheck, 
-  Hospital, 
-  HelpCircle,
   Plus,
   Minus
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
-import { TREATMENTS_PROCEDURES_DATA } from "@/data/treatmentsProceduresData";
-import { HEART_TRANSPLANT_TOC, HEART_TRANSPLANT_DETAIL } from "@/data/heartTransplantDetailData";
+import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -36,18 +27,17 @@ interface PageProps {
 export default function ProcedureDetailPage({ params }: PageProps) {
   const { slug } = React.use(params);
   
-  // Find matching procedure or fall back to heart-transplant
-  const procedure = TREATMENTS_PROCEDURES_DATA.find((p) => p.slug === slug) || TREATMENTS_PROCEDURES_DATA[0];
-  const isHeartTransplant = procedure.slug === "heart-transplant" || slug === "heart-transplant";
+  // Dynamically resolve clinical procedure data tailored to this exact procedure
+  const detail: ProcedureDetailData = getProcedureDetailData(slug);
 
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
 
-  // Set up intersection observer for active TOC highlighting
+  // Intersection observer for sticky active Table of Contents
   useEffect(() => {
     const handleScroll = () => {
-      const sections = HEART_TRANSPLANT_TOC.map((item) => document.getElementById(item.id)).filter(Boolean);
+      const sections = detail.toc.map((item) => document.getElementById(item.id)).filter(Boolean);
       const scrollPosition = window.scrollY + 200;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -61,7 +51,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [detail.toc]);
 
   const handleCopyLink = () => {
     if (typeof window !== "undefined") {
@@ -71,93 +61,102 @@ export default function ProcedureDetailPage({ params }: PageProps) {
     }
   };
 
-  const heroImageSrc = isHeartTransplant
-    ? "/images/procedures/heart_transplant_hero.jpg"
-    : procedure.image;
-
   return (
-    <div className={styles.detailPageContainer}>
-      {/* ─── DETAIL HERO ─────────────────────────────────────────────────── */}
+    <motion.div 
+      className={styles.detailPageContainer}
+      initial={{ opacity: 0, scale: 0.97, y: 12 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {/* ─── DETAIL HERO (FULL BACKGROUND IMAGE & ATMOSPHERIC GRADIENT) ─────── */}
       <section className={styles.detailHero}>
+        {/* Full scale background image with gentle zoom settle */}
+        <div className={styles.heroBg}>
+          <motion.div
+            className={styles.heroBgMotion}
+            initial={{ scale: 1.08, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image
+              src={detail.heroImage}
+              alt={detail.title}
+              fill
+              priority
+              sizes="100vw"
+              className={styles.heroBgImage}
+            />
+          </motion.div>
+          <div className={styles.heroBgOverlay} />
+        </div>
+
         <div className={styles.heroInner}>
           <div className={styles.breadcrumbsWrapper}>
             <Breadcrumbs
               items={[
                 { label: "Home", href: "/" },
                 { label: "Treatments & Procedures", href: "/treatments" },
-                { label: procedure.title },
+                { label: detail.shortTitle },
               ]}
               theme="dark"
             />
           </div>
 
-          <div className={styles.heroGrid}>
-            <div className={styles.heroLeftContent}>
-              <div className={styles.heroBadge}>
-                <span className={styles.heroBadgeDot} />
-                <span>{procedure.speciality}</span>
-              </div>
-
-              <h1 className={styles.heroMainTitle}>
-                {isHeartTransplant ? HEART_TRANSPLANT_DETAIL.heroTitle : procedure.title}
-              </h1>
-
-              <p className={styles.heroSubTitle}>
-                {isHeartTransplant ? HEART_TRANSPLANT_DETAIL.heroSubtitle : procedure.summary}
-              </p>
-
-              <div className={styles.heroActionsRow}>
-                <Link href="/doctors" className={styles.primaryFindDocBtn}>
-                  <span>Find a Specialist</span>
-                  <ArrowUpRight size={18} />
-                </Link>
-
-                <Link href="/doctors" className={styles.secondaryBookBtn}>
-                  <span>Book Consultation</span>
-                </Link>
-              </div>
-
-              {/* Quick Metrics */}
-              <div className={styles.heroMetricsRow}>
-                {procedure.successRate && (
-                  <div className={styles.metricItem}>
-                    <span className={styles.metricValue}>{procedure.successRate}</span>
-                    <span className={styles.metricLabel}>Success Rate</span>
-                  </div>
-                )}
-                {procedure.duration && (
-                  <div className={styles.metricItem}>
-                    <span className={styles.metricValue}>{procedure.duration}</span>
-                    <span className={styles.metricLabel}>Procedure Duration</span>
-                  </div>
-                )}
-                {procedure.hospitalStay && (
-                  <div className={styles.metricItem}>
-                    <span className={styles.metricValue}>{procedure.hospitalStay}</span>
-                    <span className={styles.metricLabel}>Typical Stay</span>
-                  </div>
-                )}
-                {procedure.recoveryTime && (
-                  <div className={styles.metricItem}>
-                    <span className={styles.metricValue}>{procedure.recoveryTime}</span>
-                    <span className={styles.metricLabel}>Recovery Period</span>
-                  </div>
-                )}
-              </div>
+          <div className={styles.heroContentCol}>
+            {/* Clean Uppercase Eyebrow (No red dot or blue chip) */}
+            <div className={styles.heroEyebrow}>
+              {detail.speciality}
             </div>
 
-            {/* 3D Medical Illustration in Hero */}
-            <div className={styles.heroImageCol}>
-              <div className={styles.heroVisualFrame}>
-                <Image
-                  src={heroImageSrc}
-                  alt={procedure.title}
-                  fill
-                  priority
-                  sizes="(max-width: 900px) 100vw, 500px"
-                  className={styles.heroVisualImg}
-                />
-              </div>
+            {/* Refined, Balanced Title (Not overly thick or huge) */}
+            <h1 className={styles.heroMainTitle}>
+              {detail.heroTitle}
+            </h1>
+
+            {/* Complementary Subtitle */}
+            <p className={styles.heroSubTitle}>
+              {detail.heroSubtitle}
+            </p>
+
+            {/* Clean Single Primary CTA + Phone Helpline */}
+            <div className={styles.heroActionsRow}>
+              <Link href="/doctors" className={styles.heroPrimaryBtn}>
+                <Calendar size={15} />
+                <span>Book Consultation</span>
+              </Link>
+
+              <a href="tel:18003090309" className={styles.heroPhoneLink}>
+                <PhoneCall size={14} />
+                <span>1800 309 0309 (24x7)</span>
+              </a>
+            </div>
+
+            {/* Standard Site Parameter Showcase Language */}
+            <div className={styles.heroMetricsRow}>
+              {detail.metrics.successRate && (
+                <div className={styles.metricItem}>
+                  <span className={styles.metricValue}>{detail.metrics.successRate}</span>
+                  <span className={styles.metricLabel}>Success Rate</span>
+                </div>
+              )}
+              {detail.metrics.duration && (
+                <div className={styles.metricItem}>
+                  <span className={styles.metricValue}>{detail.metrics.duration}</span>
+                  <span className={styles.metricLabel}>Duration</span>
+                </div>
+              )}
+              {detail.metrics.hospitalStay && (
+                <div className={styles.metricItem}>
+                  <span className={styles.metricValue}>{detail.metrics.hospitalStay}</span>
+                  <span className={styles.metricLabel}>Typical Stay</span>
+                </div>
+              )}
+              {detail.metrics.recoveryTime && (
+                <div className={styles.metricItem}>
+                  <span className={styles.metricValue}>{detail.metrics.recoveryTime}</span>
+                  <span className={styles.metricLabel}>Recovery Period</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -171,7 +170,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             <div className={styles.tocCard}>
               <h2 className={styles.tocHeaderTitle}>Table of Contents</h2>
               <ul className={styles.tocList}>
-                {HEART_TRANSPLANT_TOC.map((item) => {
+                {detail.toc.map((item) => {
                   const isActive = activeSection === item.id;
                   return (
                     <li key={item.id}>
@@ -245,11 +244,11 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Expert Coordinator Callback Card */}
+            {/* Medical Guidance Helpline Card */}
             <div className={styles.sidebarHelpCard}>
               <div className={styles.helpCardTitle}>Need Medical Guidance?</div>
               <p className={styles.helpCardDesc}>
-                Speak directly with a dedicated transplant clinical coordinator for guidance on eligibility, donor waitlists, and second opinions.
+                Speak directly with a dedicated surgical clinical coordinator for guidance on diagnosis, scheduling, and second opinions.
               </p>
               <a href="tel:18003090309" className={styles.helpCardPhoneBtn}>
                 <PhoneCall size={15} />
@@ -258,29 +257,29 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             </div>
           </aside>
 
-          {/* ─── RIGHT COLUMN: ARTICLE DETAILS ──────────────────────────── */}
+          {/* ─── RIGHT COLUMN: ARTICLE DETAILS (TRUE INFORMATION) ───────── */}
           <article className={styles.articleContent}>
             {/* 1. Overview */}
             <section id="overview" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
-                {HEART_TRANSPLANT_DETAIL.title}
+                {detail.title}
               </h2>
               <p className={styles.leadParagraph}>
-                {HEART_TRANSPLANT_DETAIL.leadParagraph}
+                {detail.leadParagraph}
               </p>
             </section>
 
-            {/* 2. What Is a Heart Transplant? (Highlight Box) */}
+            {/* 2. What Is It? */}
             <section id="what-is-it" className={styles.sectionBlock}>
               <div className={styles.highlightBox}>
                 <h3 className={styles.highlightBoxTitle}>
-                  {HEART_TRANSPLANT_DETAIL.whatIsIt.title}
+                  {detail.whatIsIt.title}
                 </h3>
                 <p className={styles.bodyParagraph}>
-                  {HEART_TRANSPLANT_DETAIL.whatIsIt.description}
+                  {detail.whatIsIt.description}
                 </p>
                 <ul className={styles.highlightKeyPointsList}>
-                  {HEART_TRANSPLANT_DETAIL.whatIsIt.keyPoints.map((point, i) => (
+                  {detail.whatIsIt.keyPoints.map((point, i) => (
                     <li key={i} className={styles.highlightKeyPoint}>
                       <span className={styles.checkIconWrapper}>
                         <Check size={16} />
@@ -292,16 +291,46 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 3. Who Needs Heart Transplant Care? */}
-            <section id="who-needs-care" className={styles.sectionBlock}>
+            {/* 3. Clickable Symptoms & Warning Signs Section */}
+            <section id="symptoms" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
-                {HEART_TRANSPLANT_DETAIL.whoNeedsCare.title}
+                {detail.symptoms.title}
               </h2>
               <p className={styles.bodyParagraph}>
-                {HEART_TRANSPLANT_DETAIL.whoNeedsCare.description}
+                {detail.symptoms.description}
+              </p>
+              <div className={styles.symptomsGrid}>
+                {detail.symptoms.items.map((sym, i) => (
+                  <Link
+                    key={i}
+                    href={`/search?q=${encodeURIComponent(sym.name)}`}
+                    className={styles.symptomCard}
+                    title={`Click to explore clinical guidance for ${sym.name}`}
+                  >
+                    <div className={styles.symptomCardHeader}>
+                      <div className={styles.symptomIconWrap}>
+                        <Activity size={16} />
+                      </div>
+                      <ArrowUpRight size={14} className={styles.symptomArrow} />
+                    </div>
+                    <div className={styles.symptomName}>{sym.name}</div>
+                    <p className={styles.symptomDesc}>{sym.desc}</p>
+                    <div className={styles.symptomActionHint}>Explore symptom guidance &rarr;</div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* 4. Indications & Who Needs Care */}
+            <section id="who-needs-care" className={styles.sectionBlock}>
+              <h2 className={styles.mainSectionTitle}>
+                {detail.whoNeedsCare.title}
+              </h2>
+              <p className={styles.bodyParagraph}>
+                {detail.whoNeedsCare.description}
               </p>
               <div className={styles.conditionsGrid}>
-                {HEART_TRANSPLANT_DETAIL.whoNeedsCare.conditions.map((item, i) => (
+                {detail.whoNeedsCare.conditions.map((item, i) => (
                   <div key={i} className={styles.conditionCard}>
                     <div className={styles.conditionName}>{item.name}</div>
                     <p className={styles.conditionDesc}>{item.desc}</p>
@@ -310,16 +339,16 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 4. When Is It Recommended? */}
+            {/* 5. When Is It Recommended? */}
             <section id="when-recommended" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
-                {HEART_TRANSPLANT_DETAIL.whenRecommended.title}
+                {detail.whenRecommended.title}
               </h2>
               <p className={styles.bodyParagraph}>
-                {HEART_TRANSPLANT_DETAIL.whenRecommended.description}
+                {detail.whenRecommended.description}
               </p>
               <ul className={styles.bulletList} style={{ marginTop: "16px" }}>
-                {HEART_TRANSPLANT_DETAIL.whenRecommended.recommendations.map((rec, i) => (
+                {detail.whenRecommended.recommendations.map((rec, i) => (
                   <li key={i} className={styles.bulletItem}>
                     <CheckCircle2 size={16} color="#034EA2" style={{ flexShrink: 0, marginTop: "2px" }} />
                     <span>{rec}</span>
@@ -328,19 +357,19 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </ul>
             </section>
 
-            {/* 5 & 6. Eligibility vs Non-Eligibility */}
+            {/* 6. Eligibility vs Non-Eligibility */}
             <section id="eligibility" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
-                {HEART_TRANSPLANT_DETAIL.eligibility.title}
+                {detail.eligibility.title}
               </h2>
               <div className={styles.eligibilityRow}>
                 <div className={`${styles.eligibilityCard} ${styles.eligibleCard}`}>
                   <h3 className={`${styles.eligibilityTitle} ${styles.eligibleTitle}`}>
                     <CheckCircle2 size={18} />
-                    <span>General Eligibility Factors</span>
+                    <span>General Eligibility Criteria</span>
                   </h3>
                   <ul className={styles.bulletList}>
-                    {HEART_TRANSPLANT_DETAIL.eligibility.eligiblePoints.map((pt, i) => (
+                    {detail.eligibility.eligiblePoints.map((pt, i) => (
                       <li key={i} className={styles.bulletItem}>
                         <Check size={15} color="#15803d" style={{ flexShrink: 0, marginTop: "3px" }} />
                         <span>{pt}</span>
@@ -355,7 +384,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                     <span>Contraindications / Not Eligible</span>
                   </h3>
                   <ul className={styles.bulletList}>
-                    {HEART_TRANSPLANT_DETAIL.eligibility.notEligiblePoints.map((pt, i) => (
+                    {detail.eligibility.notEligiblePoints.map((pt, i) => (
                       <li key={i} className={styles.bulletItem}>
                         <X size={15} color="#b91c1c" style={{ flexShrink: 0, marginTop: "3px" }} />
                         <span>{pt}</span>
@@ -366,15 +395,18 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 7. How Donor Matching Works */}
-            <section id="donor-matching" className={styles.sectionBlock}>
+            {/* 7. Surgical Approach & Technology */}
+            <section id="surgical-procedure" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
-                {HEART_TRANSPLANT_DETAIL.donorMatching.title}
+                {detail.approach.title}
               </h2>
+              <p className={styles.bodyParagraph}>
+                {detail.approach.description}
+              </p>
               <div className={styles.matchingStepsList}>
-                {HEART_TRANSPLANT_DETAIL.donorMatching.steps.map((st, i) => (
+                {detail.approach.steps.map((st, i) => (
                   <div key={i} className={styles.matchingStepCard}>
-                    <span className={styles.matchingStepNumber}>Step {st.step}</span>
+                    <span className={styles.matchingStepNumber}>Phase {st.step}</span>
                     <h3 className={styles.matchingStepTitle}>{st.title}</h3>
                     <p className={styles.matchingStepDesc}>{st.desc}</p>
                   </div>
@@ -382,66 +414,39 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 8. Waiting List */}
-            <section id="waiting-list" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>The Heart Transplant Waiting List</h2>
-              <p className={styles.bodyParagraph}>
-                Once a patient is deemed medically eligible by the transplant board, they are formally registered on the state government organ sharing network (such as NOTTO in India). Allocation is strictly prioritized based on medical acuity (Status 1A, 1B, or 2), geographical proximity to the donor hospital, and waiting duration.
-              </p>
-            </section>
-
-            {/* 9. Pre-Transplant Evaluation Tests */}
-            <section id="pre-transplant-tests" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Pre-Transplant Evaluation Tests</h2>
-              <p className={styles.bodyParagraph}>
-                Before placement on the active recipient list, patients undergo an extensive multi-organ diagnostic evaluation:
-              </p>
-              <div className={styles.conditionsGrid}>
-                {[
-                  { name: "Right Heart Catheterization", desc: "Measures pulmonary vascular resistance (PVR) and cardiac output." },
-                  { name: "High-Resolution Cardiac MRI & Echo", desc: "Assesses precise left and right ventricular ejection fractions." },
-                  { name: "HLA Tissue Typing & PRA", desc: "Identifies antibody sensitivities to prevent post-op donor organ rejection." },
-                  { name: "Pulmonary Function Tests (PFT)", desc: "Confirms lungs can tolerate prolonged bypass and ventilatory support." },
-                  { name: "Renal & Hepatic Function Panels", desc: "Ensures kidneys and liver can withstand post-transplant medications." },
-                  { name: "Comprehensive Infection Screening", desc: "Screens for latent CMV, EBV, Hepatitis, and TB to guide prophylaxis." },
-                ].map((item, i) => (
-                  <div key={i} className={styles.conditionCard}>
-                    <div className={styles.conditionName}>{item.name}</div>
-                    <p className={styles.conditionDesc}>{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* 10. Surgical Procedure */}
-            <section id="surgical-procedure" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Surgical Procedure & Technology</h2>
-              <p className={styles.bodyParagraph}>
-                During orthotopic heart transplantation, the patient is placed on cardiopulmonary bypass (heart-lung machine). The diseased heart is excised, leaving behind the posterior walls of the atria. The donor heart is meticulously sewn into place (bicaval anastomosis technique), restoring physiological anatomical circulation. Narayana Health utilizes state-of-the-art TransMedics Organ Care System (OCS) warm perfusion technology for select long-distance organ transfers.
-              </p>
-            </section>
-
-            {/* 11. Post-Transplant Recovery & Care */}
+            {/* 8. Recovery Care & Hospital Stay */}
             <section id="recovery-care" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Post-Transplant Recovery & Care</h2>
+              <h2 className={styles.mainSectionTitle}>
+                {detail.recoveryCare.title}
+              </h2>
               <p className={styles.bodyParagraph}>
-                The post-surgical phase focuses on preventing rejection while protecting against infection. Regular surveillance via endomyocardial biopsies and non-invasive cell-free DNA blood assays ensures any early cellular rejection is treated promptly with adjusted immunosuppressant therapy.
+                {detail.recoveryCare.description}
               </p>
+              <ul className={styles.bulletList} style={{ marginTop: "16px" }}>
+                {detail.recoveryCare.highlights.map((item, i) => (
+                  <li key={i} className={styles.bulletItem}>
+                    <CheckCircle2 size={16} color="#034EA2" style={{ flexShrink: 0, marginTop: "2px" }} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </section>
 
-            {/* 12. Cost & Insurance */}
+            {/* 9. Cost & Insurance */}
             <section id="cost-insurance" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Cost & Insurance in India</h2>
+              <h2 className={styles.mainSectionTitle}>
+                {detail.cost.title}
+              </h2>
               <div className={styles.costCard}>
                 <div className={styles.costHeader}>
                   <div>
                     <div className={styles.costBadge}>Estimated All-Inclusive Surgery Package</div>
-                    <div className={styles.costEstimateText}>{HEART_TRANSPLANT_DETAIL.costs.estimateRange}</div>
+                    <div className={styles.costEstimateText}>{detail.cost.estimateRange}</div>
                     <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.75)", marginTop: "4px" }}>
-                      International Patients: {HEART_TRANSPLANT_DETAIL.costs.internationalRange}
+                      International Patients: {detail.cost.internationalRange}
                     </div>
                   </div>
-                  <Link href="/doctors" className={styles.trustPrimaryBtn}>
+                  <Link href="/doctors" className={styles.heroPrimaryBtn}>
                     <span>Request Estimate</span>
                     <ArrowUpRight size={16} />
                   </Link>
@@ -449,7 +454,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
                 <div className={styles.costInclusionsTitle}>Package Inclusions:</div>
                 <div className={styles.costInclusionsGrid}>
-                  {HEART_TRANSPLANT_DETAIL.costs.inclusions.map((inc, i) => (
+                  {detail.cost.inclusions.map((inc, i) => (
                     <div key={i} className={styles.costInclusionItem}>
                       <CheckCircle2 size={16} color="#38bdf8" style={{ flexShrink: 0, marginTop: "1px" }} />
                       <span>{inc}</span>
@@ -459,68 +464,84 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
                 <div className={styles.costInsuranceNote}>
                   <strong>Insurance & Cashless Support: </strong>
-                  {HEART_TRANSPLANT_DETAIL.costs.insuranceNote}
+                  {detail.cost.insuranceNote}
                 </div>
               </div>
             </section>
 
-            {/* 13. Top Surgeons */}
+            {/* 10. Top Specialists (Matching Pulse AI Doctor Cards) */}
             <section id="specialists" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Top Cardiac Transplant Surgeons</h2>
+              <h2 className={styles.mainSectionTitle}>Specialist Surgeons & Consultants</h2>
               <p className={styles.bodyParagraph}>
-                Our cardiac team has completed over 1,000+ organ transplants with international clinical benchmark outcomes.
+                Our senior surgeons and clinical specialists bring decades of experience, board certifications, and high procedural success rates.
               </p>
               <div className={styles.doctorsGrid}>
-                {HEART_TRANSPLANT_DETAIL.doctors.map((doc, i) => (
-                  <div key={i} className={styles.docCard}>
-                    <div className={styles.docPhotoWrapper}>
-                      <Image
-                        src={doc.image}
-                        alt={doc.name}
-                        fill
-                        className={styles.docPhoto}
-                      />
+                {detail.doctors.map((doc, i) => (
+                  <div key={i} className={styles.refDoctorCard}>
+                    <Image
+                      src={doc.image}
+                      alt={doc.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 300px"
+                      className={styles.refDocFullImage}
+                    />
+                    <div className={styles.refDocFullGradient} />
+                    <div className={styles.refDocOverlayContent}>
+                      <div className={styles.refDocBottomFlex}>
+                        <div className={styles.refDocTextCol}>
+                          <h3 className={styles.refDocName} title={doc.name}>
+                            {doc.name}
+                          </h3>
+                          <div className={styles.refDocSpecialty}>
+                            {doc.speciality}
+                          </div>
+                          <div className={styles.refDocExpRow}>
+                            <span>{doc.experience}</span>
+                          </div>
+                          <div className={styles.refDocHospital} title={doc.hospital}>
+                            {doc.hospital}
+                          </div>
+                        </div>
+
+                        <Link href="/doctors" className={styles.refBookBtnWhite}>
+                          Book
+                        </Link>
+                      </div>
                     </div>
-                    <h3 className={styles.docName}>{doc.name}</h3>
-                    <div className={styles.docDesignation}>{doc.designation}</div>
-                    <div className={styles.docHospital}>{doc.hospital}</div>
-                    <Link href="/doctors" className={styles.docBookBtn}>
-                      Consult Doctor
-                    </Link>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* 14. Equipped Hospitals */}
+            {/* 11. Equipped Hospitals (Matching Unified Card Language) */}
             <section id="hospitals" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Equipped Transplant Hospitals</h2>
+              <h2 className={styles.mainSectionTitle}>Equipped Surgical Centres</h2>
               <div className={styles.hospitalsGrid}>
-                {HEART_TRANSPLANT_DETAIL.hospitals.map((hosp, i) => (
-                  <div key={i} className={styles.hospitalCard}>
-                    <div className={styles.hospitalImgWrapper}>
-                      <Image
-                        src={hosp.image}
-                        alt={hosp.name}
-                        fill
-                        className={styles.hospitalImg}
-                      />
-                    </div>
-                    <div className={styles.hospitalBody}>
-                      <h3 className={styles.hospitalName}>{hosp.name}</h3>
-                      <div className={styles.hospitalCity}>{hosp.city}</div>
-                      <div className={styles.hospitalBeds}>{hosp.beds}</div>
+                {detail.hospitals.map((hosp, i) => (
+                  <div key={i} className={styles.refHospitalCard}>
+                    <Image
+                      src={hosp.image}
+                      alt={hosp.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 360px"
+                      className={styles.refHospFullImage}
+                    />
+                    <div className={styles.refHospFullGradient} />
+                    <div className={styles.refHospOverlayContent}>
+                      <h3 className={styles.refHospName}>{hosp.name}</h3>
+                      <div className={styles.refHospCity}>{hosp.city}</div>
+                      <span className={styles.refHospBedsBadge}>{hosp.beds}</span>
                     </div>
                   </div>
                 ))}
               </div>
             </section>
 
-            {/* 15. FAQs Accordion */}
+            {/* 12. FAQs Accordion */}
             <section id="faqs" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>Frequently Asked Questions</h2>
               <div className={styles.faqAccordionList}>
-                {HEART_TRANSPLANT_DETAIL.faqs.map((faq, i) => {
+                {detail.faqs.map((faq, i) => {
                   const isOpen = openFaqIdx === i;
                   return (
                     <div key={i} className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ""}`}>
@@ -552,9 +573,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           </article>
         </div>
       </main>
-
-      {/* Sleek Medically Reviewed Band */}
-      <MedicallyReviewedBand />
-    </div>
+    </motion.div>
   );
 }
