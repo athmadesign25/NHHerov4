@@ -1,3 +1,18 @@
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotateBorderAngle {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
 .pageContainer {
   min-height: 100vh;
   background-color: #060e1b;
@@ -109,7 +124,7 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* ─── SEARCH INPUT (COMPRESSED PILL WITH GRADIENT OUTLINE & SPOTLIGHT) ──── */
+/* ─── SEARCH INPUT (COMPACT PULSE SEARCH WITH CONIC MOTION GRADIENT & SPOTLIGHT) ─── */
 .heroSearchContainer {
   display: flex;
   flex-direction: column;
@@ -118,34 +133,46 @@
   position: relative;
 }
 
-/* Gradient outline wrapper stroke */
+/* Compact Pulse search shell wrapper */
 .searchBoxWrap {
   position: relative;
   width: 100%;
   border-radius: var(--radius-full, 9999px);
-  padding: 1.5px; /* Vivid gradient stroke */
+  padding: 1.25px; /* Precision hairline stroke */
   background: linear-gradient(
     115deg,
-    #a855f7 0%,
-    #7c3aed 35%,
-    #6366f1 70%,
-    #ec4899 100%
+    #8b5cf6 0%,
+    #2563eb 35%,
+    #00c4ff 65%,
+    #ff2e93 85%,
+    #ed1c24 100%
   );
-  box-shadow: 0 0 24px -2px rgba(168, 85, 247, 0.42),
-              0 8px 26px rgba(0, 0, 0, 0.45);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
+    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
+  );
+  animation: rotateBorderAngle 8s linear infinite;
+  box-shadow: 0 0 20px -2px rgba(139, 92, 246, 0.40),
+              0 8px 24px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Ambient purple spotlight aura behind the search pill */
 .searchBoxWrap::before {
   content: "";
   position: absolute;
-  inset: -14px -18px;
+  inset: -12px -16px;
   background: radial-gradient(
     ellipse at center,
-    rgba(168, 85, 247, 0.38) 0%,
-    rgba(99, 102, 241, 0.16) 50%,
-    transparent 74%
+    rgba(139, 92, 246, 0.38) 0%,
+    rgba(0, 196, 255, 0.14) 50%,
+    transparent 72%
   );
   filter: blur(14px);
   z-index: -1;
@@ -156,39 +183,43 @@
 }
 
 .searchBoxWrap:hover {
-  box-shadow: 0 0 32px 0px rgba(168, 85, 247, 0.58),
-              0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 28px 1px rgba(139, 92, 246, 0.58),
+              0 10px 28px rgba(0, 0, 0, 0.5);
 }
 
 .searchBoxWrap:focus-within {
-  background: linear-gradient(
-    115deg,
-    #c084fc 0%,
-    #818cf8 40%,
-    #e879f9 75%,
-    #a855f7 100%
-  );
-  box-shadow: 0 0 38px 2px rgba(168, 85, 247, 0.72),
-              0 12px 36px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 34px 2px rgba(139, 92, 246, 0.72),
+              0 12px 32px rgba(0, 0, 0, 0.6);
 }
 
+/* Inner Glass Shell in Compact Size (44px) */
 .searchBox {
   width: 100%;
   display: flex;
   align-items: center;
-  background: rgba(13, 10, 26, 0.86);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(14, 20, 34, 0.85);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-radius: var(--radius-full, 9999px);
-  padding: 0 18px;
-  height: 48px;
+  padding: 0 16px;
+  height: 44px;
   box-sizing: border-box;
 }
 
+/* Pulse Search Icon with gradient stroke */
 .searchIcon {
-  color: rgba(255, 255, 255, 0.78);
+  stroke: url(#nhPulseSearchGrad) !important;
+  color: #00C4FF !important;
+  filter: drop-shadow(0 0 3px rgba(0, 196, 255, 0.45));
   flex-shrink: 0;
-  margin-right: 4px;
+  margin-right: 6px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
+}
+
+.searchBox:hover .searchIcon,
+.searchBox:focus-within .searchIcon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 5px rgba(0, 196, 255, 0.8)) drop-shadow(0 0 8px rgba(255, 46, 147, 0.5));
 }
 
 .searchInput {
@@ -196,14 +227,16 @@
   background: none;
   border: none;
   outline: none;
-  font-size: 14.5px;
+  font-family: inherit;
+  font-size: 13.5px;
   color: #ffffff;
-  padding: 6px 10px;
+  padding: 4px 6px;
   letter-spacing: -0.01em;
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 400;
 }
 
 .clearSearchBtn {

@@ -134,11 +134,23 @@ export default function TreatmentsLibraryPage() {
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
             </p>
 
-            {/* Compressed Pill Search with Gradient Outline, Glow Spotlight & Live Result Count */}
+            {/* Compressed Pill Search with Pulse Moving Gradient Outline, Glow Spotlight & Live Result Count */}
             <div className={styles.heroSearchContainer}>
+              {/* Pulse AI Search Gradient Definition for Search Icon */}
+              <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                <defs>
+                  <linearGradient id="nhPulseSearchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#00C4FF" />
+                    <stop offset="35%" stopColor="#8B5CF6" />
+                    <stop offset="70%" stopColor="#FF2E93" />
+                    <stop offset="100%" stopColor="#ED1C24" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
               <div className={styles.searchBoxWrap}>
                 <div className={styles.searchBox}>
-                  <Search size={18} strokeWidth={1.8} className={styles.searchIcon} />
+                  <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
                   <input
                     type="text"
                     placeholder="Search treatments, surgery or condition..."
@@ -156,7 +168,7 @@ export default function TreatmentsLibraryPage() {
                       onClick={() => setSearchQuery("")}
                       aria-label="Clear search input"
                     >
-                      <X size={15} />
+                      <X size={14} />
                     </button>
                   )}
                 </div>
