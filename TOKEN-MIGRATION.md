@@ -83,15 +83,23 @@ other way round quietly deletes someone's week.
 
 ### Checkpoint 2 — the contested files
 
-The agent sorts every conflict into three buckets:
+The agent sorts every conflict:
 
 - **A — not yours** → takes `main`'s version
 - **B — yours, `main` left it alone** → keeps yours
-- **C — yours, and `main` changed it too** → **stops and asks you**
+- **C — yours, and `main` changed it too** → **yours wins.** It keeps your
+  version of what you own and takes `main`'s for the rest of that file.
+  Ownership decides, not whose change is newer.
+- **D — more than 20 conflicts in one file** → **stops and asks you**
 
-C means two people built on the same thing. No rule resolves that, and an
-agent that picks a side silently destroys someone's work. **Take the C list
-to Nahid.** Do not work through it alone, especially if it is long.
+Most files land in A, B or C and the agent just gets on with it. D is the
+only thing that reaches you, and it is rare: on a dry run of Chetan's
+branch, 17 of 19 conflicted files had fewer than 10 conflicts each, and
+only 2 crossed the line.
+
+A file with hundreds of conflicts is not a stale branch — it is two people
+having rewritten the same file. Taking either side wholesale loses real
+work, so those come to Nahid. **Do not resolve the D list alone.**
 
 ### Checkpoint 3 — does it still look right?
 
@@ -144,13 +152,22 @@ Do these in order and STOP where it says stop.
    A. Not mine -> take main's version of the whole file. This always
       includes src/app/globals.css, whatever my scope says.
    B. Mine, and main did not change it -> keep mine.
-   C. Mine AND main changed the same feature -> do not touch it. A human
-      decides.
-   Show me a table of every conflicted file and its bucket, with the C
-   files listed separately under "NEEDS A HUMAN DECISION". Then STOP.
+   C. Mine AND main changed it too -> resolve in my favour: keep MY
+      version of anything inside my scope, and take main's for everything
+      else in that file. Ownership decides this, not which change is
+      newer.
+   D. EXCEPTION to C: if one file has more than 20 separate conflict
+      hunks, do not resolve it at all. That is not a stale branch, it is
+      two people having rewritten the same file, and taking either side
+      wholesale throws away real work. Leave it conflicted.
+
+   Show me a table of every conflicted file, its bucket and its conflict
+   count, with the D files listed separately under "NEEDS A HUMAN
+   DECISION". Then STOP.
 
 Never push to main. Never use reset --hard, force push, or anything else
-that can discard work. If you are unsure which bucket a file is, it is C.
+that can discard work. If you are unsure whether a file is mine, treat it
+as NOT mine (bucket A).
 If anything looks wrong, stop and tell me rather than working around it.
 ```
 
@@ -159,9 +176,8 @@ If anything looks wrong, stop and tell me rather than working around it.
 ```
 Continue the token migration. Read TOKEN-MIGRATION.md if you have not.
 
-1. Resolve the bucket A and B conflicts as agreed. Leave every bucket C
-   file exactly as it is unless I have told you otherwise. Commit the
-   merge.
+1. Resolve the A, B and C conflicts as agreed. Leave every D file exactly
+   as it is unless I have told you otherwise. Commit the merge.
 
 2. Run: npm install && npm run check:tokens
    Tell me how many files it lists. If it is far more than my own file
@@ -200,7 +216,8 @@ show me the result before moving on.
 
 **"Will merging `main` overwrite my search / booking flow?"** Not if your
 scope is right at checkpoint 1 — your files are bucket B and are kept. The
-real risk is bucket C, where the agent stops rather than guesses.
+real risk is a file you both rewrote — bucket D, where the agent stops
+rather than guesses.
 
 **"Later, when my branch goes into `main`, does this undo my feature?"**
 No. That merge is separate, after review, and carries your feature *into*
