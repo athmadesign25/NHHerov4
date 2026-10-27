@@ -45,7 +45,23 @@ const CAP = args.includes("--full") ? Infinity : 20;
 const ALL = args.includes("--all");
 const BASE = (() => {
   const i = args.indexOf("--base");
-  return i >= 0 ? args[i + 1] : "nahidremote/main";
+  if (i >= 0) return args[i + 1];
+  // Whichever of these this clone actually has. The shared repo is called
+  // `nahidremote` here and `origin` in a fresh clone, and hard-coding one
+  // of them meant the other fell through to scanning the whole codebase —
+  // which buries your own work in a few thousand pre-existing findings.
+  // Existing is not enough: it has to share history with you. This repo
+  // still has an `origin` pointing at an unrelated older project, and it
+  // resolves fine but has no merge base, so the diff died on it.
+  for (const ref of ["origin/main", "nahidremote/main", "main"]) {
+    try {
+      execSync(`git merge-base ${ref} HEAD`, { cwd: ROOT, stdio: "ignore" });
+      return ref;
+    } catch {
+      /* unrelated or absent — try the next one */
+    }
+  }
+  return "main";
 })();
 
 /* ── reading the system ──────────────────────────────────────────────── */
@@ -228,8 +244,17 @@ function targets() {
   try {
     execSync(`git rev-parse --verify ${base}`, { cwd: ROOT, stdio: "ignore" });
   } catch {
-    console.error(`  (no ref ${base} — falling back to --all)\n`);
-    return targets.call(null, (process.argv.push("--all"), undefined));
+    // Deliberately a stop, not a fallback. Quietly widening to the whole
+    // codebase answers a different question from the one that was asked,
+    // and the flood of pre-existing findings reads as "my branch is a
+    // disaster" when the real problem is a missing ref.
+    console.error(
+      `\n  Cannot compare against '${base}' — this clone has no such branch.\n` +
+        `  Fetch it first:   git fetch origin main\n` +
+        `  Or name your own: npm run check:tokens -- --base <branch>\n` +
+        `  To scan everything on purpose: npm run check:tokens:all\n`,
+    );
+    process.exit(2);
   }
   // Committed work AND the working tree. Looking only at `base...HEAD`
   // meant the check passed silently on everything you had not committed
