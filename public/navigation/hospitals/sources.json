@@ -25,6 +25,13 @@
       "href": "https://www.narayanahealth.org/hospitals-clinics/gurugram/narayana-superspeciality-hospital-gurugram",
       "image": "/navigation/hospitals/gurugram.webp",
       "city": "Gurugram"
+    },
+    {
+      "label": "Narayana Institute of Cardiac Sciences, Bangalore",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/bangalore/narayana-institute-cardiac-sciences-bommasandra",
+      "image": "/navigation/hospitals/cardiac-sciences-banner.webp",
+      "sourceImage": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/gjdktEVS3ZedbGj9vxIt.png",
+      "city": "Bangalore"
     }
   ]
 }

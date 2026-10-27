@@ -5,27 +5,28 @@
   position: fixed;
   left: var(--space-24);
   bottom: var(--space-24);
+  top: auto;
+  right: auto;
+  height: fit-content;
   z-index: 2147481800;
   display: flex;
   width: 274px;
-  padding: var(--space-12) var(--space-14);
+  padding: 0;
   align-items: center;
   gap: var(--space-12);
   border-radius: var(--radius-md);
-  /* Glass, not a flat card. A translucent surface over a real blur, with a
-     light top border and a darker bottom one so the edge catches — the
-     opaque version read as a notification sitting ON the page rather than
-     a piece of the same interface. */
+  /* Shared campaign background for desktop and mobile. */
   background: linear-gradient(
-    to bottom,
-    rgba(var(--white-rgb), 0.7),
-    rgba(var(--white-rgb), 0.4)
+    98deg,
+    hsl(212deg 100% 74.1098% / 0.7) -1.32%,
+    color-mix(in srgb, #d0e6ff 70%, transparent) 12.66%,
+    color-mix(in srgb, var(--slate-100) 85%, transparent) 36.23%,
+    color-mix(in srgb, #86beff 70%, transparent) 84.35%
   );
-  backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
-  -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.6);
-  border: 1px solid rgba(var(--white-rgb), 0.7);
-  border-bottom-color: rgba(var(--navy-900-rgb), 0.08);
-  box-shadow: var(--elevation-3), inset 0 1px 0 rgba(var(--white-rgb), 0.6);
+  backdrop-filter: blur(var(--blur-md)) saturate(1.3);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.3);
+  border: 0;
+  box-shadow: var(--elevation-3);
   font-family: var(--font-family);
   text-align: left;
   cursor: pointer;
@@ -34,21 +35,16 @@
 }
 
 .toast:hover {
-  box-shadow: var(--elevation-4), inset 0 1px 0 rgba(var(--white-rgb), 0.6);
+  box-shadow: var(--elevation-4);
   transform: translateY(-2px);
 }
 
-/* 44px plate holding the 28px mark. */
+/* Unboxed mark: the SVG supplies its own size, with no plate or padding. */
 .iconWrap {
-  composes: tile from "./AnnouncementTile.module.css";
   display: flex;
-  width: 44px;
-  height: 44px;
-  padding: var(--space-8);
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-
 }
 
 .copy {
@@ -93,34 +89,17 @@
        about twenty characters per line to work with before clamping. */
     width: 200px;
     height: 48px;
-    padding: 0 var(--space-8);
+    padding: 0;
     gap: var(--space-8);
     border-radius: var(--radius-sm);
-    border: 1px solid hsl(0deg 0% 100% / 0.9);
-    background: linear-gradient(
-      98deg,
-      hsl(212deg 100% 74.1098%) -1.32%,
-      #d0e6ff 12.66%,
-      var(--slate-100) 36.23%,
-      #86beff 84.35%
-    );
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    border: 0;
+
     box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
   }
 
   .toast:hover {
     box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
     transform: none;
-  }
-
-  /* The mark on a lit plate — top-left highlight, deep blue underneath,
-     with an inner rim so it reads as raised rather than printed. */
-  .iconWrap {
-    width: 32px;
-    height: 32px;
-    padding: var(--space-6);
-
   }
 
   /* The parts run together as one paragraph here, and the CLAMP lives on
@@ -159,4 +138,20 @@
   .line { display: inline; line-height: var(--leading-body); }
   .line:first-child { display: block; }
   .line:nth-child(n + 3)::before { content: " "; }
+}
+
+.openToast { position: relative; z-index: 1; display: flex; align-items: center; gap: var(--space-12); width: 100%; min-width: 0; padding: var(--space-12) var(--space-14); border: 0; border-radius: inherit; background: transparent; color: inherit; font-family: inherit; text-align: inherit; cursor: pointer; }
+.dismiss { position: absolute; z-index: 2; top: calc(-1 * var(--space-8)); right: calc(-1 * var(--space-8)); display: grid; place-items: center; width: var(--space-24); height: var(--space-24); border: var(--space-1) solid rgba(var(--white-rgb), 0.8); border-radius: var(--radius-full); background: var(--color-surface); color: var(--color-primary); box-shadow: var(--elevation-1); cursor: pointer; }
+.dismiss svg { width: var(--space-14); height: var(--space-14); }
+.dismiss:hover { background: var(--color-primary-light); box-shadow: var(--elevation-2); }
+.openToast:focus-visible, .dismiss:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.pattern { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+/* Match L2's right edge: identical artwork, scale, fade and mirroring. */
+.pattern::after { content: ""; position: absolute; top: 50%; right: 0; width: var(--space-64); height: calc(var(--space-80) + var(--space-4)); transform: translateY(-50%) scaleX(-1); background: linear-gradient(90deg, rgba(var(--white-rgb), 0.6), rgba(var(--white-rgb), 0.3) 60%, transparent); mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; -webkit-mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; }
+@media (max-width: 768px) {
+  .openToast { padding: 0 var(--space-8); gap: var(--space-8); height: 100%; }
+  .pattern::after { width: var(--space-40); height: var(--space-48); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
+}
+@media (max-width: 1099px) {
+  :global(body:has(#mobile-navigation-menu)) .toast { visibility: hidden; pointer-events: none; }
 }

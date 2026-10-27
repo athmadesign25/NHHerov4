@@ -1340,3 +1340,10 @@
 
 
 .desktopBrandNav .navLink { position: relative; }
+
+/* Compact emergency affordance belongs to the right-hand mobile controls. */
+.mobileEmergency { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-6); min-height: var(--space-32); padding-inline: var(--space-8); margin-right: var(--space-4); border-radius: var(--radius-sm); background: var(--red-emergency-dark); color: var(--white); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; white-space: nowrap; }
+.mobileEmergency:focus-visible { outline: var(--space-2) solid currentColor; outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+
+.mobileEmergency::before { content: ""; position: absolute; inset: calc(-1 * var(--space-8)) 0; }
+.mobileEmergency:hover { background: var(--red-emergency); }

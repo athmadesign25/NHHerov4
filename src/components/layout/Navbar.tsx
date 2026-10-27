@@ -5,7 +5,7 @@ import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MapPin, Search, Menu, X, User, CalendarCheck, FileText, LogOut, Check } from "lucide-react";
+import { ChevronDown, Search, Menu, X, User, CalendarCheck, FileText, LogOut, Check } from "lucide-react";
 import styles from "./Navbar.module.css";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import { TriangleAlert } from "@/components/animate-ui/icons/hugeicons/triangle-alert";
@@ -475,7 +475,7 @@ export default function Navbar() {
           <Link aria-label="Narayana Health Home" href="/" className={styles.mobileLogoLink}>
             <div
               className={styles.mobileLogoContainer}
-              data-theme={isMobileMenuOpen || !isNavbarLight ? "dark" : "light"}
+              data-theme={!isMobileMenuOpen && (!isNavbarActive || isNavbarLight) ? "light" : "dark"}
             >
               <Image
                 alt="Narayana Health"
@@ -500,22 +500,9 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.mobileActionGroup}>
-            <AnimatePresence>
-              {isMobileMenuOpen && (
-                <motion.button
-                  className={styles.navCityBtn}
-                  aria-label="Select City"
-                  initial={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
-                  animate={{ opacity: 1, width: "auto", overflow: "visible", padding: "0 4px" }}
-                  exit={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <MapPin size={16} strokeWidth={2.5} />
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>BLR</span>
-                  <ChevronDown size={14} style={{ opacity: 0.7 }} />
-                </motion.button>
-              )}
-            </AnimatePresence>
+            {!isMobileMenuOpen && <a href="tel:18003090309" className={styles.mobileEmergency} aria-label="24/7 Emergency">
+              <TriangleAlert size={16} /><span>24/7 Emergency</span>
+            </a>}
             {/* No search affordance in the mobile bar: the hero composer
                 docks into the bottom action bar on scroll and carries search
                 from there, so a second entry point up here was a duplicate. */}

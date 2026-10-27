@@ -19,6 +19,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "./useIsMobile";
 import { ease } from "@/lib/motion";
+import { X } from "lucide-react";
 import AnnouncementIcon from "./AnnouncementIcon";
 import styles from "./CollapsedToast.module.css";
 import { type HeadlinePart, COLLAPSED_LABEL } from "./types";
@@ -26,14 +27,15 @@ import { type HeadlinePart, COLLAPSED_LABEL } from "./types";
 type Props = {
   parts: HeadlinePart[];
   onExpand: () => void;
+  onDismiss: () => void;
 };
 
-export default function CollapsedToast({ parts, onExpand }: Props) {
+export default function CollapsedToast({ parts, onExpand, onDismiss }: Props) {
   // The phone gets a different object, not a smaller one: a 126px chip
   // top-right under the nav, with the mark on a lit plate. At 274px the
   // desktop toast took a third of a phone's width.
   const isMobile = useIsMobile();
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   /**
    * The chip rides under the navbar, including while the navbar is
@@ -50,7 +52,10 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
    * then stops; it is not a permanent rAF.
    */
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile) {
+      ref.current?.style.removeProperty("top");
+      return;
+    }
     const nav = document.querySelector("nav");
     if (!nav) return;
 
@@ -71,6 +76,7 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
+      ref.current?.style.removeProperty("top");
     };
   }, [isMobile]);
   // A banner whose artwork carries its own type has no headline to lend
@@ -86,11 +92,9 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
   const lines = [firstLine, secondLine].filter(Boolean);
 
   return (
-    <motion.button
+    <motion.div
       ref={ref}
-      type="button"
       className={styles.toast}
-      onClick={onExpand}
       // Arrives from its own corner: up from the bottom-left on desktop,
       // down from under the nav on a phone.
       initial={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
@@ -98,8 +102,10 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
       exit={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
       transition={{ duration: 0.5, ease: ease.spring }}
     >
+      <span className={styles.pattern} aria-hidden="true" />
+      <button type="button" className={styles.openToast} onClick={onExpand}>
       <span className={styles.iconWrap}>
-        <AnnouncementIcon size={isMobile ? 20 : 28} gradient />
+        <AnnouncementIcon size={isMobile ? 32 : 40} gradient tone="blue" />
       </span>
       <span className={styles.copy}>
         {isMobile ? (
@@ -115,6 +121,8 @@ export default function CollapsedToast({ parts, onExpand }: Props) {
           ))
         )}
       </span>
-    </motion.button>
+      </button>
+      {!isMobile && <button type="button" className={styles.dismiss} onClick={onDismiss} aria-label="Dismiss announcement toast"><X aria-hidden="true" /></button>}
+    </motion.div>
   );
 }

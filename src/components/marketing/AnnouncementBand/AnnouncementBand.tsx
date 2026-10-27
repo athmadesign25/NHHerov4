@@ -109,7 +109,7 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
           {/* Pattern and inner shading sit under the copy and
               take no pointer events, so the band stays one flat row to
               click through. */}
-          <span className={styles.pattern} aria-hidden />
+          <span className={styles.pattern} aria-hidden><span className={styles.patternCentre} /></span>
           <span className={styles.innerEdge} aria-hidden />
 
 
@@ -138,9 +138,6 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
           )}
 
           <div className={styles.actions}>
-            {/* Accent red, not --red-emergency: that one is reserved for
-                genuine emergency affordances, and spending it on a
-                marketing link is how it stops meaning anything. */}
             <a className={styles.link} href={config.link.href}>
               {config.link.label}
             </a>
