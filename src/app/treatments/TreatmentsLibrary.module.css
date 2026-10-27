@@ -58,6 +58,13 @@
   overflow: hidden;
 }
 
+.heroBgMotion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .heroBgImage {
   object-fit: cover;
   object-position: center 25%;
@@ -462,24 +469,11 @@
 .feedbackHighlight {
   color: #ffffff;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 2px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  display: inline-block;
 }
 
-.feedbackCountBadge {
-  display: inline-flex;
-  align-items: center;
-  color: #00C4FF;
-  font-weight: 700;
-  background: rgba(0, 196, 255, 0.12);
-  border: 1px solid rgba(0, 196, 255, 0.3);
-  padding: 2px 9px;
-  border-radius: var(--radius-full, 9999px);
-  margin-left: 6px;
-  font-size: 12.5px;
+.feedbackCount {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
 }
 
 .clearFilterChip {
@@ -549,6 +543,128 @@
   .cardsGrid {
     grid-template-columns: 1fr;
     gap: 18px;
+  }
+}
+
+/* ─── ENTRANCE SKELETON CARDS (SHOWS DURING INITIAL OPENING SEQUENCE) ─────── */
+.skeletonCard {
+  background: #091322;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 460px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.skeletonImageWrap {
+  width: 100%;
+  height: 230px;
+  background: #0b172a;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonContent {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonEyebrow {
+  width: 90px;
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.09);
+  margin-bottom: 14px;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  margin-bottom: 12px;
+}
+
+.skeletonLine {
+  width: 100%;
+  height: 13px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-bottom: 8px;
+}
+
+.skeletonLineShort {
+  width: 62%;
+  height: 13px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-bottom: 18px;
+}
+
+.skeletonBadges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.skeletonBadge {
+  width: 88px;
+  height: 22px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.skeletonFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.skeletonPrice {
+  width: 110px;
+  height: 20px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.skeletonCta {
+  width: 96px;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.skeletonShimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: skeletonSweep 1.6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes skeletonSweep {
+  100% {
+    transform: translateX(100%);
   }
 }
 

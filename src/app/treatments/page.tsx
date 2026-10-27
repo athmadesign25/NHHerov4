@@ -51,7 +51,16 @@ export default function TreatmentsLibraryPage() {
   const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
+  const [isPageOpening, setIsPageOpening] = useState<boolean>(true);
   const [, startTransition] = useTransition();
+
+  // Initial page entrance animation sequence orchestration (image -> overlay -> title/subtext -> search -> skeleton -> real cards)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageOpening(false);
+    }, 950);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Dynamic API fetching whenever selectedOrgan or searchQuery changes
   useEffect(() => {
@@ -119,21 +128,38 @@ export default function TreatmentsLibraryPage() {
       {/* ─── TWO-COLUMN HERO SECTION (FOCUSED ON SEARCH & CLINICAL CONTENT) ── */}
       <section className={styles.hero}>
         <div className={styles.heroBg}>
-          <Image
-            src="/doctor_patient.png"
-            alt="Doctor examining patient with stethoscope"
-            fill
-            priority
-            sizes="100vw"
-            className={styles.heroBgImage}
+          <motion.div
+            className={styles.heroBgMotion}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image
+              src="/doctor_patient.png"
+              alt="Doctor examining patient with stethoscope"
+              fill
+              priority
+              sizes="100vw"
+              className={styles.heroBgImage}
+            />
+          </motion.div>
+          <motion.div
+            className={styles.heroBgOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.75, delay: 0.15 }}
           />
-          <div className={styles.heroBgOverlay} />
         </div>
 
         <div className={styles.heroInner}>
           {/* Left Column: Breadcrumb, Title, Subtitle & Pulse AI Search */}
           <div className={styles.heroLeftCol}>
-            <div className={styles.breadcrumbsContainer}>
+            <motion.div
+              className={styles.breadcrumbsContainer}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.22 }}
+            >
               <Breadcrumbs
                 items={[
                   { label: "Home", href: "/" },
@@ -141,23 +167,38 @@ export default function TreatmentsLibraryPage() {
                 ]}
                 theme="dark"
               />
-            </div>
+            </motion.div>
 
-            <h1 className={styles.heroTitle}>
+            <motion.h1
+              className={styles.heroTitle}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            >
               <TextSweepEffect 
                 words={["Treatments & Procedures"]} 
                 sweepMs={2400} 
                 delayMs={80} 
                 finalColor="#FFFFFF" 
               />
-            </h1>
+            </motion.h1>
 
-            <p className={styles.heroSubtitle}>
+            <motion.p
+              className={styles.heroSubtitle}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            >
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
-            </p>
+            </motion.p>
 
             {/* Compressed Pill Search with Visible Gradient Outline, Glow Spotlight & Live Result Count */}
-            <div className={styles.heroSearchContainer}>
+            <motion.div
+              className={styles.heroSearchContainer}
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
+            >
               <div className={styles.searchBoxWrap}>
                 <div className={styles.searchBox}>
                   <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
@@ -192,11 +233,16 @@ export default function TreatmentsLibraryPage() {
                   </span>
                 </div>
               )}
-            </div>
+            </motion.div>
           </div>
 
           {/* Right Column: Secondary Credential Numbers (4 parameters, balanced hierarchy) */}
-          <div className={styles.heroRightCol}>
+          <motion.div
+            className={styles.heroRightCol}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.55, delay: 0.58, ease: [0.16, 1, 0.3, 1] }}
+          >
             {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
               <div key={index} className={styles.statBlock}>
                 <span className={styles.statNumber}>
@@ -209,12 +255,17 @@ export default function TreatmentsLibraryPage() {
                 <span className={styles.statLabel}>{item.label}</span>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ─── 10 ORGAN CIRCLE BUBBLE FILTERS ───────────────────────────────── */}
-      <section className={styles.categorySection}>
+      <motion.section
+        className={styles.categorySection}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className={styles.bubblesRow}>
           {ORGAN_FILTER_OPTIONS.map((opt) => {
             const isActive = selectedOrgan === opt.value;
@@ -240,23 +291,28 @@ export default function TreatmentsLibraryPage() {
             );
           })}
         </div>
-      </section>
+      </motion.section>
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW (HIGHLIGHTING ORGAN & RESULT COUNT) ─── */}
-      <div className={styles.feedbackTextRow}>
+      {/* ─── DYNAMIC FEEDBACK TEXT ROW (MINIMAL TYPOGRAPHY, NO CHIPS/BADGES) ─ */}
+      <motion.div
+        className={styles.feedbackTextRow}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.45, delay: 0.76 }}
+      >
         <div className={styles.feedbackTextWrapper}>
           <p className={styles.feedbackText}>
             {searchQuery.trim() ? (
               <>
-                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
               </>
             ) : selectedOrgan ? (
               <>
-                Here based on your selection for treatment under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+                Here based on your selection for treatment under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
               </>
             ) : (
               <>
-                Here based on your selection for clinical treatments & procedures &mdash; <span className={styles.feedbackCountBadge}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
+                Here based on your selection for clinical treatments &amp; procedures &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
               </>
             )}
           </p>
@@ -279,101 +335,145 @@ export default function TreatmentsLibraryPage() {
             <div className={styles.apiPulseIndicator} />
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* ─── 3-COLUMN CARDS GRID (FETCHED FROM API & INTERACTIVE) ──────────── */}
-      <main className={styles.cardsGrid} style={{ opacity: isApiLoading ? 0.78 : 1, transition: "opacity 0.18s ease" }}>
-        {items.length === 0 ? (
-          <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
-            <div className={styles.emptyIconWrapper}>
-              <Search size={26} />
-            </div>
-            <h3 className={styles.emptyTitle}>No matching procedures found</h3>
-            <p className={styles.emptyDesc}>
-              We couldn't find any results matching your search or active organ filter. Try clearing your query or exploring another organ.
-            </p>
-            <button className={styles.resetFiltersBtn} onClick={handleResetFilters}>
-              Reset Filters
-            </button>
-          </div>
+      {/* ─── 3-COLUMN CARDS GRID (ORCHESTRATED WITH ENTRANCE SKELETON) ─────── */}
+      <AnimatePresence mode="wait">
+        {isPageOpening ? (
+          <motion.div
+            key="entrance-skeletons"
+            className={styles.cardsGrid}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.45, delay: 0.78 }}
+          >
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className={styles.skeletonCard}>
+                <div className={styles.skeletonImageWrap}>
+                  <div className={styles.skeletonShimmer} />
+                </div>
+                <div className={styles.skeletonContent}>
+                  <div>
+                    <div className={styles.skeletonEyebrow} />
+                    <div className={styles.skeletonTitle} />
+                    <div className={styles.skeletonLine} />
+                    <div className={styles.skeletonLineShort} />
+                    <div className={styles.skeletonBadges}>
+                      <div className={styles.skeletonBadge} />
+                      <div className={styles.skeletonBadge} />
+                    </div>
+                  </div>
+                  <div className={styles.skeletonFooter}>
+                    <div className={styles.skeletonPrice} />
+                    <div className={styles.skeletonCta} />
+                  </div>
+                </div>
+                <div className={styles.skeletonShimmer} />
+              </div>
+            ))}
+          </motion.div>
         ) : (
-          <AnimatePresence mode="popLayout">
-            {items.map((item, idx) => {
-              const detailUrl = `/procedures/${item.slug}`;
-              const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
+          <motion.main
+            key="loaded-cards"
+            className={styles.cardsGrid}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: isApiLoading ? 0.78 : 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+          >
+            {items.length === 0 ? (
+              <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.emptyIconWrapper}>
+                  <Search size={26} />
+                </div>
+                <h3 className={styles.emptyTitle}>No matching procedures found</h3>
+                <p className={styles.emptyDesc}>
+                  We couldn't find any results matching your search or active organ filter. Try clearing your query or exploring another organ.
+                </p>
+                <button className={styles.resetFiltersBtn} onClick={handleResetFilters}>
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {items.map((item, idx) => {
+                  const detailUrl = `/procedures/${item.slug}`;
+                  const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
 
-              return (
-                <motion.article
-                  key={item.id}
-                  className={styles.procedureCard}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
-                >
-                  {/* Top 3D Organ / Procedure Image with Dark Gradient Vignette */}
-                  <div className={styles.cardImageWrap}>
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className={styles.cardBgImage}
-                    />
-                    <div className={styles.cardGradient} />
-                  </div>
-
-                  {/* Content Block */}
-                  <div className={styles.cardContent}>
-                    <div>
-                      <div className={styles.cardEyebrow}>
-                        {item.speciality}
+                  return (
+                    <motion.article
+                      key={item.id}
+                      className={styles.procedureCard}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
+                    >
+                      {/* Top 3D Organ / Procedure Image with Dark Gradient Vignette */}
+                      <div className={styles.cardImageWrap}>
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className={styles.cardBgImage}
+                        />
+                        <div className={styles.cardGradient} />
                       </div>
 
-                      <Link href={detailUrl} className={styles.cardTitleLink}>
-                        <h2 className={styles.cardTitle}>
-                          {item.title}
-                        </h2>
-                      </Link>
+                      {/* Content Block */}
+                      <div className={styles.cardContent}>
+                        <div>
+                          <div className={styles.cardEyebrow}>
+                            {item.speciality}
+                          </div>
 
-                      <p className={styles.cardSub}>
-                        {item.summary}
-                      </p>
-                    </div>
+                          <Link href={detailUrl} className={styles.cardTitleLink}>
+                            <h2 className={styles.cardTitle}>
+                              {item.title}
+                            </h2>
+                          </Link>
 
-                    {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Hover Decision Action Buttons */}
-                    <div className={styles.cardBottomSlot}>
-                      {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover) */}
-                      <div className={styles.cardRestingMeta}>
-                        <span className={styles.metaBadge}>
-                          <Clock size={11} className={styles.metaIcon} />
-                          <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
-                        </span>
-                        <span className={styles.metaBadge}>
-                          <Activity size={11} className={styles.metaIcon} />
-                          <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
-                        </span>
+                          <p className={styles.cardSub}>
+                            {item.summary}
+                          </p>
+                        </div>
+
+                        {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Hover Decision Action Buttons */}
+                        <div className={styles.cardBottomSlot}>
+                          {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover) */}
+                          <div className={styles.cardRestingMeta}>
+                            <span className={styles.metaBadge}>
+                              <Clock size={11} className={styles.metaIcon} />
+                              <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
+                            </span>
+                            <span className={styles.metaBadge}>
+                              <Activity size={11} className={styles.metaIcon} />
+                              <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
+                            </span>
+                          </div>
+
+                          {/* Hover Action Buttons: Find doctors & Read more ↗ (Revealed on hover on desktop / Always available on iPad & mobile) */}
+                          <div className={styles.cardActions}>
+                            <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
+                              Find doctors
+                            </Link>
+
+                            <Link href={detailUrl} className={styles.cardDetailBtn}>
+                              <span>Read more</span>
+                              <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                            </Link>
+                          </div>
+                        </div>
                       </div>
-
-                      {/* Hover Action Buttons: Find doctors & Read more ↗ (Revealed on hover on desktop / Always available on iPad & mobile) */}
-                      <div className={styles.cardActions}>
-                        <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
-                          Find doctors
-                        </Link>
-
-                        <Link href={detailUrl} className={styles.cardDetailBtn}>
-                          <span>Read more</span>
-                          <ArrowUpRight size={13} className={styles.pillBtnArrow} />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </AnimatePresence>
+                    </motion.article>
+                  );
+                })}
+              </AnimatePresence>
+            )}
+          </motion.main>
         )}
-      </main>
+      </AnimatePresence>
 
       {/* ─── BOTTOM TRUST HIGHLIGHT (SECOND OPINION BOARD WITH TEAM VISUAL) ─── */}
       <section className={styles.trustBanner}>
