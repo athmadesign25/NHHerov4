@@ -1040,6 +1040,7 @@ export default function SearchResultsCanvas({
                 }
               }}
               query={activeQuery}
+              onClose={onClose}
             />
           </div>
         )}

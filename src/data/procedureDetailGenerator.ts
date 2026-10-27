@@ -293,8 +293,48 @@ const SYMPTOMS_DICTIONARY: Record<string, SymptomItem[]> = {
   "acute-pancreatitis": [
     { name: "Severe Upper Abdominal Pain", desc: "Intense stabbing pain in the epigastrium radiating directly through to the back." },
     { name: "Nausea & Persistent Vomiting", desc: "Severe emesis that provides no relief from the intense abdominal pain." },
-    { name: "Abdominal Tenderness & Guarding", desc: "Extreme sensitivity to touch with rigid abdominal wall musculature." },
-    { name: "Rapid Pulse & Low Blood Pressure", desc: "Tachycardia and hypovolemia resulting from pancreatic third-space fluid loss." },
+  ],
+  "coronary-angiography": [
+    { name: "Angina & Chest Tightness", desc: "Squeezing pressure or discomfort across the sternum triggered by physical exertion or emotional stress." },
+    { name: "Exertional Breathlessness", desc: "Shortness of breath during ordinary walking or climbing a single flight of stairs." },
+    { name: "Radiating Discomfort", desc: "Aching pain traveling to the left arm, shoulder, jaw, neck, or upper back." },
+    { name: "Unexplained Chronic Fatigue", desc: "Persistent low stamina resulting from diminished coronary artery blood flow." },
+  ],
+  "echocardiography": [
+    { name: "Cardiac Murmur or Abnormal Sounds", desc: "Innocent or pathological heart murmurs identified during physical stethoscope examination." },
+    { name: "Swelling in Lower Extremities", desc: "Pitting edema in ankles, shins, or feet indicative of reduced ventricular pumping capacity." },
+    { name: "Orthopnea & Paroxysmal Dyspnea", desc: "Waking up breathless at night or requiring multiple pillows to breathe comfortably." },
+    { name: "Heart Fluttering & Skipped Beats", desc: "Episodic palpitations or irregular sensations in the chest cavity." },
+  ],
+  "ecg-electrocardiogram": [
+    { name: "Sudden Tachycardia or Racing Pulse", desc: "Rapid heartbeats occurring unpredictably without physical exertion." },
+    { name: "Near-Syncope or Fainting Spells", desc: "Sudden lightheadedness, dizziness, or brief loss of consciousness." },
+    { name: "Transient Chest Aches", desc: "Momentary sharp or dull chest pain requiring ruling out of ischemia." },
+    { name: "Irregular Pulse Sensation", desc: "Erratic pulse patterns noted during home monitoring or wrist wearable alerts." },
+  ],
+  "cardiac-consultation": [
+    { name: "Family History of Premature Heart Disease", desc: "Strong pedigree history of heart attacks or cardiac sudden death in first-degree relatives." },
+    { name: "Uncontrolled Blood Pressure or Cholesterol", desc: "Chronic hypertension or dyslipidemia requiring therapeutic risk reduction." },
+    { name: "Pre-Operative Clearance Needs", desc: "Clinical clearance required before undergoing major elective non-cardiac surgery." },
+    { name: "Lifestyle Cardiovascular Risk Profile", desc: "Diabetes mellitus, smoking history, or elevated coronary calcium scores." },
+  ],
+  "knee-replacement-surgery": [
+    { name: "Severe Chronic Knee Joint Pain", desc: "Debilitating joint pain that persists during resting, sitting, and sleep." },
+    { name: "Severe Morning Joint Stiffness", desc: "Inability to bend, bear weight, or fully straighten the knee joint for extended periods." },
+    { name: "Bone-on-Bone Crepitus & Deformity", desc: "Audible grinding sensation and progressive bowlegged or knock-knee alignment." },
+    { name: "Exhausted Conservative Therapies", desc: "No sustained relief achieved from physical therapy, NSAIDs, or viscosupplement injections." },
+  ],
+  "knee-arthroscopy": [
+    { name: "Knee Locking or Catching", desc: "Inability to fully extend or bend the joint caused by a displaced meniscal flap." },
+    { name: "Giving Way & Joint Instability", desc: "Sudden sensation of the knee buckling or popping out during pivoting movements." },
+    { name: "Sharp Joint Line Tenderness", desc: "Pinpoint pain along the medial or lateral knee joint margin following trauma." },
+    { name: "Post-Traumatic Joint Effusion", desc: "Rapid fluid accumulation and swelling within hours of a sports injury." },
+  ],
+  "knee-mri-imaging": [
+    { name: "Sub-Acute Joint Pain After Injury", desc: "Persistent knee pain failing to improve following a twist, fall, or sports impact." },
+    { name: "Suspected Ligamentous Injury", desc: "Evaluation for anterior cruciate (ACL), posterior cruciate (PCL), or collateral ligament tears." },
+    { name: "Occult Bone Contusion or Stress Fracture", desc: "Deep structural bone edema invisible on standard plain X-ray radiographs." },
+    { name: "Cartilage & Chondral Defect Assessment", desc: "High-resolution staging of articular surface wear and osteochondral lesions." },
   ],
   default: [
     { name: "Persistent Pain or Discomfort", desc: "Localized or radiating pain that fails to subside with conservative medications." },

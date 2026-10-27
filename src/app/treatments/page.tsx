@@ -61,6 +61,21 @@ export default function TreatmentsLibraryPage() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Read URL search or organ parameter if navigated from Pulse search
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialSearch = urlParams.get("search") || urlParams.get("q") || urlParams.get("query");
+      const initialOrgan = urlParams.get("organ");
+      if (initialSearch) {
+        setSearchQuery(initialSearch);
+      }
+      if (initialOrgan) {
+        setSelectedOrgan(initialOrgan);
+      }
+    }
+  }, []);
+
   // Dynamic API fetching whenever selectedOrgan or searchQuery changes
   useEffect(() => {
     const controller = new AbortController();

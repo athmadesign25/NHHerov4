@@ -304,6 +304,7 @@ export default function SearchResultsCanvas({
                   relatedSpecialties={currentResults.relatedSpecialties}
                   onSelectSpecialtyTag={onSelectSpecialtyTag}
                   query={activeQuery}
+                  onClose={onClose}
                 />
               </div>
             )}

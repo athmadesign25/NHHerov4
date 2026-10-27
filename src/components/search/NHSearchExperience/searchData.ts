@@ -45,6 +45,7 @@ export interface TreatmentItemData {
   title: string;
   subtitle: string;
   iconType: "heart" | "activity" | "angiography" | "stethoscope" | "joint" | "xray";
+  slug?: string;
 }
 
 export interface ArticleItemData {
@@ -748,24 +749,28 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
       title: "Cardiac consultation",
       subtitle: "Specialist assessment",
       iconType: "heart",
+      slug: "cardiac-consultation",
     },
     {
       id: "t-2",
       title: "ECG · Electrocardiogram",
       subtitle: "Heart rhythm test",
       iconType: "activity",
+      slug: "ecg-electrocardiogram",
     },
     {
       id: "t-3",
       title: "Coronary angiography",
       subtitle: "Diagnostic procedure",
       iconType: "angiography",
+      slug: "coronary-angiography",
     },
     {
       id: "t-4",
       title: "Echocardiography (ECHO)",
       subtitle: "Heart ultrasound & imaging",
       iconType: "activity",
+      slug: "echocardiography",
     },
   ],
   articles: [
@@ -911,24 +916,28 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
       title: "Orthopaedic consultation",
       subtitle: "Specialist joint & bone assessment",
       iconType: "joint",
+      slug: "knee-replacement-surgery",
     },
     {
       id: "t-ortho-2",
       title: "Knee pain assessment",
       subtitle: "Comprehensive clinical evaluation",
       iconType: "stethoscope",
+      slug: "knee-arthroscopy",
     },
     {
       id: "t-ortho-3",
       title: "Knee replacement surgery",
       subtitle: "Advanced robotic-assisted procedure",
       iconType: "joint",
+      slug: "knee-replacement-surgery",
     },
     {
       id: "t-ortho-4",
       title: "Digital X-ray & Knee MRI",
       subtitle: "High resolution joint imaging",
       iconType: "xray",
+      slug: "knee-mri-imaging",
     },
   ],
   articles: [
@@ -1079,6 +1088,7 @@ export function mapApiResultsToSearchData(
         title: item.name,
         subtitle: item.speciality ? `${item.speciality} Procedure` : "Specialist assessment & care",
         iconType,
+        slug: (item as { slug?: string }).slug || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       };
     });
   } else {
