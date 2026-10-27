@@ -17,7 +17,6 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
-import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import { 
   TREATMENTS_PROCEDURES_DATA, 
   TreatmentProcedureItem 
@@ -475,9 +474,20 @@ export default function TreatmentsLibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT (SECOND OPINION BOARD WITH TEAM VISUAL) ─── */}
+      {/* ─── BOTTOM TRUST HIGHLIGHT (SECOND OPINION BOARD WITH INTEGRATED GRADIENT IMAGE) ─── */}
       <section className={styles.trustBanner}>
-        <div className={styles.trustLeft}>
+        <div className={styles.trustImageBg}>
+          <Image
+            src="/top-medical-experts.png"
+            alt="Narayana Health multidisciplinary surgical board"
+            fill
+            sizes="(max-width: 900px) 100vw, 640px"
+            className={styles.trustImage}
+          />
+          <div className={styles.trustGradientOverlay} />
+        </div>
+
+        <div className={styles.trustContent}>
           <div className={styles.trustEyebrow}>MULTI-DISCIPLINARY SURGICAL BOARD</div>
           <h3 className={styles.trustTitle}>
             Looking for a surgical second opinion or cost estimate?
@@ -497,36 +507,7 @@ export default function TreatmentsLibraryPage() {
             </Link>
           </div>
         </div>
-
-        <div className={styles.trustVisualCol}>
-          <div className={styles.trustImageFrame}>
-            <Image
-              src="/top-medical-experts.png"
-              alt="Narayana Health multidisciplinary surgical board"
-              fill
-              sizes="(max-width: 900px) 100vw, 340px"
-              className={styles.trustImage}
-            />
-            <div className={styles.trustImageOverlay} />
-          </div>
-        </div>
       </section>
-
-      {/* ─── MEDICALLY REVIEWED BADGE FOOTER ───────────────────────────────── */}
-      <div style={{ maxWidth: "1240px", margin: "0 auto", padding: "0 clamp(20px, 4vw, 40px) 40px" }}>
-        <MedicallyReviewedBand
-          reviewer={{
-            name: "Dr. Devi Prasad Shetty",
-            designation: "Chairman & Founder, Narayana Health",
-            specialty: "Cardiac Surgery",
-            qualifications: "MS, FRCS",
-            experience: "35+ Yrs Exp",
-            image: "/doctors/doc_devi_shetty.jpg",
-            profileLink: "/doctors/dr-devi-shetty",
-            reviewDate: "October 2026",
-          }}
-        />
-      </div>
     </div>
   );
 }
