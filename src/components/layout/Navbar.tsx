@@ -312,9 +312,12 @@ export default function Navbar() {
                   <Link href="/specialities/joint-replacement" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Joint Replacement</Link>
                   <Link href="/specialities/sports-medicine" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Sports Medicine</Link>
                 </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
+                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Link href="/treatments" style={{ fontSize: "13px", fontWeight: 700, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "4px" }}>
+                    Browse Treatments & Procedures <ChevronRight size={14} />
+                  </Link>
+                  <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-text-secondary, #4A5568)", display: "flex", alignItems: "center", gap: "2px" }}>
+                    View all Specialities <ChevronRight size={14} />
                   </Link>
                 </div>
               </div>
@@ -799,6 +802,12 @@ export default function Navbar() {
                       <div className={styles.subCategoryLabel}>Bones & Joints</div>
                       <Link href="/specialities/orthopaedics" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedics</Link>
                       <Link href="/specialities/joint-replacement" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Joint Replacement</Link>
+                    </div>
+                    <div style={{ padding: "16px 0", borderTop: "1px solid rgba(255,255,255,0.12)", marginTop: "12px" }}>
+                      <Link href="/treatments" onClick={() => setIsMobileMenuOpen(false)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "#38bdf8", fontWeight: 700, fontSize: "14px", padding: "8px 0" }}>
+                        <span>Browse Treatments & Procedures</span>
+                        <ChevronRight size={16} />
+                      </Link>
                     </div>
                   </div>
                 </motion.div>

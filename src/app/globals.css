@@ -1,36 +1,185 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────────────── */
+/*
+ * Two layers, deliberately:
+ *
+ *   PRIMITIVES  raw values, named for what they ARE (--slate-500).
+ *               Nothing in a component should reference a raw hex again.
+ *   SEMANTIC    named for what they are FOR (--color-border), pointing at
+ *               a primitive. This is what components should prefer.
+ *
+ * Every primitive below is the exact value already in use somewhere in the
+ * codebase — this layer was extracted, not invented, so adding it changed
+ * no pixels. The near-duplicates it exposes (see the notes) are real and
+ * deliberate to leave for now: naming them is what makes them fixable in
+ * one place later.
+ */
 :root {
-  --color-primary: #034EA2;
-  --color-primary-dark: #023070;
-  --color-primary-light: #EEF3FA;
-  --color-primary-mid: #1565C0;
-  --color-primary-tint: rgba(3, 78, 162, 0.08);
-  --color-primary-tint-hover: rgba(3, 78, 162, 0.15);
+  /* ── PRIMITIVES ──────────────────────────────────────────────────────── */
 
-  --color-emergency: #ED1C24;
+  /* A primitive is held as bare channels whenever it is used at an opacity
+     more often than solid — white alone appears in 446 rgba() literals
+     across 64 different alphas. Composing from the channel var keeps one
+     source of truth for the colour while the alpha stays at the call site:
+     rgba(var(--white-rgb), 0.08) */
+  --white-rgb: 255, 255, 255;
+  --white: rgb(var(--white-rgb));
+  --black-rgb: 0, 0, 0;
+  --black: rgb(var(--black-rgb));
+
+  /* Neutral ramp. These ten are an exact match for a standard slate scale,
+     so they were already a coherent system — just an unnamed one. */
+  --slate-50-rgb: 248, 250, 252;
+  --slate-50: rgb(var(--slate-50-rgb));
+  --slate-100: #f1f5f9;
+  --slate-200-rgb: 226, 232, 240;
+  --slate-200: rgb(var(--slate-200-rgb));
+  --slate-250: #cfd8e5;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-450: #6a7890;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800-rgb: 30, 41, 59;
+  --slate-800: rgb(var(--slate-800-rgb));
+  --slate-900-rgb: 15, 23, 42;
+  --slate-900: rgb(var(--slate-900-rgb));
+
+  /* Off-ramp greys — neutral rather than blue-tinted, so they are genuinely
+     a separate family from the slate ramp above rather than near-misses of
+     it. (A third, #4a5568, used to live here: it sat one channel-step from
+     --slate-600 and did the same job in 52 places, so it was merged away.) */
+  --grey-100: #f7f7f7;
+  --grey-500: #666666;
+
+  /* Brand blue and its dark steps.
+     Held as bare channels so the 62 places that need it at some opacity can
+     compose from the same source — rgba(var(--blue-brand-rgb), 0.08) — rather
+     than hard-coding the channels alongside their own alpha. Changing the
+     brand blue now moves the solid colour and every tint of it together.
+     The value is the one in the brand artwork (the One Health lockup and the
+     speciality icons); the CSS had been a shade off at #034EA2. */
+  --blue-brand-rgb: 3, 78, 161;
+  --blue-brand: rgb(var(--blue-brand-rgb));
+  --blue-700: #0f58b8;
+  --blue-800: #0446b8;
+  /* The navbar's scrolled shadow was written as rgba(2, 48, 112, 0.3) —
+     which is exactly this value, and exactly what --color-primary-dark
+     already held. It was the same colour twice, one of them anonymous. */
+  --blue-900-rgb: 2, 48, 112;
+  --blue-900: rgb(var(--blue-900-rgb));
+
+  /* Accent blues. Not drift: --cyan-bright, --sky-400 and --blue-600 are
+     concentrated in the Pulse AI components, where they appear in gradients
+     alongside the violets below. That is a deliberate AI accent identity,
+     distinct from the NH brand blue, so they are kept apart on purpose. */
+  --blue-vivid-rgb: 11, 93, 244;
+  --blue-vivid: rgb(var(--blue-vivid-rgb));
+  --blue-500-rgb: 59, 130, 246;
+  --blue-500: rgb(var(--blue-500-rgb));
+  --blue-600: #2563eb;
+  --cyan-bright-rgb: 0, 196, 255;
+  --cyan-bright: rgb(var(--cyan-bright-rgb));
+  --sky-400-rgb: 56, 189, 248;
+  --sky-400: rgb(var(--sky-400-rgb));
+  --sky-600-rgb: 2, 132, 199;
+  --sky-600: rgb(var(--sky-600-rgb));
+
+  /* Pale blue tints. */
+  --blue-tint-50: #eef2f7;
+  --blue-tint-100: #ebf3fc;
+
+  /* TWO red families, deliberately separate.
+     ------------------------------------------------------------------
+     EMERGENCY is brand signal and is RESERVED. Use it only for genuine
+     emergency affordances — the 24/7 button, the emergency number, the
+     ambulance strip. If it appears on an ordinary tab or icon it stops
+     meaning anything, which is the whole reason it cannot double as the
+     accent red. */
+  --red-emergency-rgb: 237, 28, 36;
+  --red-emergency: rgb(var(--red-emergency-rgb));
+  /* Pressed/hover for the above. Was --red-700, which made it look like a
+     step on the accent ramp; it is not, it is a darkened #ED1C24 and its
+     only three uses are emergency button backgrounds in the navbar. */
+  --red-emergency-dark: #c8151c;
+
+  /* ACCENT RED is the general-purpose one: destructive actions, alerts,
+     error states, a red tab or icon. This is what to reach for unless the
+     thing is literally an emergency.
+     Both new steps were already in the codebase as literals (#dc2626 x5,
+     #fef2f2 x2) — extracted, not invented. */
+  --red-50: #fef2f2;
+  --red-400-rgb: 248, 113, 113;
+  --red-400: rgb(var(--red-400-rgb));
+  --red-500-rgb: 239, 68, 68;
+  --red-500: rgb(var(--red-500-rgb));
+  --red-600-rgb: 220, 38, 38;
+  --red-600: rgb(var(--red-600-rgb));
+
+  /* Dark surfaces used by the navy sections and the footer. */
+  --navy-800: #223148;
+  --navy-900-rgb: 3, 18, 36;
+  --navy-900: rgb(var(--navy-900-rgb));
+  --navy-ink: #1a1a2e;
+
+  /* Support hues. */
+  --green-500-rgb: 34, 197, 94;
+  --green-500: rgb(var(--green-500-rgb));
+  --emerald-500: #10b981;
+  --teal-600-rgb: 13, 148, 136;
+  --teal-600: rgb(var(--teal-600-rgb));
+  --amber-500-rgb: 245, 158, 11;
+  --amber-500: rgb(var(--amber-500-rgb));
+  --violet-400: #a78bfa;
+  --violet-600-rgb: 124, 58, 237;
+  --violet-600: rgb(var(--violet-600-rgb));
+  --pink-500: #ec4899;
+
+  /* ── SEMANTIC ────────────────────────────────────────────────────────── */
+
+  --color-primary: var(--blue-brand);
+  --color-primary-dark: var(--blue-900);
+  --color-primary-light: #EEF3FA;
+  /* --color-primary-tint and -tint-hover lived here as named stand-ins for
+     "brand blue at 8% / 15%". They are gone: composing at the call site —
+     rgba(var(--blue-brand-rgb), 0.08) — says the same thing, reads the same,
+     and does not need a new token every time a different opacity is wanted.
+     Both had zero consumers. */
+
+  --color-emergency: var(--red-emergency);
   --color-emergency-light: #FFF0F0;
 
-  --color-text: #1A1A2E;
-  --color-text-secondary: #4A5568;
+  --color-text: var(--navy-ink);
+  --color-text-secondary: var(--slate-600);
   --color-text-muted: #718096;
-  --color-text-inverse: #FFFFFF;
+  --color-text-inverse: var(--white);
 
   --color-bg: #fafcfc;
   --color-bg-alt: #F3F5F9;
-  --color-bg-card: #FFFFFF;
+  --color-bg-card: var(--white);
+  /* The general light surface. --color-bg-card is the same value but names
+     a narrower job; components that are not cards were reaching past it to
+     the primitive instead of through a role. */
+  --color-surface: var(--white);
 
-  --color-border: #E2E8F0;
-  --color-border-light: #EEF2F7;
+  --color-border: var(--slate-200);
+  --color-border-light: var(--blue-tint-50);
 
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
+  --color-success: var(--green-500);
 
   /* Typography */
+  /* Inter is self-hosted by next/font (see layout.tsx), which exposes it as
+     --font-inter. globals.css also @imported Inter from Google Fonts, so the
+     family was downloaded twice and the @import was a render-blocking
+     external request — exactly what next/font exists to avoid. The @import
+     is gone; this is now the single source. */
   --font-inter-fallback: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-family: var(--font-inter, var(--font-inter-fallback));
   --font-sans: var(--font-family);
+  /* 10px, for the smallest badge and overline labels. The scale previously
+     bottomed out at 12px, so everything below it was written as a literal. */
+  --font-size-2xs: 10px;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
@@ -39,21 +188,128 @@
   --font-size-2xl: 24px;
   --font-size-3xl: 30px;
   --font-size-4xl: 36px;
-  --font-size-5xl: 48px;
-  --font-size-6xl: 60px;
-  --font-size-7xl: 72px;
+  /* 40px. Added for the marketing drawer headline, which the design calls
+     for at 40 — it fell between 4xl (36) and display (42), and rounding
+     either way on a headline is visible. */
+  --font-size-40: 40px;
+  /* Section-title display size. Sits between 4xl and 5xl because the
+     section titles across PatientStories and HealthPackages had settled on
+     42px independently, and the page h1 at 40px was within 2px of them. */
+  --font-size-display: 42px;
 
-  /* Spacing (8px system) */
-  --sp-1: 8px;
-  --sp-2: 16px;
-  --sp-3: 24px;
-  --sp-4: 32px;
-  --sp-5: 40px;
-  --sp-6: 48px;
-  --sp-8: 64px;
-  --sp-10: 80px;
-  --sp-12: 96px;
-  --sp-16: 128px;
+  /* Leading, chosen by the size it accompanies rather than per instance —
+     small text needs proportionally more room, display type needs less, so
+     a single "line-height" value cannot serve both. There were 18 distinct
+     values here with no rule; these six cover all of them.
+
+     Rough guide:
+       body and anything under 20px   -> normal / relaxed
+       subtitles, 20-30px             -> snug
+       titles and display, 30px+      -> tight
+       numerals and icon labels       -> none */
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.4;
+  --leading-body: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* ── SPACING ──────────────────────────────────────────────────────────
+     Named by the pixel value, so there is never a question of which token
+     a given gap wants. --space-12 is 12px.
+
+     The ramp is 2px-stepped up to 16px, then 4px, then 8px and wider. That
+     is deliberate and not a strict 4px or 8px grid: 6px, 10px and 14px are
+     three of the five most-used values here (115, 100 and 60 uses), and in
+     dense UI — result rows, filter chips, card meta — they are the right
+     answer. Forcing them onto a 4px grid would have churned 275
+     declarations to make the system tidier on paper and the interface
+     slightly worse.
+
+     Use the nearest step. If a value is not on the ramp, that is a prompt
+     to reconsider, not to add a token. */
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  /* Legacy aliases. --sp-N counted eights rather than pixels, so --sp-16
+     was 128px and not 16px — which is exactly the confusion the ramp above
+     removes. Kept so existing uses keep working; prefer --space-* in new
+     code. */
+  --sp-1: var(--space-8);
+  --sp-2: var(--space-16);
+  --sp-3: var(--space-24);
+  --sp-4: var(--space-32);
+  --sp-5: var(--space-40);
+  --sp-6: var(--space-48);
+  --sp-8: var(--space-64);
+  --sp-10: var(--space-80);
+  --sp-16: var(--space-128);
+
+  /* ── SCRIM & BLUR ─────────────────────────────────────────────────────
+     For anything that dims the page behind a modal, drawer or overlay.
+     There was no token for this: every overlay picked its own black and
+     its own blur radius, which is why they never quite matched.
+
+     The blur steps exist so "blurred background" is a choice between three
+     named intensities rather than a number someone types. 16px is the one
+     the marketing drawer uses. */
+  --scrim: hsl(0deg 8% 0% / 0.44);
+  --blur-sm: 8px;
+  --blur-md: 16px;
+  --blur-lg: 24px;
+
+  /* ── SECTION RHYTHM ───────────────────────────────────────────────────
+     The vertical breathing room above and below a major page section —
+     "y" being the vertical axis. One value, so the page keeps a beat as
+     you scroll instead of each section choosing its own spacing.
+
+     Before this, three steps had been arrived at independently rather
+     than chosen: 150px (CentreOfExcellence, WhyChooseNH), 110px (Health
+     Packages) and 90px (App Download). All now resolve here.
+
+     It steps down at narrower widths because 120px of air either side of
+     every section is overwhelming on a phone — roughly a third of the
+     viewport. The breakpoints match the ones the rest of the app uses.
+
+     NOT covered by this: Footer's 220px. That is the curtain-reveal
+     mechanism, where the footer's own height sets how far the reveal
+     travels and therefore how much of the App Download section stays
+     visible at the end of the page. It is a mechanism, not rhythm.
+
+     Three steps, not one, so a section can be given more or less weight
+     without anyone inventing a fourth number:
+
+       --section-y-lg   a section that should feel like a moment —
+                        a hero-adjacent block, a full-bleed feature
+       --section-y      the default. Reach for this unless there is a
+                        reason not to
+       --section-y-sm   dense or secondary bands — a strip of stats, a
+                        related-links row, a compact CTA
+
+     lg and sm are currently unused: every section on the landing page is
+     on the default. They exist so the Specialities and booking pages have
+     a choice to make rather than a value to invent. */
+  --section-y-lg: 160px;
+  --section-y: 120px;
+  --section-y-sm: 60px;
 
   /* Layout */
   --max-width: 1240px;
@@ -66,6 +322,37 @@
   --radius-xl: 20px;
   --radius-full: 9999px;
 
+  /* ── ELEVATION ───────────────────────────────────────────────────────────
+     123 distinct shadows collapse to six steps. 107 of the 161 uses sat in
+     just two blur bands, so this was two elevation levels wearing eighty
+     costumes rather than a system.
+
+     Three things here are deliberate rather than a transcription of what
+     was there:
+
+     1. Two layers per step. A single shadow reads flat, because real
+        occlusion has both a tight contact shadow and a wide ambient one.
+        The tight layer holds the object to the surface; the wide layer
+        gives it height.
+     2. Navy, not black. rgba(12, 24, 57) was already in use in DoctorCard
+        and Hero and is the better instinct — pure black over a blue-tinted
+        UI goes muddy and reads as grime rather than depth.
+     3. Negative spread on the upper steps, pulling the shadow in so it does
+        not halo out from under the element. Only the search overlay was
+        already doing this.
+
+     Elevation is about distance from the surface, so each step raises blur
+     and alpha together. */
+  /* The default shadow hue. A component overrides this locally to retint
+     the whole ramp — see the * rule below, which is what makes that work. */
+  --shadow-rgb: 12, 24, 57;
+
+  /* Not elevation: a focus ring and an inner top-edge highlight. Kept here
+     because they are written as box-shadows and would otherwise be the last
+     two reasons to hand-write one. */
+  --shadow-focus-ring: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.16);
+  --shadow-inset-highlight: inset 0 1px 0 rgba(var(--white-rgb), 0.16);
+
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 16px rgba(3, 78, 162, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
@@ -73,10 +360,85 @@
   --shadow-xl: 0 16px 48px rgba(3, 78, 162, 0.16), 0 6px 20px rgba(0, 0, 0, 0.08);
   --shadow-card-hover: 0 12px 40px rgba(3, 78, 162, 0.18);
 
+  /* Motion.
+     Durations are named by purpose, and the rule is that duration scales
+     with how far a thing travels: small/local is fast, large/entrance is
+     slow. Before this there were 18 distinct durations with no rule — the
+     variation was accidental rather than chosen.
+
+     NOTE: Framer Motion animations live in JS and cannot read these. The
+     same values are mirrored in src/lib/motion.ts; changing one means
+     changing both. That duplication is unavoidable, not an oversight. */
+  --duration-instant: 0.1s;
+  --duration-fast: 0.15s;
+  --duration-base: 0.2s;
+  --duration-moderate: 0.25s;
+  --duration-emphasis: 0.3s;
+  --duration-slow: 0.4s;
+  --duration-slower: 0.5s;
+  --duration-slowest: 0.6s;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Transitions */
   --transition-fast: 150ms ease-out;
   --transition-base: 250ms ease-out;
   --transition-slow: 400ms ease-out;
+}
+
+/* Section rhythm steps down together, so the relationship between the
+   three holds at every width rather than only on desktop. */
+@media (max-width: 1024px) {
+  :root {
+    --section-y-lg: 128px;
+    --section-y: 96px;
+    --section-y-sm: 48px;
+  }
+}
+@media (max-width: 768px) {
+  :root {
+    --section-y-lg: 96px;
+    --section-y: 72px;
+    --section-y-sm: 40px;
+  }
+}
+
+/* ─── ELEVATION RAMP ──────────────────────────────────────────────────────
+   Declared on * rather than :root, and that placement is load-bearing.
+
+   A custom property substitutes its own var() references at computed-value
+   time on the element where it is DECLARED. Defined on :root, --elevation-2
+   would resolve var(--shadow-rgb) once, against the root's default navy, and
+   every element would inherit that already-resolved string — so a component
+   setting --shadow-rgb on itself would have no effect whatsoever. Verified:
+   it silently did nothing.
+
+   Declared on *, each element computes its own copy against its own
+   --shadow-rgb. That is what lets a component retint the entire ramp with
+   one line:
+
+     .bookBtn { --shadow-rgb: var(--red-emergency-rgb); box-shadow: var(--elevation-1); }
+
+   One elevation axis that carries hue, rather than a parallel glow scale.
+   It is also why hover is a step up the ramp instead of a brighter glow. */
+*, *::before, *::after {
+  --elevation-1:
+    0 1px 2px rgba(var(--shadow-rgb), 0.06),
+    0 2px 6px rgba(var(--shadow-rgb), 0.06);
+  --elevation-2:
+    0 1px 2px rgba(var(--shadow-rgb), 0.06),
+    0 4px 12px rgba(var(--shadow-rgb), 0.08);
+  --elevation-3:
+    0 2px 4px rgba(var(--shadow-rgb), 0.06),
+    0 8px 24px rgba(var(--shadow-rgb), 0.10);
+  --elevation-4:
+    0 4px 8px -2px rgba(var(--shadow-rgb), 0.08),
+    0 16px 40px -8px rgba(var(--shadow-rgb), 0.16);
+  --elevation-5:
+    0 8px 16px -4px rgba(var(--shadow-rgb), 0.10),
+    0 24px 64px -12px rgba(var(--shadow-rgb), 0.24);
 }
 
 /* ─── RESETS ─────────────────────────────────────────────────────────────── */

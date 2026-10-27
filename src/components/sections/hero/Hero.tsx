@@ -30,7 +30,7 @@ const STAT_GROUPS = [
   ],
 ];
 
-function MetricValueReveal({ value, suffix = "" }: { value: number; suffix?: string }) {
+export function MetricValueReveal({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10px" });
 

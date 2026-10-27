@@ -18,6 +18,7 @@ export interface SpecialityMeta {
   icon: string;
   image: string;
   video?: string;
+  detailVideo?: string;
   stat: { value: string; label: string };
 }
 
@@ -76,6 +77,7 @@ export const ALL_SPECIALITIES: SpecialityMeta[] = [
     icon: "/Specialities icons/Cancercare.svg",
     image: "/Specialities icons/Cancer Care.jpeg",
     video: "/Specialities icons/Cancer Care.mp4",
+    detailVideo: "/Specialities icons/Cancer Care Detail.mp4",
     stat: { value: "10K+", label: "Patients Treated" },
   },
   {
