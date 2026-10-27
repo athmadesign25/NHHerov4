@@ -374,10 +374,12 @@
   translate: 0 -50%;
 }
 
-/* Wide: above the panel, right edges aligned. Positioned with `right`
-   rather than a translate, because Framer owns this element's transform. */
+/* Wide: centred above the panel. Independent translate preserves Framer's
+   entrance transform. */
 .closeWide {
-  right: calc(50% - var(--wide-w) / 2);
+  left: 50%;
+  right: auto;
+  translate: -50% 0;
   top: calc(50% - var(--wide-h) / 2 - var(--space-40));
 }
 

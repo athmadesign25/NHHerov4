@@ -9,7 +9,7 @@
  * controls once and are not any more, because each one was a way for two
  * banners to stop looking like the same brand.
  *
- * DEV ONLY. Renders nothing in a production build.
+ * Available on the desktop L1 prototype route, including deployed previews.
  */
 
 import { motion, useDragControls } from "framer-motion";
@@ -33,6 +33,11 @@ type Props = {
 
 const ORIENTATIONS: Orientation[] = ["vertical", "horizontal"];
 const COLLAPSE: CollapseMode[] = ["none", "toast", "island"];
+const COLLAPSE_LABELS: Record<CollapseMode, string> = {
+  none: "none",
+  toast: "L3 (sm banner)",
+  island: "L4 (icon)",
+};
 const KINDS: FieldKind[] = ["text", "phone"];
 
 function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -52,7 +57,6 @@ function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 export default function DrawerControlPanel({ config, onChange }: Props) {
   const controls = useDragControls();
   const isMobile = useIsMobile();
-  if (process.env.NODE_ENV === "production") return null;
   // There is no room for it beside a 92vw panel, and mobile is a preview
   // of what desktop produced rather than its own thing to configure.
   if (isMobile) return null;
@@ -223,7 +227,7 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
                 onClick={() => set({ collapse: c })}
                 className={c === config.collapse ? styles.segOn : styles.segOff}
               >
-                {c}
+                {COLLAPSE_LABELS[c]}
               </button>
             ))}
           </div>

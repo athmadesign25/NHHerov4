@@ -2,7 +2,7 @@
 
 /**
  * The banner's collapsed form: a small persistent alert at the bottom
- * left. No scrim, no lock — it just sits there until dismissed.
+ * right. No scrim, no lock — it just sits there until dismissed.
  *
  * It does not simply appear. It grows out of the corner the panel shrank
  * toward, so the two read as one movement rather than a disappearance
@@ -95,7 +95,7 @@ export default function CollapsedToast({ parts, onExpand, onDismiss }: Props) {
     <motion.div
       ref={ref}
       className={styles.toast}
-      // Arrives from its own corner: up from the bottom-left on desktop,
+      // Arrives from its own corner: up from the bottom-right on desktop,
       // down from under the nav on a phone.
       initial={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}

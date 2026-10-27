@@ -54,7 +54,7 @@ export default function MarketingDrawerLab() {
     //
     // toast: not mounted yet, so its resting box comes from the same
     // values its stylesheet uses — 274px wide, 24px in from the
-    // bottom-left.
+    // bottom-right.
     //
     // island: the dock's fourth bubble does not exist yet either, and
     // adding it also widens the island, so every bubble shifts left. The
@@ -79,7 +79,7 @@ export default function MarketingDrawerLab() {
       }
     } else {
       const w = Math.min(274, window.innerWidth - 24);
-      target = { x: 24, y: window.innerHeight - 24 - 36, width: w };
+      target = { x: window.innerWidth - 24 - w, y: window.innerHeight - 24 - 36, width: w };
     }
 
     // morphTo must land in a render where the drawer is still OPEN.
