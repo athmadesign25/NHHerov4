@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useTransition } from "react";
+import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
   X, 
@@ -17,71 +17,97 @@ import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import { 
   TREATMENTS_PROCEDURES_DATA, 
-  SPECIALITY_FILTER_OPTIONS, 
   TreatmentProcedureItem 
 } from "@/data/treatmentsProceduresData";
 import styles from "./TreatmentsLibrary.module.css";
 
-// Parameters displayed on the right column of the Hero (matching mockup)
+// 10 Key Organ Filters requested by user
+const ORGAN_FILTER_OPTIONS = [
+  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
+  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
+  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
+  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
+  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
+  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
+  { label: "Stomach", value: "stomach", image: "/Specialities icons/General Surgery.jpeg" },
+  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
+  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
+  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
+];
+
+// Secondary credentials on right hero column (calm, non-distracting metrics)
 const HERO_ANALYTICS_PARAMETERS = [
   { value: 400, suffix: "+", label: "Surgical Procedures" },
   { value: 30, suffix: "+", label: "Medical Specialities" },
   { staticValue: "98.6%", label: "Clinical Safety Score" },
-  { staticValue: "1L+", label: "Transplant & Surgical Care" },
 ];
 
 export default function TreatmentsLibraryPage() {
-  // Circular filters are NOT initially active; become active only when clicked
-  const [selectedSpeciality, setSelectedSpeciality] = useState<string | null>(null);
+  const [items, setItems] = useState<TreatmentProcedureItem[]>(TREATMENTS_PROCEDURES_DATA);
+  const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
   const [, startTransition] = useTransition();
 
-  // Filter items based on active criteria
-  const filteredItems = useMemo(() => {
-    return TREATMENTS_PROCEDURES_DATA.filter((item) => {
-      // Filter by speciality if one is explicitly selected
-      if (selectedSpeciality && item.specialitySlug !== selectedSpeciality) {
-        return false;
-      }
-      // Filter by search query
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        const matchesTitle = item.title.toLowerCase().includes(query);
-        const matchesShortTitle = item.shortTitle.toLowerCase().includes(query);
-        const matchesSummary = item.summary.toLowerCase().includes(query);
-        const matchesSpeciality = item.speciality.toLowerCase().includes(query);
-        if (!matchesTitle && !matchesShortTitle && !matchesSummary && !matchesSpeciality) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }, [selectedSpeciality, searchQuery]);
+  // Dynamic API fetching whenever selectedOrgan or searchQuery changes
+  useEffect(() => {
+    const controller = new AbortController();
+    
+    // Quick debounce so typing feels natural without overloading network
+    const timer = setTimeout(async () => {
+      setIsApiLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (searchQuery.trim()) params.set("query", searchQuery.trim());
+        if (selectedOrgan) params.set("organ", selectedOrgan);
+        params.set("limit", "48");
 
-  // Compute dynamic feedback text matching user's exact syntax
+        const res = await fetch(`/api/treatments?${params.toString()}`, {
+          signal: controller.signal,
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.items)) {
+            setItems(data.items);
+          }
+        }
+      } catch (err: unknown) {
+        if ((err as Error)?.name !== "AbortError") {
+          console.error("[Treatments API] error:", err);
+        }
+      } finally {
+        setIsApiLoading(false);
+      }
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [selectedOrgan, searchQuery]);
+
+  // Compute dynamic feedback text matching clinical semantics
   const feedbackText = useMemo(() => {
     if (searchQuery.trim()) {
       return `Here based on your search for "${searchQuery}" this are the results`;
     }
-    if (selectedSpeciality === "cardiology") {
-      return "Here based on your selection for treatment under heart section this are the results";
-    }
-    if (selectedSpeciality) {
-      const currentOpt = SPECIALITY_FILTER_OPTIONS.find((s) => s.value === selectedSpeciality);
+    if (selectedOrgan) {
+      const currentOpt = ORGAN_FILTER_OPTIONS.find((s) => s.value === selectedOrgan);
       if (currentOpt) {
         return `Here based on your selection for treatment under ${currentOpt.label.toLowerCase()} section this are the results`;
       }
     }
     return "Here based on your selection for clinical treatments and procedures this are the results";
-  }, [selectedSpeciality, searchQuery]);
+  }, [selectedOrgan, searchQuery]);
 
-  const handleToggleSpeciality = (val: string) => {
-    // Clicking active filter toggles it off, clicking another selects it
-    setSelectedSpeciality((prev) => (prev === val ? null : val));
+  const handleToggleOrgan = (val: string) => {
+    // Clicking active organ toggles it off, clicking another selects it
+    setSelectedOrgan((prev) => (prev === val ? null : val));
   };
 
   const handleResetFilters = () => {
-    setSelectedSpeciality(null);
+    setSelectedOrgan(null);
     setSearchQuery("");
   };
 
@@ -94,7 +120,7 @@ export default function TreatmentsLibraryPage() {
         ))}
       </div>
 
-      {/* ─── TWO-COLUMN HERO SECTION (MATCHING MOCKUP) ────────────────────── */}
+      {/* ─── TWO-COLUMN HERO SECTION (FOCUSED ON SEARCH & CLINICAL CONTENT) ── */}
       <section className={styles.hero}>
         <div className={styles.heroBg}>
           <Image
@@ -109,7 +135,7 @@ export default function TreatmentsLibraryPage() {
         </div>
 
         <div className={styles.heroInner}>
-          {/* Left Column: Breadcrumb, Title, Subtitle & Search */}
+          {/* Left Column: Breadcrumb, Title, Subtitle & Pulse AI Search */}
           <div className={styles.heroLeftCol}>
             <div className={styles.breadcrumbsContainer}>
               <Breadcrumbs
@@ -178,14 +204,14 @@ export default function TreatmentsLibraryPage() {
               {searchQuery.trim().length > 0 && (
                 <div className={styles.searchCountFeedback}>
                   <span>
-                    Showing <strong className={styles.searchCountHighlight}>{filteredItems.length}</strong> {filteredItems.length === 1 ? "result" : "results"} for &ldquo;{searchQuery}&rdquo;
+                    Showing <strong className={styles.searchCountHighlight}>{items.length}</strong> {items.length === 1 ? "result" : "results"} for &ldquo;{searchQuery}&rdquo;
                   </span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Right Column: Vertically Stacked Numerical Validation with Left Divider */}
+          {/* Right Column: Secondary Credential Numbers (Toned down, non-distracting) */}
           <div className={styles.heroRightCol}>
             {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
               <div key={index} className={styles.statBlock}>
@@ -203,16 +229,16 @@ export default function TreatmentsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── CATEGORY CIRCLE BUBBLE FILTERS (NOT INITIALLY ACTIVE) ────────── */}
+      {/* ─── 10 ORGAN CIRCLE BUBBLE FILTERS ───────────────────────────────── */}
       <section className={styles.categorySection}>
         <div className={styles.bubblesRow}>
-          {SPECIALITY_FILTER_OPTIONS.map((opt) => {
-            const isActive = selectedSpeciality === opt.value;
+          {ORGAN_FILTER_OPTIONS.map((opt) => {
+            const isActive = selectedOrgan === opt.value;
             return (
               <button
                 key={opt.value}
                 className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
-                onClick={() => handleToggleSpeciality(opt.value)}
+                onClick={() => handleToggleOrgan(opt.value)}
                 type="button"
                 aria-pressed={isActive}
               >
@@ -232,86 +258,95 @@ export default function TreatmentsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW (MATCHING USER SCREENSHOT) ─────────── */}
+      {/* ─── DYNAMIC FEEDBACK TEXT ROW & QUICK API PULSE BAR ─────────────── */}
       <div className={styles.feedbackTextRow}>
         <p className={styles.feedbackText}>
           {feedbackText}
         </p>
+
+        {isApiLoading && (
+          <div className={styles.apiPulseBar}>
+            <div className={styles.apiPulseIndicator} />
+          </div>
+        )}
       </div>
 
-      {/* ─── 3-COLUMN CARDS GRID (PROMINENT ABOVE THE FOLD) ────────────────── */}
-      <main className={styles.cardsGrid}>
-        {filteredItems.length === 0 ? (
+      {/* ─── 3-COLUMN CARDS GRID (FETCHED FROM API & INTERACTIVE) ──────────── */}
+      <main className={styles.cardsGrid} style={{ opacity: isApiLoading ? 0.78 : 1, transition: "opacity 0.18s ease" }}>
+        {items.length === 0 ? (
           <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
             <div className={styles.emptyIconWrapper}>
               <Search size={26} />
             </div>
             <h3 className={styles.emptyTitle}>No matching procedures found</h3>
             <p className={styles.emptyDesc}>
-              We couldn't find any results matching your search or active category filter. Try clearing your query or choosing another section.
+              We couldn't find any results matching your search or active organ filter. Try clearing your query or exploring another organ.
             </p>
             <button className={styles.resetFiltersBtn} onClick={handleResetFilters}>
               Reset Filters
             </button>
           </div>
         ) : (
-          filteredItems.map((item, idx) => {
-            const detailUrl = `/procedures/${item.slug}`;
-            const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
+          <AnimatePresence mode="popLayout">
+            {items.map((item, idx) => {
+              const detailUrl = `/procedures/${item.slug}`;
+              const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
 
-            return (
-              <motion.article
-                key={item.id}
-                className={styles.procedureCard}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.28, delay: Math.min(idx * 0.03, 0.2) }}
-              >
-                {/* Top 3D Organ / Procedure Image with Dark Gradient Vignette */}
-                <div className={styles.cardImageWrap}>
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className={styles.cardBgImage}
-                  />
-                  <div className={styles.cardGradient} />
-                </div>
+              return (
+                <motion.article
+                  key={item.id}
+                  className={styles.procedureCard}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
+                >
+                  {/* Top 3D Organ / Procedure Image with Dark Gradient Vignette */}
+                  <div className={styles.cardImageWrap}>
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={styles.cardBgImage}
+                    />
+                    <div className={styles.cardGradient} />
+                  </div>
 
-                {/* Content Block */}
-                <div className={styles.cardContent}>
-                  <div>
-                    <div className={styles.cardEyebrow}>
-                      {item.speciality}
+                  {/* Content Block */}
+                  <div className={styles.cardContent}>
+                    <div>
+                      <div className={styles.cardEyebrow}>
+                        {item.speciality}
+                      </div>
+
+                      <Link href={detailUrl} className={styles.cardTitleLink}>
+                        <h2 className={styles.cardTitle}>
+                          {item.title}
+                        </h2>
+                      </Link>
+
+                      <p className={styles.cardSub}>
+                        {item.summary}
+                      </p>
                     </div>
 
-                    <Link href={detailUrl} className={styles.cardTitleLink}>
-                      <h2 className={styles.cardTitle}>
-                        {item.title}
-                      </h2>
-                    </Link>
+                    {/* Two Decision Buttons: Find doctors & Read more ↗ (Hover on desktop / Always visible on iPad & mobile) */}
+                    <div className={styles.cardActions}>
+                      <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
+                        Find doctors
+                      </Link>
 
-                    <p className={styles.cardSub}>
-                      {item.summary}
-                    </p>
+                      <Link href={detailUrl} className={styles.cardDetailBtn}>
+                        <span>Read more</span>
+                        <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                      </Link>
+                    </div>
                   </div>
-
-                  {/* Two Decision Buttons: Find doctors & Read more ↗ (Hover on desktop / Always visible on iPad & mobile) */}
-                  <div className={styles.cardActions}>
-                    <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
-                      Find doctors
-                    </Link>
-
-                    <Link href={detailUrl} className={styles.cardDetailBtn}>
-                      <span>Read more</span>
-                      <ArrowUpRight size={13} className={styles.pillBtnArrow} />
-                    </Link>
-                  </div>
-                </div>
-              </motion.article>
-            );
-          })
+                </motion.article>
+              );
+            })}
+          </AnimatePresence>
         )}
       </main>
 
@@ -339,19 +374,21 @@ export default function TreatmentsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── MEDICALLY REVIEWED FOOTER BAND ────────────────────────────────── */}
-      <MedicallyReviewedBand
-        reviewer={{
-          name: "Dr. Devi Prasad Shetty",
-          designation: "Chairman & Senior Consultant Cardiac Surgeon",
-          specialty: "Cardiothoracic & Vascular Surgery",
-          qualifications: "MS, FRCS (England), Padma Bhushan",
-          experience: "35+ Yrs Exp",
-          image: "/assets/doctor_1.png",
-          reviewDate: "October 2026",
-          profileLink: "/doctors"
-        }}
-      />
+      {/* ─── MEDICALLY REVIEWED BADGE FOOTER ───────────────────────────────── */}
+      <div style={{ maxWidth: "1240px", margin: "0 auto", padding: "0 clamp(20px, 4vw, 40px) 40px" }}>
+        <MedicallyReviewedBand
+          reviewer={{
+            name: "Dr. Devi Prasad Shetty",
+            designation: "Chairman & Founder, Narayana Health",
+            specialty: "Cardiac Surgery",
+            qualifications: "MS, FRCS",
+            experience: "35+ Yrs Exp",
+            image: "/doctors/doc_devi_shetty.jpg",
+            profileLink: "/doctors/dr-devi-shetty",
+            reviewDate: "October 2026",
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -133,63 +133,63 @@
   position: relative;
 }
 
-/* Compact Pulse search shell wrapper */
+/* Compact Pulse search shell wrapper (Subtle 10-12% opacity colors for serene AI aesthetic) */
 .searchBoxWrap {
   position: relative;
   width: 100%;
   border-radius: var(--radius-full, 9999px);
-  padding: 1.25px; /* Precision hairline stroke */
+  padding: 1.2px; /* Precision hairline stroke */
   background: linear-gradient(
     115deg,
-    #8b5cf6 0%,
-    #2563eb 35%,
-    #00c4ff 65%,
-    #ff2e93 85%,
-    #ed1c24 100%
+    rgba(139, 92, 246, 0.24) 0%,
+    rgba(37, 99, 235, 0.20) 35%,
+    rgba(0, 196, 255, 0.20) 65%,
+    rgba(255, 46, 147, 0.18) 85%,
+    rgba(237, 28, 36, 0.16) 100%
   );
   background: conic-gradient(
     from var(--border-angle, 0deg),
-    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
-    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
-    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
-    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
-    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
-    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
-    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
+    rgba(237, 28, 36, 0.20) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.18) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.24) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.22) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.22) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.20) 295deg,    /* Royal Blue */
+    rgba(237, 28, 36, 0.20) 360deg     /* Loop to NH Red */
   );
-  animation: rotateBorderAngle 8s linear infinite;
-  box-shadow: 0 0 20px -2px rgba(139, 92, 246, 0.40),
-              0 8px 24px rgba(0, 0, 0, 0.45);
+  animation: rotateBorderAngle 10s linear infinite;
+  box-shadow: 0 0 16px -2px rgba(139, 92, 246, 0.12),
+              0 8px 20px rgba(0, 0, 0, 0.35);
   transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Ambient purple spotlight aura behind the search pill */
+/* Subtle, soft 10%-12% spotlight aura behind the search pill */
 .searchBoxWrap::before {
   content: "";
   position: absolute;
-  inset: -12px -16px;
+  inset: -10px -14px;
   background: radial-gradient(
     ellipse at center,
-    rgba(139, 92, 246, 0.38) 0%,
-    rgba(0, 196, 255, 0.14) 50%,
-    transparent 72%
+    rgba(139, 92, 246, 0.12) 0%,
+    rgba(0, 196, 255, 0.04) 50%,
+    transparent 70%
   );
   filter: blur(14px);
   z-index: -1;
   border-radius: var(--radius-full, 9999px);
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0.6;
   transition: opacity 0.3s ease;
 }
 
 .searchBoxWrap:hover {
-  box-shadow: 0 0 28px 1px rgba(139, 92, 246, 0.58),
-              0 10px 28px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 22px 1px rgba(139, 92, 246, 0.18),
+              0 10px 24px rgba(0, 0, 0, 0.4);
 }
 
 .searchBoxWrap:focus-within {
-  box-shadow: 0 0 34px 2px rgba(139, 92, 246, 0.72),
-              0 12px 32px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 26px 2px rgba(139, 92, 246, 0.24),
+              0 12px 28px rgba(0, 0, 0, 0.5);
 }
 
 /* Inner Glass Shell in Compact Size (44px) */
@@ -197,20 +197,20 @@
   width: 100%;
   display: flex;
   align-items: center;
-  background: rgba(14, 20, 34, 0.85);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  background: rgba(12, 16, 28, 0.82);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
   border-radius: var(--radius-full, 9999px);
   padding: 0 16px;
   height: 44px;
   box-sizing: border-box;
 }
 
-/* Pulse Search Icon with gradient stroke */
+/* Pulse Search Icon with subtle gradient stroke */
 .searchIcon {
   stroke: url(#nhPulseSearchGrad) !important;
   color: #00C4FF !important;
-  filter: drop-shadow(0 0 3px rgba(0, 196, 255, 0.45));
+  filter: drop-shadow(0 0 2px rgba(0, 196, 255, 0.30));
   flex-shrink: 0;
   margin-right: 6px;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
@@ -218,8 +218,8 @@
 
 .searchBox:hover .searchIcon,
 .searchBox:focus-within .searchIcon {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 5px rgba(0, 196, 255, 0.8)) drop-shadow(0 0 8px rgba(255, 46, 147, 0.5));
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 4px rgba(0, 196, 255, 0.50));
 }
 
 .searchInput {
@@ -235,7 +235,7 @@
 }
 
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(255, 255, 255, 0.58);
   font-weight: 400;
 }
 
@@ -261,7 +261,7 @@
 .searchCountFeedback {
   margin-top: 10px;
   font-size: 13px;
-  color: rgba(226, 218, 255, 0.92);
+  color: rgba(226, 218, 255, 0.88);
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -288,26 +288,26 @@
   }
 }
 
-/* ─── RIGHT COLUMN: LIGHTWEIGHT NUMBER TYPOGRAPHY (FROM USER INSTRUCTION) ── */
+/* ─── RIGHT COLUMN: SECONDARY CREDENTIAL METRICS (SUBTLE, NON-DISTRACTING) ─ */
 .heroRightCol {
   display: flex;
   flex-direction: column;
-  gap: 36px;
-  border-left: 1px solid rgba(255, 255, 255, 0.18);
-  padding-left: clamp(28px, 3.5vw, 40px);
-  padding-top: 6px;
-  padding-bottom: 6px;
+  gap: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
+  padding-left: clamp(20px, 2.5vw, 28px);
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 @media (max-width: 900px) {
   .heroRightCol {
     border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
     padding-left: 0;
-    padding-top: 24px;
+    padding-top: 20px;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: 24px;
   }
 }
 
@@ -317,18 +317,18 @@
 }
 
 .statNumber {
-  font-size: clamp(34px, 3.2vw, 44px);
-  font-weight: 350;
-  color: #ffffff;
-  line-height: 1.1;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.44);
   font-weight: 400;
-  margin-top: 4px;
+  margin-top: 3px;
   line-height: 1.35;
 }
 
@@ -452,6 +452,32 @@
   font-weight: 400;
   letter-spacing: -0.01em;
   margin: 0;
+}
+
+/* Quick subtle pulse bar when API search/filtering is active */
+.apiPulseBar {
+  max-width: 1240px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 10px auto 0;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.apiPulseIndicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #00C4FF, #8B5CF6, transparent);
+  animation: apiPulseScan 0.8s ease-in-out infinite;
+}
+
+@keyframes apiPulseScan {
+  0% { left: -25%; }
+  100% { left: 100%; }
 }
 
 /* ─── 3-COLUMN CARDS GRID (PARTIALLY VISIBLE ABOVE THE FOLD) ──────────────── */
