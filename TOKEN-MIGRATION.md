@@ -109,16 +109,23 @@ The agent sorts every conflict:
 - **C — yours, and `main` changed it too** → **yours wins.** It keeps your
   version of what you own and takes `main`'s for the rest of that file.
   Ownership decides, not whose change is newer.
-- **D — more than 20 conflicts in one file** → **stops and asks you**
+- **D — too much of `main` inside the conflicts** → **stops and asks you**
 
-Most files land in A, B or C and the agent just gets on with it. D is the
-only thing that reaches you, and it is rare: on a dry run of Chetan's
-branch, 17 of 19 conflicted files had fewer than 10 conflicts each, and
-only 2 crossed the line.
+C only ever touches files you declared. Shared ones — homepage, layout,
+sections, `globals.css` — are bucket A by definition and `main` keeps
+them. And C only decides the *clashing* lines; everything `main` changed
+that does not clash merges in regardless.
 
-A file with hundreds of conflicts is not a stale branch — it is two people
-having rewritten the same file. Taking either side wholesale loses real
-work, so those come to Nahid. **Do not resolve the D list alone.**
+D is the safety net, and it triggers on **either** 20+ conflicts in a file
+**or** more than 50 lines of `main` sitting inside those conflicts. The
+second test is the one that matters. On a dry run of Chetan's branch,
+`SearchResultsCanvas.tsx` has only **5** conflicts — nowhere near the hunk
+limit — but **326 lines** of other people's work inside them. Counting
+conflicts alone would have resolved that file in his favour and dropped
+the lot.
+
+A file in D is not a stale branch, it is two people having rewritten the
+same thing. **Do not resolve the D list alone** — bring it to Nahid.
 
 ### Checkpoint 3 — does it still look right?
 
@@ -185,20 +192,26 @@ Do these in order and STOP where it says stop.
 6. Once I confirm, merge <remote>/main into the copy branch.
 
 7. Sort every conflicted file into:
-   A. Not mine -> take main's version of the whole file. This always
-      includes src/app/globals.css, whatever my scope says.
+   A. Not mine -> take main's version of the whole file. This ALWAYS
+      applies to the shared paths listed in step 5, whatever my scope
+      says — if one ended up in MY FILES by mistake, it is still A.
    B. Mine, and main did not change it -> keep mine.
    C. Mine AND main changed it too -> resolve in my favour: keep MY
-      version of anything inside my scope, and take main's for everything
-      else in that file. Ownership decides this, not which change is
-      newer.
-   D. EXCEPTION to C: if one file has more than 20 separate conflict
-      hunks, do not resolve it at all. That is not a stale branch, it is
-      two people having rewritten the same file, and taking either side
-      wholesale throws away real work. Leave it conflicted.
+      version of the conflicting lines. Ownership decides this, not which
+      change is newer. (main's non-conflicting changes merge in anyway;
+      this only decides the clashes.)
+   D. EXCEPTION to C — escalate instead of resolving, if EITHER:
+        - the file has more than 20 conflict hunks, OR
+        - main's side of the conflicts totals more than 50 lines
+      Count main's side as the lines between ======= and >>>>>>> across
+      all hunks in that file, and report that number for every file.
+      Both tests matter: a file can have only a handful of hunks and
+      still have hundreds of lines of someone's work inside them, and
+      resolving that in my favour would throw the lot away.
+      Leave D files conflicted and untouched.
 
-   Show me a table of every conflicted file, its bucket and its conflict
-   count, with the D files listed separately under "NEEDS A HUMAN
+   Show me a table of every conflicted file: bucket, hunk count, and
+   main-side line count. List the D files separately under "NEEDS A HUMAN
    DECISION". Then STOP.
 
 Never push to main. Never use reset --hard, force push, or anything else
