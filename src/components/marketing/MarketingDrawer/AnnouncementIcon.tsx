@@ -15,12 +15,10 @@
  * brand gradient is applied to `stroke`, and `fill` stays none — putting
  * that gradient on the fill would flood the whole glyph.
  *
- * `currentColor` is the default, so the toast and the island tile each
- * tint it from their own context. `gradient` is the mobile toast's
- * version, where the mark sits on a deep blue plate and is lit from the
- * top left; the gradient is part of the artwork rather than a UI colour,
- * so it is not tokenised. Its coordinates are the previous icon's,
- * scaled by 24/15 for the new viewBox.
+ * `currentColor` is the non-gradient variant. The default gradient is
+ * white-to-light-blue for dark plates; the toast's blue tone uses existing
+ * palette tokens through CSS stop colours, so it can sit directly on its
+ * light background without a container.
  *
  * The gradient id comes from useId rather than a module counter. Two of
  * these on one page sharing an id would have the second silently reuse
@@ -63,9 +61,11 @@ const lines = {
 export default function AnnouncementIcon({
   size = 32,
   gradient = true,
+  tone = "light",
 }: {
   size?: number;
   gradient?: boolean;
+  tone?: "light" | "blue";
 }) {
   const id = `announcement-grad-${useId()}`;
   const reducedMotion = useReducedMotion();
@@ -105,8 +105,8 @@ export default function AnnouncementIcon({
             y2="19.7344"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="white" />
-            <stop offset="1" stopColor="#70AEFF" />
+            <stop stopColor="white" style={tone === "blue" ? { stopColor: "var(--blue-500)" } : undefined} />
+            <stop offset="1" stopColor="#70AEFF" style={tone === "blue" ? { stopColor: "var(--blue-brand)" } : undefined} />
           </linearGradient>
         </defs>
       )}

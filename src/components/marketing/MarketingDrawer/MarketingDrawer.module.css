@@ -251,9 +251,13 @@
   position: relative;
 }
 
-/* The label IS the placeholder at rest, then shrinks into the corner
-   once the field is focused or holds anything. One piece of text doing
-   both jobs, so nothing is lost on focus the way a real placeholder is. */
+/* Reserve a separate label line only while focused or populated. */
+.field:has(.input:focus),
+.field:has(.input:not(:placeholder-shown)) {
+  padding-top: calc(var(--font-size-xs) * var(--leading-normal) + var(--space-8));
+}
+
+/* At rest the label acts as the placeholder; active labels sit above the box. */
 .fieldLabel {
   position: absolute;
   left: var(--space-14);
@@ -263,7 +267,7 @@
   pointer-events: none;
   font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1;
+  line-height: var(--leading-normal);
   color: var(--slate-400);
   transition:
     translate var(--duration-fast) var(--ease-out),
@@ -275,8 +279,10 @@
    together mean "focused, or holding something". */
 .input:focus + .fieldLabel,
 .input:not(:placeholder-shown) + .fieldLabel {
-  translate: 0 -168%;
-  scale: 0.78;
+  top: 0;
+  left: 0;
+  translate: 0 0;
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   font-weight: 600;
 }
@@ -286,8 +292,8 @@
   /* Medium: comfortably over the 44px touch minimum without the airiness
      of a 56px form field, which on a banner reads as a different page. */
   min-height: 48px;
-  /* Room above the text for the label to move into. */
-  padding: var(--space-16) var(--space-14) var(--space-4);
+  padding: var(--space-12) var(--space-14);
+  line-height: var(--leading-normal);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: rgba(var(--white-rgb), 0.92);
@@ -546,4 +552,19 @@
 
 @media (prefers-reduced-motion: reduce) {
   .glowFrame { display: none; }
+}
+
+/* Quiet blue lattice rising from the panel foot, below live content. */
+.panel::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--space-96);
+  background: linear-gradient(to top, rgba(var(--blue-500-rgb), 0.12), transparent);
+  mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
+  -webkit-mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
+  pointer-events: none;
 }

@@ -39,7 +39,7 @@
      came out almost transparent, with the hero video playing through it.
 
      The edges fade continuously into the pale ground. On the right the
-     blue finishes within 48px of the edge, before the red link begins. */
+     blue finishes within 48px of the edge, before the link begins. */
   background: linear-gradient(
     90deg,
     hsl(212deg 100% 74.1098%) 0,
@@ -99,67 +99,34 @@
   box-shadow: 0 -4px 34px 0 hsl(220deg 83.2238% 40.8541% / 0) inset;
 }
 
-/* ─── Background pattern ─────────────────────────────────────────────────
-   Two artworks. `band-pattern-edge.svg` holds the ends and
-   `band-pattern-mid.svg` the middle.
-
-   Both were optimised from their exports: the single stroke colour and
-   width hoisted off every path, a clipPath whose rect was exactly the
-   viewBox dropped (the outer svg already clips to it), and numbers
-   rounded to 2dp. Middle 6.7KB to 4.6KB, edge 4.8KB to 3.1KB.
-
-   Numbers are rounded one at a time and never shifted. An earlier pass
-   tried to dedupe repeated glyphs into <defs> plus <use>, which meant
-   re-expressing each path relative to its own origin — subtracting dx
-   from the even-indexed numbers and dy from the odd. That is only valid
-   if the data is all coordinate pairs. These paths use V and H, which
-   take a single value, so every number after the first one of those got
-   the wrong offset and the lattice came out as a tangle of diagonals.
-   Verified by pixel diff now, not by arithmetic: 0.12% of pixels differ
-   between export and optimised file, all of it anti-aliasing. */
-.pattern {
+/* One regular lattice: equal-size units on a shared pitch, with a wider
+   middle row. The band clips the upper and lower rows symmetrically. */
+.pattern { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.patternCentre {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  /* The middle only. The ends are the pseudo-elements below. */
-  background-image: url("/band-pattern-mid.svg");
-  background-repeat: no-repeat;
-  /* Authored at 82px against a 62px band, so it is scaled to 124% and
-     hangs off the top — what shows is the lower part of the lattice
-     rather than the whole thing boxed inside the band. */
-  background-position: left 50% top -26px;
-  background-size: auto 124%;
-  opacity: 0.9;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--space-128) * 2 + var(--space-24));
+  height: var(--space-80);
+  transform: translate(-50%, -50%);
+  background: rgba(var(--cyan-bright-rgb), 0.3);
+  mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat;
+  -webkit-mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat;
 }
-
-/* The ends. The artwork is authored at exactly the band's 62px height,
-   so it sits 1:1 with no scaling and runs flush to the edge. */
 .pattern::before,
 .pattern::after {
   content: "";
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 140px;
-  background-image: url("/band-pattern-edge.svg");
-  background-repeat: no-repeat;
-  background-size: auto 100%;
+  top: 50%;
+  width: var(--space-128);
+  height: calc(var(--space-80) + var(--space-4));
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(var(--white-rgb), 0.6), rgba(var(--white-rgb), 0.3) 60%, transparent);
+  mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat;
+  -webkit-mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat;
 }
-
-.pattern::before {
-  left: 0;
-  background-position: left center;
-}
-
-/* Mirrored, so the lattice reads outward from the right edge the way the
-   left one reads outward from the left. A background image cannot be
-   flipped, so the box is flipped and the image drawn into it. */
-.pattern::after {
-  right: 0;
-  background-position: left center;
-  transform: scaleX(-1);
-}
+.pattern::before { left: 0; }
+.pattern::after { right: 0; transform: translateY(-50%) scaleX(-1); }
 
 /* ─── Copy ──────────────────────────────────────────────────────────── */
 
@@ -242,7 +209,7 @@
   font-size: var(--font-size-base);
   font-weight: 500;
   line-height: var(--leading-snug);
-  color: var(--red-600);
+  color: var(--blue-brand);
   text-decoration: none;
   white-space: nowrap;
   transition: color var(--duration-fast) var(--ease-out);
@@ -262,7 +229,7 @@
 }
 
 .link:hover {
-  color: var(--red-500);
+  color: var(--color-primary-dark);
 }
 
 .link:hover::after,
@@ -317,7 +284,7 @@
 
   /* One paint source for the strip and the backing exposed by both
      hero corners. The shared height keeps the angled gradient aligned. */
-  .band::before,
+  .band,
   .mobileBackdrop {
     background: linear-gradient(
       98deg,
@@ -330,18 +297,13 @@
     background-repeat: no-repeat;
   }
 
-  /* The brand lattice, scaled down to the band's own height and kept to
-     the two ends so the moving text never crosses it. */
-  .pattern {
-    background-size: auto 100%;
-    background-position: left -40px top, right -40px top;
-    opacity: 0.7;
-  }
+  /* On phones the gradient is the band itself, already painted before
+     the scroll reveal starts. Remounting must not replay an edge wipe. */
+  .band::before { display: none; animation: none; }
+
+  .patternCentre { display: none; }
   .pattern::before,
-  .pattern::after {
-    width: 96px;
-    background-size: auto 100%;
-  }
+  .pattern::after { width: var(--space-96); height: var(--space-48); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
 
   /* ── the marquee ── */
   .marquee {
