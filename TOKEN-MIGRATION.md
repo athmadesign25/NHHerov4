@@ -73,12 +73,31 @@ MY FILES: src/components/search/**, src/components/ui/DoctorCard.tsx
 ```
 
 It builds this from the files you touched, which **over-counts** — it
-includes files you only wired your feature into. Cut those.
+includes files you only wired your feature into.
 
-**Owning a file means you would be the person to fix it if it broke.**
-Touching the homepage to plug your feature in does not make the homepage
-yours. If you genuinely cannot tell, call it not-yours: taking `main`'s
-version of something that was actually yours is one command to undo, the
+**This is the step that matters most**, because of what happens next: in a
+contested file your version wins. So anything wrongly listed as yours
+means your five-week-old copy of it replaces the current one.
+
+The prompt already protects the obvious traps. These are shared and are
+never yours by default, however many of them you touched:
+
+```
+src/app/globals.css        src/components/sections/**
+src/app/page.tsx           src/components/marketing/**
+src/components/layout/**   src/lib/**
+```
+
+That is not a formality — on a dry run, 16 of Chetan's changed files sat
+in those folders, and `main` has changed them more than anything else.
+Wiring your feature into the homepage does not make the homepage yours.
+
+The agent shows you three lists: what it thinks you own, what it excluded
+as shared, and any shared path it thinks is genuinely yours. **Read the
+first list, not just the summary.** If something there isn't yours, say so.
+
+**Owning a file means you would be the person to fix it if it broke.** If
+you cannot tell, call it not-yours — that is one command to undo. The
 other way round quietly deletes someone's week.
 
 ### Checkpoint 2 — the contested files
@@ -139,12 +158,29 @@ Do these in order and STOP where it says stop.
 4. Show me the files I have changed, grouped by folder with counts:
    git diff --name-only $(git merge-base <remote>/main HEAD)...HEAD
 
-5. From that, propose my scope in this form, then STOP and wait:
+5. Propose my scope, then STOP and wait.
+
+   These paths are SHARED. They are never mine by default, whatever the
+   file list shows — they are the pages and systems everyone builds on:
+       src/app/globals.css
+       src/app/page.tsx
+       src/components/layout/**
+       src/components/sections/**
+       src/components/marketing/**
+       src/lib/**
+   I have almost certainly touched some of them to wire my feature in.
+   That is not ownership. If you believe I genuinely own one, do NOT put
+   it in MY FILES — list it under CLAIMS and leave it out until Nahid
+   agrees.
+
+   Present it exactly like this:
       I OWN: <my feature, in plain words>
-      MY FILES: <paths>
-   That list over-counts — it includes files I only wired my feature into,
-   which are NOT mine. Owning a file means I would be the one to fix it if
-   it broke. Wait for me to confirm or correct it before going on.
+      MY FILES: <paths I own>
+      EXCLUDED AS SHARED: <paths from step 4 that fall under the list above>
+      CLAIMS TO CHECK WITH NAHID: <any shared path you think is really mine>
+
+   Owning a file means I would be the one to fix it if it broke. Wait for
+   me to confirm or correct it before going on.
 
 6. Once I confirm, merge <remote>/main into the copy branch.
 
