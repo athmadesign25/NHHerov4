@@ -26,6 +26,16 @@ import DoctorCardD2 from "./designs/DoctorCardD2";
 import DoctorCardCompact from "./designs/DoctorCardCompact";
 import DoctorCardOriginal from "./designs/DoctorCardOriginal";
 import Design3SearchResults from "./designs/d3/Design3SearchResults";
+import Design4SearchResults from "./designs/d4/Design4SearchResults";
+import Design5SearchResults from "./designs/d5/Design5SearchResults";
+import Design6SearchResults from "./designs/d6/Design6SearchResults";
+import Design16SearchResults from "./designs/d16/Design16SearchResults";
+import Design17SearchResults from "./designs/d17/Design17SearchResults";
+import Design18SearchResults from "./designs/d18/Design18SearchResults";
+import Design19SearchResults from "./designs/d19/Design19SearchResults";
+import Design7SearchResults from "./designs/d7/Design7SearchResults";
+import Design15SearchResults from "./designs/d15/Design15SearchResults";
+import { isDesign15Variant, isJourneyDesign } from "@/features/design-preview/journeyDesigns";
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 
@@ -2916,15 +2926,47 @@ function EmptyState({ category }: { category: string }) {
 
 function SearchPreviewContent() {
   const variant = useDesignVariant("search-top");
+  if (variant === null) return <SearchPreviewLoading />;
+  if (isDesign15Variant(variant)) {
+    return <Design15SearchResults design={variant} catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (isJourneyDesign(variant)) {
+    return <Design7SearchResults design={variant} catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d16") {
+    return <Design16SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d17" || variant === "d17-lite") {
+    return <Design17SearchResults variant={variant} catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d18") {
+    return <Design18SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d19") {
+    return <Design19SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d6") {
+    return <Design6SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d5") {
+    return <Design5SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
+  if (variant === "d4") {
+    return <Design4SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
+  }
   if (variant === "d3") {
     return <Design3SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
   }
   return <SearchResultsContent />;
 }
 
+function SearchPreviewLoading() {
+  return <div className={styles.previewLoading} role="status">Loading search results…</div>;
+}
+
 export default function SearchResultsPage() {
   return (
-    <Suspense fallback={<div style={{ paddingTop: "120px", textAlign: "center" }}>Loading search results...</div>}>
+    <Suspense fallback={<SearchPreviewLoading />}>
       <SearchPreviewContent />
     </Suspense>
   );

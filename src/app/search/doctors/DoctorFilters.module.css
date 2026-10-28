@@ -18,7 +18,7 @@
 .group { position: relative; padding-block: var(--sp-1); }
 .panel { position: relative; }
 .group + .group { border-top: 1px solid var(--color-border-light); }
-.groupHeader { position: relative; display: flex; align-items: center; height: var(--sp-6); }
+.groupHeader { position: relative; display: flex; align-items: center; height: var(--filter-category-height, var(--sp-6)); }
 /* Each open group's own boundary pushes its heading away for the next group. */
 .group[data-expanded="true"] > .groupHeader { position: sticky; top: var(--filter-header-height, 0px); z-index: 1; background: var(--color-bg-card); }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -33,7 +33,7 @@
   }
 }
 .groupHeading { flex: 1; min-width: 0; margin: 0; font: inherit; }
-.groupToggle { position: relative; display: flex; align-items: center; gap: var(--sp-1); width: 100%; height: var(--sp-6); padding-inline-end: calc(var(--sp-6) + var(--sp-3)); border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; text-align: left; color: var(--d3-ui-text, var(--color-text-secondary)); transition: color var(--d3-ui-fast, var(--transition-fast)); }
+.groupToggle { position: relative; display: flex; align-items: center; gap: var(--sp-1); width: 100%; height: var(--filter-category-height, var(--sp-6)); padding-inline-end: calc(var(--sp-6) + var(--sp-3)); border-radius: var(--radius-sm); font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; text-align: left; color: var(--d3-ui-text, var(--color-text-secondary)); transition: color var(--d3-ui-fast, var(--transition-fast)); }
 .groupLabel { min-width: 0; line-height: 1.3; }
 .groupToggle:active { color: var(--d3-ui-ink-pressed, var(--color-text)); }
 .groupIcon { flex-shrink: 0; width: var(--font-size-base); height: var(--font-size-base); color: inherit; }

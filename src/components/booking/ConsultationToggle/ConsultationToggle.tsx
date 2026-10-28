@@ -8,6 +8,7 @@ import styles from "./ConsultationToggle.module.css";
 
 interface ConsultationToggleProps {
   value: ConsultationType;
+  availableModes?: readonly ConsultationType[];
   onChange: (type: ConsultationType) => void;
 }
 
@@ -26,10 +27,10 @@ const OPTIONS: { value: ConsultationType; label: string; icon: string; alt: stri
   },
 ];
 
-export default function ConsultationToggle({ value, onChange }: ConsultationToggleProps) {
+export default function ConsultationToggle({ value, onChange, availableModes }: ConsultationToggleProps) {
   return (
     <div className={styles.track} role="group" aria-label="Consultation type">
-      {OPTIONS.map((opt) => {
+      {OPTIONS.filter(opt => !availableModes || availableModes.includes(opt.value)).map((opt) => {
         const isActive = value === opt.value;
         return (
           <button

@@ -1,16 +1,29 @@
 import type { NormalizedDoctor } from "@/lib/searchService";
+import { advertisedAppointmentTimestamp, indiaAppointmentTimestamp, indiaClock, indiaDate } from "@/features/booking/appointmentTime";
 
 export type ConsultationMode = "hospital" | "video";
-export type DoctorSort = "relevance" | "earliest" | "experience" | "fee_asc" | "fee_desc";
+export type DoctorSort = "relevance" | "earliest" | "nearest" | "experience" | "fee_asc" | "fee_desc";
 export type AvailabilityFilter = "any" | "today" | "tomorrow" | "week";
+
+export interface DoctorPracticeLocation {
+  hospital: string;
+  city: string;
+  /** Design 16 stakeholder sample, not a measured journey distance. */
+  distanceKm?: number;
+  availability: { hospital?: string; video?: string };
+  fee: string;
+}
 
 export interface DoctorListingItem {
   id: string;
   name: string;
   speciality: string;
+  /** Supplied professional role; never inferred from experience or speciality. */
+  designation?: string;
   degrees: string;
   hospital: string;
   hospitals?: readonly string[];
+  practiceLocations?: readonly DoctorPracticeLocation[];
   hospitalCount?: string;
   city: string;
   experience: string;
@@ -91,37 +104,34 @@ export function doctorHospitals(doctor: DoctorListingItem): string[] {
   return [...new Set([doctor.hospital, ...(doctor.hospitals ?? [])].filter(Boolean))];
 }
 
+/** Keep the selected affiliation visible and carry it into the Design 3 booking URL. */
+export function withSelectedDoctorHospital(doctor: DoctorListingItem, selectedHospitals: readonly string[]): DoctorListingItem {
+  const hospitals = doctorHospitals(doctor);
+  const hospital = hospitals.find((name) => selectedHospitals.includes(name));
+  return hospital && hospital !== doctor.hospital ? { ...doctor, hospital, hospitals } : doctor;
+}
+
 export function nextSlot(doctor: DoctorListingItem, mode: ConsultationMode, now = new Date()): Date | null {
+  if (doctor.modes[mode] === false) return null;
   const text = doctor.availability[mode]?.trim();
   if (!text) return null;
-  const time = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (!time || Number(time[1]) < 1 || Number(time[1]) > 12 || Number(time[2]) > 59) return null;
-  const date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (/^tomorrow\b/i.test(text)) date.setDate(date.getDate() + 1);
-  else if (!/^today\b/i.test(text)) {
-    const iso = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (!iso) return null;
-    date.setFullYear(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]));
-    if (date.getFullYear() !== Number(iso[1]) || date.getMonth() !== Number(iso[2]) - 1 || date.getDate() !== Number(iso[3])) return null;
-  }
-  const hour = Number(time[1]) % 12 + (time[3].toUpperCase() === "PM" ? 12 : 0);
-  date.setHours(hour, Number(time[2]), 0, 0);
-  return date;
+  const timestamp = advertisedAppointmentTimestamp(text, now);
+  return timestamp !== null && timestamp > now.getTime() ? new Date(timestamp) : null;
 }
 
 export function filterDoctors(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode, now = new Date()) {
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const tomorrow = new Date(start); tomorrow.setDate(start.getDate() + 1);
-  const afterTomorrow = new Date(start); afterTomorrow.setDate(start.getDate() + 2);
-  const week = new Date(start); week.setDate(start.getDate() + 7);
+  const start = indiaAppointmentTimestamp(indiaDate(now), "12:00 AM")!;
+  const tomorrow = start + 24 * 60 * 60 * 1000;
+  const afterTomorrow = tomorrow + 24 * 60 * 60 * 1000;
+  const week = start + 7 * 24 * 60 * 60 * 1000;
   return doctors.filter((doctor) => {
     if (doctor.modes[mode] === false) return false;
     for (const key of ["specialties", "hospitals", "languages", "genders", "expertise"] as const) {
       if (filters[key].length && !doctorFilterValues(doctor, key).some((value) => filters[key].includes(value))) return false;
     }
     if (filters.availability === "any") return true;
-    const slot = nextSlot(doctor, mode, now);
-    if (!slot) return false;
+    const slot = nextSlot(doctor, mode, now)?.getTime();
+    if (slot === undefined) return false;
     if (filters.availability === "today") return slot >= start && slot < tomorrow;
     if (filters.availability === "tomorrow") return slot >= tomorrow && slot < afterTomorrow;
     return slot >= start && slot < week;
@@ -132,9 +142,10 @@ export function sortDoctors(doctors: readonly DoctorListingItem[], sort: DoctorS
   const number = (text: string) => text.trim() ? Number.parseFloat(text.replace(/[^\d.]/g, "")) : NaN;
   const value = (doctor: DoctorListingItem) => sort === "earliest"
     ? nextSlot(doctor, mode, now)?.getTime() ?? NaN
+    : sort === "nearest" ? doctor.practiceLocations?.find((unit) => unit.hospital === doctor.hospital)?.distanceKm ?? NaN
     : sort === "experience" ? number(doctor.experience) : number(doctor.fee);
   return [...doctors].sort((a, b) => {
-    if (sort === "relevance") return 0;
+    if (sort === "relevance" || (sort === "nearest" && mode !== "hospital")) return 0;
     const av = value(a); const bv = value(b);
     // Unknown prices/experience/times always follow known values, in either direction.
     if (!Number.isFinite(av)) return Number.isFinite(bv) ? 1 : 0;
@@ -149,9 +160,8 @@ export function bookingUrl(doctor: DoctorListingItem, mode: ConsultationMode, in
   if (mode === "hospital" && doctor.hospital) params.set("hospital", doctor.hospital);
   const slot = includeSlot ? nextSlot(doctor, mode, now) : null;
   if (slot) {
-    const date = `${slot.getFullYear()}-${String(slot.getMonth() + 1).padStart(2, "0")}-${String(slot.getDate()).padStart(2, "0")}`;
-    params.set("date", date);
-    params.set("time", `${String(slot.getHours() % 12 || 12).padStart(2, "0")}:${String(slot.getMinutes()).padStart(2, "0")} ${slot.getHours() >= 12 ? "PM" : "AM"}`);
+    params.set("date", indiaDate(slot));
+    params.set("time", indiaClock(slot));
   }
   return `/doctors/${encodeURIComponent(doctor.id)}/book?${params}`;
 }
@@ -173,9 +183,10 @@ export function readListingParams(params: URLSearchParams) {
   const availability = params.get("availability");
   if (availability && Object.hasOwn(availabilityLabels, availability)) filters.availability = availability as AvailabilityFilter;
   const sort = params.get("sort");
+  const nearest = sort === "nearest" && ["d16", "d17", "d17-lite", "d18", "d19"].includes(params.get("design") ?? "") && params.get("mode") !== "video";
   return {
     filters,
     mode: (params.get("mode") === "video" ? "video" : "hospital") as ConsultationMode,
-    sort: (["earliest", "experience", "fee_asc", "fee_desc"].includes(sort ?? "") ? sort : "relevance") as DoctorSort,
+    sort: (["earliest", "experience", "fee_asc", "fee_desc"].includes(sort ?? "") || nearest ? sort : "relevance") as DoctorSort,
   };
 }

@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  background: #f1f5f9;
+  background: var(--consultation-track, #f1f5f9);
   border: none;
   border-radius: var(--radius-full);
   padding: 4px;
@@ -37,7 +37,7 @@
 .activePill {
   position: absolute;
   inset: 0;
-  background: #ffffff;
+  background: var(--consultation-pill, #ffffff);
   border: none;
   border-radius: var(--radius-full);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
@@ -56,28 +56,28 @@
 .optionLabel {
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
-  color: #475569;
+  color: var(--consultation-muted, #475569);
   white-space: nowrap;
   transition: color var(--transition-fast), font-weight var(--transition-fast);
 }
 
 .option:hover:not(.optionActive) .optionLabel {
-  color: #0f172a;
+  color: var(--consultation-text, #0f172a);
 }
 
 .optionHospitalActive .optionLabel {
   font-weight: 700;
-  color: #dc2626;
+  color: var(--consultation-hospital, #dc2626);
 }
 
 .optionVideoActive .optionLabel {
   font-weight: 700;
-  color: #034ea2;
+  color: var(--consultation-video, #034ea2);
 }
 
 .optionIcon {
   opacity: 0.65;
-  filter: grayscale(1) brightness(0.2);
+  filter: var(--consultation-icon, grayscale(1) brightness(0.2));
   transition: opacity var(--transition-fast), filter var(--transition-fast);
 }
 

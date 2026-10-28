@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, Fragment } from "react";
 import Link from "next/link";
+import DoctorNavigationLink from "./DoctorNavigationLink";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +29,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const doctorMenuLinkRef = useRef<HTMLAnchorElement>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activePane, setActivePane] = useState<string>('main');
@@ -230,47 +232,63 @@ export default function Navbar() {
           <li className={styles.navItem}
             style={{ position: "relative" }}
             onMouseEnter={() => setActiveDropdown("find-a-doctor")}
-            onMouseLeave={() => setActiveDropdown(null)}
+            onMouseLeave={(event) => {
+              if (!event.currentTarget.contains(document.activeElement)) setActiveDropdown(null);
+            }}
+            onFocus={() => setActiveDropdown("find-a-doctor")}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) setActiveDropdown(null);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                doctorMenuLinkRef.current?.focus();
+                setActiveDropdown(null);
+              }
+            }}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest("a")) setActiveDropdown(null);
+            }}
           >
-            <Link className={styles.navLink} href="/search/doctors">
+            <DoctorNavigationLink ref={doctorMenuLinkRef} className={styles.navLink} href="/book-an-appointment" aria-expanded={activeDropdown === "find-a-doctor"} aria-controls="find-doctor-links">
               Find a Doctor<ChevronDown size={14} />
-            </Link>
+            </DoctorNavigationLink>
             {activeDropdown === "find-a-doctor" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
+              <div id="find-doctor-links" style={{ position: "absolute", top: "100%", left: "0px", background: "rgb(255, 255, 255)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(0,0,0,0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, #E2E8F0)" }}>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Top Specialties</div>
-                  <Link href="/search/doctors?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
-                  <Link href="/search/doctors?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
-                  <Link href="/search/doctors?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
-                  <Link href="/search/doctors?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
-                  <Link href="/search/doctors?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
+                  <DoctorNavigationLink href="/book-an-appointment/cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</DoctorNavigationLink>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Surgical Specialists</div>
-                  <Link href="/search/doctors?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
-                  <Link href="/search/doctors?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
-                  <Link href="/search/doctors?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
-                  <Link href="/search/doctors?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
+                  <DoctorNavigationLink href="/book-an-appointment/cardiac-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/general-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/vascular-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/plastic-surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</DoctorNavigationLink>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Internal Medicine</div>
-                  <Link href="/search/doctors?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
-                  <Link href="/search/doctors?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
-                  <Link href="/search/doctors?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
-                  <Link href="/search/doctors?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
+                  <DoctorNavigationLink href="/book-an-appointment/gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</DoctorNavigationLink>
                 </div>
                 <div>
                   <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, #034EA2)", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, #ED1C24)", paddingLeft: "8px" }}>Other Specialists</div>
-                  <Link href="/search/doctors?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
-                  <Link href="/search/doctors?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
-                  <Link href="/search/doctors?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
-                  <Link href="/search/doctors?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
-                  <Link href="/search/doctors?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
+                  <DoctorNavigationLink href="/book-an-appointment/urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/ent-specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/book-an-appointment/dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/search/doctors?design=d3&specialties=Dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</DoctorNavigationLink>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/search/doctors" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
+                  <DoctorNavigationLink href="/book-an-appointment" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
                     View all <ChevronRight size={14} />
-                  </Link>
+                  </DoctorNavigationLink>
                 </div>
               </div>
             )}
@@ -406,6 +424,7 @@ export default function Navbar() {
               <motion.button
                 type="button"
                 className={styles.navLocationBtn}
+                data-nav-city
                 aria-label="Change city"
                 initial={{ opacity: 0, width: 0, marginRight: -12 }}
                 animate={{ opacity: 1, width: "auto", marginRight: 0 }}
@@ -680,6 +699,7 @@ export default function Navbar() {
               {isMobileMenuOpen && (
                 <motion.button 
                   className={styles.navCityBtn} 
+                  data-nav-city
                   aria-label="Select City"
                   initial={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
                   animate={{ opacity: 1, width: "auto", overflow: "visible", padding: "0 4px" }}
@@ -847,20 +867,21 @@ export default function Navbar() {
                     <span className={styles.paneTitle}>Find a Doctor</span>
                   </div>
                   <div className={styles.darkDrawerScroll}>
+                    <DoctorNavigationLink href="/book-an-appointment" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>View all doctors</DoctorNavigationLink>
                     <div className={styles.subCategoryGroup}>
                       <div className={styles.subCategoryLabel}>Top Specialties</div>
-                      <Link href="/search/doctors?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
-                      <Link href="/search/doctors?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
-                      <Link href="/search/doctors?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
-                      <Link href="/search/doctors?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
-                      <Link href="/search/doctors?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
+                      <DoctorNavigationLink href="/book-an-appointment/cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</DoctorNavigationLink>
                     </div>
                     <div className={styles.subCategoryGroup}>
                       <div className={styles.subCategoryLabel}>Surgical Specialists</div>
-                      <Link href="/search/doctors?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
-                      <Link href="/search/doctors?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
-                      <Link href="/search/doctors?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
-                      <Link href="/search/doctors?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
+                      <DoctorNavigationLink href="/book-an-appointment/cardiac-surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/general-surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/vascular-surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</DoctorNavigationLink>
+                      <DoctorNavigationLink href="/book-an-appointment/plastic-surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</DoctorNavigationLink>
                     </div>
                   </div>
                 </motion.div>

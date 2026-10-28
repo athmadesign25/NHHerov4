@@ -4,6 +4,7 @@
 
 import { searchDoctorsData } from "@/app/search/mockDoctors";
 import { allSearchDataDoctors } from "@/components/search/NHSearchExperience/searchData";
+import { getDesign3CityDoctor } from "@/features/search/design3CityDoctors";
 import type { BookingDoctorSummary } from "./types";
 
 /** Hand-curated profiles (slug-style ids used by the doctor profile page). */
@@ -183,6 +184,14 @@ export function getBookingDoctor(slug: string): BookingDoctorSummary {
 
 /** Design 3 only: never resolve an ID by substring or synthesize a clinician. */
 export function getDesign3BookingDoctor(id: string): BookingDoctorSummary | null {
+  const preview = getDesign3CityDoctor(id);
+  if (preview) return {
+    id: preview.id, name: preview.name, speciality: preview.speciality,
+    subSpeciality: "", hospital: preview.hospital, city: preview.city,
+    locations: (preview.hospitals ?? [preview.hospital]).map((name) => ({ name, city: preview.city })),
+    experienceYears: preview.experience, rating: preview.rating, reviews: preview.reviews,
+    img: preview.img, fee: preview.fee, languages: [...(preview.languages ?? [])],
+  };
   const doctor = searchDoctorsData.find((item) => item.id === id);
   if (!doctor) return null;
   return {

@@ -1,0 +1,12 @@
+.dialog { width: min(calc(100% - var(--sp-4)), calc(var(--sp-16) * 5)); max-width: 100%; max-height: calc(100dvh - var(--sp-4)); margin: auto; padding: 0; border: 1px solid var(--d7-border); border-radius: var(--d7-radius); color: var(--d7-text); background: var(--d7-surface); box-shadow: var(--d7-shadow); overflow: hidden; }
+.dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.dialog::backdrop { background: color-mix(in srgb, var(--journey-ink-bg) 70%, transparent); backdrop-filter: blur(calc(var(--sp-1) / 2)); -webkit-backdrop-filter: blur(calc(var(--sp-1) / 2)); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--d7-border); background: var(--d7-glass); }
+.header h2 { font-size: clamp(var(--font-size-lg), 2vw, var(--font-size-xl)); font-weight: 600; line-height: 1.4; letter-spacing: -.025em; }
+.header button { display: grid; place-items: center; flex-shrink: 0; width: calc(var(--sp-5) + var(--sp-1) / 2); height: calc(var(--sp-5) + var(--sp-1) / 2); border: 1px solid var(--d7-border); border-radius: var(--radius-full); color: var(--d7-muted); }
+.body { min-height: 0; min-width: 0; padding: var(--sp-3); overflow-y: auto; overscroll-behavior: contain; }
+.footer { padding: var(--sp-2) var(--sp-3); padding-bottom: max(var(--sp-2), env(safe-area-inset-bottom)); border-top: 1px solid var(--d7-border); background: var(--d7-surface); }
+.dialog :is(button, a, input, select, summary):focus-visible { outline: 2px solid var(--d7-accent); outline-offset: 3px; }
+@media (max-width: 639px) { .dialog { width: 100%; max-height: calc(100dvh - var(--sp-2)); margin-bottom: 0; border-bottom: 0; border-radius: var(--d7-radius) var(--d7-radius) 0 0; } .header, .body, .footer { padding-inline: var(--sp-2); } .body { padding-block: var(--sp-2); } }
+@media (hover: hover) { .header button:hover { background: var(--d7-accent-soft); } }
+@media (forced-colors: active) { .dialog, .header, .footer, .header button { border-color: CanvasText; } }

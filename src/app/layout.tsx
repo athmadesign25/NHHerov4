@@ -38,7 +38,7 @@ export default function RootLayout({
         <ScrollProgress />
 
         {/* Layout */}
-        <Navbar />
+        <div data-site-header><Navbar /></div>
         <FooterRevealWrapper>{children}</FooterRevealWrapper>
       </body>
     </html>

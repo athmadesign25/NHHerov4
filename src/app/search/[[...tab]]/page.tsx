@@ -29,6 +29,9 @@ export async function generateMetadata({ params }: SearchRouteProps): Promise<Me
   return {
     title,
     description: tab.metaDescription,
+    // Doctor search includes preview fixtures and arbitrary user refinements.
+    // Approved, verified landing pages own future indexable directory content.
+    robots: tab.id === "doctors" ? { index: false, follow: true } : undefined,
     alternates: { canonical: getSearchTabPath(tab) },
     openGraph: { title, description: tab.metaDescription, url: getSearchTabPath(tab) },
   };

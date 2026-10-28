@@ -7,8 +7,8 @@ import styles from "./ActiveDoctorFilters.module.css";
 
 export interface ActiveDoctorFilter { key: string; label: string; remove: () => void }
 
-export default function ActiveDoctorFilters({ chips, reducedMotion, focusFallback }: {
-  chips: ActiveDoctorFilter[]; reducedMotion: boolean; focusFallback: () => void;
+export default function ActiveDoctorFilters({ chips, reducedMotion, focusFallback, wrap = false }: {
+  chips: ActiveDoctorFilter[]; reducedMotion: boolean; focusFallback: () => void; wrap?: boolean;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
   const remove = (button: HTMLButtonElement, action: () => void) => {
@@ -18,7 +18,7 @@ export default function ActiveDoctorFilters({ chips, reducedMotion, focusFallbac
     if (next) next.focus({ preventScroll: true }); else focusFallback();
     action();
   };
-  return <div ref={listRef} className={styles.list} role="group" aria-label="Active filters">
+  return <div ref={listRef} className={`${styles.list} ${wrap ? styles.wrap : ""}`} role="group" aria-label="Active filters">
     <AnimatePresence initial={false} mode="popLayout">{chips.map((chip) =>
       <AppliedFilterChip key={chip.key} label={chip.label} reducedMotion={reducedMotion} onRemove={(button) => remove(button, chip.remove)} />
     )}</AnimatePresence>

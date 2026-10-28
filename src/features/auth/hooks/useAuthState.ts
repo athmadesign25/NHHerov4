@@ -6,8 +6,10 @@ export function useAuthState() {
   useEffect(() => {
     const checkStatus = () => {
       if (typeof window !== "undefined") {
-        const local = localStorage.getItem("isLoggedIn") === "true";
-        const session = sessionStorage.getItem("isLoggedIn") === "true";
+        let local = false;
+        let session = false;
+        try { local = localStorage.getItem("isLoggedIn") === "true"; } catch { /* Persistent storage may be blocked. */ }
+        try { session = sessionStorage.getItem("isLoggedIn") === "true"; } catch { /* Treat an unavailable store as signed out. */ }
         setIsUserLoggedIn(local || session);
       }
     };

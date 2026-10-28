@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,6 +16,11 @@ import MemberSelector, { type FamilyMember } from "@/components/booking/MemberSe
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import { saveBooking } from "@/features/booking/bookingStore";
+import { design17ProfileAvailability, design17ProfileDetails, design17ProfileUrl, getDesign17ProfileDoctor, getDesign17RelatedDoctors, selectDesign17ProfileHospital } from "@/features/search/design17Profile";
+import { design17BookingUrl } from "@/features/search/design17Booking";
+import { design17ListingReturnTo } from "@/features/search/design17Navigation";
+import { fromDirectoryDoctor } from "@/features/search/doctorListing";
+import profileStyles from "./DoctorProfile.module.css";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -194,6 +199,11 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   const { slug } = React.use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const requestedDesign = searchParams.get("design");
+  const directoryDesign = requestedDesign === "d17-lite" || requestedDesign === "d18" || requestedDesign === "d19" ? requestedDesign : "d17";
+  const isDesign17 = ["d17", "d17-lite", "d18", "d19"].includes(requestedDesign ?? "");
+  const listingReturnTo = design17ListingReturnTo(searchParams.get("returnTo"), directoryDesign);
+  const listingDoctor = isDesign17 ? getDesign17ProfileDoctor(slug, searchParams) : null;
 
   // Try all known data sources first
   const dbDoc = getDoctorDetail(slug);
@@ -263,9 +273,9 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
     };
   })();
 
-  const doc = dbDoc ?? fallbackDoc ?? dynamicSlugDoc;
+  const doc = listingDoctor ? design17ProfileDetails(listingDoctor) : dbDoc ?? fallbackDoc ?? dynamicSlugDoc;
 
-  const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">("Hospital Visit");
+  const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">(isDesign17 && searchParams.get("mode") === "video" ? "Video Consultation" : "Hospital Visit");
   
   // Rolling 15 days
   const [actualDates] = useState(() => {
@@ -292,6 +302,13 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { isUserLoggedIn } = useAuthState();
+
+  const requestedMode = searchParams.get("mode");
+  useEffect(() => {
+    if (!isDesign17) return;
+    setSelectedHospital(doc.hospital);
+    setConsultationType(requestedMode === "video" ? "Video Consultation" : "Hospital Visit");
+  }, [slug, doc.hospital, requestedMode, isDesign17]);
 
   const [selectedMember, setSelectedMember] = useState<FamilyMember>({
     id: 1,
@@ -332,6 +349,11 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   };
 
   const proceedToBooking = () => {
+    if (listingDoctor) {
+      const selected = selectDesign17ProfileHospital(listingDoctor, selectedHospital);
+      router.push(design17BookingUrl(selected, consultationType === "Hospital Visit" ? "hospital" : "video", searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo));
+      return;
+    }
     const chosenDateObj = actualDates.find((d) => d.date === selectedDate) || actualDates[0];
     const record = saveBooking({
       doctorSlug: slug,
@@ -363,9 +385,20 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
     proceedToBooking();
   };
 
-  const similarDoctors = searchDoctorsData
+  const relatedMode = consultationType === "Video Consultation" ? "video" : "hospital";
+  const relatedDoctors = isDesign17 ? getDesign17RelatedDoctors(slug, relatedMode, doc.name) : searchDoctorsData
     .filter((d) => d.id !== slug && d.name.toLowerCase() !== doc.name.toLowerCase())
-    .slice(0, 8);
+    .slice(0, 8).map(fromDirectoryDoctor);
+  const similarDoctors = relatedDoctors.map(doctor => {
+      return {
+        ...doctor,
+        availabilityLabel: isDesign17 ? design17ProfileAvailability(doctor, relatedMode) : "",
+        profileHref: isDesign17 ? design17ProfileUrl(doctor, relatedMode, searchParams.get("date") ?? "", false, directoryDesign, listingReturnTo)
+          : `/doctors/${encodeURIComponent(doctor.id)}?name=${encodeURIComponent(doctor.name)}`,
+        bookingHref: isDesign17 ? design17BookingUrl(doctor, relatedMode, searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo)
+          : `/doctors/${encodeURIComponent(doctor.id)}/book?mode=hospital`,
+      };
+    });
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
@@ -373,12 +406,12 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
           theme="light"
           items={[
             { label: "Home", href: "/" },
-            { label: "Doctors", href: "/search?q=Dr.&location=All" },
+            { label: "Doctors", href: isDesign17 ? listingReturnTo : "/search?q=Dr.&location=All" },
             { label: doc.name }
           ]}
         />
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "var(--sp-4)", alignItems: "start" }}>
+        <div className={isDesign17 ? profileStyles.grid : undefined} style={{ display: "grid", gridTemplateColumns: isDesign17 ? undefined : "1fr 400px", gap: "var(--sp-4)", alignItems: "start" }}>
           {/* Left Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--sp-3)" }}>
             
@@ -392,7 +425,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
                   <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
-                    <Image src={doc.img} alt={doc.name} fill style={{ objectFit: "cover" }} />
+                    <Image src={doc.img} alt={doc.name} fill sizes="180px" style={{ objectFit: "cover" }} />
                   </div>
                   <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column" }}>
                     <h1 style={{ fontSize: "var(--font-size-3xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em", marginBottom: 4 }}>{doc.name}</h1>
@@ -402,7 +435,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                       {(doc.locations || [{ name: doc.hospital, city: doc.city }]).map((loc, idx) => (
                         <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500 }}>
                           <MapPin size={16} style={{ color: "var(--color-text)" }} />
-                          {loc.name}, {loc.city}
+                          {loc.name}{loc.city && !loc.name.toLocaleLowerCase().includes(loc.city.toLocaleLowerCase()) ? `, ${loc.city}` : ""}
                         </div>
                       ))}
                       <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginTop: 4 }}>
@@ -473,7 +506,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               </div>
 
               {/* Work Experience */}
-              <div>
+              {doc.experience.length > 0 && <div>
                 <SectionHeading title="Work experience" />
                 <ExpandableList 
                   items={doc.experience}
@@ -487,10 +520,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                     </div>
                   )}
                 />
-              </div>
+              </div>}
 
               {/* Awards & Recognition */}
-              <div>
+              {doc.awards.length > 0 && <div>
                 <SectionHeading title="Award & recognition" />
                 <ExpandableList 
                   items={doc.awards}
@@ -504,7 +537,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                     </div>
                   )}
                 />
-              </div>
+              </div>}
 
               {/* Fields of Expertise */}
               <div>
@@ -539,6 +572,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
             <div style={{ display: "flex", alignItems: "center", background: "#F1F5F9", borderRadius: 24, padding: 4, gap: 4, marginBottom: 20 }}>
               <button
                 type="button"
+                disabled={isDesign17 && listingDoctor?.modes.hospital === false}
                 onClick={() => setConsultationType("Hospital Visit")}
                 style={{
                   position: "relative", display: "flex", alignItems: "center", justifyContent: "center", flex: 1, padding: "8px 16px",
@@ -558,6 +592,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               </button>
               <button
                 type="button"
+                disabled={isDesign17 && listingDoctor?.modes.video === false}
                 onClick={() => setConsultationType("Video Consultation")}
                 style={{
                   position: "relative", display: "flex", alignItems: "center", justifyContent: "center", flex: 1, padding: "8px 16px",
@@ -578,12 +613,12 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
             </div>
 
             {/* Select Member Dropdown (Toshib pattern + Add Patient) */}
-            <div style={{ marginBottom: 20 }}>
+            {!isDesign17 && <div style={{ marginBottom: 20 }}>
               <MemberSelector
                 selectedMemberId={selectedMember.id}
                 onSelectMember={(m) => setSelectedMember(m)}
               />
-            </div>
+            </div>}
 
             {/* Hospital Selector (for Hospital Visit) */}
             {consultationType === "Hospital Visit" && (
@@ -614,6 +649,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
             )}
 
             {/* Date Selector */}
+            {!isDesign17 && <>
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                 <div style={{ fontSize: "var(--font-size-base)", fontWeight: 500, color: "var(--color-text)", display: "flex", alignItems: "center", gap: 8 }}>
@@ -758,7 +794,9 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               </div>
             </div>
 
+            </>}
             {/* CTAs */}
+            {isDesign17 && (!listingDoctor || listingDoctor.modes[consultationType === "Hospital Visit" ? "hospital" : "video"] !== true) ? <a href="tel:18602080208">Contact NH for appointments</a> :
             <button
               id="book-appointment-btn"
               type="button"
@@ -772,9 +810,9 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}
             >
               Book Appointment
-            </button>
+            </button>}
             <a
-              href="tel:18001030"
+              href={isDesign17 ? "tel:18602080208" : "tel:18001030"}
               id="doctor-call-btn"
               style={{
                 width: "100%", padding: "12px", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)",
@@ -862,7 +900,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                         <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
                           <Link
                             style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}
-                            href={`/doctors/${sDoc.id}?name=${encodeURIComponent(sDoc.name)}`}
+                            href={sDoc.profileHref}
                           >
                             <div style={{ width: "100%", height: "100%", position: "relative" }}>
                               <Image
@@ -877,7 +915,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                           </Link>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                          <Link style={{ textDecoration: "none" }} href={`/doctors/${sDoc.id}?name=${encodeURIComponent(sDoc.name)}`}>
+                          <Link style={{ textDecoration: "none" }} href={sDoc.profileHref}>
                             <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                               {sDoc.name}
                             </h3>
@@ -905,9 +943,13 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                       </div>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                         <Clock size={16} style={{ color: "var(--color-text-secondary)" }} />
-                        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)" }}>Next available at</p>
+                        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)" }}>{isDesign17 ? "Availability" : "Next available at"}</p>
                       </div>
                       <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 10, marginBottom: 16 }}>
+                        {isDesign17 ? <div aria-label={`${relatedMode === "hospital" ? "Hospital visit" : "Video consultation"}: ${sDoc.availabilityLabel}`} style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
+                          <Image alt="" width={16} height={16} src={relatedMode === "hospital" ? "/Appointment/Hospital_visit.svg" : "/Appointment/Video_consultation.svg"} />
+                          {sDoc.availabilityLabel}
+                        </div> : <>
                         <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
                           <Image alt="" width={16} height={16} src="/Appointment/Hospital_visit.svg" />
                           Available Today
@@ -916,6 +958,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                           <Image alt="" width={16} height={16} src="/Appointment/Video_consultation.svg" />
                           Today, 10:00 AM
                         </div>
+                        </>}
                       </div>
                       <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -924,10 +967,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                           <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>onwards</span>
                         </div>
                         <div style={{ display: "flex", gap: 8 }}>
-                          <a href="tel:18001030" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
+                          <a href={isDesign17 ? "tel:18602080208" : "tel:18001030"} aria-label={isDesign17 ? `Call Narayana Health about ${sDoc.name}` : undefined} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
                             <PhoneCall size={18} />
                           </a>
-                          <Link style={{ height: 44, padding: "0 22px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }} href={`/doctors/${sDoc.id}/book?mode=hospital`}>
+                          <Link style={{ height: 44, padding: "0 22px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }} href={sDoc.bookingHref}>
                             Book now
                           </Link>
                         </div>

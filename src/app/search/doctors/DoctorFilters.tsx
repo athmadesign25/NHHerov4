@@ -11,8 +11,10 @@ import styles from "./DoctorFilters.module.css";
 interface Props {
   doctors: readonly DoctorListingItem[];
   value: Filters;
+  matchingDoctors?: readonly DoctorListingItem[];
   onChange: (filters: Filters) => void;
   showAvailability?: boolean;
+  showResultCounts?: boolean;
   availabilityEnabled?: boolean;
   mode?: ConsultationMode;
 }
@@ -25,7 +27,7 @@ const groups = [
   { key: "genders", label: "Doctor gender", plural: "gender options", Icon: UserRound },
 ] as const;
 
-export default function DoctorFilters({ doctors, value, onChange, showAvailability = true, availabilityEnabled = true, mode = "hospital" }: Props) {
+export default function DoctorFilters({ doctors, matchingDoctors, value, onChange, showAvailability = true, showResultCounts = true, availabilityEnabled = true, mode = "hospital" }: Props) {
   const id = useId();
   const reducedMotion = useReducedMotion();
   const transition = { duration: reducedMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] as const };
@@ -37,25 +39,24 @@ export default function DoctorFilters({ doctors, value, onChange, showAvailabili
     finishListToggle.current = null;
     finish?.();
   }, [expanded]);
-  const [openGroups, setOpenGroups] = useState<Partial<Record<DoctorMultiFilterKey, boolean>>>(() =>
-    Object.fromEntries(groups.map((group) => [group.key, group.key === "specialties" || value[group.key].length > 0]))
-  );
+  const [openGroup, setOpenGroup] = useState<DoctorMultiFilterKey | "availability" | null>("specialties");
   return (
     <div className={styles.filters}>
       <LayoutGroup id={id}>{groups.map((group) => {
-        const options = doctorFilterOptions(doctors, value, mode, group.key);
+        const counts = matchingDoctors ? new Map(doctorFilterOptions(matchingDoctors, value, mode, group.key).map(option => [option.value, option.count])) : null;
+        const options = doctorFilterOptions(doctors, value, mode, group.key).map(option => counts ? { ...option, count: counts.get(option.value) ?? 0 } : option);
         const search = searches[group.key] ?? "";
         const matching = options.filter((option) => option.value.toLowerCase().includes(search.trim().toLowerCase()));
         const visible = search.trim() || expanded[group.key] ? matching : matching.filter((option, index) => index < 5 || value[group.key].includes(option.value));
         const hidden = matching.length - visible.length;
         const Icon = group.Icon;
-        const open = Boolean(openGroups[group.key]);
+        const open = openGroup === group.key;
         const triggerId = `${id}-${group.key}-trigger`;
         const panelId = `${id}-${group.key}-panel`;
         return <Fragment key={group.key}><motion.section className={styles.group} data-filter-group data-expanded={open} aria-labelledby={triggerId} layout={reducedMotion ? false : "position"} transition={transition}>
           <div className={styles.groupHeader} data-filter-category-header><h3 className={styles.groupHeading}><motion.button type="button" id={triggerId} className={styles.groupToggle} aria-expanded={open} aria-controls={panelId}
             transition={transition}
-            onClick={(event) => { if (open) keepFilterHeadingVisible(event.currentTarget); setOpenGroups((previous) => ({ ...previous, [group.key]: !open })); }}>
+            onClick={(event) => { if (open) keepFilterHeadingVisible(event.currentTarget); setOpenGroup(open ? null : group.key); }}>
             <Icon size={17} className={styles.groupIcon} aria-hidden /><span className={styles.groupLabel}>{group.label}</span>
             {value[group.key].length > 0 && <motion.span className={styles.count}
               initial={reducedMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={transition}>{value[group.key].length}</motion.span>}
@@ -89,7 +90,7 @@ export default function DoctorFilters({ doctors, value, onChange, showAvailabili
                       ? value[group.key].filter((item) => item !== option.value) : [...value[group.key], option.value] })} />
                   <Check size={14} strokeWidth={2} absoluteStrokeWidth className={styles.checkIcon} aria-hidden />
                 </span>
-                <span className={styles.optionLabel}>{option.value}</span><span className={styles.resultCount} aria-label={`${option.count} matching doctors`}>{option.count}</span>
+                <span className={styles.optionLabel}>{option.value}</span>{showResultCounts && <span className={styles.resultCount} aria-label={`${option.count} matching doctors`}>{option.count}</span>}
               </motion.label>;
             })}
             {options.length > 0 && matching.length === 0 && <p className={styles.hint} role="status">No matches. Try another search.</p>}
@@ -104,6 +105,7 @@ export default function DoctorFilters({ doctors, value, onChange, showAvailabili
           </div>
         </motion.section>
           {group.key === "hospitals" && showAvailability && <AvailabilityFilter value={value.availability} enabled={availabilityEnabled}
+            open={openGroup === "availability"} onOpenChange={(open) => setOpenGroup(open ? "availability" : null)}
             onChange={(availability) => onChange({ ...value, availability })} />}
         </Fragment>;
       })}</LayoutGroup>

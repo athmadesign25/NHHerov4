@@ -7,10 +7,15 @@
 .state button:active { background: var(--d3-ui-action-pressed, var(--color-primary-dark)); }
 @media (prefers-reduced-motion: reduce) { .state button { transition: none; } }
 .skeleton { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-bg-card); }
-.portrait { height: calc(var(--sp-16) + var(--sp-12) + var(--sp-1) * 1.5); background: var(--color-primary-light); }
+.portrait { height: calc(var(--sp-16) + var(--sp-6) + var(--sp-1)); background: var(--color-primary-light); }
 .picture { aspect-ratio: 16 / 9; background: var(--color-primary-light); }
 .lines { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-3); }
 .lines span, .lines div { display: block; border-radius: var(--radius-md); height: var(--sp-2); background: var(--color-bg-alt); }
 .lines span:nth-child(2) { width: 65%; }
 .lines div { height: var(--sp-8); }
 .lines span:last-child { height: var(--sp-6); }
+
+@media (min-width: 640px) { .portrait { height: calc(var(--sp-16) + var(--sp-8) + var(--sp-1)); } }
+
+.state .secondary { color: var(--d3-ui-action, var(--color-primary)); background: transparent; border: 1px solid var(--color-border); }
+.state .secondary:hover { background: var(--d3-ui-hover, var(--color-bg-alt)); }

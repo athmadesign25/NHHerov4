@@ -1,0 +1,75 @@
+.workspace {
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+  color: var(--d7-text);
+  scroll-margin-top: calc(var(--nav-height) + var(--sp-3));
+}
+.workspaceHeader { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.workspaceHeader h1 { font-size: clamp(var(--font-size-2xl), 2.5vw, var(--font-size-4xl)); line-height: 1.2; letter-spacing: -.025em; font-weight: 600; }
+.workspaceHeader h1:focus { outline: none; }
+.back { display: inline-flex; align-items: center; gap: var(--sp-1); width: fit-content; min-height: var(--sp-6); padding: 0; border: 0; background: transparent; color: var(--d7-accent); font-size: var(--font-size-sm); font-weight: 500; cursor: pointer; }
+.back:hover { text-decoration: underline; text-underline-offset: .25em; }
+.surface { display: grid; grid-template-columns: minmax(0, 1fr); border: 1px solid var(--d7-border); border-radius: var(--radius-xl); background: var(--d7-surface); box-shadow: var(--shadow-lg); isolation: isolate; }
+.portrait { position: relative; min-width: 0; overflow: hidden; border-radius: var(--radius-xl) var(--radius-xl) 0 0; background: var(--d7-bg); }
+.photo { object-fit: cover; object-position: center 15%; }
+.scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 8%, color-mix(in srgb, var(--d7-bg) 20%, transparent) 25%, color-mix(in srgb, var(--d7-bg) 94%, transparent) 52%, var(--d7-bg) 70%); }
+.doctorContext { position: relative; display: grid; gap: var(--sp-1); padding: calc(var(--sp-16) * 1.5) var(--sp-3) var(--sp-3); }
+.doctorContext h2 { font-size: clamp(var(--font-size-xl), 1.7vw, var(--font-size-2xl)); line-height: 1.3; font-weight: 600; letter-spacing: -.02em; }
+.doctorContext > p { font-size: var(--font-size-base); line-height: 1.5; color: var(--d7-muted); }
+.doctorContext > .experience { font-size: var(--font-size-sm); }
+.visit { display: grid; gap: var(--sp-3); margin-top: var(--sp-2); padding: var(--sp-2); border: 1px solid var(--d7-border); border-radius: var(--radius-lg); background: color-mix(in srgb, var(--d7-surface) 75%, transparent); backdrop-filter: blur(var(--sp-2)); }
+.visit > p { display: flex; align-items: flex-start; gap: var(--sp-1); font-size: var(--font-size-sm); line-height: 1.5; }
+.visit svg { flex-shrink: 0; margin-top: .15em; color: var(--d7-muted); }
+.selectedSlot { display: flex; align-items: flex-start; gap: var(--sp-1); }
+.selectedSlot > div { display: grid; gap: calc(var(--sp-1) / 2); }
+.selectedSlot span { color: var(--d7-muted); font-size: var(--font-size-xs); }
+.selectedSlot strong { font-size: var(--font-size-base); line-height: 1.4; font-weight: 600; }
+.selectedSlot small { font-size: var(--font-size-xs); font-weight: 400; color: var(--d7-muted); }
+.help { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: var(--sp-6); color: var(--d7-accent); font-size: var(--font-size-sm); text-decoration: none; }
+.help:hover { text-decoration: underline; }
+.controls { min-width: 0; padding: var(--sp-3); }
+.actionBar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-top: 1px solid var(--d7-border); border-radius: 0 0 var(--radius-xl) var(--radius-xl); background: color-mix(in srgb, var(--d7-surface) 94%, transparent); backdrop-filter: blur(var(--sp-2)); position: sticky; bottom: 0; z-index: 2; }
+.price { display: grid; gap: calc(var(--sp-1) / 2); }
+.price span { font-size: var(--font-size-xs); color: var(--d7-muted); }
+.price strong { font-size: var(--font-size-xl); font-weight: 600; }
+.mobileSlot { display: grid; gap: calc(var(--sp-1) / 2); flex: 1; min-width: 0; text-align: right; }
+.mobileSlot span { color: var(--d7-muted); font-size: var(--font-size-xs); }
+.mobileSlot strong { font-size: var(--font-size-sm); line-height: 1.5; font-weight: 600; }
+.continue { display: grid; gap: var(--sp-1); width: 100%; }
+.continue p, .authReassurance { color: var(--d7-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.continue button { width: 100%; min-height: var(--sp-6); border-radius: var(--radius-md); }
+.workspaceLayout { grid-template-columns: minmax(0, 1fr) !important; }
+.hidden { display: none !important; }
+.listingWorkspace { padding-top: calc(var(--nav-height) + var(--sp-2)); }
+@media (min-width: 640px) {
+  .mobileSlot { display: none; }
+  .continue { width: auto; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--sp-3); }
+  .continue button { width: auto; }
+  .continue p { max-width: calc(var(--sp-16) * 2); }
+}
+@media (max-width: 767px) {
+  .portrait { min-height: calc(var(--sp-16) * 1.6); }
+  .photo { object-position: center 25%; }
+  .scrim { background: linear-gradient(to right, var(--d7-bg) 8%, color-mix(in srgb, var(--d7-bg) 96%, transparent) 28%, color-mix(in srgb, var(--d7-bg) 65%, transparent) 58%, transparent); }
+  .doctorContext { padding: var(--sp-3); width: 70%; min-height: calc(var(--sp-16) * 1.6); align-content: center; }
+  .doctorContext h2 { font-size: var(--font-size-xl); }
+  .doctorContext .visit, .doctorContext .help, .doctorContext .experience { display: none; }
+  .controls { padding: var(--sp-2); }
+  .actionBar { padding: var(--sp-2); }
+  .workspaceHeader { gap: var(--sp-1); margin-bottom: var(--sp-2); }
+}
+@media (min-width: 768px) {
+  .surface { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+  .portrait { border-radius: var(--radius-xl) 0 0 0; }
+  .photo { height: clamp(calc(var(--sp-16) * 2.5), 32vw, calc(var(--sp-16) * 3.5)) !important; object-position: center top; mask-image: linear-gradient(to bottom, var(--color-text) 60%, transparent); }
+  .doctorContext { padding-top: calc(var(--sp-16) * 2.1); }
+  .controls { padding: var(--sp-4); }
+  .actionBar { grid-column: 1 / -1; }
+  .listingWorkspace { padding-top: calc(var(--nav-height) + var(--sp-3)); }
+}
+@media (min-width: 1024px) {
+  .surface { grid-template-columns: minmax(0, .65fr) minmax(0, 1.35fr); }
+  .doctorContext { padding: calc(var(--sp-16) * 2.3) var(--sp-4) var(--sp-3); }
+}
+@media (prefers-reduced-motion: reduce) { .workspace *, .workspace *::before, .workspace *::after { scroll-behavior: auto; } }

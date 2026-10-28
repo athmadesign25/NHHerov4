@@ -6,7 +6,8 @@ import Footer from "./Footer";
 import SeoLinksBand from "./SeoLinksBand";
 
 /**
- * Curtain-reveal footer, as on sites like icomat.co.uk: the footer is
+ * Homepage-only curtain-reveal footer. Inner pages use normal document flow.
+ * As on sites like icomat.co.uk: the homepage footer is
  * `position: fixed` at the bottom of the viewport and never moves at all,
  * while `main` sits above it (z-index) and slides up and off it. Nothing
  * about the footer animates — it's simply uncovered, which is what makes
@@ -74,11 +75,12 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
   const [pinned, setPinned] = useState(false);
 
   const pathname = usePathname();
-  const isSearchPage = pathname?.startsWith("/search") ?? false;
+  const isHomePage = pathname === "/";
+  const revealFooter = isHomePage && pinned;
 
   useEffect(() => {
     const footerEl = footerRef.current;
-    if (!footerEl) return;
+    if (!footerEl || !isHomePage) return;
 
     const measure = () => {
       const height = Math.ceil(footerEl.getBoundingClientRect().height);
@@ -86,7 +88,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       // The real constraint is only whether the unit fits on screen: pinned
       // to `bottom: 0`, anything taller than the viewport puts its own top
       // permanently out of reach. 
-      setPinned(height > 0 && height <= window.innerHeight && !isSearchPage);
+      setPinned(height > 0 && height <= window.innerHeight);
     };
 
     measure();
@@ -97,7 +99,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [isSearchPage]);
+  }, [isHomePage]);
 
   return (
     <>
@@ -106,16 +108,17 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
         style={{
           position: "relative",
           zIndex: 1,
-          background: pinned ? "var(--color-bg)" : undefined,
-          marginBottom: pinned ? `${footerHeight}px` : undefined,
+          background: revealFooter ? "var(--color-bg)" : undefined,
+          marginBottom: revealFooter ? `${footerHeight}px` : undefined,
         }}
       >
         {children}
       </main>
       <div
         ref={footerRef}
+        data-site-footer
         style={
-          pinned
+          revealFooter
             ? { position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 0 }
             : undefined
         }

@@ -838,9 +838,7 @@ export default function NHSearchExperience({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              const target = selectedLocation && selectedLocation !== "Bangalore"
-                ? `/search/doctors?city=${encodeURIComponent(selectedLocation)}`
-                : "/search/doctors";
+              const target = `/search/doctors?design=d17-lite&location=${encodeURIComponent(selectedLocation || "All")}`;
               router.push(target);
             }}
             aria-label="Book Appointment"

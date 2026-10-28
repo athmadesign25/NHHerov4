@@ -21,7 +21,7 @@
   --d3-ui-ink-pressed: var(--color-text);
   --d3-ui-mode-track: #F2F5FA;
   --d3-ui-neutral-border: color-mix(in srgb, var(--color-border) 80%, var(--color-text-secondary));
-  --d3-ui-focus: var(--color-text-secondary);
+  --d3-ui-focus: var(--d3-ui-accent);
   --d3-ui-border: var(--color-border);
   --d3-ui-text: var(--color-text-secondary);
   --d3-ui-hover: color-mix(in srgb, var(--color-text) 2%, var(--color-bg-card));

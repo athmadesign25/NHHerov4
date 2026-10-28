@@ -11,11 +11,15 @@ interface Props {
   value: AvailabilityValue;
   enabled: boolean;
   onChange: (value: AvailabilityValue) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export default function AvailabilityFilter({ value, enabled, onChange }: Props) {
+export default function AvailabilityFilter({ value, enabled, onChange, open: controlledOpen, onOpenChange }: Props) {
   const id = useId();
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
   const reducedMotion = useReducedMotion();
   const transition = { duration: reducedMotion ? 0 : .25, ease: [0.22, 1, 0.36, 1] as const };
   const triggerId = `${id}-availability-trigger`;

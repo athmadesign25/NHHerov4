@@ -1,3 +1,17 @@
-.list { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: calc(var(--sp-1) * .75); min-width: max-content; padding-inline-start: var(--sp-2); border-inline-start: 1px solid var(--color-border); overflow-anchor: none; }
+.list { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: calc(var(--sp-1) * .75); min-width: max-content; padding-inline-start: calc(var(--sp-2) + 1px); overflow-anchor: none; }
+.list::before { content: ""; position: absolute; inset-inline-start: 0; top: 50%; height: var(--sp-3); border-inline-start: 1px solid var(--color-border); transform: translateY(-50%); pointer-events: none; }
 .list > button { flex: 0 0 auto; min-width: 0; max-width: min(calc(var(--sp-16) * 2), calc(100vw - var(--d3-gutter-start) - var(--d3-gutter-end) - var(--sp-12))); }
 .list > button span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.wrap { flex-wrap: wrap; min-width: 0; padding: 0 0 var(--sp-2); margin-bottom: var(--sp-2); border-bottom: 1px solid var(--d3-ui-border, var(--color-border)); gap: 0 calc(var(--sp-1) * .75); }
+.wrap::before { content: none; }
+.wrap > button { max-width: 100%; border-radius: var(--radius-md); text-align: start; }
+.wrap > button span { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 639px) { .wrap { padding-bottom: var(--sp-2); } }
+
+.wrap > button { font-size: var(--font-size-xs); gap: calc(var(--sp-1) / 2); padding-inline: var(--sp-1); }
+.wrap > button svg { width: calc(var(--sp-2) - var(--sp-1) / 4); height: calc(var(--sp-2) - var(--sp-1) / 4); }
+@media (min-width: 1024px) and (pointer: fine) {
+  .wrap > button { min-height: var(--sp-4); padding-block: calc(var(--sp-1) / 2); }
+  .wrap > button::before { inset-block: calc(var(--sp-1) / 4); }
+}

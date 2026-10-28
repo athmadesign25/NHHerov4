@@ -1,0 +1,211 @@
+/* The portrait fills the card; one glass surface holds all secondary details. */
+.card {
+  --card-night: color-mix(in srgb, var(--color-primary-dark) 28%, var(--color-text));
+  --card-ink: var(--color-text-inverse);
+  --card-muted: color-mix(in srgb, var(--card-ink) 86%, transparent);
+  --card-line: color-mix(in srgb, var(--card-ink) 16%, transparent);
+  --card-glass-edge: color-mix(in srgb, var(--card-ink) 18%, transparent);
+  --card-target: calc(var(--sp-5) + var(--sp-1) / 2);
+  --card-inset: var(--sp-2);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  border: 1px solid var(--card-night);
+  border-radius: calc(var(--radius-xl) + var(--sp-1));
+  color: var(--card-ink);
+  background: var(--card-night);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--d3-ui-base), box-shadow var(--d3-ui-base);
+}
+
+.card[data-locations-open] { z-index: 5; }
+.card :is(a, button) { -webkit-tap-highlight-color: transparent; }
+.card :is(a, button):focus-visible { outline: 2px solid var(--card-ink); outline-offset: 3px; }
+.card svg { flex-shrink: 0; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.portrait { position: absolute; inset: 0; z-index: 0; overflow: hidden; border-radius: inherit; background: var(--card-night); }
+.photo { object-fit: cover; object-position: center top; transition: transform var(--transition-slow); }
+.portraitFallback { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); padding-top: var(--sp-10); min-height: 100%; color: var(--card-muted); background: radial-gradient(ellipse at top, var(--color-primary-dark), var(--card-night) 70%); font-size: var(--font-size-xs); }
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--card-night) 16%, transparent) 0%,
+    color-mix(in srgb, var(--card-night) 6%, transparent) 18%,
+    color-mix(in srgb, var(--card-night) 72%, transparent) 32%,
+    color-mix(in srgb, var(--card-night) 82%, transparent) 60%,
+    color-mix(in srgb, var(--card-night) 92%, transparent) 100%);
+}
+
+.identity { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--sp-16) * 2 + var(--sp-4)); padding: calc(var(--sp-16) + var(--sp-6)) var(--card-inset) var(--sp-2); }
+.identityText { min-width: 0; }
+.name { margin: 0; font-size: clamp(var(--font-size-xl), 1.55vw, var(--font-size-2xl)); font-weight: 600; line-height: 1.2; letter-spacing: -.025em; }
+.profileAction { display: block; width: 100%; color: var(--card-ink); background: transparent; font: inherit; text-align: left; text-decoration: none; }
+.profileAction::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-xl); }
+.profileAction > span:first-child { overflow-wrap: anywhere; }
+.profileCue {
+  position: absolute;
+  top: var(--card-inset);
+  right: var(--card-inset);
+  display: grid;
+  place-items: center;
+  width: var(--card-target);
+  height: var(--card-target);
+  border: 1px solid var(--card-glass-edge);
+  border-radius: var(--radius-full);
+  color: var(--card-ink);
+  background: color-mix(in srgb, var(--card-night) 38%, transparent);
+  backdrop-filter: blur(var(--sp-3)) saturate(115%);
+  -webkit-backdrop-filter: blur(var(--sp-3)) saturate(115%);
+  transition: opacity var(--d3-ui-base), transform var(--d3-ui-base), border-color var(--d3-ui-fast);
+}
+.speciality { display: flex; align-items: center; gap: var(--sp-1); margin-top: var(--sp-1); color: var(--card-ink); font-size: var(--font-size-sm); font-weight: 500; line-height: 1.5; }
+.speciality > span { min-width: 0; overflow-wrap: anywhere; }
+.moreSpecialities { position: relative; z-index: 1; display: grid; place-items: center; min-width: var(--card-target); min-height: var(--card-target); flex-shrink: 0; border: 1px solid var(--card-line); border-radius: var(--radius-sm); color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 10%, transparent); font-size: var(--font-size-xs); transition: background-color var(--d3-ui-fast); }
+.experience { margin: calc(var(--sp-1) / 2) 0 0; color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.experience strong { color: var(--card-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tags { position: absolute; top: var(--card-inset); left: var(--card-inset); display: flex; align-items: flex-start; flex-wrap: wrap; gap: calc(var(--sp-1) / 2); max-width: calc(100% - var(--card-inset) * 2 - var(--card-target) - var(--sp-1)); }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--sp-1) / 2);
+  min-height: calc(var(--sp-3) + var(--sp-1) / 2);
+  padding: calc(var(--sp-1) / 2) var(--sp-1);
+  border: 1px solid color-mix(in srgb, var(--tag-tint) 24%, transparent);
+  border-radius: var(--radius-full);
+  color: var(--tag-ink);
+  background: color-mix(in srgb, var(--tag-tint) 72%, transparent);
+  backdrop-filter: blur(var(--sp-3)) saturate(115%);
+  -webkit-backdrop-filter: blur(var(--sp-3)) saturate(115%);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.tagExecutive {
+  --tag-tint: color-mix(in srgb, var(--color-warning) 38%, var(--card-ink));
+  --tag-ink: color-mix(in srgb, var(--color-warning) 22%, var(--color-text));
+}
+.tagBooked {
+  --tag-tint: color-mix(in srgb, var(--color-primary-mid) 22%, var(--color-primary-light));
+  --tag-ink: var(--color-primary-dark);
+}
+
+.body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(var(--sp-1) * 1.5);
+  min-width: 0;
+  margin: 0 var(--card-inset) var(--card-inset);
+  padding: var(--sp-2);
+  border: 1px solid var(--card-line);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--card-night) 90%, var(--card-ink));
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .body {
+    background: color-mix(in srgb, var(--card-ink) 9%, transparent);
+    backdrop-filter: blur(var(--sp-4)) saturate(115%);
+    -webkit-backdrop-filter: blur(var(--sp-4)) saturate(115%);
+  }
+}
+
+.clinicalDetails { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--sp-1) / 2); margin: 0; color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.clinicalDetails dd { margin: 0; overflow-wrap: anywhere; }
+.expertise dt { display: inline; margin-right: var(--sp-1); color: var(--card-ink); font-weight: 500; }
+.expertise dd { display: inline; }
+
+.location { position: relative; min-width: 0; padding-top: var(--sp-1); border-top: 1px solid var(--card-line); }
+.locationSummary { display: flex; align-items: center; gap: var(--sp-1); }
+.singleLocation { flex: 1; }
+.locationOption, .singleLocation { display: flex; align-items: center; gap: var(--sp-1); min-width: 0; min-height: var(--card-target); width: 100%; margin: 0; padding-block: calc(var(--sp-1) / 2); color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; text-align: left; }
+.locationOption { border-radius: var(--radius-sm); background: transparent; transition: color var(--d3-ui-fast), background-color var(--d3-ui-fast); }
+.locationOption > span:first-of-type, .singleLocation > span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.locationOption[aria-pressed="true"] { color: var(--card-ink); }
+.locationCheck { display: grid; place-items: center; width: var(--sp-2); height: var(--sp-2); flex-shrink: 0; border: 1px solid var(--card-line); border-radius: var(--radius-full); }
+.locationOption[aria-pressed="true"] .locationCheck { border-color: var(--card-ink); background: var(--card-ink); color: var(--card-night); }
+.moreLocations { display: flex; align-items: center; justify-content: center; gap: calc(var(--sp-1) / 2); min-width: var(--card-target); min-height: var(--card-target); flex-shrink: 0; border-radius: var(--radius-sm); background: transparent; color: var(--card-ink); font-size: var(--font-size-xs); font-weight: 600; transition: background-color var(--d3-ui-fast); }
+.moreLocations svg { transition: transform var(--d3-ui-base); }
+.moreLocations[aria-expanded="true"] svg { transform: rotate(180deg); }
+.locationsPopover { position: absolute; z-index: 5; top: calc(100% + var(--sp-1)); inset-inline: 0; max-height: min(calc(var(--sp-16) * 2), 50dvh); overflow-y: auto; overscroll-behavior: contain; padding: var(--sp-2); border: 1px solid var(--card-line); border-radius: var(--radius-md); background: var(--card-night); box-shadow: var(--shadow-lg); }
+.locationsAbove { top: auto; bottom: calc(100% + var(--sp-1)); }
+.locationsPopover p { margin: 0 0 var(--sp-1); color: var(--card-muted); font-size: var(--font-size-xs); font-weight: 600; }
+.locationsPopover ul { list-style: none; margin: 0; padding: 0; }
+.locationsPopover li + li { border-top: 1px solid var(--card-line); }
+.travelDetails { display: flex; align-items: center; flex-wrap: wrap; column-gap: var(--sp-1); padding-inline-start: var(--sp-3); color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.distance { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.directions { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); min-width: var(--card-target); min-height: var(--card-target); max-width: 100%; padding-inline: calc(var(--sp-1) * 1.5); border: 1px solid var(--card-line); border-radius: var(--radius-sm); color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 6%, transparent); font-weight: 500; text-decoration: none; transition: background-color var(--d3-ui-fast), border-color var(--d3-ui-fast); }
+.directionsIcon { width: calc(var(--sp-2) + var(--sp-1) / 2); height: calc(var(--sp-2) + var(--sp-1) / 2); }
+.locationDistance { display: block; margin-top: calc(var(--sp-1) / 4); color: var(--card-muted); font-variant-numeric: tabular-nums; }
+
+.availability { display: flex; flex-direction: column; gap: var(--sp-1); margin: auto 0 0; }
+.consultationInfo { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; column-gap: var(--sp-1); row-gap: calc(var(--sp-1) / 2); }
+.mode { display: flex; align-items: center; gap: var(--sp-1); color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.mode svg { align-self: center; }
+.appointmentTime { margin: 0; color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; overflow-wrap: anywhere; }
+.appointmentTime[data-available] { color: var(--card-ink); font-weight: 500; }
+.availabilityUnknown { color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.5; }
+.availabilityUnknown dt { color: var(--card-ink); font-weight: 500; }
+.availabilityUnknown dd { margin: calc(var(--sp-1) / 2) 0 0; }
+
+.footer { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-1); padding-top: calc(var(--sp-1) * 1.5); border-top: 1px solid var(--card-line); }
+.fee { display: flex; flex: 1 1 var(--sp-6); flex-direction: column; min-width: 0; gap: calc(var(--sp-1) / 4); }
+.feeAmount { color: var(--card-ink); font-size: var(--font-size-base); font-weight: 600; line-height: 1.25; letter-spacing: -.025em; }
+.feeCaption { color: var(--card-muted); font-size: var(--font-size-xs); line-height: 1.4; }
+.feeUnknown { color: var(--card-ink); font-size: var(--font-size-sm); font-weight: 500; }
+.call { display: grid; place-items: center; flex-shrink: 0; width: var(--card-target); height: var(--card-target); border: 1px solid var(--card-line); border-radius: var(--radius-full); color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 5%, transparent); text-decoration: none; transition: background-color var(--d3-ui-fast), border-color var(--d3-ui-fast); }
+.book { display: inline-flex; align-items: center; justify-content: center; flex: 1 0 auto; min-height: var(--card-target); padding: var(--sp-1); border: 1px solid var(--card-ink); border-radius: var(--radius-full); color: var(--color-primary-dark); background: color-mix(in srgb, var(--card-ink) 94%, transparent); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; text-align: center; text-decoration: none; transition: background-color var(--d3-ui-fast), border-color var(--d3-ui-fast); }
+.book:active { background: var(--color-primary-light); border-color: var(--color-primary-light); }
+
+@media (min-width: 640px) {
+  .identity { min-height: calc(var(--sp-16) * 2 + var(--sp-8)); padding-top: calc(var(--sp-16) + var(--sp-8)); }
+  .clinicalDetails { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (hover: hover) {
+  .card:hover { border-color: var(--card-night); box-shadow: var(--shadow-md); }
+  .profileAction:hover .profileCue { border-color: color-mix(in srgb, var(--card-ink) 30%, transparent); }
+  .moreSpecialities:hover, .locationOption:hover, .moreLocations:hover, .call:hover { background: color-mix(in srgb, var(--card-ink) 20%, var(--card-night)); }
+  .call:hover { border-color: var(--card-ink); }
+  .book:hover:not(:active) { background: var(--color-primary-light); border-color: var(--color-primary-light); }
+  .directions:hover { background: color-mix(in srgb, var(--card-ink) 15%, transparent); border-color: color-mix(in srgb, var(--card-ink) 35%, transparent); }
+}
+
+/* The profile target remains available; its glass cue reveals on intent. */
+@media (hover: hover) and (pointer: fine) {
+  .profileCue { opacity: 0; transform: translateY(calc(var(--sp-1) / 2)) scale(.94); }
+  .card:is(:hover, :focus-within) .profileCue { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (min-width: 640px) and (hover: hover) and (pointer: fine) {
+  .directions { min-height: var(--sp-4); }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover .photo { transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) { .card, .card * { transition: none; } }
+@media (prefers-reduced-transparency: reduce) {
+  .body, .profileCue { background: var(--card-night); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .tag { background: var(--tag-tint); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .card, .body, .location, .footer, .call, .locationsPopover, .book, .tag, .profileCue { border-color: ButtonText; }
+  .portrait, .scrim { visibility: hidden; }
+  .card, .body, .book, .tag, .profileCue { color: CanvasText; background: Canvas; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .name, .speciality, .experience, .experience strong, .clinicalDetails, .expertise dt, .singleLocation, .moreLocations, .mode, .appointmentTime, .feeAmount, .feeCaption, .feeUnknown, .call, .profileAction, .travelDetails, .locationDistance { color: CanvasText; }
+  .directions { color: LinkText; border-color: LinkText; background: Canvas; }
+  .locationOption[aria-pressed="true"] .locationCheck { forced-color-adjust: none; border-color: Highlight; background: Highlight; color: HighlightText; }
+  .card :is(a, button):focus-visible { outline-color: Highlight; }
+}

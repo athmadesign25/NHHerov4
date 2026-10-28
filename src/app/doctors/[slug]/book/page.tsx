@@ -32,15 +32,28 @@ import {
   generateTimeSlots,
 } from "@/features/booking/useBookingState";
 import { getBookingDoctor, getDesign3BookingDoctor } from "@/features/booking/doctors";
+import { getDesign3BookingSlots, isDesign3BookingSlotAvailable } from "@/features/booking/design3Availability";
+import { appointmentDates, DESIGN16_BOOKING_DAYS } from "@/features/booking/appointmentTime";
 import { formatBookingDate } from "@/features/booking/format";
 import { saveBooking } from "@/features/booking/bookingStore";
-import type { BookingDoctorSummary, ConsultationType } from "@/features/booking/types";
+import type { BookingDoctorSummary, ConsultationType, DateSlot } from "@/features/booking/types";
 
 // Auth
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 
 import styles from "./page.module.css";
+import Design7BookingFlow from "@/features/booking/design7/Design7BookingFlow";
+import Design13BookingFlow from "@/features/booking/design13/Design13BookingFlow";
+import Design15BookingFlow from "@/features/booking/design15/Design15BookingFlow";
+import Design17BookingFlow from "@/features/booking/design17/Design17BookingFlow";
+import Design18BookingFlow from "@/features/booking/design18/Design18BookingFlow";
+import Design19BookingFlow from "@/features/booking/design19/Design19BookingFlow";
+import { getDesign17ProfileDoctor } from "@/features/search/design17Profile";
+import Design7Shell from "@/features/design-preview/design7/Design7Shell";
+import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { design7HospitalCity } from "@/app/search/designs/d7/directory";
+import { isDesign15Variant, isJourneyDesign, isQuickJourneyDesign } from "@/features/design-preview/journeyDesigns";
 
 // ─── MODE-AWARE COPY ──────────────────────────────────────────────────────────
 // Fee label and trust points depend on how the visit happens.
@@ -59,6 +72,17 @@ const MODE_COPY: Record<ConsultationType, { feeLabel: string; trust: string[] }>
   },
 };
 
+/** The smart directories and booking picker share the same India-day window. */
+function bookingDatesForDesign(design: string | null, now = Date.now()): DateSlot[] {
+  if (design !== "d16" && design !== "d17" && design !== "d17-lite" && design !== "d18" && design !== "d19") return generateDates();
+  const weekday = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: "UTC" });
+  const month = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
+  return appointmentDates(now, DESIGN16_BOOKING_DAYS).map((fullDate) => {
+    const date = new Date(`${fullDate}T12:00:00Z`);
+    return { date: fullDate.slice(-2), day: weekday.format(date), month: month.format(date).toUpperCase(), fullDate, hasSlots: true };
+  });
+}
+
 // ─── INNER PAGE (uses useSearchParams so must be inside Suspense) ─────────────
 function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDoctorSummary }) {
   const searchParams = useSearchParams();
@@ -70,6 +94,9 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
   const dateParam = searchParams.get("date");
   const timeParam = searchParams.get("time");
   const aiParam = searchParams.get("ai");
+  const design = searchParams.get("design");
+  const isDirectoryPreview = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(design ?? "");
+  const bookingWindowDays = design === "d16" || design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" ? DESIGN16_BOOKING_DAYS : undefined;
 
   const initialConsultationType: ConsultationType =
     modeParam === "video" ? "video" : "hospital";
@@ -83,8 +110,9 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
   const initialHospital = hospitalParam
     ? hospitals.find(
         (h) =>
-          h.value.toLowerCase().includes(hospitalParam.toLowerCase()) ||
-          hospitalParam.toLowerCase().includes(h.value.toLowerCase())
+          isDirectoryPreview ? h.value === hospitalParam :
+            h.value.toLowerCase().includes(hospitalParam.toLowerCase()) ||
+            hospitalParam.toLowerCase().includes(h.value.toLowerCase())
       )?.value ?? hospitals[0]?.value ?? ""
     : cityParam
     ? hospitals.find((h) =>
@@ -133,31 +161,37 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
     if (!state.selectedHospital && initialHospital) {
       setSelectedHospital(initialHospital);
     }
-    const dates = generateDates();
+    const dates = bookingDatesForDesign(design);
+    const requestedDate = dateParam === "today" ? dates[0]?.fullDate
+      : dateParam === "tomorrow" ? dates[1]?.fullDate
+      : dates.find((date) => date.fullDate === dateParam)?.fullDate;
+    const initialDate = requestedDate ?? (isDirectoryPreview
+      ? dates.find((date) => getDesign3BookingSlots(slug, date.fullDate, initialConsultationType, initialHospital, new Date(), bookingWindowDays).some((slot) => slot.available))?.fullDate
+      : undefined) ?? dates[0]?.fullDate ?? "";
     if (!state.selectedDate) {
-      if (dateParam === "today" && dates[0]) {
-        setSelectedDate(dates[0].fullDate);
-      } else if (dateParam === "tomorrow" && dates[1]) {
-        setSelectedDate(dates[1].fullDate);
-      } else if (dateParam && dates.some((d) => d.fullDate === dateParam)) {
-        setSelectedDate(dateParam);
-      } else if (dates[0]) {
-        setSelectedDate(dates[0].fullDate);
-      }
+      setSelectedDate(initialDate);
     }
     if (!state.selectedTime && timeParam) {
-      const decodedTime = decodeURIComponent(timeParam);
-      setSelectedTime(decodedTime);
+      // URLSearchParams already decodes values. Design 3 accepts only a current
+      // slot from the same fixture schedule that supplies the listing card.
+      if (!isDirectoryPreview || isDesign3BookingSlotAvailable(slug, initialDate, timeParam, initialConsultationType, initialHospital, new Date(), bookingWindowDays)) {
+        setSelectedTime(isDirectoryPreview ? timeParam : decodeURIComponent(timeParam));
+      }
     }
   }, []); // mount-only — intentional
 
-  const dates = generateDates();
-  const timeSlots = generateTimeSlots();
+  const dates = bookingDatesForDesign(design).map((date) => isDirectoryPreview ? {
+    ...date,
+    hasSlots: getDesign3BookingSlots(slug, date.fullDate, state.consultationType, state.selectedHospital, new Date(), bookingWindowDays).some((slot) => slot.available),
+  } : date);
+  const timeSlots = isDirectoryPreview
+    ? getDesign3BookingSlots(slug, state.selectedDate, state.consultationType, state.selectedHospital, new Date(), bookingWindowDays)
+    : generateTimeSlots();
 
   const modeCopy = MODE_COPY[state.consultationType];
 
   // Booking is allowed once slot is selected (Toshib flow).
-  const canBook = isStep1Valid;
+  const canBook = isStep1Valid && (!isDirectoryPreview || timeSlots.some((slot) => slot.available && slot.time === state.selectedTime));
   const blockReason = canBook
     ? ""
     : !state.selectedDate
@@ -165,6 +199,11 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
       : "Select a time slot to continue";
 
   const proceedToBooking = () => {
+    // Recheck after login too: a previously selected time may have elapsed.
+    if (isDirectoryPreview && !isDesign3BookingSlotAvailable(slug, state.selectedDate, state.selectedTime, state.consultationType, state.selectedHospital, new Date(), bookingWindowDays)) {
+      setSelectedTime("");
+      return;
+    }
     // Persist once; the confirmation page reads it back by reference, so the URL
     // carries no patient data and a refresh shows the same booking.
     const record = saveBooking({
@@ -180,7 +219,7 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
       fee: doctor.fee,
     });
     router.push(
-      `/doctors/${encodeURIComponent(slug)}/book/confirmation?ref=${encodeURIComponent(record.ref)}`
+      `/doctors/${encodeURIComponent(slug)}/book/confirmation?ref=${encodeURIComponent(record.ref)}${design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" ? `&design=${design}` : ""}`
     );
   };
 
@@ -381,7 +420,10 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
                   <HospitalSelector
                     hospitals={hospitals}
                     value={state.selectedHospital}
-                    onChange={setSelectedHospital}
+                    onChange={(hospital) => {
+                      setSelectedHospital(hospital);
+                      if (isDirectoryPreview && hospital !== state.selectedHospital) setSelectedTime("");
+                    }}
                   />
                 </div>
               )}
@@ -465,7 +507,41 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
 function BookingPreviewRoute({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
-  const doctor = searchParams.get("design") === "d3" ? getDesign3BookingDoctor(slug) : getBookingDoctor(slug);
+  const design = searchParams.get("design");
+  if (DESIGN_PREVIEW_ENABLED && (design === "d17" || design === "d17-lite" || design === "d18" || design === "d19")) {
+    const source = getDesign3BookingDoctor(slug);
+    const listing = getDesign17ProfileDoctor(slug, searchParams);
+    if (!source || !listing) notFound();
+    const doctor = { ...source, name: listing.name, hospital: listing.hospital, city: listing.city, fee: listing.fee };
+    if (design === "d18") return <Design18BookingFlow key={`${slug}-${design}`} doctor={doctor} />;
+    if (design === "d19") return <Design19BookingFlow key={`${slug}-${design}`} doctor={doctor} />;
+    return <Design17BookingFlow key={`${slug}-${design}`} doctor={doctor} design={design} />;
+  }
+  if (DESIGN_PREVIEW_ENABLED && isJourneyDesign(design)) {
+    const previewDoctor = getDesign3BookingDoctor(slug);
+    if (!previewDoctor) return <Design7Shell compact currentStep="appointment">
+      <h1>We couldn’t find this doctor</h1>
+      <p>Return to the directory to choose an available doctor.</p>
+      <Link href={`/search/doctors?design=${design}`}>Find a doctor</Link>
+    </Design7Shell>;
+    const locations = (previewDoctor.locations ?? [{ name: previewDoctor.hospital, city: previewDoctor.city }])
+      .map(location => ({ ...location, city: design7HospitalCity(location.name, location.city) }));
+    const selectedLocation = locations.find(location => location.name === searchParams.get("hospital"))
+      ?? locations.find(location => location.city.toLowerCase() === searchParams.get("city")?.toLowerCase())
+      ?? locations[0];
+    const doctor = {
+      ...previewDoctor,
+      hospital: selectedLocation?.name ?? previewDoctor.hospital,
+      city: selectedLocation?.city ?? previewDoctor.city,
+      locations,
+    };
+    return <Design7Shell compact currentStep="appointment">{isDesign15Variant(design)
+      ? <Design15BookingFlow key={doctor.id} doctor={doctor} variant={design} />
+      : isQuickJourneyDesign(design)
+      ? <Design13BookingFlow key={doctor.id} doctor={doctor} variant={design} />
+      : <Design7BookingFlow key={doctor.id} doctor={doctor} />}</Design7Shell>;
+  }
+  const doctor = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(searchParams.get("design") ?? "") ? getDesign3BookingDoctor(slug) : getBookingDoctor(slug);
   if (!doctor) notFound();
   return <BookingPageInner slug={slug} doctor={doctor} />;
 }

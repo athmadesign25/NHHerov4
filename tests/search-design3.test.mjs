@@ -32,7 +32,83 @@ const { getDesign3BookingDoctor } = await import('../src/features/booking/doctor
 const { searchDoctorsData } = await import('../src/app/search/mockDoctors.ts');
 const { readSearchLocation, catalogResults, filterCatalog, emptyCatalogFilters } = await import('../src/features/search/design3Data.ts');
 const doctors = searchDoctorsData.map(listing.fromDirectoryDoctor);
+const { suggestDoctorCity } = await import('../src/features/search/doctorLocation.ts');
+const { design3CityDoctors, DESIGN3_EMPTY_CITY } = await import('../src/features/search/design3CityDoctors.ts');
+const { NH_CITIES, getCityId } = await import('../src/lib/searchService.ts');
 const now = new Date(2026, 9, 15, 0, 0);
+
+test('Design 3 cities have varied stable counts, both modes, and exactly one empty city', () => {
+  const directory = [...doctors, ...design3CityDoctors];
+  assert.equal(new Set(directory.map(doctor => doctor.id)).size, directory.length);
+  const previewCounts = new Set();
+  for (const { value } of NH_CITIES) {
+    const cityDoctors = directory.filter(doctor => getCityId(doctor.city) === getCityId(value));
+    if (value === DESIGN3_EMPTY_CITY) { assert.equal(cityDoctors.length, 0); continue; }
+    if (value !== 'Bangalore') previewCounts.add(cityDoctors.length);
+    for (const mode of ['hospital', 'video']) {
+      assert.ok(listing.filterDoctors(cityDoctors, listing.emptyDoctorFilters(), mode, now).length, `${value}: ${mode}`);
+      // A single-doctor city may legitimately have no results for one date.
+      let datedCount = 0;
+      for (const availability of ['today', 'tomorrow']) {
+        const matches = listing.filterDoctors(cityDoctors, {...listing.emptyDoctorFilters(), availability}, mode, now);
+        assert.ok(matches.every(doctor => doctor.availability[mode].toLowerCase().startsWith(availability)));
+        datedCount += matches.length;
+      }
+      if (value !== 'Bangalore') assert.equal(datedCount, cityDoctors.length);
+      else assert.ok(datedCount > 0);
+    }
+  }
+  assert.deepEqual([...previewCounts].sort((a, b) => a - b), [1, 2, 3, 4, 5, 6]);
+  assert.ok(searchDoctorsData.every(doctor => doctor.city === 'Bangalore'), 'shared directory stays unchanged');
+});
+
+test('city preview booking resolves the selected fixture without a Bangalore fallback', () => {
+  for (const doctor of design3CityDoctors) {
+    const booking = getDesign3BookingDoctor(doctor.id);
+    assert.equal(booking.id, doctor.id);
+    assert.equal(booking.name, doctor.name);
+    assert.equal(booking.city, doctor.city);
+    assert.deepEqual(booking.locations, listing.doctorHospitals(doctor).map(name => ({name, city: doctor.city})));
+    const url = new URL(listing.bookingUrl(doctor, 'hospital', true, now), 'http://localhost');
+    assert.equal(url.searchParams.get('city'), doctor.city);
+    assert.equal(url.searchParams.get('hospital'), doctor.hospital);
+  }
+  assert.equal(getDesign3BookingDoctor('d3-preview-56-1'), null, 'empty city has no bookable fixture');
+});
+
+test('preview cities expose two to four working hospital facets including secondary affiliations', () => {
+  const counts = new Set();
+  for (const city of new Set(design3CityDoctors.map(doctor => doctor.city))) {
+    const records = design3CityDoctors.filter(doctor => doctor.city === city);
+    const options = listing.doctorFilterOptions(records, listing.emptyDoctorFilters(), 'hospital', 'hospitals');
+    counts.add(options.length);
+    assert.ok(options.length >= 2 && options.length <= 4);
+    for (const option of options) {
+      const matches = listing.filterDoctors(records, {...listing.emptyDoctorFilters(), hospitals:[option.value]}, 'hospital', now);
+      assert.ok(matches.length > 0);
+      assert.equal(matches.length, option.count);
+      assert.ok(matches.every(doctor => listing.doctorHospitals(doctor).includes(option.value)));
+    }
+  }
+  assert.deepEqual([...counts].sort(), [2, 3, 4]);
+  assert.ok(!design3CityDoctors.some(doctor => doctor.city === DESIGN3_EMPTY_CITY));
+});
+
+test('location suggests only nearby mapped cities and normalizes the Delhi hub to an API city', () => {
+  assert.equal(suggestDoctorCity({latitude:12.9716,longitude:77.5946,accuracy:50}), 'Bangalore');
+  assert.equal(suggestDoctorCity({latitude:28.6139,longitude:77.2090,accuracy:50}), 'Delhi');
+  // Never map a remote user to the old demonstration fallback (Pune/Hosur).
+  assert.equal(suggestDoctorCity({latitude:18.5204,longitude:73.8567,accuracy:50}), null);
+  assert.equal(suggestDoctorCity({latitude:51.5074,longitude:-0.1278,accuracy:50}), null);
+});
+
+test('imprecise and invalid coordinates require manual city selection', () => {
+  assert.equal(suggestDoctorCity({latitude:12.9716,longitude:77.5946,accuracy:20000}), null);
+  assert.equal(suggestDoctorCity({latitude:NaN,longitude:77.5946,accuracy:50}), null);
+  assert.equal(suggestDoctorCity({latitude:91,longitude:77.5946,accuracy:50}), null);
+  assert.equal(suggestDoctorCity({latitude:12.9716,longitude:181,accuracy:50}), null);
+  assert.equal(suggestDoctorCity({latitude:12.9716,longitude:77.5946,accuracy:-1}), null);
+});
 
 test('Design 3 resolves the exact selected doctor, including prefix-collision IDs', () => {
   for (const id of ['dr-1', 'dr-10', 'dr-11', 'dr-20']) assert.equal(getDesign3BookingDoctor(id)?.id, id);

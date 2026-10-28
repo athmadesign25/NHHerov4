@@ -1,3 +1,11 @@
+.previewLoading {
+  min-height: 100dvh;
+  padding: calc(var(--nav-height) + var(--sp-6)) var(--sp-2) var(--sp-6);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
 .searchForm {
   display: flex;
   gap: 12px;
@@ -661,7 +669,6 @@
     animation: none;
   }
 }
-
 
 
 

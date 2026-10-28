@@ -708,9 +708,7 @@ export default function DefaultSearchPrompt({
                 className={styles.insideActionPill}
                 onClick={(e) => {
                   e.stopPropagation();
-                  const target = selectedLocation && selectedLocation !== "Bangalore"
-                    ? `/search/doctors?city=${encodeURIComponent(selectedLocation)}`
-                    : "/search/doctors";
+                  const target = `/search/doctors?design=d17-lite&location=${encodeURIComponent(selectedLocation || "All")}`;
                   router.push(target);
                 }}
                 title="Book Doctor Appointment"

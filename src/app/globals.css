@@ -55,6 +55,8 @@
 
   /* Layout */
   --max-width: 1240px;
+  --doctor-listing-max-width: 1600px;
+  --doctor-listing-card-min-width: 360px;
   --nav-height: 72px;
 
   /* Radius */
@@ -75,7 +77,131 @@
   --transition-fast: 150ms ease-out;
   --transition-base: 250ms ease-out;
   --transition-slow: 400ms ease-out;
+
+  /* Design 7 — charcoal glass shared across the complete booking journey. */
+  --d7-bg: #0a101c;
+  --d7-surface: #121c2b;
+  --d7-surface-raised: #1a273a;
+  --d7-glass: rgba(22, 32, 49, 0.72);
+  --d7-border: rgba(220, 233, 255, 0.16);
+  --d7-text: #f5f8ff;
+  --d7-muted: #bbc7d9;
+  --d7-subtle: #99aac2;
+  --d7-accent: #bdd9ff;
+  --d7-accent-soft: rgba(105, 163, 238, 0.14);
+  --d7-danger: #ff939b;
+  --d7-success: #9de4cb;
+  --d7-gold: #eed39c;
+  --d7-action: color-mix(in srgb, var(--color-emergency) 88%, var(--color-primary-dark));
+  --d7-radius: var(--radius-xl);
+  --d7-shadow: 0 var(--sp-3) var(--sp-8) rgba(0, 0, 0, 0.2);
+
+  /* Design 17 — neutral charcoal for the portrait and inset glass cards. */
+  --d17-card-surface: #17191D;
+  --d17-lite-surface: var(--color-bg);
+  --d17-lite-ink: color-mix(in srgb, var(--d17-card-surface) 90%, var(--color-primary-dark));
+  --d17-lite-accent: var(--color-primary);
+
+  /* Immutable journey palettes: islands never inherit a surrounding palette. */
+  --journey-ink-bg: #0a101c;
+  --journey-ink-surface: #121c2b;
+  --journey-ink-raised: #1a273a;
+  --journey-ink-glass: rgba(22, 32, 49, 0.72);
+  --journey-ink-border: rgba(220, 233, 255, 0.16);
+  --journey-ink-text: #f5f8ff;
+  --journey-ink-muted: #bbc7d9;
+  --journey-ink-subtle: #99aac2;
+  --journey-ink-accent: #bdd9ff;
+  --journey-ink-accent-soft: rgba(105, 163, 238, 0.14);
+  --journey-ink-danger: #ff939b;
+  --journey-ink-success: #9de4cb;
+  --journey-ink-gold: #eed39c;
+  --journey-ink-action: color-mix(in srgb, var(--color-emergency) 88%, var(--color-primary-dark));
+  --journey-ink-shadow: 0 var(--sp-3) var(--sp-8) rgba(0, 0, 0, 0.2);
+  --journey-paper-bg: var(--color-bg);
+  --journey-paper-surface: #ffffff;
+  --journey-paper-raised: #eaf0f8;
+  --journey-paper-glass: rgba(255, 255, 255, 0.78);
+  --journey-paper-border: rgba(40, 70, 109, 0.22);
+  --journey-paper-text: #152c48;
+  --journey-paper-muted: #425976;
+  --journey-paper-subtle: #586b84;
+  --journey-paper-accent: #034ea2;
+  --journey-paper-accent-soft: rgba(3, 78, 162, 0.075);
+  --journey-paper-danger: #b22336;
+  --journey-paper-success: #17664f;
+  --journey-paper-gold: #806017;
+  --journey-paper-action: var(--color-primary);
+  --journey-paper-shadow: 0 var(--sp-3) var(--sp-8) rgba(38, 65, 101, 0.09);
+  --journey-pearl-glow: rgba(139, 180, 234, 0.19);
+  --journey-warm-glow: rgba(237, 28, 36, 0.035);
+  --journey-tone-duration: 500ms;
+  --journey-tone-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --d12-action-bg: var(--journey-ink-accent);
+  --d12-action-text: var(--journey-paper-text);
+  --d15-button-bg: var(--journey-ink-accent);
+  --d15-button-text: var(--journey-paper-text);
 }
+
+/* The tested journey components use one semantic palette in every design. */
+[data-design7-shell]:is([data-journey-design="d8"], [data-journey-design="d9"], [data-journey-design="d11"], [data-journey-design="d15-light"]),
+[data-design7-shell][data-journey-design="d10"][data-journey-tone="light"],
+[data-design7-shell] [data-journey-palette="light"] {
+  --d7-bg: var(--journey-paper-bg);
+  --d7-surface: var(--journey-paper-surface);
+  --d7-surface-raised: var(--journey-paper-raised);
+  --d7-glass: var(--journey-paper-glass);
+  --d7-border: var(--journey-paper-border);
+  --d7-text: var(--journey-paper-text);
+  --d7-muted: var(--journey-paper-muted);
+  --d7-subtle: var(--journey-paper-subtle);
+  --d7-accent: var(--journey-paper-accent);
+  --d7-accent-soft: var(--journey-paper-accent-soft);
+  --d7-danger: var(--journey-paper-danger);
+  --d7-success: var(--journey-paper-success);
+  --d7-gold: var(--journey-paper-gold);
+  --d7-action: var(--journey-paper-action);
+  --d7-shadow: var(--journey-paper-shadow);
+  color-scheme: light;
+}
+
+[data-design7-shell][data-journey-design="d11"] {
+  --d7-radius: var(--radius-lg);
+}
+
+[data-design7-shell]:is([data-journey-design="d15-light"], [data-journey-design="d15-dark"]) {
+  --d7-radius: var(--radius-lg);
+}
+[data-design7-shell][data-journey-design="d15-light"] {
+  --d15-button-bg: var(--color-primary);
+  --d15-button-text: var(--color-text-inverse);
+}
+
+[data-design7-shell] :is([data-journey-palette="dark"], [data-journey-contrast="dark"]) {
+  --d7-bg: var(--journey-ink-bg);
+  --d7-surface: var(--journey-ink-surface);
+  --d7-surface-raised: var(--journey-ink-raised);
+  --d7-glass: var(--journey-ink-glass);
+  --d7-border: var(--journey-ink-border);
+  --d7-text: var(--journey-ink-text);
+  --d7-muted: var(--journey-ink-muted);
+  --d7-subtle: var(--journey-ink-subtle);
+  --d7-accent: var(--journey-ink-accent);
+  --d7-accent-soft: var(--journey-ink-accent-soft);
+  --d7-danger: var(--journey-ink-danger);
+  --d7-success: var(--journey-ink-success);
+  --d7-gold: var(--journey-ink-gold);
+  --d7-action: var(--journey-ink-action);
+  --d7-shadow: var(--journey-ink-shadow);
+  color-scheme: dark;
+}
+
+/* D7 owns its journey chrome. Other pages keep their server-rendered layout. */
+[data-site-header] { display: contents; }
+body:has([data-design7-shell]) { background: var(--d7-bg); }
+body:has([data-design7-shell]) :is([data-site-header], [data-site-footer]) { display: none; }
+body:has([data-design7-shell]) #main-content { margin-bottom: 0 !important; background: var(--d7-bg) !important; }
+body:has([data-design7-shell][data-journey-tone="light"]) { --d7-bg: var(--journey-paper-bg); }
 
 /* ─── RESETS ─────────────────────────────────────────────────────────────── */
 *, *::before, *::after {

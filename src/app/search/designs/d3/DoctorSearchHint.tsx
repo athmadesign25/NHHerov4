@@ -12,7 +12,7 @@ export default function DoctorSearchHint({ active, paused }: { active: boolean; 
   const term = terms[index];
 
   useEffect(() => {
-    // Loop while idle. Focus stops the hints, including after focus moves away.
+    // Loop only while empty and unfocused; resume after focus leaves the input.
     if (!active || paused || reducedMotion) return;
     let timer: ReturnType<typeof setTimeout>;
     const schedule = () => {
@@ -34,6 +34,6 @@ export default function DoctorSearchHint({ active, paused }: { active: boolean; 
           transition={{ duration: reducedMotion || paused ? 0 : .25, ease: [.22, 1, .36, 1] }}>{term}</motion.span>
       </AnimatePresence>
     </span></span>
-    <span className={styles.static}>Doctor, speciality, hospital</span>
+    <span className={styles.static}>Search by doctor, speciality, hospital</span>
   </span>;
 }

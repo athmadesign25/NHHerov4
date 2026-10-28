@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
+import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -13,18 +14,28 @@ interface LoginModalProps {
   onLoginSuccess?: () => void;
   /** Opt-in keyboard/modal behaviour for the Design 3 preview. */
   manageFocus?: boolean;
+  purpose?: "booking" | "history";
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false, purpose = "booking" }: LoginModalProps) {
   const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [mobileNumber, setMobileNumber] = useState("");
   const [mobileError, setMobileError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [codeError, setCodeError] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const verified = useRef(false);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  useEffect(() => {
+    if (isOpen && step === "otp") otpRefs.current[0]?.focus();
+  }, [isOpen, step]);
 
   useEffect(() => {
     if (!manageFocus || !isOpen || !mounted || !modalRef.current) return;
@@ -37,7 +48,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       .filter((element) => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0);
     (modal.querySelector<HTMLInputElement>('input') ?? focusable()[0])?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { event.preventDefault(); onClose(); }
+      if (event.key === 'Escape') { event.preventDefault(); closeRef.current(); }
       if (event.key !== 'Tab') return;
       const elements = focusable();
       const first = elements[0]; const last = elements.at(-1);
@@ -50,7 +61,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       trigger?.focus({ preventScroll: true });
     };
-  }, [manageFocus, isOpen, mounted, onClose]);
+  }, [manageFocus, isOpen, mounted]);
 
   const handleContinue = () => {
     if (activeTab === "mobile") {
@@ -59,16 +70,34 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
         return;
       }
       setStep("otp");
+    } else if (!normalizeAuthIdentity("email", email)) {
+      setEmailError(true);
+    } else {
+      setStep("otp");
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = (code = otp.join("")) => {
+    if (purpose === "history" && !isValidVerificationCode(code)) {
+      setCodeError(code.length < 6 ? "Enter all 6 digits of your verification code." : "That code isn’t correct. Check it and try again.");
+      return;
+    }
+    if (verified.current) return;
     if (typeof window !== "undefined") {
-      localStorage.setItem("isLoggedIn", "true");
-      sessionStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userName", "Aditya");
+      try {
+        // Keep this tab's login usable even when persistent storage is blocked.
+        sessionStorage.setItem("isLoggedIn", "true");
+      } catch {
+        setCodeError("Sign in couldn’t be completed. Check your browser’s site storage settings and try again.");
+        return;
+      }
+      try {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userName", "Aditya");
+      } catch { /* The current tab is signed in; persistent storage is optional. */ }
       window.dispatchEvent(new Event("login-state-changed"));
     }
+    verified.current = true;
     if (onLoginSuccess) onLoginSuccess();
     onClose();
   };
@@ -79,16 +108,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     const newOtp = [...otp];
     newOtp[index] = digit;
     setOtp(newOtp);
+    setCodeError("");
 
     if (digit && index < 5) {
       otpRefs.current[index + 1]?.focus();
     }
 
-    // Auto verify once 6th digit is typed or all 6 digits are populated
-    if (digit && (index === 5 || newOtp.every((d) => d.trim() !== ""))) {
-      setTimeout(() => {
-        handleVerify();
-      }, 50);
+    // Verify only a complete code, without a delayed callback after dismissal.
+    if (digit && newOtp.every((d) => d.trim() !== "")) {
+      handleVerify(newOtp.join(""));
     }
   };
 
@@ -109,10 +137,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       newOtp[i] = pasted[i] || "";
     }
     setOtp(newOtp);
+    setCodeError("");
     if (pasted.length === 6) {
-      setTimeout(() => {
-        handleVerify();
-      }, 50);
+      handleVerify(pasted);
     } else {
       otpRefs.current[pasted.length]?.focus();
     }
@@ -128,6 +155,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       setStep("phone");
       setMobileNumber("");
       setMobileError(false);
+      setEmail("");
+      setEmailError(false);
+      setCodeError("");
+      verified.current = false;
       setOtp(["", "", "", "", "", ""]);
       setActiveTab("mobile");
     }
@@ -204,7 +235,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
             ref={modalRef}
             role={manageFocus ? "dialog" : undefined}
             aria-modal={manageFocus ? true : undefined}
-            aria-label={manageFocus ? "Login or register to book an appointment" : undefined}
+            aria-label={manageFocus ? (purpose === "history" ? "Sign in to see previously booked doctors" : "Login or register to book an appointment") : undefined}
             className={`${styles.modalContainer} ${manageFocus ? styles.accessibleDialog : ""}`}
           >
             {/* Image Column */}
@@ -253,7 +284,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
               <div style={{ flexShrink: 0, textAlign: "center", marginBottom: "24px" }}>
                 <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, #0f172a)", margin: "0 0 8px 0" }}>Login / Register</h2>
                 <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, #475569)", margin: 0, lineHeight: 1.5 }}>
-                  Sign in to manage appointments, access reports, and stay connected with your doctors.
+                  {purpose === "history" ? "Sign in to see doctors you’ve booked before." : "Sign in to manage appointments, access reports, and stay connected with your doctors."}
                 </p>
               </div>
               
@@ -405,6 +436,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                     <input 
                       type="email"
                       aria-label={manageFocus ? "Email address" : undefined}
+                      value={email}
+                      maxLength={160}
+                      aria-invalid={emailError}
+                      autoComplete="email"
+                      onChange={(event) => { setEmail(event.target.value); setEmailError(false); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") handleContinue(); }}
                       placeholder="Enter your email address"
                       style={{
                         width: "100%",
@@ -417,6 +454,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                         outline: "none"
                       }}
                     />
+                    {emailError && <p className={styles.inputError} role="alert">Enter a valid email address.</p>}
                   </div>
                 )}
               </div>
@@ -441,6 +479,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
               </button>
 
               {/* Divider */}
+              {purpose !== "history" && <>
               <div style={{ display: "flex", alignItems: "center", margin: "24px 0" }}>
                 <div style={{ flex: 1, height: "1px", background: "var(--color-border, #e2e8f0)" }} />
                 <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, #475569)", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
@@ -450,7 +489,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
               {/* Google Button */}
               <button
                 type="button"
-                onClick={handleVerify}
+                onClick={() => handleVerify()}
                 style={{
                   width: "100%",
                   padding: "14px",
@@ -477,6 +516,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                 />
                 Sign in with Google
               </button>
+              </>}
               
               <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.5 }}>
                 By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
@@ -487,8 +527,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                   <div style={{ marginTop: "32px" }}>
                     <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, #475569)", marginBottom: "8px", textAlign: "center" }}>
                       Enter the 6-digit OTP sent to <br/>
-                      <span style={{ fontWeight: 700, color: "var(--color-text, #0f172a)" }}>{mobileNumber}</span>
-                      <button onClick={() => setStep("phone")} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
+                      <span style={{ fontWeight: 700, color: "var(--color-text, #0f172a)" }}>{activeTab === "mobile" ? mobileNumber : email}</span>
+                      <button onClick={() => { setStep("phone"); setOtp(["", "", "", "", "", ""]); setCodeError(""); }} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
                     </label>
                     <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "16px" }}>
                       {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -520,9 +560,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                         />
                       ))}
                     </div>
+                    {codeError && <p className={styles.inputError} role="alert">{codeError}</p>}
                   </div>
                   <button 
-                    onClick={handleVerify}
+                    onClick={() => handleVerify()}
                     disabled={isVerifying}
                     style={{
                       width: "100%",

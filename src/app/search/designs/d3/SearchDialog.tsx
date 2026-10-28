@@ -25,7 +25,7 @@ export default function SearchDialog({ title, children, footer, onClose, mobileO
     dialog?.showModal();
     document.documentElement.style.overflow = "hidden";
     lenis?.stop();
-    const desktop = window.matchMedia("(min-width: 1024px)");
+    const desktop = window.matchMedia(doctorPreview ? "(min-width: 1200px)" : "(min-width: 1024px)");
     const resize = () => { if (mobileOnly && desktop.matches) closeRef.current(); };
     desktop.addEventListener("change", resize);
     return () => {
@@ -35,7 +35,7 @@ export default function SearchDialog({ title, children, footer, onClose, mobileO
       desktop.removeEventListener("change", resize);
       trigger?.focus({ preventScroll: true });
     };
-  }, [mobileOnly]);
+  }, [mobileOnly, doctorPreview]);
   return createPortal(<motion.dialog layoutRoot ref={ref} className={`${styles.dialog} ${doctorPreview ? ui.theme : ""}`} aria-labelledby={titleId} data-lenis-prevent data-d3-ui data-doctor-preview={doctorPreview || undefined}
     inert={!present} data-closing={!present || undefined} initial={animate ? { opacity: 0, y: 16 } : false} animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: animate ? 8 : 0, transition: { duration: animate ? .15 : 0 } }}
