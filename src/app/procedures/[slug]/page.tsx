@@ -86,8 +86,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               sizes="100vw"
               className={styles.heroBgImage}
             />
+            <div className={styles.heroBgOverlay} />
           </motion.div>
-          <div className={styles.heroBgOverlay} />
         </div>
 
         <div className={styles.heroInner}>

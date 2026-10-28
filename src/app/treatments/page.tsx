@@ -144,9 +144,9 @@ export default function TreatmentsLibraryPage() {
         <div className={styles.heroBg}>
           <motion.div
             className={styles.heroBgMotion}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Image
               src="/doctor_patient.png"
@@ -156,13 +156,8 @@ export default function TreatmentsLibraryPage() {
               sizes="100vw"
               className={styles.heroBgImage}
             />
+            <div className={styles.heroBgOverlay} />
           </motion.div>
-          <motion.div
-            className={styles.heroBgOverlay}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.75, delay: 0.15 }}
-          />
         </div>
 
         <div className={styles.heroInner}>
@@ -172,7 +167,7 @@ export default function TreatmentsLibraryPage() {
               className={styles.breadcrumbsContainer}
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.22 }}
+              transition={{ duration: 0.4, delay: 0.08 }}
             >
               <Breadcrumbs
                 items={[
@@ -185,9 +180,9 @@ export default function TreatmentsLibraryPage() {
 
             <motion.h1
               className={styles.heroTitle}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
               <TextSweepEffect 
                 words={["Treatments & Procedures"]} 
@@ -199,9 +194,9 @@ export default function TreatmentsLibraryPage() {
 
             <motion.p
               className={styles.heroSubtitle}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
             </motion.p>

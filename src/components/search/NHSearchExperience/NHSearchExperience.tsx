@@ -365,11 +365,25 @@ export default function NHSearchExperience({
     onOpenChange?.(true);
   };
 
-  // Close search (Active/Results → Landing)
+  // Exit animation mode: 'collapse' (drops back down to hero search box on manual dismiss) vs 'expand' (expands forward into page upon clicking a result)
+  const [exitMode, setExitMode] = useState<"collapse" | "expand">("collapse");
+
+  // Close search manually (Active/Results → Landing via X or backdrop click)
   const handleClose = () => {
+    setExitMode("collapse");
     setSearchState("landing");
     setActivePill(null);
     onOpenChange?.(false);
+  };
+
+  // Navigate forward to a clinical destination (procedure, library, doctor) with an expanding forward transition
+  const handleNavigateOut = (targetHref: string) => {
+    setExitMode("expand");
+    setSearchState("landing");
+    onOpenChange?.(false);
+    setTimeout(() => {
+      router.push(targetHref);
+    }, 200);
   };
 
   // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
@@ -1162,7 +1176,7 @@ export default function NHSearchExperience({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: prefersReducedMotion ? 0.1 : 0.32, ease: "easeOut" }}
+                  transition={{ duration: prefersReducedMotion ? 0.1 : (exitMode === "expand" ? 0.25 : 0.32), ease: "easeOut" }}
                   onClick={handleClose}
                   style={{
                     position: "fixed",
@@ -1242,14 +1256,23 @@ export default function NHSearchExperience({
                       scale: 1,
                       borderRadius: isPhone ? 18 : 24,
                     }}
-                    exit={{
-                      opacity: 0,
-                      y: originDeltaY,
-                      scale: originScale,
-                      borderRadius: 20,
-                    }}
+                    exit={
+                      exitMode === "expand"
+                        ? {
+                            opacity: 0,
+                            scale: 1.05,
+                            y: -14,
+                            filter: "blur(6px)",
+                          }
+                        : {
+                            opacity: 0,
+                            y: originDeltaY,
+                            scale: originScale,
+                            borderRadius: 20,
+                          }
+                    }
                     transition={{
-                      duration: prefersReducedMotion ? 0.1 : 0.42,
+                      duration: prefersReducedMotion ? 0.1 : (exitMode === "expand" ? 0.28 : 0.42),
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     style={{
@@ -1341,6 +1364,7 @@ export default function NHSearchExperience({
                             onEditSearch={handleEditSearch}
                             onSubmit={handleSubmit}
                             onClose={handleClose}
+                            onNavigateOut={handleNavigateOut}
                             selectedLocation={selectedLocation}
                             onSelectLocation={handleSelectLocation}
                             onSelectSpecialtyTag={handleSelectSpecialtyTag}
@@ -1364,6 +1388,7 @@ export default function NHSearchExperience({
                             doctors={resultsData.doctors}
                             onBack={handleBackToResults}
                             onClose={handleClose}
+                            onNavigateOut={handleNavigateOut}
                             attachedFile={attachedReportFile}
                           />
                         </motion.div>

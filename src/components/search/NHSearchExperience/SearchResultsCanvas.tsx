@@ -30,6 +30,7 @@ interface SearchResultsCanvasProps {
   onSelectLocation: (loc: string) => void;
   onSelectSpecialtyTag?: (tag: string) => void;
   onAskPulse?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
 }
 
 interface CompletedTurn {
@@ -60,6 +61,7 @@ export default function SearchResultsCanvas({
   onEditSearch,
   onSubmit,
   onClose,
+  onNavigateOut,
   selectedLocation,
   onSelectLocation,
   onSelectSpecialtyTag,
@@ -1041,6 +1043,7 @@ export default function SearchResultsCanvas({
               }}
               query={activeQuery}
               onClose={onClose}
+              onNavigateOut={onNavigateOut}
             />
           </div>
         )}

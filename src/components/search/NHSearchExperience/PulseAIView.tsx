@@ -47,6 +47,7 @@ interface PulseAIViewProps {
   doctors: DoctorCardData[];
   onBack: () => void;
   onClose?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
   attachedFile?: { name: string; size?: number } | null;
 }
 
@@ -96,6 +97,7 @@ export default function PulseAIView({
   doctors,
   onBack,
   onClose,
+  onNavigateOut,
   attachedFile,
 }: PulseAIViewProps) {
   // 1. Multi-turn chat state & conversation memory
@@ -118,6 +120,19 @@ export default function PulseAIView({
   const [phase, setPhase] = useState<ChatPhase>("prompt_sent");
   const [displayedText, setDisplayedText] = useState("");
   const [typedIndex, setTypedIndex] = useState(0);
+
+  const handlePulseRedirect = (e: React.MouseEvent, href: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      return;
+    }
+    e.preventDefault();
+    if (onNavigateOut) {
+      onNavigateOut(href);
+    } else {
+      onClose?.();
+      window.location.href = href;
+    }
+  };
 
   // Sync doctors when query / location changes or if passed doctors updates
   useEffect(() => {
@@ -674,12 +689,18 @@ export default function PulseAIView({
                         {reportSpecialistRecommendations[selectedSpecialistIndex].desc}
                       </p>
 
-                      <Link
-                        href={`/doctors?speciality=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&city=${encodeURIComponent(selectedLocation)}`}
-                        className={styles.pulseConsultBtn}
-                      >
-                        Consult
-                      </Link>
+                      {(() => {
+                        const consultHref = `/doctors?speciality=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&city=${encodeURIComponent(selectedLocation)}`;
+                        return (
+                          <Link
+                            href={consultHref}
+                            className={styles.pulseConsultBtn}
+                            onClick={(e) => handlePulseRedirect(e, consultHref)}
+                          >
+                            Consult
+                          </Link>
+                        );
+                      })()}
                     </div>
 
                     {/* 3 Dots Carousel Pagination */}
@@ -861,12 +882,18 @@ export default function PulseAIView({
                                   {doc.hospital}
                                 </div>
                               </div>
-                              <Link
-                                href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
-                                className={styles.pulseDocBookBtnWhite}
-                              >
-                                Book
-                              </Link>
+                              {(() => {
+                                const bookHref = `/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`;
+                                return (
+                                  <Link
+                                    href={bookHref}
+                                    className={styles.pulseDocBookBtnWhite}
+                                    onClick={(e) => handlePulseRedirect(e, bookHref)}
+                                  >
+                                    Book
+                                  </Link>
+                                );
+                              })()}
                             </div>
                           </div>
                         </div>

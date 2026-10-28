@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { 
@@ -21,6 +21,7 @@ interface TertiaryResultsProps {
   pulseRecommendationText?: string;
   query?: string;
   onClose?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
 }
 
 export default function TertiaryResults({
@@ -30,8 +31,10 @@ export default function TertiaryResults({
   onSelectSpecialtyTag,
   query = "",
   onClose,
+  onNavigateOut,
 }: TertiaryResultsProps) {
   const router = useRouter();
+  const [expandingId, setExpandingId] = useState<string | null>(null);
 
   // Helper to reliably resolve clean procedure slug matching our procedures library & detail page
   const getProcedureSlug = (t: TreatmentItemData): string => {
@@ -54,22 +57,26 @@ export default function TertiaryResults({
       .replace(/(^-|-$)/g, "");
   };
 
-  // Smooth, delightful transition from Pulse search modal into the target page
-  const handleSmoothNavigate = (e: React.MouseEvent, targetHref: string) => {
+  // Smooth, delightful expanding transition from Pulse search modal into the target page
+  const handleSmoothNavigate = (e: React.MouseEvent, targetHref: string, id: string) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
       return; // allow opening in new tab
     }
     e.preventDefault();
 
-    // Trigger smooth fade / exit transition on search modal
-    if (onClose) {
-      onClose();
-    }
+    // Trigger point expansion on the exact clicked item
+    setExpandingId(id);
 
-    // Seamlessly navigate to target page
-    setTimeout(() => {
-      router.push(targetHref);
-    }, 180);
+    if (onNavigateOut) {
+      onNavigateOut(targetHref);
+    } else {
+      if (onClose) {
+        onClose();
+      }
+      setTimeout(() => {
+        router.push(targetHref);
+      }, 180);
+    }
   };
   // Show 4 items per category and up to 3 rows of specialties
   const displayedTreatments = treatments.slice(0, 4);
@@ -145,8 +152,8 @@ export default function TertiaryResults({
             <span className={styles.sectionEyebrowTitle}>TREATMENTS &amp; PROCEDURES</span>
             <Link 
               href={treatmentsViewAllHref} 
-              className={styles.editorialHeaderViewAll}
-              onClick={(e) => handleSmoothNavigate(e, treatmentsViewAllHref)}
+              className={`${styles.editorialHeaderViewAll} ${expandingId === "treatments-all" ? styles.viewAllExpanding : ""}`}
+              onClick={(e) => handleSmoothNavigate(e, treatmentsViewAllHref, "treatments-all")}
             >
               <span>View all</span>
               <ArrowRight size={11} />
@@ -161,8 +168,8 @@ export default function TertiaryResults({
                 <Link
                   key={t.id}
                   href={targetHref}
-                  className={styles.editorialItem}
-                  onClick={(e) => handleSmoothNavigate(e, targetHref)}
+                  className={`${styles.editorialItem} ${expandingId === t.id ? styles.editorialItemExpanding : ""}`}
+                  onClick={(e) => handleSmoothNavigate(e, targetHref, t.id)}
                 >
                   <div className={styles.editorialItemLeft}>
                     <span className={styles.editorialIconBox}>
@@ -217,33 +224,41 @@ export default function TertiaryResults({
       <div className={styles.editorialSection}>
         <div className={styles.editorialHeadingRow}>
           <span className={styles.sectionEyebrowTitle}>RELATED ARTICLES &amp; GUIDANCE</span>
-          <Link href={articlesViewAllHref} className={styles.editorialHeaderViewAll}>
+          <Link 
+            href={articlesViewAllHref} 
+            className={`${styles.editorialHeaderViewAll} ${expandingId === "articles-all" ? styles.viewAllExpanding : ""}`}
+            onClick={(e) => handleSmoothNavigate(e, articlesViewAllHref, "articles-all")}
+          >
             <span>View all</span>
             <ArrowRight size={11} />
           </Link>
         </div>
 
         <div className={styles.editorialList}>
-          {effectiveArticles.map((art, idx) => (
-            <Link
-              key={art.id}
-              href={`/search?tab=articles&q=${encodeURIComponent(art.title)}`}
-              className={styles.editorialItem}
-            >
-              <div className={styles.editorialItemLeft}>
-                <span className={styles.editorialIconBox}>
-                  {renderArticleIcon(art.iconType, idx)}
-                </span>
-                <div className={styles.editorialMeta}>
-                  <div className={styles.editorialItemTitle}>{art.title}</div>
-                  <div className={styles.editorialItemSub}>
-                    {art.readTime} • {art.category}
+          {effectiveArticles.map((art, idx) => {
+            const artHref = `/search?tab=articles&q=${encodeURIComponent(art.title)}`;
+            return (
+              <Link
+                key={art.id}
+                href={artHref}
+                className={`${styles.editorialItem} ${expandingId === art.id ? styles.editorialItemExpanding : ""}`}
+                onClick={(e) => handleSmoothNavigate(e, artHref, art.id)}
+              >
+                <div className={styles.editorialItemLeft}>
+                  <span className={styles.editorialIconBox}>
+                    {renderArticleIcon(art.iconType, idx)}
+                  </span>
+                  <div className={styles.editorialMeta}>
+                    <div className={styles.editorialItemTitle}>{art.title}</div>
+                    <div className={styles.editorialItemSub}>
+                      {art.readTime} • {art.category}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ChevronRight size={14} className={styles.editorialChevron} />
-            </Link>
-          ))}
+                <ChevronRight size={14} className={styles.editorialChevron} />
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -252,7 +267,11 @@ export default function TertiaryResults({
         <div className={styles.editorialSection}>
           <div className={styles.editorialHeadingRow}>
             <span className={styles.sectionEyebrowTitle}>RELATED SPECIALTIES &amp; CARE</span>
-            <Link href="/specialities" className={styles.editorialHeaderViewAll}>
+            <Link 
+              href="/specialities" 
+              className={`${styles.editorialHeaderViewAll} ${expandingId === "specialties-all" ? styles.viewAllExpanding : ""}`}
+              onClick={(e) => handleSmoothNavigate(e, "/specialities", "specialties-all")}
+            >
               <span>View all</span>
               <ArrowRight size={11} />
             </Link>
