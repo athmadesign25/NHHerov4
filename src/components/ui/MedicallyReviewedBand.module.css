@@ -1,0 +1,231 @@
+.bandWrapper {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  padding: var(--space-20, 20px) 0;
+  background: var(--navy-900);
+  box-sizing: border-box;
+  overflow: hidden;
+  border-top: 1px solid rgba(var(--white-rgb), 0.08);
+  font-family: var(--font-family);
+}
+
+.bandContainer {
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  padding: 0 var(--space-24, 24px);
+  box-sizing: border-box;
+}
+
+/* Sleek horizontal bar with subtle glassmorphism */
+.sleekBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-24, 24px);
+  padding: var(--space-10, 10px) var(--space-20, 20px);
+  background: rgba(var(--navy-800-rgb), 0.55);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
+  border-radius: var(--radius-lg, 12px);
+  backdrop-filter: blur(var(--blur-sm, 8px));
+  -webkit-backdrop-filter: blur(var(--blur-sm, 8px));
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.25);
+  transition: border-color var(--transition-base, 0.2s ease), background var(--transition-base, 0.2s ease);
+  box-sizing: border-box;
+}
+
+.sleekBar:hover {
+  border-color: rgba(var(--sky-400-rgb, 56, 189, 248), 0.3);
+  background: rgba(var(--navy-800-rgb), 0.7);
+}
+
+/* Trust side */
+.trustSide {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12, 12px);
+  flex-shrink: 0;
+}
+
+.shieldIconWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm, 8px);
+  background: rgba(var(--blue-brand-rgb), 0.2);
+  border: 1px solid rgba(var(--blue-500-rgb), 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sky-400);
+  flex-shrink: 0;
+}
+
+.trustTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8, 8px);
+  flex-wrap: wrap;
+}
+
+.pulseDot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: var(--radius-full);
+  background: var(--emerald-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+}
+
+.reviewLabel {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.bullet {
+  color: var(--slate-500);
+  font-size: var(--font-size-2xs, 10px);
+}
+
+.contextBadge {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 600;
+  color: var(--sky-400);
+  background: rgba(var(--blue-brand-rgb), 0.2);
+  border: 1px solid rgba(var(--blue-500-rgb), 0.3);
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+}
+
+.reviewDate {
+  font-size: var(--font-size-2xs, 11px);
+  color: var(--slate-400);
+}
+
+/* Vertical divider */
+.verticalDivider {
+  width: 1px;
+  height: 34px;
+  background: rgba(var(--white-rgb), 0.1);
+  flex-shrink: 0;
+}
+
+/* Doctor side */
+.doctorSide {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12, 12px);
+  min-width: 0;
+  flex: 1;
+}
+
+.avatarFrame {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-full);
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--emerald-500) 100%);
+  flex-shrink: 0;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  background: var(--slate-800);
+  display: block;
+}
+
+.verifiedCheckBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--radius-full);
+  background: var(--emerald-500);
+  color: var(--white);
+  border: 1.5px solid var(--navy-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doctorDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8, 8px);
+  flex-wrap: wrap;
+}
+
+.docName {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.docQual {
+  font-size: var(--font-size-2xs, 10px);
+  font-weight: 500;
+  color: var(--slate-300);
+  background: rgba(var(--white-rgb), 0.08);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.docRole {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-2xs, 11px);
+  color: var(--slate-300);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.designation {
+  font-weight: 600;
+  color: var(--sky-400);
+}
+
+.department {
+  color: var(--slate-300);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sleekBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12, 12px);
+  }
+
+  .verticalDivider {
+    display: none;
+  }
+
+  .docRole {
+    white-space: normal;
+    flex-wrap: wrap;
+  }
+}
