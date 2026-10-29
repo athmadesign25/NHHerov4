@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, 
@@ -675,7 +676,7 @@ export default function PulseAIView({
                       </p>
 
                       <Link
-                        href={`/doctors?speciality=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&city=${encodeURIComponent(selectedLocation)}`}
+                        href={`/search/doctors?design=${DEFAULT_DOCTOR_DESIGN}&specialties=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&location=${encodeURIComponent(selectedLocation)}`}
                         className={styles.pulseConsultBtn}
                       >
                         Consult
@@ -862,7 +863,7 @@ export default function PulseAIView({
                                 </div>
                               </div>
                               <Link
-                                href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
+                                href={`/doctors/${encodeURIComponent(doc.id)}/book?design=${DEFAULT_DOCTOR_DESIGN}&city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
                                 className={styles.pulseDocBookBtnWhite}
                               >
                                 Book

@@ -17,8 +17,7 @@ export function resolveDoctorLanding(pathname: string) {
 
 export default async function DoctorLandingPage({ pathname }: { pathname: string }) {
   resolveDoctorLanding(pathname);
-  // Explicit design URLs render their selected preview on the server; saved
-  // browser preferences resolve without briefly painting a different design.
+  // Render the current journey or an explicitly selected development preview.
   await connection();
   return <DoctorLandingPreview catalogs={catalogs} />;
 }

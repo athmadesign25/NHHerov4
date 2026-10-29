@@ -63,7 +63,7 @@ function DesignSwitcherInner({ scope, currentVariant, onVariantChange }: Props) 
                   setDesignVariant(scope, v.id);
                   // Entering the new exploration from a legacy preview must
                   // also survive refresh when the old URL has ?design=d2/d3.
-                  if (!onVariantChange && (["d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(v.id) || isJourneyDesign(v.id))) {
+                  if (!onVariantChange && (["d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(v.id) || isJourneyDesign(v.id))) {
                     const url = new URL(window.location.href);
                     url.searchParams.set("design", v.id);
                     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);

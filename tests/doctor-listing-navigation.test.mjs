@@ -63,7 +63,7 @@ test('removing the landing speciality exits to a recoverable unfiltered search',
   params.delete('specialties');
   const url = new URL(doctorListingUrl(path, params), 'http://localhost');
   assert.equal(url.pathname, '/search/doctors');
-  assert.equal(url.searchParams.get('design'), 'd3');
+  assert.equal(url.searchParams.get('design'), 'd20');
   assert.equal(url.searchParams.get('location'), 'Bangalore');
   assert.equal(doctorListingParams(url.pathname, url.search).has('specialties'), false);
 });

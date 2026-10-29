@@ -15,5 +15,5 @@ function ContextualLink({ href, ...props }: Props) {
 
 /** Isolate query-dependent navigation so the rest of the navbar stays prerendered. */
 export default function DoctorNavigationLink(props: Props) {
-  return <Suspense fallback={<Link {...props} />}><ContextualLink {...props} /></Suspense>;
+  return <Suspense fallback={<Link {...props} href={design17DoctorNavigationHref(props.href, "", new URLSearchParams())} />}><ContextualLink {...props} /></Suspense>;
 }

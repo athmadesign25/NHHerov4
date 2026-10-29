@@ -10,9 +10,14 @@ import { readBookingRaw, parseBooking } from "@/features/booking/bookingStore";
 import Design17BookingFlow from "@/features/booking/design17/Design17BookingFlow";
 import Design18BookingFlow from "@/features/booking/design18/Design18BookingFlow";
 import Design19BookingFlow from "@/features/booking/design19/Design19BookingFlow";
+import Design20BookingFlow from "@/features/booking/design20/Design20BookingFlow";
 import { getDesign3BookingDoctor } from "@/features/booking/doctors";
 import { getDesign17ProfileDoctor } from "@/features/search/design17Profile";
+import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
+import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { resolveDoctorDesign } from "@/features/design-preview/doctorJourney";
+import { design20DoctorRecoveryUrl } from "@/features/search/design20BookingEntry";
 import styles from "./page.module.css";
 
 // sessionStorage never changes from outside this tab's flow, so there is
@@ -22,13 +27,14 @@ const subscribeNoop = () => () => {};
 
 function ConfirmationRoute({ slug }: { slug: string }) {
   const params = useSearchParams();
-  const design = params.get("design");
-  if (design === "d17" || design === "d17-lite" || design === "d18" || design === "d19") {
-    const source = getDesign3BookingDoctor(slug);
-    const listing = getDesign17ProfileDoctor(slug, params);
-    if (!source || !listing) return <div className={styles.page}><h1>We couldn’t find this doctor</h1><Link href={design17ListingReturnTo(params.get("returnTo"), design)}>Back to doctors</Link></div>;
+  const design = resolveDoctorDesign(params.get("design"), DESIGN_PREVIEW_ENABLED);
+  if (design === "d17" || design === "d17-lite" || design === "d18" || (design === "d19" || design === "d20")) {
+    const source = design === "d20" ? getDesign20BookingDoctor(slug, params.get("name")) : getDesign3BookingDoctor(slug);
+    const listing = design === "d20" ? getDesign20ProfileDoctor(slug, params) : getDesign17ProfileDoctor(slug, params);
+    if (!source || !listing) return <div className={styles.page}><h1>We couldn’t find this doctor</h1><Link href={design === "d20" ? design20DoctorRecoveryUrl(params) : design17ListingReturnTo(params.get("returnTo"), design)}>Back to doctors</Link></div>;
     const doctor = { ...source, name: listing.name, hospital: listing.hospital, city: listing.city, fee: listing.fee };
     if (design === "d18") return <Design18BookingFlow key={`${slug}-${design}-${params.get("ref")}`} doctor={doctor} confirmationRef={params.get("ref") ?? ""} />;
+    if (design === "d20") return <Design20BookingFlow key={`${slug}-${design}-${params.get("ref")}`} doctor={doctor} confirmationRef={params.get("ref") ?? ""} />;
     if (design === "d19") return <Design19BookingFlow key={`${slug}-${design}-${params.get("ref")}`} doctor={doctor} confirmationRef={params.get("ref") ?? ""} />;
     return <Design17BookingFlow key={`${slug}-${design}-${params.get("ref")}`} doctor={doctor} design={design} confirmationRef={params.get("ref") ?? ""} />;
   }
@@ -38,7 +44,7 @@ function ConfirmationRoute({ slug }: { slug: string }) {
 function ConfirmationInner({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref") ?? "";
-  const designQuery = ["d17", "d17-lite", "d18", "d19"].includes(searchParams.get("design") ?? "") ? `?design=${searchParams.get("design")}` : "";
+  const designQuery = ["d17", "d17-lite", "d18", "d19", "d20"].includes(searchParams.get("design") ?? "") ? `?design=${searchParams.get("design")}` : "";
 
   // undefined = still hydrating, null = no such booking, string = raw record
   const raw = useSyncExternalStore<string | null | undefined>(

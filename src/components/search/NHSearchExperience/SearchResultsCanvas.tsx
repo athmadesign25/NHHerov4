@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
 import { Search, X, ArrowRight, Plus, Mic, Send, Briefcase, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NHSearchExperience.module.css";
@@ -1072,7 +1073,7 @@ export default function SearchResultsCanvas({
                             </div>
 
                             <Link
-                              href={`/doctors/${turn.doctor.id}?name=${encodeURIComponent(turn.doctor.name)}&specialty=${encodeURIComponent(turn.doctor.speciality)}&hospital=${encodeURIComponent(turn.doctor.hospital)}&experience=${encodeURIComponent(turn.doctor.experience)}&city=${encodeURIComponent(turn.doctor.city)}&img=${encodeURIComponent(turn.doctor.image)}`}
+                              href={`/doctors/${encodeURIComponent(turn.doctor.id)}?design=${DEFAULT_DOCTOR_DESIGN}&name=${encodeURIComponent(turn.doctor.name)}&specialty=${encodeURIComponent(turn.doctor.speciality)}&hospital=${encodeURIComponent(turn.doctor.hospital)}&experience=${encodeURIComponent(turn.doctor.experience)}&city=${encodeURIComponent(turn.doctor.city)}&img=${encodeURIComponent(turn.doctor.image)}`}
                               className={styles.refBookBtnWhite}
                             >
                               Book
@@ -1215,7 +1216,7 @@ export default function SearchResultsCanvas({
                                   </div>
 
                                   <Link
-                                    href={`/doctors/${activeTurn.doctor.id}?name=${encodeURIComponent(activeTurn.doctor.name)}&specialty=${encodeURIComponent(activeTurn.doctor.speciality)}&hospital=${encodeURIComponent(activeTurn.doctor.hospital)}&experience=${encodeURIComponent(activeTurn.doctor.experience)}&city=${encodeURIComponent(activeTurn.doctor.city)}&img=${encodeURIComponent(activeTurn.doctor.image)}`}
+                                    href={`/doctors/${encodeURIComponent(activeTurn.doctor.id)}?design=${DEFAULT_DOCTOR_DESIGN}&name=${encodeURIComponent(activeTurn.doctor.name)}&specialty=${encodeURIComponent(activeTurn.doctor.speciality)}&hospital=${encodeURIComponent(activeTurn.doctor.hospital)}&experience=${encodeURIComponent(activeTurn.doctor.experience)}&city=${encodeURIComponent(activeTurn.doctor.city)}&img=${encodeURIComponent(activeTurn.doctor.image)}`}
                                     className={styles.refBookBtnWhite}
                                   >
                                     Book

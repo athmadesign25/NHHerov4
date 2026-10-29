@@ -96,3 +96,58 @@ test('contextual page copy handles the directory, city and specialist without un
   assert.equal(copy.heading, 'ENT specialists');
   assert.match(copy.summary, /ENT specialists/);
 });
+
+test('listing headings cover every imported speciality independently of SEO routes', async () => {
+  const { design20DirectorySource } = await import('../src/features/search/design20DirectoryData.ts');
+  const city = landing.findDoctorLandingCity('Bangalore');
+  const specialties = new Set(design20DirectorySource.doctors.flatMap(doctor => doctor.specialties));
+  for (const specialty of specialties) {
+    const copy = landing.getDoctorListingCopy({ specialties: [specialty], city });
+    assert.notEqual(copy.heading, 'Doctors in Bangalore', specialty);
+    assert.ok(copy.heading.endsWith(' in Bangalore'), specialty);
+    assert.equal(copy.heading, `${landing.getDoctorListingCopy({ specialties: [specialty] }).heading} in Bangalore`, specialty);
+    assert.equal(copy.summary, 'Explore doctors and consultation options.');
+  }
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['Adult Cardiology'], city }).heading, 'Adult cardiologists in Bangalore');
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['New Department'] }).heading, 'New Department specialists');
+  assert.equal(landing.getDoctorLandingContext('/book-an-appointment/adult-cardiology'), null);
+});
+
+test('single-speciality headings retain clinical distinctions and name services accurately', () => {
+  const examples = [
+    ['Adult Cardiology', 'Adult cardiologists'],
+    ['Paediatric Cardiology', 'Paediatric cardiologists'],
+    ['Interventional Neurology', 'Interventional neurologists'],
+    ['Medical Gastroenterology', 'Medical gastroenterologists'],
+    ['Clinical Psychology', 'Clinical psychologists'],
+    ['E.N.T', 'ENT specialists'],
+    ['Obstetrics & Gynaecology', 'Obstetricians & gynaecologists'],
+    ['Executive Health Checkup', 'Doctors for executive health checks'],
+    ['Paediatric & Congenital Heart Surgery', 'Paediatric & Congenital Heart Surgery specialists'],
+  ];
+  for (const [speciality, heading] of examples) {
+    assert.equal(landing.getDoctorListingCopy({ specialties: [speciality] }).heading, heading);
+    assert.equal(landing.getDoctorListingCopy({ specialties: [speciality], city: landing.findDoctorLandingCity('Bangalore') }).heading, `${heading} in Bangalore`);
+  }
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['  adult cardiology  '] }).heading, 'Adult cardiologists');
+});
+
+test('listing context remains accurate through multiple selection, city changes and reset', () => {
+  const city = landing.findDoctorLandingCity('Bangalore');
+  const selected = ['Adult Cardiology', 'Orthopaedic Surgery'];
+  const copy = landing.getDoctorListingCopy({ specialties: selected, city });
+  assert.equal(copy.heading, 'Specialists in Bangalore');
+  assert.equal(copy.summary, 'Explore doctors and consultation options.');
+  const many = landing.getDoctorListingCopy({ specialties: [...selected, 'Dermatology', 'E.N.T'], city });
+  assert.equal(many.heading, copy.heading);
+  assert.equal(many.summary, copy.summary);
+  assert.equal(landing.getDoctorListingCopy({ specialties: selected }).heading, 'Our specialists');
+  assert.equal(landing.getDoctorListingCopy({ specialties: [...selected, 'Dermatology'] }).heading, 'Our specialists');
+  assert.equal(landing.getDoctorListingCopy({ specialties: [], city }).summary, copy.summary);
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['Adult Cardiology'], city }).summary, copy.summary);
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['Orthopaedic Surgery'], city: landing.findDoctorLandingCity('Mumbai') }).heading, 'Orthopaedic surgeons in Mumbai');
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['Cardiologist'], city }).heading, 'Cardiologists in Bangalore');
+  assert.equal(landing.getDoctorListingCopy({ specialties: ['Adult Cardiology', 'Adult Cardiology', ' '], city }).heading, 'Adult cardiologists in Bangalore');
+  assert.equal(landing.getDoctorListingCopy({ specialties: [], city }).heading, 'Doctors in Bangalore');
+  assert.equal(landing.getDoctorListingCopy({ specialties: [] }).heading, 'Our doctors');
+});

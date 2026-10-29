@@ -1,6 +1,20 @@
 .page { --d3-gutter-start: var(--sp-2); --d3-gutter-end: var(--sp-2); min-height: 100dvh; background: linear-gradient(160deg, var(--color-bg), var(--color-primary-light)); padding-bottom: var(--sp-8); }
 .container { width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end)); margin-inline: var(--d3-gutter-start) var(--d3-gutter-end); padding-top: var(--sp-3); }
 .page.doctorPage { --d3-gutter-start: clamp(calc(var(--sp-1) * 1.5), 3.5vw, calc(var(--sp-2) + var(--sp-1) / 4)); --d3-gutter-end: var(--d3-gutter-start); --d3-nav-height: calc(var(--nav-height) - var(--sp-2)); --filter-bottom-gap: var(--sp-2); background: var(--color-bg); overflow-anchor: none; color-scheme: light; }
+/* A quiet continuation of the booking-page canvas, bounded independently of result count. */
+.page.doctorPage[data-design="d20"] {
+  --d20-canvas-glow-height: clamp(calc(var(--sp-16) * 3), 65vw, calc(var(--sp-16) * 6));
+  background:
+    radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
+      color-mix(in srgb, var(--color-primary) 8%, transparent),
+      color-mix(in srgb, var(--color-primary) 4%, transparent) 40%,
+      color-mix(in srgb, var(--color-primary) 1%, transparent) 72%,
+      transparent 100%),
+    var(--d17-lite-surface);
+}
+@media (forced-colors: active) {
+  .page.doctorPage[data-design="d20"] { background: Canvas; }
+}
 /* Appending cards must not make the browser follow the footer down the page. */
 :global(body):has(.doctorPage) { overflow-anchor: none; }
 /* This preview is light-only; retain the theme experiment on other pages. */
@@ -31,7 +45,7 @@
   background: var(--filter-glass-surface);
 }
 /* Draw the panel edge above the frosted heading so blur cannot wash it out. */
-.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .sidebar::after {
+.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .sidebar::after {
   content: ""; position: absolute; inset: -1px; z-index: 4; pointer-events: none;
   border: 1px solid var(--color-border); border-radius: inherit;
 }
@@ -60,6 +74,7 @@
 .filterHeading button:not(:disabled):active { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); }
 .results { min-width: 0; }
 .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); align-items: stretch; }
+.page[data-design="d20"] .grid { grid-auto-rows: 1fr; }
 .grid.doctorGrid { grid-template-columns: minmax(0, 1fr); }
 .resultMeta { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: var(--sp-1); padding-block: var(--sp-2); font-size: var(--font-size-sm); color: var(--color-text-secondary); }
 .resultMeta strong { color: var(--color-text); }
@@ -133,34 +148,34 @@
 }
 
 /* Bound the listing independently of the shared website navigation. */
-.page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) {
+.page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) {
   --d16-content-max: var(--doctor-listing-max-width);
   --d16-page-gutter: var(--sp-2);
   --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
   --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
 }
-.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .grid { grid-template-columns: minmax(0, 1fr); }
-.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .layout { grid-template-columns: minmax(0, 1fr); }
+.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .grid { grid-template-columns: minmax(0, 1fr); }
+.page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .layout { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 640px) {
-  .page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) { --d16-page-gutter: var(--sp-3); }
+  .page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) { --d16-page-gutter: var(--sp-3); }
 }
 @media (min-width: 768px) {
-  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1024px) {
-  .page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) { --d16-page-gutter: clamp(var(--sp-4), 3.5vw, var(--sp-6)); }
+  .page.doctorPage:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) { --d16-page-gutter: clamp(var(--sp-4), 3.5vw, var(--sp-6)); }
 }
 /* Keep filters in their compact control until the sidebar and two readable
    cards fit together. This breakpoint is based on the content's minimum size. */
 @media (width < 1200px) {
-  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .sidebar { display: none; }
+  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .sidebar { display: none; }
 }
 @media (min-width: 1200px) {
-  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) { --d16-filter-width: calc(var(--sp-16) * 2 + var(--sp-8)); }
-  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .layout { grid-template-columns: var(--d16-filter-width) minmax(0, 1fr); }
+  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) { --d16-filter-width: calc(var(--sp-16) * 2 + var(--sp-8)); }
+  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .layout { grid-template-columns: var(--d16-filter-width) minmax(0, 1fr); }
   /* The fractional minimum explicitly caps the grid at three columns. auto-fill
      preserves card width when filters leave only one or two doctors. */
-  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], [data-design="d19"]) .grid {
+  .page:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"])) .grid {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, max(var(--doctor-listing-card-min-width), calc((100% - var(--sp-2) * 2) / 3))), 1fr));
   }
 }

@@ -21,3 +21,5 @@
   .layout { grid-template-columns: var(--d16-filter-width) minmax(0, 1fr); }
   .hint { grid-column: 2; }
 }
+.layout.videoSmartFilter { grid-template-columns: minmax(0, 1fr); }
+.videoSmartFilter .hint { grid-column: 1; }

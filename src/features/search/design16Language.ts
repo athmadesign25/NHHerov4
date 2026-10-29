@@ -19,6 +19,7 @@ export function getDesign16LanguageShortcut(
   location: string,
   now = new Date(),
   matchingDoctors: readonly DoctorListingItem[] = doctors,
+  requireSuppliedLanguage = false,
 ): Design16LanguageShortcut | null {
   const city = NH_CITIES.find((item) => item.id === getCityId(location));
   const regional = city ? CITY_CONSULTATION_LANGUAGES[city.value] : undefined;
@@ -29,6 +30,8 @@ export function getDesign16LanguageShortcut(
     ? supported.find(language => language.trim().toLowerCase() === regional.toLowerCase()) ?? regional
     : filters.languages.find(language => Boolean(language.trim()));
   if (!value) return null;
+  // D20's real directory must not suggest a regional language missing from its source records.
+  if (requireSuppliedLanguage && !supported.some(language => language.trim().toLowerCase() === value.toLowerCase())) return null;
   const matching = filterDoctors(matchingDoctors, { ...filters, languages: [] }, mode, now);
   return { value, selected: filters.languages.includes(value), count: matching.filter((doctor) => doctor.languages?.includes(value)).length };
 }

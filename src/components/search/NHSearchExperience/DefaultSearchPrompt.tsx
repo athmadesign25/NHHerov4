@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { buildSearchUrl } from "@/features/search/searchTabs";
 import { motion, MotionValue, AnimatePresence } from "framer-motion";
 import { Paperclip, Mic, ArrowRight, User, Heart, X, Square, Pause, FileText, Check, Clock, CalendarCheck, Activity } from "lucide-react";
 import Lottie from "lottie-react";
@@ -708,7 +709,7 @@ export default function DefaultSearchPrompt({
                 className={styles.insideActionPill}
                 onClick={(e) => {
                   e.stopPropagation();
-                  const target = `/search/doctors?design=d17-lite&location=${encodeURIComponent(selectedLocation || "All")}`;
+                  const target = buildSearchUrl({ location: selectedLocation || "All" });
                   router.push(target);
                 }}
                 title="Book Doctor Appointment"

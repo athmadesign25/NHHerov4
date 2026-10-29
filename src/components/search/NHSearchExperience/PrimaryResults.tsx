@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
+import { buildSearchUrl } from "@/features/search/searchTabs";
 import { motion } from "framer-motion";
 import { 
   ArrowRight, 
@@ -343,7 +345,7 @@ export default function PrimaryResults({
 
                     {/* Right Side: White Book Button → opens Doctor Profile page with inline fallback data */}
                     <Link
-                      href={`/doctors/${doc.id}?name=${encodeURIComponent(doc.name)}&specialty=${encodeURIComponent(doc.speciality)}&hospital=${encodeURIComponent(doc.hospital)}&experience=${encodeURIComponent(doc.experience)}&city=${encodeURIComponent(doc.city)}&img=${encodeURIComponent(doc.image)}`}
+                      href={`/doctors/${encodeURIComponent(doc.id)}?design=${DEFAULT_DOCTOR_DESIGN}&name=${encodeURIComponent(doc.name)}&specialty=${encodeURIComponent(doc.speciality)}&hospital=${encodeURIComponent(doc.hospital)}&experience=${encodeURIComponent(doc.experience)}&city=${encodeURIComponent(doc.city)}&img=${encodeURIComponent(doc.image)}`}
                       className={styles.refBookBtnWhite}
                     >
                       Book
@@ -359,7 +361,7 @@ export default function PrimaryResults({
       {/* Clean View all doctors Link */}
       <div className={styles.refViewAllRow}>
         <Link
-          href={`/search/doctors?q=${encodeURIComponent(query)}&city=${encodeURIComponent(selectedLocation)}`}
+          href={buildSearchUrl({ q: query, location: selectedLocation })}
           className={styles.refViewAllLink}
         >
           <span>View all doctors ({doctors.length > 8 ? `${doctors.length}+` : doctors.length})</span>

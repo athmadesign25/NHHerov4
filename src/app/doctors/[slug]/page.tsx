@@ -19,7 +19,12 @@ import { saveBooking } from "@/features/booking/bookingStore";
 import { design17ProfileAvailability, design17ProfileDetails, design17ProfileUrl, getDesign17ProfileDoctor, getDesign17RelatedDoctors, selectDesign17ProfileHospital } from "@/features/search/design17Profile";
 import { design17BookingUrl } from "@/features/search/design17Booking";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
+import { getDesign20ProfileDoctor, getDesign20RelatedDoctors } from "@/features/search/design20Directory";
 import { fromDirectoryDoctor } from "@/features/search/doctorListing";
+import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { resolveDoctorDesign } from "@/features/design-preview/doctorJourney";
+import { design20BookingEntryUrl, design20DoctorRecoveryUrl } from "@/features/search/design20BookingEntry";
+import bookingStyles from "@/features/booking/design17/Booking.module.css";
 import profileStyles from "./DoctorProfile.module.css";
 
 const doctors: Record<string, {
@@ -199,11 +204,11 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   const { slug } = React.use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const requestedDesign = searchParams.get("design");
-  const directoryDesign = requestedDesign === "d17-lite" || requestedDesign === "d18" || requestedDesign === "d19" ? requestedDesign : "d17";
-  const isDesign17 = ["d17", "d17-lite", "d18", "d19"].includes(requestedDesign ?? "");
+  const requestedDesign = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  const directoryDesign = requestedDesign === "d17-lite" || requestedDesign === "d18" || (requestedDesign === "d19" || requestedDesign === "d20") ? requestedDesign : "d17";
+  const isDesign17 = ["d17", "d17-lite", "d18", "d19", "d20"].includes(requestedDesign ?? "");
   const listingReturnTo = design17ListingReturnTo(searchParams.get("returnTo"), directoryDesign);
-  const listingDoctor = isDesign17 ? getDesign17ProfileDoctor(slug, searchParams) : null;
+  const listingDoctor = requestedDesign === "d20" ? getDesign20ProfileDoctor(slug, searchParams) : isDesign17 ? getDesign17ProfileDoctor(slug, searchParams) : null;
 
   // Try all known data sources first
   const dbDoc = getDoctorDetail(slug);
@@ -273,7 +278,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
     };
   })();
 
-  const doc = listingDoctor ? design17ProfileDetails(listingDoctor) : dbDoc ?? fallbackDoc ?? dynamicSlugDoc;
+  const doc = listingDoctor ? { ...design17ProfileDetails(listingDoctor), ...(requestedDesign === "d20" ? { img: listingDoctor.img } : {}) } : dbDoc ?? fallbackDoc ?? dynamicSlugDoc;
 
   const [consultationType, setConsultationType] = useState<"Hospital Visit" | "Video Consultation">(isDesign17 && searchParams.get("mode") === "video" ? "Video Consultation" : "Hospital Visit");
   
@@ -349,9 +354,16 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   };
 
   const proceedToBooking = () => {
+    if (directoryDesign === "d20" && !listingDoctor) {
+      router.push(design20DoctorRecoveryUrl(searchParams));
+      return;
+    }
     if (listingDoctor) {
       const selected = selectDesign17ProfileHospital(listingDoctor, selectedHospital);
-      router.push(design17BookingUrl(selected, consultationType === "Hospital Visit" ? "hospital" : "video", searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo));
+      const mode = consultationType === "Hospital Visit" ? "hospital" : "video";
+      router.push(directoryDesign === "d20"
+        ? design20BookingEntryUrl(selected, mode, searchParams.get("date") ?? "", listingReturnTo)
+        : design17BookingUrl(selected, mode, searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo));
       return;
     }
     const chosenDateObj = actualDates.find((d) => d.date === selectedDate) || actualDates[0];
@@ -373,7 +385,9 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   };
 
   const handleBookAppointment = () => {
-    if (!isUserLoggedIn) {
+    if (directoryDesign === "d20") {
+      proceedToBooking();
+    } else if (!isUserLoggedIn) {
       setIsAuthModalOpen(true);
     } else {
       proceedToBooking();
@@ -386,7 +400,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   };
 
   const relatedMode = consultationType === "Video Consultation" ? "video" : "hospital";
-  const relatedDoctors = isDesign17 ? getDesign17RelatedDoctors(slug, relatedMode, doc.name) : searchDoctorsData
+  const relatedDoctors = requestedDesign === "d20" ? getDesign20RelatedDoctors(slug, relatedMode) : isDesign17 ? getDesign17RelatedDoctors(slug, relatedMode, doc.name) : searchDoctorsData
     .filter((d) => d.id !== slug && d.name.toLowerCase() !== doc.name.toLowerCase())
     .slice(0, 8).map(fromDirectoryDoctor);
   const similarDoctors = relatedDoctors.map(doctor => {
@@ -395,10 +409,18 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
         availabilityLabel: isDesign17 ? design17ProfileAvailability(doctor, relatedMode) : "",
         profileHref: isDesign17 ? design17ProfileUrl(doctor, relatedMode, searchParams.get("date") ?? "", false, directoryDesign, listingReturnTo)
           : `/doctors/${encodeURIComponent(doctor.id)}?name=${encodeURIComponent(doctor.name)}`,
-        bookingHref: isDesign17 ? design17BookingUrl(doctor, relatedMode, searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo)
+        bookingHref: directoryDesign === "d20" ? design20BookingEntryUrl(doctor, relatedMode, searchParams.get("date") ?? "", listingReturnTo)
+          : isDesign17 ? design17BookingUrl(doctor, relatedMode, searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo)
           : `/doctors/${encodeURIComponent(doctor.id)}/book?mode=hospital`,
       };
     });
+  if (directoryDesign === "d20" && !listingDoctor) return <div className={bookingStyles.page} data-design17-booking="d20">
+    <div className={bookingStyles.container}><section className={bookingStyles.panel}>
+      <h1>Choose a doctor to continue</h1>
+      <p>We couldn’t find this doctor’s profile. Find an available doctor in the directory.</p>
+      <Link href={design20DoctorRecoveryUrl(searchParams)} className={bookingStyles.primary}>Find a doctor</Link>
+    </section></div>
+  </div>;
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
@@ -425,7 +447,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
               <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
                   <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
-                    <Image src={doc.img} alt={doc.name} fill sizes="180px" style={{ objectFit: "cover" }} />
+                    {doc.img ? <Image src={doc.img} alt={doc.name} fill sizes="180px" style={{ objectFit: "cover" }} /> : <User size={72} aria-label="Doctor photo unavailable" />}
                   </div>
                   <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column" }}>
                     <h1 style={{ fontSize: "var(--font-size-3xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em", marginBottom: 4 }}>{doc.name}</h1>
@@ -438,10 +460,10 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                           {loc.name}{loc.city && !loc.name.toLocaleLowerCase().includes(loc.city.toLocaleLowerCase()) ? `, ${loc.city}` : ""}
                         </div>
                       ))}
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginTop: 4 }}>
+                      {doc.experienceYears && <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, marginTop: 4 }}>
                         <Clock size={16} style={{ color: "var(--color-text)" }} />
                         {doc.experienceYears} Experience
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 </div>
@@ -903,14 +925,14 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                             href={sDoc.profileHref}
                           >
                             <div style={{ width: "100%", height: "100%", position: "relative" }}>
-                              <Image
+                              {requestedDesign === "d20" && !sDoc.img ? <User size={64} aria-label="Doctor photo unavailable" /> : <Image
                                 alt={sDoc.name}
                                 loading="lazy"
                                 fill
                                 style={{ objectFit: "cover" }}
                                 sizes="120px"
                                 src={sDoc.img || "/images/misc/doctor_avatar_male_v2.png"}
-                              />
+                              />}
                             </div>
                           </Link>
                         </div>
@@ -924,7 +946,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
                             {sDoc.speciality}
                           </p>
                           <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {sDoc.degrees || "MBBS, MD"}
+                            {sDoc.degrees || (requestedDesign === "d20" ? "" : "MBBS, MD")}
                           </p>
                           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
                             <span style={{ fontSize: 12, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 500 }}>

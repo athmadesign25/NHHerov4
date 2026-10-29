@@ -11,13 +11,13 @@ function normalize(value: string): string {
 }
 
 /** Search the stakeholder directory without converting API identities into bookable fixtures. */
-export function searchDesign17Directory(directory: readonly DoctorListingItem[], query: string): DoctorListingItem[] {
+export function searchDesign17Directory(directory: readonly DoctorListingItem[], query: string, allowedIds: ReadonlySet<string> = fixtureIds): DoctorListingItem[] {
   const terms = normalize(query).split(" ").filter(Boolean);
   return directory.filter(doctor => {
-    if (!fixtureIds.has(doctor.id)) return false;
+    if (!allowedIds.has(doctor.id)) return false;
     if (!terms.length) return true;
     const searchable = normalize([
-      doctor.name, doctor.speciality, doctor.city, doctor.hospital,
+      doctor.name, doctor.speciality, ...(doctor.specialityAliases ?? []), doctor.city, doctor.hospital,
       ...(doctor.expertise ?? []), ...(doctor.hospitals ?? []),
       ...(doctor.practiceLocations ?? []).flatMap(practice => [practice.hospital, practice.city]),
     ].join(" "));

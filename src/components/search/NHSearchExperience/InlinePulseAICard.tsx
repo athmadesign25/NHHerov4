@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -406,7 +407,7 @@ export default function InlinePulseAICard({
                             <span>Available Today</span>
                           </span>
                           <Link
-                            href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}&ai=true`}
+                            href={`/doctors/${encodeURIComponent(doc.id)}/book?design=${DEFAULT_DOCTOR_DESIGN}&city=${encodeURIComponent(selectedLocation)}&ai=true`}
                             className={styles.pulseCuratedDocBookBtn}
                           >
                             <span>Book</span>

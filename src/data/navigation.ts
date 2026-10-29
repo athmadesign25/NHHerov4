@@ -1,7 +1,9 @@
+import { buildSearchUrl } from "@/features/search/searchTabs";
+
 export const footerLinks = {
   "Patient Care": [
-    { label: "Book Appointment", href: "/doctors" },
-    { label: "Find a Doctor", href: "/doctors" },
+    { label: "Book Appointment", href: buildSearchUrl() },
+    { label: "Find a Doctor", href: buildSearchUrl() },
     { label: "Our Specialities", href: "/specialities/cardiology" },
     { label: "Our Hospitals", href: "/" },
     { label: "Health Packages", href: "/" },

@@ -13,11 +13,12 @@ export interface LanguageShortcutProps {
   mode: ConsultationMode;
   location: string;
   now?: Date;
+  requireSuppliedLanguage?: boolean;
   onChange: (filters: DoctorFilters) => void;
 }
 
-export default function LanguageShortcut({ doctors, matchingDoctors, filters, mode, location, now, onChange }: LanguageShortcutProps) {
-  const option = getDesign16LanguageShortcut(doctors, filters, mode, location, now, matchingDoctors);
+export default function LanguageShortcut({ doctors, matchingDoctors, filters, mode, location, now, requireSuppliedLanguage, onChange }: LanguageShortcutProps) {
+  const option = getDesign16LanguageShortcut(doctors, filters, mode, location, now, matchingDoctors, requireSuppliedLanguage);
   if (!option) return null;
   return <div className={styles.group} role="group" aria-label="Consultation language" data-d3-ui>
     <button type="button" className={`${chip.chip} ${styles.option}`} aria-pressed={option.selected}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, type RefObject } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpDown, Building2, Video, X } from "lucide-react";
 import { availabilityLabels, type ConsultationMode, type DoctorFilters, type DoctorSort } from "@/features/search/doctorListing";
@@ -25,19 +26,20 @@ interface Props {
 }
 
 /** Shared consultation toggle; Design 16 places it alongside search. */
-export function DoctorConsultationToggle({ mode, onModeChange, modeRef }: { mode: ConsultationMode; onModeChange: (mode: ConsultationMode) => void; modeRef?: RefObject<HTMLFieldSetElement | null> }) {
+export function DoctorConsultationToggle({ mode, onModeChange, modeRef, availableModes, iconVariant = "outline" }: { mode: ConsultationMode; onModeChange: (mode: ConsultationMode) => void; modeRef?: RefObject<HTMLFieldSetElement | null>; availableModes?: readonly ConsultationMode[]; iconVariant?: "outline" | "availability" }) {
   const id = useId();
   const reducedMotion = Boolean(useReducedMotion());
   const transition = { duration: reducedMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] as const };
-  return <fieldset ref={modeRef} className={styles.mode}>
+  const options = (["hospital", "video"] as const).filter(value => !availableModes || availableModes.includes(value));
+  return <fieldset ref={modeRef} className={styles.mode} data-single-mode={options.length === 1 || undefined}>
         <legend className={styles.srOnly}>Consultation mode</legend>
         <motion.span className={styles.modeIndicator} aria-hidden initial={false}
-          animate={{ x: mode === "video" ? "100%" : "0%" }} transition={transition} />
-        {(["hospital", "video"] as const).map((value) => {
+          animate={{ x: options.indexOf(mode) > 0 ? "100%" : "0%" }} transition={transition} />
+        {options.map((value) => {
           const Icon = value === "hospital" ? Building2 : Video;
           return <label key={value} className={styles.modeOption}>
             <input type="radio" name={`${id}-mode`} value={value} aria-label={value === "hospital" ? "Hospital visit" : "Video consultation"} aria-describedby="d3-refinement-help" checked={mode === value} onChange={() => onModeChange(value)} />
-            <span className={styles.modeLabel}><Icon size={16} aria-hidden />{value === "hospital" ? "Hospital visit" : "Video consultation"}</span>
+            <span className={styles.modeLabel}>{iconVariant === "availability" ? <Image src={`/icons/doctor-card/${value}.svg`} alt="" width={16} height={16} className={styles.modeImage} /> : <Icon size={16} aria-hidden />}{value === "hospital" ? "Hospital visit" : "Video consultation"}</span>
           </label>;
         })}
       </fieldset>;

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buildSearchUrl } from "@/features/search/searchTabs";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
@@ -838,7 +839,7 @@ export default function NHSearchExperience({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              const target = `/search/doctors?design=d17-lite&location=${encodeURIComponent(selectedLocation || "All")}`;
+              const target = buildSearchUrl({ location: selectedLocation || "All" });
               router.push(target);
             }}
             aria-label="Book Appointment"

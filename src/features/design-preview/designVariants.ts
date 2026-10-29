@@ -32,9 +32,12 @@ export interface DesignScope {
   variants: DesignVariant[];
 }
 
+/** Current public doctor discovery and appointment journey. */
+export const DEFAULT_DOCTOR_DESIGN = "d20";
+
 export const DESIGN_SCOPES = {
   "search-top": {
-    defaultVariant: "original",
+    defaultVariant: DEFAULT_DOCTOR_DESIGN,
     variants: [
       { id: "original", label: "Original", note: "Pre-redesign UI" },
       { id: "d1", label: "Design 1", note: "Compact sticky search · mobile filters" },
@@ -59,6 +62,7 @@ export const DESIGN_SCOPES = {
       { id: "d17-lite", label: "Design 17 – Lite", note: "Pearl glass cards · same layout and booking experience" },
       { id: "d18", label: "Design 18", note: "Pearl glass · appointment workspace · connected booking" },
       { id: "d19", label: "Design 19", note: "Pearl glass · book inside the doctor card" },
+      { id: "d20", label: "Design 20", note: "Design 19 baseline · doctor card refinements" },
     ],
   },
 } satisfies Record<string, DesignScope>;

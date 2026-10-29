@@ -16,6 +16,9 @@ interface RealHospital {
 // POI names/localities from NH's official hospital pages and their Maps links.
 // https://www.narayanahealth.org/hospitals-clinics/bangalore/mazumdar-shaw-medical-centre-bommasandra
 // https://www.narayanahealth.org/hospitals-clinics/mumbai/srcc-childrens-hospital
+// Additional exact unit names from the verified featured clinicians' profiles:
+// https://www.narayanahealth.org/c/bangalore/cardiac-surgery-adult/dr-devi-prasad-shetty
+// https://www.narayanahealth.org/c/bangalore/paediatric-surgery/dr-ashley-lucien-joseph-d-cruz
 // Keep street numbers out: Maps may otherwise select the street address instead
 // of the named hospital, even when the hospital name precedes that address.
 // The kilometres are deliberately seeded stakeholder-preview data, not routes.
@@ -31,6 +34,16 @@ const realHospitals = new Map<string, RealHospital>([
     id: "mazumdar-shaw-bommasandra",
     city: "Bangalore",
     destination: "Mazumdar Shaw Medical Center, Bommasandra, Bengaluru",
+  }],
+  ["Narayana Institute of Cardiac Sciences, Bangalore", {
+    id: "narayana-institute-cardiac-sciences-bangalore",
+    city: "Bangalore",
+    destination: "Narayana Institute of Cardiac Sciences, Bangalore",
+  }],
+  ["Narayana Multispeciality Hospital, HSR Bangalore", {
+    id: "narayana-multispeciality-hsr-bangalore",
+    city: "Bangalore",
+    destination: "Narayana Multispeciality Hospital, HSR Bangalore",
   }],
   ["SRCC Children's Hospital, Mumbai", {
     id: "srcc-childrens-haji-ali",

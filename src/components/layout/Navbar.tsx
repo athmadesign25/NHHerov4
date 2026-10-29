@@ -283,7 +283,7 @@ export default function Navbar() {
                   <DoctorNavigationLink href="/book-an-appointment/gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</DoctorNavigationLink>
                   <DoctorNavigationLink href="/book-an-appointment/ent-specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</DoctorNavigationLink>
                   <DoctorNavigationLink href="/book-an-appointment/dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</DoctorNavigationLink>
-                  <DoctorNavigationLink href="/search/doctors?design=d3&specialties=Dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</DoctorNavigationLink>
+                  <DoctorNavigationLink href="/search/doctors?specialties=Dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, #4A5568)", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</DoctorNavigationLink>
                 </div>
                 <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, #E2E8F0)", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
                   <DoctorNavigationLink href="/book-an-appointment" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, #034EA2)", display: "flex", alignItems: "center", gap: "2px" }}>
@@ -762,13 +762,13 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
+                      <DoctorNavigationLink href="/book-an-appointment" onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                           <CalendarCheck size={18} color="#94a3b8" />
                           <span className={styles.coreNavTitle}>Book Visit</span>
                         </div>
                         <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </Link>
+                      </DoctorNavigationLink>
 
                       <button onClick={() => setActivePane('search')} className={styles.coreNavLink}>
                         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

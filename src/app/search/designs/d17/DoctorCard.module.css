@@ -204,7 +204,7 @@
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) { .card:hover .photo { transform: scale(1.02); } }
 /* Lite changes only the palette; both previews share the same card structure. */
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .card {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .card {
   --card-night: var(--d17-lite-surface);
   --card-ink: var(--d17-lite-ink);
   --card-muted: var(--color-text-secondary);
@@ -214,10 +214,10 @@
   --icon-glass-active-shadow: inset 0 1px 0 var(--color-bg-card), 0 calc(var(--sp-1) / 4) var(--sp-1) color-mix(in srgb, var(--card-ink) 7%, transparent);
   border-color: color-mix(in srgb, var(--card-ink) 18%, var(--card-night));
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .spotlight {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .spotlight {
   --spotlight-tint: var(--color-primary-mid);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .body {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .body {
   --panel-frost: color-mix(in srgb, var(--color-bg-card) 70%, var(--color-border));
   --panel-glow-tint: color-mix(in srgb, var(--color-text-secondary) 75%, var(--color-bg-card));
   --panel-glow: radial-gradient(ellipse 70% var(--sp-6) at calc(50% - (var(--card-target) + var(--sp-1)) / 2) calc(100% - var(--sp-2)), color-mix(in srgb, var(--panel-glow-tint) 16%, transparent), color-mix(in srgb, var(--panel-glow-tint) 7%, transparent) 40%, color-mix(in srgb, var(--panel-glow-tint) 2%, transparent) 68%, transparent 100%);
@@ -227,21 +227,21 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 12%, transparent), inset 0 1px 0 var(--color-bg-card), inset 0 -1px 0 color-mix(in srgb, var(--color-bg-card) 70%, transparent), 0 var(--sp-1) var(--sp-3) color-mix(in srgb, var(--card-ink) 7%, transparent);
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .body {
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .body {
     background: var(--panel-glow), var(--panel-sheen), var(--panel-tint), color-mix(in srgb, var(--panel-frost) 64%, transparent);
     backdrop-filter: blur(var(--sp-4)) saturate(105%);
     -webkit-backdrop-filter: blur(var(--sp-4)) saturate(105%);
   }
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .tagExecutive {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .tagExecutive {
   --tag-tint: color-mix(in srgb, var(--color-warning) 18%, var(--card-ink));
   --tag-surface: color-mix(in srgb, var(--color-bg-card) 92%, var(--color-warning));
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .tagBooked {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .tagBooked {
   --tag-tint: color-mix(in srgb, var(--color-primary-dark) 80%, var(--card-ink));
   --tag-surface: var(--color-primary-light);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .tag {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .tag {
   color: var(--tag-tint);
   border-color: color-mix(in srgb, var(--tag-tint) 10%, transparent);
   background: linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 16%, transparent), transparent 70%), color-mix(in srgb, var(--tag-surface) 64%, transparent);
@@ -249,7 +249,7 @@
   backdrop-filter: blur(var(--sp-1)) saturate(115%);
   -webkit-backdrop-filter: blur(var(--sp-1)) saturate(115%);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) :is(.directions, .call, .profileCue) {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) :is(.directions, .call, .profileCue) {
   color: var(--color-primary-dark);
   border-color: var(--card-line);
   background: color-mix(in srgb, var(--color-bg-card) 78%, transparent);
@@ -257,44 +257,44 @@
   backdrop-filter: blur(var(--sp-2)) saturate(105%);
   -webkit-backdrop-filter: blur(var(--sp-2)) saturate(105%);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .directions { transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .profileCueLabel {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .directions { transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .profileCueLabel {
   color: var(--color-primary-dark);
   background: color-mix(in srgb, var(--color-bg-card) 96%, transparent);
   border-color: var(--color-border);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .card :is(a, button):focus-visible { outline-color: var(--color-primary); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .profileAction:focus-visible .profileCue,
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) :is(.directions, .call):is(:focus-visible, :active),
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .profileCue:active {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .card :is(a, button):focus-visible { outline-color: var(--color-primary); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .profileAction:focus-visible .profileCue,
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) :is(.directions, .call):is(:focus-visible, :active),
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .profileCue:active {
   background: var(--icon-glass-active-fill);
   border-color: var(--icon-glass-active-line);
   box-shadow: var(--icon-glass-active-shadow);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .book {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .book {
   color: var(--color-text-inverse);
   background: var(--d17-lite-accent);
   border-color: var(--d17-lite-accent);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .book:active {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .book:active {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .locationOption[aria-pressed="true"] .locationCheck { color: var(--color-text-inverse); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .locationsPopover { box-shadow: 0 var(--sp-2) var(--sp-4) color-mix(in srgb, var(--card-ink) 16%, transparent); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .locationOption[aria-pressed="true"] .locationCheck { color: var(--color-text-inverse); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .locationsPopover { box-shadow: 0 var(--sp-2) var(--sp-4) color-mix(in srgb, var(--card-ink) 16%, transparent); }
 @media (hover: hover) and (pointer: fine) {
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .book:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) :is(.directions, .call, .profileCue):hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .book:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) :is(.directions, .call, .profileCue):hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
 }
 @media (prefers-reduced-motion: reduce) { .card, .card * { transition: none; } }
 /* Design 19 shares the same quiet glass across browsing and booking states. */
-:global([data-design="d19"]) .body {
+:global(:is([data-design="d19"], [data-design="d20"])) .body {
   background: var(--d19-summary-glass);
   backdrop-filter: blur(var(--d19-summary-blur)) saturate(108%);
   -webkit-backdrop-filter: blur(var(--d19-summary-blur)) saturate(108%);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 15%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-text-inverse) 65%, transparent);
 }
-:global([data-design="d19"]) .body::before {
+:global(:is([data-design="d19"], [data-design="d20"])) .body::before {
   content: "";
   position: absolute;
   inset-inline: 0;
@@ -303,24 +303,24 @@
   background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--card-night) 10%, transparent));
   pointer-events: none;
 }
-:global([data-design="d19"]) .card[data-locations-open] .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
+:global(:is([data-design="d19"], [data-design="d20"])) .card[data-locations-open] .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-  :global([data-design="d19"]) .body::before { display: none; }
+  :global(:is([data-design="d19"], [data-design="d20"])) .body::before { display: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .card { --icon-glass-active-fill: color-mix(in srgb, var(--card-ink) 20%, var(--card-night)); }
   .body, .profileCue, .profileCueLabel, .locationsPopover, .call { background: var(--card-night); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .body { background: var(--panel-frost); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .card { --icon-glass-active-fill: var(--color-bg-card); }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) :is(.directions, .call, .profileCue, .profileCueLabel) { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .body { background: var(--panel-frost); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .card { --icon-glass-active-fill: var(--color-bg-card); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) :is(.directions, .call, .profileCue, .profileCueLabel) { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 @media (forced-colors: active) {
-  .card, :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .card { --icon-glass-active-fill: Canvas; --icon-glass-active-line: Highlight; --icon-glass-active-shadow: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) :is(.body, .book, .tag, .locationsPopover, .directions, .call, .profileCue, .profileCueLabel) { color: CanvasText; background: Canvas; border-color: ButtonText; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .card :is(a, button):focus-visible { outline-color: Highlight; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d19"])) .book:is(:hover, :active) { background: Canvas; border-color: ButtonText; }
+  .card, :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .card { --icon-glass-active-fill: Canvas; --icon-glass-active-line: Highlight; --icon-glass-active-shadow: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) :is(.body, .book, .tag, .locationsPopover, .directions, .call, .profileCue, .profileCueLabel) { color: CanvasText; background: Canvas; border-color: ButtonText; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .card :is(a, button):focus-visible { outline-color: Highlight; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .book:is(:hover, :active) { background: Canvas; border-color: ButtonText; }
   .portrait, .scrim { visibility: hidden; }
   .card, .body, .profileCue, .profileCueLabel, .tag, .locationsPopover, .book, .call { color: CanvasText; background: Canvas; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: ButtonText; }
   .card :is(a, button):focus-visible { outline-color: Highlight; }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { ArrowUpDown, Filter, History, X } from "lucide-react";
+import { ArrowUpDown, Filter, History, Video, X } from "lucide-react";
 import type { ConsultationMode, DoctorFilters, DoctorSort } from "@/features/search/doctorListing";
 import { DoctorConsultationToggle } from "../../doctors/DoctorListingControls";
 import DoctorRefinementRow from "../d3/DoctorRefinementRow";
@@ -25,6 +25,7 @@ interface Props {
   historySelected: boolean;
   historyLabel?: string;
   compactMobile?: boolean;
+  videoSmartFilter?: boolean;
   filterCount?: number;
   onOpenFilters?: () => void;
   onModeChange: (mode: ConsultationMode) => void;
@@ -39,8 +40,8 @@ interface Props {
 export default function Design16Refinements(props: Props) {
   const [locationFeedback, setLocationFeedback] = useState("");
   const unavailable = !props.hasDates || props.loading || props.error;
-  return <div className={`${styles.layout} ${props.compactMobile ? styles.compactMobile : ""}`}>
-    <DoctorConsultationToggle mode={props.mode} onModeChange={props.onModeChange} />
+  return <div className={`${styles.layout} ${props.compactMobile ? styles.compactMobile : ""} ${props.videoSmartFilter ? styles.videoSmartFilter : ""}`}>
+    {!props.videoSmartFilter && <DoctorConsultationToggle mode={props.mode} onModeChange={props.onModeChange} />}
     <div className={styles.shortcuts}>
       <div className={styles.shortcutBar}>
       {props.compactMobile && props.onOpenFilters && <button type="button" className={`${chip.chip} ${styles.filterButton}`}
@@ -55,6 +56,10 @@ export default function Design16Refinements(props: Props) {
           title={props.historyRequiresLogin ? `Sign in to see ${props.historyLabel === "Previously consulted" ? "doctors you’ve consulted before" : "doctors you’ve booked before"}` : undefined} onClick={props.onHistoryChange}>
           <History size={16} aria-hidden />{props.historyLabel ?? "Previously booked"}{props.historySelected && <X size={14} aria-hidden />}
         </button>
+        {props.videoSmartFilter && <button type="button" className={chip.chip} aria-pressed={props.mode === "video"}
+          aria-describedby="d3-refinement-help" onClick={() => props.onModeChange(props.mode === "video" ? "hospital" : "video")}>
+          <Video size={16} aria-hidden />Video consultation{props.mode === "video" && <X size={14} aria-hidden />}
+        </button>}
         {props.mode === "hospital" && <NearMeLocation location={props.location} selected={props.sort === "nearest"} disabled={props.loading || props.error}
           onLocated={props.onNearMe} onClear={() => props.onSortChange("relevance")} onFeedback={setLocationFeedback} />}
         <div className={styles.group} role="group" aria-label="Appointment date and order">

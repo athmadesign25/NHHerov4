@@ -1,0 +1,50 @@
+.reserve { height: var(--sp-12); }
+.bar {
+  --bar-surface: var(--d17-lite-surface);
+  position: fixed; z-index: 40; inset: auto var(--sp-2) max(var(--sp-2), env(safe-area-inset-bottom));
+  width: min(calc(100% - var(--sp-4)), calc(var(--sp-16) * 8)); margin-inline: auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--sp-16) * 1.4), auto); align-items: center; gap: var(--sp-3);
+  padding: calc(var(--sp-1) * 1.5) var(--sp-3); border: 1px solid color-mix(in srgb, var(--d17-lite-ink) 12%, transparent); border-radius: var(--radius-xl);
+  color: var(--d17-lite-ink); background: radial-gradient(ellipse at 82% 100%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 58%), linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 70%, transparent), transparent 75%), color-mix(in srgb, var(--bar-surface) 84%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-bg-card) 80%, transparent), 0 var(--sp-1) var(--sp-4) color-mix(in srgb, var(--d17-lite-ink) 10%, transparent);
+  backdrop-filter: blur(calc(var(--sp-1) * 1.5)) saturate(108%); -webkit-backdrop-filter: blur(calc(var(--sp-1) * 1.5)) saturate(108%);
+}
+.bar::before { content: ""; position: absolute; inset: calc(var(--sp-2) * -1) 0 auto; height: var(--sp-2); pointer-events: none; background: linear-gradient(transparent, color-mix(in srgb, var(--bar-surface) 15%, transparent)); }
+.amount { display: grid; grid-template-columns: auto 1fr; gap: 0 var(--sp-2); align-items: baseline; }
+.amount > span { grid-column: 1 / -1; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: 1.5; }
+.amount strong { font-size: var(--font-size-lg); font-weight: 600; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.amount small { color: var(--journey-paper-success); font-size: var(--font-size-xs); line-height: 1.5; }
+.methods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(var(--sp-1) / 2); border: 0; border-radius: var(--radius-full); padding: calc(var(--sp-1) / 2); margin: 0; min-width: 0; background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
+.methods label { position: relative; cursor: pointer; min-width: 0; }
+.methodLabel { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: calc(var(--sp-1) / 2); min-height: calc(var(--sp-1) * 5); padding: 0 var(--sp-2); border-radius: var(--radius-full); color: var(--color-text-secondary); font-size: var(--font-size-sm); font-weight: 500; white-space: nowrap; transition: color var(--transition-fast); }
+.methods input, .srOnly { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.selection { position: absolute; inset: 0; pointer-events: none; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-emergency-light) 80%, var(--color-bg-card)); }
+.methods label:has(input:checked) .methodLabel { color: var(--d7-action); font-weight: 600; }
+.methods label:has(input:focus-visible) .methodLabel { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.methodNote { display: flex; align-items: center; gap: var(--sp-1); color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.submit { display: flex; align-items: center; justify-content: center; gap: var(--sp-2); min-height: var(--sp-6); padding: 0 var(--sp-3); border: 0; border-radius: var(--radius-md); background: var(--color-primary); color: var(--color-text-inverse); font: inherit; font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; transition: background var(--transition-fast); }
+.submit:disabled { opacity: .46; cursor: not-allowed; }
+.submit:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.feedback { grid-column: 1 / -1; grid-row: 1; margin: 0 0 calc(var(--sp-2) * -1); font-size: var(--font-size-xs); color: var(--color-text-secondary); line-height: 1.4; text-align: right; }
+@media (hover: hover) {
+  .submit:hover:not(:disabled) { background: var(--color-primary-dark); }
+  .methods label:not(:has(input:checked)):hover .methodLabel { background: color-mix(in srgb, var(--color-bg-card) 55%, transparent); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .amount { display: flex; flex-direction: column; }
+  .methods .methodLabel { padding-inline: var(--sp-1); }
+}
+@media (max-width: 767px) {
+  .reserve { height: calc(var(--sp-16) + var(--sp-4)); }
+  .bar { grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-1) var(--sp-2); padding: calc(var(--sp-1) * 1.5); inset-inline: var(--sp-1); width: calc(100% - var(--sp-2)); bottom: max(var(--sp-1), env(safe-area-inset-bottom)); }
+  .methods, .methodNote { grid-column: 1 / -1; grid-row: 1; }
+  .methods { justify-self: stretch; padding: calc(var(--sp-1) / 4); }
+  .methodLabel { min-height: calc(var(--sp-1) * 5.5); font-size: var(--font-size-xs); padding-inline: var(--sp-1); }
+  .amount { display: flex; flex-direction: column; grid-row: 2; }
+  .amount small { font-size: var(--font-size-xs); }
+  .submit { grid-row: 2; padding-inline: var(--sp-2); gap: var(--sp-1); }
+  .feedback { grid-row: 2; text-align: right; margin: 0; }
+  .bar[data-feedback="true"] :is(.amount, .submit) { grid-row: 3; }
+}
+@media (prefers-reduced-motion: reduce) { .bar * { transition: none; animation: none; } }
+@media (prefers-reduced-transparency: reduce) { .bar { background: var(--color-bg-card); backdrop-filter: none; } }

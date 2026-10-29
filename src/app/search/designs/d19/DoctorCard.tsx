@@ -26,7 +26,7 @@ import chip from "../../doctors/DoctorControlChip.module.css";
 import styles from "./DoctorCard.module.css";
 
 type Props = Omit<ComponentProps<typeof Design17DoctorCard>, "cardDesign"> & {
-  cardDesign?: "d17" | "d17-lite" | "d18" | "d19";
+  cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20";
   active?: boolean;
   onClose?: () => void;
   initialSelection?: AppointmentSelection;
@@ -97,7 +97,7 @@ function BookingCard({ doctor, initialSelection, returnTo, onClose, resume }: {
     return () => cancelAnimationFrame(frame);
   }, [flow.phase]);
 
-  return <><motion.article className={styles.card} data-doctor-card data-d19-booking-card={doctor.id} aria-labelledby={`${id}-doctor`}
+  return <><motion.article className={styles.card} data-doctor-card data-d19-booking-card={doctor.id} data-booking-card={doctor.id} aria-labelledby={`${id}-doctor`}
     layoutId={reduced ? undefined : `d19-card-${doctor.id}`} transition={{ duration: .32, ease: [.22, 1, .36, 1] }}>
     <header className={styles.header}>
       <motion.div className={styles.portrait} layoutId={reduced ? undefined : `d19-portrait-${doctor.id}`}>

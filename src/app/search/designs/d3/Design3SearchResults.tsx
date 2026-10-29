@@ -1,4 +1,5 @@
 "use client";
+import { design20ListingReturnTo, design20RequestedSelection } from "@/features/booking/design20/model";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type ComponentType, type MouseEvent } from "react";
 import type Lenis from "lenis";
@@ -15,7 +16,7 @@ import { useDesign3Search } from "@/features/search/useDesign3Search";
 import { useDesign3BookedDoctors } from "@/features/search/useDesign3BookedDoctors";
 import { withDesign3DemoMetadata } from "@/features/search/design3DoctorMetadata";
 import { design3CityDoctors, getDesign3CityDoctor } from "@/features/search/design3CityDoctors";
-import { DOCTOR_LANDING_CITIES, DOCTOR_LANDING_SPECIALITIES, getDoctorLandingContext, getDoctorLandingCopy } from "@/features/search/doctorLandingPages";
+import { DOCTOR_LANDING_CITIES, getDoctorLandingContext, getDoctorListingCopy } from "@/features/search/doctorLandingPages";
 import { doctorListingParams, doctorListingUrl } from "@/features/search/doctorListingNavigation";
 import { DESIGN16_BOOKING_DAYS, indiaDate } from "@/features/booking/appointmentTime";
 import { design16DoctorsInLocation, readDesign16Date, refineDesign16Doctors, findDesign16NextAvailability, hasDesign16Availability } from "@/features/search/design16Refinements";
@@ -28,6 +29,7 @@ import { design17BookingUrl } from "@/features/search/design17Booking";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
 import { searchDesign17Directory } from "@/features/search/design17DirectorySearch";
 import { getDesign3BookingDoctor } from "@/features/booking/doctors";
+import { design20Directory, design20SearchableIds, getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import { presentationDoctorName } from "@/features/design-preview/presentationCopy";
 import { design17RequestedSelection } from "@/features/booking/design17/model";
 import { design18ListingReturnTo } from "@/features/booking/design18/model";
@@ -53,7 +55,7 @@ import SearchState, { ResultSkeletons } from "./SearchState";
 import styles from "./Design3SearchResults.module.css";
 import ui from "./DoctorSearchTheme.module.css";
 
-const directory = [...withDesign3DemoMetadata(searchDoctorsData.map(fromDirectoryDoctor)), ...design3CityDoctors];
+const previewDirectory = [...withDesign3DemoMetadata(searchDoctorsData.map(fromDirectoryDoctor)), ...design3CityDoctors];
 const titles: Record<SearchTabId, string> = {
   doctors: "Find the right doctor", hospitals: "Find a hospital or clinic", specialties: "Explore our specialities",
   treatments: "Explore treatments & procedures", packages_tests: "Health packages & tests", articles: "Health articles & insights",
@@ -61,12 +63,14 @@ const titles: Record<SearchTabId, string> = {
 
 interface Props {
   catalogs: SearchCatalogs;
-  previewVariant?: "d3" | "d4" | "d5" | "d6" | "d16" | "d17" | "d17-lite" | "d18" | "d19";
-  cardComponent?: ComponentType<ComponentProps<typeof DoctorCard> & { priority?: boolean; bookingDate?: string; focusTerms?: string[]; cardDesign?: "d17" | "d17-lite" | "d18" | "d19"; listingReturnTo?: string; active?: boolean; onClose?: () => void; initialSelection?: AppointmentSelection; resume?: boolean }>;
+  previewVariant?: "d3" | "d4" | "d5" | "d6" | "d16" | "d17" | "d17-lite" | "d18" | "d19" | "d20";
+  cardComponent?: ComponentType<ComponentProps<typeof DoctorCard> & { priority?: boolean; bookingDate?: string; focusTerms?: string[]; cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20"; listingReturnTo?: string; active?: boolean; onClose?: () => void; initialSelection?: AppointmentSelection; resume?: boolean }>;
   gridClassName?: string;
 }
 
 export default function Design3SearchResults({ catalogs, previewVariant = "d3", cardComponent: Card = DoctorCard, gridClassName = "" }: Props) {
+  const directory = previewVariant === "d20" ? design20Directory : previewDirectory;
+  const scheduleContext = previewVariant === "d20" ? "d20" : undefined;
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -79,13 +83,14 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const { filters: listingFilters, mode, sort } = readListingParams(params);
   const [availabilityNow, refreshAvailability] = useState(() => new Date());
   const isDesign18 = previewVariant === "d18";
-  const isDesign19 = previewVariant === "d19";
+  const isDesign19 = previewVariant === "d19" || previewVariant === "d20";
   const isDesign17 = previewVariant === "d17" || previewVariant === "d17-lite" || isDesign18 || isDesign19;
-  const cardDesign = isDesign19 ? "d19" : isDesign18 ? "d18" : previewVariant === "d17-lite" ? "d17-lite" : "d17";
+  const cardDesign = isDesign19 ? (previewVariant === "d20" ? "d20" : "d19") : isDesign18 ? "d18" : previewVariant === "d17-lite" ? "d17-lite" : "d17";
   const smartRefinements = previewVariant === "d16" || isDesign17;
-  const listingReturnTo = isDesign19 ? design19ListingReturnTo(`${pathname}?${searchParams}`) : isDesign18 ? design18ListingReturnTo(`${pathname}?${searchParams}`) : isDesign17 ? design17ListingReturnTo(`${pathname}?${searchParams}`, cardDesign) : undefined;
+  const listingReturnToForCard = previewVariant === "d20" ? design20ListingReturnTo : design19ListingReturnTo;
+  const listingReturnTo = isDesign19 ? listingReturnToForCard(`${pathname}?${searchParams}`) : isDesign18 ? design18ListingReturnTo(`${pathname}?${searchParams}`) : isDesign17 ? design17ListingReturnTo(`${pathname}?${searchParams}`, cardDesign) : undefined;
   const bookingId = isDesign18 || isDesign19 ? searchParams.get("booking") : null;
-  const bookingSource = bookingId ? getDesign3BookingDoctor(bookingId) : null;
+  const bookingSource = bookingId ? (previewVariant === "d20" ? getDesign20BookingDoctor(bookingId) : getDesign3BookingDoctor(bookingId)) : null;
   const activeBooking = bookingSource ? { ...bookingSource, name: presentationDoctorName(bookingSource.name) } : null;
   const workspacePosition = useRef<{ scroll: number; doctorId: string } | null>(null);
   const previousBooking = useRef<string | null>(null);
@@ -133,7 +138,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       // Book click keeps its exact current position and never scrolls the page.
       if (!openedHere.current) {
         const frame = requestAnimationFrame(() => {
-          const card = document.querySelector<HTMLElement>(`[data-d19-booking-card="${CSS.escape(bookingId)}"]`);
+          const card = document.querySelector<HTMLElement>(`[data-booking-card="${CSS.escape(bookingId)}"]`);
           if (!card) return;
           const top = Math.max(0, window.scrollY + card.getBoundingClientRect().top - parseFloat(getComputedStyle(card).scrollMarginTop));
           const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
@@ -149,7 +154,8 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   }, [bookingId, isDesign19]);
   const cardSelectionParams = new URLSearchParams(searchParams.toString());
   if (isDesign19 && searchParams.get("bookingMode")) cardSelectionParams.set("mode", searchParams.get("bookingMode")!);
-  const activeCardSelection = isDesign19 && activeBooking ? design17RequestedSelection(activeBooking, cardSelectionParams) : undefined;
+  const activeCardSelection = isDesign19 && activeBooking
+    ? (previewVariant === "d20" ? design20RequestedSelection : design17RequestedSelection)(activeBooking, cardSelectionParams) : undefined;
   const customDate = smartRefinements ? readDesign16Date(params.get("appointmentDate") ?? "", availabilityNow) : "";
   const filters = customDate ? { ...listingFilters, availability: "any" as const } : listingFilters;
   const catalogFilters = readCatalogFilters(params, tab.id);
@@ -160,9 +166,9 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const loading = apiCategory && request.loading;
   const error = apiCategory && request.error;
   const doctorTab = tab.id === "doctors";
-  const selectedSpeciality = filters.specialties.length === 1 ? DOCTOR_LANDING_SPECIALITIES.find(item => item.label === filters.specialties[0]) : undefined;
+  const selectedSpeciality = filters.specialties.length === 1 ? filters.specialties[0] : undefined;
   const selectedCity = DOCTOR_LANDING_CITIES.find(item => item.value === location);
-  const doctorCopy = getDoctorLandingCopy({ speciality: selectedSpeciality, city: selectedCity });
+  const doctorCopy = getDoctorListingCopy({ specialties: filters.specialties, city: selectedCity });
   const { isUserLoggedIn } = useAuthState();
   const sessionBookedDoctors = useDesign3BookedDoctors(doctorTab && (smartRefinements || !live) && isUserLoggedIn);
   const bookedDoctors = useMemo(() => design17ConsultationHistory(sessionBookedDoctors, {
@@ -209,16 +215,21 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
     } else window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
   }, []);
 
-  const doctors = localDoctorSearch ? searchDesign17Directory(design16DoctorsInLocation(directory, location), query)
+  const doctors = localDoctorSearch ? searchDesign17Directory(design16DoctorsInLocation(directory, location), query, previewVariant === "d20" ? design20SearchableIds : undefined)
     : live ? (request.data?.doctors ?? []).map(fromApiDoctor)
     : smartRefinements ? design16DoctorsInLocation(directory, location)
     : directory.filter((doctor) => location === "All" || getCityId(doctor.city) === getCityId(location));
-  const results = smartRefinements
-    ? refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, nearestUnits)
+  const filteredResults = smartRefinements
+    ? refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, nearestUnits, scheduleContext)
     : sortDoctors(filterDoctors(doctors, filters, mode), sort, mode).map((doctor) => withSelectedDoctorHospital(doctor, filters.hospitals));
-  const hasDates = smartRefinements && hasDesign16Availability(doctors, mode, availabilityNow);
+  // A direct Book action has a specific doctor intent. Keep that card available
+  // while booking, even when prior directory filters would otherwise hide it.
+  const entryDoctor = previewVariant === "d20" && bookingId && !filteredResults.some(doctor => doctor.id === bookingId)
+    ? getDesign20ProfileDoctor(bookingId, cardSelectionParams) : null;
+  const results = entryDoctor ? [entryDoctor, ...filteredResults] : filteredResults;
+  const hasDates = smartRefinements && hasDesign16Availability(doctors, mode, availabilityNow, scheduleContext);
   const recovery = smartRefinements && !loading && !error && !results.length && (customDate || filters.availability !== "any")
-    ? findDesign16NextAvailability(doctors, filters, mode, customDate, previouslyBooked, bookedDoctors, availabilityNow) : null;
+    ? findDesign16NextAvailability(doctors, filters, mode, customDate, previouslyBooked, bookedDoctors, availabilityNow, scheduleContext) : null;
   const catalog = catalogResults(catalogs, query, location, request.data);
   const items = doctorTab ? [] : filterCatalog(catalog[tab.id as Exclude<SearchTabId, "doctors">], catalogFilters);
   const currentItems = doctorTab ? [] : catalog[tab.id as Exclude<SearchTabId, "doctors">];
@@ -228,7 +239,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
 
   const chooseNearestUnit = (doctorId: string, hospital: string) => {
     const selected = { ...nearestUnits, [doctorId]: hospital };
-    const reordered = refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, selected);
+    const reordered = refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, selected, scheduleContext);
     setNearestUnits(selected);
     // Keep a manually changed card mounted even if its new distance moves it
     // beyond the current batch, preserving its location-control focus.
@@ -247,7 +258,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
     next.delete("tab"); next.delete("city"); next.delete("cityId"); next.delete("search"); next.delete("query");
     next.set("design", previewVariant);
     if (isDesign19) {
-      for (const key of ["booking", "bookingMode", "hospital", "date", "step", "ref"]) next.delete(key);
+      for (const key of ["booking", "bookingMode", "bookingResume", "hospital", "date", "step", "ref"]) next.delete(key);
       openedHere.current = false;
       visitedCards.current.clear();
       setResumeCard(false);
@@ -306,8 +317,11 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       setResumeCard(visitedCards.current.has(doctor.id));
       visitedCards.current.add(doctor.id);
       const next = new URLSearchParams(searchParams.toString());
-      next.set("design", "d19"); next.set("booking", doctor.id); next.set("bookingMode", selectedMode); next.set("hospital", doctor.hospital);
-      if (customDate) next.set("date", customDate); else next.delete("date");
+      next.delete("bookingResume");
+      next.set("design", previewVariant); next.set("booking", doctor.id); next.set("bookingMode", selectedMode); next.set("hospital", doctor.hospital);
+      const cardDate = previewVariant === "d20" && event.currentTarget instanceof HTMLAnchorElement
+        ? new URL(event.currentTarget.href).searchParams.get("date") : null;
+      if (customDate || cardDate) next.set("date", customDate || cardDate!); else next.delete("date");
       if (bookingId) window.history.replaceState(null, "", `${pathname}?${next}`);
       else { openedHere.current = true; window.history.pushState(null, "", `${pathname}?${next}`); }
       return;
@@ -352,12 +366,12 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
 
   const dateFilteredDoctors = (draft: boolean) => smartRefinements ? refineDesign16Doctors(doctors.map(doctor => withSelectedDoctorHospital(doctor, (draft ? draftDoctors : filters).hospitals)),
     { ...emptyDoctorFilters(), availability: (draft ? draftDoctors : filters).availability },
-    mode, "relevance", draft ? draftDate : customDate, draft ? draftHistory : previouslyBooked, bookedDoctors, availabilityNow) : undefined;
+    mode, "relevance", draft ? draftDate : customDate, draft ? draftHistory : previouslyBooked, bookedDoctors, availabilityNow, {}, scheduleContext) : undefined;
   const renderFilters = (draft: boolean) => doctorTab
     ? <DoctorFilters doctors={doctors} matchingDoctors={dateFilteredDoctors(draft)} value={draft ? draftDoctors : filters} onChange={draft ? (value) => { setDraftDoctors(value); if (value.availability !== draftDoctors.availability) setDraftDate(""); } : changeDoctorFilters}
         showResultCounts={!isDesign17} availabilityEnabled={smartRefinements ? hasDates : doctors.some((doctor) => Boolean(doctor.availability[mode]))} mode={mode} />
     : <CatalogFilters tab={tab.id} items={currentItems} value={draft ? draftCatalog : catalogFilters} onChange={draft ? setDraftCatalog : changeCatalogFilters} />;
-  const draftCount = doctorTab ? (smartRefinements ? refineDesign16Doctors(doctors, draftDoctors, mode, sort, draftDate, draftHistory, bookedDoctors, availabilityNow).length : filterDoctors(doctors, draftDoctors, mode).length) : filterCatalog(currentItems, draftCatalog).length;
+  const draftCount = doctorTab ? (smartRefinements ? refineDesign16Doctors(doctors, draftDoctors, mode, sort, draftDate, draftHistory, bookedDoctors, availabilityNow, {}, scheduleContext).length : filterDoctors(doctors, draftDoctors, mode).length) : filterCatalog(currentItems, draftCatalog).length;
   const sample = !live || !apiCategory;
 
   return <div className={`${styles.page} ${doctorTab ? `${styles.doctorPage} ${ui.theme}` : ""}`} data-design={previewVariant} data-nav-theme="light">
@@ -366,14 +380,14 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       loading={loading} error={error} filterCount={filterCount} onOpenFilters={openFilters}
       onQuery={(value) => update((next) => { if (value) next.set("q", value); else next.delete("q"); }, true)}
       onLocation={(value) => update((next) => { next.delete("location"); if (value !== "All") next.set("location", value); if (smartRefinements && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}>
-      {smartRefinements ? <Design16Refinements compactMobile={isDesign17} onOpenFilters={openFilters} filterCount={filterCount} location={location} mode={mode} sort={sort} filters={filters} date={customDate}
+      {smartRefinements ? <Design16Refinements compactMobile={isDesign17} videoSmartFilter={previewVariant === "d20"} onOpenFilters={openFilters} filterCount={filterCount} location={location} mode={mode} sort={sort} filters={filters} date={customDate}
         minDate={indiaDate(availabilityNow)} maxDate={indiaDate(availabilityNow, DESIGN16_BOOKING_DAYS - 1)} hasDates={hasDates} loading={loading} error={error}
         historyRequiresLogin={!isUserLoggedIn} historySelected={previouslyBooked} historyLabel={historyLabel}
         onNearMe={city => { setNearestUnits({}); update(next => { next.set("location", city); next.set("sort", "nearest"); }, false, true); }}
         onModeChange={value => update(next => { next.set("mode", value); if (value === "video" && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}
         onSortChange={value => { if (value === "nearest") setNearestUnits({}); update(next => { if (value === "relevance") next.delete("sort"); else next.set("sort", value); }, false, true); }}
         onFiltersChange={changeDoctorFilters} onDateChange={changeDate} onHistoryChange={changeHistory}>
-        <LanguageShortcut doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={mode} location={location} now={availabilityNow} onChange={changeDoctorFilters} />
+        <LanguageShortcut doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={mode} location={location} now={availabilityNow} requireSuppliedLanguage={previewVariant === "d20"} onChange={changeDoctorFilters} />
         <ExpertiseShortcuts doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={mode} query={query} onChange={changeDoctorFilters} />
       </Design16Refinements> : <DoctorListingControls mode={mode} sort={sort} filters={filters}
         onModeChange={(value) => { if (value !== mode) update((next) => next.set("mode", value), false, true); }}
@@ -422,7 +436,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
           {doctorTab && <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{!loading && !error && visible > 16 ? (isDesign17 ? "More doctors loaded" : `Showing ${Math.min(visible, total)} of ${total} doctors`) : ""}</p>}
           {!loading && !error && total > 0 && <div ref={moreRef} className={styles.more} data-d3-ui>{!(doctorTab && isDesign17) && <p>Showing {Math.min(visible, total)} of {total}</p>}{!doctorTab && visible < total && <button type="button" className={styles.secondaryButton} onClick={() => setVisible((value) => Math.min(value + 16, total))}>Show more results</button>}</div>}
           {doctorTab && <div hidden={loading || error || visible < total}>
-            <DoctorListingFAQ speciality={selectedSpeciality?.label} city={selectedCity?.label} />
+            <DoctorListingFAQ speciality={selectedSpeciality} city={selectedCity?.label} />
           </div>}
           </div>
         </section>
@@ -462,8 +476,8 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       <p>{tab.id === "packages_tests" ? "Online booking for this package or test is currently unavailable here." : "Contact Narayana Health for further information."}</p>
     </SearchDialog>}
     </AnimatePresence>
-    {pendingUrl && <LoginModal isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }} />}
-    {historyLogin && <LoginModal isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }} />}
+    {pendingUrl && <LoginModal previewOtp={previewVariant === "d20"} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }} />}
+    {historyLogin && <LoginModal previewOtp={previewVariant === "d20"} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }} />}
     {!workspaceOpen && !(isDesign19 && bookingId) && <DesignSwitcher scope="search-top" currentVariant={previewVariant} onVariantChange={(variant) => {
       const next = new URLSearchParams(params);
       next.set("design", variant);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Send, Mic, Plus, Calendar, FileText, Heart,
@@ -15,6 +16,8 @@ import {
 import styles from "./PulseAIWorkspace.module.css";
 import lottie from "lottie-web";
 import PixelRipple from "@/components/ui/effects/PixelRipple";
+import { design20BookingEntryUrl } from "@/features/search/design20BookingEntry";
+import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
 
 function LottieAnimation({ animationPath, width = 60, height = 60 }: { animationPath: string; width?: number; height?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -3694,6 +3697,7 @@ function Workspace({
   isMaximized?: boolean;
   onToggleMaximize?: () => void;
 }) {
+  const router = useRouter();
   // Associated Accounts Profiles selector
   const [activeProfile, setActiveProfile] = useState(ASSOCIATED_PROFILES[0]);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -3918,6 +3922,23 @@ function Workspace({
     injectAI(resp);
   }, [isThinking, isLoggedIn, injectAI, tutorialStep, activeProfile]);
 
+  const openDoctorBooking = useCallback((doctor: Doctor, mode: "hospital" | "video" = "hospital") => {
+    // Pulse's private mock IDs overlap other directories. Resolve the clinician by name.
+    const doctorSlug = `dr-${doctor.name.toLowerCase().replace(/^dr[.\s]*/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+    const matchedDoctor = getDesign20DirectoryDoctor(doctorSlug);
+    const listingParams = new URLSearchParams({ design: "d20", location: matchedDoctor?.city || "Bangalore", mode });
+    if (!matchedDoctor) {
+      const speciality = doctor.speciality.split("·")[0].trim();
+      listingParams.set("specialties", speciality === "General Physician" ? "General Medicine" : speciality);
+    }
+    const listing = `/search/doctors?${listingParams}`;
+    const destination = matchedDoctor
+      ? design20BookingEntryUrl(matchedDoctor, mode, "", listing)
+      : listing;
+    onClose();
+    router.push(destination);
+  }, [onClose, router]);
+
   const handleAction = useCallback((type: string, data?: unknown) => {
     switch (type) {
       case "start_tutorial_triage": {
@@ -3950,38 +3971,16 @@ function Workspace({
         break;
       }
       case "book_now": {
-        const doc = data as Doctor;
-        const slotMsg: Message = { id: `slot-${Date.now()}`, role: "ai", text: `Great choice! Select a date and time to see ${doc.name}.`, ts: new Date(), rtype: "slot_picker", slotDoctor: doc };
-        setMsgs(prev => [...prev, slotMsg]);
+        openDoctorBooking(data as Doctor);
         break;
       }
       case "confirm_slot": {
-        const { doctor, slot, type: vtype, clinic, fee } = (data || {}) as {
-          doctor?: Doctor; slot?: string; type?: string; clinic?: string; fee?: number;
+        const { doctor, type: vtype } = (data || {}) as {
+          doctor?: Doctor; type?: string;
         };
         const lastSlotMsg = msgs.slice().reverse().find(m => m.rtype === "slot_picker");
         const doc = doctor || lastSlotMsg?.slotDoctor || MOCK_DOCTORS[0];
-        const finalClinic = clinic || (vtype === "video" ? "Narayana Tele-Health" : doc.hospital || "Mazumdar Shaw Medical Centre");
-
-        if (!isLoggedIn) {
-          setPendingAction({ type: "confirm_slot", data });
-          injectAI({
-            text: "To finalize your booking, please enter your mobile number to sign in or register:",
-            rtype: "inline_phone_input"
-          }, 300);
-        } else {
-          injectAI({
-            text: `Here is your order summary for **${doc.name}** at **${finalClinic}**. Please review your member discount, apply coupons, and complete payment:`,
-            rtype: "order_summary",
-            orderSummaryData: {
-              doctor: doc,
-              slot: slot || "Tomorrow, 09:15 AM",
-              visitType: vtype || "hospital",
-              clinicName: finalClinic,
-              fee: fee || 800
-            }
-          }, 500);
-        }
+        openDoctorBooking(doc, vtype === "video" ? "video" : "hospital");
         break;
       }
       case "submit_inline_phone": {
@@ -4078,7 +4077,7 @@ function Workspace({
       default:
         break;
     }
-  }, [isLoggedIn, injectAI, sendMessage, activeProfile]);
+  }, [isLoggedIn, injectAI, sendMessage, activeProfile, msgs, openDoctorBooking]);
 
 
   // After login, resume pending action

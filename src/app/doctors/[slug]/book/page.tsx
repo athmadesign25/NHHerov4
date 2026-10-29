@@ -49,9 +49,14 @@ import Design15BookingFlow from "@/features/booking/design15/Design15BookingFlow
 import Design17BookingFlow from "@/features/booking/design17/Design17BookingFlow";
 import Design18BookingFlow from "@/features/booking/design18/Design18BookingFlow";
 import Design19BookingFlow from "@/features/booking/design19/Design19BookingFlow";
+import Design20BookingFlow from "@/features/booking/design20/Design20BookingFlow";
 import { getDesign17ProfileDoctor } from "@/features/search/design17Profile";
+import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import Design7Shell from "@/features/design-preview/design7/Design7Shell";
 import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { resolveDoctorDesign } from "@/features/design-preview/doctorJourney";
+import { design20DoctorRecoveryUrl } from "@/features/search/design20BookingEntry";
+import bookingStyles from "@/features/booking/design17/Booking.module.css";
 import { design7HospitalCity } from "@/app/search/designs/d7/directory";
 import { isDesign15Variant, isJourneyDesign, isQuickJourneyDesign } from "@/features/design-preview/journeyDesigns";
 
@@ -74,7 +79,7 @@ const MODE_COPY: Record<ConsultationType, { feeLabel: string; trust: string[] }>
 
 /** The smart directories and booking picker share the same India-day window. */
 function bookingDatesForDesign(design: string | null, now = Date.now()): DateSlot[] {
-  if (design !== "d16" && design !== "d17" && design !== "d17-lite" && design !== "d18" && design !== "d19") return generateDates();
+  if (design !== "d16" && design !== "d17" && design !== "d17-lite" && design !== "d18" && design !== "d19" && design !== "d20") return generateDates();
   const weekday = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: "UTC" });
   const month = new Intl.DateTimeFormat("en-US", { month: "short", timeZone: "UTC" });
   return appointmentDates(now, DESIGN16_BOOKING_DAYS).map((fullDate) => {
@@ -95,8 +100,8 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
   const timeParam = searchParams.get("time");
   const aiParam = searchParams.get("ai");
   const design = searchParams.get("design");
-  const isDirectoryPreview = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(design ?? "");
-  const bookingWindowDays = design === "d16" || design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" ? DESIGN16_BOOKING_DAYS : undefined;
+  const isDirectoryPreview = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(design ?? "");
+  const bookingWindowDays = design === "d16" || design === "d17" || design === "d17-lite" || design === "d18" || (design === "d19" || design === "d20") ? DESIGN16_BOOKING_DAYS : undefined;
 
   const initialConsultationType: ConsultationType =
     modeParam === "video" ? "video" : "hospital";
@@ -219,7 +224,7 @@ function BookingPageInner({ slug, doctor }: { slug: string; doctor: BookingDocto
       fee: doctor.fee,
     });
     router.push(
-      `/doctors/${encodeURIComponent(slug)}/book/confirmation?ref=${encodeURIComponent(record.ref)}${design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" ? `&design=${design}` : ""}`
+      `/doctors/${encodeURIComponent(slug)}/book/confirmation?ref=${encodeURIComponent(record.ref)}${design === "d17" || design === "d17-lite" || design === "d18" || (design === "d19" || design === "d20") ? `&design=${design}` : ""}`
     );
   };
 
@@ -507,13 +512,23 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
 function BookingPreviewRoute({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
-  const design = searchParams.get("design");
-  if (DESIGN_PREVIEW_ENABLED && (design === "d17" || design === "d17-lite" || design === "d18" || design === "d19")) {
-    const source = getDesign3BookingDoctor(slug);
-    const listing = getDesign17ProfileDoctor(slug, searchParams);
-    if (!source || !listing) notFound();
+  const design = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  if (design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" || design === "d20") {
+    const source = design === "d20" ? getDesign20BookingDoctor(slug, searchParams.get("name")) : getDesign3BookingDoctor(slug);
+    const listing = design === "d20" ? getDesign20ProfileDoctor(slug, searchParams) : getDesign17ProfileDoctor(slug, searchParams);
+    if (!source || !listing) {
+      if (design !== "d20") notFound();
+      return <div className={bookingStyles.page} data-design17-booking="d20">
+        <div className={bookingStyles.container}><section className={bookingStyles.panel}>
+          <h1>Choose a doctor to continue</h1>
+          <p>We couldn’t find this doctor’s booking details. Find an available doctor in the directory.</p>
+          <Link href={design20DoctorRecoveryUrl(searchParams)} className={bookingStyles.primary}>Find a doctor</Link>
+        </section></div>
+      </div>;
+    }
     const doctor = { ...source, name: listing.name, hospital: listing.hospital, city: listing.city, fee: listing.fee };
     if (design === "d18") return <Design18BookingFlow key={`${slug}-${design}`} doctor={doctor} />;
+    if (design === "d20") return <Design20BookingFlow key={`${slug}-${design}`} doctor={doctor} />;
     if (design === "d19") return <Design19BookingFlow key={`${slug}-${design}`} doctor={doctor} />;
     return <Design17BookingFlow key={`${slug}-${design}`} doctor={doctor} design={design} />;
   }
@@ -541,7 +556,7 @@ function BookingPreviewRoute({ slug }: { slug: string }) {
       ? <Design13BookingFlow key={doctor.id} doctor={doctor} variant={design} />
       : <Design7BookingFlow key={doctor.id} doctor={doctor} />}</Design7Shell>;
   }
-  const doctor = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(searchParams.get("design") ?? "") ? getDesign3BookingDoctor(slug) : getBookingDoctor(slug);
+  const doctor = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(searchParams.get("design") ?? "") ? getDesign3BookingDoctor(slug) : getBookingDoctor(slug);
   if (!doctor) notFound();
   return <BookingPageInner slug={slug} doctor={doctor} />;
 }

@@ -12,6 +12,8 @@ export class Design15DraftStore {
   private entries = new Map<string, Entry>();
   private timer: ReturnType<typeof setTimeout> | undefined;
   constructor(private clock: () => number = Date.now, private capacity = CAPACITY) {}
+  protected resolveDoctor(doctorId: string) { return getDesign3BookingDoctor(doctorId); }
+  protected parseDraft(value: unknown, doctorId: string): Design15Draft | null { return parseDesign15Draft(value, doctorId); }
   private key(token: string, doctorId: string) { return `${token.toLowerCase()}:${doctorId}`; }
   private prune() {
     for (const [key, entry] of this.entries) if (this.clock() >= entry.expiresAt) this.entries.delete(key);
@@ -42,8 +44,8 @@ export class Design15DraftStore {
   put(token: string, doctorId: string, value: unknown): "saved" | "invalid" | "full" {
     this.prune();
     if (!validPreviewToken(token)) return "invalid";
-    const draft = parseDesign15Draft(value, doctorId);
-    const doctor = getDesign3BookingDoctor(doctorId);
+    const draft = this.parseDraft(value, doctorId);
+    const doctor = this.resolveDoctor(doctorId);
     if (!draft || !doctor) return "invalid";
     const locations = doctor.locations?.map(location => location.name) ?? [doctor.hospital];
     if (!locations.includes(draft.selection.hospital) && !(draft.selection.mode === "video" && draft.selection.hospital === "")) return "invalid";

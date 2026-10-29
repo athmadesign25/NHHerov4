@@ -57,6 +57,8 @@ export function readDesignVariant(scope: DesignScopeKey): string {
   manualVariants.delete(scope);
   seedFromUrl(scope, fromUrl, entry);
   if (isSelectable(scope, fromUrl)) return fromUrl;
+  // A saved design is a preview preference, not the public entry-point default.
+  if (scope === "search-top") return fallback;
   try {
     const stored = localStorage.getItem(storageKey(scope)) ?? memoryVariants.get(scope) ?? null;
     return isSelectable(scope, stored) ? stored : fallback;
@@ -92,9 +94,9 @@ export function useDesignVariant(scope: DesignScopeKey): string | null {
   const getSnapshot = useCallback(() => readDesignVariant(scope), [scope, fromUrl]);
   const getServerSnapshot = useCallback(() => {
     if (!DESIGN_PREVIEW_ENABLED) return DESIGN_SCOPES[scope].defaultVariant;
-    // Shareable URLs can render their actual design immediately. Without one,
-    // wait for localStorage instead of painting the wrong design first.
-    return isSelectable(scope, fromUrl) ? fromUrl : null;
+    // Normal entries render the latest journey immediately; only an explicit
+    // preview URL selects an older design.
+    return isSelectable(scope, fromUrl) ? fromUrl : DESIGN_SCOPES[scope].defaultVariant;
   }, [scope, fromUrl]);
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

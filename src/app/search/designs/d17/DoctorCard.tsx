@@ -19,7 +19,7 @@ interface Props {
   mode: ConsultationMode;
   live: boolean;
   priority?: boolean;
-  cardDesign?: "d17" | "d17-lite" | "d18" | "d19";
+  cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20";
   listingReturnTo?: string;
   bookingDate?: string;
   bookedEarlier?: boolean;

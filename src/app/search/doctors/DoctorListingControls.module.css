@@ -5,7 +5,7 @@
 .modeIndicator { position: absolute; inset-block: calc(var(--sp-1) * .75); inset-inline-start: calc(var(--sp-1) / 4); width: calc((100% - var(--sp-1) / 2) / 2); border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: inherit; background: var(--color-bg-card); pointer-events: none; transition: background-color var(--d3-ui-fast, var(--transition-fast)); }
 .modeOption { position: relative; min-width: 0; cursor: pointer; }
 .modeOption input { position: absolute; inset: 0; z-index: 1; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-.modeLabel { position: relative; isolation: isolate; display: flex; align-items: center; justify-content: center; gap: calc(var(--sp-1) * .75); min-height: var(--mode-target-height); padding: var(--sp-1) calc(var(--sp-1) * 1.5); border-radius: var(--radius-full); color: var(--d3-ui-text, var(--color-text-secondary)); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.25; white-space: nowrap; pointer-events: none; transition: color var(--d3-ui-fast, var(--transition-fast)); }
+.modeLabel { position: relative; isolation: isolate; display: flex; align-items: center; justify-content: center; gap: var(--mode-label-gap, calc(var(--sp-1) * .75)); min-height: var(--mode-target-height); padding: var(--sp-1) var(--mode-label-padding, calc(var(--sp-1) * 1.5)); border-radius: var(--radius-full); color: var(--d3-ui-text, var(--color-text-secondary)); font-size: var(--mode-font-size, var(--font-size-sm)); font-weight: 600; line-height: 1.25; white-space: nowrap; pointer-events: none; transition: color var(--d3-ui-fast, var(--transition-fast)); }
 .modeOption input:checked + .modeLabel { color: var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text))); }
 .modeOption input:focus-visible + .modeLabel { outline: 2px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: 2px; }
 .quickFilters { display: flex; flex: 0 0 auto; align-items: center; gap: calc(var(--sp-1) * .75); margin-inline-start: var(--sp-1); }
@@ -46,3 +46,7 @@
 }
 
 @media (min-width: 1024px) { .mode { width: var(--d16-filter-width, auto); } }
+
+.mode[data-single-mode] { grid-template-columns: minmax(0, 1fr); }
+.mode[data-single-mode] .modeIndicator { width: calc(100% - var(--sp-1) / 2); }
+.modeImage { flex-shrink: 0; width: var(--sp-2); height: var(--sp-2); }

@@ -1,5 +1,6 @@
 import { searchDoctorsData } from "@/app/search/mockDoctors";
 import { getDesign3CityDoctor } from "@/features/search/design3CityDoctors";
+import { getDesign20DirectoryDoctor, getDesign20VerifiedDoctor } from "@/features/search/design20Directory";
 import { doctorHospitals, fromDirectoryDoctor, nextSlot, type ConsultationMode } from "@/features/search/doctorListing";
 import { generateTimeSlots } from "./useBookingState";
 import type { TimeSlot } from "./types";
@@ -16,9 +17,13 @@ export function getDesign3BookingSlots(
   hospital: string,
   now = new Date(),
   windowDays = 15,
+  scheduleContext?: "d20",
 ): TimeSlot[] {
   const directoryDoctor = searchDoctorsData.find((doctor) => doctor.id === doctorId);
-  const doctor = getDesign3CityDoctor(doctorId) ?? (directoryDoctor ? fromDirectoryDoctor(directoryDoctor) : null);
+  // Featured IDs also exist in older previews. Only an explicit D20 context
+  // uses their corrected affiliations; legacy callers keep their own fixtures.
+  const doctor = scheduleContext === "d20" ? getDesign20DirectoryDoctor(doctorId)
+    : getDesign20VerifiedDoctor(doctorId) ?? getDesign3CityDoctor(doctorId) ?? (directoryDoctor ? fromDirectoryDoctor(directoryDoctor) : null);
   if (!doctor || doctor.modes[mode] !== true) return [];
   if (mode === "hospital" && !doctorHospitals(doctor).includes(hospital)) return [];
 
@@ -52,7 +57,8 @@ export function isDesign3BookingSlotAvailable(
   hospital: string,
   now = new Date(),
   windowDays = 15,
+  scheduleContext?: "d20",
 ): boolean {
-  return getDesign3BookingSlots(doctorId, date, mode, hospital, now, windowDays)
+  return getDesign3BookingSlots(doctorId, date, mode, hospital, now, windowDays, scheduleContext)
     .some((slot) => slot.available && slot.time === time);
 }

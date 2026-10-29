@@ -1,0 +1,15 @@
+.picker { --card-night: var(--d17-lite-surface); --card-ink: var(--d17-lite-ink); --card-muted: var(--color-text-secondary); --card-line: color-mix(in srgb, var(--card-ink) 14%, transparent); --card-target: var(--target); position: relative; min-width: 0; }
+.hospital { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--sp-1); min-width: 0; margin: 0; padding-block: calc(var(--sp-1) / 2); color: var(--d7-text); font-size: var(--font-size-sm); font-weight: 400; line-height: 1.5; }
+.hospital > span { min-width: 0; overflow-wrap: anywhere; }
+.trigger { width: 100%; min-height: var(--target); border: 0; padding-inline: 0; border-radius: var(--radius-sm); background: transparent; font-family: inherit; text-align: left; cursor: pointer; }
+.trigger > span { text-decoration: none; }
+.nameEnd { white-space: nowrap; }
+.chevron { display: inline-block; margin-inline-start: calc(var(--sp-1) / 2); vertical-align: calc(var(--sp-1) / -4); transition: transform var(--transition-fast); }
+.trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+.picker button[aria-pressed]:focus-visible { outline-offset: -3px; color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
+@media (hover: hover) {
+  .trigger:hover .chevron { transform: translateY(calc(var(--sp-1) / 4)); }
+  .trigger[aria-expanded="true"]:hover .chevron { transform: rotate(180deg); }
+}
+@media (prefers-reduced-motion: reduce) { .trigger > span, .chevron, .option { transition: none; } }

@@ -1,5 +1,6 @@
 import { getDoctorLandingContext } from "./doctorLandingPages";
 import { isJourneyDesign } from "../design-preview/journeyDesigns";
+import { DEFAULT_DOCTOR_DESIGN } from "../design-preview/doctorJourney";
 
 /** Route context and visible filters must describe the same set of doctors. */
 export function doctorListingParams(pathname: string, query: string): URLSearchParams {
@@ -19,7 +20,7 @@ export function doctorListingParams(pathname: string, query: string): URLSearchP
 export function doctorListingUrl(pathname: string, values: URLSearchParams): string {
   const params = new URLSearchParams(values);
   const requestedDesign = params.get("design") ?? "";
-  const design = ["d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19"].includes(requestedDesign) || isJourneyDesign(requestedDesign) ? requestedDesign : "d3";
+  const design = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(requestedDesign) || isJourneyDesign(requestedDesign) ? requestedDesign : DEFAULT_DOCTOR_DESIGN;
   const context = getDoctorLandingContext(pathname);
   const specialties = params.getAll("specialties").filter(Boolean);
   const keepsSpeciality = !context?.speciality || (specialties.length === 1 && specialties[0] === context.speciality.label);
@@ -28,8 +29,7 @@ export function doctorListingUrl(pathname: string, values: URLSearchParams): str
   if (keepsContext) {
     if (context?.speciality) params.delete("specialties");
     if (context?.city) params.delete("location");
-    if (design !== "d3") params.set("design", design);
-    else params.delete("design"); // The original landing-page preview is Design 3.
+    params.set("design", design);
   } else params.set("design", design);
   const query = params.toString();
   return `${keepsContext ? pathname : "/search/doctors"}${query ? `?${query}` : ""}`;

@@ -18,6 +18,8 @@ export interface DoctorListingItem {
   id: string;
   name: string;
   speciality: string;
+  /** Optional navigation terms for source specialties, without changing the displayed clinical label. */
+  specialityAliases?: readonly string[];
   /** Supplied professional role; never inferred from experience or speciality. */
   designation?: string;
   degrees: string;
@@ -65,7 +67,10 @@ export function doctorFilterValues(doctor: DoctorListingItem, key: DoctorMultiFi
 export function doctorFilterOptions(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode, key: DoctorMultiFilterKey) {
   const candidates = filterDoctors(doctors, { ...filters, [key]: [] }, mode);
   const counts = new Map<string, number>();
-  candidates.forEach((doctor) => new Set(doctorFilterValues(doctor, key)).forEach((value) => counts.set(value, (counts.get(value) ?? 0) + 1)));
+  candidates.forEach((doctor) => {
+    const selectedAliases = key === "specialties" ? (doctor.specialityAliases ?? []).filter(value => filters.specialties.includes(value)) : [];
+    new Set([...doctorFilterValues(doctor, key), ...selectedAliases]).forEach((value) => counts.set(value, (counts.get(value) ?? 0) + 1));
+  });
   const values = [...new Set([...doctors.flatMap((doctor) => [...doctorFilterValues(doctor, key)]), ...filters[key]])].filter(Boolean);
   return values.sort((a, b) => a.localeCompare(b)).map((value) => ({ value, count: counts.get(value) ?? 0 }));
 }
@@ -127,7 +132,8 @@ export function filterDoctors(doctors: readonly DoctorListingItem[], filters: Do
   return doctors.filter((doctor) => {
     if (doctor.modes[mode] === false) return false;
     for (const key of ["specialties", "hospitals", "languages", "genders", "expertise"] as const) {
-      if (filters[key].length && !doctorFilterValues(doctor, key).some((value) => filters[key].includes(value))) return false;
+      const values = key === "specialties" ? [...doctorFilterValues(doctor, key), ...(doctor.specialityAliases ?? [])] : doctorFilterValues(doctor, key);
+      if (filters[key].length && !values.some((value) => filters[key].includes(value))) return false;
     }
     if (filters.availability === "any") return true;
     const slot = nextSlot(doctor, mode, now)?.getTime();
@@ -183,7 +189,7 @@ export function readListingParams(params: URLSearchParams) {
   const availability = params.get("availability");
   if (availability && Object.hasOwn(availabilityLabels, availability)) filters.availability = availability as AvailabilityFilter;
   const sort = params.get("sort");
-  const nearest = sort === "nearest" && ["d16", "d17", "d17-lite", "d18", "d19"].includes(params.get("design") ?? "") && params.get("mode") !== "video";
+  const nearest = sort === "nearest" && ["d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(params.get("design") ?? "") && params.get("mode") !== "video";
   return {
     filters,
     mode: (params.get("mode") === "video" ? "video" : "hospital") as ConsultationMode,

@@ -7,6 +7,7 @@ import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
 import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
+import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -15,9 +16,12 @@ interface LoginModalProps {
   /** Opt-in keyboard/modal behaviour for the Design 3 preview. */
   manageFocus?: boolean;
   purpose?: "booking" | "history";
+  /** Accept any complete OTP only in explicitly opted-in design previews. */
+  previewOtp?: boolean;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false, purpose = "booking" }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false, purpose = "booking", previewOtp = false }: LoginModalProps) {
+  const acceptsPreviewOtp = DESIGN_PREVIEW_ENABLED && previewOtp;
   const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [mobileNumber, setMobileNumber] = useState("");
@@ -65,7 +69,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
 
   const handleContinue = () => {
     if (activeTab === "mobile") {
-      if (mobileNumber.length !== 10) {
+      if (!/^\d{10}$/.test(mobileNumber)) {
         setMobileError(true);
         return;
       }
@@ -77,11 +81,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     }
   };
 
-  const handleVerify = (code = otp.join("")) => {
-    if (purpose === "history" && !isValidVerificationCode(code)) {
-      setCodeError(code.length < 6 ? "Enter all 6 digits of your verification code." : "That code isn’t correct. Check it and try again.");
-      return;
-    }
+  const completeLogin = () => {
     if (verified.current) return;
     if (typeof window !== "undefined") {
       try {
@@ -100,6 +100,18 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     verified.current = true;
     if (onLoginSuccess) onLoginSuccess();
     onClose();
+  };
+
+  const handleVerify = (code = otp.join("")) => {
+    if (acceptsPreviewOtp && !/^\d{6}$/.test(code)) {
+      setCodeError("Enter all 6 digits of your verification code.");
+      return;
+    }
+    if (!acceptsPreviewOtp && purpose === "history" && !isValidVerificationCode(code)) {
+      setCodeError(code.length < 6 ? "Enter all 6 digits of your verification code." : "That code isn’t correct. Check it and try again.");
+      return;
+    }
+    completeLogin();
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -489,7 +501,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
               {/* Google Button */}
               <button
                 type="button"
-                onClick={() => handleVerify()}
+                onClick={completeLogin}
                 style={{
                   width: "100%",
                   padding: "14px",

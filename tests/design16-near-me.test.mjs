@@ -32,6 +32,7 @@ const { isDesign3BookingSlotAvailable } = await import("../src/features/booking/
 const { requestDoctorPosition } = await import("../src/features/search/doctorPosition.ts");
 const { searchDoctorsData } = await import("../src/app/search/mockDoctors.ts");
 const { design3CityDoctors } = await import("../src/features/search/design3CityDoctors.ts");
+const { design20Directory } = await import("../src/features/search/design20Directory.ts");
 
 const now = new Date("2026-10-20T02:30:00Z");
 const directory = searchDoctorsData.map(fromDirectoryDoctor);
@@ -57,6 +58,8 @@ test("directions use real unit destinations and route dummy units to the agreed 
   const destinations = [
     ["Narayana Health City", "Narayana Health City, Bommasandra, Bengaluru"],
     ["Mazumdar Shaw Medical Centre, Bangalore", "Mazumdar Shaw Medical Center, Bommasandra, Bengaluru"],
+    ["Narayana Institute of Cardiac Sciences, Bangalore", "Narayana Institute of Cardiac Sciences, Bangalore"],
+    ["Narayana Multispeciality Hospital, HSR Bangalore", "Narayana Multispeciality Hospital, HSR Bangalore"],
     ["SRCC Children's Hospital, Mumbai", "Narayana Health SRCC Children's Hospital, Haji Ali, Mumbai"],
   ];
   for (const [hospital, destination] of destinations) {
@@ -77,6 +80,28 @@ test("directions use real unit destinations and route dummy units to the agreed 
     }
   }
   assert.equal(getDesign16HospitalPreview("An unknown hospital"), null);
+});
+
+test("corrected D20 featured hospitals retain stable sample distances, their own directions and selected booking units", () => {
+  for (const id of ["dr-1", "dr-ashley"]) {
+    const doctor = design20Directory.find(doctor => doctor.id === id);
+    const before = JSON.stringify(doctor);
+    for (const hospital of doctor.hospitals) {
+      const preview = getDesign16HospitalPreview(hospital);
+      assert.equal(preview.city, "Bangalore");
+      assert.ok(Number.isFinite(preview.distanceKm) && preview.distanceKm > 0);
+      assert.deepEqual(getDesign16HospitalPreview(hospital), preview);
+      assert.equal(new URL(preview.directionsUrl).searchParams.get("destination"), preview.directionsDestination);
+      const [selected] = refineDesign16Doctors([doctor], { ...emptyDoctorFilters(), hospitals: [hospital] },
+        "hospital", "nearest", "2026-10-23", false, new Set(), now, {}, "d20");
+      assert.equal(selected.hospital, hospital);
+      assert.equal(distance(selected), preview.distanceKm);
+      const booking = new URL(bookingUrl(selected, "hospital", true, now), "https://preview.test");
+      assert.equal(booking.searchParams.get("hospital"), hospital);
+      assert.ok(isDesign3BookingSlotAvailable(id, "2026-10-23", booking.searchParams.get("time"), "hospital", hospital, now, 21, "d20"));
+    }
+    assert.equal(JSON.stringify(doctor), before);
+  }
 });
 
 test("nearest orders only matching doctors, leaves unknown distances last, and does not mutate source data", () => {

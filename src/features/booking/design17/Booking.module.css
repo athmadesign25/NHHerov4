@@ -10,7 +10,7 @@
   background: radial-gradient(ellipse at 15% 0, color-mix(in srgb, var(--color-primary) 15%, transparent), transparent 60%), var(--d7-bg);
   color: var(--d7-text); color-scheme: dark;
 }
-.page:is([data-design17-booking="d17-lite"], [data-design17-booking="d18"], [data-design17-booking="d19"]) {
+.page:is([data-design17-booking="d17-lite"], [data-design17-booking="d18"], :is([data-design17-booking="d19"], [data-design17-booking="d20"])) {
   --d7-bg: var(--d17-lite-surface); --d7-surface: var(--journey-paper-surface); --d7-surface-raised: var(--journey-paper-raised);
   --d7-glass: var(--journey-paper-glass); --d7-border: color-mix(in srgb, var(--d17-lite-ink) 15%, transparent);
   --d7-text: var(--d17-lite-ink); --d7-muted: var(--journey-paper-muted); --d7-subtle: var(--journey-paper-subtle);
@@ -107,7 +107,7 @@
 .summaryActions { display: grid; gap: var(--sp-2); }
 .editAppointment { justify-self: start; color: var(--d7-accent); min-height: var(--sp-6); font-size: var(--font-size-sm); }
 .consultationControl { --consultation-track: var(--d7-surface-raised); --consultation-pill: var(--d7-surface); --consultation-muted: var(--d7-muted); --consultation-text: var(--d7-text); --consultation-hospital: var(--d7-danger); --consultation-video: var(--d7-accent); --consultation-icon: grayscale(1) brightness(2); }
-.page:is([data-design17-booking="d17-lite"], [data-design17-booking="d18"], [data-design17-booking="d19"]) .consultationControl { --consultation-icon: grayscale(1) brightness(.2); }
+.page:is([data-design17-booking="d17-lite"], [data-design17-booking="d18"], :is([data-design17-booking="d19"], [data-design17-booking="d20"])) .consultationControl { --consultation-icon: grayscale(1) brightness(.2); }
 .memberSection { min-width: 0; }
 .memberControl { margin: 0; --color-text: var(--d7-text); --color-text-secondary: var(--d7-muted); --color-border: var(--d7-border); --color-bg-subtle: var(--d7-surface-raised); --color-primary: var(--d7-accent); }
 .memberControl h2 { margin-bottom: var(--sp-1); font-size: var(--font-size-sm); font-weight: 600; letter-spacing: normal; line-height: 1.5; }

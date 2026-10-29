@@ -84,6 +84,59 @@ export function getDoctorLandingCopy(context: DoctorLandingContext) {
   return { heading, summary };
 }
 
+/** Display copy only: keep directory facet values and the SEO route vocabulary intact. */
+const DOCTOR_LISTING_SUBJECTS = new Map([
+  ["Adult Cardiology", "Adult cardiologists"],
+  ["Clinical Psychology", "Clinical psychologists"],
+  ["Dermatology", "Dermatologists"],
+  ["E.N.T", "ENT specialists"],
+  ["Endocrinology", "Endocrinologists"],
+  ["Executive Health Checkup", "Doctors for executive health checks"],
+  ["Family Medicine", "Family physicians"],
+  ["General Medicine", "General physicians"],
+  ["Gynaecologic Oncology", "Gynaecologic oncologists"],
+  ["Gynaecology", "Gynaecologists"],
+  ["Interventional Neurology", "Interventional neurologists"],
+  ["Medical Gastroenterology", "Medical gastroenterologists"],
+  ["Neurosurgery", "Neurosurgeons"],
+  ["Obstetrics & Gynaecology", "Obstetricians & gynaecologists"],
+  ["Orthopaedic Surgery", "Orthopaedic surgeons"],
+  ["Paediatric Cardiology", "Paediatric cardiologists"],
+  ["Paediatric Medicine", "Paediatricians"],
+  ["Paediatric Nephrology", "Paediatric nephrologists"],
+  ["Paediatric Surgery", "Paediatric surgeons"],
+  ["Plastic Surgery", "Plastic surgeons"],
+  ["Psychiatry", "Psychiatrists"],
+  ["Pulmonology", "Pulmonologists"],
+  ["Radiology", "Radiologists"],
+  ["Urology", "Urologists"],
+].map(([department, subject]) => [department.toLowerCase(), subject]));
+
+/** Listing facets can grow independently of the finite SEO route vocabulary. */
+export function getDoctorListingCopy({ specialties, city }: {
+  specialties: readonly string[];
+  city?: DoctorLandingCity;
+}) {
+  const selected = [...new Set(specialties.map(value => value.trim()).filter(Boolean))];
+  const summary = "Explore doctors and consultation options.";
+  if (!selected.length) return { heading: city ? `Doctors in ${city.label}` : "Our doctors", summary };
+  const location = city ? ` in ${city.label}` : "";
+  if (selected.length === 1) {
+    const speciality = findDoctorLandingSpeciality(selected[0]);
+    if (speciality) return { ...getDoctorLandingCopy({ speciality, city }), summary };
+    // Preserve the full department when there is no reviewed clinician label.
+    const subject = DOCTOR_LISTING_SUBJECTS.get(selected[0].toLowerCase()) ?? `${selected[0]} specialists`;
+    return {
+      heading: `${subject}${location}`,
+      summary,
+    };
+  }
+  return {
+    heading: city ? `Specialists${location}` : "Our specialists",
+    summary,
+  };
+}
+
 /** Mapping, not availability, determines whether a landing page has doctor content. */
 export function hasDoctorLandingDoctors(context: DoctorLandingContext, doctors: readonly { speciality: string; city: string }[]) {
   return doctors.some((doctor) => (!context.city || getCityId(doctor.city) === getCityId(context.city.value))

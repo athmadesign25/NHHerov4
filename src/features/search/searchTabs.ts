@@ -1,3 +1,5 @@
+import { DEFAULT_DOCTOR_DESIGN } from "../design-preview/doctorJourney";
+
 /**
  * Search hub tabs — single source of truth.
  *
@@ -133,6 +135,7 @@ export interface BuildSearchUrlOptions {
  */
 export function buildSearchUrl({ tab, q, location }: BuildSearchUrlOptions = {}): string {
   const params = new URLSearchParams();
+  if (!tab || tab === "doctors") params.set("design", DEFAULT_DOCTOR_DESIGN);
   const trimmedQuery = q?.trim();
   if (trimmedQuery) params.set("q", trimmedQuery);
   if (location && location !== "All") params.set("location", location);
