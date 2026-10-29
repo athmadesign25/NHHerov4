@@ -463,7 +463,7 @@ export default function TreatmentsLibraryPage() {
 
                             <Link href={detailUrl} className={styles.cardDetailBtn}>
                               <span>Read more</span>
-                              <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                              <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
                             </Link>
                           </div>
                         </div>

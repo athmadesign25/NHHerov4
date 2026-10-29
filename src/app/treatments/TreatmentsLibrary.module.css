@@ -531,27 +531,28 @@
 /* ─── ENTRANCE SKELETON CARDS (SHOWS DURING INITIAL OPENING SEQUENCE) ─────── */
 .skeletonCard {
   background: #091322;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 460px;
+  min-height: 415px;
+  height: 100%;
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .skeletonImageWrap {
   width: 100%;
-  height: 230px;
+  height: 210px;
   background: #0b172a;
   position: relative;
   overflow: hidden;
 }
 
 .skeletonContent {
-  padding: 24px;
+  padding: 18px 20px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -561,47 +562,47 @@
 }
 
 .skeletonEyebrow {
-  width: 90px;
-  height: 12px;
+  width: 80px;
+  height: 10px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.09);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .skeletonTitle {
-  width: 80%;
-  height: 22px;
-  border-radius: 6px;
+  width: 85%;
+  height: 18px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.12);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .skeletonLine {
   width: 100%;
-  height: 13px;
+  height: 12px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.06);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .skeletonLineShort {
   width: 62%;
-  height: 13px;
+  height: 12px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.06);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .skeletonBadges {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 7px;
+  margin-top: auto;
 }
 
 .skeletonBadge {
-  width: 88px;
-  height: 22px;
-  border-radius: 6px;
+  width: 80px;
+  height: 28px;
+  border-radius: 9999px;
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -609,20 +610,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .skeletonPrice {
-  width: 110px;
-  height: 20px;
+  width: 100px;
+  height: 18px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.08);
 }
 
 .skeletonCta {
-  width: 96px;
-  height: 32px;
+  width: 84px;
+  height: 30px;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.09);
 }
@@ -650,33 +651,34 @@
   }
 }
 
-/* ─── PROCEDURE CARD (GENEROUS SPACING, REFINED LINE-HEIGHT) ─────────────── */
+/* ─── PROCEDURE CARD (UNIFIED PROPORTIONS, CRISP TYPOGRAPHY, COMPACT PILL BUTTONS) ─── */
 .procedureCard {
   background: #091322;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 460px;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+  min-height: 415px;
+  height: 100%;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.25s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.32);
 }
 
 .procedureCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
-  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.52);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Top Image Container with Dark Gradient Fade */
 .cardImageWrap {
   position: relative;
   width: 100%;
-  height: 230px;
+  height: 210px;
   overflow: hidden;
   background: #060e1b;
 }
@@ -688,7 +690,7 @@
 }
 
 .procedureCard:hover .cardBgImage {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .cardGradient {
@@ -697,16 +699,16 @@
   background: linear-gradient(
     to top,
     #091322 0%,
-    rgba(9, 19, 34, 0.72) 40%,
-    rgba(9, 19, 34, 0.18) 75%,
+    rgba(9, 19, 34, 0.72) 42%,
+    rgba(9, 19, 34, 0.15) 75%,
     transparent 100%
   );
   pointer-events: none;
 }
 
-/* Content block directly on the card with relaxed, elegant line-height */
+/* Content block with structured typography and consistent vertical alignment */
 .cardContent {
-  padding: 20px 22px 22px;
+  padding: 18px 20px 20px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -714,12 +716,12 @@
 }
 
 .cardEyebrow {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 10.5px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 8px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 7px;
 }
 
 .cardTitleLink {
@@ -728,62 +730,71 @@
 }
 
 .cardTitle {
-  font-size: 18.5px;
-  font-weight: 700;
-  line-height: 1.42;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
   color: #ffffff;
-  margin: 0 0 10px 0;
+  margin: 0 0 7px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  min-height: 44px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   transition: color 0.15s ease;
 }
 
+.procedureCard:hover .cardTitle {
+  color: #4da5ff;
+}
+
 .cardSub {
-  font-size: 12.8px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0 0 16px 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.60);
+  margin: 0 0 14px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 36px;
 }
 
-/* ─── CARD BOTTOM SLOT: RESTING META VS HOVER ACTION BUTTONS ───────────── */
+/* ─── CARD BOTTOM SLOT: COMPACT RESTING META VS REFINED ACTION BUTTONS ─────── */
 .cardBottomSlot {
   position: relative;
   margin-top: auto;
-  min-height: 42px;
+  min-height: 34px;
   display: flex;
   align-items: center;
 }
 
-/* Resting State: Procedure Clinical Metadata (Recovery, Stay, Tech) */
+/* Resting State: Procedure Clinical Metadata (Compact, unified scale) */
 .cardRestingMeta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   flex-wrap: wrap;
   width: 100%;
-  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .metaBadge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 10px;
+  height: 28px;
+  padding: 0 10px;
   border-radius: var(--radius-full, 9999px);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   font-size: 11px;
   color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .metaIcon {
@@ -791,31 +802,31 @@
   flex-shrink: 0;
 }
 
-/* Two Action Buttons */
+/* Action Buttons Container: Inline-Flex pills instead of stretched blocks */
 .cardActions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
 }
 
-/* Desktop: at rest, resting metadata is shown and buttons are hidden.
-   On hover, metadata glides out and action buttons slide in! */
+/* Desktop: at rest, resting metadata is shown.
+   On hover, metadata glides out and action buttons slide in with matching compact scale! */
 @media (min-width: 1025px) and (hover: hover) {
   .cardActions {
     position: absolute;
     inset: 0;
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
     pointer-events: none;
-    transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .procedureCard:hover .cardRestingMeta,
   .procedureCard:focus-within .cardRestingMeta {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-5px);
     pointer-events: none;
   }
 
@@ -827,7 +838,7 @@
   }
 }
 
-/* iPad, Tablets & Mobile (mweb): action buttons always available */
+/* iPad, Tablets & Mobile (mweb): action buttons always available with compact sizing */
 @media (max-width: 1024px), (hover: none) {
   .cardRestingMeta {
     display: none;
@@ -840,60 +851,68 @@
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors */
+/* Decision Button 1 (Secondary): Find doctors - Compact 32px pill */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 12px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .cardDoctorBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.45);
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ */
+/* Decision Button 2 (Primary): Read more ↗ - Compact 32px NH blue pill */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 9px 12px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
   background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.35);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.3);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .cardDetailBtn:hover {
   background: linear-gradient(135deg, #023d82 0%, #104e9c 100%);
   border-color: #ffffff;
-  box-shadow: 0 6px 18px rgba(3, 78, 162, 0.5);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.45);
   transform: translateY(-1px);
 }
 
 .pillBtnArrow {
   transition: transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .cardDetailBtn:hover .pillBtnArrow {
@@ -905,23 +924,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 14px;
+  gap: 5px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 500;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
 .pillBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.45);
   transform: translateY(-1px);
 }
 
