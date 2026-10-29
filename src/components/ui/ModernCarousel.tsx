@@ -88,15 +88,17 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
     window.addEventListener("resize", checkWidth);
     return () => window.removeEventListener("resize", checkWidth);
   }, []);
-  
+
   const activeId = externalActiveId !== undefined ? externalActiveId : internalActiveId;
   const setActiveId = (id: string) => {
     setInternalActiveId(id);
     onActiveChange?.(id);
   };
-  
+
   const activeIndex = items.findIndex(item => item.id === activeId);
   const totalItems = items.length;
+  const activeItem = items[activeIndex];
+  const nextItem = activeIndex < totalItems - 1 ? items[activeIndex + 1] : null;
 
   const isPrevDisabled = activeIndex <= 0;
   const isNextDisabled = activeIndex >= totalItems - 1;
@@ -116,14 +118,14 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
   const transition: any = { type: "spring", bounce: 0.2, duration: 0.8 };
 
   return (
-    <motion.div 
+    <motion.div
       className={styles.carouselContainer}
       initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div 
+      <div
         className={styles.carouselTrack}
         onTouchStart={(e) => {
           touchStartX.current = e.touches[0].clientX;
@@ -231,7 +233,7 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
               />
 
               {/* Content */}
-              <motion.div 
+              <motion.div
                 className={styles.content}
                 animate={{
                   opacity: isActive && !isPeek ? 1 : 0,
@@ -252,7 +254,7 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
                   <div className={styles.bottomContent}>
                     <h3 className={styles.title}>{item.title}</h3>
                     <p className={styles.desc}>{item.desc}</p>
-                    
+
                     {item.link && (
                       <motion.div
                         whileHover={{ x: 5 }}
@@ -268,7 +270,7 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
                   {item.stat && (
                     <AnimatePresence mode="wait">
                       {isActive && (
-                        <motion.div 
+                        <motion.div
                           key={item.id}
                           className={styles.metricContainer}
                           initial={{ opacity: 0, y: 20 }}
@@ -279,7 +281,7 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
                           <div className={styles.metricValue}>
                             <ShutterMetricReveal value={item.stat.value} />
                           </div>
-                          <div 
+                          <div
                             className={styles.metricLabel}
                             dangerouslySetInnerHTML={{ __html: item.stat.label }}
                           />
@@ -291,7 +293,7 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
               </motion.div>
 
               {/* Vertical Title (when collapsed) */}
-              <motion.div 
+              <motion.div
                 className={styles.collapsedContent}
                 animate={{
                   opacity: !isActive ? (isPeek ? 0.6 : 1) : 0,
@@ -314,26 +316,65 @@ export default function ModernCarousel({ items, activeId: externalActiveId, onAc
           </span>
           <div className={styles.indicatorBars}>
             {items.map((_, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`${styles.indicatorBar} ${idx === activeIndex ? styles.indicatorBarActive : ''}`}
                 onClick={() => setActiveId(items[idx].id)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Go to ${items[idx].title}`}
               />
             ))}
           </div>
         </div>
+
+        {/* Active & Next Card Readability Indication (Text Only, No Labels) */}
+        <div className={styles.readingAidContainer}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeItem?.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={styles.readingAidContent}
+            >
+              {/* Active Card Title */}
+              <span className={styles.activeTitle} title={activeItem?.title}>
+                {activeItem?.title}
+              </span>
+
+              {/* Next Card Title (No "Next:" label text) */}
+              {nextItem && (
+                <button
+                  type="button"
+                  className={styles.readingAidNext}
+                  onClick={handleNext}
+                  title={`Go to ${nextItem.title}`}
+                >
+                  <span className={styles.readingAidDivider}>/</span>
+                  <span className={styles.nextTitle} title={nextItem.title}>
+                    {nextItem.title}
+                  </span>
+                  <ArrowRight size={12} className={styles.nextArrowIcon} />
+                </button>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
         <div className={styles.navButtons}>
-          <button 
-            className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`} 
-            onClick={handlePrev} 
+          <button
+            className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`}
+            onClick={handlePrev}
             disabled={isPrevDisabled}
             aria-label="Previous item"
           >
             <ArrowLeft size={16} />
           </button>
-          <button 
-            className={`${styles.navBtn} ${isNextDisabled ? styles.navBtnDisabled : ""}`} 
-            onClick={handleNext} 
+          <button
+            className={`${styles.navBtn} ${isNextDisabled ? styles.navBtnDisabled : ""}`}
+            onClick={handleNext}
             disabled={isNextDisabled}
             aria-label="Next item"
           >

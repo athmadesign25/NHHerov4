@@ -44,26 +44,41 @@
               box-shadow 160ms ease;
 }
 
-/* Both themes — light gray dash visible on dark blue and white alike */
-.themeDark .dash,
-.themeLight .dash {
-  background: rgba(var(--white-rgb), 0.6);
+/* Dark theme — visible on deep navy sections */
+.themeDark .dash {
+  background: rgba(var(--white-rgb), 0.55);
   box-shadow: none;
+}
+
+.themeDark .dashHovered {
+  background: var(--white);
+  opacity: 1;
+}
+
+.themeDark .dashActive {
+  background: linear-gradient(90deg, var(--white) 0%, var(--sky-400) 40%, var(--color-emergency) 100%);
+  box-shadow: 0 0 10px rgba(var(--cyan-bright-rgb), 0.4), 0 0 6px rgba(var(--red-emergency-rgb), 0.4);
+}
+
+/* Light theme — visible on white/light sections using design tokens */
+.themeLight .dash {
+  background: var(--slate-300, #cbd5e1);
+  box-shadow: 0 0.5px 1.5px rgba(var(--slate-900-rgb), 0.08);
+}
+
+.themeLight .dashHovered {
+  background: var(--color-primary);
+  opacity: 1;
+}
+
+.themeLight .dashActive {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--blue-600) 42%, var(--color-emergency) 100%) !important;
+  box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.35) !important;
 }
 
 .dashHovered {
   width: 18px;
   opacity: 0.95;
-}
-
-/* On dark: hovered dash stays white but more opaque */
-.themeDark .dashHovered {
-  background: rgba(var(--white-rgb), 0.85);
-}
-
-/* On light: hovered dash turns primary blue */
-.themeLight .dashHovered {
-  background: var(--color-primary);
 }
 
 .dashActive {

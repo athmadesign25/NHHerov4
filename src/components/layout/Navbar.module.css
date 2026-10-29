@@ -5,24 +5,25 @@
   right: 0;
   z-index: 1000;
   height: var(--nav-height);
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(var(--white-rgb), 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-light);
   transition: background var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-slow);
 }
 
 .navbar.scrolled {
-  background: rgba(3, 78, 162, 0.97);
+  background: rgba(var(--blue-brand-rgb), 0.95);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(2, 48, 112, 0.3);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.16);
+  --shadow-rgb: var(--blue-900-rgb);
+  box-shadow: var(--elevation-3);
 }
 
 .inner {
   display: flex;
   align-items: center;
   height: var(--nav-height);
-  gap: 24px;
+  gap: var(--space-24);
 }
 
 .navContainer {
@@ -32,7 +33,7 @@
   justify-content: space-between;
   height: 68px;
   margin: 0 auto;
-  padding: 0 80px;
+  padding: 0 max(4vw, 40px);
 }
 
 .desktopOnly {
@@ -74,8 +75,8 @@
 
 .mobileLogoContainer {
   position: relative;
-  width: 92px;
-  height: 29px;
+  width: var(--space-96);
+  height: var(--space-40);
   display: flex;
   align-items: center;
 }
@@ -86,12 +87,22 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.mobileLogoDefault { opacity: 1; }
+.mobileLogoWhite { opacity: 0; }
+.mobileLogoContainer[data-theme="dark"] .mobileLogoDefault { opacity: 0; }
+.mobileLogoContainer[data-theme="dark"] .mobileLogoWhite { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileLogoImg { transition: none; }
 }
 
 .mobileActionGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .mobileSearchBtn {
@@ -106,24 +117,24 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: var(--nav-fg-color, #ffffff);
+  color: var(--nav-fg-color, var(--white));
   cursor: pointer;
   padding: 0;
-  transition: color 0.4s ease, background 0.2s ease, transform 0.15s ease;
+  transition: color var(--duration-slow) ease, background var(--duration-base) ease, transform var(--duration-fast) ease;
 }
 
 .navCityBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   height: 44px;
-  padding: 0 4px;
+  padding: 0 var(--space-4);
   background: transparent;
   border: none;
-  color: var(--nav-fg-color, #ffffff);
+  color: var(--nav-fg-color, var(--white));
   cursor: pointer;
   font-family: inherit;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-emphasis) ease;
 }
 .navCityBtn:active {
   opacity: 0.6;
@@ -137,7 +148,7 @@
 
 .mobileSearchBtn:active {
   transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 
@@ -158,9 +169,9 @@
   background: transparent;
   cursor: pointer;
   padding: 0;
-  gap: 5px;
-  color: var(--nav-fg-color, #ffffff);
-  transition: color 0.4s ease, background 0.2s ease, transform 0.15s ease;
+  gap: var(--space-6);
+  color: var(--nav-fg-color, var(--white));
+  transition: color var(--duration-slow) ease, background var(--duration-base) ease, transform var(--duration-fast) ease;
 }
 
 .appleHamburgerBtn::after {
@@ -171,7 +182,7 @@
 
 .appleHamburgerBtn:active {
   transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 .hamburgerLine {
@@ -180,11 +191,11 @@
   height: 1.75px;
   background-color: currentColor;
   border-radius: 2px;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease,
-              width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              margin 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.3s ease;
+  transition: transform var(--duration-emphasis) var(--ease-spring),
+              opacity var(--duration-moderate) ease,
+              width var(--duration-emphasis) var(--ease-spring),
+              margin var(--duration-emphasis) var(--ease-spring),
+              background-color var(--duration-emphasis) ease;
   transform-origin: center;
 }
 
@@ -221,12 +232,12 @@
   right: 0;
   bottom: 0;
   height: calc(100dvh - 56px);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(var(--slate-900-rgb), 0.95);
   backdrop-filter: blur(40px) saturate(150%);
   -webkit-backdrop-filter: blur(40px) saturate(150%);
   z-index: 999999;
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--white-rgb), 0.1);
 }
 
 .darkDrawerPane {
@@ -242,7 +253,7 @@
 .darkDrawerScroll {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 0 40px;
+  padding: var(--space-24) 0 var(--space-40);
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -253,23 +264,23 @@
 .quickActionsGrid {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .emergencyActionCard {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.04);
+  gap: var(--space-16);
+  background: rgba(var(--white-rgb), 0.03);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--space-16);
   text-decoration: none;
 }
 
 .emergencyIconPulse {
   width: 40px;
   height: 40px;
-  background: rgba(237, 28, 36, 0.1);
+  background: rgba(var(--red-emergency-rgb), 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -282,24 +293,24 @@
 }
 
 .emergencyLabel {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #f87171;
+  color: var(--red-400);
 }
 
 .emergencyNumber {
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-inverse);
   letter-spacing: 0.02em;
 }
 
 .primaryActionsRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .primaryActionCard {
@@ -307,26 +318,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  gap: var(--space-10);
+  background: rgba(var(--white-rgb), 0.03);
   border-radius: 16px;
-  padding: 16px;
+  padding: var(--space-16);
   text-decoration: none;
   border: none;
-  color: #fff;
+  color: var(--color-text-inverse);
   font-family: inherit;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background var(--duration-base);
 }
 
 .primaryActionCard span {
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .primaryActionCard:active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 /* -- Core Nav List -- */
@@ -343,7 +354,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: var(--space-20) var(--space-24);
   border: none;
   background: none;
   text-align: left;
@@ -360,18 +371,36 @@
   left: 54px; /* Aligns with text start */
   right: 0;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
+}
+
+/* Narayana One Health row in the mobile drawer. Full-colour artwork, unlike
+   the desktop lockup, which reverses to white over the dark sections — the
+   drawer keeps the brand's own colours. Its left edge sits in the icon
+   column with the other rows' glyphs. */
+.oneHealthNavLogo {
+  height: 46px;
+  width: auto;
+}
+
+/* The lockup is more than twice the height of the 18px glyphs the other
+   rows carry, so the shared 20px vertical padding made this row half again
+   as tall as its neighbours. Trimmed to keep it reading as a peer in the
+   list rather than a banner at the end of it. */
+.oneHealthNavRow {
+  padding-top: var(--space-14);
+  padding-bottom: var(--space-14);
 }
 
 .coreNavTitle {
-  font-size: 17px;
+  font-size: var(--font-size-lg);
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #f8fafc;
+  color: var(--slate-50);
 }
 
 .coreNavChevron {
-  color: #64748b;
+  color: var(--slate-500);
 }
 
 /* -- Utility Dock -- */
@@ -388,13 +417,13 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-14);
   width: 100%;
-  padding: 20px 24px;
+  padding: var(--space-20) var(--space-24);
   background: none;
   border: none;
-  color: #cbd5e1;
-  font-size: 15px;
+  color: var(--slate-300);
+  font-size: var(--font-size-base);
   font-family: inherit;
   font-weight: 500;
   text-align: left;
@@ -408,7 +437,7 @@
   left: 24px;
   right: 24px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 .utilityIconWrap {
@@ -418,21 +447,21 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: rgba(var(--white-rgb), 0.1);
+  color: var(--color-text-inverse);
 }
 
 .utilityRow strong {
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 /* -- Sub Panes -- */
 .paneHeader {
   display: flex;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(15, 23, 42, 0.5);
+  padding: var(--space-16) var(--space-20);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.08);
+  background: rgba(var(--slate-900-rgb), 0.5);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -442,20 +471,20 @@
 .backBtn {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   background: none;
   border: none;
-  color: #94a3b8;
-  font-size: 15px;
+  color: var(--slate-400);
+  font-size: var(--font-size-base);
   font-weight: 500;
-  padding: 8px 12px 8px 0;
+  padding: var(--space-8) var(--space-12) var(--space-8) 0;
   cursor: pointer;
 }
 
 .paneTitle {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-inverse);
   margin-left: 12px;
 }
 
@@ -463,31 +492,31 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding-bottom: 16px;
+  padding-bottom: var(--space-16);
 }
 
 .subCategoryLabel {
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #94a3b8;
-  padding: 0 24px 8px;
+  color: var(--slate-400);
+  padding: 0 var(--space-24) var(--space-8);
 }
 
 .subCategoryLink {
   display: block;
-  padding: 16px 24px;
-  font-size: 16px;
+  padding: var(--space-16) var(--space-24);
+  font-size: var(--font-size-base);
   font-weight: 500;
-  color: #f1f5f9;
+  color: var(--slate-100);
   text-decoration: none;
   border-radius: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.05);
 }
 
 .subCategoryLink:active {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--white-rgb), 0.05);
 }
 
 /* ── Logo ── */
@@ -501,7 +530,7 @@
 .logoWrap {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 
@@ -510,7 +539,7 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-2);
   margin-left: auto;
 }
 
@@ -521,8 +550,8 @@
 .navLink {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 11px;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-12);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
@@ -532,7 +561,7 @@
 }
 
 .scrolled .navLink {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(var(--white-rgb), 0.9);
 }
 
 .navLink:hover {
@@ -541,8 +570,8 @@
 }
 
 .scrolled .navLink:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-inverse);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 .chevron {
@@ -561,17 +590,17 @@
   left: 50%;
   transform: translateX(-50%);
   min-width: 210px;
-  background: #fff;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
-  padding: 6px;
+  padding: var(--space-6);
   overflow: hidden;
 }
 
 .dropdownItem {
   display: block;
-  padding: 9px 14px;
+  padding: var(--space-10) var(--space-14);
   font-size: var(--font-size-sm);
   font-weight: 500;
   color: var(--color-text);
@@ -588,25 +617,25 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 
 .phoneLink {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  padding: 6px 10px;
+  padding: var(--space-6) var(--space-10);
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast);
   white-space: nowrap;
 }
 
 .scrolled .phoneLink {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 .phoneLink:hover {
@@ -614,7 +643,7 @@
 }
 
 .scrolled .phoneLink:hover {
-  color: #ffffff;
+  color: var(--color-text-inverse);
 }
 
 /* Rectangular Rounded Secondary Login Button */
@@ -622,34 +651,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 24px;
+  padding: var(--space-8) var(--space-24);
   border-radius: var(--radius-full);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) ease;
 }
 
 .loginBtnActive {
-  border: 1.5px solid var(--color-primary, #034EA2);
-  color: var(--color-primary, #034EA2);
+  border: 1.5px solid var(--color-primary, var(--blue-brand));
+  color: var(--color-primary, var(--blue-brand));
   background: transparent;
 }
 
 .loginBtnActive:hover {
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
+  background: var(--color-primary, var(--blue-brand));
+  color: var(--color-text-inverse);
 }
 
 .loginBtnInactive {
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  color: #ffffff;
+  border: 1.5px solid rgba(var(--white-rgb), 0.6);
+  color: var(--color-text-inverse);
   background: transparent;
 }
 
 .loginBtnInactive:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
+  background: rgba(var(--white-rgb), 0.16);
+  border-color: var(--white);
 }
 
 .loginIconResponsive {
@@ -675,21 +704,23 @@
 .bookBtn {
   display: inline-flex;
   align-items: center;
-  padding: 9px 18px;
+  padding: var(--space-10) var(--space-20);
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-inverse);
   background: var(--color-emergency);
   border-radius: var(--radius-full);
   transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(237, 28, 36, 0.3);
+  --shadow-rgb: var(--red-emergency-rgb);
+  box-shadow: var(--elevation-1);
 }
 
 .bookBtn:hover {
-  background: #c8151c;
+  background: var(--red-emergency-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(237, 28, 36, 0.4);
+  --shadow-rgb: var(--red-emergency-rgb);
+  box-shadow: var(--elevation-2);
 }
 
 .scrolled .bookBtn {
@@ -697,7 +728,7 @@
 }
 
 .scrolled .bookBtn:hover {
-  background: #c8151c;
+  background: var(--red-emergency-dark);
 }
 
 /* ── Mobile Toggle ── */
@@ -714,7 +745,7 @@
 }
 
 .scrolled .mobileToggle {
-  color: #ffffff;
+  color: var(--color-text-inverse);
 }
 
 .mobileToggle:hover {
@@ -722,7 +753,7 @@
 }
 
 .scrolled .mobileToggle:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--white-rgb), 0.16);
 }
 
 /* ── Mobile Menu ── */
@@ -732,8 +763,8 @@
   right: 0;
   bottom: 0;
   width: min(340px, 90vw);
-  background: #ffffff;
-  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15);
+  background: var(--color-surface);
+  box-shadow: -8px 0 40px rgba(var(--black-rgb), 0.16);
   z-index: 999;
   overflow-y: auto;
 }
@@ -742,12 +773,12 @@
   padding: var(--sp-3);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-4);
 }
 
 .mobileNavLink {
   display: block;
-  padding: 14px 16px;
+  padding: var(--space-14) var(--space-16);
   font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--color-text);
@@ -773,25 +804,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 14px;
+  padding: var(--space-14);
   font-size: var(--font-size-base);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-inverse);
   background: var(--color-emergency);
   border-radius: var(--radius-md);
   transition: background var(--transition-fast);
 }
 
 .mobileBookBtn:hover {
-  background: #c8151c;
+  background: var(--red-emergency-dark);
 }
 
 .mobileLoginBtn {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 13px;
+  gap: var(--space-8);
+  padding: var(--space-14);
   font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--color-primary);
@@ -802,15 +833,15 @@
 
 .mobileLoginBtn:hover {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .mobilePhoneLink {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--space-8);
+  padding: var(--space-12);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
@@ -852,12 +883,12 @@
 .gradientPulseText {
   background: linear-gradient(
     90deg, 
-    #ffffff 0%, 
-    #ffffff 40%, 
+    var(--white) 0%, 
+    var(--white) 40%, 
     #CC428E 48%, 
     #3B6AA7 52%, 
-    #ffffff 60%, 
-    #ffffff 100%
+    var(--white) 60%, 
+    var(--white) 100%
   );
   background-size: 300% 100%;
   background-position: 100% center;
@@ -876,15 +907,15 @@
 }
 
 .navLink {
-  color: var(--nav-fg-color, #FFFFFF) !important;
-  font-size: 14px;
+  color: var(--nav-fg-color, var(--white)) !important;
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  padding: 8px 4px;
+  padding: var(--space-8) var(--space-4);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-4);
   /* Smooth opacity transition */
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-slow) var(--ease-spring);
   white-space: nowrap;
   position: relative;
   text-decoration: none;
@@ -904,7 +935,7 @@
 
 /* Chevron rotation */
 .navLink svg {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-slow) var(--ease-spring);
   color: inherit !important;
 }
 
@@ -916,7 +947,7 @@
 .desktopNav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-16);
   margin: 0;
   list-style: none;
 }
@@ -926,14 +957,14 @@
 }
 
 .navLink {
-  color: var(--nav-fg-color, #FFFFFF) !important;
-  font-size: 14px;
+  color: var(--nav-fg-color, var(--white)) !important;
+  font-size: var(--font-size-sm);
   font-weight: 500;
-  padding: 8px 4px;
+  padding: var(--space-8) var(--space-4);
   display: flex;
   align-items: center;
-  gap: 4px;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: var(--space-4);
+  transition: opacity var(--duration-emphasis) var(--ease-spring), transform var(--duration-emphasis) var(--ease-spring);
   white-space: nowrap;
   position: relative;
   text-decoration: none;
@@ -948,7 +979,7 @@
 
 /* Chevron rotation */
 .navLink svg {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-emphasis) var(--ease-spring);
   color: inherit !important;
 }
 
@@ -956,3 +987,363 @@
   transform: rotate(180deg);
 }
 
+/* ─── 24/7 Emergency: red glass secondary button ───
+   Carries its own surface rather than sitting bare on the navbar, so it
+   reads identically over the light and dark sections instead of flipping
+   with --nav-fg-color the way the plain nav labels do. */
+.emergencyBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  cursor: pointer;
+  /* Height (and radius) matched to the Login button sitting beside it —
+     its own 18px icon is taller than Login's text line, so equal padding
+     would not have produced equal buttons. */
+  height: 35px;
+  box-sizing: border-box;
+  padding: 0 var(--space-14);
+  border-radius: 10px;
+  text-decoration: none;
+  background: rgba(var(--red-emergency-rgb), 0.16);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
+  border: 1px solid rgba(255, 56, 56, 0.85);
+  box-shadow: var(--shadow-inset-highlight);
+  will-change: filter, transform;
+  transition: filter var(--duration-moderate) ease, transform var(--duration-moderate) ease, background var(--duration-moderate) ease;
+}
+
+.emergencyBtn:hover {
+  background: rgba(var(--red-emergency-rgb), 0.3);
+  filter: drop-shadow(0 0 8px rgba(var(--red-emergency-rgb), 0.6)) drop-shadow(0 0 2px rgba(var(--red-emergency-rgb), 0.7));
+  transform: translateY(-1px);
+}
+
+.emergencyLabelText {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-text-inverse);
+  transition: color var(--duration-slow) var(--ease-spring);
+}
+
+/* Over light sections the glass has no dark backdrop to hold white text,
+   so label and siren both take the brand red instead. */
+.emergencyBtnOnLight {
+  background: rgba(var(--red-emergency-rgb), 0.10);
+  border-color: rgba(var(--red-emergency-rgb), 0.6);
+}
+
+.emergencyBtnOnLight .emergencyLabelText,
+.emergencyBtnOnLight .emergencyIcon {
+  color: var(--red-emergency);
+}
+
+/* Hover deepens the red fill, which leaves the red label with nothing to
+   read against — so label and siren flip to white for that state only. */
+.emergencyBtnOnLight:hover {
+  background: rgba(var(--red-emergency-rgb), 0.9);
+  border-color: rgba(var(--red-emergency-rgb), 0.9);
+}
+
+.emergencyBtnOnLight:hover .emergencyLabelText,
+.emergencyBtnOnLight:hover .emergencyIcon {
+  color: var(--color-text-inverse);
+}
+
+/* Siren icon: takes the label's colour in both themes. */
+.emergencyIcon {
+  display: flex;
+  color: var(--color-text-inverse);
+  transition: color var(--duration-slow) var(--ease-spring);
+}
+
+/* ─── Narayana One Health lockup (desktop) ───
+   Sits bare on the navbar, like the city picker rather than the emergency
+   and login buttons — a second bordered surface next to those two would
+   read as a third action. */
+.oneHealthLink {
+  display: flex;
+  align-items: center;
+  /* Optically level with the 35px buttons: the lockup carries its own
+     internal breathing room top and bottom, so an equal box height would
+     leave the artwork itself looking smaller than the text beside it. */
+  height: 44px;
+  flex: none;
+  border-radius: 8px;
+  transition: opacity var(--duration-moderate) ease, transform var(--duration-moderate) ease;
+}
+
+.oneHealthLogo {
+  height: 100%;
+  /* Set by the intrinsic 91:100 ratio rather than a second fixed value, so
+     the two can never disagree. */
+  width: auto;
+}
+
+/* Over the dark sections the lockup's navy wordmark has nothing to read
+   against. `brightness(0) invert(1)` flattens the whole mark to white,
+   which is exactly NH's own reversed treatment — narayana_one_health_logo_white.png
+   is the same all-white silhouette — so this reproduces the official
+   artwork from the vector instead of swapping in a 91px raster. */
+.oneHealthLinkOnDark .oneHealthLogo {
+  filter: brightness(0) invert(1);
+}
+
+.oneHealthLink:hover {
+  transform: translateY(-1px);
+  opacity: 0.82;
+}
+
+/* ─── City picker (desktop) ───
+   Tertiary next to the emergency button: plain text and icon on the
+   navbar's own dynamic colour, no surface of its own. Only present once
+   the hero search — which otherwise owns the location — has docked. */
+.navLocationBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--nav-fg-color, var(--white));
+  overflow: hidden;
+  white-space: nowrap;
+  transition: color var(--duration-slow) var(--ease-spring), opacity var(--duration-base) ease;
+}
+
+.navLocationBtn:hover {
+  opacity: 0.75;
+}
+
+.navLocationName {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: inherit;
+}
+
+/* ─── Search Experience Theme Toggle (Dark / White Mode) ─── */
+.searchThemeToggle {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+}
+
+.themeTogglePill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-10) var(--space-4) var(--space-6);
+  border-radius: var(--radius-full);
+  background: rgba(var(--white-rgb), 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--nav-fg-color, var(--white));
+  font-family: var(--font-family);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all var(--duration-moderate) var(--ease-spring);
+  box-shadow: var(--elevation-2);
+}
+
+.navbarScrolled .themeTogglePill,
+:global([data-nav-theme="light"]) .themeTogglePill {
+  background: rgba(var(--slate-900-rgb), 0.05);
+  border-color: rgba(var(--slate-900-rgb), 0.16);
+  color: var(--slate-900);
+}
+
+.searchThemeToggle:hover .themeTogglePill {
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-2);
+}
+
+.themeToggleThumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--white-rgb), 0.25);
+  color: inherit;
+  transition: transform var(--duration-moderate) ease, background var(--duration-moderate) ease;
+}
+
+.themeWhiteActive .themeToggleThumb {
+  background: var(--blue-vivid);
+  color: var(--color-text-inverse);
+}
+
+.themeDarkActive .themeToggleThumb {
+  background: rgba(var(--slate-800-rgb), 0.7);
+  color: var(--slate-50);
+}
+
+.themeToggleLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Desktop information architecture; the navbar keeps its section-aware glass. */
+.desktopBrandNav { gap: var(--space-16); min-width: 0; }
+.desktopNav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-2);
+}
+.desktopActions { gap: var(--space-16); flex-shrink: 0; }
+.desktopBrandNav .navLink { padding-inline: var(--space-8); }
+.callUs {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+  color: var(--nav-fg-color, var(--color-text));
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.callUs span { position: relative; }
+.callUs span::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--space-1);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.callUs:hover span::after,
+.callUs:focus-visible span::after { transform: scaleX(1); }
+.emergencyBtn.emergencyBtnSolid {
+  height: var(--space-40);
+  background: var(--red-emergency);
+  border: var(--space-1) solid var(--red-emergency);
+  border-radius: var(--radius-md);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: var(--elevation-1);
+  filter: none;
+}
+.emergencyBtn.emergencyBtnSolid:hover {
+  background: var(--red-emergency-dark);
+  border-color: var(--red-emergency-dark);
+  filter: none;
+  box-shadow: var(--elevation-2);
+}
+.desktopLogin {
+  height: var(--space-40);
+  padding: 0 var(--space-24);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: var(--space-1) solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  line-height: var(--leading-normal);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.desktopLogin:hover { background: var(--color-primary-dark); box-shadow: var(--elevation-2); }
+.simpleDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-16);
+  border: var(--space-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-3);
+}
+.simpleDropdown a {
+  padding: var(--space-8);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+}
+.simpleDropdown a:hover { color: var(--color-primary); background: var(--color-primary-light); }
+@media (min-width: 1025px) and (max-width: 1099px) {
+  .desktopOnly { display: none !important; }
+  .mobileNav { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%; }
+  .navContainer { height: var(--space-56); padding-inline: var(--space-16); }
+}
+@media (min-width: 1100px) and (max-width: 1280px) {
+  .navContainer { padding-inline: var(--space-24); }
+  .desktopBrandNav { gap: var(--space-8); }
+  .desktopActions { gap: var(--space-8); }
+  .desktopBrandNav .navLink { padding-inline: var(--space-6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .callUs span::after { transition: none; }
+}
+
+/* The inset is measured from the first desktop label, so every menu
+   shares one centred shell across routes and desktop sizes. */
+.menuOpen { --nav-fg-color: var(--color-text); }
+.menuOpen .navContainer { position: relative; z-index: 2; }
+.menuOpen .navLink {
+  --nav-fg-color: var(--grey-500);
+  opacity: 1;
+}
+.menuOpen .navLink[aria-expanded="true"] {
+  --nav-fg-color: var(--color-text);
+  opacity: 1;
+}
+.menuOpen .navLink[aria-expanded="true"] svg { transform: rotate(180deg); }
+.navMenuOverlay {
+  position: fixed;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  padding: 0;
+  border: none;
+  background: rgba(var(--black-rgb), 0.2);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  z-index: 0;
+}
+.menuBridge {
+  position: absolute;
+  top: 100%;
+  left: var(--desktop-menu-inset);
+  right: var(--desktop-menu-inset);
+  height: var(--space-12);
+  z-index: 3;
+}
+@media (max-width: 1099px) {
+  .navMenuOverlay, .menuBridge { display: none; }
+}
+.desktopNav .navLink[aria-expanded="false"] svg { transform: rotate(0); }
+.desktopNav .navLink[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+
+.desktopBrandNav .navLink { position: relative; }
+
+/* Compact emergency affordance belongs to the right-hand mobile controls. */
+.mobileEmergency { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-6); min-height: var(--space-32); padding-inline: var(--space-8); margin-right: var(--space-4); border-radius: var(--radius-sm); background: var(--red-emergency-dark); color: var(--white); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; white-space: nowrap; }
+.mobileEmergency:focus-visible { outline: var(--space-2) solid currentColor; outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+
+.mobileEmergency::before { content: ""; position: absolute; inset: calc(-1 * var(--space-8)) 0; }
+.mobileEmergency:hover { background: var(--red-emergency); }

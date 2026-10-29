@@ -148,7 +148,7 @@ export default function TreatmentsLibraryPage() {
   return (
     <div className={styles.pageContainer}>
       {/* ─── TWO-COLUMN HERO SECTION (FOCUSED ON SEARCH & CLINICAL CONTENT) ── */}
-      <section className={styles.hero}>
+      <section className={styles.hero} data-nav-theme="dark">
         <div className={styles.heroBg}>
           <motion.div
             className={styles.heroBgMotion}

@@ -80,7 +80,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
     >
       {/* ─── DETAIL HERO (FULL BACKGROUND IMAGE & ATMOSPHERIC GRADIENT) ─────── */}
-      <section className={styles.detailHero}>
+      <section className={styles.detailHero} data-nav-theme="dark">
         {/* Full scale background image with gentle zoom settle */}
         <div className={styles.heroBg}>
           <motion.div

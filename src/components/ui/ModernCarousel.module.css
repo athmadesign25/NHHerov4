@@ -7,7 +7,7 @@
 .carouselTrack {
   display: flex;
   gap: var(--space-16);
-  height: clamp(480px, 56vh, 640px);
+  height: clamp(505px, calc(56vh + 25px), 665px);
   width: 100%;
 }
 
@@ -281,23 +281,23 @@
 
 @media (max-width: 768px) {
   .carouselTrack {
-    height: 480px;
+    height: 505px;
     gap: var(--space-8);
   }
-  
+
   .content {
     padding: var(--space-20);
   }
-  
+
   .title {
     font-size: var(--font-size-3xl);
   }
-  
+
   .desc {
     font-size: var(--font-size-sm);
     margin-bottom: var(--space-16);
   }
-  
+
   .verticalTitle {
     font-size: var(--font-size-sm);
   }
@@ -342,6 +342,79 @@
   background-color: var(--color-primary);
 }
 
+/* ─── Active & Next Card Readability Indication (Pure Text, No Labels) ─── */
+.readingAidContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0 var(--space-16);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.readingAidContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-6);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.activeTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  max-width: clamp(140px, 20vw, 260px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readingAidDivider {
+  color: var(--slate-300);
+  font-size: var(--font-size-xs);
+  margin: 0 var(--space-4);
+  user-select: none;
+}
+
+.readingAidNext {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  min-width: 0;
+  transition: color var(--duration-fast) ease;
+}
+
+.readingAidNext:hover {
+  color: var(--color-primary);
+}
+
+.nextTitle {
+  font-weight: 500;
+  color: inherit;
+  font-size: var(--font-size-sm);
+  max-width: clamp(120px, 18vw, 240px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nextArrowIcon {
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) ease;
+}
+
+.readingAidNext:hover .nextArrowIcon {
+  transform: translateX(2px);
+}
+
 .navButtons {
   display: flex;
   gap: var(--space-12);
@@ -376,7 +449,7 @@
 @media (max-width: 900px) {
   .carouselTrack {
     gap: var(--space-10);
-    height: clamp(440px, 52vh, 560px);
+    height: clamp(465px, calc(52vh + 25px), 585px);
   }
 
   .carouselItem.active {
@@ -420,7 +493,7 @@
 @media (max-width: 600px) {
   .carouselTrack {
     gap: var(--space-8);
-    height: 440px;
+    height: 465px;
   }
 
   .carouselItem:not(.active) {
@@ -467,6 +540,60 @@
   .bottomContent {
     max-width: 100%;
     width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .readingAidContainer {
+    padding: 0 var(--space-8);
+  }
+
+  .activeTitle {
+    max-width: 150px;
+  }
+
+  .nextTitle {
+    max-width: 130px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navigationWrapper {
+    flex-wrap: wrap;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  .readingAidContainer {
+    order: -1;
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0;
+    justify-content: flex-start;
+  }
+
+  .readingAidContent {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
+
+  .activeTitle,
+  .nextTitle {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .activeTitle {
+    max-width: 125px;
+    font-size: var(--font-size-xs);
+  }
+
+  .nextTitle {
+    max-width: 115px;
+    font-size: var(--font-size-xs);
   }
 }
 
