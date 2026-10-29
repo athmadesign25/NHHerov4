@@ -2,7 +2,7 @@ import { DEFAULT_DOCTOR_DESIGN, DESIGN_SCOPES } from "./designVariants";
 
 export { DEFAULT_DOCTOR_DESIGN };
 
-/** Older designs are available only through an explicit development preview. */
+/** Resolve stale preview links to the current Design 20 experience. */
 export function resolveDoctorDesign(requested: string | null | undefined, previewEnabled: boolean): string {
   if (previewEnabled && requested && DESIGN_SCOPES["search-top"].variants.some(
     variant => variant.id === requested && !("disabled" in variant && variant.disabled),

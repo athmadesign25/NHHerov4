@@ -1,5 +1,0 @@
-.grid[aria-busy] { grid-template-columns: minmax(0, 1fr); gap: var(--sp-2); }
-
-@media (min-width: 768px) {
-  .grid[aria-busy] { grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--sp-16) * 3 + var(--sp-8))), 1fr)); }
-}

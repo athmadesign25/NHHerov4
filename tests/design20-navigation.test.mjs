@@ -125,7 +125,7 @@ test("D20 supports nearest sorting for hospital visits only", () => {
   assert.equal(readListingParams(new URLSearchParams("design=d3&mode=hospital&sort=nearest")).sort, "relevance");
 });
 
-test("D20 is selectable and an explicit URL wins over a saved older preview", t => {
+test("D20 is the only selectable flow, including stale preview URLs and preferences", t => {
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
   const previousStorage = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
   const values = new Map([["nh_design_preview:search-top", "d17-lite"]]);
@@ -144,7 +144,7 @@ test("D20 is selectable and an explicit URL wins over a saved older preview", t 
   assert.equal(readDesignVariant("search-top"), "d20");
   setDesignVariant("search-top", "d17-lite");
   window.location.search = "?design=d17-lite";
-  assert.equal(readDesignVariant("search-top"), "d17-lite");
+  assert.equal(readDesignVariant("search-top"), "d20");
   setDesignVariant("search-top", "d20");
   assert.equal(readDesignVariant("search-top"), "d20");
   window.location.pathname = "/search/doctors";
@@ -156,7 +156,7 @@ test("D20 is selectable and an explicit URL wins over a saved older preview", t 
 test("the latest design is the default for direct and production routes", () => {
   for (const value of [null, undefined, "", "unknown"]) assert.equal(resolveDoctorDesign(value, true), "d20");
   for (const value of [null, "d3", "d17-lite", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, false), "d20");
-  assert.equal(resolveDoctorDesign("d17-lite", true), "d17-lite");
+  for (const value of ["original", "d1", "d7", "d15-light", "d17-lite", "d18", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, true), "d20");
 });
 
 test("normal public listing links use D20 without changing other search categories", () => {

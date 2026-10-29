@@ -42,7 +42,6 @@ const { indiaClock, indiaDate } = await import('../src/features/booking/appointm
 const { Design15DraftStore } = await import('../src/features/booking/design15/serverDraftStore.ts');
 const { Design20DraftStore, restoreDesign20DraftMethods } = await import('../src/features/booking/design20/serverDraftStore.ts');
 const { patientsForIdentity } = await import('../src/features/booking/design15/model.ts');
-const { design17Available } = await import('../src/features/booking/design17/model.ts');
 const { design20Available, design20RequestedSelection, confirmDesign20, design20SafeStep, design20ContinuePhase, design20InlineUrl, design20FlowUrl } = await import('../src/features/booking/design20/model.ts');
 const now = new Date('2026-10-28T02:00:00Z');
 
@@ -247,7 +246,6 @@ test('corrected featured affiliations retain matching D20 filter, card, booking 
     const legacyHospital = 'Narayana Health City, Bangalore';
     const legacySlots = getDesign3BookingSlots(id, date, 'hospital', legacyHospital, now, 21);
     const legacySelection = { doctorId: id, mode: 'hospital', hospital: legacyHospital, date, time: legacySlots.find(slot => slot.available).time };
-    assert.equal(design17Available(legacySelection, now.getTime()), true);
     assert.equal(design20Available(legacySelection, now.getTime()), false);
     assert.deepEqual(getDesign3BookingSlots(id, date, 'hospital', legacyHospital, now, 21, 'd20'), []);
   }
