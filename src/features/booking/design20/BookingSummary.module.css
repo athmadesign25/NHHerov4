@@ -4,7 +4,7 @@
 .container > nav a { overflow-wrap: anywhere; }
 .container > nav svg { flex-shrink: 0; }
 .page.page { padding-top: calc(var(--nav-height) + var(--sp-1)); }
-.intro { margin: 0 0 var(--sp-1); }
+.intro { margin: 0 0 var(--sp-3); }
 .intro h1 { color: var(--d7-text); font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl)); line-height: 1.2; letter-spacing: -.025em; font-weight: 600; }
 .intro p { margin-top: calc(var(--sp-1) / 2); color: var(--d7-muted); font-size: var(--font-size-sm); }
 .panel {
@@ -65,6 +65,13 @@
 .breakdown .saving dd { color: var(--journey-paper-success); }
 .breakdown .total { border-top: 1px solid color-mix(in srgb, var(--d7-text) 7%, transparent); padding-top: var(--sp-1); margin-top: calc(var(--sp-1) / 2); color: var(--d7-text); font-size: var(--font-size-sm); font-weight: 600; }
 .total dd { font-size: var(--font-size-base); }
+.savingsFeedback { position: relative; margin-inline-end: calc(var(--sp-2) * -1); }
+.savingsStrip { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; min-height: var(--sp-5); width: 100%; margin-top: var(--sp-1); padding: var(--sp-1) var(--sp-2); border-radius: var(--radius-md) 0 0 var(--radius-md); background: linear-gradient(90deg, color-mix(in srgb, var(--journey-paper-success) 12%, transparent), color-mix(in srgb, var(--journey-paper-success) 5%, transparent) 60%, transparent); color: var(--journey-paper-success); font-size: var(--font-size-sm); font-weight: 400; line-height: 1.5; text-align: left; cursor: default; }
+.savingsShimmer { position: absolute; z-index: -1; inset: 0; pointer-events: none; background: linear-gradient(108deg, transparent 43%, color-mix(in srgb, var(--color-bg-card) 50%, transparent) 44% 47%, transparent 48% 50%, color-mix(in srgb, var(--color-bg-card) 35%, transparent) 51% 52%, transparent 53%); animation: savingsSweep calc(var(--journey-tone-duration) * 1.8) cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes savingsSweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .savingsShimmer { display: none; animation: none; } }
+.savingsValue { display: inline-grid; font-variant-numeric: tabular-nums; }
+.savingsValue > strong { grid-area: 1 / 1; font-weight: 600; white-space: nowrap; }
 .panel button:disabled { opacity: .5; cursor: not-allowed; }
 .panel :is(button, input, summary, a):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 .panel :is(button, h2) { scroll-margin-top: calc(var(--nav-height) + var(--sp-3)); scroll-margin-bottom: var(--booking-dock-space); }
@@ -90,11 +97,17 @@
 
 @media (hover: hover) { .coupon:has(.benefitMain:hover:not(:disabled)) { background: color-mix(in srgb, var(--journey-paper-success) 12%, transparent); } }
 
-.hospitalLine { display: flex; align-items: flex-start; gap: var(--sp-1); }
-.hospitalLine p { flex: 1; min-width: 0; }
-.distancePill { --distance-tint: color-mix(in srgb, var(--d7-muted) 25%, var(--color-primary)); position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: calc(var(--sp-1) / 2); min-height: var(--sp-3); padding-inline: var(--sp-1); border-radius: var(--radius-full); background: color-mix(in srgb, var(--distance-tint) 6%, transparent); color: var(--d7-muted); font-size: var(--font-size-xs); font-weight: 400; line-height: 1.5; text-decoration: none; white-space: nowrap; backdrop-filter: blur(var(--sp-1)); transition: background-color var(--transition-fast); }
+.hospitalLine { overflow-wrap: anywhere; }
+.distancePill { --distance-tint: color-mix(in srgb, var(--d7-muted) 25%, var(--color-primary)); position: relative; display: inline-flex; vertical-align: middle; margin-inline-start: var(--sp-1); align-items: center; justify-content: center; gap: calc(var(--sp-1) / 2); min-height: var(--sp-3); padding-inline: var(--sp-1); border-radius: var(--radius-full); background: color-mix(in srgb, var(--distance-tint) 6%, transparent); color: var(--d7-muted); font-size: var(--font-size-xs); font-weight: 400; line-height: 1.5; text-decoration: none; white-space: nowrap; backdrop-filter: blur(var(--sp-1)); transition: background-color var(--transition-fast); }
 .distancePill::before { content: ""; position: absolute; inset: calc(var(--sp-1) * -1.25) 0; }
 .distancePill:is(:focus-visible, :active) { background: color-mix(in srgb, var(--distance-tint) 11%, transparent); }
 @media (hover: hover) { .distancePill:hover { background: color-mix(in srgb, var(--distance-tint) 11%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .distancePill { transition: none; } }
 
+
+/* Reserve feedback space so confirmation never moves the appointment details. */
+.updatedSlot { position: relative; isolation: isolate; }
+.slotHighlight { position: absolute; z-index: -1; inset: calc(var(--sp-1) / -2); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--color-success) 12%, transparent); pointer-events: none; }
+.updateFeedback { position: relative; min-height: calc(var(--font-size-xs) * 1.5); margin-top: calc(var(--sp-1) / 2); color: var(--journey-paper-success); font-size: var(--font-size-xs); font-weight: 400; line-height: 1.5; }
+.updateFeedback > span { position: absolute; inset-block-start: 0; inset-inline-start: 0; display: inline-flex; align-items: center; gap: calc(var(--sp-1) / 2); }
+.updateAnnouncement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

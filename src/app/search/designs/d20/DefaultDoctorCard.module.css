@@ -1,4 +1,5 @@
 .card {
+  --card-image-extension: var(--sp-5);
   --card-night: color-mix(in srgb, var(--d17-card-surface) 85%, var(--color-primary-dark));
   --card-ink: var(--color-text-inverse);
   --card-muted: color-mix(in srgb, var(--card-ink) 78%, var(--card-night));
@@ -30,10 +31,10 @@
 .card :is(a, button):focus-visible { outline: 2px solid var(--card-ink); outline-offset: 3px; }
 .card svg { flex-shrink: 0; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.portrait { position: absolute; inset: 0 0 auto; height: min(100%, calc(var(--sp-16) * 2 + var(--sp-8) + var(--sp-3))); z-index: 0; overflow: hidden; border-radius: inherit; background: var(--card-night); }
+.portrait { position: absolute; inset: 0 0 auto; height: min(100%, calc(var(--sp-16) * 2 + var(--sp-8) + var(--sp-3) + var(--card-image-extension))); z-index: 0; overflow: hidden; border-radius: inherit; background: var(--card-night); }
 .photoFrame { position: absolute; inset: 0; z-index: 1; }
 .officialPortrait .photo { object-position: center 45%; }
-.thumbnailPortrait .photoFrame { height: calc(var(--sp-16) + var(--sp-8)); mask-image: linear-gradient(90deg, transparent 15%, black 35%, black 65%, transparent 85%); }
+.thumbnailPortrait .photoFrame { height: calc(var(--sp-16) + var(--sp-8) + var(--card-image-extension)); mask-image: linear-gradient(90deg, transparent 15%, black 35%, black 65%, transparent 85%); }
 .thumbnailPortrait .photo { object-fit: contain; object-position: center top; }
 .photoAmbient { object-fit: cover; filter: blur(var(--sp-2)); opacity: .12; transform: scale(1.08); }
 .photo { object-fit: cover; object-position: center 20%; transition: transform var(--transition-slow); }
@@ -46,15 +47,15 @@
   pointer-events: none;
   /* Ease the portrait into the surface before the image ends, without a dark band. */
   background: linear-gradient(180deg,
-    transparent calc(var(--sp-8) + var(--sp-3)),
-    transparent calc(var(--sp-12) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 8%, transparent) calc(var(--sp-16) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 50%, transparent) calc(var(--sp-16) + var(--sp-4) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 88%, transparent) calc(var(--sp-16) + var(--sp-8) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 98%, transparent) calc(var(--sp-16) + var(--sp-12) + var(--sp-3)),
-    var(--card-night) calc(var(--sp-16) * 2 + var(--sp-3)));
+    transparent calc(var(--card-image-extension) + var(--sp-8) + var(--sp-3)),
+    transparent calc(var(--card-image-extension) + var(--sp-12) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 8%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 50%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-4) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 88%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-8) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 98%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-12) + var(--sp-3)),
+    var(--card-night) calc(var(--card-image-extension) + var(--sp-16) * 2 + var(--sp-3)));
 }
-.identity { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--sp-16) + var(--sp-12)); padding: calc(var(--sp-16) + var(--sp-6)) var(--card-content-inset) var(--sp-3); }
+.identity { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--sp-16) + var(--sp-12)); padding: calc(var(--sp-16) + var(--sp-6) + var(--card-image-extension)) var(--card-content-inset) var(--sp-3); }
 .identity { container-type: inline-size; }
 .identityText { min-width: 0; }
 .designation { margin: calc(var(--sp-1) / 2) 0 0; color: var(--card-muted); font-size: var(--font-size-sm); line-height: 1.5; overflow-wrap: anywhere; }
@@ -342,7 +343,7 @@
   inset-block-start: calc(var(--card-inset) - (var(--share-target) - (var(--sp-3) + var(--sp-1) / 2)) / 2);
   inset-inline-end: calc(var(--card-inset) - (var(--share-target) - (var(--sp-3) + var(--sp-1) / 2)) / 2);
 }
-.identity { padding-top: calc(var(--sp-16) + var(--sp-6)); padding-bottom: var(--sp-2); }
+.identity { padding-top: calc(var(--sp-16) + var(--sp-6) + var(--card-image-extension)); padding-bottom: var(--sp-2); }
 .identityText { display: grid; align-content: start; gap: var(--sp-1); }
 .profileAction { display: block; }
 .identityMeta { position: relative; min-width: 0; flex-direction: row; align-items: baseline; flex-wrap: nowrap; gap: calc(var(--sp-1) / 2) var(--sp-1); margin-top: 0; }
@@ -436,5 +437,3 @@
 
 .bookSlot { min-width: 0; }
 .bookSlot > .book { width: 100%; }
-
-.identityMeta .experienceMeasure { position: absolute; visibility: hidden; pointer-events: none; width: max-content; inset: 0 auto auto 0; }

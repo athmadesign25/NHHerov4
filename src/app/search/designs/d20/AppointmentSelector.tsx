@@ -16,10 +16,11 @@ import chip from "../../doctors/DoctorControlChip.module.css";
 import styles from "./DoctorCard.module.css";
 import { cardLayoutTransition } from "./cardMotion";
 
-export default function AppointmentSelector({ doctor, selection, now, onChange }: {
+export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false }: {
   doctor: BookingDoctorSummary;
   selection: AppointmentSelection;
   now: number;
+  autoSelectFirst?: boolean;
   onChange: (selection: AppointmentSelection) => void;
 }) {
   const dates = appointmentDates(now, DESIGN16_BOOKING_DAYS);
@@ -28,6 +29,13 @@ export default function AppointmentSelector({ doctor, selection, now, onChange }
   const availableModes = (["hospital", "video"] as const).filter(mode => profile?.modes[mode] === true);
   const availableSlots = (date: string, mode = selection.mode, hospital = selection.hospital) => getDesign3BookingSlots(doctor.id, date, mode, hospital, new Date(now), DESIGN16_BOOKING_DAYS, "d20").filter(slot => slot.available);
   const slots = availableSlots(selection.date);
+  const firstAvailableTime = slots[0]?.time;
+  useEffect(() => {
+    // Default only an empty selection; never overwrite a visitor's chosen time.
+    if (autoSelectFirst && !selection.time && firstAvailableTime) {
+      onChange({ ...selection, time: firstAvailableTime });
+    }
+  }, [autoSelectFirst, firstAvailableTime, selection, onChange]);
   const months = [...new Set(dates.map(date => date.slice(0, 7)))].map(month => ({
     key: month,
     label: new Date(`${month}-01T12:00:00Z`).toLocaleDateString("en-IN", { month: "short", timeZone: "UTC" }),

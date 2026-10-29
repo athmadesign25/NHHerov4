@@ -104,7 +104,7 @@ function BookingCard({ doctor, initialSelection, returnTo, onClose, resume }: {
     <motion.div layoutScroll ref={content} className={styles.content} tabIndex={0} role="region" aria-label="Appointment options" data-lenis-prevent initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .16 }}>
       {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
       {!flow.loaded ? <p className={styles.hint} role="status">Finding available times…</p>
-        : <AppointmentSelector doctor={doctor} selection={draft.selection} now={flow.now} onChange={flow.selectTime} />}
+        : <AppointmentSelector doctor={doctor} selection={draft.selection} now={flow.now} onChange={flow.selectTime} autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired} />}
     </motion.div>
     </CardScrollArea>
     <motion.footer ref={footer} className={styles.footer} layoutId={reduced ? undefined : `d20-summary-${doctor.id}`} transition={{ layout: cardLayoutTransition }}>
