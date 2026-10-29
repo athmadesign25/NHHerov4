@@ -1,25 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef, Fragment } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
+import { ChevronDown, Search, Menu, X, User, CalendarCheck, FileText, LogOut, Check } from "lucide-react";
 import styles from "./Navbar.module.css";
+import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
+import { TriangleAlert } from "@/components/animate-ui/icons/hugeicons/triangle-alert";
 
-// Emergency siren icon (custom, not in lucide-react) for the 24/7 Emergency
-// nav button. Fixed red (see .emergencyIcon) rather than currentColor —
-// unlike the label beside it, this doesn't follow the navbar's dynamic
-// light/dark text color.
-function EmergencyIcon({ size = 18 }: { size?: number }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="currentColor" viewBox="0 0 256 256">
-      <path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM134.68,87.89C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0c0-27.4-20.07-51.43-46.68-55.89a8,8,0,1,0-2.64,15.78ZM216,200V176H40v24H216Z"></path>
-    </svg>
-  );
-}
+import MobileMegaMenu from "./navigation/MobileMegaMenu";
+import DesktopMegaMenu from "./navigation/DesktopMegaMenu";
+import { DESKTOP_NAV_ITEMS } from "./navigation/menu-data";
+
+const MotionLink = motion.create(Link);
 
 const MOCK_FAMILY_MEMBERS = [
   { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
@@ -29,18 +24,54 @@ const MOCK_FAMILY_MEMBERS = [
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
-  // /L2banner renders the same landing page with a different marketing
-  // surface, so it is a homepage for every purpose the navbar cares about.
-  // Without this it counted as an interior page and painted solid over the
-  // hero from the first frame.
-  const isHomePage = pathname === "/" || pathname === "/L2banner";
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activePane, setActivePane] = useState<string>('main');
+  const navRef = useRef<HTMLElement>(null);
+  const lastMenuIndex = useRef(0);
+  const [menuDirection, setMenuDirection] = useState(1);
+  const openDropdown = (key: string) => {
+    const index = DESKTOP_NAV_ITEMS.findIndex((item) => item.id === key);
+    setMenuDirection(index >= lastMenuIndex.current ? 1 : -1);
+    lastMenuIndex.current = index;
+    setActiveDropdown(key);
+  };
+  const menuFocusRequested = useRef(false);
+  useLayoutEffect(() => {
+    if (!activeDropdown || !menuFocusRequested.current) return;
+    menuFocusRequested.current = false;
+    const panel = navRef.current?.querySelector<HTMLElement>('[data-desktop-menu-content="active"]');
+    panel?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"], a, button')?.focus();
+  }, [activeDropdown]);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const nav = navRef.current;
+      const firstLink = nav?.querySelector<HTMLElement>("[data-desktop-links] > li > a");
+      if (!nav || !firstLink) return;
+      const inset = firstLink.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(firstLink).paddingLeft);
+      nav.style.setProperty("--desktop-menu-inset", `${inset}px`);
+      if (window.innerWidth < 1100) setActiveDropdown(null);
+      else setIsMobileMenuOpen(false);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  useEffect(() => {
+    if (!activeDropdown) return;
+    const dismiss = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      const trigger = navRef.current?.querySelector<HTMLAnchorElement>('[data-desktop-links] > li > a[aria-expanded="true"]');
+      trigger?.focus();
+      setActiveDropdown(null);
+    };
+    document.addEventListener("keydown", dismiss);
+    return () => document.removeEventListener("keydown", dismiss);
+  }, [activeDropdown]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), [setIsMobileMenuOpen]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  
+
   // Search theme state ("dark" | "white") for stakeholder simulation
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -53,12 +84,7 @@ export default function Navbar() {
     }
   }, []);
 
-  
-  useEffect(() => {
-    if (!isMobileMenuOpen) {
-      setTimeout(() => setActivePane('main'), 300); // Reset pane when drawer closes
-    }
-  }, [isMobileMenuOpen]);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -84,10 +110,6 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
-  // The hero search carries the location picker; once it has handed off to
-  // the floating bar there is nowhere left to see or change it, so the
-  // navbar picks it up. Same threshold the floating bar appears on.
-  const [searchDocked, setSearchDocked] = useState(false);
   const isOverLightRef = useRef(false);
   const lastScrollY = useRef(0);
 
@@ -120,21 +142,15 @@ export default function Navbar() {
       }
 
       const isLight = detectedTheme !== "dark";
-      if (typeof document !== "undefined") {
-        document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
-      }
+      document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
       if (isLight !== isOverLightRef.current) {
         isOverLightRef.current = isLight;
         setIsOverLightBackground(isLight);
       }
     };
 
-    // Initialize baseline to current scroll position so page refresh doesn't trigger false delta
-    lastScrollY.current = window.scrollY;
-
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setSearchDocked(currentScrollY >= window.innerHeight * 0.65);
 
       if (currentScrollY > 20) {
         setScrolled(true);
@@ -147,20 +163,12 @@ export default function Navbar() {
       // Always show navbar near the top
       if (currentScrollY < 120) {
         setIsVisible(true);
-        if (typeof document !== "undefined") {
-          document.documentElement.setAttribute("data-nav-visible", "true");
-        }
+        document.documentElement.setAttribute("data-nav-visible", "true");
         lastScrollY.current = currentScrollY;
         return;
       }
 
       const delta = currentScrollY - lastScrollY.current;
-
-      // During initial scroll restoration / Lenis settlement, update baseline without triggering navbar visibility changes
-      if (isSettling) {
-        lastScrollY.current = currentScrollY;
-        return;
-      }
 
       // Dead zone: ignore tiny scroll movements / Lenis momentum jitter (less than 12px)
       if (Math.abs(delta) < 12) {
@@ -170,53 +178,52 @@ export default function Navbar() {
       if (delta > 0) {
         // Sustained downward scroll
         setIsVisible(false);
-        if (typeof document !== "undefined") {
-          document.documentElement.setAttribute("data-nav-visible", "false");
-        }
+        document.documentElement.setAttribute("data-nav-visible", "false");
       } else {
         // Sustained upward scroll
         setIsVisible(true);
-        if (typeof document !== "undefined") {
-          document.documentElement.setAttribute("data-nav-visible", "true");
-        }
+        document.documentElement.setAttribute("data-nav-visible", "true");
       }
 
       // Update baseline after a meaningful scroll distance
       lastScrollY.current = currentScrollY;
     };
 
-    // On initial mount / refresh: if restored at scroll >= 120, start with navbar hidden and data-nav-visible=false
-    const initialScrollY = window.scrollY;
-    if (initialScrollY < 120) {
-      setIsVisible(true);
-      if (typeof document !== "undefined") {
-        document.documentElement.setAttribute("data-nav-visible", "true");
-      }
-    } else {
-      setIsVisible(false);
-      if (typeof document !== "undefined") {
-        document.documentElement.setAttribute("data-nav-visible", "false");
-      }
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-nav-visible", window.scrollY < 120 ? "true" : "false");
     }
-
-    let isSettling = true;
-    const settleTimer = setTimeout(() => {
-      isSettling = false;
-      lastScrollY.current = window.scrollY;
-    }, 600);
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => {
-      clearTimeout(settleTimer);
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isNavbarActive = !isHomePage || scrolled || isMobileMenuOpen;
+  // Every route uses the same scroll, section-theme and menu behavior.
+  const isNavbarActive = scrolled || isMobileMenuOpen || activeDropdown !== null;
+  const isNavbarLight = isOverLightBackground || activeDropdown !== null;
 
   return (
     <nav
+      ref={navRef}
+      role={isMobileMenuOpen ? "dialog" : undefined}
+      aria-modal={isMobileMenuOpen || undefined}
+      aria-labelledby={isMobileMenuOpen ? "mobile-menu-title" : undefined}
+      className={activeDropdown ? styles.menuOpen : undefined}
+      onMouseLeave={() => setActiveDropdown(null)}
+      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActiveDropdown(null); }}
+      onKeyDown={(event) => {
+        const trigger = (event.target as HTMLElement).closest<HTMLAnchorElement>("[data-menu-trigger]");
+        if (event.key !== "ArrowDown" || !trigger) return;
+        event.preventDefault();
+        const key = trigger.dataset.menuTrigger ?? null;
+        if (activeDropdown === key) {
+          navRef.current?.querySelector<HTMLElement>('[data-desktop-menu-content="active"] [role="tab"][aria-selected="true"], [data-desktop-menu-content="active"] a, [data-desktop-menu-content="active"] button')?.focus();
+        } else {
+          menuFocusRequested.current = true;
+          if (key) openDropdown(key);
+        }
+      }}
+      onClick={(event) => { if ((event.target as HTMLElement).closest("a")) setActiveDropdown(null); }}
       style={{
         position: "fixed",
         // An announcement band, where one is present, publishes its measured
@@ -225,13 +232,13 @@ export default function Navbar() {
         top: "var(--band-height, 0px)",
         zIndex: isMobileMenuOpen ? 10000000 : 1000,
         width: "100%",
-        transform: isVisible ? "translateY(0)" : "translateY(-100%)",
+        transform: isVisible || activeDropdown ? "translateY(0)" : "translateY(-100%)",
         // `top` transitions too, so when the announcement band scrolls away
         // the navbar rides up with it instead of snapping the instant the
         // band's height drops to 0.
         transition:
           "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), top 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
-        "--nav-fg-color": (!isMobileMenuOpen && isOverLightBackground) ? "var(--color-text, var(--slate-900))" : "var(--white)"
+        "--nav-fg-color": (!isMobileMenuOpen && isNavbarLight) ? "var(--color-text, var(--slate-900))" : "var(--white)"
       } as React.CSSProperties}
     >
       <div
@@ -240,290 +247,98 @@ export default function Navbar() {
           position: "absolute",
           inset: 0,
           zIndex: -1,
-          backgroundColor: isMobileMenuOpen
+          backgroundColor: activeDropdown ? "var(--color-surface)" : isMobileMenuOpen
             ? "rgba(var(--slate-900-rgb), 0.95)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "rgba(var(--white-rgb), 0.8)" : "rgba(8, 15, 28, 0.55)")
+                ? (isNavbarLight ? "rgba(var(--white-rgb), 0.8)" : "rgba(8, 15, 28, 0.55)")
                 : "transparent"),
           backdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           WebkitBackdropFilter: (isNavbarActive || isMobileMenuOpen) ? "blur(24px) saturate(180%)" : "none",
           borderBottom: isMobileMenuOpen
             ? "1px solid rgba(var(--white-rgb), 0.1)"
             : (isNavbarActive
-                ? (isOverLightBackground ? "1px solid rgba(var(--black-rgb), 0.08)" : "1px solid rgba(var(--white-rgb), 0.2)")
+                ? (isNavbarLight ? "1px solid rgba(var(--black-rgb), 0.08)" : "1px solid rgba(var(--white-rgb), 0.2)")
                 : "1px solid rgba(var(--white-rgb), 0)"),
           transition: "background-color 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease",
           pointerEvents: "none"
         }}
       />
+      {activeDropdown && <>
+        <button type="button" className={styles.navMenuOverlay} aria-label="Close navigation menu"
+          tabIndex={-1} onMouseEnter={() => setActiveDropdown(null)} onClick={() => setActiveDropdown(null)} />
+        <div className={styles.menuBridge} aria-hidden="true" />
+      </>}
       <div className={`container ${styles.navContainer}`}>
-        <div style={{ display: "flex", alignItems: "center", gap: "40px" }} className={styles.desktopOnly}>
+        <div className={`${styles.desktopOnly} ${styles.desktopBrandNav}`}>
           <Link aria-label="Narayana Health Home" style={{ flexShrink: 0 }} href="/">
             <div style={{ position: "relative", width: "140px", height: "44px", display: "flex", alignItems: "center" }}>
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
-              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isOverLightBackground) ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isNavbarLight) ? 1 : 0, transition: "opacity 0.4s ease" }} src="/NH-logo.svg" priority />
+              <Image alt="Narayana Health" width={140} height={44} style={{ position: "absolute", inset: 0, width: "70%", height: "100%", objectFit: "contain", opacity: (!isNavbarActive || isNavbarLight) ? 0 : 1, transition: "opacity 0.4s ease" }} src="/NH-logo-white.svg" priority />
             </div>
           </Link>
-          <ul style={{ display: "flex", listStyle: "none", gap: "16px", alignItems: "center", margin: 0 }} className={styles.desktopNav}>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("find-a-doctor")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/search">
-              Find a Doctor<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "find-a-doctor" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--color-surface)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Top Specialties</div>
-                  <Link href="/search?q=cardiologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiologist</Link>
-                  <Link href="/search?q=orthopaedician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedician</Link>
-                  <Link href="/search?q=oncologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Oncologist</Link>
-                  <Link href="/search?q=neurologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurologist</Link>
-                  <Link href="/search?q=pediatrician" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pediatrician</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Surgical Specialists</div>
-                  <Link href="/search?q=cardiac%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgeon</Link>
-                  <Link href="/search?q=general%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>General Surgeon</Link>
-                  <Link href="/search?q=vascular%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgeon</Link>
-                  <Link href="/search?q=plastic%20surgeon" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Plastic Surgeon</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Internal Medicine</div>
-                  <Link href="/search?q=gastroenterologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gastroenterologist</Link>
-                  <Link href="/search?q=pulmonologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Pulmonologist</Link>
-                  <Link href="/search?q=endocrinologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Endocrinologist</Link>
-                  <Link href="/search?q=nephrologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Nephrologist</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Other Specialists</div>
-                  <Link href="/search?q=urologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Urologist</Link>
-                  <Link href="/search?q=gynecologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gynecologist</Link>
-                  <Link href="/search?q=ent%20specialist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>ENT Specialist</Link>
-                  <Link href="/search?q=dermatologist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dermatologist</Link>
-                  <Link href="/search?q=dentist" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dentist</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, var(--slate-200))", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/search" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, var(--blue-brand))", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("hospitals")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/hospitals">
-              Hospitals & Clinics<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "hospitals" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--color-surface)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>SOUTH INDIA</div>
-                  <Link href="/hospitals/bengaluru-health-city" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru — Health City</Link>
-                  <Link href="/hospitals/bengaluru-mazumdar-shaw" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bengaluru —<br />Mazumdar Shaw</Link>
-                  <Link href="/hospitals/mysuru" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Mysuru</Link>
-                  <Link href="/hospitals/dharwad" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Dharwad</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>EAST INDIA</div>
-                  <Link href="/hospitals/kolkata" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Kolkata</Link>
-                  <Link href="/hospitals/jamshedpur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jamshedpur</Link>
-                  <Link href="/hospitals/raipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Raipur</Link>
-                  <Link href="/hospitals/guwahati" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Guwahati</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>NORTH INDIA</div>
-                  <Link href="/hospitals/delhi-ncr" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Delhi NCR</Link>
-                  <Link href="/hospitals/gurugram" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Gurugram</Link>
-                  <Link href="/hospitals/jaipur" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jaipur</Link>
-                  <Link href="/hospitals/jammu" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Jammu</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>INTERNATIONAL</div>
-                  <Link href="/hospitals/cayman-islands" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cayman Islands</Link>
-                  <Link href="/hospitals/bangladesh-helpdesk" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Bangladesh<br />Helpdesk</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, var(--slate-200))", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/hospitals" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, var(--blue-brand))", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("specialities")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/specialities">
-              Treatment & Specialities<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "specialities" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--color-surface)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "720px", border: "1px solid var(--color-border, var(--slate-200))" }}>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>HEART & VASCULAR</div>
-                  <Link href="/specialities/cardiology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiology</Link>
-                  <Link href="/specialities/cardiac-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Cardiac Surgery</Link>
-                  <Link href="/specialities/vascular-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vascular Surgery</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>CANCER CARE</div>
-                  <Link href="/specialities/medical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Medical Oncology</Link>
-                  <Link href="/specialities/surgical-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Surgical Oncology</Link>
-                  <Link href="/specialities/radiation-oncology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Radiation Oncology</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>BRAIN & SPINE</div>
-                  <Link href="/specialities/neurology" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurology</Link>
-                  <Link href="/specialities/neurosurgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Neurosurgery</Link>
-                  <Link href="/specialities/spine-surgery" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Spine Surgery</Link>
-                </div>
-                <div>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>BONES & JOINTS</div>
-                  <Link href="/specialities/orthopaedics" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Orthopaedics</Link>
-                  <Link href="/specialities/joint-replacement" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Joint Replacement</Link>
-                  <Link href="/specialities/sports-medicine" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Sports Medicine</Link>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, var(--slate-200))", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/specialities" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, var(--blue-brand))", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-          <li className={styles.navItem}
-            style={{ position: "relative" }}
-            onMouseEnter={() => setActiveDropdown("health-checks")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <Link className={styles.navLink} href="/health-checks">
-              Health Checkups<ChevronDown size={14} />
-            </Link>
-            {activeDropdown === "health-checks" && (
-              <div style={{ position: "absolute", top: "100%", left: "0px", background: "var(--color-surface)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md, 0 4px 16px rgba(var(--black-rgb), 0.1))", padding: "var(--sp-4, 32px)", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "var(--sp-4, 32px)", minWidth: "640px", border: "1px solid var(--color-border, var(--slate-200))" }}>
-                <div style={{ gridColumn: "span 2" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Health Packages for Women</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                    <Link href="/specialities/vital-care-(below-40-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 40 years)</Link>
-                    <Link href="/specialities/prime-health-(40-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (40-45 years)</Link>
-                    <Link href="/specialities/enhanced-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (above 45 years)</Link>
-                    <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
-                  </div>
-                </div>
-                <div style={{ gridColumn: "span 2" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-primary, var(--blue-brand))", marginBottom: "10px", borderLeft: "3px solid var(--color-emergency, var(--red-emergency))", paddingLeft: "8px" }}>Health Packages for Men</div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                    <Link href="/specialities/vital-care-(below-35-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Vital Care (below 35 years)</Link>
-                    <Link href="/specialities/prime-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Prime Health (35-45 years)</Link>
-                    <Link href="/specialities/enhanced-health-(35-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Enhanced Health (35-45 years)</Link>
-                    <Link href="/specialities/comprehensive-health-(above-45-years)" style={{ display: "block", fontSize: "13px", color: "var(--color-text-secondary, var(--slate-600))", padding: "4px 0px 4px 11px", borderRadius: "var(--radius-sm)", transition: "color 0.15s" }}>Comprehensive Health (above 45 years)</Link>
-                  </div>
-                </div>
-                <div style={{ gridColumn: "1 / -1", borderTop: "1px solid var(--color-border, var(--slate-200))", paddingTop: "var(--sp-3, 24px)", display: "flex", justifyContent: "flex-end" }}>
-                  <Link href="/health-checks" style={{ fontSize: "13px", fontWeight: 600, color: "var(--color-primary, var(--blue-brand))", display: "flex", alignItems: "center", gap: "2px" }}>
-                    View all <ChevronRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            )}
-          </li>
-
+          <ul className={styles.desktopNav} data-desktop-links>
+            {DESKTOP_NAV_ITEMS.map((item) => (
+              <li key={item.id} className={styles.navItem} onMouseEnter={() => openDropdown(item.id)} onFocus={() => openDropdown(item.id)}>
+                <Link className={styles.navLink} href={item.href} data-menu-trigger={item.id}
+                  aria-expanded={activeDropdown === item.id} aria-controls="desktop-navigation-panel">
+                  {item.label}<ChevronDown size={14} />
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "24px" }} className={styles.desktopOnly}>
-          <AnimatePresence>
-            {searchDocked && (
-              <motion.button
-                type="button"
-                className={styles.navLocationBtn}
-                aria-label="Change city"
-                initial={{ opacity: 0, width: 0, marginRight: -12 }}
-                animate={{ opacity: 1, width: "auto", marginRight: 0 }}
-                exit={{ opacity: 0, width: 0, marginRight: -12 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <MapPin size={16} strokeWidth={2} />
-                <span className={styles.navLocationName}>Bangalore</span>
-                <ChevronDown size={14} style={{ opacity: 0.7 }} />
-              </motion.button>
-            )}
-          </AnimatePresence>
+        <div className={`${styles.desktopOnly} ${styles.desktopActions}`} onMouseEnter={() => setActiveDropdown(null)}>
+          <motion.a href="tel:18003090309" className={styles.callUs} initial="initial" whileHover="animate" whileFocus="animate">
+            <PhoneCall animateOnHover />
+            <span>Call Us</span>
+          </motion.a>
 
-          {/* Narayana One Health — sibling-brand cross-link. A stacked
-              three-tier lockup, so it is sized by its own legibility rather
-              than to the 35px button boxes beside it: matched to their
-              height, the "Narayana" wordmark drops to about a 5px cap and
-              stops reading as words. */}
-          <a
-            href="https://www.narayanaone.health/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.oneHealthLink} ${isOverLightBackground ? "" : styles.oneHealthLinkOnDark}`}
-            aria-label="Narayana One Health (opens in a new tab)"
-          >
-            <Image
-              src="/narayana_one_health_logo.svg"
-              alt="Narayana One Health"
-              width={91}
-              height={100}
-              className={styles.oneHealthLogo}
-            />
-          </a>
-
-          <Link
+          <MotionLink
             href="/emergency"
-            className={`${styles.emergencyBtn} ${isOverLightBackground ? styles.emergencyBtnOnLight : ""}`}
+            initial="initial"
+            whileHover="animate"
+            whileFocus="animate"
+            className={`${styles.emergencyBtn} ${styles.emergencyBtnSolid}`}
           >
             <span className={styles.emergencyIcon}>
-              <EmergencyIcon size={18} />
+              <TriangleAlert animateOnHover />
             </span>
-            {/* Red over light sections, white over dark — flipping on the
-                same signal the rest of the navbar's labels use, since white
-                on the pale red glass has nothing to sit against there. */}
             <span className={styles.emergencyLabelText}>24/7 Emergency</span>
-          </Link>
+          </MotionLink>
 
           {isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
-              <button 
+              <button
                 onClick={() => {
                   setIsProfileDropdownOpen(!isProfileDropdownOpen);
                   if (isProfileDropdownOpen) setIsMembersExpanded(false);
                 }}
                 className={styles.loginBtnResponsive}
-                style={{ 
-                  cursor: "pointer", 
-                  fontFamily: "inherit", 
-                  padding: "6px 12px 6px 6px", 
-                  display: "flex", 
-                  alignItems: "center", 
+                style={{
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  padding: "6px 12px 6px 6px",
+                  display: "flex",
+                  alignItems: "center",
                   gap: "8px",
-                  background: isProfileDropdownOpen 
-                    ? (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)") 
-                    : (isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)"),
+                  background: isProfileDropdownOpen
+                    ? (isNavbarLight ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)")
+                    : (isNavbarLight ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)"),
                   color: "var(--nav-fg-color)",
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",
-                  border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
+                  border: isNavbarLight ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
                   borderRadius: "100px",
                   transition: "all 0.2s"
                 }}
-                onMouseEnter={(e) => { 
+                onMouseEnter={(e) => {
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
+                    e.currentTarget.style.background = isNavbarLight ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
                   }
                 }}
-                onMouseLeave={(e) => { 
+                onMouseLeave={(e) => {
                   if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
+                    e.currentTarget.style.background = isNavbarLight ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
                   }
                 }}
               >
@@ -531,7 +346,7 @@ export default function Navbar() {
                 <span style={{ fontWeight: 600, fontSize: "15px" }}>{activeUser.name}</span>
                 <ChevronDown size={16} strokeWidth={2.5} style={{ opacity: 0.7, transform: isProfileDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
               </button>
-              
+
               {isProfileDropdownOpen && (
                 <div style={{
                   position: "absolute",
@@ -555,7 +370,7 @@ export default function Navbar() {
                       {MOCK_FAMILY_MEMBERS.slice(0, isMembersExpanded ? MOCK_FAMILY_MEMBERS.length : 3).map((member) => {
                         const isActive = member.id === activeUserId;
                         return (
-                          <button 
+                          <button
                             key={member.id}
                             onClick={() => {
                               setActiveUserId(member.id);
@@ -589,17 +404,17 @@ export default function Navbar() {
                       })}
                     </div>
                     {MOCK_FAMILY_MEMBERS.length > 3 && (
-                      <button 
+                      <button
                         onClick={() => setIsMembersExpanded(!isMembersExpanded)}
-                        style={{ 
-                          marginTop: "8px", 
-                          padding: "8px", 
-                          width: "100%", 
-                          background: "none", 
-                          border: "none", 
-                          color: "var(--color-primary)", 
-                          fontSize: "13px", 
-                          fontWeight: 600, 
+                        style={{
+                          marginTop: "8px",
+                          padding: "8px",
+                          width: "100%",
+                          background: "none",
+                          border: "none",
+                          color: "var(--color-primary)",
+                          fontSize: "13px",
+                          fontWeight: 600,
                           cursor: "pointer",
                           textAlign: "center"
                         }}
@@ -608,7 +423,7 @@ export default function Navbar() {
                       </button>
                     )}
                   </div>
-                  
+
                   <div style={{ padding: "8px" }}>
                     <Link href="/profile" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, var(--slate-900))", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
                       <User size={18} style={{ color: "var(--color-text-secondary, var(--slate-600))" }} /> My account
@@ -620,15 +435,15 @@ export default function Navbar() {
                       <FileText size={18} style={{ color: "var(--color-text-secondary, var(--slate-600))" }} /> Health records
                     </Link>
                   </div>
-                  
+
                   <div style={{ borderTop: "1px solid var(--color-border, var(--slate-200))", padding: "8px" }}>
-                    <button 
+                    <button
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
                         setIsLoggedIn(false); localStorage.removeItem('isLoggedIn');
                       }}
-                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, var(--red-500))", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }} 
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"} 
+                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, var(--red-500))", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"}
                       onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                     >
                       <LogOut size={18} /> Sign out
@@ -638,40 +453,20 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <button 
-              className={styles.loginBtnResponsive}
+            <button
+              className={`${styles.loginBtnResponsive} ${styles.desktopLogin}`}
               onClick={() => setIsLoginModalOpen(true)}
-              style={{ 
-                cursor: "pointer", 
-                fontFamily: "inherit",
-                background: isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)",
-                color: "var(--nav-fg-color)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                border: isOverLightBackground ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
-                padding: "8px 24px",
-                borderRadius: "var(--radius-md)",
-                fontWeight: 600,
-                fontSize: "14px",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
-              }}
-              onMouseLeave={(e) => { 
-                e.currentTarget.style.background = isOverLightBackground ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
-              }}
             >
               Login
             </button>
           )}
-          <Link 
-            href="/login" 
-            className={styles.loginIconResponsive} 
-            style={{ 
-              color: "var(--nav-fg-color)", 
-              padding: "8px", 
-              alignItems: "center", 
+          <Link
+            href="/login"
+            className={styles.loginIconResponsive}
+            style={{
+              color: "var(--nav-fg-color)",
+              padding: "8px",
+              alignItems: "center",
               justifyContent: "center",
               transition: "color 0.4s ease"
             }}
@@ -686,47 +481,48 @@ export default function Navbar() {
         {/* ─── Mobile Navbar (<= 1024px): [ NH Logo ] [ Search ] [ Book Appointment ] [ Menu ] ─── */}
         <div className={styles.mobileNav}>
           <Link aria-label="Narayana Health Home" href="/" className={styles.mobileLogoLink}>
-            <div className={styles.mobileLogoContainer}>
-              <Image 
-                alt="Narayana Health" 
-                src="/NH-logo.svg" 
-                width={112} 
-                height={35} 
-                className={styles.mobileLogoImg}
-                style={{ opacity: 1 }} 
-                priority 
+            <div
+              className={styles.mobileLogoContainer}
+              data-theme={!isMobileMenuOpen && (!isNavbarActive || isNavbarLight) ? "light" : "dark"}
+            >
+              <Image
+                alt="Narayana Health"
+                src="/NH-logo.svg"
+                width={84}
+                height={40}
+                sizes="96px"
+                className={`${styles.mobileLogoImg} ${styles.mobileLogoDefault}`}
+                priority
+              />
+              <Image
+                alt=""
+                aria-hidden="true"
+                src="/NH-logo-white.svg"
+                width={84}
+                height={40}
+                sizes="96px"
+                className={`${styles.mobileLogoImg} ${styles.mobileLogoWhite}`}
+                priority
               />
             </div>
           </Link>
 
           <div className={styles.mobileActionGroup}>
-            <AnimatePresence>
-              {isMobileMenuOpen && (
-                <motion.button 
-                  className={styles.navCityBtn} 
-                  aria-label="Select City"
-                  initial={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
-                  animate={{ opacity: 1, width: "auto", overflow: "visible", padding: "0 4px" }}
-                  exit={{ opacity: 0, width: 0, overflow: "hidden", padding: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <MapPin size={16} strokeWidth={2.5} />
-                  <span style={{ fontSize: '13px', fontWeight: 600 }}>BLR</span>
-                  <ChevronDown size={14} style={{ opacity: 0.7 }} />
-                </motion.button>
-              )}
-            </AnimatePresence>
+            {!isMobileMenuOpen && <a href="tel:18003090309" className={styles.mobileEmergency} aria-label="24/7 Emergency">
+              <TriangleAlert size={16} /><span>24/7 Emergency</span>
+            </a>}
             {/* No search affordance in the mobile bar: the hero composer
                 docks into the bottom action bar on scroll and carries search
                 from there, so a second entry point up here was a duplicate. */}
 
             {/* Apple-Style Morphing 2-Line Animated Hamburger Button */}
-            <button 
+            <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={styles.appleHamburgerBtn}
               aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation-menu"
             >
               <span className={`${styles.hamburgerLine} ${styles.lineTop} ${isMobileMenuOpen ? styles.lineTopOpen : ""}`} />
               <span className={`${styles.hamburgerLine} ${styles.lineBottom} ${isMobileMenuOpen ? styles.lineBottomOpen : ""}`} />
@@ -735,235 +531,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ─── Premium Dark Mode Mobile Menu (Sliding Panes) ─── */}
+      {activeDropdown && <DesktopMegaMenu activeMenu={activeDropdown} direction={menuDirection} onNavigate={() => setActiveDropdown(null)} />}
+
+      {/* Local mobile-menu exploration; the closed navbar stays unchanged. */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div 
-            className={styles.darkDrawerOverlay}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <AnimatePresence mode="wait">
-              
-              {/* --- MAIN PANE --- */}
-              {activePane === 'main' && (
-                <motion.div 
-                  key="main"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "-20%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "-20%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.darkDrawerScroll}>
-                    
-                    {/* Main Unified Navigation List */}
-                    <motion.div 
-                      className={styles.coreNavList}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <Link href="/book" onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <CalendarCheck size={18} color="#94a3b8" />
-                          <span className={styles.coreNavTitle}>Book Visit</span>
-                        </div>
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </Link>
-
-                      <button onClick={() => setActivePane('search')} className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <Search size={18} color="#94a3b8" />
-                          <span className={styles.coreNavTitle}>Find Doctor</span>
-                        </div>
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </button>
-
-                      {[
-                        { title: "Treatments & Specialities", pane: "specialities", icon: <Stethoscope size={18} color="#94a3b8" /> },
-                        { title: "Health Checkups", pane: "health-checks", icon: <Activity size={18} color="#94a3b8" /> },
-                        { title: "Hospitals & Clinics", href: "/hospitals", icon: <Building2 size={18} color="#94a3b8" /> },
-                        { title: "International Patients", href: "/international-patients", icon: <Globe size={18} color="#94a3b8" /> },
-                      ].map((item) => (
-                        <Fragment key={item.title}>
-                          {item.pane ? (
-                            <button onClick={() => setActivePane(item.pane)} className={styles.coreNavLink}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                {item.icon}
-                                <span className={styles.coreNavTitle}>{item.title}</span>
-                              </div>
-                              <ChevronRight size={20} className={styles.coreNavChevron} />
-                            </button>
-                          ) : (
-                            <Link href={item.href!} onClick={() => setIsMobileMenuOpen(false)} className={styles.coreNavLink}>
-                              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                                {item.icon}
-                                <span className={styles.coreNavTitle}>{item.title}</span>
-                              </div>
-                              <ChevronRight size={20} className={styles.coreNavChevron} />
-                            </Link>
-                          )}
-                        </Fragment>
-                      ))}
-
-                      <a href="tel:18003090309" className={styles.coreNavLink}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                          <Phone size={18} color="#f87171" />
-                          <span className={styles.coreNavTitle} style={{ color: "var(--red-400)" }}>24/7 Emergency (1800 309 0309)</span>
-                        </div>
-                      </a>
-
-                      {/* Carries no title text: the lockup spells the brand
-                          out itself, so a "Narayana One Health" label beside
-                          it would just say the same thing twice. */}
-                      <a
-                        href="https://www.narayanaone.health/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`${styles.coreNavLink} ${styles.oneHealthNavRow}`}
-                        aria-label="Narayana One Health (opens in a new tab)"
-                      >
-                        <Image
-                          src="/narayana_one_health_logo.svg"
-                          alt="Narayana One Health"
-                          width={91}
-                          height={100}
-                          className={styles.oneHealthNavLogo}
-                        />
-                        <ChevronRight size={20} className={styles.coreNavChevron} />
-                      </a>
-                    </motion.div>
-
-                    {/* Bottom Utility Dock */}
-                    <motion.div 
-                      className={styles.utilityDock}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <button onClick={() => { setIsMobileMenuOpen(false); setIsLoginModalOpen(true); }} className={styles.utilityRow}>
-                        <div className={styles.utilityIconWrap}><User size={16} /></div>
-                        <span>Login</span>
-                      </button>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: FIND A DOCTOR (SEARCH) --- */}
-              {activePane === 'search' && (
-                <motion.div 
-                  key="search"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Find a Doctor</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Top Specialties</div>
-                      <Link href="/search?q=cardiologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiologist</Link>
-                      <Link href="/search?q=orthopaedician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedician</Link>
-                      <Link href="/search?q=oncologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Oncologist</Link>
-                      <Link href="/search?q=neurologist" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurologist</Link>
-                      <Link href="/search?q=pediatrician" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Pediatrician</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Surgical Specialists</div>
-                      <Link href="/search?q=cardiac%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgeon</Link>
-                      <Link href="/search?q=general%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>General Surgeon</Link>
-                      <Link href="/search?q=vascular%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgeon</Link>
-                      <Link href="/search?q=plastic%20surgeon" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Plastic Surgeon</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: SPECIALITIES --- */}
-              {activePane === 'specialities' && (
-                <motion.div 
-                  key="specialities"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Specialities</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Heart Care</div>
-                      <Link href="/specialities/cardiology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiology</Link>
-                      <Link href="/specialities/cardiac-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Cardiac Surgery</Link>
-                      <Link href="/specialities/vascular-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vascular Surgery</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Brain & Spine</div>
-                      <Link href="/specialities/neurology" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurology</Link>
-                      <Link href="/specialities/neurosurgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Neurosurgery</Link>
-                      <Link href="/specialities/spine-surgery" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Spine Surgery</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>Bones & Joints</div>
-                      <Link href="/specialities/orthopaedics" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Orthopaedics</Link>
-                      <Link href="/specialities/joint-replacement" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Joint Replacement</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* --- SUB-PANE: HEALTH CHECKUPS --- */}
-              {activePane === 'health-checks' && (
-                <motion.div 
-                  key="health-checks"
-                  className={styles.darkDrawerPane}
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <div className={styles.paneHeader}>
-                    <button onClick={() => setActivePane('main')} className={styles.backBtn}>
-                      <ChevronLeft size={22} />
-                    </button>
-                    <span className={styles.paneTitle}>Health Checkups</span>
-                  </div>
-                  <div className={styles.darkDrawerScroll}>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>For Women</div>
-                      <Link href="/specialities/vital-care-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 40 years)</Link>
-                      <Link href="/specialities/prime-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (40-45 years)</Link>
-                      <Link href="/specialities/enhanced-health-women" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
-                    </div>
-                    <div className={styles.subCategoryGroup}>
-                      <div className={styles.subCategoryLabel}>For Men</div>
-                      <Link href="/specialities/vital-care-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Vital Care (below 35 years)</Link>
-                      <Link href="/specialities/prime-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Prime Health (35-45 years)</Link>
-                      <Link href="/specialities/enhanced-health-men" onClick={() => setIsMobileMenuOpen(false)} className={styles.subCategoryLink}>Enhanced Health (above 45 years)</Link>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-            </AnimatePresence>
-          </motion.div>
-        )}
+        {isMobileMenuOpen && <MobileMegaMenu onClose={closeMobileMenu} onLogin={() => { closeMobileMenu(); setIsLoginModalOpen(true); }} />}
       </AnimatePresence>
 
       {isSearchOpen && (
@@ -972,7 +544,7 @@ export default function Navbar() {
             <button aria-label="Close search" onClick={() => setIsSearchOpen(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "transparent", border: "none", cursor: "pointer", padding: "8px", color: "var(--grey-500)" }}>
               <X size={24} strokeWidth={2.5} />
             </button>
-            
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "12px", alignItems: "end" }}>
               <div style={{ position: "relative" }}>
                 <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "var(--grey-500)", marginBottom: "6px", letterSpacing: "0.05em", textTransform: "uppercase" }}>Search Doctors, Specialities or Hospitals</label>

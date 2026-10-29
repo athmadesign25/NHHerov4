@@ -20,6 +20,7 @@ import AdvanceTechnology from "@/components/sections/advance-technology/AdvanceT
 import AdvanceTestsCarousel from "@/components/ui/AdvanceTestsCarousel";
 import DoctorOverviewCarousel from "@/components/ui/DoctorOverviewCarousel";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
+import AboutSpecialitySection from "./AboutSpecialitySection";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
 import { ALL_SPECIALITIES } from "@/data/specialities";
 
@@ -30,6 +31,7 @@ const TOC_ITEMS: TOCItem[] = [
   { id: "procedures", label: "Procedures & Surgeries" },
   { id: "technology", label: "Advance Technology" },
   { id: "tests", label: "Advance Tests" },
+  { id: "about-speciality", label: "About Speciality" },
   { id: "doctor-overview", label: "Doctor Video Insights" },
   { id: "why-us", label: "Why Choose Us" },
   { id: "patient-stories", label: "Patient Stories" },
@@ -1075,6 +1077,22 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
       const active = document.documentElement.getAttribute("data-nav-theme-active");
       if (active === "light" || active === "dark") {
         setNavTheme(active);
+        return;
+      }
+
+      const probeX = window.innerWidth / 2;
+      const probeY = 100;
+      const elements = document.elementsFromPoint(probeX, probeY);
+      for (const el of elements) {
+        if (el.closest("nav") || el.closest('[class*="programmeTabsWrapper"]') || el.closest("footer")) continue;
+        const themeEl = el.closest("[data-nav-theme]");
+        if (themeEl) {
+          const t = themeEl.getAttribute("data-nav-theme");
+          if (t === "light" || t === "dark") {
+            setNavTheme(t);
+            return;
+          }
+        }
       }
     };
 
@@ -1093,7 +1111,12 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
       attributeFilter: ["data-nav-theme-active"]
     });
 
-    return () => observer.disconnect();
+    window.addEventListener("scroll", updateTheme, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateTheme);
+    };
   }, []);
 
   useEffect(() => {
@@ -1394,6 +1417,18 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
           <div className={isTabsPinned ? styles.programmeTabsContainerPinned : styles.programmeTabsContainer}>
             {isTabsPinned ? (
               <div className={styles.pinnedBreadcrumbRow}>
+                {/* 0. All Specialities Link */}
+                <Link
+                  href="/specialities"
+                  className={styles.breadcrumbLink}
+                  title="All Specialities"
+                  aria-label="View all medical specialities"
+                >
+                  Specialities
+                </Link>
+
+                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+
                 {/* 1. Main Speciality Root */}
                 <button
                   type="button"
@@ -1408,47 +1443,47 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                   {title}
                 </button>
 
-                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                {/* 2. Patient Type */}
-                <button
-                  type="button"
-                  className={styles.breadcrumbTypeBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const nextType = patientType === "Adult" ? "Paediatric" : "Adult";
-                    handlePatientTypeChange(nextType, true);
-                  }}
-                  title={`Patient type: ${patientType}. Click to switch.`}
-                  aria-label={`Current patient type: ${patientType}. Click to switch.`}
-                >
-                  {patientType}
-                </button>
-
-                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                {/* 3. Selected tab as text dropdown trigger */}
+                {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
                 <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
-                  <button
-                    type="button"
-                    className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsDropdownOpen((prev) => !prev);
-                    }}
-                    aria-haspopup="listbox"
-                    aria-expanded={isDropdownOpen}
-                    aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
-                  >
-                    <span className={styles.breadcrumbSelectedTabTitle}>
-                      {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
-                    </span>
-                    <ChevronDown
-                      size={14}
-                      className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
-                      aria-hidden="true"
-                    />
-                  </button>
+                  <div className={styles.breadcrumbCombinedDropdown}>
+                    <button
+                      type="button"
+                      className={`${styles.breadcrumbTypeBtn} ${isDropdownOpen ? styles.breadcrumbTypeBtnOpen : ""}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen((prev) => !prev);
+                      }}
+                      title={`Patient type: ${patientType}. Click to change programme or patient type.`}
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-label={`Current patient type: ${patientType}. Click to change.`}
+                    >
+                      <span>{patientType}</span>
+                    </button>
+
+                    <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+
+                    <button
+                      type="button"
+                      className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen((prev) => !prev);
+                      }}
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
+                    >
+                      <span className={styles.breadcrumbSelectedTabTitle}>
+                        {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
+                      </span>
+                      <ChevronDown
+                        size={14}
+                        className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
 
                   <AnimatePresence>
                     {isDropdownOpen && (
@@ -1998,6 +2033,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
       {[
         { id: "technology", title: activeTechnologyInfo.title, desc: activeTechnologyInfo.desc },
         { id: "tests", title: activeTestsInfo.title, desc: activeTestsInfo.desc },
+        { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
         { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
         { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
         { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
@@ -2021,9 +2057,11 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         const isFaqs = section.id === "faqs";
         const isDarkTheme = isWhyUs;
         
-        const isTransparentSection = section.id === "technology" || isWhyUs;
+        const isTransparentSection = section.id === "technology" || section.id === "about-speciality" || isWhyUs;
         let sectionBg = isTransparentSection ? "transparent" : (idx % 2 === 0 ? "var(--color-bg-alt)" : "var(--color-surface)");
-        if (section.id === "doctor-overview") {
+        if (section.id === "about-speciality") {
+          sectionBg = "transparent";
+        } else if (section.id === "doctor-overview") {
           sectionBg = "var(--color-surface)";
         } else if (isHospitals || isFaqs) {
           sectionBg = "var(--white)";
@@ -2040,7 +2078,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
           className={styles.doctorsSection} 
           data-nav-theme={isDarkTheme ? "dark" : "light"} 
           style={{ 
-            background: sectionBg, 
+            ...(sectionBg && sectionBg !== "transparent" ? { background: sectionBg } : {}),
             position: "relative"
           }}
         >
@@ -2101,6 +2139,13 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
               >
                 <AdvanceTestsCarousel />
               </motion.div>
+            </div>
+          ) : section.id === "about-speciality" ? (
+            <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
+              <AboutSpecialitySection
+                specialitySlug={slug}
+                specialityTitle={title}
+              />
             </div>
           ) : section.id === "doctor-overview" ? (
             <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
