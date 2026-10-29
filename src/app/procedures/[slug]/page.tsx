@@ -318,7 +318,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 3. Clickable Symptoms & Warning Signs */}
+            {/* 3. Clickable Symptoms & Warning Signs (Interactive Triage Signal List) */}
             <section id="symptoms" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.symptoms.title}
@@ -326,25 +326,28 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.symptoms.description}
               </p>
-              <div className={styles.cleanGrid}>
+              <div className={styles.symptomsTriageList}>
                 {detail.symptoms.items.map((sym, i) => (
                   <Link
                     key={i}
                     href={`/search?q=${encodeURIComponent(sym.name)}`}
-                    className={`${styles.cleanCard} ${styles.cleanCardClickable}`}
-                    title={`Explore guidance for ${sym.name}`}
+                    className={styles.symptomTriageItem}
+                    title={`Explore clinical guidance for ${sym.name}`}
                   >
-                    <div className={styles.cardHeaderRow}>
-                      <h4 className={styles.cleanCardTitle}>{sym.name}</h4>
-                      <ArrowUpRight size={14} className={styles.cardArrow} />
+                    <div className={styles.symptomTriageIndicator}>
+                      <span className={styles.triageSignalDot} />
                     </div>
-                    <p className={styles.cleanCardDesc}>{sym.desc}</p>
+                    <div className={styles.symptomTriageContent}>
+                      <span className={styles.symptomTriageName}>{sym.name}</span>
+                      <span className={styles.symptomTriageDesc}>&mdash; {sym.desc}</span>
+                    </div>
+                    <ArrowUpRight size={14} className={styles.symptomTriageArrow} />
                   </Link>
                 ))}
               </div>
             </section>
 
-            {/* 4. Indications & Who Needs Care */}
+            {/* 4. Indications & Who Needs Care (Structured Clinical Condition Dossier) */}
             <section id="who-needs-care" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.whoNeedsCare.title}
@@ -352,11 +355,16 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.whoNeedsCare.description}
               </p>
-              <div className={styles.cleanGrid}>
+              <div className={styles.conditionDossierContainer}>
                 {detail.whoNeedsCare.conditions.map((item, i) => (
-                  <div key={i} className={styles.cleanCard}>
-                    <h4 className={styles.cleanCardTitle}>{item.name}</h4>
-                    <p className={styles.cleanCardDesc}>{item.desc}</p>
+                  <div key={i} className={styles.conditionDossierRow}>
+                    <div className={styles.conditionDossierIconWrap}>
+                      <Activity size={15} color="#034EA2" />
+                    </div>
+                    <div className={styles.conditionDossierBody}>
+                      <h4 className={styles.conditionDossierTitle}>{item.name}</h4>
+                      <p className={styles.conditionDossierDesc}>{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>

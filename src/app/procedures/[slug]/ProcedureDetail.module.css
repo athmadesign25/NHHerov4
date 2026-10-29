@@ -487,71 +487,130 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-/* ─── UNIFIED CLEAN GRID & CLEAN CARDS (SYMPTOMS & CONDITIONS) ───────────── */
-.cleanGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+/* ─── SYMPTOMS: INTERACTIVE TRIAGE SIGNAL LIST ───────────────────────────── */
+.symptomsTriageList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 18px;
 }
 
-@media (max-width: 640px) {
-  .cleanGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.cleanCard {
+.symptomTriageItem {
+  display: grid;
+  grid-template-columns: 24px 1fr 20px;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px;
   background: #ffffff;
   border: 1px solid var(--slate-200, #e2e8f0);
-  border-radius: var(--radius-lg, 12px);
-  padding: 18px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-md, 10px);
   text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.2s ease,
-              box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cleanCardClickable:hover {
-  transform: translateY(-2px);
+.symptomTriageItem:hover {
+  background: #f8fafc;
   border-color: rgba(3, 78, 162, 0.35);
-  box-shadow: 0 6px 18px rgba(3, 78, 162, 0.06);
+  transform: translateX(3px);
 }
 
-.cardHeaderRow {
+.symptomTriageIndicator {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
+  justify-content: center;
 }
 
-.cleanCardTitle {
+.triageSignalDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary, #034EA2);
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.15);
+  display: block;
+}
+
+.symptomTriageContent {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.symptomTriageName {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   color: #0f172a;
-  margin: 0;
-  line-height: 1.35;
 }
 
-.cardArrow {
+.symptomTriageDesc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.symptomTriageArrow {
   color: #94a3b8;
-  flex-shrink: 0;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.cleanCardClickable:hover .cardArrow {
+.symptomTriageItem:hover .symptomTriageArrow {
   color: var(--color-primary, #034EA2);
   transform: translate(2px, -2px);
 }
 
-.cleanCardDesc {
+/* ─── INDICATIONS: STRUCTURED CLINICAL CONDITION DOSSIER ─────────────────── */
+.conditionDossierContainer {
+  background: #ffffff;
+  border: 1px solid var(--slate-200, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+  margin-top: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.conditionDossierRow {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 16px;
+  padding: 18px 22px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--slate-100, #f1f5f9);
+}
+
+.conditionDossierRow:last-child {
+  border-bottom: none;
+}
+
+.conditionDossierIconWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(3, 78, 162, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.conditionDossierBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.conditionDossierTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.conditionDossierDesc {
   font-size: 13.5px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: #475569;
   margin: 0;
 }
