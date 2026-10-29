@@ -228,8 +228,59 @@
 }
 
 
+/* ─── CONTINUOUS EDITORIAL CANVAS WITH BACKGROUND IMAGE & FLOWING GRADIENT ─── */
+.readingExperienceWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.readingBgCanvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.readingBgImage {
+  object-fit: cover;
+  object-position: top center;
+  opacity: 0.09;
+  filter: saturate(1.15) contrast(1.05);
+  transform: scale(1.02);
+}
+
+.readingBgGradient {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      rgba(248, 250, 252, 0.88) 10%,
+      rgba(241, 245, 249, 0.84) 40%,
+      rgba(248, 250, 252, 0.90) 80%,
+      #ffffff 100%
+    ),
+    radial-gradient(
+      circle 900px at 8% 22%,
+      rgba(3, 78, 162, 0.08) 0%,
+      rgba(3, 78, 162, 0.02) 50%,
+      transparent 75%
+    ),
+    radial-gradient(
+      circle 1000px at 92% 65%,
+      rgba(3, 78, 162, 0.04) 0%,
+      transparent 70%
+    );
+}
+
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
 .mainLayoutContainer {
+  position: relative;
+  z-index: 1;
   max-width: var(--max-width, 1240px);
   margin: 0 auto;
   padding: 48px clamp(16px, 4vw, 32px) 80px;
@@ -249,34 +300,60 @@
   }
 }
 
-/* ─── STICKY LEFT SIDEBAR (TOC + SHARING) ────────────────────────────────── */
+/* ─── STICKY LEFT SIDEBAR (UNBOXED SECTION SELECTOR ON GRADIENT) ────────── */
 .stickySidebar {
   position: sticky;
   top: calc(var(--nav-height, 72px) + 24px);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-.tocCard {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: var(--radius-lg, 14px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+/* Unboxed Section Selector */
+.tocSectionSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: transparent;
+  border: none;
   box-shadow: none;
-  padding: 24px;
+  padding: 0;
   max-height: calc(100vh - 140px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(3, 78, 162, 0.25) transparent;
 }
 
-.tocHeaderTitle {
-  font-size: var(--font-size-base, 16px);
+.tocSectionSelector::-webkit-scrollbar {
+  width: 3px;
+}
+.tocSectionSelector::-webkit-scrollbar-thumb {
+  background: rgba(3, 78, 162, 0.2);
+  border-radius: 4px;
+}
+
+.tocEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--color-text, #1a1a2e);
-  margin: 0 0 16px 0;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--slate-100, #f1f5f9);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-primary, #034EA2);
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid rgba(3, 78, 162, 0.12);
+}
+
+.tocEyebrowIcon {
+  color: var(--color-primary, #034EA2);
+  flex-shrink: 0;
+}
+
+.tocNavRail {
+  position: relative;
+  padding-left: 14px;
+  border-left: 2px solid rgba(3, 78, 162, 0.12);
 }
 
 .tocList {
@@ -288,48 +365,73 @@
   margin: 0;
 }
 
+.tocListItem {
+  position: relative;
+}
+
 .tocLink {
-  display: block;
-  font-size: 13px;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13.5px;
   line-height: 1.45;
-  color: var(--color-text-secondary, #4a5568);
-  padding: 8px 12px;
-  border-radius: var(--radius-sm, 6px);
-  border-left: 2px solid transparent;
+  color: #4b5563;
+  padding: 6px 10px;
+  border-radius: 6px;
   text-decoration: none;
-  transition: all var(--duration-fast, 0.15s) ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tocLink:hover {
   color: var(--color-primary, #034EA2);
-  background: var(--slate-50, #f8fafc);
+  transform: translateX(3px);
+  background: rgba(3, 78, 162, 0.05);
+}
+
+.tocIndicatorMarker {
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--color-primary, #034EA2);
+  border-radius: 4px;
+  transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .tocLinkActive {
   color: var(--color-primary, #034EA2);
   font-weight: 700;
-  background: rgba(3, 78, 162, 0.06);
-  border-left-color: var(--color-primary, #034EA2);
+  background: rgba(3, 78, 162, 0.08);
+  transform: translateX(3px);
 }
 
-/* Social Share Block */
-.shareWidget {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: var(--radius-lg, 14px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  padding: 18px 24px;
-  box-shadow: none;
+.tocLinkActive .tocIndicatorMarker {
+  height: 20px;
+  box-shadow: 0 0 8px rgba(3, 78, 162, 0.6);
+}
+
+.tocLinkLabel {
+  flex: 1;
+}
+
+/* Unboxed Social Share on Gradient */
+.shareWidgetBorderless {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1.5px solid rgba(3, 78, 162, 0.1);
 }
 
 .shareWidgetTitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--slate-600, #475569);
-  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+  color: #64748b;
 }
 
 .shareIconsRow {
@@ -339,46 +441,59 @@
 }
 
 .shareBtn {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--slate-200, #e2e8f0);
-  background: var(--white, #ffffff);
+  border: 1px solid rgba(3, 78, 162, 0.16);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: var(--color-primary, #034EA2);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--duration-fast, 0.15s) ease;
+  transition: all 0.2s ease;
 }
 
 .shareBtn:hover {
   background: var(--color-primary, #034EA2);
-  color: var(--white, #ffffff);
+  color: #ffffff;
   border-color: var(--color-primary, #034EA2);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.25);
 }
 
-/* Second Opinion Callback Card */
-.sidebarHelpCard {
-  background: linear-gradient(135deg, #eef7ff 0%, #f4faff 100%);
-  border: 1px solid #c7e1ff;
-  border-radius: var(--radius-lg, 14px);
-  padding: 20px;
+.copyToastNotice {
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Unboxed Guidance Helpline on Gradient */
+.sidebarHelpCallout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(3, 78, 162, 0.14);
+  border-radius: 12px;
 }
 
 .helpCardTitle {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--color-primary-dark, #023070);
-  margin-bottom: 6px;
 }
 
 .helpCardDesc {
   font-size: 12px;
-  color: var(--color-text-secondary, #4a5568);
+  color: #4b5563;
   line-height: 1.45;
-  margin-bottom: 14px;
+  margin: 0;
 }
 
 .helpCardPhoneBtn {
@@ -389,10 +504,13 @@
   font-weight: 700;
   color: var(--color-emergency, #ED1C24);
   text-decoration: none;
+  margin-top: 4px;
+  transition: transform 0.15s ease;
 }
 
 .helpCardPhoneBtn:hover {
   text-decoration: underline;
+  transform: translateX(2px);
 }
 
 /* ─── RIGHT CONTENT AREA ─────────────────────────────────────────────────── */
@@ -562,12 +680,14 @@
 
 /* ─── INDICATIONS: STRUCTURED CLINICAL CONDITION DOSSIER ─────────────────── */
 .conditionDossierContainer {
-  background: #ffffff;
-  border: 1px solid var(--slate-200, #e2e8f0);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   margin-top: 18px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
 }
 
 .conditionDossierRow {
@@ -630,11 +750,13 @@
 }
 
 .eligibilityCol {
-  background: #ffffff;
-  border: 1px solid var(--slate-200, #e2e8f0);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: var(--radius-lg, 12px);
   padding: 22px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
 }
 
 .eligibilityHeader {
@@ -685,11 +807,13 @@
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 16px;
-  background: #ffffff;
-  border: 1px solid var(--slate-200, #e2e8f0);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
   align-items: flex-start;
 }
 
@@ -835,12 +959,14 @@
 
 /* ─── COST & INSURANCE (HARMONIOUS LIGHT THEME) ──────────────────────────── */
 .costCard {
-  background: #ffffff;
-  border: 1px solid var(--slate-200, #e2e8f0);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: var(--radius-lg, 12px);
   padding: 28px 30px;
   margin-top: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
 }
 
 .costHeader {
