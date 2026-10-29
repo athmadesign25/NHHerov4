@@ -14,11 +14,7 @@ import {
   Calendar, 
   Activity, 
   Plus,
-  Minus,
-  Clock,
-  ShieldCheck,
-  Award,
-  Sparkles
+  Minus
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
@@ -29,25 +25,6 @@ import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
-}
-
-function SparkleStarIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-      <path
-        d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
-        fill="url(#sparkleStarGradFabDetail)"
-      />
-      <circle cx="19.5" cy="4.5" r="1.5" fill="#00C4FF" />
-      <defs>
-        <linearGradient id="sparkleStarGradFabDetail" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#00C4FF" />
-          <stop offset="0.5" stopColor="#38BDF8" />
-          <stop offset="1" stopColor="#A855F7" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
 }
 
 export default function ProcedureDetailPage({ params }: PageProps) {
@@ -286,37 +263,16 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             <div className={styles.sidebarHelpCard}>
               <div className={styles.helpCardTitle}>Need Medical Guidance?</div>
               <p className={styles.helpCardDesc}>
-                Speak directly with a dedicated surgical clinical coordinator for guidance on diagnosis, scheduling, and second opinions.
+                Speak directly with our clinical surgical coordinators for consultations, second opinions, and procedure scheduling.
               </p>
               <a href="tel:18003090309" className={styles.helpCardPhoneBtn}>
-                <PhoneCall size={15} />
-                <span>1800-309-0309 (24x7)</span>
+                <PhoneCall size={14} />
+                <span>1800 309 0309 (24×7)</span>
               </a>
-            </div>
-
-            {/* Global Accreditation & Clinical Excellence Card */}
-            <div className={styles.accreditationTrustCard}>
-              <div className={styles.accreditationHeader}>
-                <div className={styles.accreditationShield}>
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                  <div className={styles.accreditationTitle}>Global Clinical Excellence</div>
-                  <div className={styles.accreditationSubtitle}>JCI &amp; NABH Accredited Protocols</div>
-                </div>
-              </div>
-              <p className={styles.accreditationDesc}>
-                Every surgical treatment at Narayana Health follows strict international safety standards, backed by senior multidisciplinary boards.
-              </p>
-              <div className={styles.accreditationBadgesRow}>
-                <span className={styles.trustMiniPill}>✓ 100% Paperless ICU</span>
-                <span className={styles.trustMiniPill}>✓ Dual Surgical Review</span>
-                <span className={styles.trustMiniPill}>✓ Transparent Pricing</span>
-              </div>
             </div>
           </aside>
 
-          {/* ─── RIGHT COLUMN: ARTICLE DETAILS (TRUE INFORMATION) ───────── */}
+          {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
             {/* 1. Overview */}
             <section id="overview" className={styles.sectionBlock}>
@@ -327,90 +283,34 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 {detail.leadParagraph}
               </p>
 
-              {/* Visual Clinical Anatomy & Procedure Snapshot Card */}
-              <div className={styles.visualAnatomyCard}>
-                <div className={styles.visualAnatomyMedia}>
-                  <Image
-                    src={detail.heroImage}
-                    alt={`${detail.title} anatomical visualization`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 420px"
-                    className={styles.visualAnatomyImg}
-                  />
-                  <div className={styles.visualAnatomyOverlay} />
-                  <span className={styles.visualBadgePulse}>
-                    <span className={styles.pulseDot} />
-                    Clinical Reference Model
-                  </span>
-                </div>
-
-                <div className={styles.visualAnatomyInfo}>
-                  <div className={styles.visualAnatomyTag}>
-                    <Sparkles size={13} />
-                    <span>CLINICAL SNAPSHOT</span>
-                  </div>
-                  <h3 className={styles.visualAnatomyTitle}>{detail.shortTitle} Specification</h3>
-
-                  <div className={styles.visualSpecsGrid}>
-                    <div className={styles.visualSpecItem}>
-                      <div className={styles.specIconWrap}>
-                        <Clock size={16} />
-                      </div>
-                      <div>
-                        <span className={styles.specLabel}>Avg. Duration</span>
-                        <span className={styles.specVal}>{detail.metrics.duration || "4 - 6 Hours"}</span>
-                      </div>
-                    </div>
-
-                    <div className={styles.visualSpecItem}>
-                      <div className={styles.specIconWrap}>
-                        <ShieldCheck size={16} />
-                      </div>
-                      <div>
-                        <span className={styles.specLabel}>Success Rate</span>
-                        <span className={styles.specVal}>{detail.metrics.successRate || "95%+"}</span>
-                      </div>
-                    </div>
-
-                    <div className={styles.visualSpecItem}>
-                      <div className={styles.specIconWrap}>
-                        <Activity size={16} />
-                      </div>
-                      <div>
-                        <span className={styles.specLabel}>Anesthesia</span>
-                        <span className={styles.specVal}>{detail.metrics.anesthesia || "General Anesthesia"}</span>
-                      </div>
-                    </div>
-
-                    <div className={styles.visualSpecItem}>
-                      <div className={styles.specIconWrap}>
-                        <Award size={16} />
-                      </div>
-                      <div>
-                        <span className={styles.specLabel}>Hospital Stay</span>
-                        <span className={styles.specVal}>{detail.metrics.hospitalStay || "14 - 21 Days"}</span>
-                      </div>
-                    </div>
-                  </div>
+              {/* Clean Clinical Figure (No nested cards or duplicate metrics) */}
+              <div className={styles.clinicalFigureContainer}>
+                <Image
+                  src={detail.heroImage}
+                  alt={`${detail.title} clinical reference`}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 840px"
+                  className={styles.clinicalFigureImage}
+                />
+                <div className={styles.clinicalFigureCaption}>
+                  Clinical Reference &middot; Narayana Health {detail.speciality} Care Protocol
                 </div>
               </div>
             </section>
 
             {/* 2. What Is It? */}
             <section id="what-is-it" className={styles.sectionBlock}>
-              <div className={styles.highlightBox}>
-                <h3 className={styles.highlightBoxTitle}>
-                  {detail.whatIsIt.title}
-                </h3>
-                <p className={styles.bodyParagraph}>
-                  {detail.whatIsIt.description}
-                </p>
-                <ul className={styles.highlightKeyPointsList}>
+              <h3 className={styles.subSectionTitle}>
+                {detail.whatIsIt.title}
+              </h3>
+              <p className={styles.bodyParagraph}>
+                {detail.whatIsIt.description}
+              </p>
+              <div className={styles.keyPointsCard}>
+                <ul className={styles.bulletList}>
                   {detail.whatIsIt.keyPoints.map((point, i) => (
-                    <li key={i} className={styles.highlightKeyPoint}>
-                      <span className={styles.checkIconWrapper}>
-                        <Check size={16} />
-                      </span>
+                    <li key={i} className={styles.bulletItem}>
+                      <CheckCircle2 size={16} color="#034EA2" style={{ flexShrink: 0, marginTop: "2px" }} />
                       <span>{point}</span>
                     </li>
                   ))}
@@ -418,7 +318,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 3. Clickable Symptoms & Warning Signs Section */}
+            {/* 3. Clickable Symptoms & Warning Signs */}
             <section id="symptoms" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.symptoms.title}
@@ -426,23 +326,19 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.symptoms.description}
               </p>
-              <div className={styles.symptomsGrid}>
+              <div className={styles.cleanGrid}>
                 {detail.symptoms.items.map((sym, i) => (
                   <Link
                     key={i}
                     href={`/search?q=${encodeURIComponent(sym.name)}`}
-                    className={styles.symptomCard}
-                    title={`Click to explore clinical guidance for ${sym.name}`}
+                    className={`${styles.cleanCard} ${styles.cleanCardClickable}`}
+                    title={`Explore guidance for ${sym.name}`}
                   >
-                    <div className={styles.symptomCardHeader}>
-                      <div className={styles.symptomIconWrap}>
-                        <Activity size={16} />
-                      </div>
-                      <ArrowUpRight size={14} className={styles.symptomArrow} />
+                    <div className={styles.cardHeaderRow}>
+                      <h4 className={styles.cleanCardTitle}>{sym.name}</h4>
+                      <ArrowUpRight size={14} className={styles.cardArrow} />
                     </div>
-                    <div className={styles.symptomName}>{sym.name}</div>
-                    <p className={styles.symptomDesc}>{sym.desc}</p>
-                    <div className={styles.symptomActionHint}>Explore symptom guidance &rarr;</div>
+                    <p className={styles.cleanCardDesc}>{sym.desc}</p>
                   </Link>
                 ))}
               </div>
@@ -456,11 +352,11 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.whoNeedsCare.description}
               </p>
-              <div className={styles.conditionsGrid}>
+              <div className={styles.cleanGrid}>
                 {detail.whoNeedsCare.conditions.map((item, i) => (
-                  <div key={i} className={styles.conditionCard}>
-                    <div className={styles.conditionName}>{item.name}</div>
-                    <p className={styles.conditionDesc}>{item.desc}</p>
+                  <div key={i} className={styles.cleanCard}>
+                    <h4 className={styles.cleanCardTitle}>{item.name}</h4>
+                    <p className={styles.cleanCardDesc}>{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -490,30 +386,30 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 {detail.eligibility.title}
               </h2>
               <div className={styles.eligibilityRow}>
-                <div className={`${styles.eligibilityCard} ${styles.eligibleCard}`}>
-                  <h3 className={`${styles.eligibilityTitle} ${styles.eligibleTitle}`}>
-                    <CheckCircle2 size={18} />
-                    <span>General Eligibility Criteria</span>
-                  </h3>
+                <div className={styles.eligibilityCol}>
+                  <div className={styles.eligibilityHeader}>
+                    <CheckCircle2 size={17} color="#15803d" />
+                    <h3 className={styles.eligibilityHeading}>General Eligibility Criteria</h3>
+                  </div>
                   <ul className={styles.bulletList}>
                     {detail.eligibility.eligiblePoints.map((pt, i) => (
                       <li key={i} className={styles.bulletItem}>
-                        <Check size={15} color="#15803d" style={{ flexShrink: 0, marginTop: "3px" }} />
+                        <Check size={14} color="#15803d" style={{ flexShrink: 0, marginTop: "3px" }} />
                         <span>{pt}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div id="who-not-eligible" className={`${styles.eligibilityCard} ${styles.notEligibleCard}`}>
-                  <h3 className={`${styles.eligibilityTitle} ${styles.notEligibleTitle}`}>
-                    <X size={18} />
-                    <span>Contraindications / Not Eligible</span>
-                  </h3>
+                <div id="who-not-eligible" className={styles.eligibilityCol}>
+                  <div className={styles.eligibilityHeader}>
+                    <X size={17} color="#b91c1c" />
+                    <h3 className={styles.eligibilityHeading}>Contraindications &amp; Precautions</h3>
+                  </div>
                   <ul className={styles.bulletList}>
                     {detail.eligibility.notEligiblePoints.map((pt, i) => (
                       <li key={i} className={styles.bulletItem}>
-                        <X size={15} color="#b91c1c" style={{ flexShrink: 0, marginTop: "3px" }} />
+                        <X size={14} color="#b91c1c" style={{ flexShrink: 0, marginTop: "3px" }} />
                         <span>{pt}</span>
                       </li>
                     ))}
@@ -522,7 +418,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 7. Surgical Approach & Technology */}
+            {/* 7. Surgical Approach & Steps */}
             <section id="surgical-procedure" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.approach.title}
@@ -531,30 +427,23 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 {detail.approach.description}
               </p>
 
-              {/* Visual Surgical Care Pathway Stepper */}
-              <div className={styles.surgicalPathwayContainer}>
-                <div className={styles.pathwayGrid}>
-                  {detail.approach.steps.map((st, i) => (
-                    <div key={i} className={styles.pathwayStepCard}>
-                      <div className={styles.pathwayStepHeader}>
-                        <div className={styles.pathwayNumberBadge}>0{i + 1}</div>
-                        <span className={styles.pathwayStepPill}>Phase {st.step}</span>
-                      </div>
-                      <h3 className={styles.pathwayStepTitle}>{st.title}</h3>
-                      <p className={styles.pathwayStepDesc}>{st.desc}</p>
-                      <div className={styles.pathwayStepFooter}>
-                        <span className={styles.pathwayCheckBadge}>
-                          <Check size={12} />
-                          <span>Standard Clinical Protocol</span>
-                        </span>
-                      </div>
+              {/* Clean Editorial Step Sequence (No label overload) */}
+              <div className={styles.approachSequence}>
+                {detail.approach.steps.map((st, i) => (
+                  <div key={i} className={styles.approachStepItem}>
+                    <div className={styles.stepNumCol}>
+                      <span className={styles.stepBadge}>0{i + 1}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className={styles.stepInfoCol}>
+                      <h3 className={styles.stepTitle}>{st.title}</h3>
+                      <p className={styles.stepDesc}>{st.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
-            {/* 8. Recovery Care & Hospital Stay */}
+            {/* 8. Recovery Care & Milestones */}
             <section id="recovery-care" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.recoveryCare.title}
@@ -563,46 +452,44 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 {detail.recoveryCare.description}
               </p>
 
-              {/* Visual Patient Recovery Milestones Roadmap Infographic */}
-              <div className={styles.recoveryRoadmapCard}>
-                <div className={styles.roadmapHeader}>
-                  <div>
-                    <span className={styles.roadmapEyebrow}>POST-PROCEDURE TIMELINE</span>
-                    <h3 className={styles.roadmapTitle}>Patient Recovery Milestones</h3>
-                  </div>
-                  <span className={styles.roadmapAvgBadge}>
-                    <Clock size={13} />
-                    <span>Est. Recovery: {detail.metrics.recoveryTime || "3 - 6 Months"}</span>
-                  </span>
+              {/* Clean Unified Recovery Milestones Track */}
+              <div className={styles.recoveryTrackCard}>
+                <div className={styles.recoveryTrackHeader}>
+                  <h3 className={styles.recoveryTrackTitle}>Clinical Recovery Milestones</h3>
+                  {detail.metrics.recoveryTime && (
+                    <span className={styles.recoveryEstPill}>
+                      Expected Duration: {detail.metrics.recoveryTime}
+                    </span>
+                  )}
                 </div>
 
-                <div className={styles.roadmapStagesGrid}>
-                  <div className={styles.roadmapStage}>
-                    <div className={styles.stageDotActive}>01</div>
-                    <h4 className={styles.stageTitle}>ICU Protocol</h4>
-                    <span className={styles.stageDuration}>Days 1 - 3</span>
-                    <p className={styles.stageDesc}>Continuous hemodynamic monitoring, organ perfusions, and vital settle.</p>
+                <div className={styles.recoveryMilestonesGrid}>
+                  <div className={styles.milestoneBox}>
+                    <span className={styles.milestoneNum}>01</span>
+                    <h4 className={styles.milestoneName}>ICU Protocol</h4>
+                    <span className={styles.milestoneDays}>Days 1 - 3</span>
+                    <p className={styles.milestoneText}>Continuous hemodynamic monitoring, organ perfusion, and vital stability.</p>
                   </div>
 
-                  <div className={styles.roadmapStage}>
-                    <div className={styles.stageDot}>02</div>
-                    <h4 className={styles.stageTitle}>Step-Down Ward</h4>
-                    <span className={styles.stageDuration}>Days 4 - 10</span>
-                    <p className={styles.stageDesc}>Supported bedside ambulation, physical therapy, and oral diet reintroduction.</p>
+                  <div className={styles.milestoneBox}>
+                    <span className={styles.milestoneNum}>02</span>
+                    <h4 className={styles.milestoneName}>Step-Down Ward</h4>
+                    <span className={styles.milestoneDays}>Days 4 - 10</span>
+                    <p className={styles.milestoneText}>Bedside ambulation, respiratory therapy, and gradual diet reintroduction.</p>
                   </div>
 
-                  <div className={styles.roadmapStage}>
-                    <div className={styles.stageDot}>03</div>
-                    <h4 className={styles.stageTitle}>Home Transition</h4>
-                    <span className={styles.stageDuration}>Weeks 2 - 4</span>
-                    <p className={styles.stageDesc}>Discharge with custom medication schedule, telehealth follow-ups, and mobility pacing.</p>
+                  <div className={styles.milestoneBox}>
+                    <span className={styles.milestoneNum}>03</span>
+                    <h4 className={styles.milestoneName}>Home Transition</h4>
+                    <span className={styles.milestoneDays}>Weeks 2 - 4</span>
+                    <p className={styles.milestoneText}>Discharge protocol, scheduled telehealth reviews, and progressive mobility pacing.</p>
                   </div>
 
-                  <div className={styles.roadmapStage}>
-                    <div className={styles.stageDot}>04</div>
-                    <h4 className={styles.stageTitle}>Active Recovery</h4>
-                    <span className={styles.stageDuration}>Month 3+</span>
-                    <p className={styles.stageDesc}>Safe resumption of professional activity, cardiovascular rehab, and routine labs.</p>
+                  <div className={styles.milestoneBox}>
+                    <span className={styles.milestoneNum}>04</span>
+                    <h4 className={styles.milestoneName}>Active Recovery</h4>
+                    <span className={styles.milestoneDays}>Month 3+</span>
+                    <p className={styles.milestoneText}>Resumption of daily work routines, cardiac/physical rehab, and periodic follow-up.</p>
                   </div>
                 </div>
               </div>
@@ -617,7 +504,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </ul>
             </section>
 
-            {/* 9. Cost & Insurance */}
+            {/* 9. Cost & Insurance (Harmonious Light Theme) */}
             <section id="cost-insurance" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>
                 {detail.cost.title}
@@ -627,13 +514,13 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   <div>
                     <div className={styles.costBadge}>Estimated All-Inclusive Surgery Package</div>
                     <div className={styles.costEstimateText}>{detail.cost.estimateRange}</div>
-                    <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.75)", marginTop: "4px" }}>
+                    <div className={styles.costInternationalText}>
                       International Patients: {detail.cost.internationalRange}
                     </div>
                   </div>
                   <Link href="/doctors" className={styles.heroPrimaryBtn}>
-                    <span>Request Estimate</span>
-                    <ArrowUpRight size={16} />
+                    <span>Request Detailed Estimate</span>
+                    <ArrowUpRight size={15} />
                   </Link>
                 </div>
 
@@ -641,14 +528,14 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <div className={styles.costInclusionsGrid}>
                   {detail.cost.inclusions.map((inc, i) => (
                     <div key={i} className={styles.costInclusionItem}>
-                      <CheckCircle2 size={16} color="#38bdf8" style={{ flexShrink: 0, marginTop: "1px" }} />
+                      <CheckCircle2 size={15} color="#034EA2" style={{ flexShrink: 0, marginTop: "2px" }} />
                       <span>{inc}</span>
                     </div>
                   ))}
                 </div>
 
                 <div className={styles.costInsuranceNote}>
-                  <strong>Insurance & Cashless Support: </strong>
+                  <strong>Insurance &amp; Cashless Support: </strong>
                   {detail.cost.insuranceNote}
                 </div>
               </div>
