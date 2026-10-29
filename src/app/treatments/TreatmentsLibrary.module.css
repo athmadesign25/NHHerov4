@@ -933,12 +933,13 @@
   flex-shrink: 0;
 }
 
-/* Action Buttons Container: Inline-Flex pills side-by-side with compact scale */
+/* Action Buttons Container: Half-Half (50% / 50%) width filling the card bottom */
 .cardActions {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   width: 100%;
+  align-items: center;
 }
 
 /* Desktop: at rest, resting metadata is shown.
@@ -982,16 +983,17 @@
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors - Compact 32px pill */
+/* Decision Button 1 (Secondary): Find doctors - Compact 34px pill filling 50% width */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 32px;
-  padding: 0 14px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
   border-radius: var(--radius-full, 9999px);
   font-size: 11.5px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -1001,7 +1003,7 @@
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
-  flex: 0 0 auto;
+  box-sizing: border-box;
 }
 
 .cardDoctorBtn:hover {
@@ -1010,14 +1012,15 @@
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ - Compact 32px NH blue pill */
+/* Decision Button 2 (Primary): Read more ↗ - Compact 34px NH blue pill filling 50% width */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  height: 32px;
-  padding: 0 14px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
   border-radius: var(--radius-full, 9999px);
   font-size: 11.5px;
   font-weight: 600;
@@ -1031,7 +1034,7 @@
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
-  flex: 0 0 auto;
+  box-sizing: border-box;
 }
 
 .cardDetailBtn:hover {
