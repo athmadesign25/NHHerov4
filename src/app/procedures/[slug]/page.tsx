@@ -75,12 +75,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   };
 
   return (
-    <motion.div 
-      className={styles.detailPageContainer}
-      initial={{ opacity: 0, scale: 0.97, y: 12 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div className={styles.detailPageContainer}>
       {/* ─── DETAIL HERO (FULL BACKGROUND IMAGE & ATMOSPHERIC GRADIENT) ─────── */}
       <section className={styles.detailHero} data-nav-theme="dark">
         {/* Full scale background image with gentle zoom settle */}
@@ -230,9 +225,9 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 </nav>
               </div>
 
-              {/* Share Widget (Unboxed Floating Bar on Gradient) */}
+              {/* Share Widget with Twitter, LinkedIn, Facebook, Copy Link */}
               <div className={styles.shareWidgetBorderless}>
-                <div className={styles.shareWidgetTitle}>Share Article</div>
+                <div className={styles.shareWidgetTitle}>Share with your community!</div>
                 <div className={styles.shareIconsRow}>
                   <button
                     className={styles.shareBtn}
@@ -257,11 +252,11 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   <button
                     className={styles.shareBtn}
                     onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`, "_blank")}
-                    title="Share on X"
-                    aria-label="Share on X"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
                     </svg>
                   </button>
                   <button
@@ -739,6 +734,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           backLabel={`Back to ${detail.shortTitle}`}
         />
       )}
-    </motion.div>
+    </div>
   );
 }
