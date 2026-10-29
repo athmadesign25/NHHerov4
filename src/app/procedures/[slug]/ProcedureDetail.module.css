@@ -152,6 +152,30 @@
   transform: translate(2px, -2px);
 }
 
+.heroPulseBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-md, 8px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heroPulseBtn:hover {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
 /* Clean Phone Number (Call icon + text, no second competing button) */
 .heroPhoneText {
   display: inline-flex;
@@ -1059,3 +1083,188 @@
   line-height: 1.6;
   color: var(--color-text-secondary, #4a5568);
 }
+
+/* ─── FLOATING ACTION DOCK (FAB ON RIGHT SIDE) ──────────────────────────── */
+.floatingActionDock {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 8px 12px;
+  background: rgba(10, 18, 36, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 
+    0 16px 36px rgba(3, 14, 38, 0.38),
+    0 4px 14px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.floatingActionDock:hover {
+  box-shadow: 
+    0 20px 44px rgba(3, 14, 38, 0.48),
+    0 6px 18px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* 1. Pulse AI Button */
+.fabPulseBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: linear-gradient(135deg, rgba(0, 196, 255, 0.12) 0%, rgba(168, 85, 247, 0.15) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-full, 9999px);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fabPulseBtn:hover {
+  background: linear-gradient(135deg, rgba(0, 196, 255, 0.22) 0%, rgba(168, 85, 247, 0.25) 100%);
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+  transform: translateY(-1px);
+}
+
+.fabPulseIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.fabPulseText {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg, #ffffff 0%, #e0f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+/* Subtle pulse glow animation */
+.fabPulseGlow {
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.3) 0%, transparent 70%);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: pulseGlowAnim 3s infinite ease-in-out;
+}
+
+@keyframes pulseGlowAnim {
+  0%, 100% { transform: scale(0.9); opacity: 0.4; }
+  50% { transform: scale(1.15); opacity: 0.8; }
+}
+
+/* Divider between pill actions */
+.fabDivider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* 2. Helpline Call Button */
+.fabHelplineBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: var(--radius-full, 9999px);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.fabHelplineBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.fabHelplineIcon {
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.fabHelplineText {
+  white-space: nowrap;
+}
+
+/* 3. Primary Book Consultation CTA */
+.fabBookBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px 9px 14px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.45);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.fabBookBtn:hover {
+  background: linear-gradient(135deg, #023d82 0%, #104e9c 100%);
+  border-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(3, 78, 162, 0.65);
+  transform: translateY(-2px);
+}
+
+.fabBtnArrow {
+  transition: transform 0.2s ease;
+}
+
+.fabBookBtn:hover .fabBtnArrow {
+  transform: translate(2px, -2px);
+}
+
+/* Responsive adjustment for Mobile screens */
+@media (max-width: 680px) {
+  .floatingActionDock {
+    bottom: 20px;
+    right: 14px;
+    left: 14px;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-radius: 18px;
+  }
+  .fabHelplineText {
+    display: none;
+  }
+  .fabHelplineBtn {
+    padding: 8px 10px;
+  }
+  .fabPulseBtn {
+    padding: 8px 12px 8px 8px;
+    font-size: 12px;
+  }
+  .fabBookBtn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+

@@ -20,24 +20,6 @@
   position: relative;
 }
 
-/* ─── LEFT MARGIN VERTICAL INDICATOR RAIL (FROM MOCKUP) ─────────────────── */
-.verticalRail {
-  position: absolute;
-  left: clamp(14px, 2vw, 28px);
-  top: 560px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.railDash {
-  width: 12px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 1px;
-}
 
 /* ─── TWO-COLUMN HERO SECTION (SPACIOUS & BREATHING) ─────────────────────── */
 .hero {

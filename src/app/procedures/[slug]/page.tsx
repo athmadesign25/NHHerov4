@@ -18,10 +18,30 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
+import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+function SparkleStarIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+      <path
+        d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
+        fill="url(#sparkleStarGradFabDetail)"
+      />
+      <circle cx="19.5" cy="4.5" r="1.5" fill="#00C4FF" />
+      <defs>
+        <linearGradient id="sparkleStarGradFabDetail" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#00C4FF" />
+          <stop offset="0.5" stopColor="#38BDF8" />
+          <stop offset="1" stopColor="#A855F7" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
 }
 
 export default function ProcedureDetailPage({ params }: PageProps) {
@@ -33,12 +53,19 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isPulseOpen, setIsPulseOpen] = useState(false);
 
-  // Intersection observer for sticky active Table of Contents
+  // Scroll listener for:
+  // 1. Sticky active Table of Contents
+  // 2. Transforming hero Book Consultation CTA into the bottom-right floating FAB dock
   useEffect(() => {
     const handleScroll = () => {
+      const scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      setIsScrolled(scrollPos > 320);
+
       const sections = detail.toc.map((item) => document.getElementById(item.id)).filter(Boolean);
-      const scrollPosition = window.scrollY + 200;
+      const scrollPosition = scrollPos + 200;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const sec = sections[i];
@@ -50,6 +77,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // initialize on mount
     return () => window.removeEventListener("scroll", handleScroll);
   }, [detail.toc]);
 
@@ -118,13 +146,27 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               {detail.heroSubtitle}
             </p>
 
-            {/* Clean Single Primary CTA (NH Blue) + Call Helpline Text */}
+            {/* Actions Row: Primary CTA (NH Blue) + Ask Pulse AI + Helpline */}
             <div className={styles.heroActionsRow}>
-              <Link href="/doctors" className={styles.heroPrimaryBtn}>
+              <Link 
+                href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`} 
+                className={styles.heroPrimaryBtn}
+              >
                 <Calendar size={15} />
                 <span>Book Consultation</span>
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
+
+              <button
+                type="button"
+                className={styles.heroPulseBtn}
+                onClick={() => setIsPulseOpen(true)}
+                title={`Ask Pulse AI about ${detail.shortTitle}`}
+                aria-label="Ask Pulse AI"
+              >
+                <SparkleStarIcon size={16} />
+                <span>Ask Pulse AI</span>
+              </button>
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
@@ -574,6 +616,72 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           </article>
         </div>
       </main>
+
+      {/* ─── FLOATING ACTION BUTTON (FAB) DOCK ON RIGHT SIDE ────────────── */}
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.div
+            className={styles.floatingActionDock}
+            initial={{ opacity: 0, y: 36, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 28, scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 420, damping: 28 }}
+            role="region"
+            aria-label="Floating clinical quick actions"
+          >
+            {/* 1. Pulse AI Overlay Trigger */}
+            <button
+              type="button"
+              className={styles.fabPulseBtn}
+              onClick={() => setIsPulseOpen(true)}
+              title={`Ask Pulse AI about ${detail.shortTitle}`}
+              aria-label={`Ask Pulse AI about ${detail.shortTitle}`}
+            >
+              <div className={styles.fabPulseGlow} />
+              <span className={styles.fabPulseIconBox}>
+                <SparkleStarIcon size={16} />
+              </span>
+              <span className={styles.fabPulseText}>Ask Pulse AI</span>
+            </button>
+
+            <div className={styles.fabDivider} aria-hidden="true" />
+
+            {/* 2. Helpline Call */}
+            <a
+              href="tel:18003090309"
+              className={styles.fabHelplineBtn}
+              title="Call 24x7 Care Helpline: 1800 309 0309"
+              aria-label="Call 24x7 Care Helpline"
+            >
+              <PhoneCall size={14} className={styles.fabHelplineIcon} />
+              <span className={styles.fabHelplineText}>1800 309 0309</span>
+            </a>
+
+            <div className={styles.fabDivider} aria-hidden="true" />
+
+            {/* 3. Primary Book Consultation CTA */}
+            <Link
+              href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
+              className={styles.fabBookBtn}
+              title={`Book Consultation for ${detail.shortTitle}`}
+              aria-label="Book Consultation"
+            >
+              <Calendar size={14} />
+              <span>Book Consultation</span>
+              <ArrowUpRight size={13} className={styles.fabBtnArrow} />
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ─── PULSE AI OVERLAY ────────────────────────────────────────────── */}
+      {isPulseOpen && (
+        <PulseAIWorkspace
+          onClose={() => setIsPulseOpen(false)}
+          initialQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}
+          backLabel={`Back to ${detail.shortTitle}`}
+        />
+      )}
     </motion.div>
   );
 }

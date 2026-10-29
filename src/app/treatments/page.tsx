@@ -132,13 +132,6 @@ export default function TreatmentsLibraryPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {/* ─── VERTICAL INDICATOR RAIL (SIGNATURE DETAIL FROM MOCKUP) ───────── */}
-      <div className={styles.verticalRail} aria-hidden="true">
-        {[...Array(12)].map((_, i) => (
-          <span key={i} className={styles.railDash} />
-        ))}
-      </div>
-
       {/* ─── TWO-COLUMN HERO SECTION (FOCUSED ON SEARCH & CLINICAL CONTENT) ── */}
       <section className={styles.hero}>
         <div className={styles.heroBg}>
