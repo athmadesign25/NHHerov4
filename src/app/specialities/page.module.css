@@ -12,11 +12,18 @@
   --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
   --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
 
-  padding-top: var(--nav-height, 72px);
+  --page-nav-height: 68px;
+  padding-top: var(--nav-actual-height, var(--page-nav-height, 68px));
   min-height: 100vh;
   background: var(--white);
   font-family: var(--font-family, inherit);
   color: var(--color-text, #0f172a);
+}
+
+@media (max-width: 1024px) {
+  .page {
+    --page-nav-height: 56px;
+  }
 }
 
 @media (min-width: 640px) {
@@ -89,7 +96,7 @@
   --d3-control-surface: var(--color-bg-card, #ffffff);
   --d3-control-muted: var(--color-bg-alt, #f8fafc);
   position: sticky;
-  top: var(--nav-height, 72px);
+  top: var(--nav-actual-height, var(--page-nav-height, 68px));
   z-index: 40;
   padding-block: var(--sp-2, 16px);
   background: #ffffff;
@@ -108,7 +115,7 @@
 
 .navHidden,
 :global(html[data-nav-visible="false"]) .searchToolbarWrapper {
-  transform: translateY(calc(var(--nav-height, 72px) * -1));
+  transform: translateY(calc(var(--nav-actual-height, var(--page-nav-height, 68px)) * -1));
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
 }
 
@@ -527,8 +534,8 @@
     display: flex;
     flex-direction: column;
     position: sticky;
-    top: calc(var(--nav-height, 72px) + 130px);
-    max-height: calc(100dvh - var(--nav-height, 72px) - 146px);
+    top: calc(var(--nav-actual-height, var(--page-nav-height, 68px)) + 130px);
+    max-height: calc(100dvh - var(--nav-actual-height, var(--page-nav-height, 68px)) - 146px);
     overflow-y: auto;
     overscroll-behavior-y: contain;
     scrollbar-width: thin;

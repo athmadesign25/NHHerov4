@@ -142,25 +142,25 @@ function SpecialitiesContent() {
     if (loc) setSelectedCity(loc);
   }, [searchParams]);
 
-  // Navbar visibility on scroll (matching DoctorSearchTop from aditya4_work)
+  // Navbar visibility synchronized with Navbar's data-nav-visible on <html>
   const [navVisible, setNavVisible] = useState(true);
 
   useEffect(() => {
-    let last = 0;
-    const onScroll = () => {
-      const current = window.scrollY;
-      if (current < 120) {
-        setNavVisible(true);
-        last = current;
-        return;
+    const updateNavVisible = () => {
+      const attr = document.documentElement.getAttribute("data-nav-visible");
+      if (attr !== null) {
+        setNavVisible(attr !== "false");
       }
-      if (Math.abs(current - last) < 12) return;
-      setNavVisible(current < last);
-      last = current;
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    updateNavVisible();
+
+    const observer = new MutationObserver(updateNavVisible);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-nav-visible"],
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   // Refinement scroll handler

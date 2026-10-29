@@ -45,8 +45,13 @@ export default function Navbar() {
   useLayoutEffect(() => {
     const measure = () => {
       const nav = navRef.current;
-      const firstLink = nav?.querySelector<HTMLElement>("[data-desktop-links] > li > a");
-      if (!nav || !firstLink) return;
+      if (!nav) return;
+      const rect = nav.getBoundingClientRect();
+      if (rect.height > 0) {
+        document.documentElement.style.setProperty("--nav-actual-height", `${rect.height}px`);
+      }
+      const firstLink = nav.querySelector<HTMLElement>("[data-desktop-links] > li > a");
+      if (!firstLink) return;
       const inset = firstLink.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(firstLink).paddingLeft);
       nav.style.setProperty("--desktop-menu-inset", `${inset}px`);
       if (window.innerWidth < 1100) setActiveDropdown(null);
