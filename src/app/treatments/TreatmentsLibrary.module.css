@@ -122,10 +122,18 @@
   position: relative;
 }
 
+.heroSearchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
 /* Compact Pulse search shell wrapper (Visible hairline gradient stroke with balanced contrast) */
 .searchBoxWrap {
   position: relative;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   border-radius: var(--radius-full, 9999px);
   padding: 1.5px; /* Clearly visible outline stroke */
   background: linear-gradient(
@@ -192,7 +200,7 @@
   box-sizing: border-box;
 }
 
-/* Clean Crisp White Search Icon (Requested: keep it white, elegant) */
+/* Clean Crisp White Search Icon */
 .searchIcon {
   color: #ffffff !important;
   stroke: #ffffff !important;
@@ -241,6 +249,88 @@
 .clearSearchBtn:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.15);
+}
+
+/* Mobile Filter Trigger Button (Beside Search Box on Mobile) */
+.mobileFilterBtn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileFilterBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(10, 15, 30, 0.90);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  .mobileFilterBtn:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .mobileFilterBtnActive {
+    border-color: #00C4FF !important;
+    background: rgba(3, 78, 162, 0.40) !important;
+    color: #00C4FF !important;
+    box-shadow: 0 0 16px rgba(0, 196, 255, 0.35);
+  }
+
+  .mobileFilterDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00C4FF;
+    box-shadow: 0 0 6px #00C4FF;
+  }
+}
+
+/* Active Filter Pill below search */
+.activeFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.activeFilterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 196, 255, 0.12);
+  border: 1px solid rgba(0, 196, 255, 0.35);
+  font-size: 11px;
+  color: #00C4FF;
+  font-weight: 600;
+  animation: feedbackFadeIn 0.2s ease;
+}
+
+.removeActiveFilterBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00C4FF;
+  cursor: pointer;
 }
 
 /* ─── LIVE SEARCH RESULT COUNT INDICATOR (WHEN TYPING) ──────────────────── */
@@ -297,6 +387,33 @@
   }
 }
 
+/* mweb: Tight stack of two (2x2 grid) with reduced font-size taking minimal vertical room */
+@media (max-width: 640px) {
+  .heroRightCol {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 16px;
+    padding-top: 14px;
+    margin-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    width: 100%;
+  }
+
+  .statNumber {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    line-height: 1.15;
+  }
+
+  .statLabel {
+    font-size: 10.5px !important;
+    color: rgba(255, 255, 255, 0.50) !important;
+    margin-top: 2px !important;
+    line-height: 1.25;
+  }
+}
+
 .statBlock {
   display: flex;
   flex-direction: column;
@@ -326,6 +443,12 @@
   width: 100%;
   padding-left: clamp(20px, 4vw, 40px);
   padding-right: clamp(20px, 4vw, 40px);
+}
+
+@media (max-width: 768px) {
+  .categorySection {
+    display: none;
+  }
 }
 
 .bubblesRow {
@@ -524,7 +647,8 @@
 @media (max-width: 640px) {
   .cardsGrid {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: 12px;
+    padding: 0 16px 40px;
   }
 }
 
@@ -672,6 +796,11 @@
   transform: translateY(-5px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.52);
   border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Desktop: cardTopBody acts as pass-through container */
+.cardTopBody {
+  display: contents;
 }
 
 /* Top Image Container with Dark Gradient Fade */
@@ -1160,4 +1289,315 @@
     padding: 32px 24px 20px;
     max-width: 100%;
   }
+}
+
+/* ─── MWEB (MOBILE <= 640PX) HIGH-DENSITY CARD LAYOUT: 3-4 CARDS VISIBLE ─── */
+@media (max-width: 640px) {
+  .procedureCard {
+    min-height: auto;
+    height: auto;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .procedureCard:hover {
+    transform: none; /* Avoid jank on touch devices */
+  }
+
+  /* Transform top into horizontal flex row (thumbnail on left, title & subtext on right) */
+  .cardTopBody {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .cardImageWrap {
+    width: 80px;
+    height: 80px;
+    min-height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #091322;
+  }
+
+  .cardGradient {
+    display: none;
+  }
+
+  .cardContent {
+    padding: 0;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .cardEyebrow {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+    color: rgba(255, 255, 255, 0.50);
+  }
+
+  .cardTitle {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0 0 3px 0;
+    min-height: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cardSub {
+    font-size: 11px;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+    min-height: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cardBottomSlot {
+    margin-top: 10px;
+    min-height: 32px;
+    width: 100%;
+  }
+
+  .cardActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .cardDoctorBtn,
+  .cardDetailBtn {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Entrance Skeletons high-density match */
+  .skeletonCard {
+    min-height: auto;
+    height: auto;
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  .skeletonImageWrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .skeletonContent {
+    padding: 0;
+    flex: 1;
+  }
+
+  .skeletonBadges {
+    display: none;
+  }
+}
+
+/* ─── MOBILE FILTER BOTTOM SHEET DRAWER ───────────────────────────────────── */
+.sheetBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 18, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9998;
+}
+
+.sheetContainer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 82vh;
+  background: #091322;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sheetDragHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  margin: 12px auto 6px;
+}
+
+.sheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sheetTitleWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheetTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sheetSubtitle {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 2px;
+}
+
+.sheetCloseBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sheetBody {
+  padding: 16px 20px;
+  overflow-y: auto;
+  max-height: calc(82vh - 140px);
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sheetOrgansGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.sheetOrganCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sheetOrganCardActive {
+  background: rgba(3, 78, 162, 0.35);
+  border-color: #00C4FF;
+  box-shadow: 0 0 14px rgba(0, 196, 255, 0.25);
+}
+
+.sheetOrganImgWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: #060e1b;
+}
+
+.sheetOrganImg {
+  object-fit: cover;
+}
+
+.sheetOrganIconWrapAll {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  color: #00C4FF;
+  flex-shrink: 0;
+}
+
+.sheetOrganLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  flex: 1;
+}
+
+.sheetOrganCount {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.sheetFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #091322;
+}
+
+.sheetResetBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.sheetApplyBtn {
+  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.4);
 }

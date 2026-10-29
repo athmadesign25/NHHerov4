@@ -12,7 +12,9 @@ import {
   Calendar,
   Clock,
   Activity,
-  RotateCcw
+  RotateCcw,
+  SlidersHorizontal,
+  Layers
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -48,10 +50,23 @@ const HERO_ANALYTICS_PARAMETERS = [
 export default function TreatmentsLibraryPage() {
   const [items, setItems] = useState<TreatmentProcedureItem[]>(TREATMENTS_PROCEDURES_DATA);
   const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
   const [isPageOpening, setIsPageOpening] = useState<boolean>(true);
   const [, startTransition] = useTransition();
+
+  // Prevent background scroll when mobile filter sheet is open
+  useEffect(() => {
+    if (isFilterSheetOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFilterSheetOpen]);
 
   // Initial page entrance animation sequence orchestration (image -> overlay -> title/subtext -> search -> skeleton -> real cards)
   useEffect(() => {
@@ -194,38 +209,71 @@ export default function TreatmentsLibraryPage() {
               Explore comprehensive clinical guides, recovery paths, and transparent pricing for over 400+ advanced surgical procedures and evidence-based treatments across Narayana Health.
             </motion.p>
 
-            {/* Compressed Pill Search with Visible Gradient Outline, Glow Spotlight & Live Result Count */}
+            {/* Compressed Pill Search with Visible Gradient Outline, Glow Spotlight & Mobile Filter Button */}
             <motion.div
               className={styles.heroSearchContainer}
               initial={{ opacity: 0, y: 14, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.52, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className={styles.searchBoxWrap}>
-                <div className={styles.searchBox}>
-                  <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
-                  <input
-                    type="text"
-                    placeholder="Search treatments, surgery or condition..."
-                    className={styles.searchInput}
-                    value={searchQuery}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      startTransition(() => setSearchQuery(val));
-                    }}
-                    aria-label="Search treatments, surgery or condition"
-                  />
-                  {searchQuery && (
-                    <button
-                      className={styles.clearSearchBtn}
-                      onClick={() => setSearchQuery("")}
-                      aria-label="Clear search input"
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
+              <div className={styles.heroSearchRow}>
+                <div className={styles.searchBoxWrap}>
+                  <div className={styles.searchBox}>
+                    <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
+                    <input
+                      type="text"
+                      placeholder="Search treatments, surgery or condition..."
+                      className={styles.searchInput}
+                      value={searchQuery}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        startTransition(() => setSearchQuery(val));
+                      }}
+                      aria-label="Search treatments, surgery or condition"
+                    />
+                    {searchQuery && (
+                      <button
+                        className={styles.clearSearchBtn}
+                        onClick={() => setSearchQuery("")}
+                        aria-label="Clear search input"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
+
+                {/* Mobile Filter Trigger Button (Beside Search Box on Mobile) */}
+                <button
+                  type="button"
+                  className={`${styles.mobileFilterBtn} ${selectedOrgan ? styles.mobileFilterBtnActive : ""}`}
+                  onClick={() => setIsFilterSheetOpen(true)}
+                  aria-label="Open organ filters"
+                >
+                  <SlidersHorizontal size={15} />
+                  <span className={styles.mobileFilterBtnText}>
+                    {selectedOrgan ? ORGAN_FILTER_OPTIONS.find(o => o.value === selectedOrgan)?.label : "Filters"}
+                  </span>
+                  {selectedOrgan && <span className={styles.mobileFilterDot} />}
+                </button>
               </div>
+
+              {/* Active Filter Pill on Mobile when an organ is chosen */}
+              {selectedOrgan && (
+                <div className={styles.activeFilterRow}>
+                  <span className={styles.activeFilterPill}>
+                    <span>Filter: {ORGAN_FILTER_OPTIONS.find(o => o.value === selectedOrgan)?.label}</span>
+                    <button
+                      type="button"
+                      className={styles.removeActiveFilterBtn}
+                      onClick={() => handleToggleOrgan(selectedOrgan)}
+                      aria-label="Remove filter"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                </div>
+              )}
 
               {/* Dynamic result count displayed immediately below search when typing */}
               {searchQuery.trim().length > 0 && (
@@ -411,21 +459,22 @@ export default function TreatmentsLibraryPage() {
                       exit={{ opacity: 0, scale: 0.96 }}
                       transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
                     >
-                      {/* Top 3D Organ / Procedure Image with Dark Gradient Vignette */}
-                      <div className={styles.cardImageWrap}>
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className={styles.cardBgImage}
-                        />
-                        <div className={styles.cardGradient} />
-                      </div>
+                      {/* Card Top Body: Desktop stacks vertically; Mobile displays thumbnail on left & text on right */}
+                      <div className={styles.cardTopBody}>
+                        {/* 3D Organ / Procedure Image */}
+                        <div className={styles.cardImageWrap}>
+                          <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            sizes="(max-width: 640px) 84px, (max-width: 1024px) 50vw, 33vw"
+                            className={styles.cardBgImage}
+                          />
+                          <div className={styles.cardGradient} />
+                        </div>
 
-                      {/* Content Block */}
-                      <div className={styles.cardContent}>
-                        <div>
+                        {/* Content Block */}
+                        <div className={styles.cardContent}>
                           <div className={styles.cardEyebrow}>
                             {item.speciality}
                           </div>
@@ -440,32 +489,32 @@ export default function TreatmentsLibraryPage() {
                             {item.summary}
                           </p>
                         </div>
+                      </div>
 
-                        {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Hover Decision Action Buttons */}
-                        <div className={styles.cardBottomSlot}>
-                          {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover) */}
-                          <div className={styles.cardRestingMeta}>
-                            <span className={styles.metaBadge}>
-                              <Clock size={11} className={styles.metaIcon} />
-                              <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
-                            </span>
-                            <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
-                              <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
-                            </span>
-                          </div>
+                      {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Decision Action Buttons */}
+                      <div className={styles.cardBottomSlot}>
+                        {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover on desktop) */}
+                        <div className={styles.cardRestingMeta}>
+                          <span className={styles.metaBadge}>
+                            <Clock size={11} className={styles.metaIcon} />
+                            <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
+                          </span>
+                          <span className={styles.metaBadge}>
+                            <Activity size={11} className={styles.metaIcon} />
+                            <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
+                          </span>
+                        </div>
 
-                          {/* Hover Action Buttons: Find doctors & Read more ↗ (Revealed on hover on desktop / Always available on iPad & mobile) */}
-                          <div className={styles.cardActions}>
-                            <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
-                              Find doctors
-                            </Link>
+                        {/* Action Buttons: Find doctors & Read more ↗ (Half-half width) */}
+                        <div className={styles.cardActions}>
+                          <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
+                            Find doctors
+                          </Link>
 
-                            <Link href={detailUrl} className={styles.cardDetailBtn}>
-                              <span>Read more</span>
-                              <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
-                            </Link>
-                          </div>
+                          <Link href={detailUrl} className={styles.cardDetailBtn}>
+                            <span>Read more</span>
+                            <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
+                          </Link>
                         </div>
                       </div>
                     </motion.article>
@@ -511,6 +560,122 @@ export default function TreatmentsLibraryPage() {
           </div>
         </div>
       </section>
+
+      {/* ─── MOBILE FILTER BOTTOM SHEET DRAWER ─── */}
+      <AnimatePresence>
+        {isFilterSheetOpen && (
+          <>
+            <motion.div
+              className={styles.sheetBackdrop}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFilterSheetOpen(false)}
+            />
+
+            <motion.div
+              className={styles.sheetContainer}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className={styles.sheetDragHandle} />
+
+              <div className={styles.sheetHeader}>
+                <div className={styles.sheetTitleWrap}>
+                  <h3 className={styles.sheetTitle}>Filter by Speciality &amp; Organ</h3>
+                  <span className={styles.sheetSubtitle}>Choose an organ to filter procedures</span>
+                </div>
+                <button
+                  type="button"
+                  className={styles.sheetCloseBtn}
+                  onClick={() => setIsFilterSheetOpen(false)}
+                  aria-label="Close filters"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className={styles.sheetBody}>
+                {/* All Specialities Option */}
+                <button
+                  type="button"
+                  className={`${styles.sheetOrganCard} ${!selectedOrgan ? styles.sheetOrganCardActive : ""}`}
+                  onClick={() => {
+                    setSelectedOrgan(null);
+                    setIsFilterSheetOpen(false);
+                  }}
+                >
+                  <div className={styles.sheetOrganIconWrapAll}>
+                    <Layers size={18} />
+                  </div>
+                  <span className={styles.sheetOrganLabel}>All Specialities</span>
+                  <span className={styles.sheetOrganCount}>{TREATMENTS_PROCEDURES_DATA.length}</span>
+                </button>
+
+                {/* 10 Organ Options */}
+                <div className={styles.sheetOrgansGrid}>
+                  {ORGAN_FILTER_OPTIONS.map((opt) => {
+                    const isSelected = selectedOrgan === opt.value;
+                    const count = TREATMENTS_PROCEDURES_DATA.filter((p) => {
+                      const fullContent = `${p.title} ${p.shortTitle} ${p.speciality} ${p.summary} ${p.specialitySlug}`.toLowerCase();
+                      return fullContent.includes(opt.value);
+                    }).length;
+
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        className={`${styles.sheetOrganCard} ${isSelected ? styles.sheetOrganCardActive : ""}`}
+                        onClick={() => {
+                          handleToggleOrgan(opt.value);
+                          setIsFilterSheetOpen(false);
+                        }}
+                      >
+                        <div className={styles.sheetOrganImgWrap}>
+                          <Image
+                            src={opt.image}
+                            alt={opt.label}
+                            fill
+                            sizes="32px"
+                            className={styles.sheetOrganImg}
+                          />
+                        </div>
+                        <span className={styles.sheetOrganLabel}>{opt.label}</span>
+                        {count > 0 && <span className={styles.sheetOrganCount}>{count}</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={styles.sheetFooter}>
+                {selectedOrgan ? (
+                  <button
+                    type="button"
+                    className={styles.sheetResetBtn}
+                    onClick={() => {
+                      setSelectedOrgan(null);
+                    }}
+                  >
+                    Reset
+                  </button>
+                ) : (
+                  <div />
+                )}
+                <button
+                  type="button"
+                  className={styles.sheetApplyBtn}
+                  onClick={() => setIsFilterSheetOpen(false)}
+                >
+                  View {items.length} Procedures
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
