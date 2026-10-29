@@ -17,21 +17,6 @@ const accreditations = [
 
 const accreditationGroups = [accreditations.slice(0, 2), accreditations.slice(2)];
 
-// Keep every city intact; balance the remaining cities across three columns.
-const otherCities = HOSPITAL_CITIES.filter(city => city.slug !== "bangalore");
-const cityWeight = (city: typeof HOSPITAL_CITIES[number]) => city.hospitals.length + 2;
-const weightOf = (cities: typeof otherCities) => cities.reduce((total, city) => total + cityWeight(city), 0);
-let cuts = [1, 2];
-let bestWeight = Infinity;
-for (let first = 1; first < otherCities.length - 1; first++) {
-  for (let second = first + 1; second < otherCities.length; second++) {
-    const weights = [otherCities.slice(0, first), otherCities.slice(first, second), otherCities.slice(second)].map(weightOf);
-    const largest = Math.max(...weights);
-    if (largest < bestWeight) { bestWeight = largest; cuts = [first, second]; }
-  }
-}
-const cityColumns = [HOSPITAL_CITIES.filter(city => city.slug === "bangalore"), otherCities.slice(0, cuts[0]), otherCities.slice(cuts[0], cuts[1]), otherCities.slice(cuts[1])];
-
 export default function HospitalMegaMenu({ onNavigate }: { onNavigate: () => void }) {
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
@@ -73,20 +58,10 @@ export default function HospitalMegaMenu({ onNavigate }: { onNavigate: () => voi
         </div>
       </section>
       <div className={styles.directory} aria-label="Hospitals by city">
-        {cityColumns.map((column, index) => <div className={styles.column} key={index}
-          aria-label={index === 0 ? "Bangalore hospitals and clinics" : `Hospitals from ${column[0].city} to ${column[column.length - 1].city}`}
-          >
-          {column.map(city => {
-            return <section className={styles.cityGroup} key={city.slug} aria-labelledby={`hospital-city-${city.slug}`}>
-              <h2 id={`hospital-city-${city.slug}`}>
-                <Link className={`${styles.textButton} ${styles.cityButton}`} href={city.href} onClick={onNavigate}>{city.city}</Link>
-              </h2>
-              <ul>{city.hospitals.map(hospital => <li key={hospital.label}>
-                <Link className={`${styles.textButton} ${styles.hospitalButton}`} href={hospital.href} onClick={onNavigate}>{hospital.label}</Link>
-              </li>)}</ul>
-            </section>;
-          })}
-        </div>)}
+        {HOSPITAL_CITIES.map(city => <section className={styles.cityGroup} key={city.slug} aria-labelledby={`hospital-city-${city.slug}`}>
+          <h2 id={`hospital-city-${city.slug}`}><Link className={`${styles.textButton} ${styles.cityButton}`} href={city.href} onClick={onNavigate}>{city.city}</Link></h2>
+          <ul>{city.hospitals.map(hospital => <li key={hospital.label}><Link className={`${styles.textButton} ${styles.hospitalButton}`} href={hospital.href} onClick={onNavigate}>{hospital.label}</Link></li>)}</ul>
+        </section>)}
       </div>
       <Link className={`${styles.textButton} ${styles.viewAll}`} href="https://www.narayanahealth.org/hospitals-clinics" onClick={onNavigate}>View All Hospitals & Clinics</Link>
     </div>

@@ -3,8 +3,10 @@
 import { useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Search } from "lucide-react";
 import styles from "./DoctorMegaMenu.module.css";
 import DoctorLocations from "./DoctorLocations";
+import DoctorAvailabilityMenu from "./DoctorAvailabilityMenu";
 import { DOCTOR_SPECIALTIES as specialties } from "./doctor-specialties";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 
@@ -15,7 +17,7 @@ const splitColumns = (items: string[]) => {
 const sections = [
   { id: "speciality", label: "Find Doctor By Speciality", columns: specialties, viewAll: "View All Specialities", href: "/specialities" },
   { id: "location", label: "Find Doctor By Location", columns: [], viewAll: "View All Doctors", href: "/doctors" },
-  { id: "condition", label: "Find Doctor By Disease/Condition", columns: splitColumns(DOCTOR_CONDITIONS), viewAll: "View All Diseases", href: "/search" },
+  { id: "condition", label: "Find Doctor By Disease/Condition", columns: splitColumns(DOCTOR_CONDITIONS), viewAll: "Look up a condition or disease", href: "/search" },
   { id: "sunday", label: "Doctors Available on Sunday", columns: [], viewAll: "", href: "/doctors" },
   { id: "today", label: "Doctors Available Today", columns: [], viewAll: "", href: "/doctors" },
 ];
@@ -34,8 +36,13 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
     tabs?.[next]?.focus();
   };
   const itemHref = (label: string) => `/search?q=${encodeURIComponent(label)}`;
-  const isPlaceholder = section.id === "sunday" || section.id === "today";
+  const isAvailability = section.id === "sunday" || section.id === "today";
   const isLocation = section.id === "location";
+  const isCondition = section.id === "condition";
+  const openConditionSearch = () => {
+    onNavigate();
+    requestAnimationFrame(() => window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } })));
+  };
 
   return (
     <div className={styles.menu}>
@@ -49,25 +56,18 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
           </button>
         ))}
       </div>
-      <div className={`${styles.panel} ${isLocation || isPlaceholder ? styles.singlePanel : ""}`} id="doctor-menu-panel" role="tabpanel" aria-labelledby={`doctor-menu-tab-${section.id}`}>
-        {isLocation ? <DoctorLocations onNavigate={onNavigate} /> : isPlaceholder ? (
-          <div className={styles.placeholder}>need content</div>
+      <div className={`${styles.panel} ${isLocation || isAvailability ? styles.singlePanel : ""} ${isAvailability ? styles.availabilityPanel : ""} ${isCondition ? styles.conditionPanel : ""}`} id="doctor-menu-panel" role="tabpanel" aria-labelledby={`doctor-menu-tab-${section.id}`}>
+        {isLocation ? <DoctorLocations onNavigate={onNavigate} /> : isAvailability ? (
+          <DoctorAvailabilityMenu availability={section.id === "sunday" ? "sunday" : "today"} onNavigate={onNavigate} />
         ) : <>
           <div className={styles.imageWrap}>
-            <Image src={section.id === "speciality" ? "/nav-doctor-speciality.png" : "/doctor_patient.png"} alt="A doctor speaking with a patient during a consultation" fill sizes="(min-width: 1600px) 28vw, 24vw" className={styles.image} />
+            <Image src={section.id === "speciality" ? "/nav-doctor-speciality.png" : "/bento-patient-first.jpg"} alt={section.id === "speciality" ? "A doctor speaking with a patient during a consultation" : "Patient-first support and compassionate care"} fill sizes="(min-width: 1600px) 28vw, 24vw" className={styles.image} />
           </div>
-          <div className={styles.columns}>
-            {section.columns.map((column, index) => (
-              <ul key={`${section.id}-${index}`} className={styles.column}>
-                {column.map((label) => (
-                  <li key={label}><Link href={itemHref(label)} title={label} className={styles.item} onClick={onNavigate}>
-                    <strong>{label.charAt(0)}</strong>{label.slice(1)}
-                  </Link></li>
-                ))}
-                {index === 2 && <li><Link href={section.href} className={styles.viewAll} onClick={onNavigate}>{section.viewAll}</Link></li>}
-              </ul>
-            ))}
-          </div>
+          <ul className={styles.columns}>
+            {section.columns.flat().map(label => <li key={label}><Link href={itemHref(label)} title={label} className={styles.item} onClick={onNavigate}><strong>{label.charAt(0)}</strong>{label.slice(1)}</Link></li>)}
+          </ul>
+          {!isCondition && <Link href={section.href} className={styles.viewAll} onClick={onNavigate}>{section.viewAll}</Link>}
+          {isCondition && <button type="button" className={styles.conditionSearch} onClick={openConditionSearch}><Search aria-hidden="true" />Look up a condition or disease</button>}
         </>}
       </div>
     </div>

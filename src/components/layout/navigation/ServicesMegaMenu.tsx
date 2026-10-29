@@ -18,7 +18,6 @@ export default function ServicesMegaMenu({ onNavigate }: { onNavigate: () => voi
           <ul className={styles.centreLinks}>
             {centres.map((centre) => <li key={centre.href}><Link href={centre.href} onClick={onNavigate}>{centre.label}</Link></li>)}
           </ul>
-          <Link href="/specialities" className={styles.viewAll} onClick={onNavigate}>View All</Link>
         </div>
       </section>
       <div className={styles.tiles} aria-label="Our services">
@@ -32,6 +31,7 @@ export default function ServicesMegaMenu({ onNavigate }: { onNavigate: () => voi
           </Link>
         ))}
       </div>
+      <Link href="/specialities" className={styles.viewAll} onClick={onNavigate}>View All</Link>
     </div>
   );
 }

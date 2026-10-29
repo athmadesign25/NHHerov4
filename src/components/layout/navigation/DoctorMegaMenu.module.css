@@ -1,6 +1,7 @@
 .menu {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+  height: 100%;
   min-height: 100%;
   font-family: var(--font-family);
 }
@@ -45,17 +46,18 @@
 .panel {
   display: grid;
   grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: var(--space-24);
-  padding: var(--space-32);
+  padding: var(--space-24);
   min-width: 0;
+  min-height: 0;
   background: var(--color-surface);
   border-radius: var(--radius-md);
 }
-.imageWrap { position: relative; min-width: 0; min-height: var(--space-128); border-radius: var(--radius-md); overflow: hidden; }
+.imageWrap { grid-column: 1; grid-row: 1 / span 2; position: relative; min-width: 0; min-height: var(--space-128); border-radius: var(--radius-md); overflow: hidden; }
 .image { object-fit: cover; object-position: center; }
-.columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-24); min-width: 0; }
-.column { list-style: none; margin: 0; padding: 0; min-width: 0; }
-.column li { min-width: 0; }
+.columns { grid-column: 2; grid-row: 1; column-count: 3; column-gap: var(--space-24); column-fill: auto; height: 100%; min-height: 0; min-width: 0; list-style: none; margin: 0; padding: 0; }
+.columns li { break-inside: avoid; min-width: 0; }
 .item {
   display: block;
   overflow: hidden;
@@ -71,6 +73,9 @@
 .item strong { font-weight: 700; }
 .item:hover { color: var(--color-primary); }
 .viewAll {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
   display: inline-block;
   padding: var(--space-10) 0;
   font-size: var(--font-size-sm);
@@ -82,10 +87,48 @@
 @media (max-width: 1280px) {
   .menu { grid-template-columns: minmax(0, 1fr) minmax(0, 3.5fr); }
   .rail { padding: var(--space-16); gap: var(--space-8); }
-  .panel { gap: var(--space-20); padding: var(--space-24); grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr); }
-  .columns { gap: var(--space-16); }
+  .panel { gap: var(--space-20); padding: var(--space-20); grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr); }
+  .columns { column-gap: var(--space-16); }
 }
 @media (prefers-reduced-motion: reduce) { .tab span::after, .item { transition: none; } }
 
 .singlePanel { display: block; }
-.placeholder { display: flex; align-items: center; justify-content: center; min-height: 100%; color: var(--color-text-secondary); font-size: var(--font-size-base); line-height: var(--leading-body); }
+.availabilityPanel { padding: 0; }
+
+/* The condition menu keeps its wider care image beside the text columns. */
+.conditionPanel {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--space-16) var(--space-24);
+}
+.conditionPanel .imageWrap { grid-column: 1; grid-row: 1 / span 2; }
+.conditionPanel .columns { column-gap: var(--space-16); }
+.conditionPanel .item { white-space: normal; overflow-wrap: break-word; padding-block: var(--space-6); }
+.conditionSearch {
+  grid-column: 2;
+  grid-row: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: var(--space-8);
+  padding: var(--space-8) 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out);
+}
+.conditionSearch svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.conditionSearch:hover { color: var(--color-primary-dark); text-decoration: underline; text-underline-offset: var(--space-4); }
+.conditionSearch:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); border-radius: var(--radius-sm); }
+@media (max-width: 1280px) {
+  .conditionPanel { gap: var(--space-12) var(--space-20); }
+  .conditionPanel .columns { column-gap: var(--space-12); }
+  .conditionPanel .item { font-size: var(--font-size-xs); line-height: var(--leading-normal); padding-block: var(--space-4); }
+}
+@media (prefers-reduced-motion: reduce) { .conditionSearch { transition: none; } }

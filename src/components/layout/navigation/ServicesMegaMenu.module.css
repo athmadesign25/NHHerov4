@@ -4,9 +4,13 @@
   gap: var(--space-24);
   padding: var(--space-24);
   min-height: 100%;
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr) auto;
   background: var(--color-surface);
 }
 .centres {
+  grid-column: 1;
+  grid-row: 1 / span 2;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -40,9 +44,9 @@
   transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
 }
 .centreLinks a:hover { background: var(--color-surface); color: var(--color-primary); }
-.viewAll { margin-top: auto; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; align-self: flex-start; }
+.viewAll { grid-column: 2; grid-row: 2; justify-self: end; padding-block: var(--space-8); margin-top: 0; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; align-self: flex-start; }
 .viewAll:hover { text-decoration: underline; text-underline-offset: var(--space-4); }
-.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: var(--space-20); min-width: 0; }
+.tiles { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: var(--space-20); min-width: 0; }
 .tile {
   position: relative;
   display: flex;
@@ -73,7 +77,7 @@
 @media (max-width: 1280px) {
   .menu { gap: var(--space-16); padding: var(--space-20); grid-template-columns: minmax(0, 1.15fr) minmax(0, 2.2fr); }
   .centreContent { padding-inline: var(--space-12); }
-  .centreLinks a { font-size: var(--font-size-2xs); }
+  .centreLinks a { font-size: var(--font-size-xs); }
   .centreLinks { gap: var(--space-8); }
   .centreLinks a { padding: var(--space-8); }
   .tiles { gap: var(--space-12); grid-template-columns: repeat(2, minmax(0, 1fr)); }

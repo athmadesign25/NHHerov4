@@ -35,9 +35,11 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
             </Link>
           </li>
         ))}
-        <li className={styles.viewAllCell}><Link href="/doctors" className={styles.viewAll} onClick={onNavigate}>View All</Link></li>
       </ul>
-      <a className={styles.credits} href="/navigation/cities/credits.json" target="_blank" rel="noopener noreferrer">Photo credits</a>
+      <div className={styles.footer}>
+        <a className={styles.credits} href="/navigation/cities/credits.json" target="_blank" rel="noopener noreferrer">Photo credits</a>
+        <Link href="/doctors" className={styles.viewAll} onClick={onNavigate}>View All</Link>
+      </div>
     </div>
   );
 }
