@@ -1028,7 +1028,47 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
   const [isTabsPinned, setIsTabsPinned] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const tabsSentinelRef = useRef<HTMLDivElement>(null);
+  const pinnedTabsRef = useRef<HTMLDivElement>(null);
   const footerSentinelRef = useRef<HTMLDivElement>(null);
+
+  // Track the existing navbar's rendered edge, including its slide animation.
+  // The speciality bar follows it without changing the shared navbar.
+  useEffect(() => {
+    const tabs = pinnedTabsRef.current;
+    const nav = document.querySelector("nav");
+    if (!isTabsPinned || !tabs || !nav) return;
+    let frame = 0;
+    let until = 0;
+    let previous = "";
+    const transitionTime = () => Math.max(...getComputedStyle(nav).transitionDuration.split(",").map(value => parseFloat(value) * 1000));
+    const follow = () => {
+      const offset = `${Math.max(0, nav.getBoundingClientRect().bottom)}px`;
+      if (offset !== previous) {
+        tabs.style.setProperty("--speciality-nav-offset", offset);
+        previous = offset;
+      }
+      frame = performance.now() < until ? requestAnimationFrame(follow) : 0;
+    };
+    const schedule = () => {
+      until = performance.now() + transitionTime();
+      if (!frame) frame = requestAnimationFrame(follow);
+    };
+    follow();
+    const observer = new MutationObserver(schedule);
+    observer.observe(nav, { attributes: true, attributeFilter: ["style", "class"] });
+    const resize = new ResizeObserver(schedule);
+    resize.observe(nav);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      observer.disconnect();
+      resize.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+      tabs.style.removeProperty("--speciality-nav-offset");
+    };
+  }, [isTabsPinned]);
 
   useEffect(() => {
     const sentinel = tabsSentinelRef.current;
@@ -1388,6 +1428,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
 
         {/* Pinned Programme Dropdown Bar */}
         <div
+          ref={pinnedTabsRef}
           data-theme={isTabsPinned ? navTheme : undefined}
           className={`${styles.programmeTabsWrapper} ${isTabsPinned ? `${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark}` : ""} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""}`}
         >

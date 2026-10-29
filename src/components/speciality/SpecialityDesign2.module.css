@@ -714,7 +714,7 @@
   position: fixed;
   left: 0;
   right: 0;
-  top: 68px;
+  top: 0;
   width: 100%;
   z-index: 950;
   margin: 0;
@@ -727,12 +727,10 @@
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.14);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.32);
-  transform: translateY(0);
+  transform: translateY(var(--speciality-nav-offset, var(--nav-height)));
   opacity: 1;
   pointer-events: auto;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease,
+  transition: opacity var(--duration-moderate) var(--ease-out),
               padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.4s ease,
               border-color 0.4s ease,
@@ -1094,30 +1092,6 @@
   background: rgba(var(--navy-900-rgb), 0.72);
   border-bottom: 1px solid rgba(var(--white-rgb), 0.14);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.32);
-}
-
-/* When the navbar slides into view on scroll up, the pinned tabs smoothly slide down flush against the navbar */
-:global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned {
-  top: 68px;
-  transform: translateY(0) !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-:global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned {
-  top: 0;
-  transform: translateY(0) !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-@media (max-width: 1024px) {
-  :global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned {
-    top: 56px;
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
 }
 
 /* Hide or push away gracefully when footer is reached */
