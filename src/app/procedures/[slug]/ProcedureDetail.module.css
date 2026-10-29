@@ -238,25 +238,20 @@
 }
 
 
-/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (FROSTED GRADIENT SCREEN) ─── */
+/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (ATMOSPHERIC BACKDROP) ─── */
 .readingExperienceWrapper {
   position: relative;
   width: 100%;
   z-index: 1;
-  background: 
-    radial-gradient(circle 900px at 8% 22%, rgba(3, 78, 162, 0.05) 0%, transparent 65%),
-    radial-gradient(circle 1000px at 92% 65%, rgba(0, 196, 255, 0.03) 0%, transparent 65%),
-    linear-gradient(
-      180deg,
-      rgba(248, 250, 252, 0.84) 0%,
-      rgba(241, 245, 249, 0.86) 35%,
-      rgba(248, 250, 252, 0.88) 70%,
-      rgba(241, 245, 249, 0.90) 100%
-    );
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-top: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 -8px 24px rgba(6, 14, 27, 0.06);
+  background: linear-gradient(
+    180deg,
+    rgba(6, 14, 27, 0.35) 0%,
+    rgba(15, 23, 42, 0.55) 100%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -12px 36px rgba(6, 14, 27, 0.2);
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
@@ -271,7 +266,7 @@
 .twoColumnGrid {
   display: grid;
   grid-template-columns: 310px 1fr;
-  gap: 56px;
+  gap: 36px;
   align-items: start;
 }
 
@@ -282,7 +277,7 @@
   }
 }
 
-/* ─── STICKY LEFT SIDEBAR (UNBOXED SECTION SELECTOR ON GRADIENT) ────────── */
+/* ─── STICKY LEFT SIDEBAR (FROSTED GLASS NAVIGATION PANEL) ────────── */
 .stickySidebar {
   position: -webkit-sticky;
   position: sticky;
@@ -292,6 +287,15 @@
   flex-direction: column;
   gap: 20px;
   z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 18px;
+  padding: 24px 20px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.03),
+    0 16px 36px -6px rgba(15, 23, 42, 0.06);
 }
 
 /* Unboxed Section Selector */
@@ -500,13 +504,22 @@
   transform: translateX(2px);
 }
 
-/* ─── RIGHT CONTENT AREA ─────────────────────────────────────────────────── */
-/* ─── RIGHT CONTENT AREA (UNIFIED READING TYPOGRAPHY) ─────────────────────── */
+/* ─── RIGHT CONTENT AREA (FROSTED GLASS WHITE FOCUS READING SHEET) ────────── */
 .articleContent {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 48px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 20px;
+  padding: clamp(28px, 4.5vw, 48px);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.03),
+    0 24px 48px -10px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset;
 }
 
 .sectionBlock {
@@ -584,14 +597,12 @@
 
 /* ─── KEY POINTS CARD (WHAT IS IT) ───────────────────────────────────────── */
 .keyPointsCard {
-  background: rgba(255, 255, 255, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid var(--slate-200, #e2e8f0);
   border-radius: var(--radius-lg, 12px);
   padding: 22px 24px;
   margin-top: 16px;
-  box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 /* ─── SYMPTOMS: INTERACTIVE TRIAGE SIGNAL LIST ───────────────────────────── */
@@ -608,13 +619,11 @@
   gap: 14px;
   align-items: center;
   padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid var(--slate-200, #e2e8f0);
   border-radius: var(--radius-md, 10px);
   text-decoration: none;
-  box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -671,14 +680,12 @@
 
 /* ─── INDICATIONS: STRUCTURED CLINICAL CONDITION DOSSIER ─────────────────── */
 .conditionDossierContainer {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   margin-top: 18px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03);
 }
 
 .conditionDossierRow {
@@ -741,13 +748,11 @@
 }
 
 .eligibilityCol {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 22px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03);
 }
 
 .eligibilityHeader {
@@ -798,13 +803,11 @@
   display: grid;
   grid-template-columns: 44px 1fr;
   gap: 16px;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03);
   align-items: flex-start;
 }
 
@@ -851,14 +854,12 @@
 
 /* ─── RECOVERY CARE MILESTONES (LIGHT, COHESIVE TRACK) ───────────────────── */
 .recoveryTrackCard {
-  background: rgba(255, 255, 255, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid var(--slate-200, #e2e8f0);
   border-radius: var(--radius-lg, 12px);
   padding: 24px;
   margin-top: 20px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03);
 }
 
 .recoveryTrackHeader {
@@ -952,14 +953,12 @@
 
 /* ─── COST & INSURANCE (HARMONIOUS LIGHT THEME) ──────────────────────────── */
 .costCard {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 28px 30px;
   margin-top: 20px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.03);
 }
 
 .costHeader {
@@ -1210,12 +1209,11 @@
 }
 
 .faqItem {
-  background: rgba(255, 255, 255, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  background: #f8fafc;
+  border: 1px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-lg, 14px);
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: all var(--duration-fast, 0.15s) ease;
 }
 
