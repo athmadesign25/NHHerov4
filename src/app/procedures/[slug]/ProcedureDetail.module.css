@@ -1072,22 +1072,22 @@
   align-items: center;
   gap: 4px;
   padding: 10px 6px;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(3, 78, 162, 0.14);
   border-radius: 20px;
   box-shadow: 
-    0 16px 36px rgba(15, 23, 42, 0.14),
-    0 4px 12px rgba(15, 23, 42, 0.06),
+    0 16px 40px rgba(3, 78, 162, 0.14),
+    0 4px 12px rgba(15, 23, 42, 0.05),
     inset 0 1px 1px rgba(255, 255, 255, 0.95);
   transform-origin: center right;
-  transition: box-shadow 0.25s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .floatingSideBoxes:hover {
   box-shadow: 
-    0 20px 44px rgba(15, 23, 42, 0.20),
+    0 22px 48px rgba(3, 78, 162, 0.20),
     0 6px 16px rgba(15, 23, 42, 0.08),
     inset 0 1px 1px rgba(255, 255, 255, 1);
 }
@@ -1097,10 +1097,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 8px 10px;
+  gap: 6px;
+  padding: 8px 6px;
   width: 78px;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #1a1a2e;
   text-decoration: none;
   background: transparent;
@@ -1112,54 +1112,60 @@
 }
 
 .floatingBoxItem:hover {
-  background: rgba(3, 78, 162, 0.06);
+  background: rgba(3, 78, 162, 0.05);
   transform: translateY(-2px);
 }
 
+/* Unified Cohesive Icon Squircle Tile for ALL 3 buttons */
 .boxIconWrap {
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 11px;
-  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  border-radius: 12px;
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 4px 14px rgba(3, 78, 162, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.15);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
 .floatingBoxItem:hover .boxIconWrap {
   transform: scale(1.08);
-  box-shadow: 0 6px 18px rgba(3, 78, 162, 0.45);
+  box-shadow: 
+    0 6px 18px rgba(3, 78, 162, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
+/* Contact Support and Pulse inherit the same cohesive royal styling */
 .boxIconSupport {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  color: #38bdf8;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.24), inset 0 1px 1px rgba(255, 255, 255, 0.25);
-}
-
-.floatingBoxItem:hover .boxIconSupport {
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.4);
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
 }
 
 .boxIconPulse {
-  background: linear-gradient(135deg, #00C4FF 0%, #38BDF8 40%, #A855F7 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
 }
 
-.floatingBoxItem:hover .boxIconPulse {
-  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.55);
+/* Live Pulse Lottie Animation Frame */
+.pulseLottieBox {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .boxDivider {
   width: 44px;
   height: 1px;
-  background: #f1f5f9;
+  background: rgba(3, 78, 162, 0.08);
   margin: 1px 0;
 }
 
@@ -1171,6 +1177,11 @@
   color: #334155;
   text-align: center;
   letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.floatingBoxItem:hover .boxLabel {
+  color: #034EA2;
 }
 
 /* Tablet & Mobile adjustments */
@@ -1184,8 +1195,12 @@
     padding: 6px 4px;
   }
   .boxIconWrap {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
+  }
+  .pulseLottieBox {
+    width: 28px;
+    height: 28px;
   }
   .boxLabel {
     font-size: 10px;

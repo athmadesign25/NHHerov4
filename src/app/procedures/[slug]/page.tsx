@@ -19,6 +19,8 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import Lottie from "lottie-react";
+import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -657,7 +659,9 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               aria-label="Ask Pulse AI"
             >
               <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
-                <SparkleStarIcon size={19} />
+                <div className={styles.pulseLottieBox}>
+                  <Lottie animationData={pulseAnimation} loop={true} />
+                </div>
               </div>
               <span className={styles.boxLabel}>Ask<br />Pulse</span>
             </button>
