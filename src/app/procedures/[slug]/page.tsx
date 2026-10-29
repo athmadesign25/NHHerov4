@@ -76,27 +76,30 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
   return (
     <div className={styles.detailPageContainer}>
-      {/* ─── DETAIL HERO (FULL BACKGROUND IMAGE & ATMOSPHERIC GRADIENT) ─────── */}
+      {/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ──── */}
+      <div className={styles.stationaryCanvas} aria-hidden="true">
+        <motion.div
+          className={styles.stationaryMotionWrapper}
+          initial={{ scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src={detail.heroImage}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className={styles.stationaryImage}
+          />
+        </motion.div>
+        <div className={styles.stationaryCanvasOverlay} />
+      </div>
+
+      {/* ─── DETAIL HERO (FULL BACKGROUND ATMOSPHERIC GRADIENT & METRICS) ───── */}
       <section className={styles.detailHero} data-nav-theme="dark">
-        {/* Full scale background image with gentle zoom settle */}
-        <div className={styles.heroBg}>
-          <motion.div
-            className={styles.heroBgMotion}
-            initial={{ scale: 1.08, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Image
-              src={detail.heroImage}
-              alt={detail.title}
-              fill
-              priority
-              sizes="100vw"
-              className={styles.heroBgImage}
-            />
-            <div className={styles.heroBgOverlay} />
-          </motion.div>
-        </div>
+        {/* Hero contrast overlay (ensures left-column typography is crisp) */}
+        <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
           <div className={styles.heroLeftCol}>
@@ -174,20 +177,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ─── MAIN CONTENT BODY WITH FLOWING EDITORIAL BACKGROUND & GRADIENT ─── */}
+      {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
       <div className={styles.readingExperienceWrapper}>
-        {/* Editorial Atmospheric Background Image & Flowing Gradient Canvas */}
-        <div className={styles.readingBgCanvas} aria-hidden="true">
-          <Image
-            src={detail.heroImage}
-            alt=""
-            fill
-            sizes="100vw"
-            className={styles.readingBgImage}
-          />
-          <div className={styles.readingBgGradient} />
-        </div>
-
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
             {/* ─── LEFT COLUMN: UNBOXED SECTION SELECTOR ON GRADIENT ─────── */}
