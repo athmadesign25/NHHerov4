@@ -146,7 +146,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               {detail.heroSubtitle}
             </p>
 
-            {/* Actions Row: Primary CTA (NH Blue) + Ask Pulse AI + Helpline */}
+            {/* Actions Row: Primary CTA (NH Blue) + Call Helpline Text */}
             <div className={styles.heroActionsRow}>
               <Link 
                 href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`} 
@@ -156,17 +156,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <span>Book Consultation</span>
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
-
-              <button
-                type="button"
-                className={styles.heroPulseBtn}
-                onClick={() => setIsPulseOpen(true)}
-                title={`Ask Pulse AI about ${detail.shortTitle}`}
-                aria-label="Ask Pulse AI"
-              >
-                <SparkleStarIcon size={16} />
-                <span>Ask Pulse AI</span>
-              </button>
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
@@ -617,59 +606,61 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         </div>
       </main>
 
-      {/* ─── FLOATING ACTION BUTTON (FAB) DOCK ON RIGHT SIDE ────────────── */}
+      {/* ─── FLOATING ACTION BOXES (FAB GROUP ON RIGHT MID-HEIGHT) ───────── */}
       <AnimatePresence>
         {isScrolled && (
           <motion.div
-            className={styles.floatingActionDock}
-            initial={{ opacity: 0, y: 36, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 28, scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 420, damping: 28 }}
+            className={styles.floatingSideBoxes}
+            initial={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            animate={{ opacity: 1, x: 0, y: "-50%", scale: 1 }}
+            exit={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            transition={{ type: "spring", stiffness: 380, damping: 28 }}
             role="region"
-            aria-label="Floating clinical quick actions"
+            aria-label="Quick clinical actions"
           >
-            {/* 1. Pulse AI Overlay Trigger */}
-            <button
-              type="button"
-              className={styles.fabPulseBtn}
-              onClick={() => setIsPulseOpen(true)}
-              title={`Ask Pulse AI about ${detail.shortTitle}`}
-              aria-label={`Ask Pulse AI about ${detail.shortTitle}`}
-            >
-              <div className={styles.fabPulseGlow} />
-              <span className={styles.fabPulseIconBox}>
-                <SparkleStarIcon size={16} />
-              </span>
-              <span className={styles.fabPulseText}>Ask Pulse AI</span>
-            </button>
-
-            <div className={styles.fabDivider} aria-hidden="true" />
-
-            {/* 2. Helpline Call */}
-            <a
-              href="tel:18003090309"
-              className={styles.fabHelplineBtn}
-              title="Call 24x7 Care Helpline: 1800 309 0309"
-              aria-label="Call 24x7 Care Helpline"
-            >
-              <PhoneCall size={14} className={styles.fabHelplineIcon} />
-              <span className={styles.fabHelplineText}>1800 309 0309</span>
-            </a>
-
-            <div className={styles.fabDivider} aria-hidden="true" />
-
-            {/* 3. Primary Book Consultation CTA */}
+            {/* Box 1: Book Consultation */}
             <Link
               href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
-              className={styles.fabBookBtn}
+              className={styles.floatingBoxItem}
               title={`Book Consultation for ${detail.shortTitle}`}
               aria-label="Book Consultation"
             >
-              <Calendar size={14} />
-              <span>Book Consultation</span>
-              <ArrowUpRight size={13} className={styles.fabBtnArrow} />
+              <div className={styles.boxIconWrap}>
+                <Calendar size={18} />
+              </div>
+              <span className={styles.boxLabel}>Book<br />Consultation</span>
             </Link>
+
+            <div className={styles.boxDivider} aria-hidden="true" />
+
+            {/* Box 2: Contact Support */}
+            <a
+              href="tel:18003090309"
+              className={styles.floatingBoxItem}
+              title="Contact Support: 1800 309 0309"
+              aria-label="Contact Support"
+            >
+              <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
+                <PhoneCall size={17} />
+              </div>
+              <span className={styles.boxLabel}>Contact<br />Support</span>
+            </a>
+
+            <div className={styles.boxDivider} aria-hidden="true" />
+
+            {/* Box 3: Ask Pulse */}
+            <button
+              type="button"
+              className={styles.floatingBoxItem}
+              onClick={() => setIsPulseOpen(true)}
+              title={`Ask Pulse AI about ${detail.shortTitle}`}
+              aria-label="Ask Pulse AI"
+            >
+              <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
+                <SparkleStarIcon size={19} />
+              </div>
+              <span className={styles.boxLabel}>Ask<br />Pulse</span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
