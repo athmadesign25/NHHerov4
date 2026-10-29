@@ -798,9 +798,10 @@
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Desktop: cardTopBody acts as pass-through container */
-.cardTopBody {
-  display: contents;
+/* Content text group */
+.cardTextGroup {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Top Image Container with Dark Gradient Fade */
@@ -882,7 +883,7 @@
   font-size: 12px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.60);
-  margin: 0 0 14px 0;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -897,6 +898,7 @@
   min-height: 34px;
   display: flex;
   align-items: center;
+  padding-top: 14px;
 }
 
 /* Resting State: Procedure Clinical Metadata (Compact, unified scale) */
@@ -931,13 +933,12 @@
   flex-shrink: 0;
 }
 
-/* Action Buttons Container: Half-Half (50% / 50%) width filling the card bottom */
+/* Action Buttons Container: Inline-Flex pills side-by-side with compact scale */
 .cardActions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  align-items: center;
   gap: 8px;
   width: 100%;
-  align-items: center;
 }
 
 /* Desktop: at rest, resting metadata is shown.
@@ -981,17 +982,16 @@
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors - Compact 34px pill filling 50% width */
+/* Decision Button 1 (Secondary): Find doctors - Compact 32px pill */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 34px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -1001,7 +1001,7 @@
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
-  box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .cardDoctorBtn:hover {
@@ -1010,15 +1010,14 @@
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ - Compact 34px NH blue pill filling 50% width */
+/* Decision Button 2 (Primary): Read more ↗ - Compact 32px NH blue pill */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  width: 100%;
-  height: 34px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-full, 9999px);
   font-size: 11.5px;
   font-weight: 600;
@@ -1032,7 +1031,7 @@
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
-  box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .cardDetailBtn:hover {
@@ -1297,10 +1296,13 @@
     min-height: auto;
     height: auto;
     border-radius: 14px;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: start;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
     transition: transform 0.2s ease, border-color 0.2s ease;
   }
@@ -1309,15 +1311,9 @@
     transform: none; /* Avoid jank on touch devices */
   }
 
-  /* Transform top into horizontal flex row (thumbnail on left, title & subtext on right) */
-  .cardTopBody {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    width: 100%;
-  }
-
   .cardImageWrap {
+    grid-column: 1;
+    grid-row: 1;
     width: 80px;
     height: 80px;
     min-height: 80px;
@@ -1334,8 +1330,13 @@
   }
 
   .cardContent {
+    display: contents;
     padding: 0;
-    flex: 1;
+  }
+
+  .cardTextGroup {
+    grid-column: 2;
+    grid-row: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -1375,9 +1376,18 @@
   }
 
   .cardBottomSlot {
-    margin-top: 10px;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 0;
+    padding: 0;
     min-height: 32px;
     width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .cardRestingMeta {
+    display: none;
   }
 
   .cardActions {
@@ -1385,14 +1395,24 @@
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     width: 100%;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    position: static;
   }
 
   .cardDoctorBtn,
   .cardDetailBtn {
     height: 32px;
+    width: 100%;
     padding: 0 8px;
     font-size: 11px;
     font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex: 1 1 0;
   }
 
   /* Entrance Skeletons high-density match */

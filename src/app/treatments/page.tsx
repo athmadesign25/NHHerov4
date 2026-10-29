@@ -459,22 +459,21 @@ export default function TreatmentsLibraryPage() {
                       exit={{ opacity: 0, scale: 0.96 }}
                       transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
                     >
-                      {/* Card Top Body: Desktop stacks vertically; Mobile displays thumbnail on left & text on right */}
-                      <div className={styles.cardTopBody}>
-                        {/* 3D Organ / Procedure Image */}
-                        <div className={styles.cardImageWrap}>
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            sizes="(max-width: 640px) 84px, (max-width: 1024px) 50vw, 33vw"
-                            className={styles.cardBgImage}
-                          />
-                          <div className={styles.cardGradient} />
-                        </div>
+                      {/* 3D Organ / Procedure Image */}
+                      <div className={styles.cardImageWrap}>
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 640px) 84px, (max-width: 1024px) 50vw, 33vw"
+                          className={styles.cardBgImage}
+                        />
+                        <div className={styles.cardGradient} />
+                      </div>
 
-                        {/* Content Block */}
-                        <div className={styles.cardContent}>
+                      {/* Content Block */}
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardTextGroup}>
                           <div className={styles.cardEyebrow}>
                             {item.speciality}
                           </div>
@@ -489,32 +488,32 @@ export default function TreatmentsLibraryPage() {
                             {item.summary}
                           </p>
                         </div>
-                      </div>
 
-                      {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Decision Action Buttons */}
-                      <div className={styles.cardBottomSlot}>
-                        {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover on desktop) */}
-                        <div className={styles.cardRestingMeta}>
-                          <span className={styles.metaBadge}>
-                            <Clock size={11} className={styles.metaIcon} />
-                            <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
-                          </span>
-                          <span className={styles.metaBadge}>
-                            <Activity size={11} className={styles.metaIcon} />
-                            <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
-                          </span>
-                        </div>
+                        {/* Card Bottom Slot: Resting Metadata (Recovery, Stay) vs Decision Action Buttons */}
+                        <div className={styles.cardBottomSlot}>
+                          {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover on desktop) */}
+                          <div className={styles.cardRestingMeta}>
+                            <span className={styles.metaBadge}>
+                              <Clock size={11} className={styles.metaIcon} />
+                              <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
+                            </span>
+                            <span className={styles.metaBadge}>
+                              <Activity size={11} className={styles.metaIcon} />
+                              <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
+                            </span>
+                          </div>
 
-                        {/* Action Buttons: Find doctors & Read more ↗ (Half-half width) */}
-                        <div className={styles.cardActions}>
-                          <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
-                            Find doctors
-                          </Link>
+                          {/* Action Buttons: Find doctors & Read more ↗ */}
+                          <div className={styles.cardActions}>
+                            <Link href={doctorsUrl} className={styles.cardDoctorBtn}>
+                              Find doctors
+                            </Link>
 
-                          <Link href={detailUrl} className={styles.cardDetailBtn}>
-                            <span>Read more</span>
-                            <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
-                          </Link>
+                            <Link href={detailUrl} className={styles.cardDetailBtn}>
+                              <span>Read more</span>
+                              <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </motion.article>
