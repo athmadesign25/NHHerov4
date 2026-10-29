@@ -278,7 +278,7 @@
   }
 }
 
-/* ─── STICKY LEFT SIDEBAR (GLASSMORPHIC NAVIGATION PANEL) ─────────────────── */
+/* ─── STICKY LEFT SIDEBAR (AIRY MINIMAL NAVIGATION RAIL) ─────────────────── */
 .stickySidebar {
   position: -webkit-sticky;
   position: sticky;
@@ -286,17 +286,12 @@
   align-self: start;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 20px;
-  padding: 24px 20px;
-  box-shadow: 
-    0 8px 32px 0 rgba(15, 23, 42, 0.05),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 
 /* Unboxed Section Selector */
@@ -318,20 +313,20 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--color-primary, #034EA2);
+  color: #64748b;
   padding-bottom: 8px;
-  border-bottom: 1.5px solid rgba(3, 78, 162, 0.12);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .tocEyebrowIcon {
-  color: var(--color-primary, #034EA2);
+  color: #64748b;
   flex-shrink: 0;
 }
 
 .tocNavRail {
   position: relative;
   padding-left: 14px;
-  border-left: 2px solid rgba(3, 78, 162, 0.12);
+  border-left: 2px solid rgba(15, 23, 42, 0.10);
   max-height: clamp(260px, 44vh, 420px);
   overflow-y: auto;
   scrollbar-width: thin;
@@ -417,11 +412,11 @@
 }
 
 .shareWidgetTitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--slate-600, #475569);
+  color: #94a3b8;
   margin-bottom: 2px;
 }
 
@@ -432,28 +427,27 @@
 }
 
 .shareBtn {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 1px solid var(--slate-200, #e2e8f0);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--color-primary, #034EA2);
+  color: #475569;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all var(--duration-fast, 0.15s) ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: none;
 }
 
 .shareBtn:hover {
   background: var(--color-primary, #034EA2);
   color: #ffffff;
   border-color: var(--color-primary, #034EA2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.25);
+  transform: translateY(-1px);
 }
 
 .copyToastNotice {
@@ -462,16 +456,16 @@
   font-weight: 600;
 }
 
-/* Unboxed Guidance Helpline on Gradient */
+/* Minimal Guidance Helpline Callout */
 .sidebarHelpCallout {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 16px 18px;
-  background: rgba(255, 255, 255, 0.65);
+  gap: 6px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(3, 78, 162, 0.14);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 12px;
 }
 
