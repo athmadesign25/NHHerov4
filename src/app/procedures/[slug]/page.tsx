@@ -19,6 +19,8 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import { HospitalCard } from "@/components/ui/HospitalCarousel";
+import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./ProcedureDetail.module.css";
@@ -593,26 +595,20 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 11. Equipped Hospitals (Matching Unified Card Language) */}
+            {/* 11. Equipped Hospitals & Clinics (Matching Speciality Hospital Cards) */}
             <section id="hospitals" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Equipped Surgical Centres</h2>
-              <div className={styles.hospitalsGrid}>
+              <h2 className={styles.mainSectionTitle}>Equipped Surgical Centres &amp; Clinics</h2>
+              <p className={styles.bodyParagraph}>
+                Advanced tertiary hospitals and multispeciality clinical centres equipped with state-of-the-art surgical suites, hybrid cath labs, and 24×7 critical care monitoring.
+              </p>
+              <div className={styles.clinicalHospitalsGrid}>
                 {detail.hospitals.map((hosp, i) => (
-                  <div key={i} className={styles.refHospitalCard}>
-                    <Image
-                      src={hosp.image}
-                      alt={hosp.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 360px"
-                      className={styles.refHospFullImage}
-                    />
-                    <div className={styles.refHospFullGradient} />
-                    <div className={styles.refHospOverlayContent}>
-                      <h3 className={styles.refHospName}>{hosp.name}</h3>
-                      <div className={styles.refHospCity}>{hosp.city}</div>
-                      <span className={styles.refHospBedsBadge}>{hosp.beds}</span>
-                    </div>
-                  </div>
+                  <HospitalCard
+                    key={hosp.id || i}
+                    hosp={hosp}
+                    cardIndex={i}
+                    className={carouselStyles.cardGrid}
+                  />
                 ))}
               </div>
             </section>

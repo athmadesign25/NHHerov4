@@ -15,14 +15,15 @@ interface HospitalCarouselProps {
 
 const CARD_STEP = 572; // 528px card width + 44px gap
 
-interface HospitalCardProps {
+export interface HospitalCardProps {
   hosp: HospitalItem;
   cardIndex?: number;
   priority?: boolean;
   isLight?: boolean;
+  className?: string;
 }
 
-function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = false }: HospitalCardProps) {
+export function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = false, className }: HospitalCardProps) {
   const images = hosp.images && hosp.images.length > 0 ? hosp.images : [hosp.image];
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -45,7 +46,7 @@ function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = false }
 
   return (
     <div
-      className={`${styles.card} ${isLight ? styles.cardLight : ""}`}
+      className={`${styles.card} ${isLight ? styles.cardLight : ""} ${className || ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

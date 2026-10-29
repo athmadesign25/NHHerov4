@@ -1,5 +1,6 @@
 import { TREATMENTS_PROCEDURES_DATA, TreatmentProcedureItem } from "./treatmentsProceduresData";
 import { HEART_TRANSPLANT_TOC, HEART_TRANSPLANT_DETAIL } from "./heartTransplantDetailData";
+import { HospitalItem, HOSPITALS_DATA } from "./hospitalsData";
 
 export interface SymptomItem {
   name: string;
@@ -103,7 +104,7 @@ export interface ProcedureDetailData {
     insuranceNote: string;
   };
   doctors: DoctorItem[];
-  hospitals: HospitalDetailItem[];
+  hospitals: HospitalItem[];
   faqs: FAQItem[];
   toc: TOCItem[];
 }
@@ -420,7 +421,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
         insuranceNote: HEART_TRANSPLANT_DETAIL.costs.insuranceNote,
       },
       doctors: SPECIALTY_DOCTORS_MAP.cardiology,
-      hospitals: ACCREDITED_HOSPITALS,
+      hospitals: HOSPITALS_DATA.slice(0, 4),
       faqs: HEART_TRANSPLANT_DETAIL.faqs,
       toc,
     };
@@ -546,7 +547,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       insuranceNote: "All major health insurance policies and TPAs in India cover this surgical procedure. Narayana Health provides dedicated on-site insurance desk assistance for quick cashless authorization and paperless claims.",
     },
     doctors: docsList,
-    hospitals: ACCREDITED_HOSPITALS,
+    hospitals: HOSPITALS_DATA.slice(0, 4),
     faqs: [
       {
         q: `What is the expected hospital stay for ${proc.shortTitle}?`,
