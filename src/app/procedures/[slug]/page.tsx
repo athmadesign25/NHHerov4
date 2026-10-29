@@ -161,7 +161,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             )}
           </div>
         </div>
-        <div className={styles.heroBottomMelt} aria-hidden="true" />
       </section>
 
       {/* ─── MAIN CONTENT BODY ───────────────────────────────────────────── */}
