@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
 import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
@@ -100,6 +100,7 @@ export default function NHSearchExperience({
 
   const isMobile = winSize.w <= 900;
   const router = useRouter();
+  const pathname = usePathname();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
@@ -110,7 +111,7 @@ export default function NHSearchExperience({
       bannerCollapse.subscribe,
       bannerCollapse.get,
       bannerCollapse.getServerSnapshot,
-    ) === "island";
+    ) === "island" && pathname === "/L1banner";
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -1004,7 +1005,6 @@ export default function NHSearchExperience({
               </motion.div>
               <motion.span className={styles.announcementCount} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slowest, duration: prefersReducedMotion ? 0 : duration.base, ease: ease.spring }} aria-hidden="true">3</motion.span>
               <span className={styles.bubbleTooltip}>3 announcements</span>
-              {isDocked && <span className={styles.mwebBubbleTag}>News!</span>}
             </motion.button>
           )}
         </>

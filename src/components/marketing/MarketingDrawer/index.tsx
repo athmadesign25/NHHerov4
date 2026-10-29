@@ -67,10 +67,16 @@ export default function MarketingDrawerLab() {
   }, []);
 
   useEffect(() => setMounted(true), []);
-  // The FAB tile lives inside FloatingQuickActions, so it reaches back
-  // through the store rather than a prop.
+  // Keep the island announcement and its reopen hook local to this route.
   useEffect(() => {
-    (window as unknown as { __reopenBanner?: () => void }).__reopenBanner = reopen;
+    const host = window as unknown as { __reopenBanner?: () => void };
+    bannerCollapse.clear();
+    host.__reopenBanner = reopen;
+    return () => {
+      pendingCollapse.current = null;
+      bannerCollapse.clear();
+      if (host.__reopenBanner === reopen) delete host.__reopenBanner;
+    };
   }, [reopen]);
   if (!mounted) return null;
 
