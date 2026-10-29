@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight, Play, Pause, Volume2, VolumeX, Quote } from "lucide-react";
 import styles from "./PatientStories.module.css";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
@@ -149,6 +149,7 @@ function StoryCard({
   isActive,
   isHovered,
   isMuted,
+  isLight = false,
   onToggleMute,
   onMouseEnter,
   onMouseLeave,
@@ -158,6 +159,7 @@ function StoryCard({
   isActive: boolean;
   isHovered: boolean;
   isMuted: boolean;
+  isLight?: boolean;
   onToggleMute: () => void;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
@@ -207,7 +209,7 @@ function StoryCard({
 
   return (
     <article
-      className={styles.card}
+      className={`${styles.card} ${isLight ? styles.cardLight : ""}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -243,8 +245,8 @@ function StoryCard({
       {/* Bottom Gradient Overlay for text contrast */}
       <div className={styles.bottomOverlay} />
 
-      {/* Top Gradient Overlay for quote contrast */}
-      <div className={styles.topOverlay} />
+      {/* Top Gradient Overlay for quote contrast (hidden for design 2 light mode) */}
+      {!isLight && <div className={styles.topOverlay} />}
 
       {/* Top Left Quote Box - Visible only when NOT actively playing video */}
       <motion.div
@@ -346,12 +348,14 @@ function MobileStoryCard({
   card,
   index,
   isMuted,
+  isLight = false,
   onToggleMute,
   onVisible,
 }: {
   card: (typeof initialCards)[0];
   index: number;
   isMuted: boolean;
+  isLight?: boolean;
   onToggleMute: () => void;
   onVisible: (idx: number) => void;
 }) {
@@ -372,6 +376,7 @@ function MobileStoryCard({
         isActive={isInView}
         isHovered={false}
         isMuted={isMuted}
+        isLight={isLight}
         onToggleMute={onToggleMute}
         onMouseEnter={() => {}}
         onMouseLeave={() => {}}
@@ -384,30 +389,16 @@ interface SpecialityPatientStoriesProps {
   title?: string;
   subtitle?: string;
   activeCategory?: string;
+  theme?: "dark" | "light";
 }
 
 export default function SpecialityPatientStories({
   title = "Lives Changed, Stories Told",
   subtitle = "Real patients. Real outcomes. Thousands of life-changing stories.",
   activeCategory,
+  theme = "dark",
 }: SpecialityPatientStoriesProps = {}) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Scroll-linked expansion to fill full screen on reveal (specialty page)
-  const { scrollYProgress: enterProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start 92%", "start 25%"],
-  });
-
-  const sectionScale = useTransform(enterProgress, [0, 1], [0.92, 1.0]);
-  const sectionWidth = useTransform(enterProgress, [0, 1], ["92%", "100%"]);
-  const sectionRadius = useTransform(enterProgress, [0, 0.95], ["26px", "0px"]);
-  const sectionBlur = useTransform(enterProgress, [0, 0.4], ["blur(10px)", "blur(0px)"]);
-  const sectionShadow = useTransform(
-    enterProgress,
-    [0, 0.95],
-    ["0 24px 60px rgba(3, 18, 36, 0.28)", "0 0 0 rgba(3, 18, 36, 0)"]
-  );
+  const isLight = theme === "light";
 
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const [centerIndex, setCenterIndex] = useState(0);
@@ -460,46 +451,39 @@ export default function SpecialityPatientStories({
 
   return (
     <section 
-      ref={sectionRef} 
-      data-nav-theme="dark"
+      data-nav-theme={isLight ? "light" : "dark"}
+      className={`${styles.sectionWrap} ${isLight ? styles.sectionWrapLight : ""}`}
       style={{
         position: "relative",
         width: "100%",
-        background: "transparent",
         display: "flex",
         justifyContent: "center",
         overflow: "hidden",
       }}
     >
-      <motion.div 
-        className={styles.section} 
+      <div 
+        className={`${styles.section} ${isLight ? styles.sectionLight : ""}`} 
         style={{
+          width: "100%",
           paddingTop: "80px",
-          scale: sectionScale,
-          width: sectionWidth,
-          borderRadius: sectionRadius,
-          filter: sectionBlur,
-          boxShadow: sectionShadow,
-          transformOrigin: "center top",
-          willChange: "transform, width, border-radius",
         }}
       >
         {/* Header Container */}
         <div className={`container ${styles.headerContainer}`}>
           <div id="patient-stories-title-unit" className={styles.header}>
-            <h2 className={`section-title ${styles.sectionTitle}`}>
+            <h2 className={`section-title ${styles.sectionTitle} ${isLight ? styles.sectionTitleLight : ""}`}>
               <TextSweepEffect
                 key={activeCategory ? `patient-stories-title-${activeCategory}` : title}
                 words={[title]}
                 sweepMs={1200}
-                finalColor="#FFFFFF"
+                finalColor={isLight ? "#1A1A2E" : "#FFFFFF"}
               />
             </h2>
 
             <AnimatePresence mode="wait">
               <motion.p
                 key={activeCategory ? `patient-stories-desc-${activeCategory}` : subtitle}
-                className={styles.sectionSubtitle}
+                className={`${styles.sectionSubtitle} ${isLight ? styles.sectionSubtitleLight : ""}`}
                 initial={{ opacity: 0, filter: "blur(12px)", y: -16 }}
                 animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                 exit={{ opacity: 0, filter: "blur(8px)", y: 16 }}
@@ -569,6 +553,7 @@ export default function SpecialityPatientStories({
                           isActive={isActive}
                           isHovered={isHovered}
                           isMuted={isMuted}
+                          isLight={isLight}
                           onToggleMute={() => toggleMute(realIndex)}
                           onMouseEnter={() => handleMouseEnter(realIndex)}
                           onMouseLeave={handleMouseLeave}
@@ -581,20 +566,24 @@ export default function SpecialityPatientStories({
             </div>
           </div>
 
-          {/* EDGE FADES */}
-          <div
-            className={`${styles.edgeFade} ${styles.edgeFadeLeft} ${styles.desktopOnly}`}
-            aria-hidden="true"
-          />
-          <div
-            className={`${styles.edgeFade} ${styles.edgeFadeRight} ${styles.desktopOnly}`}
-            aria-hidden="true"
-          />
+          {/* EDGE FADES (dark mode only) */}
+          {!isLight && (
+            <>
+              <div
+                className={`${styles.edgeFade} ${styles.edgeFadeLeft} ${styles.desktopOnly}`}
+                aria-hidden="true"
+              />
+              <div
+                className={`${styles.edgeFade} ${styles.edgeFadeRight} ${styles.desktopOnly}`}
+                aria-hidden="true"
+              />
+            </>
+          )}
 
           {/* ARROW BUTTONS */}
           <button
             type="button"
-            className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.desktopOnly}`}
+            className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
             onClick={goPrev}
             aria-label="Previous story"
           >
@@ -602,7 +591,7 @@ export default function SpecialityPatientStories({
           </button>
           <button
             type="button"
-            className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.desktopOnly}`}
+            className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
             onClick={goNext}
             aria-label="Next story"
           >
@@ -617,6 +606,7 @@ export default function SpecialityPatientStories({
                 card={card}
                 index={index}
                 isMuted={mutedStates[index]}
+                isLight={isLight}
                 onToggleMute={() => toggleMute(index)}
                 onVisible={setMobileActiveIndex}
               />
@@ -625,11 +615,11 @@ export default function SpecialityPatientStories({
 
           <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
             {initialCards.map((_, i) => (
-              <div key={i} className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ''}`} />
+              <div key={i} className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${i === mobileActiveIndex ? (isLight ? styles.navDotActiveLight : styles.navDotActive) : ''}`} />
             ))}
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -111,9 +111,9 @@ export default function Navbar() {
       let detectedTheme = "light";
 
       for (const el of elements) {
-        if (el.closest("nav")) continue;
+        if (el.closest("nav") || el.closest('[class*="programmeTabsWrapper"]') || el.closest("aside") || el.closest("footer")) continue;
         const themeEl = el.closest("[data-nav-theme]");
-        if (themeEl) {
+        if (themeEl && !themeEl.closest("footer")) {
           detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
           break;
         }

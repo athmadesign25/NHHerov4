@@ -3,41 +3,91 @@
   width: 100%;
   box-sizing: border-box;
   font-family: var(--font-family);
-  padding: 12px 0 24px 0;
+  padding: 0;
   overflow: visible;
 }
 
-/* Single-row horizontal scroll track with snap */
-.scrollTrack {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  gap: 44px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px 16px 56px 16px;
-  scroll-padding-left: 16px;
-  box-sizing: border-box;
+/* Viewport for Card Track: explicit height = card height (676px) + 20px top + 20px bottom padding */
+.trackViewport {
+  position: relative;
   width: 100%;
+  height: 716px;
+  overflow: hidden;
 }
 
-.scrollTrack::-webkit-scrollbar {
+/* Fixed Track: cards sit at absolute slot positions (slot * 572px) */
+.track {
+  position: absolute;
+  width: 2860px; /* 5 slots * 572px */
+  height: 676px;
+  left: 50%;
+  transform: translateX(-1408px);
+  top: 20px;
+}
+
+/* Mobile Native Swipe Carousel */
+.mobileCarouselContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: var(--space-16);
+  padding: 0 var(--space-24);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: var(--space-24);
+}
+
+.mobileCarouselContainer::-webkit-scrollbar {
   display: none;
 }
 
-/* Individual Card Item */
-.cardItem {
-  flex: 0 0 528px;
-  width: 528px;
-  max-width: 85vw;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
+.mobileCarouselItem {
+  flex: 0 0 85%;
+  max-width: 400px;
+  scroll-snap-align: center;
   position: relative;
+}
+
+.mobileNavigator {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.navDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: rgba(var(--black-rgb), 0.2);
+  cursor: pointer;
+  transition: all var(--duration-emphasis) var(--ease-out);
+}
+
+.navDotActive {
+  background: var(--color-primary);
+  width: 24px;
+  border-radius: var(--radius-sm);
+}
+
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none !important;
+  }
+  .mobileOnly {
+    display: block !important;
+  }
 }
 
 /* Card Shell matching Hospital & Clinics Card aesthetic (528px x 676px) */
@@ -81,17 +131,16 @@
   transform: scale(1.06);
 }
 
-/* Frosted glass blur and smooth progressive vignette for text readability — matching ModernCarousel */
+/* Soft top vignette for card depth */
 .topOverlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 120px;
+  height: 80px;
   background: linear-gradient(
     180deg,
-    rgba(var(--black-rgb), 0.45) 0%,
-    rgba(var(--black-rgb), 0.15) 60%,
+    rgba(var(--black-rgb), 0.22) 0%,
     transparent 100%
   );
   z-index: 2;
@@ -129,7 +178,7 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
   padding: 24px 26px 26px;
@@ -154,6 +203,8 @@
   color: var(--white);
   text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.5);
   cursor: pointer;
+  margin-bottom: 12px;
+  width: fit-content;
 }
 
 .actionUnderline {
@@ -224,49 +275,83 @@
   text-overflow: ellipsis;
 }
 
-/* Light-themed navigation arrows for clean section contrast */
+/* Navigation arrows matching Speciality Patient Stories */
 .arrowBtn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 20;
-  border-radius: var(--radius-full);
-  border: 1.5px solid rgba(var(--slate-900-rgb), 0.12);
-  background: rgba(var(--white-rgb), 0.94);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  color: var(--slate-900);
-  width: 46px;
-  height: 46px;
+  z-index: 30;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(3, 18, 36, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background var(--duration-moderate) var(--ease-out), border-color var(--duration-moderate) var(--ease-out), box-shadow var(--duration-moderate) var(--ease-out), transform var(--duration-moderate) var(--ease-out), opacity var(--duration-moderate) var(--ease-out);
-  box-shadow: var(--elevation-2);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
 }
 
-.arrowBtn:hover:not(:disabled) {
-  background: var(--white);
-  border-color: rgba(var(--blue-brand-rgb), 0.4);
-  color: var(--color-primary);
-  transform: translateY(-50%) scale(1.08);
-  box-shadow: var(--elevation-3);
-}
-
-.arrowBtn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
 .arrowBtnLeft {
-  left: 16px;
+  left: 28px;
 }
 
 .arrowBtnRight {
-  right: 20px;
+  right: 28px;
+}
+
+.arrowBtn:hover {
+  background: rgba(3, 18, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Light Mode Variant (Design 2) matching Speciality Patient Stories */
+.arrowBtnLight {
+  background: rgba(var(--white-rgb), 0.92) !important;
+  border-color: rgba(var(--black-rgb), 0.12) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.12) !important;
+}
+
+.arrowBtnLight:hover {
+  background: var(--white) !important;
+  border-color: rgba(var(--black-rgb), 0.28) !important;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.18) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+/* Edge Fade Gradients (White blend removed per user request) */
+.edgeFade {
+  display: none !important;
+}
+
+.edgeFadeLeft {
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    var(--white) 0%,
+    rgba(var(--white-rgb), 0.75) 45%,
+    rgba(var(--white-rgb), 0) 100%
+  );
+}
+
+.edgeFadeRight {
+  right: 0;
+  background: linear-gradient(
+    270deg,
+    var(--white) 0%,
+    rgba(var(--white-rgb), 0.75) 45%,
+    rgba(var(--white-rgb), 0) 100%
+  );
 }
 
 @media (max-width: 1024px) {
@@ -335,8 +420,9 @@
     line-clamp: 2;
   }
 
-  /* On mobile/tablet, arrows hide to encourage natural touch swipe */
-  .arrowBtn {
+  /* On mobile/tablet, arrows and edge fades hide to encourage natural touch swipe */
+  .arrowBtn,
+  .edgeFade {
     display: none;
   }
 }

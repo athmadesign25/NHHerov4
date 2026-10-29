@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     ],
     // Allow local assets served from /public
   },
+  devIndicators: false,
 };
 
 export default nextConfig;

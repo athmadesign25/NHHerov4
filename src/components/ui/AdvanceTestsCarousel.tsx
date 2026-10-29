@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AdvanceTestItem, ADVANCE_TESTS_DATA } from "@/data/advanceTestsData";
 import styles from "./AdvanceTestsCarousel.module.css";
@@ -11,121 +11,160 @@ interface AdvanceTestsCarouselProps {
   tests?: AdvanceTestItem[];
 }
 
+const CARD_STEP = 572; // 528px card width + 44px gap
+
+function AdvanceTestCard({ test }: { test: AdvanceTestItem }) {
+  return (
+    <div className={styles.card}>
+      {/* Full Photographic Image with Zoom */}
+      <div className={styles.imageWrap}>
+        <Image
+          src={test.image}
+          alt={test.name}
+          fill
+          sizes="(max-width: 768px) 85vw, 528px"
+          className={styles.image}
+          loading="lazy"
+        />
+      </div>
+
+      {/* Top and Bottom Gradient Overlays */}
+      <div className={styles.topOverlay} />
+      <div className={styles.bottomOverlay} />
+
+      {/* Card Body Layered over Image */}
+      <div className={styles.cardBody}>
+        <div className={styles.bottomContent}>
+          <div className={styles.cardContent}>
+            <span className={styles.cardAction}>
+              Explore
+              <span className={styles.actionUnderline} aria-hidden />
+            </span>
+            <h3 className={styles.testTitle} title={test.name}>
+              {test.name}
+            </h3>
+            <p className={styles.testDesc} title={test.desc}>
+              {test.desc}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: AdvanceTestsCarouselProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const cardsCount = tests.length;
+  // Card 1 (2nd card) sits at center slot (slot 2) initially
+  const [centerIndex, setCenterIndex] = useState(1);
+  const [direction, setDirection] = useState(1);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(1);
 
-  // Update scroll button states based on scroll position
-  const updateScrollState = () => {
-    if (!trackRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = trackRef.current;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+  const goNext = () => {
+    setDirection(1);
+    setCenterIndex((prev) => (prev + 1) % cardsCount);
   };
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    updateScrollState();
-    track.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-    return () => {
-      track.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [tests.length]);
-
-  const getStepWidth = () => {
-    if (!trackRef.current || !trackRef.current.firstElementChild) return 572;
-    const firstCard = trackRef.current.firstElementChild as HTMLElement;
-    const trackStyle = window.getComputedStyle(trackRef.current);
-    const gap = parseFloat(trackStyle.gap) || 44;
-    return firstCard.offsetWidth + gap;
+  const goPrev = () => {
+    setDirection(-1);
+    setCenterIndex((prev) => (prev - 1 + cardsCount) % cardsCount);
   };
 
-  const scrollByCard = (direction: "left" | "right") => {
-    if (!trackRef.current) return;
-    const stepWidth = getStepWidth();
-    trackRef.current.scrollBy({
-      left: direction === "right" ? stepWidth : -stepWidth,
-      behavior: "smooth",
-    });
-  };
+  // 5 slots centered on slot 2
+  const NUM_SLOTS = 5;
+  const slots = Array.from({ length: NUM_SLOTS }, (_, slotPos) => {
+    const offset = slotPos - 2;
+    const realIndex = ((centerIndex + offset) % cardsCount + cardsCount) % cardsCount;
+    return { slotPos, realIndex };
+  });
 
   return (
     <div className={styles.carouselWrapper}>
+      {/* DESKTOP LAYOUT WITH 5-SLOT INFINITE CAROUSEL (Identical to PatientStories) */}
+      <div className={`${styles.trackViewport} ${styles.desktopOnly}`}>
+        <div className={styles.track}>
+          {slots.map(({ slotPos, realIndex }) => {
+            const test = tests[realIndex];
+            const slideOffsetEnter = direction * 48;
+            const slideOffsetExit = direction * -48;
+
+            return (
+              <div
+                key={`slot-${slotPos}`}
+                style={{
+                  position: "absolute",
+                  left: `${slotPos * CARD_STEP}px`,
+                  top: 0,
+                }}
+              >
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.div
+                    key={`card-${test.id}`}
+                    initial={{
+                      opacity: 0,
+                      filter: "blur(12px)",
+                      x: slideOffsetEnter,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      filter: "blur(0px)",
+                      x: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      filter: "blur(12px)",
+                      x: slideOffsetExit,
+                    }}
+                    transition={{
+                      duration: 0.5,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <AdvanceTestCard test={test} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+
       {/* Navigation Arrows */}
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnLeft}`}
-        onClick={() => scrollByCard("left")}
-        disabled={!canScrollLeft}
+        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+        onClick={goPrev}
         aria-label="Previous test"
       >
-        <ChevronLeft size={22} strokeWidth={2.2} />
+        <ChevronLeft size={22} strokeWidth={2} />
       </button>
 
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnRight}`}
-        onClick={() => scrollByCard("right")}
-        disabled={!canScrollRight}
+        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.arrowBtnLight} ${styles.desktopOnly}`}
+        onClick={goNext}
         aria-label="Next test"
       >
-        <ChevronRight size={22} strokeWidth={2.2} />
+        <ChevronRight size={22} strokeWidth={2} />
       </button>
 
-      {/* Strictly 1-Row Horizontal Carousel Track */}
-      <div ref={trackRef} className={styles.scrollTrack}>
+      {/* MOBILE / TABLET NATIVE SWIPE LAYOUT */}
+      <div className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}>
         {tests.map((test, index) => (
-          <div key={test.id} className={styles.cardItem}>
-            <motion.div
-              className={styles.card}
-              initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: 0.05 * index, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Full Photographic Image with Zoom */}
-              <div className={styles.imageWrap}>
-                <Image
-                  src={test.image}
-                  alt={test.name}
-                  fill
-                  sizes="(max-width: 768px) 85vw, 528px"
-                  className={styles.image}
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Top and Bottom Gradient Overlays */}
-              <div className={styles.topOverlay} />
-              <div className={styles.bottomOverlay} />
-
-              {/* Card Body Layered over Image */}
-              <div className={styles.cardBody}>
-                <div className={styles.headerRow}>
-                  <span className={styles.cardAction}>
-                    Explore
-                    <span className={styles.actionUnderline} aria-hidden />
-                  </span>
-                  <span className={styles.index}>{String(index + 1).padStart(2, "0")}</span>
-                </div>
-
-                <div className={styles.bottomContent}>
-                  <div className={styles.cardContent}>
-                    <h3 className={styles.testTitle} title={test.name}>
-                      {test.name}
-                    </h3>
-                    <p className={styles.testDesc} title={test.desc}>
-                      {test.desc}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          <div key={`mobile-test-${test.id}`} className={styles.mobileCarouselItem}>
+            <AdvanceTestCard test={test} />
           </div>
+        ))}
+      </div>
+
+      <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
+        {tests.map((_, i) => (
+          <div
+            key={i}
+            className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
+            onClick={() => setMobileActiveIndex(i)}
+          />
         ))}
       </div>
     </div>

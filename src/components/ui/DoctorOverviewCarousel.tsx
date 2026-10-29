@@ -286,40 +286,7 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
           </div>
         </div>
 
-        {/* Active & Next Video Readability Indication (Text Only, Matching ModernCarousel) */}
-        <div className={styles.readingAidContainer}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentItem?.id}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className={styles.readingAidContent}
-            >
-              {/* Active Video Title */}
-              <span className={styles.activeTitle} title={currentItem?.title}>
-                {currentItem?.title}
-              </span>
 
-              {/* Next Video Title */}
-              {nextItem && (
-                <button
-                  type="button"
-                  className={styles.readingAidNext}
-                  onClick={goToNext}
-                  title={`Go to ${nextItem.title}`}
-                >
-                  <span className={styles.readingAidDivider}>/</span>
-                  <span className={styles.nextTitle} title={nextItem.title}>
-                    {nextItem.title}
-                  </span>
-                  <ArrowRight size={12} className={styles.nextArrowIcon} />
-                </button>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
 
         <div className={styles.navButtons}>
           <button 

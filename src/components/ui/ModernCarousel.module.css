@@ -7,7 +7,7 @@
 .carouselTrack {
   display: flex;
   gap: var(--space-16);
-  height: clamp(480px, 56vh, 640px);
+  height: clamp(505px, calc(56vh + 25px), 665px);
   width: 100%;
 }
 
@@ -281,7 +281,7 @@
 
 @media (max-width: 768px) {
   .carouselTrack {
-    height: 480px;
+    height: 505px;
     gap: var(--space-8);
   }
   
@@ -449,7 +449,7 @@
 @media (max-width: 900px) {
   .carouselTrack {
     gap: var(--space-10);
-    height: clamp(440px, 52vh, 560px);
+    height: clamp(465px, calc(52vh + 25px), 585px);
   }
 
   .carouselItem.active {
@@ -493,7 +493,7 @@
 @media (max-width: 600px) {
   .carouselTrack {
     gap: var(--space-8);
-    height: 440px;
+    height: 465px;
   }
 
   .carouselItem:not(.active) {

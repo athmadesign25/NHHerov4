@@ -10,6 +10,7 @@ import styles from "./HospitalCarousel.module.css";
 
 interface HospitalCarouselProps {
   hospitals: HospitalItem[];
+  theme?: "dark" | "light";
 }
 
 const CARD_STEP = 572; // 528px card width + 44px gap
@@ -18,9 +19,10 @@ interface HospitalCardProps {
   hosp: HospitalItem;
   cardIndex?: number;
   priority?: boolean;
+  isLight?: boolean;
 }
 
-function HospitalCard({ hosp, cardIndex = 0, priority = false }: HospitalCardProps) {
+function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = false }: HospitalCardProps) {
   const images = hosp.images && hosp.images.length > 0 ? hosp.images : [hosp.image];
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -43,7 +45,7 @@ function HospitalCard({ hosp, cardIndex = 0, priority = false }: HospitalCardPro
 
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${isLight ? styles.cardLight : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -135,7 +137,8 @@ function HospitalCard({ hosp, cardIndex = 0, priority = false }: HospitalCardPro
   );
 }
 
-export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
+export default function HospitalCarousel({ hospitals, theme = "dark" }: HospitalCarouselProps) {
+  const isLight = theme === "light";
   const cardsCount = hospitals.length;
   // By default, card 1 (2nd card) sits at center slot (slot 2)
   const [centerIndex, setCenterIndex] = useState(1);
@@ -161,7 +164,7 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
   });
 
   return (
-    <div className={styles.carouselContainer}>
+    <div className={`${styles.carouselContainer} ${isLight ? styles.carouselContainerLight : ""}`}>
       {/* DESKTOP LAYOUT WITH 5-SLOT INFINITE CAROUSEL */}
       <div className={`${styles.trackViewport} ${styles.desktopOnly}`}>
         <div className={styles.track}>
@@ -181,31 +184,28 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
               >
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
-                    key={`card-${realIndex}`}
+                    key={`card-${hosp.id}`}
                     initial={{
                       opacity: 0,
-                      filter: "blur(8px)",
+                      filter: "blur(12px)",
                       x: slideOffsetEnter,
-                      scale: 0.97,
                     }}
                     animate={{
                       opacity: 1,
                       filter: "blur(0px)",
                       x: 0,
-                      scale: 1,
                     }}
                     exit={{
                       opacity: 0,
-                      filter: "blur(8px)",
+                      filter: "blur(12px)",
                       x: slideOffsetExit,
-                      scale: 0.97,
                     }}
                     transition={{
-                      duration: 0.55,
-                      ease: [0.22, 1, 0.36, 1],
+                      duration: 0.5,
+                      ease: [0.16, 1, 0.3, 1],
                     }}
                   >
-                    <HospitalCard hosp={hosp} cardIndex={realIndex} priority={slotPos === 2} />
+                    <HospitalCard hosp={hosp} cardIndex={realIndex} priority={slotPos === 2} isLight={isLight} />
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -214,14 +214,18 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
         </div>
       </div>
 
-      {/* Dark edge fades matching the hospital section background */}
-      <div className={`${styles.edgeFade} ${styles.edgeFadeLeft} ${styles.desktopOnly}`} aria-hidden />
-      <div className={`${styles.edgeFade} ${styles.edgeFadeRight} ${styles.desktopOnly}`} aria-hidden />
+      {/* Edge fades matching the hospital section background in dark mode only */}
+      {!isLight && (
+        <>
+          <div className={`${styles.edgeFade} ${styles.edgeFadeLeft} ${styles.desktopOnly}`} aria-hidden />
+          <div className={`${styles.edgeFade} ${styles.edgeFadeRight} ${styles.desktopOnly}`} aria-hidden />
+        </>
+      )}
 
       {/* Navigation Arrows */}
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${styles.desktopOnly}`}
+        className={`${styles.arrowBtn} ${styles.arrowBtnLeft} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
         onClick={goPrev}
         aria-label="Previous hospital"
       >
@@ -230,7 +234,7 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
 
       <button
         type="button"
-        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${styles.desktopOnly}`}
+        className={`${styles.arrowBtn} ${styles.arrowBtnRight} ${isLight ? styles.arrowBtnLight : ""} ${styles.desktopOnly}`}
         onClick={goNext}
         aria-label="Next hospital"
       >
@@ -241,7 +245,7 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
       <div className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}>
         {hospitals.map((hosp, index) => (
           <div key={`mobile-hosp-${hosp.id}`} className={styles.mobileCarouselItem}>
-            <HospitalCard hosp={hosp} cardIndex={index} />
+            <HospitalCard hosp={hosp} cardIndex={index} isLight={isLight} />
           </div>
         ))}
       </div>
@@ -250,7 +254,9 @@ export default function HospitalCarousel({ hospitals }: HospitalCarouselProps) {
         {hospitals.map((_, i) => (
           <div
             key={i}
-            className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
+            className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${
+              i === mobileActiveIndex ? (isLight ? styles.navDotActiveLight : styles.navDotActive) : ""
+            }`}
             onClick={() => setMobileActiveIndex(i)}
           />
         ))}

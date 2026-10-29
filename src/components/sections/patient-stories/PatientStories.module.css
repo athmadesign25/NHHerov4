@@ -602,3 +602,71 @@
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.9);
 }
+
+/* ─── Light Mode Variant (Design 2) using Design Tokens ─── */
+.sectionWrapLight {
+  background: var(--color-surface, var(--white));
+}
+
+.sectionLight {
+  background: var(--color-surface, var(--white)) !important;
+}
+
+.sectionTitleLight {
+  color: var(--color-text, var(--navy-ink)) !important;
+}
+
+.sectionSubtitleLight {
+  color: var(--color-text-secondary, var(--slate-600)) !important;
+}
+
+.sectionWrapLight .edgeFade,
+.edgeFadeLeftLight,
+.edgeFadeRightLight {
+  display: none !important;
+}
+
+.arrowBtnLight {
+  background: rgba(var(--white-rgb), 0.92) !important;
+  border-color: rgba(var(--black-rgb), 0.12) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.12) !important;
+}
+
+.arrowBtnLight:hover {
+  background: var(--white) !important;
+  border-color: rgba(var(--black-rgb), 0.28) !important;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.18) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+.navDotLight {
+  background: rgba(var(--black-rgb), 0.2) !important;
+}
+
+.navDotActiveLight {
+  background: var(--color-primary) !important;
+}
+
+/* Light Mode Card Styling (Design 2) */
+.cardLight,
+.sectionWrapLight .card,
+.sectionLight .card {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+.cardLight .cardVideo,
+.sectionWrapLight .cardVideo,
+.sectionLight .cardVideo {
+  border-radius: 10px !important;
+}
+
+.cardLight .topOverlay,
+.sectionWrapLight .topOverlay,
+.sectionLight .topOverlay {
+  display: none !important;
+}
+
