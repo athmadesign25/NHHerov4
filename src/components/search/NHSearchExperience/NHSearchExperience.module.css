@@ -8423,7 +8423,7 @@
    on the icon itself, which beats anything inherited from the button. */
 [data-banner-bubble] .morphingActionIcon,
 [data-banner-bubble]:hover .morphingActionIcon {
-  color: var(--red-emergency);
+  color: var(--red-500);
 }
 
 .morphingActionText {
@@ -9765,4 +9765,24 @@
 .islandBubble:focus-visible .bubbleTooltip {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+/* Demo unread count for the L4 announcement slot. */
+.announcementCount {
+  position: absolute;
+  top: calc(-1 * var(--space-4));
+  right: calc(-1 * var(--space-4));
+  display: grid;
+  place-items: center;
+  min-width: var(--space-20);
+  height: var(--space-20);
+  padding-inline: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--red-600);
+  color: var(--white);
+  font-size: var(--font-size-2xs);
+  line-height: var(--leading-none);
+  font-weight: 600;
+  pointer-events: none;
 }

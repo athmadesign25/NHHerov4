@@ -180,7 +180,7 @@ export const resolve = (id: string) =>
 export const COLLAPSED_LABEL = "News!";
 
 export const DEFAULT_CONFIG: BannerConfig = {
-  orientation: "vertical",
+  orientation: "horizontal",
   image: {
     vertical: {
       src: "/marketing-tall.jpg",

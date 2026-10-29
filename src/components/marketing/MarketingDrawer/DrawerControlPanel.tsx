@@ -31,7 +31,7 @@ type Props = {
   onChange: (next: BannerConfig) => void;
 };
 
-const ORIENTATIONS: Orientation[] = ["vertical", "horizontal"];
+const ORIENTATIONS: Orientation[] = ["horizontal", "vertical"];
 const COLLAPSE: CollapseMode[] = ["none", "toast", "island"];
 const COLLAPSE_LABELS: Record<CollapseMode, string> = {
   none: "none",

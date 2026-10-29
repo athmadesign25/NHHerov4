@@ -36,73 +36,33 @@ export default function MarketingDrawerLab() {
   // drawer's effect tore down and re-ran on each control-panel keystroke —
   // briefly releasing the scroll lock and restarting paused videos.
   // What the banner left behind, if anything.
+  const l3InIsland = useRef(false);
   const [collapsed, setCollapsed] = useState<"toast" | "island" | null>(null);
-  // Where the panel should shrink to. Measured at close time, so the morph
-  // lands on the real collapsed element rather than an assumed position.
-  const [morphTo, setMorphTo] = useState<{ x: number; y: number; width: number } | null>(null);
-
+  const pendingCollapse = useRef<"none" | "toast" | "island" | null>(null);
   const close = useCallback(() => {
-    const mode = configRef.current.collapse;
+    pendingCollapse.current = configRef.current.collapse;
+    setOpen(false);
+  }, []);
 
-    if (mode === "none") {
-      setMorphTo(null);
-      setOpen(false);
-      return;
-    }
-
-    // Measure the destination BEFORE the drawer leaves.
-    //
-    // toast: not mounted yet, so its resting box comes from the same
-    // values its stylesheet uses — 274px wide, 24px in from the
-    // bottom-right.
-    //
-    // island: the dock's fourth bubble does not exist yet either, and
-    // adding it also widens the island, so every bubble shifts left. The
-    // target is derived from the island's own geometry rather than read
-    // off the current three-bubble row, which would aim one slot short.
-    let target: { x: number; y: number; width: number };
-    if (mode === "island") {
-      const dock = document.querySelector<HTMLElement>("[data-banner-bubble]");
-      const r = dock?.getBoundingClientRect();
-      if (r) {
-        target = { x: r.left, y: r.top + r.height / 2, width: r.width };
-      } else {
-        // The island is 46px bubbles with a 10px gap, raised 56px off the
-        // bottom. A fourth bubble lands half a slot right of centre.
-        const size = 46;
-        const gap = 10;
-        target = {
-          x: window.innerWidth / 2 + (size + gap),
-          y: window.innerHeight - 56 - size / 2,
-          width: size,
-        };
-      }
-    } else {
-      const w = Math.min(274, window.innerWidth - 24);
-      target = { x: window.innerWidth - 24 - w, y: window.innerHeight - 24 - 36, width: w };
-    }
-
-    // morphTo must land in a render where the drawer is still OPEN.
-    // AnimatePresence snapshots an exiting child's props from the last
-    // render in which it was present — so setting both in one update meant
-    // it exited with the previous props and played the normal retreat.
-    setMorphTo(target);
-    requestAnimationFrame(() => setOpen(false));
-
-    // The collapsed form appears only once the panel has finished arriving,
-    // so the two never overlap — it has to read as one object changing
-    // shape, not a handover.
-    window.setTimeout(() => {
-      if (mode === "island") bannerCollapse.show("island");
-      setCollapsed(mode);
-    }, 540);
+  // L3 starts after L1's actual exit completes, on either viewport.
+  const closed = useCallback(() => {
+    const mode = pendingCollapse.current;
+    pendingCollapse.current = null;
+    if (!mode || mode === "none") return;
+    if (mode === "island") bannerCollapse.show("island");
+    setCollapsed(mode);
   }, []);
 
   // Re-opening clears whatever it collapsed into.
   const reopen = useCallback(() => {
     bannerCollapse.clear();
+    if (l3InIsland.current) {
+      l3InIsland.current = false;
+      setCollapsed("toast");
+      return;
+    }
     setCollapsed(null);
-    setMorphTo(null);
+    pendingCollapse.current = null;
     setOpen(true);
   }, []);
 
@@ -125,14 +85,16 @@ export default function MarketingDrawerLab() {
         </button>
       )}
 
-      <MarketingDrawer open={open} config={config} onClose={close} morphTo={morphTo} />
+      <MarketingDrawer open={open} config={config} onClose={close} onClosed={closed} />
 
       <AnimatePresence>
         {collapsed === "toast" && (
           <CollapsedToast
             parts={config.headline.enabled ? config.headline.parts : []}
+            ctaLabel={config.cta.primary.enabled ? config.cta.primary.label : "Learn more"}
             onExpand={reopen}
-            onDismiss={() => setCollapsed(null)}
+            onDock={() => { l3InIsland.current = true; bannerCollapse.show("island"); }}
+            onDismiss={() => setCollapsed("island")}
           />
         )}
       </AnimatePresence>

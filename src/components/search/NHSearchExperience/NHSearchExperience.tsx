@@ -4,11 +4,12 @@ import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore }
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
+import { duration, ease } from "@/lib/motion";
 import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
 import Image from "next/image";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
-import { Search, X, CalendarCheck, Activity, QrCode, Mic, Sparkles } from "lucide-react";
+import { animate, motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { Search, X, CalendarCheck, Activity, HeartPulse, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
@@ -120,20 +121,12 @@ export default function NHSearchExperience({
   const [isDocked, setIsDocked] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
-  const [isQrOpen, setIsQrOpen] = useState(false);
-
-  // Close QR code popover when clicking outside
-  useEffect(() => {
-    if (!isQrOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest(`.${styles.qrPopoverCard}`) && !target.closest(`.${styles.morphingActionBtn}`) && !target.closest(`.${styles.islandBubble}`)) {
-        setIsQrOpen(false);
-      }
-    };
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => window.removeEventListener("mousedown", handleClickOutside);
-  }, [isQrOpen]);
+  const bannerBubble =
+    useSyncExternalStore(
+      bannerCollapse.subscribe,
+      bannerCollapse.get,
+      bannerCollapse.getServerSnapshot,
+    ) === "island";
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -143,7 +136,17 @@ export default function NHSearchExperience({
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
   // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
-  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
+  const naturalProgress = isMobile ? fastMobileProgress : baseProgress;
+  const announcementDockProgress = useMotionValue(0);
+  // An announcement closes into the real island even at the top of the hero.
+  // Scroll resumes control when L3 is restored.
+  useEffect(() => {
+    const animation = animate(announcementDockProgress, bannerBubble ? 1 : 0, {
+      duration: prefersReducedMotion ? 0 : duration.slowest, ease: ease.out,
+    });
+    return () => animation.stop();
+  }, [announcementDockProgress, bannerBubble, prefersReducedMotion]);
+  const activeProgress = useTransform([naturalProgress, announcementDockProgress], ([scroll, announcement]) => Math.max(Number(scroll), Number(announcement)));
 
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
@@ -160,14 +163,7 @@ export default function NHSearchExperience({
   // A collapsed marketing banner takes a fourth slot in the dock. The
   // island widens to make room rather than the bubble overlapping the
   // spotlight, which is why the count is read here rather than at render.
-  const bannerBubble =
-    useSyncExternalStore(
-      bannerCollapse.subscribe,
-      bannerCollapse.get,
-      bannerCollapse.getServerSnapshot,
-    ) === "island";
-  // Two utilities, three with a collapsed banner. "Book Tests" was a
-  // third and is gone — the search field itself is the way to that.
+  // Appointment and health-checkup utilities, plus an announcement when present.
   const bubblesCount = bannerBubble ? 3 : 2;
   const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
   
@@ -249,11 +245,7 @@ export default function NHSearchExperience({
   const btn2Scale = useTransform(activeProgress, [0.20, 0.28, 0.34], [0.15, 1.25, 1.0]);
 
   // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2
-  const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
-  const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
   // Last in the row, and last to arrive.
-  const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
-  const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
 
   // Secondary buttons and prompt cross-fades
   const controlsOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
@@ -866,10 +858,10 @@ export default function NHSearchExperience({
             {isDocked && <span className={styles.mwebBubbleTag}>Book Appt</span>}
           </motion.button>
 
-          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
+          {/* Health checkups: uses the same island slot on web and mobile. */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
             style={{
               position: "fixed",
               top: btn2Top,
@@ -884,15 +876,17 @@ export default function NHSearchExperience({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setIsQrOpen((prev) => !prev);
+              const section = Array.from(document.querySelectorAll<HTMLElement>('[id="health-packages"]')).find(element => element.getClientRects().length > 0 && element.offsetHeight > 0);
+              if (section) section.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+              else router.push("/#health-packages");
             }}
-            aria-label="Download NH Care App (QR Code)"
+            aria-label="Book Health Checkups"
           >
             <div className={styles.morphingActionIcon}>
-              <QrCode size={19} strokeWidth={2.2} />
+              <HeartPulse size={19} strokeWidth={2} aria-hidden="true" />
             </div>
-            <span className={styles.bubbleTooltip}>Download NH Care App</span>
-            {isDocked && <span className={styles.mwebBubbleTag}>NH App</span>}
+            <span className={styles.bubbleTooltip}>Book Health Checkups</span>
+            {isDocked && <span className={styles.mwebBubbleTag}>Health Checkups</span>}
           </motion.button>
 
           {/* Water-Bubble 4: a collapsed marketing banner. Present only
@@ -906,101 +900,32 @@ export default function NHSearchExperience({
               className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
               style={{
                 position: "fixed",
-                top: btn3Top,
-                left: btn3Left,
+                top: targetTop,
+                left: dockBtn3Left,
                 width: bubbleSize,
                 height: spotlightHeight,
                 borderRadius: 9999,
-                opacity: btn3Opacity,
-                scale: btn3Scale,
-                pointerEvents: isDocked || isMorphing ? "auto" : "none",
+                opacity: 1,
+                scale: 1,
+                pointerEvents: "auto",
                 zIndex: 9990,
               }}
               onClick={(e) => {
                 e.stopPropagation();
                 (window as unknown as { __reopenBanner?: () => void }).__reopenBanner?.();
               }}
-              aria-label="Announcement"
+              aria-label="Announcements, 3 unread"
             >
-              <div className={styles.morphingActionIcon}>
+              <motion.div className={styles.morphingActionIcon} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slow, duration: prefersReducedMotion ? 0 : duration.slow, ease: ease.out }}>
                 <AnnouncementIcon size={19} />
-              </div>
-              <span className={styles.bubbleTooltip}>Announcement</span>
+              </motion.div>
+              <motion.span className={styles.announcementCount} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slowest, duration: prefersReducedMotion ? 0 : duration.base, ease: ease.spring }} aria-hidden="true">3</motion.span>
+              <span className={styles.bubbleTooltip}>3 announcements</span>
               {isDocked && <span className={styles.mwebBubbleTag}>News!</span>}
             </motion.button>
           )}
         </>
       )}
-
-      {/* ── QR Code Popover Card ── */}
-      <AnimatePresence>
-        {isQrOpen && searchState === "landing" && (
-          <motion.div
-            className={styles.qrPopoverCard}
-            style={{
-              bottom: bottomClearance + spotlightHeight + 12,
-              left: Math.min(
-                winSize.w - 266,
-                Math.max(16, dockBtn2Left - 190)
-              ),
-            }}
-            initial={{ opacity: 0, y: 12, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.94 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.qrHeader}>
-              <div className={styles.qrTitleGroup}>
-                <span className={styles.qrAppTitle}>Narayana Health App</span>
-                <span className={styles.qrAppSubtitle}>Scan with phone camera to install</span>
-              </div>
-              <button
-                type="button"
-                className={styles.qrCloseBtn}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsQrOpen(false);
-                }}
-                aria-label="Close QR Code Popover"
-              >
-                <X size={15} />
-              </button>
-            </div>
-
-            <div className={styles.qrImageWrapper}>
-              <Image
-                src="/app-download-QR.png"
-                alt="Scan to download NH Care App"
-                width={124}
-                height={124}
-                className={styles.qrCodeImage}
-                priority
-              />
-            </div>
-
-            <div className={styles.qrStoreBadges}>
-              <a
-                href="https://apps.apple.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.storeBadgeLink}
-              >
-                App Store
-              </a>
-              <a
-                href="https://play.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.storeBadgeLink}
-              >
-                Google Play
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}

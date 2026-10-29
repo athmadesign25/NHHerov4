@@ -13,9 +13,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
-import { ease } from "@/lib/motion";
+import { duration, ease } from "@/lib/motion";
 import styles from "./MarketingDrawer.module.css";
 import {
   type BannerConfig,
@@ -33,25 +33,17 @@ type Props = {
   open: boolean;
   config: BannerConfig;
   onClose: () => void;
-  /**
-   * Where the panel should shrink to on close, in viewport coordinates.
-   * null means a plain exit. Set, the SAME element travels and shrinks
-   * into the collapsed form, so the two read as one object changing shape
-   * rather than one leaving and another appearing.
-   */
-  morphTo?: { x: number; y: number; width: number } | null;
+  onClosed: () => void;
 };
 
 /** The glow leads, the panel follows. */
 const GLOW_LEAD = 0.5;
 
-export default function MarketingDrawer({ open, config, onClose, morphTo }: Props) {
+export default function MarketingDrawer({ open, config, onClose, onClosed }: Props) {
   const pausedRef = useRef<HTMLVideoElement[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
   const [sweep, setSweep] = useState(false);
-  const [panelBox, setPanelBox] = useState<
-    { left: number; top: number; width: number; height: number } | null
-  >(null);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     if (!open) {
@@ -150,20 +142,6 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
         rgba(${OVERLAY_RGB}, 0) 86%)`;
 
   /**
-   * Exit. Normally the panel settles back. When collapsing, it travels to
-   * the target and shrinks to its width — measured at close time from the
-   * real element, so it lands on it rather than near it.
-   */
-  // Measured in an effect, not during render. `morphTo` is set one frame
-  // BEFORE `open` flips, so this runs while the panel is still mounted —
-  // which is the only moment its real box exists to be read.
-  useEffect(() => {
-    if (!morphTo || !panelRef.current) return;
-    const r = panelRef.current.getBoundingClientRect();
-    setPanelBox({ left: r.left, top: r.top, width: r.width, height: r.height });
-  }, [morphTo]);
-
-  /**
    * The panel's height, published for the close button to sit above.
    *
    * On mobile the panel grows with its content, so the close cannot be
@@ -190,20 +168,6 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
     // through the ResizeObserver, which is what it is there for.
   }, [open]);
 
-  const morphExit =
-    morphTo && panelBox
-      ? {
-          x: morphTo.x + morphTo.width / 2 - (panelBox.left + panelBox.width / 2),
-          y: morphTo.y - (panelBox.top + panelBox.height / 2),
-          scale: Math.max(morphTo.width / panelBox.width, 0.04),
-          opacity: 0,
-          filter: "blur(3px)",
-          // Longer and gentler than before: the morph is the moment this
-          // interaction gets judged on, and 0.62s read as a snap.
-          transition: { duration: 0.78, ease: [0.32, 0.72, 0.3, 1] as const },
-        }
-      : null;
-
   // Each block waits for the one above it. With the headline off there is
   // no sweep to wait for, so everything starts as soon as the panel lands.
   const headlineLines = config.headline.enabled ? config.headline.parts.length : 0;
@@ -223,7 +187,7 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
     config.headline.enabled || config.description.enabled || config.form.enabled || hasCta;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onClosed}>
       {open && (
         <>
           <motion.div
@@ -232,7 +196,7 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
             data-lenis-prevent
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: morphTo ? 0.6 : 0.4 } }}
+            exit={{ opacity: 0, transition: { duration: reduced ? 0 : duration.slowest * 2 } }}
             transition={{ duration: 0.4, ease: ease.out }}
           />
 
@@ -263,15 +227,11 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
             // Centred, so it grows from its own middle rather than an edge.
             initial={{ opacity: 0, scale: 0.84, y: 18, filter: "blur(16px)" }}
             animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-            exit={
-              morphExit ?? {
-                opacity: 0,
-                scale: 0.84,
-                y: 18,
-                filter: "blur(16px)",
-                transition: { duration: 0.46, ease: ease.out },
-              }
-            }
+            exit={{
+              opacity: 0, scale: 1, x: 0, y: 0,
+              filter: reduced ? "blur(0px)" : "blur(16px)",
+              transition: { duration: reduced ? 0 : duration.slowest * 2, ease: ease.standard },
+            }}
             transition={{
               duration: isMobile ? 0.7 : 0.92,
               // On mobile the scene arrives first and the panel steps onto
@@ -446,7 +406,7 @@ export default function MarketingDrawer({ open, config, onClose, morphTo }: Prop
             className={`${styles.close} ${wide ? styles.closeWide : styles.closeTall}`}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
+            exit={{ opacity: 0, transition: { duration: reduced ? 0 : duration.base, delay: 0 } }}
             transition={{ delay: GLOW_LEAD + 0.4, duration: 0.35, ease: ease.out }}
           >
             <CloseIcon size={20} />

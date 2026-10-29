@@ -1,157 +1,137 @@
-/* Collapsed banner. Spec'd at 274px wide with 12px/14px padding and a
-   10px gap; everything maps onto existing tokens rather than new ones. */
-
+/* L3 stays under the requested 310px ceiling using the spacing ramp (304px). */
 .toast {
   position: fixed;
-  left: auto;
-  bottom: var(--space-24);
-  top: auto;
   right: var(--space-24);
+  bottom: var(--space-24);
+  width: calc(var(--space-128) * 2 + var(--space-48));
+  max-width: calc(100vw - var(--space-24));
   height: fit-content;
   z-index: 2147481800;
-  display: flex;
-  width: 274px;
-  padding: 0;
-  align-items: center;
-  gap: var(--space-12);
-  border-radius: var(--radius-md);
-  /* Shared campaign background for desktop and mobile. */
-  background: linear-gradient(
-    98deg,
-    hsl(212deg 100% 74.1098% / 0.7) -1.32%,
-    color-mix(in srgb, #d0e6ff 70%, transparent) 12.66%,
-    color-mix(in srgb, var(--slate-100) 85%, transparent) 36.23%,
-    color-mix(in srgb, #86beff 70%, transparent) 84.35%
-  );
-  backdrop-filter: blur(var(--blur-md)) saturate(1.3);
-  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(1.3);
-  border: 0;
-  box-shadow: var(--elevation-3);
+  perspective: calc(var(--space-128) * 8);
   font-family: var(--font-family);
-  text-align: left;
-  cursor: pointer;
-  transition: box-shadow var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-out);
+  animation: softenIn var(--duration-slowest) var(--ease-out);
 }
-
-.toast:hover {
-  box-shadow: var(--elevation-4);
-  transform: translateY(-2px);
+.card {
+  position: relative;
+  border: var(--space-1) solid rgba(var(--white-rgb), 0.5);
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--blue-500) 30%, var(--white)) 65%, var(--slate-50) 85%, var(--color-primary-light) 100%);
+  --shadow-rgb: var(--black-rgb);
+  box-shadow: var(--elevation-3), var(--elevation-2);
+  font-family: var(--font-family);
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
 }
-
-/* Unboxed mark: the SVG supplies its own size, with no plate or padding. */
-.iconWrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
+.card::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  opacity: 0;
+  inset: auto 0 0;
+  height: var(--space-96);
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(var(--blue-500-rgb), 0.12), transparent);
+  mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-64) var(--space-64) repeat;
+  -webkit-mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-64) var(--space-64) repeat;
 }
-
-.copy {
-  display: flex;
-  flex-direction: column;
-  /* Without this a long headline pushes the box past its 274px. */
-  min-width: 0;
-}
-
-/* One line per headline part, in that part's own colour, so the toast
-   carries the banner's wording and its emphasis.
-
-   Spec'd at 700/16px, which on a glass surface read as shouting. 600 at
-   14px keeps the weight relationship without the density, and three
-   stacked lines at 14 still clear the 48px icon beside them. No clipping
-   or nowrap: the parts already carry the writer's line breaks, so there
-   is nothing to truncate. */
-.line {
-  color: var(--color-text);
+.openToast {
   display: block;
-  font-size: var(--font-size-sm);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.media { position: relative; display: block; height: calc(var(--space-128) + var(--space-96) + var(--space-8)); }
+.photo { position: absolute; inset: 0; z-index: -1; }
+.photo img { object-fit: cover; object-position: center bottom; }
+.overlay { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transform-origin: center bottom; background: linear-gradient(180deg, transparent 35%, color-mix(in srgb, var(--blue-500) 30%, var(--white)) 65%, var(--slate-50) 85%, var(--color-primary-light) 100%); }
+.toast:is([data-phase="wash"], [data-phase="title"], [data-phase="cta"]) .overlay { animation: washIn calc(var(--duration-slowest) * 2) var(--ease-out) both; }
+.openToast, .ctaRow { position: relative; z-index: 1; }
+.lineText { display: block; opacity: 0; }
+.toast:is([data-phase="title"], [data-phase="cta"]) .lineText { animation: titleIn var(--duration-slowest) var(--ease-out) both; }
+.toast:is([data-phase="title"], [data-phase="cta"]) .line:nth-child(2) .lineText { animation-delay: var(--duration-fast); }
+.toast:is([data-phase="title"], [data-phase="cta"]) .line:nth-child(3) .lineText { animation-delay: calc(var(--duration-fast) * 2); }
+.ctaRow { opacity: 0; }
+.toast[data-phase="cta"] .ctaRow { animation: titleIn var(--duration-slowest) var(--ease-out) both; }
+@keyframes softenIn { from { filter: blur(var(--blur-sm)); } to { filter: blur(0); } }
+@keyframes washIn { 0% { opacity: 0; transform: translateY(var(--space-24)) scaleY(0.9); } 65% { opacity: 1; transform: translateY(0) scaleY(1.04); } 100% { opacity: 1; transform: translateY(0) scaleY(1); } }
+@keyframes titleIn { from { opacity: 0; transform: translateY(var(--space-12)); } to { opacity: 1; transform: translateY(0); } }
+.copy { position: relative; display: block; padding: var(--space-16) var(--space-20) var(--space-12); }
+.line {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-snug);
   font-weight: 600;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.01em;
 }
-
-/* ─── Mobile ─────────────────────────────────────────────────────────────
-   A different object, not a smaller one: a 126px chip top-right under
-   the nav. At 274px the desktop toast took a third of a phone's width.
-
-   token-ok throughout — these are the design's own values and the
-   nearest palette entries are 30 to 50 ΔRGB away. */
+.accent { color: var(--red-600); }
+.ctaRow { display: flex; justify-content: center; padding: 0 var(--space-20) var(--space-20); }
+.cta {
+  max-width: 100%;
+  min-height: var(--space-40);
+  padding: var(--space-10) var(--space-20);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--white);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out);
+}
+.cta:hover { background: var(--blue-700); }
+.dismiss {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: var(--space-48);
+  height: var(--space-48);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+.dismiss::before { content: ""; position: absolute; inset: var(--space-8); border-radius: inherit; background: var(--white); box-shadow: var(--elevation-1); transition: background var(--duration-base) var(--ease-out); }
+.dismiss svg { position: relative; width: var(--space-20); height: var(--space-20); }
+.dismiss:hover::before { background: var(--color-primary-light); }
+.openToast:focus-visible, .cta:focus-visible, .dismiss:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(-1 * var(--space-4)); }
 @media (max-width: 768px) {
-  .toast {
-    left: auto;
-    bottom: auto;
-    /* Under the navbar, which publishes its own height. */
-    top: calc(var(--nav-height) + var(--space-12));
-    right: var(--space-12);
-    /* Scaled up from the spec's 126x34. At that size it read as a system
-       notification rather than part of the page, and the headline had
-       about twenty characters per line to work with before clamping. */
-    width: 200px;
-    height: 48px;
-    padding: 0;
-    gap: var(--space-8);
-    border-radius: var(--radius-sm);
-    border: 0;
-
-    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
-  }
-
-  .toast:hover {
-    box-shadow: 0 2px 12px 0 rgba(var(--black-rgb), 0.24);
-    transform: none;
-  }
-
-  /* The parts run together as one paragraph here, and the CLAMP lives on
-     the paragraph. Left as separate blocks they each clamped to two
-     lines of their own, so a three-part headline produced six lines in a
-     34px chip. */
-  .copy {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    gap: 0;
-    min-width: 0;
-  }
-
-  .line {
-    display: inline;
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    line-height: normal;
-    letter-spacing: 0;
-    text-shadow: 0 4px 34px rgba(var(--black-rgb), 0.44);
-  }
-
-  /* The space that `display: inline` on a flex child does not give you. */
-  .line + .line::before {
-    content: " ";
-  }
-
-
-}
-
-@media (min-width: 769px) {
-  .toast { width: calc(var(--space-128) * 2 + var(--space-64)); }
-  .copy { display: block; }
-  .line { display: inline; line-height: var(--leading-body); }
-  .line:first-child { display: block; }
-  .line:nth-child(n + 3)::before { content: " "; }
-}
-
-.openToast { position: relative; z-index: 1; display: flex; align-items: center; gap: var(--space-12); width: 100%; min-width: 0; padding: var(--space-12) var(--space-14); border: 0; border-radius: inherit; background: transparent; color: inherit; font-family: inherit; text-align: inherit; cursor: pointer; }
-.dismiss { position: absolute; z-index: 2; top: calc(-1 * var(--space-8)); right: calc(-1 * var(--space-8)); display: grid; place-items: center; width: var(--space-24); height: var(--space-24); border: var(--space-1) solid rgba(var(--white-rgb), 0.8); border-radius: var(--radius-full); background: var(--color-surface); color: var(--color-primary); box-shadow: var(--elevation-1); cursor: pointer; }
-.dismiss svg { width: var(--space-14); height: var(--space-14); }
-.dismiss:hover { background: var(--color-primary-light); box-shadow: var(--elevation-2); }
-.openToast:focus-visible, .dismiss:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
-.pattern { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
-/* Match L2's right edge: identical artwork, scale, fade and mirroring. */
-.pattern::after { content: ""; position: absolute; top: 50%; right: 0; width: var(--space-64); height: calc(var(--space-80) + var(--space-4)); transform: translateY(-50%) scaleX(-1); background: linear-gradient(90deg, rgba(var(--white-rgb), 0.6), rgba(var(--white-rgb), 0.3) 60%, transparent); mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; -webkit-mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; }
-@media (max-width: 768px) {
-  .openToast { padding: 0 var(--space-8); gap: var(--space-8); height: 100%; }
-  .pattern::after { width: var(--space-40); height: var(--space-48); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
+  .toast { right: var(--space-12); bottom: auto; top: calc(var(--nav-height) + var(--space-12)); width: calc(var(--space-128) + var(--space-32)); }
+  .card { border-radius: var(--radius-sm); }
+  .media { height: auto; aspect-ratio: 1.4; }
+  .copy { padding: var(--space-8) var(--space-8) var(--space-12); }
+  .line { font-size: var(--font-size-xs); line-height: var(--leading-snug); }
+  .ctaRow { display: none; }
+  .dismiss { top: 0; left: 0; }
 }
 @media (max-width: 1099px) {
   :global(body:has(#mobile-navigation-menu)) .toast { visibility: hidden; pointer-events: none; }
+}
+.toast:is([data-phase="title"], [data-phase="cta"]) .card::after { animation: titleIn var(--duration-slowest) var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) {
+  .cta, .dismiss::before { transition: none; }
+  .toast, .toast .overlay, .toast .lineText, .toast .ctaRow, .card::after { animation: none !important; }
+  .overlay, .lineText, .ctaRow, .card::after { opacity: 1; }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+  .toast[data-phase="cta"]:not([data-closing="true"]) .card:hover { box-shadow: var(--elevation-4), var(--elevation-2); }
 }
