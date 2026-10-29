@@ -14,7 +14,11 @@ import {
   Calendar, 
   Activity, 
   Plus,
-  Minus
+  Minus,
+  Clock,
+  ShieldCheck,
+  Award,
+  Sparkles
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
@@ -289,6 +293,27 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <span>1800-309-0309 (24x7)</span>
               </a>
             </div>
+
+            {/* Global Accreditation & Clinical Excellence Card */}
+            <div className={styles.accreditationTrustCard}>
+              <div className={styles.accreditationHeader}>
+                <div className={styles.accreditationShield}>
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <div className={styles.accreditationTitle}>Global Clinical Excellence</div>
+                  <div className={styles.accreditationSubtitle}>JCI &amp; NABH Accredited Protocols</div>
+                </div>
+              </div>
+              <p className={styles.accreditationDesc}>
+                Every surgical treatment at Narayana Health follows strict international safety standards, backed by senior multidisciplinary boards.
+              </p>
+              <div className={styles.accreditationBadgesRow}>
+                <span className={styles.trustMiniPill}>✓ 100% Paperless ICU</span>
+                <span className={styles.trustMiniPill}>✓ Dual Surgical Review</span>
+                <span className={styles.trustMiniPill}>✓ Transparent Pricing</span>
+              </div>
+            </div>
           </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (TRUE INFORMATION) ───────── */}
@@ -301,6 +326,74 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.leadParagraph}>
                 {detail.leadParagraph}
               </p>
+
+              {/* Visual Clinical Anatomy & Procedure Snapshot Card */}
+              <div className={styles.visualAnatomyCard}>
+                <div className={styles.visualAnatomyMedia}>
+                  <Image
+                    src={detail.heroImage}
+                    alt={`${detail.title} anatomical visualization`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 420px"
+                    className={styles.visualAnatomyImg}
+                  />
+                  <div className={styles.visualAnatomyOverlay} />
+                  <span className={styles.visualBadgePulse}>
+                    <span className={styles.pulseDot} />
+                    Clinical Reference Model
+                  </span>
+                </div>
+
+                <div className={styles.visualAnatomyInfo}>
+                  <div className={styles.visualAnatomyTag}>
+                    <Sparkles size={13} />
+                    <span>CLINICAL SNAPSHOT</span>
+                  </div>
+                  <h3 className={styles.visualAnatomyTitle}>{detail.shortTitle} Specification</h3>
+
+                  <div className={styles.visualSpecsGrid}>
+                    <div className={styles.visualSpecItem}>
+                      <div className={styles.specIconWrap}>
+                        <Clock size={16} />
+                      </div>
+                      <div>
+                        <span className={styles.specLabel}>Avg. Duration</span>
+                        <span className={styles.specVal}>{detail.metrics.duration || "4 - 6 Hours"}</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.visualSpecItem}>
+                      <div className={styles.specIconWrap}>
+                        <ShieldCheck size={16} />
+                      </div>
+                      <div>
+                        <span className={styles.specLabel}>Success Rate</span>
+                        <span className={styles.specVal}>{detail.metrics.successRate || "95%+"}</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.visualSpecItem}>
+                      <div className={styles.specIconWrap}>
+                        <Activity size={16} />
+                      </div>
+                      <div>
+                        <span className={styles.specLabel}>Anesthesia</span>
+                        <span className={styles.specVal}>{detail.metrics.anesthesia || "General Anesthesia"}</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.visualSpecItem}>
+                      <div className={styles.specIconWrap}>
+                        <Award size={16} />
+                      </div>
+                      <div>
+                        <span className={styles.specLabel}>Hospital Stay</span>
+                        <span className={styles.specVal}>{detail.metrics.hospitalStay || "14 - 21 Days"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
 
             {/* 2. What Is It? */}
@@ -437,14 +530,27 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.approach.description}
               </p>
-              <div className={styles.matchingStepsList}>
-                {detail.approach.steps.map((st, i) => (
-                  <div key={i} className={styles.matchingStepCard}>
-                    <span className={styles.matchingStepNumber}>Phase {st.step}</span>
-                    <h3 className={styles.matchingStepTitle}>{st.title}</h3>
-                    <p className={styles.matchingStepDesc}>{st.desc}</p>
-                  </div>
-                ))}
+
+              {/* Visual Surgical Care Pathway Stepper */}
+              <div className={styles.surgicalPathwayContainer}>
+                <div className={styles.pathwayGrid}>
+                  {detail.approach.steps.map((st, i) => (
+                    <div key={i} className={styles.pathwayStepCard}>
+                      <div className={styles.pathwayStepHeader}>
+                        <div className={styles.pathwayNumberBadge}>0{i + 1}</div>
+                        <span className={styles.pathwayStepPill}>Phase {st.step}</span>
+                      </div>
+                      <h3 className={styles.pathwayStepTitle}>{st.title}</h3>
+                      <p className={styles.pathwayStepDesc}>{st.desc}</p>
+                      <div className={styles.pathwayStepFooter}>
+                        <span className={styles.pathwayCheckBadge}>
+                          <Check size={12} />
+                          <span>Standard Clinical Protocol</span>
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </section>
 
@@ -456,7 +562,52 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <p className={styles.bodyParagraph}>
                 {detail.recoveryCare.description}
               </p>
-              <ul className={styles.bulletList} style={{ marginTop: "16px" }}>
+
+              {/* Visual Patient Recovery Milestones Roadmap Infographic */}
+              <div className={styles.recoveryRoadmapCard}>
+                <div className={styles.roadmapHeader}>
+                  <div>
+                    <span className={styles.roadmapEyebrow}>POST-PROCEDURE TIMELINE</span>
+                    <h3 className={styles.roadmapTitle}>Patient Recovery Milestones</h3>
+                  </div>
+                  <span className={styles.roadmapAvgBadge}>
+                    <Clock size={13} />
+                    <span>Est. Recovery: {detail.metrics.recoveryTime || "3 - 6 Months"}</span>
+                  </span>
+                </div>
+
+                <div className={styles.roadmapStagesGrid}>
+                  <div className={styles.roadmapStage}>
+                    <div className={styles.stageDotActive}>01</div>
+                    <h4 className={styles.stageTitle}>ICU Protocol</h4>
+                    <span className={styles.stageDuration}>Days 1 - 3</span>
+                    <p className={styles.stageDesc}>Continuous hemodynamic monitoring, organ perfusions, and vital settle.</p>
+                  </div>
+
+                  <div className={styles.roadmapStage}>
+                    <div className={styles.stageDot}>02</div>
+                    <h4 className={styles.stageTitle}>Step-Down Ward</h4>
+                    <span className={styles.stageDuration}>Days 4 - 10</span>
+                    <p className={styles.stageDesc}>Supported bedside ambulation, physical therapy, and oral diet reintroduction.</p>
+                  </div>
+
+                  <div className={styles.roadmapStage}>
+                    <div className={styles.stageDot}>03</div>
+                    <h4 className={styles.stageTitle}>Home Transition</h4>
+                    <span className={styles.stageDuration}>Weeks 2 - 4</span>
+                    <p className={styles.stageDesc}>Discharge with custom medication schedule, telehealth follow-ups, and mobility pacing.</p>
+                  </div>
+
+                  <div className={styles.roadmapStage}>
+                    <div className={styles.stageDot}>04</div>
+                    <h4 className={styles.stageTitle}>Active Recovery</h4>
+                    <span className={styles.stageDuration}>Month 3+</span>
+                    <p className={styles.stageDesc}>Safe resumption of professional activity, cardiovascular rehab, and routine labs.</p>
+                  </div>
+                </div>
+              </div>
+
+              <ul className={styles.bulletList} style={{ marginTop: "20px" }}>
                 {detail.recoveryCare.highlights.map((item, i) => (
                   <li key={i} className={styles.bulletItem}>
                     <CheckCircle2 size={16} color="#034EA2" style={{ flexShrink: 0, marginTop: "2px" }} />

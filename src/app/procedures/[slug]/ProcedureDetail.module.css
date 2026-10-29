@@ -1,6 +1,9 @@
 .detailPageContainer {
   min-height: 100vh;
-  background-color: var(--color-bg, #fafcfc);
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(3, 78, 162, 0.04), transparent 60%),
+    radial-gradient(circle at 100% 25%, rgba(0, 196, 255, 0.03), transparent 40%),
+    #f8fafc;
   color: var(--color-text, #1a1a2e);
 }
 
@@ -1237,6 +1240,459 @@
   .boxLabel {
     font-size: 10px;
   }
+}
+
+/* ─── VISUAL CLINICAL ANATOMY & PROCEDURE CARD ───────────────────────────── */
+.visualAnatomyCard {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(3, 78, 162, 0.12);
+  border-radius: var(--radius-xl, 18px);
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+
+@media (max-width: 860px) {
+  .visualAnatomyCard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visualAnatomyMedia {
+  position: relative;
+  min-height: 240px;
+  background: #091322;
+  overflow: hidden;
+}
+
+.visualAnatomyImg {
+  object-fit: cover;
+  object-position: center 25%;
+  filter: brightness(0.85) contrast(1.05);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visualAnatomyCard:hover .visualAnatomyImg {
+  transform: scale(1.04);
+}
+
+.visualAnatomyOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(9, 19, 34, 0.15) 0%,
+    rgba(9, 19, 34, 0.65) 100%
+  );
+  pointer-events: none;
+}
+
+.visualBadgePulse {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(6, 14, 27, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.pulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00C4FF;
+  box-shadow: 0 0 8px #00C4FF;
+  animation: pulseBeacon 1.8s ease-in-out infinite;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.visualAnatomyInfo {
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.visualAnatomyTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary, #034EA2);
+  margin-bottom: 8px;
+}
+
+.visualAnatomyTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.015em;
+  margin: 0 0 16px 0;
+}
+
+.visualSpecsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 18px;
+}
+
+@media (max-width: 540px) {
+  .visualSpecsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visualSpecItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(3, 78, 162, 0.035);
+  border: 1px solid rgba(3, 78, 162, 0.08);
+}
+
+.specIconWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary, #034EA2);
+  flex-shrink: 0;
+  border: 1px solid rgba(3, 78, 162, 0.12);
+}
+
+.specLabel {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.specVal {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+  margin-top: 1px;
+}
+
+/* ─── VISUAL SURGICAL CARE PATHWAY STEPPER ───────────────────────────────── */
+.surgicalPathwayContainer {
+  margin-top: 24px;
+}
+
+.pathwayGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 720px) {
+  .pathwayGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pathwayStepCard {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-lg, 14px);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-top: 3px solid var(--color-primary, #034EA2);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.pathwayStepCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(3, 78, 162, 0.3);
+}
+
+.pathwayStepHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pathwayNumberBadge {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-primary, #034EA2);
+  letter-spacing: -0.02em;
+}
+
+.pathwayStepPill {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 9px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(3, 78, 162, 0.07);
+  color: var(--color-primary, #034EA2);
+}
+
+.pathwayStepTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.pathwayStepDesc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+.pathwayStepFooter {
+  padding-top: 12px;
+  border-top: 1px solid rgba(241, 245, 249, 1);
+}
+
+.pathwayCheckBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #15803d;
+}
+
+/* ─── VISUAL PATIENT RECOVERY MILESTONES ROADMAP ─────────────────────────── */
+.recoveryRoadmapCard {
+  background: linear-gradient(145deg, #07152b 0%, #032044 100%);
+  color: #ffffff;
+  border-radius: var(--radius-xl, 18px);
+  padding: 28px 28px 32px;
+  margin-top: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.roadmapHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 24px;
+}
+
+.roadmapEyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: #38bdf8;
+  margin-bottom: 4px;
+}
+
+.roadmapTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.roadmapAvgBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.roadmapStagesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .roadmapStagesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .roadmapStagesGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.roadmapStage {
+  display: flex;
+  flex-direction: column;
+}
+
+.stageDotActive {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #034EA2;
+  border: 2px solid #38bdf8;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.stageDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.stageTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+}
+
+.stageDuration {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #38bdf8;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stageDesc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* ─── GLOBAL ACCREDITATION TRUST CARD (SIDEBAR) ──────────────────────────── */
+.accreditationTrustCard {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(3, 78, 162, 0.12);
+  border-radius: var(--radius-lg, 14px);
+  padding: 20px;
+}
+
+.accreditationHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.accreditationShield {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(3, 78, 162, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary, #034EA2);
+  flex-shrink: 0;
+}
+
+.accreditationTitle {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.accreditationSubtitle {
+  font-size: 11.5px;
+  color: var(--color-primary, #034EA2);
+  font-weight: 600;
+}
+
+.accreditationDesc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #475569;
+  margin: 0 0 12px 0;
+}
+
+.accreditationBadgesRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.trustMiniPill {
+  font-size: 11px;
+  font-weight: 600;
+  color: #034EA2;
+  background: rgba(3, 78, 162, 0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(3, 78, 162, 0.08);
 }
 
 
