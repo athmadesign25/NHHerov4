@@ -983,7 +983,7 @@
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors - Compact 34px pill filling 50% width */
+/* Decision Button 1 (Secondary): Find doctors - Subtle Glassmorphic Pill */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
@@ -996,23 +996,23 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
   background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDoctorBtn:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ - Compact 34px NH blue pill filling 50% width */
+/* Decision Button 2 (Primary): Read more ↗ - Pure NH Brand Blue (#034EA2), No Outline */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
@@ -1026,21 +1026,16 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: none;
   color: #ffffff;
-  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
-  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--color-primary, #034EA2);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDetailBtn:hover {
-  background: linear-gradient(135deg, #023d82 0%, #104e9c 100%);
-  border-color: #ffffff;
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.45);
+  background: var(--color-primary-dark, #023070);
   transform: translateY(-1px);
 }
 
@@ -1614,7 +1609,7 @@
 }
 
 .sheetApplyBtn {
-  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  background: var(--color-primary, #034EA2);
   color: #ffffff;
   border: none;
   border-radius: 9999px;
@@ -1622,5 +1617,9 @@
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.4);
+  transition: all 0.2s ease;
+}
+
+.sheetApplyBtn:hover {
+  background: var(--color-primary-dark, #023070);
 }
