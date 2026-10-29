@@ -5,13 +5,13 @@ import Link from "next/link";
 import { Search, X, ArrowRight, Plus, Mic, Send, Briefcase, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NHSearchExperience.module.css";
-import { 
-  SearchResultsData, 
+import {
+  SearchResultsData,
   DoctorCardData,
-  getSearchResults, 
-  countWords, 
-  enforceWordLimit, 
-  MAX_SEARCH_WORDS 
+  getSearchResults,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
 } from "./searchData";
 import LocationSelector from "./LocationSelector";
 import PrimaryResults from "./PrimaryResults";
@@ -753,7 +753,7 @@ export default function SearchResultsCanvas({
 
     // 15. General clinical intent triage fallback via pulseClinicalEngine
     const triage = analyzePulseIntent(queryText, [], location);
-    const matchingDoc = availableDoctors.find((d) => 
+    const matchingDoc = availableDoctors.find((d) =>
       triage.specialty && d.speciality.toLowerCase().includes(triage.specialty.toLowerCase())
     ) || availableDoctors[0] || {
       id: "doc-devi-shetty",
@@ -839,9 +839,9 @@ export default function SearchResultsCanvas({
   return (
     <div className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
-      <div 
-        className={`${styles.pulseActiveAmbientBg} ${isPulseActive ? styles.pulseActiveAmbientBgVisible : ""}`} 
-        aria-hidden="true" 
+      <div
+        className={`${styles.pulseActiveAmbientBg} ${isPulseActive ? styles.pulseActiveAmbientBgVisible : ""}`}
+        aria-hidden="true"
       />
 
       {/* ── 1. Top Header Row: Location Dropdown + Close Button ── */}
@@ -879,11 +879,11 @@ export default function SearchResultsCanvas({
             exit={{ opacity: 0, height: 0, overflow: "hidden" }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
-            <form 
-              className={styles.resultsQueryBar} 
+            <form
+              className={styles.resultsQueryBar}
               onSubmit={handleTopSearchSubmit}
             >
-              <div 
+              <div
                 className={styles.resultsQueryLeft}
                 onClick={() => topInputRef.current?.focus()}
               >
@@ -934,7 +934,7 @@ export default function SearchResultsCanvas({
 
       {/* ── 3. Single Permanent Unified Canvas Container ── */}
       {/* ALWAYS mounted so layout, dimensions, and scroll transitions are 100% reliable */}
-      <div 
+      <div
         ref={unifiedScrollRef}
         className={`${styles.unifiedResultsScrollArea} ${isPulseActive ? styles.unifiedResultsScrollAreaActive : ""}`}
         data-lenis-prevent="true"
@@ -1096,7 +1096,7 @@ export default function SearchResultsCanvas({
                             </div>
 
                             <Link
-                              href={`/doctors/${turn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                              href={`/doctors/${encodeURIComponent(turn.doctor.id)}/book?hospital=${encodeURIComponent(turn.doctor.hospital)}&name=${encodeURIComponent(turn.doctor.name)}&city=${encodeURIComponent(selectedLocation)}`}
                               className={styles.refBookBtnWhite}
                             >
                               Book
@@ -1239,7 +1239,7 @@ export default function SearchResultsCanvas({
                                   </div>
 
                                   <Link
-                                    href={`/doctors/${activeTurn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                                    href={`/doctors/${encodeURIComponent(activeTurn.doctor.id)}/book?hospital=${encodeURIComponent(activeTurn.doctor.hospital)}&name=${encodeURIComponent(activeTurn.doctor.name)}&city=${encodeURIComponent(selectedLocation)}`}
                                     className={styles.refBookBtnWhite}
                                   >
                                     Book
@@ -1300,7 +1300,7 @@ export default function SearchResultsCanvas({
       {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
       {/* Hidden when zero results (since empty state itself has the clean Pulse AI bridge and top input is present) */}
       {!isZeroResults && (
-        <div 
+        <div
           className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
           style={{ zIndex: 25 }}
         >

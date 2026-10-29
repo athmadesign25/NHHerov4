@@ -1,0 +1,25 @@
+.container { width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end)); margin-inline: var(--d3-gutter-start) var(--d3-gutter-end); }
+.navGap { height: var(--nav-height); }
+.header { position: sticky; top: var(--nav-height); z-index: 40; padding-block: var(--sp-2); background: color-mix(in srgb, var(--color-bg-card) 95%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-border-light); box-shadow: var(--shadow-sm); }
+.navHidden { top: 0; }
+.form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-1); }
+.searchField { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--sp-1); padding-inline: var(--sp-2); min-height: var(--sp-6); border: 1px solid var(--color-border); border-radius: var(--radius-full); color: var(--color-primary); background: var(--color-bg-card); }
+.searchField:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.08); }
+.searchField > svg { flex-shrink: 0; }
+.searchField input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; font: inherit; font-size: var(--font-size-base); color: var(--color-text); }
+.searchField input::placeholder { color: var(--color-text-secondary); }
+.searchField input::-webkit-search-cancel-button { appearance: none; }
+.clear { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-6); height: var(--sp-6); color: var(--color-text-secondary); border-radius: var(--radius-full); }
+.clear:hover { background: var(--color-bg-alt); }
+.location { display: flex; align-items: center; gap: var(--sp-1); min-width: 0; padding-inline: var(--sp-2); border: 1px solid var(--color-border); border-radius: var(--radius-full); color: var(--color-primary); }
+.location select { min-width: 0; width: 100%; height: var(--sp-6); border: 0; background: transparent; color: var(--color-text); font: inherit; font-size: var(--font-size-sm); }
+.submit { display: flex; justify-content: center; align-items: center; gap: var(--sp-1); min-height: var(--sp-6); padding-inline: var(--sp-3); background: var(--color-primary); border-radius: var(--radius-full); color: var(--color-text-inverse); font-size: var(--font-size-sm); font-weight: 600; transition: background-color var(--transition-fast); }
+.submit:hover { background: var(--color-primary-dark); }
+.srOnly { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); white-space: nowrap; overflow: hidden; }
+.container :is(a, button, select):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (min-width: 768px) {
+  .form { grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--sp-16) * 1.6)) auto; }
+  .searchField { grid-column: auto; }
+}
+@media (max-width: 639px) { .header { padding-block: var(--sp-1); } }
+@media (prefers-reduced-motion: reduce) { .submit { transition: none; } }

@@ -6,50 +6,129 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
+import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
+import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess?: () => void;
+  /** Opt-in keyboard/modal behaviour for the Design 3 preview. */
+  manageFocus?: boolean;
+  purpose?: "booking" | "history";
+  /** Accept any complete OTP only in explicitly opted-in design previews. */
+  previewOtp?: boolean;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
+export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocus = false, purpose = "booking", previewOtp = false }: LoginModalProps) {
+  const acceptsPreviewOtp = DESIGN_PREVIEW_ENABLED && previewOtp;
   const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [mobileNumber, setMobileNumber] = useState("");
   const [mobileError, setMobileError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [codeError, setCodeError] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const verified = useRef(false);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  useEffect(() => {
+    if (isOpen && step === "otp") otpRefs.current[0]?.focus();
+  }, [isOpen, step]);
+
+  useEffect(() => {
+    if (!manageFocus || !isOpen || !mounted || !modalRef.current) return;
+    const modal = modalRef.current;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const background = Array.from(document.body.children).filter((element): element is HTMLElement => element instanceof HTMLElement && !element.contains(modal));
+    const previousInert = background.map((element) => element.inert);
+    background.forEach((element) => { element.inert = true; });
+    const focusable = () => Array.from(modal.querySelectorAll<HTMLElement>('button, input, select, a[href], [tabindex]'))
+      .filter((element) => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0);
+    (modal.querySelector<HTMLInputElement>('input') ?? focusable()[0])?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); closeRef.current(); }
+      if (event.key !== 'Tab') return;
+      const elements = focusable();
+      const first = elements[0]; const last = elements.at(-1);
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    modal.addEventListener('keydown', onKey);
+    return () => {
+      modal.removeEventListener('keydown', onKey);
+      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      trigger?.focus({ preventScroll: true });
+    };
+  }, [manageFocus, isOpen, mounted]);
 
   const handleContinue = () => {
     if (activeTab === "mobile") {
-      if (mobileNumber.length !== 10) {
+      if (!/^\d{10}$/.test(mobileNumber)) {
         setMobileError(true);
         return;
       }
       setStep("otp");
+    } else if (!normalizeAuthIdentity("email", email)) {
+      setEmailError(true);
+    } else {
+      setStep("otp");
     }
   };
 
-  const handleVerify = () => {
-    if (isVerifying) return;
-    setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      if (onLoginSuccess) onLoginSuccess();
-      onClose();
-    }, 1500);
+  const completeLogin = () => {
+    if (verified.current) return;
+    if (typeof window !== "undefined") {
+      try {
+        // Keep this tab's login usable even when persistent storage is blocked.
+        sessionStorage.setItem("isLoggedIn", "true");
+      } catch {
+        setCodeError("Sign in couldn’t be completed. Check your browser’s site storage settings and try again.");
+        return;
+      }
+      try {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userName", "Aditya");
+      } catch { /* The current tab is signed in; persistent storage is optional. */ }
+      window.dispatchEvent(new Event("login-state-changed"));
+    }
+    verified.current = true;
+    if (onLoginSuccess) onLoginSuccess();
+    onClose();
+  };
+
+  const handleVerify = (code = otp.join("")) => {
+    if (acceptsPreviewOtp && !/^\d{6}$/.test(code)) {
+      setCodeError("Enter all 6 digits of your verification code.");
+      return;
+    }
+    if (!acceptsPreviewOtp && purpose === "history" && !isValidVerificationCode(code)) {
+      setCodeError(code.length < 6 ? "Enter all 6 digits of your verification code." : "That code isn’t correct. Check it and try again.");
+      return;
+    }
+    completeLogin();
   };
 
   const handleOtpChange = (index: number, value: string) => {
     if (value && !/^\d+$/.test(value)) return;
+    const digit = value.substring(value.length - 1);
     const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1);
+    newOtp[index] = digit;
     setOtp(newOtp);
-    if (value && index < 5) {
+    setCodeError("");
+
+    if (digit && index < 5) {
       otpRefs.current[index + 1]?.focus();
+    }
+
+    // Verify only a complete code, without a delayed callback after dismissal.
+    if (digit && newOtp.every((d) => d.trim() !== "")) {
+      handleVerify(newOtp.join(""));
     }
   };
 
@@ -60,7 +139,24 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       handleVerify();
     }
   };
-  
+
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pasted) return;
+    const newOtp = [...otp];
+    for (let i = 0; i < 6; i++) {
+      newOtp[i] = pasted[i] || "";
+    }
+    setOtp(newOtp);
+    setCodeError("");
+    if (pasted.length === 6) {
+      handleVerify(pasted);
+    } else {
+      otpRefs.current[pasted.length]?.focus();
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -71,11 +167,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       setStep("phone");
       setMobileNumber("");
       setMobileError(false);
+      setEmail("");
+      setEmailError(false);
+      setCodeError("");
+      verified.current = false;
       setOtp(["", "", "", "", "", ""]);
       setActiveTab("mobile");
     }
   }, [isOpen]);
-  
+
   // Prevent body scroll when modal is open and pause the hero background video.
   // Scoped to #hero-section-search-first only — other sections (e.g. HealthPackages) drive
   // their own video play/pause via scroll position and must not be touched here.
@@ -106,7 +206,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div 
+        <div
           data-lenis-prevent="true"
           style={{
           position: "fixed",
@@ -132,7 +232,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: "rgba(var(--black-rgb), 0.4)",
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
             }}
@@ -144,19 +244,23 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={styles.modalContainer}
+            ref={modalRef}
+            role={manageFocus ? "dialog" : undefined}
+            aria-modal={manageFocus ? true : undefined}
+            aria-label={manageFocus ? (purpose === "history" ? "Sign in to see previously booked doctors" : "Login or register to book an appointment") : undefined}
+            className={`${styles.modalContainer} ${manageFocus ? styles.accessibleDialog : ""}`}
           >
             {/* Image Column */}
             <div className={styles.imageColumn}>
-              <Image 
-                src="/assets/doctor_team.png" 
-                alt="Narayana Health" 
-                fill 
+              <Image
+                src="/assets/doctor_team.png"
+                alt="Narayana Health"
+                fill
                 style={{ objectFit: "cover", objectPosition: "center" }}
                 priority
               />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(var(--black-rgb), 0.8), transparent)", zIndex: 1 }}></div>
-              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--color-text-inverse)" }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent)", zIndex: 1 }}></div>
+              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "#ffffff" }}>
                 <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
                 <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
               </div>
@@ -164,19 +268,20 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           <div className={styles.formColumn}>
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "24px" }}>
-              <button 
+              <button
                 onClick={onClose}
-                style={{ 
-                  background: "var(--color-bg-alt, var(--slate-50))", 
-                  border: "none", 
-                  width: "36px", 
-                  height: "36px", 
-                  borderRadius: "50%", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  cursor: "pointer", 
-                  color: "var(--color-text-secondary, var(--slate-600))",
+                aria-label={manageFocus ? "Close login" : undefined}
+                style={{
+                  background: "var(--color-bg-alt, #f8fafc)",
+                  border: "none",
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "var(--color-text-secondary, #475569)",
                   transition: "background 0.2s"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "#e2e8f0"}
@@ -189,17 +294,17 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             {/* Body */}
             <div style={{ padding: "0px 24px 32px 24px", height: "510px", display: "flex", flexDirection: "column" }}>
               <div style={{ flexShrink: 0, textAlign: "center", marginBottom: "24px" }}>
-                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, var(--slate-900))", margin: "0 0 8px 0" }}>Login / Register</h2>
-                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, var(--slate-600))", margin: 0, lineHeight: 1.5 }}>
-                  Sign in to manage appointments, access reports, and stay connected with your doctors.
+                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, #0f172a)", margin: "0 0 8px 0" }}>Login / Register</h2>
+                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, #475569)", margin: 0, lineHeight: 1.5 }}>
+                  {purpose === "history" ? "Sign in to see doctors you’ve booked before." : "Sign in to manage appointments, access reports, and stay connected with your doctors."}
                 </p>
               </div>
-              
+
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: step === "otp" ? "space-between" : "flex-start" }}>
               {step === "phone" ? (
                 <>
               {/* Tabs */}
-              <div style={{ display: "flex", background: "var(--slate-100)", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
+              <div style={{ display: "flex", background: "#F1F5F9", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
                 <button
                   onClick={() => setActiveTab("mobile")}
                   style={{
@@ -222,7 +327,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "mobile" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -255,7 +360,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   {activeTab === "email" && (
                     <motion.div
                       layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
+                      style={{ position: "absolute", inset: 0, background: "#ffffff", borderRadius: 20, boxShadow: "0 1px 3px rgba(0,0,0,0.1)", zIndex: 0 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -272,7 +377,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <div style={{ marginBottom: "24px" }}>
                 {activeTab === "mobile" ? (
                   <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Mobile Number</label>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Mobile Number</label>
                     <div style={{ display: "flex", gap: "12px" }}>
                       {/* Country Code */}
                       <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
@@ -281,10 +386,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             width: "100%",
                             padding: "14px 32px 14px 16px",
                             borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--color-surface)",
+                            border: "1.5px solid var(--color-border, #e2e8f0)",
+                            background: "#ffffff",
                             fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, var(--slate-900))",
+                            color: "var(--color-text, #0f172a)",
                             fontWeight: 500,
                             appearance: "none",
                             outline: "none",
@@ -295,14 +400,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           <option value="+91">🇮🇳 +91</option>
                           <option value="+880">🇧🇩 +880</option>
                         </select>
-                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, var(--slate-600))", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, #475569)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <ChevronDown size={16} />
                         </div>
                       </div>
-                      
+
                       {/* Phone Input */}
-                      <input 
+                      <input
                         type="tel"
+                        aria-label={manageFocus ? "Mobile number" : undefined}
                         maxLength={10}
                         placeholder="Enter your mobile number"
                         value={mobileNumber}
@@ -315,10 +421,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           flex: 1,
                           padding: "14px 16px",
                           borderRadius: "100px",
-                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, var(--slate-200))"}`,
-                          background: "var(--color-surface)",
+                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, #e2e8f0)"}`,
+                          background: "#ffffff",
                           fontSize: "var(--font-size-base, 16px)",
-                          color: "var(--color-text, var(--slate-900))",
+                          color: "var(--color-text, #0f172a)",
                           outline: "none"
                         }}
                         onFocus={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-primary)"}
@@ -338,33 +444,41 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   </div>
                 ) : (
                   <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Email ID</label>
-                    <input 
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Email ID</label>
+                    <input
                       type="email"
+                      aria-label={manageFocus ? "Email address" : undefined}
+                      value={email}
+                      maxLength={160}
+                      aria-invalid={emailError}
+                      autoComplete="email"
+                      onChange={(event) => { setEmail(event.target.value); setEmailError(false); }}
+                      onKeyDown={(event) => { if (event.key === "Enter") handleContinue(); }}
                       placeholder="Enter your email address"
                       style={{
                         width: "100%",
                         padding: "14px 16px",
                         borderRadius: "100px",
-                        border: "1.5px solid var(--color-border, var(--slate-200))",
-                        background: "var(--color-surface)",
+                        border: "1.5px solid var(--color-border, #e2e8f0)",
+                        background: "#ffffff",
                         fontSize: "var(--font-size-base, 16px)",
-                        color: "var(--color-text, var(--slate-900))",
+                        color: "var(--color-text, #0f172a)",
                         outline: "none"
                       }}
                     />
+                    {emailError && <p className={styles.inputError} role="alert">Enter a valid email address.</p>}
                   </div>
                 )}
               </div>
 
               {/* Continue Button */}
-              <button 
+              <button
                 onClick={handleContinue}
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: "var(--color-primary, var(--blue-brand))",
-                  color: "var(--color-text-inverse)",
+                  background: "var(--color-primary, #034ea2)",
+                  color: "#ffffff",
                   fontSize: "var(--font-size-base, 16px)",
                   fontWeight: 700,
                   borderRadius: "100px",
@@ -377,19 +491,22 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               </button>
 
               {/* Divider */}
+              {purpose !== "history" && <>
               <div style={{ display: "flex", alignItems: "center", margin: "24px 0" }}>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
-                <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, var(--slate-600))", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
+                <div style={{ flex: 1, height: "1px", background: "var(--color-border, #e2e8f0)" }} />
+                <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, #475569)", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
+                <div style={{ flex: 1, height: "1px", background: "var(--color-border, #e2e8f0)" }} />
               </div>
 
               {/* Google Button */}
               <button
+                type="button"
+                onClick={completeLogin}
                 style={{
                   width: "100%",
                   padding: "14px",
-                  background: "var(--color-surface)",
-                  border: "1.5px solid var(--color-border, var(--slate-200))",
+                  background: "#ffffff",
+                  border: "1.5px solid var(--color-border, #e2e8f0)",
                   borderRadius: "100px",
                   display: "flex",
                   alignItems: "center",
@@ -398,31 +515,32 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   cursor: "pointer",
                   fontSize: "var(--font-size-base, 16px)",
                   fontWeight: 600,
-                  color: "var(--color-text, var(--slate-900))",
+                  color: "var(--color-text, #0f172a)",
                   transition: "background 0.2s"
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "var(--color-bg-alt, #f8fafc)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "#ffffff"}
               >
-                <img 
-                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-                  alt="Google" 
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google"
                   style={{ width: "20px", height: "20px" }}
                 />
                 Sign in with Google
               </button>
-              
-              <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, var(--slate-400))", textAlign: "center", lineHeight: 1.5 }}>
+              </>}
+
+              <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.5 }}>
                 By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
               </p>
                 </>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "24px", animation: "fadeIn 0.3s ease-in-out", height: "100%", justifyContent: "space-between" }}>
                   <div style={{ marginTop: "32px" }}>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, var(--slate-600))", marginBottom: "8px", textAlign: "center" }}>
+                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, #475569)", marginBottom: "8px", textAlign: "center" }}>
                       Enter the 6-digit OTP sent to <br/>
-                      <span style={{ fontWeight: 700, color: "var(--color-text, var(--slate-900))" }}>{mobileNumber}</span>
-                      <button onClick={() => setStep("phone")} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
+                      <span style={{ fontWeight: 700, color: "var(--color-text, #0f172a)" }}>{activeTab === "mobile" ? mobileNumber : email}</span>
+                      <button onClick={() => { setStep("phone"); setOtp(["", "", "", "", "", ""]); setCodeError(""); }} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
                     </label>
                     <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "16px" }}>
                       {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -430,11 +548,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                           key={i}
                           ref={(el) => { otpRefs.current[i] = el; }}
                           type="text"
+                          aria-label={manageFocus ? `Verification code digit ${i + 1}` : undefined}
                           inputMode="numeric"
                           maxLength={1}
                           value={otp[i]}
                           onChange={(e) => handleOtpChange(i, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                          onPaste={handleOtpPaste}
                           style={{
                             width: "48px",
                             height: "56px",
@@ -442,9 +562,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                             fontSize: "24px",
                             fontWeight: 600,
                             borderRadius: "12px",
-                            border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--color-surface)",
-                            color: "var(--color-text, var(--slate-900))",
+                            border: "1.5px solid var(--color-border, #e2e8f0)",
+                            background: "#ffffff",
+                            color: "var(--color-text, #0f172a)",
                             outline: "none"
                           }}
                           onFocus={(e) => e.target.style.borderColor = "var(--color-primary)"}
@@ -452,16 +572,17 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         />
                       ))}
                     </div>
+                    {codeError && <p className={styles.inputError} role="alert">{codeError}</p>}
                   </div>
-                  <button 
-                    onClick={handleVerify}
+                  <button
+                    onClick={() => handleVerify()}
                     disabled={isVerifying}
                     style={{
                       width: "100%",
                       padding: "14px",
-                      background: "var(--color-primary, var(--blue-brand))",
+                      background: "var(--color-primary, #034ea2)",
                       opacity: isVerifying ? 0.9 : 1,
-                      color: "var(--color-text-inverse)",
+                      color: "#ffffff",
                       fontSize: "var(--font-size-base, 16px)",
                       fontWeight: 700,
                       borderRadius: "100px",
@@ -479,7 +600,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                         <motion.div
                           animate={{ rotate: 360 }}
                           transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          style={{ width: 18, height: 18, border: "2px solid rgba(var(--white-rgb), 0.3)", borderTopColor: "var(--white)", borderRadius: "50%" }}
+                          style={{ width: 18, height: 18, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%" }}
                         />
                         Verifying...
                       </>
@@ -493,7 +614,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
             </div>
             </div>
-            
+
             </motion.div>
         </div>
       )}

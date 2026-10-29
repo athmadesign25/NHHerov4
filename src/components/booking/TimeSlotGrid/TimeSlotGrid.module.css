@@ -1,0 +1,151 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── PERIOD GROUP ────────────────────────────────────────────────────────── */
+.period {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.periodHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.periodIcon {
+  display: flex;
+  align-items: center;
+  color: var(--amber-500);
+}
+
+.periodLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* ─── CHIP GRID ──────────────────────────────────────────────────────────── */
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ─── TIME CHIP ──────────────────────────────────────────────────────────── */
+.chip {
+  position: relative;
+  padding: 9px 18px;
+  min-height: 38px;
+  min-width: 84px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip:hover:not(.chipSelected):not(.chipUnavailable) {
+  border-color: var(--color-primary);
+  background: #FFFFFF;
+  color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(3, 78, 162, 0.1);
+}
+
+.chip:active:not(.chipUnavailable) {
+  transform: scale(0.96);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─── SELECTED ───────────────────────────────────────────────────────────── */
+.chipSelected {
+  border-color: var(--color-primary);
+  background: #FFFFFF;
+  color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.15);
+}
+
+/* ─── UNAVAILABLE ────────────────────────────────────────────────────────── */
+.chipUnavailable {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Diagonal slash overlay for unavailable slots */
+.slashLine {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.05) 3px,
+    rgba(0, 0, 0, 0.05) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ─── EMPTY STATE ────────────────────────────────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: var(--sp-5) var(--sp-3);
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 24px;
+}
+
+.emptyText {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.emptyHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .chipGrid {
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 8px 12px;
+    min-width: 72px;
+    font-size: 11px;
+  }
+}

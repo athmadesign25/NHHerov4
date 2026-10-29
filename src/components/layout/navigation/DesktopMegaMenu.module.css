@@ -13,7 +13,7 @@
 }
 .slide { position: relative; height: 100%; min-height: 100%; }
 .body { height: 100%; min-height: 100%; overflow-y: auto; overscroll-behavior: contain; }
-.body:has([data-hospital-menu]) { overflow: visible; }
+.body:has([data-hospital-menu], [data-doctor-availability-menu]) { overflow: visible; }
 .linkGroups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-32); padding: var(--space-32); min-height: 100%; }
 .linkGroups h2 { font-size: var(--font-size-xs); line-height: var(--leading-body); color: var(--color-primary); font-weight: 700; text-transform: uppercase; margin: 0 0 var(--space-12); }
 .linkGroups ul { list-style: none; padding: 0; margin: 0; }

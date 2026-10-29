@@ -1,0 +1,33 @@
+.menu {
+  display: grid;
+  grid-template-columns: minmax(0, 1.17fr) minmax(0, 2.73fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas: "banner directory" "banner viewAll";
+  gap: 0 var(--space-20);
+  height: 100%;
+  min-width: 0;
+  padding: var(--space-24);
+  color: var(--color-text);
+}
+.banner { grid-area: banner; position: relative; min-width: 0; min-height: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--navy-900); }
+.photo { object-fit: cover; object-position: 50% center; }
+.todayPhoto { object-position: 75% center; }
+.wash { position: absolute; inset: 0; background: linear-gradient(180deg, var(--navy-900), rgba(var(--blue-brand-rgb), 0.7) 25%, rgba(var(--blue-brand-rgb), 0) 65%); }
+.title { position: absolute; inset: var(--space-24) var(--space-16) auto; margin: 0; color: var(--white); font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 600; }
+.directory { grid-area: directory; column-count: 4; column-gap: var(--space-12); column-fill: auto; height: 100%; min-width: 0; min-height: 0; }
+.cityGroup { break-inside: avoid; min-width: 0; margin-bottom: var(--space-16); padding-inline: var(--space-2); }
+.cityGroup h3 { margin: 0 0 var(--space-2); font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; }
+.cityGroup ul { list-style: none; margin: 0; padding: 0; }
+.cityButton, .localityButton { display: block; padding-block: var(--space-2); text-decoration: none; transition: color var(--duration-base) var(--ease-out); }
+.cityButton { color: var(--color-text); }
+.localityButton { color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); overflow-wrap: break-word; }
+.cityButton:hover, .localityButton:hover { color: var(--slate-400); text-decoration: none; }
+.viewAll { grid-area: viewAll; justify-self: end; margin-top: var(--space-12); padding-block: var(--space-8); color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; }
+.viewAll:hover { color: var(--color-primary-dark); }
+.menu a:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+@media (max-width: 1280px) {
+  .menu { padding: var(--space-20); column-gap: var(--space-16); grid-template-columns: minmax(0, 1.04fr) minmax(0, 2.76fr); }
+  .directory { column-gap: var(--space-8); }
+  .title { inset-inline: var(--space-12); font-size: var(--font-size-base); line-height: var(--leading-snug); }
+}
+@media (prefers-reduced-motion: reduce) { .cityButton, .localityButton { transition: none; } }

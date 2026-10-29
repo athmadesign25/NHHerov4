@@ -1,0 +1,72 @@
+.root {
+  --share-target: calc(var(--sp-5) + var(--sp-1) / 2);
+  position: relative;
+  display: inline-flex;
+  color: var(--color-text);
+}
+
+.trigger {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: var(--share-target);
+  height: var(--share-target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+/* Keep a generous hit area around the smaller, quiet glass surface. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  /* Match the 28px visual height and fully rounded edge of the status badges.
+     The 44px trigger remains intact for pointer and touch access. */
+  inset: calc((var(--share-target) - (var(--sp-3) + var(--sp-1) / 2)) / 2);
+  border: 1px solid color-mix(in srgb, var(--color-bg-card) 48%, transparent);
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--color-bg-card) 48%, transparent);
+  backdrop-filter: blur(var(--sp-2)) saturate(110%);
+  -webkit-backdrop-filter: blur(var(--sp-2)) saturate(110%);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.popover.popover {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.option { display: flex; align-items: center; gap: var(--sp-1); width: 100%; min-height: var(--share-target); padding: calc(var(--sp-1) * 1.5) var(--sp-2); border: 0; border-radius: 0; color: inherit; background: transparent; font: inherit; text-align: left; text-decoration: none; cursor: pointer; transition: background-color var(--transition-fast); }
+.option svg, .option img { flex-shrink: 0; color: var(--color-text-secondary); }
+.option:active { background: color-mix(in srgb, var(--card-ink) 16%, transparent); }
+.root :is(button, a, input):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.popover :is(button, a, input):focus-visible { outline-offset: -2px; }
+.root button:disabled { cursor: wait; opacity: 0.6; }
+.trigger:active { transform: scale(0.96); }
+.trigger[aria-expanded="true"]::before { background: color-mix(in srgb, var(--color-bg-card) 82%, transparent); }
+.copyFallback { padding: var(--sp-1); color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.copyFallback p { margin: 0 0 var(--sp-1); }
+.copyFallback input { width: 100%; min-height: var(--share-target); padding: var(--sp-1); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg-card); color: var(--color-text); font: inherit; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (hover: hover) {
+  .trigger:hover::before { background: color-mix(in srgb, var(--color-bg-card) 76%, transparent); box-shadow: var(--shadow-md); }
+  .option:hover { background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .trigger, .trigger::before, .option { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .trigger::before, .popover { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; } }

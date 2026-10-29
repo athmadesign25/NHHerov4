@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import styles from "./DoctorLocations.module.css";
 
 const cities = [
@@ -28,14 +29,14 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
       <ul className={styles.grid} aria-label="Find doctors by city">
         {cities.map((city) => (
           <li key={city.slug}>
-            <Link href={`/search?q=${encodeURIComponent(city.name)}`} onClick={onNavigate} className={styles.tile}>
+            <Link href={doctorNavUrl("location", city.name)} onClick={onNavigate} className={styles.tile}>
               <Image src={`/navigation/cities/${city.slug}.webp`} alt="" fill sizes="(min-width: 1600px) 18vw, 16vw" className={styles.image} />
               <span className={styles.wash} aria-hidden="true" />
               <span className={styles.name}>{city.name}</span>
             </Link>
           </li>
         ))}
-        <li className={styles.viewAllCell}><Link href="/doctors" className={styles.viewAll} onClick={onNavigate}>View All</Link></li>
+        <li className={styles.viewAllCell}><Link href={doctorNavUrl()} className={styles.viewAll} onClick={onNavigate}>View All</Link></li>
       </ul>
       <a className={styles.credits} href="/navigation/cities/credits.json" target="_blank" rel="noopener noreferrer">Photo credits</a>
     </div>

@@ -1,0 +1,165 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: linear-gradient(135deg, #021a36 0%, #034EA2 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(3, 78, 162, 0.15);
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+/* Subtle glow overlay */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(255,255,255,0));
+}
+
+.compact {
+  background: linear-gradient(135deg, #021a36 0%, #034EA2 100%);
+  padding: var(--sp-3);
+  gap: var(--sp-3);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── PHOTO ──────────────────────────────────────────────────────────────── */
+.photoWrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.compact .photoWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+}
+
+.photo {
+  object-fit: cover;
+}
+
+/* ─── BODY ───────────────────────────────────────────────────────────────── */
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.02em;
+}
+
+.compact .name {
+  font-size: 18px;
+}
+
+.speciality {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ─── META ROWS ──────────────────────────────────────────────────────────── */
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.metaDot {
+  display: none; /* Replaced by pills */
+}
+
+/* ─── FEE BADGE ──────────────────────────────────────────────────────────── */
+.feeBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feeLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.feeAmount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .card {
+    gap: var(--sp-3);
+    padding: var(--sp-4);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl); /* Flush with top on mobile */
+  }
+
+  .photoWrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .name {
+    font-size: 20px;
+  }
+
+  .feeBadge {
+    display: none;
+  }
+}

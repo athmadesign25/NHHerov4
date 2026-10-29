@@ -1,0 +1,143 @@
+.container { width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end)); margin-inline: var(--d3-gutter-start) var(--d3-gutter-end); }
+.navGap { height: var(--d3-nav-height); }
+.titleRow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--sp-2); min-height: var(--sp-8); padding-block: var(--sp-2) var(--sp-1); }
+.title { position: relative; min-width: 0; font-size: clamp(var(--font-size-xl), 2.2vw, var(--font-size-3xl)); font-weight: 700; letter-spacing: -.025em; line-height: 1.2; }
+.titleRow h1 { min-width: 0; font: inherit; letter-spacing: inherit; border-radius: var(--radius-sm); scroll-margin-top: calc(var(--d3-nav-height) + var(--sp-2)); }
+.titleSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; pointer-events: none; }
+.titleRow h1:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: 2px; }
+.summary { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; }
+.summary strong { color: var(--color-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pageSummary { grid-column: 1 / -1; margin: calc(var(--sp-1) / 2) 0; max-width: 85ch; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; text-wrap: pretty; }
+:global([data-design="d20"]) .pageSummary { min-width: 0; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* One blur plane serves every translucent control; opaque surfaces are the fallback. */
+.searchBar {
+  --d3-control-surface: var(--color-bg-card);
+  --d3-control-muted: var(--d3-ui-hover, var(--color-bg-alt));
+  position: sticky; top: var(--d3-nav-height); z-index: 40; padding-block: var(--sp-1); transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.searchBar::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: var(--color-bg); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .searchBar {
+    --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent);
+    --d3-control-muted: color-mix(in srgb, var(--d3-ui-hover, var(--color-bg-alt)) 65%, transparent);
+  }
+  .searchBar::before {
+    bottom: calc(var(--sp-6) * -1);
+    background: color-mix(in srgb, var(--color-bg) 62%, transparent);
+    backdrop-filter: blur(calc(var(--sp-2) + var(--sp-1) / 2));
+    -webkit-backdrop-filter: blur(calc(var(--sp-2) + var(--sp-1) / 2));
+    mask-image: linear-gradient(180deg, var(--color-text-inverse) calc(100% - var(--sp-6)), color-mix(in srgb, var(--color-text-inverse) 82%, transparent) calc(100% - var(--sp-5)), color-mix(in srgb, var(--color-text-inverse) 35%, transparent) calc(100% - var(--sp-3)), color-mix(in srgb, var(--color-text-inverse) 6%, transparent) calc(100% - var(--sp-1)), transparent);
+    -webkit-mask-image: linear-gradient(180deg, var(--color-text-inverse) calc(100% - var(--sp-6)), color-mix(in srgb, var(--color-text-inverse) 82%, transparent) calc(100% - var(--sp-5)), color-mix(in srgb, var(--color-text-inverse) 35%, transparent) calc(100% - var(--sp-3)), color-mix(in srgb, var(--color-text-inverse) 6%, transparent) calc(100% - var(--sp-1)), transparent);
+  }
+}
+.navHidden { transform: translateY(calc(var(--d3-nav-height) * -1)); }
+/* Finish the toolbar fade inside the gap, before the filter panel's top edge. */
+:global(:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .searchBar::before {
+  bottom: calc(var(--sp-1) * -1);
+  mask-image: linear-gradient(180deg, var(--color-text-inverse) calc(100% - var(--sp-1)), transparent);
+  -webkit-mask-image: linear-gradient(180deg, var(--color-text-inverse) calc(100% - var(--sp-1)), transparent);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  /* Feather both edges so the sticky glass does not cut a band through the D20 canvas. */
+  :global([data-design="d20"]) .searchBar::before {
+    background: color-mix(in srgb, var(--color-bg) 32%, transparent);
+    mask-image: linear-gradient(180deg, transparent, var(--color-text-inverse) var(--sp-2), var(--color-text-inverse) calc(100% - var(--sp-2)), transparent);
+    -webkit-mask-image: linear-gradient(180deg, transparent, var(--color-text-inverse) var(--sp-2), var(--color-text-inverse) calc(100% - var(--sp-2)), transparent);
+  }
+}
+.toolbarContent { position: relative; z-index: 1; display: flex; flex-direction: column; gap: var(--sp-1); }
+.searchRow { display: flex; align-items: center; gap: var(--sp-1); }
+.form { flex: 1; min-width: 0; display: flex; align-items: center; gap: calc(var(--sp-1) / 2); min-height: var(--sp-6); padding: 1px; border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); transition: border-color var(--d3-ui-fast, var(--transition-fast)); }
+.form:has(input:focus-visible) { outline: 1px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: -1px; }
+.form:has(input:focus) { border-color: var(--d3-ui-focus, var(--color-primary)); }
+.searchField { position: relative; display: flex; align-items: center; gap: var(--sp-1); min-width: 0; flex: 1; padding-inline: calc(var(--sp-1) * 1.5) 0; }
+.searchField input { min-width: 0; width: 100%; min-height: calc(var(--sp-6) - var(--sp-1) / 2); padding-right: calc(var(--sp-6) - var(--sp-1) / 2); border: 0; outline: 0; background: transparent; color: var(--color-text); font: inherit; font-size: var(--font-size-base); font-weight: 400; }
+.searchField input::placeholder { color: var(--color-text-secondary); }
+.searchField input:placeholder-shown { padding-right: 0; }
+.searchField input::-webkit-search-cancel-button { appearance: none; }
+.clear { position: absolute; inset-inline-end: 0; display: grid; place-items: center; width: calc(var(--sp-6) - var(--sp-1) / 2); height: calc(var(--sp-6) - var(--sp-1) / 2); border-radius: var(--radius-full); color: var(--color-text-secondary); transition: opacity var(--d3-ui-fast, var(--transition-fast)), background-color var(--d3-ui-fast, var(--transition-fast)), color var(--d3-ui-fast, var(--transition-fast)); }
+.clear:disabled { opacity: 0; pointer-events: none; }
+.submit { display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1); flex-shrink: 0; min-width: calc(var(--sp-6) - var(--sp-1) / 2); min-height: calc(var(--sp-6) - var(--sp-1) / 2); border-radius: var(--radius-full); background: transparent; color: var(--d3-ui-text, var(--color-text-secondary)); font-size: var(--font-size-sm); font-weight: 600; transition: color var(--d3-ui-fast, var(--transition-fast)), background-color var(--d3-ui-fast, var(--transition-fast)); }
+.location { display: flex; align-items: center; gap: var(--sp-1); min-width: 0; color: var(--d3-ui-text, var(--color-text-secondary)); border-radius: var(--radius-full); transition: color var(--d3-ui-fast, var(--transition-fast)); }
+.location svg { flex-shrink: 0; }
+.locationSpinner { animation: locationSpin 1s linear infinite; }
+.locationFeedback { margin: 0; font-size: var(--font-size-sm); line-height: 1.5; color: var(--color-text-secondary); }
+@keyframes locationSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .locationSpinner { animation: none; } }
+.location select { min-width: 0; width: 100%; min-height: calc(var(--sp-6) - var(--sp-1) / 2); border: 0; background: transparent; color: inherit; font: inherit; font-size: var(--font-size-sm); font-weight: 500; border-radius: var(--radius-sm); cursor: pointer; }
+.location.location select:focus-visible { outline: none; }
+.location:has(select:focus) { outline: 1px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: -1px; }
+.location[data-active] { color: var(--d3-ui-neutral-ink, var(--color-text)); }
+.filterButton[data-active] { color: var(--d3-ui-selection-label, var(--color-text)); border-color: var(--d3-ui-selection, var(--color-border)); background: var(--d3-ui-selection-surface, var(--color-bg-card)); }
+.desktopLocation { display: none; }
+.mobileLocation { grid-column: 1 / -1; justify-self: start; max-width: 100%; }
+.filterLabel { display: none; }
+.filterButton { display: inline-flex; flex-shrink: 0; min-width: calc(var(--sp-6) - var(--sp-1) / 2); justify-content: center; align-items: center; gap: var(--sp-1); min-height: calc(var(--sp-6) - var(--sp-1) / 2); padding-inline: calc(var(--sp-1) * 1.5); border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); color: var(--d3-ui-text, var(--color-text-secondary)); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--d3-ui-fast, var(--transition-fast)), background-color var(--d3-ui-fast, var(--transition-fast)), border-color var(--d3-ui-fast, var(--transition-fast)); }
+.filterCount { min-width: var(--sp-2); font-variant-numeric: tabular-nums; }
+.srOnly { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); white-space: nowrap; overflow: hidden; }
+@media (hover: hover) {
+  .clear:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .submit:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .location:hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .filterButton:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .filterButton[data-active]:where(:not(:disabled)):hover { color: var(--d3-ui-selection-hover, var(--color-text)); }
+}
+.clear:not(:disabled):active, .submit:not(:disabled):active, .filterButton:not(:disabled):active, .location:active { color: var(--d3-ui-ink-pressed, var(--color-text)); }
+.filterButton[data-active]:where(:not(:disabled)):active { color: var(--d3-ui-selection-pressed, var(--color-text)); }
+.submit:disabled, .filterButton:disabled { color: var(--color-text-muted); cursor: not-allowed; }
+.filterButton:disabled { border-color: var(--d3-ui-border, var(--color-border)); background: var(--d3-control-muted); }
+@media (min-width: 640px) {
+  .titleRow { padding-block: var(--sp-3) var(--sp-1); }
+  .summary { flex-direction: row; align-items: center; gap: var(--sp-2); }
+  .desktopLocation { display: flex; flex: 0 1 calc(var(--sp-16) + var(--sp-10)); min-height: var(--sp-6); padding-inline: calc(var(--sp-1) * 1.5); border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); transition: color var(--d3-ui-fast, var(--transition-fast)), border-color var(--d3-ui-fast, var(--transition-fast)); }
+  .desktopLocation:focus-within { border-color: var(--d3-ui-focus, var(--color-text-secondary)); }
+  .mobileLocation { display: none; }
+  .filterLabel { display: inline; }
+}
+@media (min-width: 1024px) { .filterButton { display: none; } }
+@media (1024px <= width < 1200px) {
+  :global(:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .filterButton { display: inline-flex; }
+}
+@media (prefers-reduced-motion: reduce) { .searchBar, .form, .clear, .submit, .filterButton, .desktopLocation, .location { transition: none; } }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) { .titleSweep { display: none; } }
+@media (forced-colors: active) {
+  .submit, .submit:hover, .submit:active { background: ButtonFace; color: ButtonText; outline: 1px solid ButtonText; outline-offset: -1px; }
+  .submit:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  .form:has(input:focus-visible), .location:has(select:focus) { outline-color: Highlight; }
+  .filterButton[data-active], .filterButton[data-active]:is(:hover, :active) { forced-color-adjust: none; color: HighlightText; border-color: Highlight; background: Highlight; }
+  .submit:disabled, .filterButton:disabled { color: GrayText; }
+  .filterButton[data-active]:disabled:is(:hover, :active), .filterButton:disabled { color: GrayText; border-color: GrayText; background: ButtonFace; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .searchBar {
+    --d3-control-surface: var(--color-bg-card);
+    --d3-control-muted: var(--d3-ui-hover, var(--color-bg-alt));
+  }
+  .searchBar::before, :global(:is([data-design="d16"], [data-design="d17"], [data-design="d17-lite"], [data-design="d18"], :is([data-design="d19"], [data-design="d20"]))) .searchBar::before { bottom: 0; background: var(--color-bg); backdrop-filter: none; -webkit-backdrop-filter: none; mask-image: none; -webkit-mask-image: none; } }
+
+@media (pointer: coarse) { .location select { font-size: var(--font-size-base); } }
+
+/* Design 16 keeps independent location and search controls in one desktop surface. */
+.searchContents, .combinedSearch { display: contents; }
+.locationFirst { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.leadingLocation { grid-column: 1 / -1; display: flex; min-height: var(--sp-6); padding-inline: calc(var(--sp-1) * 1.5); border: 1px solid var(--d3-ui-border, var(--color-border)); background: var(--d3-control-surface); }
+.locationFirst .form { width: 100%; }
+/* Compact variants keep the city inside the search surface on small screens. */
+@media (width < 640px) {
+  .compactMobile.locationFirst { display: flex; }
+  .compactMobile .combinedSearch { display: flex; align-items: center; flex: 1; min-width: 0; border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); }
+  .compactMobile .combinedSearch:focus-within { border-color: var(--d3-ui-focus, var(--color-primary)); outline: 1px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: -1px; }
+  .compactMobile .leadingLocation { position: relative; flex: 0 1 40%; max-width: calc(var(--sp-16) + var(--sp-2)); gap: calc(var(--sp-1) / 2); padding-inline: var(--sp-1); border: 0; background: transparent; }
+  .compactMobile .leadingLocation::after { content: ""; position: absolute; inset-inline-end: 0; inset-block: var(--sp-1); border-inline-end: 1px solid var(--d3-ui-border, var(--color-border)); }
+  .compactMobile .leadingLocation select { overflow: hidden; text-overflow: ellipsis; }
+  .compactMobile .form { border: 0; background: transparent; }
+  .compactMobile .form:has(input:focus-visible), .compactMobile .leadingLocation:has(select:focus) { outline: none; }
+}
+@media (min-width: 640px) {
+  .locationFirst { display: flex; }
+  .combinedSearch { display: flex; align-items: center; flex: 1; min-width: 0; border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); }
+  .combinedSearch:focus-within { border-color: var(--d3-ui-focus, var(--color-primary)); outline: 1px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: -1px; }
+  .combinedSearch .leadingLocation { position: relative; flex: 0 0 clamp(calc(var(--sp-16) + var(--sp-3)), 14%, calc(var(--sp-16) + var(--sp-8))); border: 0; background: transparent; }
+  .combinedSearch .leadingLocation::after { content: ""; position: absolute; inset-inline-end: 0; inset-block: var(--sp-1); border-inline-end: 1px solid var(--d3-ui-border, var(--color-border)); }
+  .combinedSearch .form { border: 0; background: transparent; }
+  .combinedSearch .form:has(input:focus-visible), .combinedSearch .leadingLocation:has(select:focus) { outline: none; }
+}

@@ -1,0 +1,282 @@
+.page {
+  padding-top: var(--nav-height);
+  min-height: 100dvh;
+  background: var(--color-bg, #f8fafc);
+  padding-bottom: var(--sp-10, 80px);
+}
+
+.container {
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+}
+
+.breadcrumbWrapper {
+  padding-top: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+/* ─── SEO HEADER ─────────────────────────────────────────────────────────── */
+.seoHeader {
+  margin-bottom: var(--sp-6);
+  max-width: 800px;
+}
+
+.h1 {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  color: var(--color-text, #0f172a);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 var(--sp-2) 0;
+}
+
+.summary {
+  font-size: clamp(15px, 1.5vw, 17px);
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ─── GRID LAYOUT ────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--sp-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mainCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.resultsCount {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* ─── DOCTOR CARDS ───────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.card {
+  background: var(--color-bg-card, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTop {
+  display: flex;
+  gap: var(--sp-4);
+}
+
+.docImageWrap {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-subtle, #f1f5f9);
+}
+
+.docImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.docInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.docNameLink {
+  text-decoration: none;
+}
+
+.docName {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0;
+  transition: color var(--transition-fast);
+}
+
+.docName:hover {
+  color: var(--color-primary);
+}
+
+.docSpec {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.docDegrees {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.metaData {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.starIcon {
+  color: #f59e0b;
+}
+
+.docPricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.feeLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.feeAmount {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+/* ─── FAQ SECTION (AEO) ──────────────────────────────────────────────────── */
+.faqSection {
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.faqTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--sp-4);
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.faqItem {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.faqQuestion {
+  padding: 16px;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none; /* removes default arrow in some browsers */
+  position: relative;
+}
+
+.faqQuestion::-webkit-details-marker {
+  display: none;
+}
+
+.faqAnswer {
+  padding: 0 16px 16px 16px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────────── */
+.sidebarCol {
+  position: sticky;
+  top: calc(var(--nav-height) + var(--sp-4));
+}
+
+.trustWidget {
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4);
+  color: #fff;
+}
+
+.trustTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.trustList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.trustList li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.trustIcon {
+  color: #93c5fd;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cardTop {
+    flex-direction: column;
+  }
+
+  .docImageWrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .docPricing {
+    align-items: flex-start;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-border-light);
+  }
+}

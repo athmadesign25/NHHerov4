@@ -1588,7 +1588,7 @@ export default function SpecialityDesign1({ slug }: { slug: string }) {
                       </div>
                     </div>
 
-                    <Link href={`/doctors/${doc.id}`} className={styles.refBookBtnWhite}>
+                    <Link href={`/doctors/${encodeURIComponent(doc.id)}?name=${encodeURIComponent(doc.name)}`} className={styles.refBookBtnWhite}>
                       Book
                     </Link>
                   </div>

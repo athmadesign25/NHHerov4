@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
-  ArrowRight, 
-  Briefcase, 
-  MapPin, 
-  Video, 
-  RefreshCw, 
+import {
+  ArrowRight,
+  Briefcase,
+  MapPin,
+  Video,
+  RefreshCw,
   SearchX,
   AlertCircle,
   Heart,
@@ -132,8 +132,8 @@ export default function PrimaryResults({
   const totalCount = totalDoctors ?? (displayedCount === 1 ? 1 : displayedCount <= 3 ? displayedCount : 24);
 
   // Determine if results context is video consultations (e.g. no in-person NH care within 100 km)
-  const isVideoContext = 
-    proximityTier === "videoOnly" || 
+  const isVideoContext =
+    proximityTier === "videoOnly" ||
     Boolean(proximityMessage?.toLowerCase().includes("video consultations"));
 
   // ── ERROR STATE (Simulation trigger: 'XZ' or network failure) ──
@@ -263,7 +263,7 @@ export default function PrimaryResults({
   return (
     <div className={styles.primaryResultsSection}>
       {/* ── STAGE 1: Word-by-Word Word-Reveal Animated Clinical Summary ── */}
-      <motion.div 
+      <motion.div
         key={query}
         className={styles.chatSummaryTextRow}
         variants={{
@@ -320,7 +320,7 @@ export default function PrimaryResults({
 
       {/* ── STAGE 3: Real Verified Doctor Cards Reveal (Maximum 8 cards) ── */}
       {(animStage === "cards" || animStage === "text") && (
-        <motion.div 
+        <motion.div
           className={`${styles.refDoctorsGrid} ${isSingleDoctor ? styles.refDoctorsGridSingle : ""}`}
           initial={{ opacity: animStage === "cards" ? 0 : 1 }}
           animate={{ opacity: 1 }}
@@ -328,14 +328,14 @@ export default function PrimaryResults({
         >
           {displayDoctors.map((doc) => {
             const isLongName = doc.name.length > 18;
-            const isVcDoctor = 
-              doc.consultationType === "video" || 
-              isVideoContext || 
+            const isVcDoctor =
+              doc.consultationType === "video" ||
+              isVideoContext ||
               Boolean(doc.isVideoConsult);
 
             return (
-              <div 
-                key={doc.id} 
+              <div
+                key={doc.id}
                 className={`${styles.refDoctorCard} ${isSingleDoctor ? styles.refDocCardSingle : ""}`}
               >
                 {/* Full background doctor photo spanning entire card */}
@@ -365,8 +365,8 @@ export default function PrimaryResults({
                   <div className={styles.refDocBottomFlex}>
                     {/* Left Column: Name, Specialty, Experience, Hospital */}
                     <div className={styles.refDocTextCol}>
-                      <h3 
-                        className={`${styles.refDocName} ${isLongName ? styles.refDocNameMultiLine : styles.refDocNameSingleLine}`} 
+                      <h3
+                        className={`${styles.refDocName} ${isLongName ? styles.refDocNameMultiLine : styles.refDocNameSingleLine}`}
                         title={doc.name}
                       >
                         {doc.name}
@@ -381,8 +381,8 @@ export default function PrimaryResults({
                         <span>{formatExperienceText(doc.experience)}</span>
                       </div>
 
-                      <div 
-                        className={`${styles.refDocHospital} ${isLongName ? styles.refDocHospitalSingleLine : styles.refDocHospitalTwoLines}`} 
+                      <div
+                        className={`${styles.refDocHospital} ${isLongName ? styles.refDocHospitalSingleLine : styles.refDocHospitalTwoLines}`}
                         title={doc.hospital}
                       >
                         {doc.hospital}
@@ -391,7 +391,7 @@ export default function PrimaryResults({
 
                     {/* Right Side: White Book Button */}
                     <Link
-                      href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                      href={`/doctors/${encodeURIComponent(doc.id)}/book?hospital=${encodeURIComponent(doc.hospital)}&name=${encodeURIComponent(doc.name)}&city=${encodeURIComponent(selectedLocation)}`}
                       className={styles.refBookBtnWhite}
                     >
                       Book
@@ -417,4 +417,3 @@ export default function PrimaryResults({
     </div>
   );
 }
-

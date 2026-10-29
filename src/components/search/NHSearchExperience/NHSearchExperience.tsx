@@ -21,9 +21,9 @@ import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import AnimatedGradientWaves from "./AnimatedGradientWaves";
-import { 
-  getSearchResults, 
-  SearchResultsData, 
+import {
+  getSearchResults,
+  SearchResultsData,
   CARDIOLOGY_RESULTS,
   countWords,
   enforceWordLimit,
@@ -137,7 +137,7 @@ export default function NHSearchExperience({
   const isPhone = winSize.w <= 640;
   const startWidth = isMobile ? Math.min(winSize.w - 32, 600) : (anchorRect?.width || Math.min(840, winSize.w - 48));
   const startHeight = isMobile ? 96 : (anchorRect ? Math.max(132, anchorRect.height) : 132);
-  const startTop = isMobile 
+  const startTop = isMobile
     ? (winSize.h > 0 ? winSize.h - 116 - startHeight : 420)
     : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
   const startLeft = isMobile ? Math.round((winSize.w - startWidth) / 2) : (anchorRect?.left || Math.round((winSize.w - startWidth) / 2));
@@ -149,8 +149,8 @@ export default function NHSearchExperience({
   const bubbleWidth3 = 46;
   const bubblesCount = bannerBubble ? 3 : 2;
   const bubblesTotalWidth = bubbleWidth1 + bubbleWidth2 + (bannerBubble ? bubbleWidth3 : 0) + bubbleGap * (bubblesCount - 1);
-  
-  const spotlightWidth = isMobile 
+
+  const spotlightWidth = isMobile
     ? Math.max(96, Math.min(192, winSize.w - 24 - bubblesTotalWidth - bubbleGap))
     : 360;
   const spotlightHeight = isPhone ? 46 : 46;
@@ -429,8 +429,8 @@ export default function NHSearchExperience({
 
     const getLenis = () => {
       if (typeof window === "undefined") return null;
-      return (window as unknown as { __lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).__lenis 
-        || (window as unknown as { lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).lenis 
+      return (window as unknown as { __lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).__lenis
+        || (window as unknown as { lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).lenis
         || null;
     };
 
@@ -558,10 +558,10 @@ export default function NHSearchExperience({
     const targetQuery = enforceWordLimit(searchQuery.trim() || "I have chest pain and need a doctor", MAX_SEARCH_WORDS);
     setQuery(targetQuery);
     setActivePill(null);
-    
+
     // Step 1: Transition to Pulse AI clinical intelligence analyzing state
     setSearchState("skeleton");
-    
+
     // Step 2: AI clinical intelligence matching delay (1100ms)
     const [results] = await Promise.all([
       getSearchResults(targetQuery, selectedLocation),
@@ -699,8 +699,8 @@ export default function NHSearchExperience({
 
   // Handle Ask Pulse CTA: Smoothly transitions into the attached Pulse AI window
   const handleAskPulse = () => {
-    const q = query && query.trim().length > 0 
-      ? query.trim() 
+    const q = query && query.trim().length > 0
+      ? query.trim()
       : "I have chest pain and need clinical guidance";
     setPulseInitialQuery(q);
     setSearchState("pulse");
@@ -712,7 +712,7 @@ export default function NHSearchExperience({
   };
 
   // Class mapping based on state:
-  const stateClass = 
+  const stateClass =
     searchState === "landing"
       ? styles.stateLanding
       : searchState === "active"
@@ -724,8 +724,8 @@ export default function NHSearchExperience({
       : styles.stateResults;
 
   return (
-    <div 
-      className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`} 
+    <div
+      className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
       data-search-theme={searchTheme}
       ref={containerRef}
       style={
@@ -830,12 +830,12 @@ export default function NHSearchExperience({
 
         {/* Apple Spotlight Content (fades in as search morphs into bottom pill) */}
         {hasScroll && searchState === "landing" && (
-          <motion.div 
+          <motion.div
             className={styles.spotlightContent}
-            style={{ 
+            style={{
               position: "absolute",
               inset: 0,
-              opacity: spotlightOpacity, 
+              opacity: spotlightOpacity,
               pointerEvents: isDocked ? "auto" : "none",
               zIndex: 10,
             }}
@@ -919,7 +919,7 @@ export default function NHSearchExperience({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              router.push("/doctors");
+              router.push(`/search/doctors?design=d20&location=${encodeURIComponent(selectedLocation)}`);
             }}
             aria-label="Book Appointment"
           >
@@ -1029,7 +1029,7 @@ export default function NHSearchExperience({
             className={styles.mwebHeroActionBtn}
             onClick={(e) => {
               e.stopPropagation();
-              router.push("/doctors");
+              router.push(`/search/doctors?design=d20&location=${encodeURIComponent(selectedLocation)}`);
             }}
           >
             <CalendarCheck size={14} className={styles.mwebHeroActionIcon} strokeWidth={1.8} />
@@ -1060,7 +1060,7 @@ export default function NHSearchExperience({
             const isPhone = winSize.w <= 640;
             const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
             const modalTargetTop = typeof window !== "undefined"
-              ? (isPhone 
+              ? (isPhone
                   ? (isCompactModal ? 10 : 16)
                   : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
               : 100;
@@ -1162,10 +1162,10 @@ export default function NHSearchExperience({
                     display: "flex",
                     justifyContent: "center",
                     width: modalTargetWidth,
-                    height: (searchState === "results" || searchState === "skeleton") 
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
-                      : searchState === "pulse" 
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                    height: (searchState === "results" || searchState === "skeleton")
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
+                      : searchState === "pulse"
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
                       : undefined,
                     maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                     zIndex: 3,
@@ -1211,10 +1211,10 @@ export default function NHSearchExperience({
                       position: "relative",
                       zIndex: 2,
                       width: "100%",
-                      height: (searchState === "results" || searchState === "skeleton") 
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
-                        : searchState === "pulse" 
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                      height: (searchState === "results" || searchState === "skeleton")
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
+                        : searchState === "pulse"
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
                         : undefined,
                       maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                       display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,

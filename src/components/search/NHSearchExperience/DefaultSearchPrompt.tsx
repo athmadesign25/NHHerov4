@@ -9,12 +9,12 @@ import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
 import TypewriterPrompt from "./TypewriterPrompt";
-import { 
-  MAX_SEARCH_WORDS, 
-  MAX_AUDIO_DURATION_SECONDS, 
-  countWords, 
-  enforceWordLimit, 
-  formatAudioDuration 
+import {
+  MAX_SEARCH_WORDS,
+  MAX_AUDIO_DURATION_SECONDS,
+  countWords,
+  enforceWordLimit,
+  formatAudioDuration
 } from "./searchData";
 
 interface DefaultSearchPromptProps {
@@ -367,9 +367,9 @@ export default function DefaultSearchPrompt({
     const file = e.target.files?.[0];
     if (file) {
       const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      setAttachedPdf({ 
-        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`, 
-        size: file.size 
+      setAttachedPdf({
+        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`,
+        size: file.size
       });
     } else {
       setAttachedPdf({ name: "Blood_Test_Report.pdf", size: 245000 });
@@ -414,7 +414,7 @@ export default function DefaultSearchPrompt({
 
   return (
     <motion.div
-      className={styles.landingContainer} 
+      className={styles.landingContainer}
       style={{
         height: "100%",
         justifyContent: "flex-start",
@@ -431,10 +431,10 @@ export default function DefaultSearchPrompt({
       <motion.div
         className={styles.landingInputRow}
         style={{
-          ...(voiceMode === "listening" 
-            ? { marginBottom: 0 } 
-            : controlsMarginBottom 
-            ? { marginBottom: controlsMarginBottom } 
+          ...(voiceMode === "listening"
+            ? { marginBottom: 0 }
+            : controlsMarginBottom
+            ? { marginBottom: controlsMarginBottom }
             : {}),
           position: "relative",
           alignItems: "center",
@@ -531,7 +531,7 @@ export default function DefaultSearchPrompt({
 
               {/* Only in last 10 seconds: slight blinking alert text */}
               {recordingSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && recordingSeconds < MAX_AUDIO_DURATION_SECONDS && (
-                <div 
+                <div
                   className={styles.voiceLastSecondsBlink}
                   role="status"
                   aria-live="polite"
@@ -625,7 +625,7 @@ export default function DefaultSearchPrompt({
 
               {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
                 <div className={styles.transcribedActions}>
-                  <span 
+                  <span
                     className={styles.transcribedWordLimitError}
                     role="alert"
                   >
@@ -677,7 +677,7 @@ export default function DefaultSearchPrompt({
       {/* Continuous horizontal interaction row */}
       <AnimatePresence initial={false}>
         {voiceMode !== "listening" ? (
-          <motion.div 
+          <motion.div
             key="standard-bottom-controls"
             className={styles.landingBottomRow}
             initial={{ opacity: 0, y: 4 }}
@@ -727,7 +727,7 @@ export default function DefaultSearchPrompt({
                   className={styles.insideActionPill}
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push("/doctors");
+                    router.push(`/search/doctors?design=d20&location=${encodeURIComponent(selectedLocation)}`);
                   }}
                   aria-label="Book Doctor Appointment"
                 >

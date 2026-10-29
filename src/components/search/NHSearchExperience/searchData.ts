@@ -4,7 +4,7 @@
  * ═════════════════════════════════════════════════════════════════════════════════
  *
  * DEVELOPER HANDOFF INSTRUCTIONS:
- * 
+ *
  * 1. DEMO SEARCH SCENARIOS:
  *    - Scenario 1 (Cardiology):
  *      User types: 'c' → 'ch' → 'chest' → 'chest pain'
@@ -1050,8 +1050,8 @@ export function mapApiResultsToSearchData(
 
   // Ensure we have at least 8 doctor cards so the list is richly scrollable
   if (mappedDocs.length > 0 && mappedDocs.length < 8) {
-    const fallbackList = cleanQ.includes("knee") || cleanQ.includes("ortho") 
-      ? ORTHOPAEDICS_RESULTS.doctors 
+    const fallbackList = cleanQ.includes("knee") || cleanQ.includes("ortho")
+      ? ORTHOPAEDICS_RESULTS.doctors
       : CARDIOLOGY_RESULTS.doctors;
     for (const fb of fallbackList) {
       if (mappedDocs.length >= 8) break;
@@ -1499,3 +1499,8 @@ export function formatAudioDuration(seconds: number): string {
   const s = seconds % 60;
   return `${m}:${s < 10 ? "0" : ""}${s}`;
 }
+
+/** Shared search fixtures let the booking resolver preserve existing doctor identities. */
+export const allSearchDataDoctors: DoctorCardData[] = [
+  ...SEMANTIC_C_RESULTS.doctors, ...CARDIOLOGY_RESULTS.doctors, ...ORTHOPAEDICS_RESULTS.doctors,
+];

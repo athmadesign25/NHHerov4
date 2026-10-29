@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorMegaMenu.module.css";
 import DoctorLocations from "./DoctorLocations";
+import DoctorAvailabilityMenu from "./DoctorAvailabilityMenu";
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { DOCTOR_SPECIALTIES as specialties } from "./doctor-specialties";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 
@@ -33,7 +35,7 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
     const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
     tabs?.[next]?.focus();
   };
-  const itemHref = (label: string) => `/search?q=${encodeURIComponent(label)}`;
+  const itemHref = (label: string) => doctorNavUrl(section.id === "speciality" ? "specialty" : "condition", label);
   const isPlaceholder = section.id === "sunday" || section.id === "today";
   const isLocation = section.id === "location";
 
@@ -51,7 +53,7 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
       </div>
       <div className={`${styles.panel} ${isLocation || isPlaceholder ? styles.singlePanel : ""}`} id="doctor-menu-panel" role="tabpanel" aria-labelledby={`doctor-menu-tab-${section.id}`}>
         {isLocation ? <DoctorLocations onNavigate={onNavigate} /> : isPlaceholder ? (
-          <div className={styles.placeholder}>need content</div>
+          <DoctorAvailabilityMenu availability={section.id === "sunday" ? "sunday" : "today"} onNavigate={onNavigate} />
         ) : <>
           <div className={styles.imageWrap}>
             <Image src={section.id === "speciality" ? "/nav-doctor-speciality.png" : "/doctor_patient.png"} alt="A doctor speaking with a patient during a consultation" fill sizes="(min-width: 1600px) 28vw, 24vw" className={styles.image} />
@@ -64,7 +66,7 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
                     <strong>{label.charAt(0)}</strong>{label.slice(1)}
                   </Link></li>
                 ))}
-                {index === 2 && <li><Link href={section.href} className={styles.viewAll} onClick={onNavigate}>{section.viewAll}</Link></li>}
+                {index === 2 && <li><Link href={doctorNavUrl()} className={styles.viewAll} onClick={onNavigate}>{section.viewAll}</Link></li>}
               </ul>
             ))}
           </div>

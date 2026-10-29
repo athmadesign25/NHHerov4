@@ -1,0 +1,329 @@
+.container {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.label {
+  font-size: var(--font-size-base, 16px);
+  font-weight: 500;
+  color: var(--color-text, #0f172a);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.labelIcon {
+  color: var(--color-text, #0f172a);
+}
+
+.trigger {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 100px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.trigger:hover {
+  border-color: var(--color-primary, #034EA2);
+}
+
+.triggerOpen {
+  border-color: var(--color-primary, #034EA2);
+  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.12);
+}
+
+.triggerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e2e8f0;
+}
+
+.name {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 500;
+  color: var(--color-text, #0f172a);
+}
+
+.relationTag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--color-bg-subtle, #f1f5f9);
+  color: var(--color-text-secondary, #64748b);
+  text-transform: capitalize;
+}
+
+.chevron {
+  color: var(--color-text-secondary, #64748b);
+  transition: transform 0.2s ease;
+}
+
+.chevronRotated {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12), 0 6px 12px -4px rgba(15, 23, 42, 0.08);
+  z-index: 50;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.memberOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s;
+  text-align: left;
+}
+
+.memberOption:hover {
+  background: #f1f5f9;
+}
+
+.memberOptionActive {
+  background: #eff6ff !important;
+}
+
+.optionLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.optionAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e2e8f0;
+}
+
+.optionName {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  color: var(--color-text, #0f172a);
+}
+
+.optionMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.optionCheck {
+  color: var(--color-primary, #034EA2);
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border, #e2e8f0);
+  margin: 4px 6px;
+}
+
+.addPatientBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--color-primary, #034EA2);
+  background: rgba(3, 78, 162, 0.04);
+  color: var(--color-primary, #034EA2);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.addPatientBtn:hover {
+  background: rgba(3, 78, 162, 0.1);
+  border-color: var(--color-primary-dark, #023874);
+}
+
+/* ─── ADD PATIENT MODAL ────────────────────────────────────────── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modalCard {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTitle {
+  font-size: var(--font-size-lg, 18px);
+  font-weight: 700;
+  color: var(--color-text, #0f172a);
+  margin: 0;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary, #64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.closeBtn:hover {
+  background: #f1f5f9;
+  color: var(--color-text, #0f172a);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #0f172a);
+}
+
+.formInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--color-text, #0f172a);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.formInput:focus {
+  border-color: var(--color-primary, #034EA2);
+}
+
+.pillRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pillBtn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  color: var(--color-text-secondary, #64748b);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pillBtnActive {
+  background: var(--color-primary-light, #e0efff);
+  border-color: var(--color-primary, #034EA2);
+  color: var(--color-primary, #034EA2);
+  font-weight: 600;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btnCancel {
+  padding: 10px 18px;
+  border-radius: 100px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: transparent;
+  color: var(--color-text-secondary, #64748b);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnSave {
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: none;
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btnSave:hover {
+  background: var(--color-primary-dark, #023874);
+}
+
+.btnSave:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

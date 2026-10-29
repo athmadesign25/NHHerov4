@@ -1,0 +1,98 @@
+.track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--consultation-track, #f1f5f9);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 4px;
+}
+
+.option {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-family);
+  outline: none;
+}
+
+.option:hover:not(.optionActive) {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ─── ACTIVE PILL (animated behind text) ─────────────────────────────────── */
+.activePill {
+  position: absolute;
+  inset: 0;
+  background: var(--consultation-pill, #ffffff);
+  border: none;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  z-index: 0;
+}
+
+/* ─── CONTENT ────────────────────────────────────────────────────────────── */
+.optionContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionLabel {
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  color: var(--consultation-muted, #475569);
+  white-space: nowrap;
+  transition: color var(--transition-fast), font-weight var(--transition-fast);
+}
+
+.option:hover:not(.optionActive) .optionLabel {
+  color: var(--consultation-text, #0f172a);
+}
+
+.optionHospitalActive .optionLabel {
+  font-weight: 700;
+  color: var(--consultation-hospital, #dc2626);
+}
+
+.optionVideoActive .optionLabel {
+  font-weight: 700;
+  color: var(--consultation-video, #034ea2);
+}
+
+.optionIcon {
+  opacity: 0.65;
+  filter: var(--consultation-icon, grayscale(1) brightness(0.2));
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+}
+
+.optionIconActive {
+  opacity: 1;
+  filter: none;
+}
+
+/* ─── MOBILE ─────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .option {
+    padding: 9px 14px;
+  }
+
+  .optionLabel {
+    font-size: var(--font-size-xs, 12px);
+  }
+}
