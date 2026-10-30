@@ -237,22 +237,12 @@
 }
 
 
-/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (HORIZONTAL WHITE FADE FROM RIGHT TO LEFT) ─── */
+/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SOLID WHITE READING SHEET) ─── */
 .readingExperienceWrapper {
   position: relative;
   width: 100%;
   z-index: 1;
-  background: linear-gradient(
-    to left,
-    #ffffff 0%,
-    #ffffff 42%,
-    rgba(255, 255, 255, 0.96) 58%,
-    rgba(255, 255, 255, 0.82) 75%,
-    rgba(255, 255, 255, 0.42) 90%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: #ffffff;
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
@@ -462,10 +452,8 @@
   flex-direction: column;
   gap: 6px;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
 }
 
