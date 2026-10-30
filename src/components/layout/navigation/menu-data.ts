@@ -12,7 +12,7 @@ export const OTHER_MENU_GROUPS = {
     { label: "Symptoms Guide", href: "/symptoms" },
     { label: "Diseases & Conditions", href: "/diseases" },
     { label: "Diagnostics & Lab Tests", href: "/diagnostics" },
-    { label: "Health Articles", href: "/health-library" },
+    { label: "Health Articles & Blog", href: "/articles" },
     { label: "Patient Stories", href: "/#patient-stories" },
     { label: "Health Videos", href: "/health-library/videos" },
   ] }],

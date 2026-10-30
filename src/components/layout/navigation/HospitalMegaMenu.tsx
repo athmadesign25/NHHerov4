@@ -88,7 +88,7 @@ export default function HospitalMegaMenu({ onNavigate }: { onNavigate: () => voi
           })}
         </div>)}
       </div>
-      <Link className={`${styles.textButton} ${styles.viewAll}`} href="https://www.narayanahealth.org/hospitals-clinics" onClick={onNavigate}>View All Hospitals & Clinics</Link>
+      <Link className={`${styles.textButton} ${styles.viewAll}`} href="/hospitals" onClick={onNavigate}>View All Hospitals & Clinics</Link>
     </div>
   );
 }
