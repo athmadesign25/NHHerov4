@@ -576,7 +576,7 @@ export function getSymptomDetailData(slug: string): SymptomDetailData {
       desc: `Comprehensive evidence-based testing to rapidly establish a precise diagnosis and rule out critical complications.`,
     })),
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 4),
+    hospitals: HOSPITALS_DATA.slice(0, 3),
     faqs: [
       {
         q: `How quickly should I seek medical help for ${match.shortTitle.toLowerCase()}?`,

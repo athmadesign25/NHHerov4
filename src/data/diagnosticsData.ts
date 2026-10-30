@@ -490,7 +490,7 @@ export function getDiagnosticDetailData(slug: string): DiagnosticDetailData {
     preparationInstructions: match.preparationInstructions,
     testProcedure: match.testProcedure,
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 4),
+    hospitals: HOSPITALS_DATA.slice(0, 3),
     faqs: [
       {
         q: `Do I need a doctor's prescription to undergo a ${match.shortTitle.toLowerCase()}?`,

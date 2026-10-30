@@ -612,7 +612,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                     key={hosp.id || i}
                     hosp={hosp}
                     cardIndex={i}
-                    className={carouselStyles.cardGrid}
+                    className={carouselStyles.cardCompact}
                   />
                 ))}
               </div>

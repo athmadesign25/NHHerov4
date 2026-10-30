@@ -242,11 +242,11 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   Your physician or consultant may order a {detail.shortTitle} for screening, diagnosis, or post-treatment monitoring:
                 </p>
-                <div className={styles.checklistContainer}>
+                <div className={styles.symptomsChecklist}>
                   {detail.whyItIsDone.map((reason, idx) => (
-                    <div key={idx} className={styles.checklistItem}>
-                      <CheckCircle2 size={16} className={styles.checkIcon} />
-                      <span className={styles.checkText}>{reason}</span>
+                    <div key={idx} className={styles.symptomCheckRow}>
+                      <CheckCircle2 size={18} className={styles.symptomCheckIcon} />
+                      <span className={styles.symptomCheckText}>{reason}</span>
                     </div>
                   ))}
                 </div>
@@ -258,14 +258,15 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   Following standard preparation protocols ensures high diagnostic accuracy and avoids test rescheduling:
                 </p>
-                <div className={styles.cardsStack}>
+                <div className={styles.protocolsList}>
                   {detail.preparationInstructions.map((prep, idx) => (
-                    <div key={idx} className={styles.causeCard}>
-                      <div className={styles.causeCardHeader}>
-                        <h3 className={styles.causeTitle}>Guideline 0{idx + 1}</h3>
-                        <span className={styles.causeTag}>Mandatory Protocol</span>
+                    <div key={idx} className={styles.protocolRow}>
+                      <span className={styles.protocolNum}>{String(idx + 1).padStart(2, "0")}</span>
+                      <div className={styles.protocolContent}>
+                        <p className={styles.protocolDesc} style={{ color: "#1E293B", fontWeight: 500 }}>
+                          {prep}
+                        </p>
                       </div>
-                      <p className={styles.causeDesc}>{prep}</p>
                     </div>
                   ))}
                 </div>
@@ -277,11 +278,9 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   What to expect during your test appointment at Narayana Health diagnostics centers:
                 </p>
-                <div className={styles.causeCard} style={{ borderColor: "rgba(3, 78, 162, 0.3)" }}>
-                  <p className={styles.leadParagraph} style={{ margin: 0 }}>
-                    {detail.testProcedure}
-                  </p>
-                </div>
+                <p className={styles.leadParagraph} style={{ marginTop: 12 }}>
+                  {detail.testProcedure}
+                </p>
               </section>
 
               {/* SECTION: Accredited Centers */}
@@ -293,7 +292,7 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
                 <div className={styles.hospitalsGrid}>
                   {detail.hospitals.map((hosp, idx) => (
                     <div key={idx} className={styles.hospitalCardWrap}>
-                      <HospitalCard hosp={hosp} />
+                      <HospitalCard hosp={hosp} className={carouselStyles.cardCompact} />
                     </div>
                   ))}
                 </div>
@@ -307,27 +306,38 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
                 </p>
                 <div className={styles.doctorsGrid}>
                   {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.doctorCard}>
-                      <div className={styles.docAvatarWrap}>
-                        <Image
-                          src={doc.image}
-                          alt={doc.name}
-                          fill
-                          sizes="80px"
-                          className={styles.docAvatar}
-                        />
-                      </div>
-                      <div className={styles.docInfo}>
-                        <h3 className={styles.docName}>{doc.name}</h3>
-                        <p className={styles.docDesig}>{doc.designation}</p>
-                        <p className={styles.docExp}>{doc.experience} Experience &bull; {doc.hospital}</p>
-                        <Link 
-                          href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
-                          className={styles.docBookBtn}
-                        >
-                          <span>Consult Doctor</span>
-                          <ArrowUpRight size={12} />
-                        </Link>
+                    <div key={idx} className={styles.refDoctorCard}>
+                      <Image
+                        src={doc.image}
+                        alt={doc.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        className={styles.refDocFullImage}
+                      />
+                      <div className={styles.refDocFullGradient} />
+                      <div className={styles.refDocOverlayContent}>
+                        <div className={styles.refDocBottomFlex}>
+                          <div className={styles.refDocTextCol}>
+                            <h3 className={styles.refDocName} title={doc.name}>
+                              {doc.name}
+                            </h3>
+                            <div className={styles.refDocSpecialty}>
+                              {doc.speciality || detail.speciality}
+                            </div>
+                            <div className={styles.refDocExpRow}>
+                              <span>{doc.experience}</span>
+                            </div>
+                            <div className={styles.refDocHospital} title={doc.hospital}>
+                              {doc.hospital}
+                            </div>
+                          </div>
+                          <Link 
+                            href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
+                            className={styles.refBookBtnWhite}
+                          >
+                            Consult
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}

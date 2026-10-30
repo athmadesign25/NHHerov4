@@ -1166,15 +1166,20 @@
 /* ─── EQUIPPED SURGICAL CENTRES & CLINICS (MATCHING SPECIALITY HOSPITAL CARDS) ─── */
 .clinicalHospitalsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
   margin-top: 20px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 960px) {
+  .clinicalHospitalsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
   .clinicalHospitalsGrid {
     grid-template-columns: 1fr;
-    gap: 16px;
   }
 }
 

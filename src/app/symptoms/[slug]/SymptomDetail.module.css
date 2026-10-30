@@ -1731,18 +1731,226 @@
 
 .hospitalsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 960px) {
+  .hospitalsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
   .hospitalsGrid {
     grid-template-columns: 1fr;
   }
 }
 
 .hospitalCardWrap {
-  min-height: 240px;
+  width: 100%;
+}
+
+/* ─── NATURAL READING STYLES (UNBOXED EDITORIAL FLOW) ─────────────────── */
+.symptomsChecklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.symptomCheckRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.symptomCheckIcon {
+  color: #059669;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.symptomCheckText {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1E293B;
+  font-weight: 500;
+}
+
+.clinicalReadingList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.clinicalReadingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.clinicalReadingItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.clinicalItemTitle {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.clinicalItemDesc {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #334155;
+  margin: 0;
+}
+
+.protocolsList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.protocolRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.protocolRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.protocolNum {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 13px;
+  font-weight: 800;
+  color: #034EA2;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  padding: 4px 10px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.protocolContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.protocolTitle {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.protocolDesc {
+  font-family: var(--font-inter, "Inter", -apple-system, sans-serif);
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #334155;
+  margin: 0;
+}
+
+.treatmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.treatmentReadingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.treatmentReadingItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ─── FIXED DOCK (OUT OF DOCUMENT FLOW - PREVENTS TRANSPARENT GAP) ───────── */
+.floatingCtaDock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  padding: 12px 24px;
+}
+
+.dockInner {
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dockText {
+  display: flex;
+  flex-direction: column;
+}
+
+.dockTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.dockSub {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.dockActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #034EA2;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+
+.dockActionBtn:hover {
+  background: #023D80;
 }
 
 /* FAQ Accordion Styling for Solid White Sheet */

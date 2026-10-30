@@ -263,14 +263,11 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   A symptom can result from localized organ distress or complex systemic conditions. Our consultants systematically differentiate between benign triggers and conditions requiring medical or surgical intervention:
                 </p>
-                <div className={styles.cardsStack}>
+                <div className={styles.clinicalReadingList}>
                   {detail.causes.map((cause, idx) => (
-                    <div key={idx} className={styles.causeCard}>
-                      <div className={styles.causeCardHeader}>
-                        <h3 className={styles.causeTitle}>{cause.name}</h3>
-                        <span className={styles.causeTag}>{cause.type}</span>
-                      </div>
-                      <p className={styles.causeDesc}>{cause.desc}</p>
+                    <div key={idx} className={styles.clinicalReadingItem}>
+                      <h3 className={styles.clinicalItemTitle}>{cause.name}</h3>
+                      <p className={styles.clinicalItemDesc}>{cause.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -282,11 +279,11 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   Even in the absence of acute emergency red flags, early specialist consultation prevents disease progression. Schedule an outpatient appointment if:
                 </p>
-                <div className={styles.checklistContainer}>
+                <div className={styles.symptomsChecklist}>
                   {detail.whenToSeekCare.map((item, idx) => (
-                    <div key={idx} className={styles.checklistItem}>
-                      <CheckCircle2 size={16} className={styles.checkIcon} />
-                      <span className={styles.checkText}>{item}</span>
+                    <div key={idx} className={styles.symptomCheckRow}>
+                      <CheckCircle2 size={18} className={styles.symptomCheckIcon} />
+                      <span className={styles.symptomCheckText}>{item}</span>
                     </div>
                   ))}
                 </div>
@@ -298,13 +295,13 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <p className={styles.sectionLeadText}>
                   At Narayana Health, precision diagnostics rapidly differentiate etiologies to establish targeted treatment plans without unnecessary delays:
                 </p>
-                <div className={styles.stepsTimeline}>
+                <div className={styles.protocolsList}>
                   {detail.diagnosticPath.map((step, idx) => (
-                    <div key={idx} className={styles.stepCard}>
-                      <div className={styles.stepBadge}>{step.step}</div>
-                      <div className={styles.stepContent}>
-                        <h3 className={styles.stepTitle}>{step.title}</h3>
-                        <p className={styles.stepDesc}>{step.desc}</p>
+                    <div key={idx} className={styles.protocolRow}>
+                      <span className={styles.protocolNum}>{String(idx + 1).padStart(2, "0")}</span>
+                      <div className={styles.protocolContent}>
+                        <h3 className={styles.protocolTitle}>{step.title}</h3>
+                        <p className={styles.protocolDesc}>{step.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -319,27 +316,38 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 </p>
                 <div className={styles.doctorsGrid}>
                   {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.doctorCard}>
-                      <div className={styles.docAvatarWrap}>
-                        <Image
-                          src={doc.image}
-                          alt={doc.name}
-                          fill
-                          sizes="80px"
-                          className={styles.docAvatar}
-                        />
-                      </div>
-                      <div className={styles.docInfo}>
-                        <h3 className={styles.docName}>{doc.name}</h3>
-                        <p className={styles.docDesig}>{doc.designation}</p>
-                        <p className={styles.docExp}>{doc.experience} Experience &bull; {doc.hospital}</p>
-                        <Link 
-                          href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
-                          className={styles.docBookBtn}
-                        >
-                          <span>Book Consultation</span>
-                          <ArrowUpRight size={12} />
-                        </Link>
+                    <div key={idx} className={styles.refDoctorCard}>
+                      <Image
+                        src={doc.image}
+                        alt={doc.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        className={styles.refDocFullImage}
+                      />
+                      <div className={styles.refDocFullGradient} />
+                      <div className={styles.refDocOverlayContent}>
+                        <div className={styles.refDocBottomFlex}>
+                          <div className={styles.refDocTextCol}>
+                            <h3 className={styles.refDocName} title={doc.name}>
+                              {doc.name}
+                            </h3>
+                            <div className={styles.refDocSpecialty}>
+                              {doc.speciality || detail.speciality}
+                            </div>
+                            <div className={styles.refDocExpRow}>
+                              <span>{doc.experience}</span>
+                            </div>
+                            <div className={styles.refDocHospital} title={doc.hospital}>
+                              {doc.hospital}
+                            </div>
+                          </div>
+                          <Link 
+                            href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
+                            className={styles.refBookBtnWhite}
+                          >
+                            Book
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -393,7 +401,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <div className={styles.hospitalsGrid}>
                   {detail.hospitals.map((hosp, idx) => (
                     <div key={idx} className={styles.hospitalCardWrap}>
-                      <HospitalCard hosp={hosp} />
+                      <HospitalCard hosp={hosp} className={carouselStyles.cardCompact} />
                     </div>
                   ))}
                 </div>

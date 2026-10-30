@@ -351,7 +351,7 @@ export function getDiseaseDetailData(slug: string): DiseaseDetailData {
       type: idx === 0 ? "First-Line Intervention" : "Advanced Modality",
     })),
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 4),
+    hospitals: HOSPITALS_DATA.slice(0, 3),
     faqs: [
       {
         q: `What are the earliest signs of ${match.shortTitle.toLowerCase()}?`,
