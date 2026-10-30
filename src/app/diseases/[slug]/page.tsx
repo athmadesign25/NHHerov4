@@ -22,6 +22,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getDiseaseDetailData, DiseaseDetailData } from "@/data/diseasesData";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import styles from "./DiseaseDetail.module.css";
 
 interface PageProps {
@@ -407,32 +408,14 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         </main>
       </div>
 
-      {/* Floating CTA Dock on Scroll */}
-      <AnimatePresence>
-        {isScrolled && (
-          <motion.div
-            className={styles.floatingCtaDock}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className={styles.dockInner}>
-              <div className={styles.dockText}>
-                <span className={styles.dockTitle}>{detail.shortTitle}</span>
-                <span className={styles.dockSub}>Multidisciplinary Care &amp; Consultation</span>
-              </div>
-              <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
-                className={styles.dockActionBtn}
-              >
-                <Calendar size={14} />
-                <span>Book Appointment</span>
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
+      <ClinicalFloatingSideActions
+        consultHref={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
+        consultLabel={"Book\nConsultation"}
+        conditionTitle={detail.shortTitle}
+        pulseQuery={`I want to know about ${detail.heroTitle}: clinical guidance, diagnosis, and treatment options.`}
+        isScrolled={isScrolled}
+      />
     </div>
   );
 }

@@ -1,0 +1,156 @@
+/* ─── CLINICAL FLOATING SIDE ACTIONS (FAB GROUP ON RIGHT MID-HEIGHT) ───────── */
+.floatingSideBoxes {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(3, 78, 162, 0.14);
+  border-radius: 20px;
+  box-shadow: 
+    0 16px 40px rgba(3, 78, 162, 0.14),
+    0 4px 12px rgba(15, 23, 42, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  transform-origin: center right;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.floatingSideBoxes:hover {
+  box-shadow: 
+    0 22px 48px rgba(3, 78, 162, 0.20),
+    0 6px 16px rgba(15, 23, 42, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
+}
+
+.floatingBoxItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 6px;
+  width: 78px;
+  border-radius: 14px;
+  color: #1a1a2e;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.floatingBoxItem:hover {
+  background: rgba(3, 78, 162, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Unified Cohesive Icon Squircle Tile for ALL 3 buttons */
+.boxIconWrap {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+  color: #ffffff;
+  box-shadow: 
+    0 4px 14px rgba(3, 78, 162, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.floatingBoxItem:hover .boxIconWrap {
+  transform: scale(1.08);
+  box-shadow: 
+    0 6px 18px rgba(3, 78, 162, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+/* Contact Support and Pulse inherit the same cohesive royal styling */
+.boxIconSupport {
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+}
+
+.boxIconPulse {
+  background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+}
+
+/* Live Pulse Lottie Animation Frame */
+.pulseLottieBox {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.boxDivider {
+  width: 44px;
+  height: 1px;
+  background: rgba(3, 78, 162, 0.08);
+  margin: 1px 0;
+}
+
+.boxLabel {
+  font-family: var(--font-inter, "Inter"), sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #334155;
+  text-align: center;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.floatingBoxItem:hover .boxLabel {
+  color: #034EA2;
+}
+
+/* Tablet & Mobile adjustments */
+@media (max-width: 900px) {
+  .floatingSideBoxes {
+    right: 8px;
+    padding: 6px 4px;
+  }
+  .floatingBoxItem {
+    width: 68px;
+    padding: 6px 4px;
+  }
+  .boxIconWrap {
+    width: 38px;
+    height: 38px;
+  }
+  .pulseLottieBox {
+    width: 28px;
+    height: 28px;
+  }
+  .boxLabel {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .floatingSideBoxes {
+    right: 8px;
+    top: auto;
+    bottom: 24px;
+    transform: none !important;
+    flex-direction: column;
+    padding: 6px 4px;
+  }
+}

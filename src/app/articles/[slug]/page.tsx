@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getArticleDetailData, ArticleDetailData } from "@/data/articlesDirectoryData";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -386,45 +387,13 @@ export default function ArticleDetailPage({ params }: PageProps) {
         </main>
       </div>
 
-      {/* ─── FLOATING ACTION BOXES (STICKY QUICK ACCESS) ──────────────────── */}
-      <div className={styles.floatingSideBoxes} aria-label="Quick Actions">
-        <Link 
-          href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
-          className={styles.floatingBoxItem}
-          title="Book Doctor Appointment"
-        >
-          <div className={styles.boxIconWrap}>
-            <Calendar size={18} />
-          </div>
-          <span className={styles.boxLabel}>Book OPD</span>
-        </Link>
-
-        <div className={styles.boxDivider} />
-
-        <Link 
-          href="/doctors"
-          className={styles.floatingBoxItem}
-          title="Video Consultation"
-        >
-          <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
-            <Video size={18} />
-          </div>
-          <span className={styles.boxLabel}>Video Call</span>
-        </Link>
-
-        <div className={styles.boxDivider} />
-
-        <a 
-          href="tel:08067506800"
-          className={styles.floatingBoxItem}
-          title="Emergency 24x7 Helpline"
-        >
-          <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
-            <HeartPulse size={18} />
-          </div>
-          <span className={styles.boxLabel}>Emergency</span>
-        </a>
-      </div>
+      {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
+      <ClinicalFloatingSideActions
+        consultHref={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
+        consultLabel={"Book\nOPD"}
+        conditionTitle={detail.title}
+        pulseQuery={`I want to learn more about "${detail.title}": clinical advice, diagnosis, and treatment options.`}
+      />
     </div>
   );
 }

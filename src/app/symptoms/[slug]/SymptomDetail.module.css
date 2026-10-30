@@ -1895,63 +1895,7 @@
   padding-bottom: 0;
 }
 
-/* ─── FIXED DOCK (OUT OF DOCUMENT FLOW - PREVENTS TRANSPARENT GAP) ───────── */
-.floatingCtaDock {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(15, 23, 42, 0.1);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-  padding: 12px 24px;
-}
 
-.dockInner {
-  max-width: var(--max-width, 1240px);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.dockText {
-  display: flex;
-  flex-direction: column;
-}
-
-.dockTitle {
-  font-size: 15px;
-  font-weight: 700;
-  color: #0F172A;
-}
-
-.dockSub {
-  font-size: 12px;
-  color: #64748B;
-}
-
-.dockActionBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: #034EA2;
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.18s ease;
-}
-
-.dockActionBtn:hover {
-  background: #023D80;
-}
 
 /* FAQ Accordion Styling for Solid White Sheet */
 .faqAccordion {

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirectoryData";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import styles from "./HospitalDetail.module.css";
 
 interface PageProps {
@@ -367,32 +368,14 @@ export default function HospitalDetailPage({ params }: PageProps) {
         </main>
       </div>
 
-      {/* Floating CTA Dock on Scroll */}
-      <AnimatePresence>
-        {isScrolled && (
-          <motion.div
-            className={styles.floatingCtaDock}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className={styles.dockInner}>
-              <div className={styles.dockText}>
-                <span className={styles.dockTitle}>{detail.name}</span>
-                <span className={styles.dockSub}>24×7 Emergency &bull; {detail.city}</span>
-              </div>
-              <Link 
-                href={`/doctors?location=${encodeURIComponent(detail.city)}`} 
-                className={styles.dockActionBtn}
-              >
-                <Calendar size={14} />
-                <span>Book OPD Now</span>
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
+      <ClinicalFloatingSideActions
+        consultHref={`/doctors?location=${encodeURIComponent(detail.city)}`}
+        consultLabel={"Book\nOPD Now"}
+        conditionTitle={detail.name}
+        pulseQuery={`I want to know about facilities, specialists, and appointments at ${detail.name}, ${detail.city}.`}
+        isScrolled={isScrolled}
+      />
     </div>
   );
 }
