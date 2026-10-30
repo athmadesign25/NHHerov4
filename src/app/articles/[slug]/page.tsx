@@ -3,22 +3,17 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   BookOpen,
   CheckCircle2, 
   Link as LinkIcon, 
   ArrowUpRight, 
   Calendar, 
-  Clock, 
   Check,
   UserCheck,
   Share2,
-  BookmarkCheck,
-  Sparkles,
-  PhoneCall,
   Video,
-  ShieldCheck,
   HeartPulse
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -35,12 +30,10 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      setIsScrolled(scrollPos > 320);
 
       const sections = detail.toc.map((item) => document.getElementById(item.id)).filter(Boolean);
       const scrollPosition = scrollPos + 220;
@@ -107,7 +100,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
             </div>
 
             <div className={styles.heroEyebrow}>
-              {detail.category} &bull; {detail.publishedDate} &bull; {detail.readTime}
+              {detail.category}
             </div>
 
             <h1 className={styles.heroMainTitle}>
@@ -118,7 +111,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
               {detail.summary}
             </p>
 
-            {/* Author Attribution pill */}
+            {/* Author Attribution */}
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px", marginBottom: "20px" }}>
               <div style={{ position: "relative", width: "42px", height: "42px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.4)" }}>
                 <Image
@@ -152,7 +145,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left" }}
               >
                 <Share2 size={14} className={styles.phoneIcon} />
-                <span>{copyToast ? "Link Copied!" : "Share this Clinical Article"}</span>
+                <span>{copyToast ? "Link Copied!" : "Share Article"}</span>
               </button>
             </div>
           </div>
@@ -252,88 +245,69 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* SECTION: Overview */}
+              {/* SECTION: Overview (Clean, unrepetitive text) */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Overview &amp; Clinical Background</h2>
-                <p className={styles.leadParagraph}>{detail.overview}</p>
-                
-                <div className={styles.quickFactsGrid}>
-                  <div className={styles.factCard}>
-                    <span className={styles.factCardLabel}>Speciality Domain</span>
-                    <span className={styles.factCardVal}>{detail.category}</span>
-                  </div>
-                  <div className={styles.factCard}>
-                    <span className={styles.factCardLabel}>Lead Specialist</span>
-                    <span className={styles.factCardVal}>{detail.author}</span>
-                  </div>
-                  <div className={styles.factCard}>
-                    <span className={styles.factCardLabel}>Reading Duration</span>
-                    <span className={styles.factCardVal}>{detail.readTime}</span>
-                  </div>
-                </div>
+                <p className={styles.editorialLeadParagraph}>{detail.overview}</p>
               </section>
 
-              {/* SECTION: Key Takeaways */}
+              {/* SECTION: Key Takeaways (Clean cohesive checklist box) */}
               <section id="key-takeaways" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Doctor&apos;s Key Takeaways</h2>
                 <p className={styles.sectionLeadText}>
                   Essential medical advice summarized by our clinical panel for everyday health management:
                 </p>
-                <div className={styles.checklistContainer}>
+                <div className={styles.takeawaysBox}>
                   {detail.keyTakeaways.map((point, idx) => (
-                    <div key={idx} className={styles.checklistItem}>
-                      <CheckCircle2 size={16} className={styles.checkIcon} />
-                      <span className={styles.checkText}><strong>{point}</strong></span>
+                    <div key={idx} className={styles.takeawayItem}>
+                      <CheckCircle2 size={18} className={styles.takeawayIcon} />
+                      <span className={styles.takeawayText}>{point}</span>
                     </div>
                   ))}
                 </div>
               </section>
 
-              {/* SECTION: In-Depth Sections */}
+              {/* SECTION: In-Depth Sections (Natural reading typography - NO boxed card borders or shadows) */}
               {detail.sections.map((sec, idx) => (
                 <section key={idx} id={`section-${idx + 1}`} className={styles.contentSection}>
                   <h2 className={styles.sectionHeading}>{sec.heading}</h2>
-                  <div className={styles.causeCard} style={{ background: "#FFFFFF", padding: "24px" }}>
-                    <p className={styles.causeDesc} style={{ fontSize: "15px", lineHeight: "1.75", color: "#334155" }}>
-                      {sec.body}
-                    </p>
-                  </div>
+                  <p className={styles.editorialBodyParagraph}>
+                    {sec.body}
+                  </p>
                 </section>
               ))}
 
               {/* SECTION: Author Review Board Callout */}
               <section className={styles.contentSection}>
-                <div className={styles.stepCard} style={{ background: "#F8FAFC", border: "1px solid #E2E8F0" }}>
-                  <div style={{ position: "relative", width: "64px", height: "64px", borderRadius: "50%", overflow: "hidden", flexShrink: 0, border: "2px solid #034EA2" }}>
+                <div className={styles.authorEditorialCard}>
+                  <div className={styles.authorAvatarWrap}>
                     <Image
                       src={detail.authorAvatar}
                       alt={detail.author}
                       fill
-                      sizes="64px"
-                      style={{ objectFit: "cover" }}
+                      sizes="58px"
+                      className={styles.authorAvatarImg}
                     />
                   </div>
-                  <div className={styles.stepContent}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                      <UserCheck size={16} style={{ color: "#034EA2" }} />
-                      <span style={{ fontSize: "12px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#034EA2" }}>
+                  <div className={styles.authorInfoCol}>
+                    <div className={styles.authorBadgeRow}>
+                      <UserCheck size={14} className={styles.authorCheckIcon} />
+                      <span className={styles.authorBadgeText}>
                         Reviewed by Narayana Medical Board
                       </span>
                     </div>
-                    <h3 className={styles.stepTitle} style={{ fontSize: "17px", margin: "0 0 4px 0" }}>
-                      {detail.author}
-                    </h3>
-                    <p style={{ fontSize: "13px", color: "#64748B", margin: "0 0 8px 0" }}>
+                    <h3 className={styles.authorName}>{detail.author}</h3>
+                    <p className={styles.authorRoleText}>
                       {detail.authorRole} &bull; Narayana Health
                     </p>
-                    <p className={styles.stepDesc} style={{ fontSize: "13.5px" }}>
+                    <p className={styles.authorEditorialNote}>
                       This content is reviewed periodically by certified physicians to reflect recent clinical trial data, ICMR protocols, and WHO healthcare benchmarks.
                     </p>
                   </div>
                 </div>
               </section>
 
-              {/* SECTION: Consult Specialists */}
+              {/* SECTION: Consult Specialists (Standard site refDoctorCard format) */}
               <section id="specialists" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Consult Leading {detail.category} Specialists</h2>
                 <p className={styles.sectionLeadText}>
@@ -341,26 +315,39 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 </p>
                 <div className={styles.doctorsGrid}>
                   {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.doctorCard}>
-                      <div className={styles.docAvatarWrap}>
-                        <Image
-                          src={doc.image}
-                          alt={doc.name}
-                          fill
-                          sizes="72px"
-                          className={styles.docAvatar}
-                        />
-                      </div>
-                      <div className={styles.docInfo}>
-                        <h4 className={styles.docName}>{doc.name}</h4>
-                        <span className={styles.docDesig}>{doc.designation}</span>
-                        <span className={styles.docExp}>{doc.experience} &bull; {doc.hospital}</span>
-                        <Link 
-                          href={`/doctors?search=${encodeURIComponent(doc.name)}`} 
-                          className={styles.docBookBtn}
-                        >
-                          Book Appointment &rarr;
-                        </Link>
+                    <div key={idx} className={styles.refDoctorCard}>
+                      <Image
+                        src={doc.image}
+                        alt={doc.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        className={styles.refDocFullImage}
+                      />
+                      <div className={styles.refDocFullGradient} />
+                      <div className={styles.refDocOverlayContent}>
+                        <div className={styles.refDocBottomFlex}>
+                          <div className={styles.refDocTextCol}>
+                            <h3 className={styles.refDocName} title={doc.name}>
+                              {doc.name}
+                            </h3>
+                            <div className={styles.refDocSpecialty}>
+                              {doc.speciality}
+                            </div>
+                            <div className={styles.refDocExpRow}>
+                              <span>{doc.experience}</span>
+                            </div>
+                            <div className={styles.refDocHospital} title={doc.hospital}>
+                              {doc.hospital}
+                            </div>
+                          </div>
+
+                          <Link 
+                            href={`/doctors?search=${encodeURIComponent(doc.name)}`} 
+                            className={styles.refBookBtnWhite}
+                          >
+                            Book
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}

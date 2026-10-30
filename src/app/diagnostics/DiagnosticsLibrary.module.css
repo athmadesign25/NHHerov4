@@ -18,6 +18,7 @@
   background-color: #060e1b;
   color: #ffffff;
   position: relative;
+  padding-bottom: 72px;
 }
 
 
@@ -1139,7 +1140,7 @@
 /* ─── BOTTOM TRUST HIGHLIGHT BANNER (INTEGRATED GRADIENT CANVAS) ─────────── */
 .trustBanner {
   margin-top: 48px;
-  margin-bottom: 72px;
+  margin-bottom: 0;
   background: #07152b;
   border-radius: 20px;
   color: #ffffff;
