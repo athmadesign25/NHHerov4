@@ -1269,171 +1269,193 @@
   transform: translateY(-2px);
 }
 
-@media (max-width: 900px) {
-  .trustBanner {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .trustImageBg {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    order: 2;
-  }
-
-  .trustGradientOverlay {
-    background: linear-gradient(0deg, #07152b 0%, rgba(7, 21, 43, 0.2) 60%, transparent 100%);
-  }
-
-  .trustContent {
-    order: 1;
-    padding: 32px 24px 20px;
-    max-width: 100%;
-  }
-}
-
-/* ─── MWEB (MOBILE <= 640PX) HIGH-DENSITY CARD LAYOUT: 3-4 CARDS VISIBLE ─── */
+/* ─── MWEB (MOBILE <= 640PX) IMMERSIVE SCRIM CARD: VISUAL EXCELLENCE ─────── */
 @media (max-width: 640px) {
   .procedureCard {
-    min-height: auto;
+    position: relative;
+    min-height: 200px;
     height: auto;
-    border-radius: 14px;
-    padding: 12px;
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 12px;
-    row-gap: 10px;
-    align-items: start;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    border-radius: 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.38);
+    background: #091322;
     transition: transform 0.2s ease, border-color 0.2s ease;
   }
 
   .procedureCard:hover {
-    transform: none; /* Avoid jank on touch devices */
+    transform: none; /* Avoid touch jank */
   }
 
   .cardImageWrap {
-    grid-column: 1;
-    grid-row: 1;
-    width: 80px;
-    height: 80px;
-    min-height: 80px;
-    border-radius: 10px;
-    overflow: hidden;
-    flex-shrink: 0;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: #091322;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    border-radius: 0;
+    border: none;
+    z-index: 0;
+    background: #060e1b;
   }
 
+  .cardBgImage {
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.85);
+  }
+
+  /* Multi-stop atmospheric dark gradient scrim covering the entire card for 100% legibility */
   .cardGradient {
-    display: none;
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      #060e1b 0%,
+      rgba(6, 14, 27, 0.94) 45%,
+      rgba(6, 14, 27, 0.55) 75%,
+      rgba(6, 14, 27, 0.22) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
   }
 
   .cardContent {
-    display: contents;
-    padding: 0;
+    position: relative;
+    z-index: 2;
+    padding: 16px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
   }
 
   .cardTextGroup {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
   }
 
   .cardEyebrow {
-    font-size: 9.5px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     letter-spacing: 0.08em;
-    margin-bottom: 2px;
-    color: rgba(255, 255, 255, 0.50);
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.65);
+    text-transform: uppercase;
   }
 
   .cardTitle {
-    font-size: 14px;
+    font-size: 15.5px;
     font-weight: 600;
-    line-height: 1.25;
-    margin: 0 0 3px 0;
+    line-height: 1.38;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+    margin: 0 0 5px 0;
     min-height: auto;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
   }
 
   .cardSub {
-    font-size: 11px;
-    line-height: 1.35;
-    color: rgba(255, 255, 255, 0.55);
-    margin: 0;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.68);
+    margin: 0 0 10px 0;
     min-height: auto;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
 
   .cardBottomSlot {
-    grid-column: 1 / -1;
-    grid-row: 2;
     margin: 0;
-    padding: 0;
-    min-height: 32px;
-    width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    height: auto;
+    min-height: 28px;
+    width: 100%;
   }
 
   .cardRestingMeta {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: auto;
+  }
+
+  .metaBadge {
+    height: 22px;
+    padding: 0 7px;
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
   }
 
   .cardActions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     gap: 8px;
-    width: 100%;
+    width: auto;
+    height: auto;
     opacity: 1;
     transform: none;
     pointer-events: auto;
     position: static;
   }
 
-  .cardDoctorBtn,
-  .cardDetailBtn {
-    height: 32px;
-    width: 100%;
-    padding: 0 8px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    flex: 1 1 0;
+  /* Eliminate blue button fatigue: hide secondary 'Find doctors' button in mobile card stream */
+  .cardDoctorBtn {
+    display: none;
   }
 
-  /* Entrance Skeletons high-density match */
+  .cardDetailBtn {
+    height: 26px;
+    width: auto;
+    padding: 0 10px;
+    font-size: 10.5px;
+    font-weight: 600;
+    border-radius: 9999px;
+    background: rgba(3, 78, 162, 0.85);
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
+  }
+
+  /* Entrance Skeletons match */
   .skeletonCard {
-    min-height: auto;
+    min-height: 200px;
     height: auto;
-    padding: 12px 14px;
-    border-radius: 14px;
+    padding: 16px;
+    border-radius: 16px;
   }
 
   .skeletonImageWrap {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    flex-shrink: 0;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
   }
 
   .skeletonContent {
+    position: relative;
+    z-index: 1;
     padding: 0;
     flex: 1;
   }
@@ -1441,6 +1463,176 @@
   .skeletonBadges {
     display: none;
   }
+}
+
+/* Aliases for filter sheet names across library templates */
+.filterSheetOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 18, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9998;
+  display: flex;
+  align-items: flex-end;
+}
+
+.filterSheetContent {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 82vh;
+  background: #091322;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.filterSheetHeader {
+  padding: 12px 20px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.filterSheetHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  margin: 0 auto 10px;
+}
+
+.filterSheetTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filterSheetTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.filterSheetCloseBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.filterSheetCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.filterSheetBody {
+  padding: 16px 20px;
+  overflow-y: auto;
+  max-height: calc(82vh - 140px);
+  -webkit-overflow-scrolling: touch;
+}
+
+.filterSheetGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.filterSheetItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.filterSheetItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filterSheetItemActive {
+  background: rgba(3, 78, 162, 0.35) !important;
+  border-color: #034EA2 !important;
+  box-shadow: 0 0 16px rgba(3, 78, 162, 0.4);
+}
+
+.filterSheetImgWrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #060e1b;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.filterSheetImg {
+  object-fit: cover;
+}
+
+.filterSheetLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  flex: 1;
+}
+
+.filterSheetFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #091322;
+}
+
+.filterSheetResetBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.filterSheetApplyBtn {
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 22px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterSheetApplyBtn:hover {
+  background: var(--color-primary-dark, #023070);
 }
 
 /* ─── MOBILE FILTER BOTTOM SHEET DRAWER ───────────────────────────────────── */

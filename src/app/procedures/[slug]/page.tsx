@@ -14,15 +14,14 @@ import {
   Calendar, 
   Activity, 
   Plus,
-  Minus
+  Minus,
+  Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
-import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
-import Lottie from "lottie-react";
-import pulseAnimation from "../../../../public/assets/pulse animation.json";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -39,7 +38,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [copyToast, setCopyToast] = useState(false);
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isPulseOpen, setIsPulseOpen] = useState(false);
 
   // Scroll listener for:
   // 1. Sticky active Table of Contents
@@ -71,6 +69,24 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       navigator.clipboard.writeText(window.location.href);
       setCopyToast(true);
       setTimeout(() => setCopyToast(false), 2500);
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: detail.title,
+          text: detail.leadParagraph,
+          url: window.location.href,
+        });
+      } catch {
+        // User dismissed
+      }
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyToast(true);
+      setTimeout(() => setCopyToast(false), 2400);
     }
   };
 
@@ -201,7 +217,10 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                               e.preventDefault();
                               const el = document.getElementById(item.id);
                               if (el) {
-                                el.scrollIntoView({ behavior: "smooth" });
+                                const isMobileView = typeof window !== "undefined" && window.innerWidth <= 960;
+                                const yOffset = isMobileView ? -112 : -88;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
                                 setActiveSection(item.id);
                               }
                             }}
@@ -215,6 +234,17 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   </ul>
                 </nav>
               </div>
+
+              {/* Mobile Persistent Share Pill inside sticky header */}
+              <button
+                type="button"
+                className={styles.mobileStickyShareBtn}
+                onClick={handleShare}
+                aria-label="Share this guide"
+              >
+                <Share2 size={13} />
+                <span>Share</span>
+              </button>
 
               {/* Share Widget with Twitter, LinkedIn, Facebook, Copy Link */}
               <div className={styles.shareWidgetBorderless}>
@@ -656,75 +686,14 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </main>
       </div>
 
-      {/* ─── FLOATING ACTION BOXES (FAB GROUP ON RIGHT MID-HEIGHT) ───────── */}
-      <AnimatePresence>
-        {isScrolled && (
-          <motion.div
-            className={styles.floatingSideBoxes}
-            initial={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
-            animate={{ opacity: 1, x: 0, y: "-50%", scale: 1 }}
-            exit={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
-            transition={{ type: "spring", stiffness: 380, damping: 28 }}
-            role="region"
-            aria-label="Quick clinical actions"
-          >
-            {/* Box 1: Book Consultation */}
-            <Link
-              href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
-              className={styles.floatingBoxItem}
-              title={`Book Consultation for ${detail.shortTitle}`}
-              aria-label="Book Consultation"
-            >
-              <div className={styles.boxIconWrap}>
-                <Calendar size={18} />
-              </div>
-              <span className={styles.boxLabel}>Book<br />Consultation</span>
-            </Link>
-
-            <div className={styles.boxDivider} aria-hidden="true" />
-
-            {/* Box 2: Contact Support */}
-            <a
-              href="tel:18003090309"
-              className={styles.floatingBoxItem}
-              title="Contact Support: 1800 309 0309"
-              aria-label="Contact Support"
-            >
-              <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
-                <PhoneCall size={17} />
-              </div>
-              <span className={styles.boxLabel}>Contact<br />Support</span>
-            </a>
-
-            <div className={styles.boxDivider} aria-hidden="true" />
-
-            {/* Box 3: Ask Pulse */}
-            <button
-              type="button"
-              className={styles.floatingBoxItem}
-              onClick={() => setIsPulseOpen(true)}
-              title={`Ask Pulse AI about ${detail.shortTitle}`}
-              aria-label="Ask Pulse AI"
-            >
-              <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
-                <div className={styles.pulseLottieBox}>
-                  <Lottie animationData={pulseAnimation} loop={true} />
-                </div>
-              </div>
-              <span className={styles.boxLabel}>Ask<br />Pulse</span>
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ─── PULSE AI OVERLAY ────────────────────────────────────────────── */}
-      {isPulseOpen && (
-        <PulseAIWorkspace
-          onClose={() => setIsPulseOpen(false)}
-          initialQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}
-          backLabel={`Back to ${detail.shortTitle}`}
-        />
-      )}
+      {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
+      <ClinicalFloatingSideActions
+        consultHref={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
+        consultLabel={"Book\nConsultation"}
+        conditionTitle={detail.shortTitle}
+        pulseQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}
+        isScrolled={isScrolled}
+      />
     </div>
   );
 }

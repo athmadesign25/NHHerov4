@@ -17,7 +17,8 @@ import {
   Check,
   MapPin,
   ShieldCheck,
-  Clock
+  Clock,
+  Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirectoryData";
@@ -64,6 +65,24 @@ export default function HospitalDetailPage({ params }: PageProps) {
       navigator.clipboard.writeText(window.location.href);
       setCopyToast(true);
       setTimeout(() => setCopyToast(false), 2500);
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: detail.name,
+          text: detail.leadParagraph,
+          url: window.location.href,
+        });
+      } catch {
+        // User dismissed
+      }
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyToast(true);
+      setTimeout(() => setCopyToast(false), 2400);
     }
   };
 
@@ -181,7 +200,10 @@ export default function HospitalDetailPage({ params }: PageProps) {
                               e.preventDefault();
                               const el = document.getElementById(item.id);
                               if (el) {
-                                el.scrollIntoView({ behavior: "smooth" });
+                                const isMobileView = typeof window !== "undefined" && window.innerWidth <= 960;
+                                const yOffset = isMobileView ? -112 : -88;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
                                 setActiveSection(item.id);
                               }
                             }}
@@ -195,6 +217,17 @@ export default function HospitalDetailPage({ params }: PageProps) {
                   </ul>
                 </nav>
               </div>
+
+              {/* Mobile Persistent Share Pill inside sticky header */}
+              <button
+                type="button"
+                className={styles.mobileStickyShareBtn}
+                onClick={handleShare}
+                aria-label="Share this hospital"
+              >
+                <Share2 size={13} />
+                <span>Share</span>
+              </button>
 
               {/* Share widget */}
               <div className={styles.shareWidgetBorderless}>

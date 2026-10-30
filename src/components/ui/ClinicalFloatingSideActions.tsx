@@ -28,6 +28,16 @@ export default function ClinicalFloatingSideActions({
 }: ClinicalFloatingSideActionsProps) {
   const [internalScrolled, setInternalScrolled] = useState(false);
   const [isPulseOpen, setIsPulseOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(typeof window !== "undefined" && window.innerWidth <= 640);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (propIsScrolled !== undefined) return;
@@ -43,11 +53,13 @@ export default function ClinicalFloatingSideActions({
   }, [propIsScrolled]);
 
   const showActions = propIsScrolled !== undefined ? propIsScrolled : internalScrolled;
-
   const defaultQuery = pulseQuery || `I want to know about ${conditionTitle}: clinical guidance, diagnosis, and treatment options.`;
 
-  // Render label with <br /> if newline is present
+  // Render label with <br /> if newline is present on desktop, inline on mobile
   const renderLabel = (text: string) => {
+    if (isMobile) {
+      return text.replace("\n", " ");
+    }
     const parts = text.split("\n");
     return (
       <>
@@ -67,9 +79,9 @@ export default function ClinicalFloatingSideActions({
         {showActions && (
           <motion.div
             className={styles.floatingSideBoxes}
-            initial={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
-            animate={{ opacity: 1, x: 0, y: "-50%", scale: 1 }}
-            exit={{ opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            initial={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
+            animate={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, x: 0, y: "-50%", scale: 1 }}
+            exit={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
             transition={{ type: "spring", stiffness: 380, damping: 28 }}
             role="region"
             aria-label="Quick clinical actions"
@@ -77,14 +89,16 @@ export default function ClinicalFloatingSideActions({
             {/* Box 1: Book / Find Consultation */}
             <Link
               href={consultHref}
-              className={styles.floatingBoxItem}
+              className={`${styles.floatingBoxItem} ${styles.floatingBoxPrimary}`}
               title={`${consultLabel.replace("\n", " ")} for ${conditionTitle}`}
               aria-label={consultLabel.replace("\n", " ")}
             >
               <div className={styles.boxIconWrap}>
                 <Calendar size={18} />
               </div>
-              <span className={styles.boxLabel}>{renderLabel(consultLabel)}</span>
+              <span className={styles.boxLabel}>
+                {isMobile ? "Book OPD" : renderLabel(consultLabel)}
+              </span>
             </Link>
 
             <div className={styles.boxDivider} aria-hidden="true" />
@@ -99,7 +113,9 @@ export default function ClinicalFloatingSideActions({
               <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
                 <PhoneCall size={17} />
               </div>
-              <span className={styles.boxLabel}>Contact<br />Support</span>
+              <span className={styles.boxLabel}>
+                {isMobile ? "Call 24×7" : <>Contact<br />Support</>}
+              </span>
             </a>
 
             <div className={styles.boxDivider} aria-hidden="true" />
@@ -117,7 +133,9 @@ export default function ClinicalFloatingSideActions({
                   <Lottie animationData={pulseAnimation} loop={true} />
                 </div>
               </div>
-              <span className={styles.boxLabel}>Ask<br />Pulse</span>
+              <span className={styles.boxLabel}>
+                {isMobile ? "Ask Pulse" : <>Ask<br />Pulse</>}
+              </span>
             </button>
           </motion.div>
         )}

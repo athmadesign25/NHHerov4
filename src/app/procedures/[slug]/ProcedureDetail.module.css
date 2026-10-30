@@ -261,10 +261,122 @@
   align-items: start;
 }
 
+/* Desktop: Hide mobile-only sticky share button */
+.mobileStickyShareBtn {
+  display: none;
+}
+
 @media (max-width: 960px) {
   .twoColumnGrid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 20px;
+  }
+
+  .stickySidebar {
+    position: sticky;
+    top: 56px;
+    z-index: 40;
+    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) 16px;
+    padding: 8px clamp(16px, 4vw, 24px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tocSectionSelector {
+    flex: 1;
+    min-width: 0;
+    gap: 0;
+  }
+
+  .tocEyebrow {
+    display: none;
+  }
+
+  .tocNavRail {
+    border-left: none;
+    padding-left: 0;
+    max-height: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: 100%;
+  }
+
+  .tocNavRail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tocList {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 2px 0;
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  .tocListItem {
+    flex-shrink: 0;
+  }
+
+  .tocLink {
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    transform: none !important;
+  }
+
+  .tocLink:hover {
+    transform: none !important;
+  }
+
+  .tocLinkActive {
+    background: #EFF6FF !important;
+    border-color: #BFDBFE !important;
+    color: #034EA2 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 4px rgba(3, 78, 162, 0.12);
+  }
+
+  .tocIndicatorMarker {
+    display: none;
+  }
+
+  .mobileStickyShareBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 9999px;
+    background: #034EA2;
+    color: #ffffff;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
+    transition: background 0.15s ease;
+  }
+
+  .mobileStickyShareBtn:hover {
+    background: #023D80;
+  }
+
+  .shareWidgetBorderless {
+    display: none;
   }
 }
 
@@ -1354,26 +1466,96 @@
   color: #034EA2;
 }
 
-/* Tablet & Mobile adjustments */
-@media (max-width: 900px) {
-  .floatingSideBoxes {
-    right: 8px;
-    padding: 6px 4px;
+/* ─── BESPOKE MOBILE WEB (MWEB <= 640PX) OPTIMIZATIONS ───────────────────── */
+@media (max-width: 640px) {
+  /* Title truncation to max 2 lines with comfortable breathing line-height */
+  .heroMainTitle {
+    font-size: clamp(20px, 5.5vw, 24px) !important;
+    line-height: 1.25 !important;
+    margin-bottom: 10px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
-  .floatingBoxItem {
-    width: 68px;
-    padding: 6px 4px;
+
+  .heroSubTitle {
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
   }
-  .boxIconWrap {
-    width: 38px;
-    height: 38px;
+
+  .breadcrumbsWrapper {
+    margin-bottom: 14px;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-  .pulseLottieBox {
-    width: 28px;
-    height: 28px;
+
+  /* Right column credential stats on mobile: matching library page typography */
+  .heroRightCol {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px 18px !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding-left: 0 !important;
+    padding-top: 18px !important;
+    margin-top: 20px !important;
   }
-  .boxLabel {
-    font-size: 10px;
+
+  .statNumber {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .statLabel {
+    font-size: 11px !important;
+    color: rgba(255, 255, 255, 0.50) !important;
+    font-weight: 400 !important;
+    margin-top: 2px !important;
+    line-height: 1.25 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+  }
+
+  /* Horizontal swipeable rail for hospital & doctor cards on mobile */
+  .clinicalHospitalsGrid,
+  .doctorsGrid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding-bottom: 12px !important;
+    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) !important;
+    padding-left: clamp(16px, 4vw, 24px) !important;
+    padding-right: clamp(16px, 4vw, 24px) !important;
+    scrollbar-width: none !important;
+  }
+
+  .clinicalHospitalsGrid::-webkit-scrollbar,
+  .doctorsGrid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .clinicalHospitalsGrid > *,
+  .doctorsGrid > * {
+    flex: 0 0 85vw !important;
+    max-width: 320px !important;
+    scroll-snap-align: start !important;
+  }
+
+  .mainLayoutContainer {
+    padding-bottom: 96px !important; /* Cushion for floating dock */
   }
 }
 
