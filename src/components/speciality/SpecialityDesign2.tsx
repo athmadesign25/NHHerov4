@@ -24,13 +24,19 @@ import AboutSpecialitySection from "./AboutSpecialitySection";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
 import { ALL_SPECIALITIES } from "@/data/specialities";
 
-const TOC_ITEMS: TOCItem[] = [
+const COE_TOC_ITEMS: TOCItem[] = [
   { id: "overview", label: "Overview" },
   { id: "treatments", label: "Conditions We Treat" },
-  { id: "doctors", label: "Our Doctors" },
   { id: "procedures", label: "Procedures & Surgeries" },
   { id: "technology", label: "Advance Technology" },
   { id: "tests", label: "Advance Tests" },
+  { id: "patient-stories", label: "Patient Stories" },
+  { id: "hospitals", label: "Hospitals & Clinics" },
+];
+
+const NON_COE_TOC_ITEMS: TOCItem[] = [
+  { id: "overview", label: "Overview" },
+  { id: "treatments", label: "Conditions We Treat" },
   { id: "about-speciality", label: "About Speciality" },
   { id: "doctor-overview", label: "Doctor Video Insights" },
   { id: "why-us", label: "Why Choose Us" },
@@ -961,9 +967,11 @@ const faqData = [
   },
 ];
 
-export default function SpecialityDesign2({ slug }: { slug: string }) {
+export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: string; isCoE?: boolean }) {
   
   const currentSpec = ALL_SPECIALITIES.find(s => s.slug === slug);
+  const isCoE = propIsCoE !== undefined ? propIsCoE : Boolean(currentSpec?.isCoE);
+  const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = currentSpec?.name || 'Cancer Care';
   const videoSrc = currentSpec?.detailVideo || currentSpec?.video || "/videos/Hero-Video-New.mp4";
   
@@ -1180,7 +1188,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
     }
   };
 
-  const doctorsRef = useRef<HTMLElement>(null);
+  const doctorsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: doctorsRef,
     offset: ["start end", "start center"]
@@ -1198,7 +1206,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
 
   return (
     <div className={styles.pageContainer}>
-      <FloatingTOC items={TOC_ITEMS} />
+      <FloatingTOC items={tocItems} />
 
       {/* Hero Section */}
       <section id="overview" className={styles.hero} data-nav-theme="dark">
@@ -1248,7 +1256,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                 transition={{ delay: 0.6, duration: 0.5, ease: "easeOut" }}
                 style={{ display: "inline-flex" }}
               >
-                <Link href="#doctors" className={styles.heroButton}>
+                <Link href="/doctors" className={styles.heroButton}>
                   Find a specialist
                 </Link>
               </motion.div>
@@ -1803,7 +1811,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                         {selectedCat.desc}
                       </p>
                       <div className={styles.selectedProgrammeActions}>
-                        <Link href="#doctors" className={styles.heroButton}>
+                        <Link href="/doctors" className={styles.heroButton}>
                           Find a specialist
                         </Link>
                       </div>
@@ -1883,163 +1891,83 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         </div>
       </section>
 
-      <section ref={doctorsRef} id="doctors" className={styles.doctorsSection} data-nav-theme="light">
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
-              <TextSweepEffect
-                key={activeCategory}
-                words={[activeDoctorInfo.title]}
-                sweepMs={2600}
-                delayMs={80}
-                finalColor="var(--color-text)"
-              />
-            </h2>
-            <AnimatePresence mode="wait">
-              <motion.p 
-                key={activeCategory}
-                className={styles.sectionDesc} 
-                style={{ color: "var(--color-text-secondary)" }}
-                initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {activeDoctorInfo.desc}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-        </div>
+      {/* Sentinel for smooth background scroll transition */}
+      <div ref={doctorsRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
 
-        <div className={styles.doctorsGridWrapper}>
-          <div className={styles.refDoctorsGrid}>
-            {doctors.map((doc, i) => (
-              <motion.div 
-                key={i} 
-                className={styles.refDoctorCard}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <Image 
-                  src={doc.img} 
-                  alt={doc.name} 
-                  fill 
-                  className={styles.refDocFullImage}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"
-                />
-                <div className={styles.refDocFullGradient}></div>
-                
-                <div className={styles.refDocOverlayContent}>
-                  <div className={styles.refDocBottomFlex}>
-                    <div className={styles.refDocTextCol}>
-                      <h3 className={`${styles.refDocName} ${styles.refDocNameMultiLine}`} title={doc.name}>
-                        {doc.name}
-                      </h3>
-                      <div className={styles.refDocSpecialty} title={activeDoctorInfo.specialty}>
-                        {activeDoctorInfo.specialty}
-                      </div>
-                      <div className={styles.refDocExpRow}>
-                        <Clock size={12} className={styles.refDocExpIcon} />
-                        <span>{doc.exp}</span>
-                      </div>
-                      <div className={`${styles.refDocHospital} ${styles.refDocHospitalSingleLine}`} title={doc.loc}>
-                        {doc.loc}
-                      </div>
-                    </div>
-                    
-                    <Link href={`/doctors/${doc.id}`} className={styles.refBookBtnWhite}>
-                      Book
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <motion.div 
-          style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-8)" }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="/doctors" className={styles.secondaryButton}>
-              View more
-            </Link>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Pinned Procedures & Surgeries Section */}
-      <div id="procedures" className={styles.pinnedProceduresTrack} data-nav-theme="light">
-        <section className={styles.pinnedProceduresSticky}>
-          <div className="container">
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
-                <TextSweepEffect
-                  key={activeCategory}
-                  words={[activeProcedureInfo.title]}
-                  sweepMs={2600}
-                  delayMs={80}
-                  finalColor="var(--color-text)"
-                />
-              </h2>
-              <AnimatePresence mode="wait">
-                <motion.p 
-                  key={activeCategory}
-                  className={styles.sectionDesc} 
-                  style={{ color: "var(--color-text-secondary)" }}
-                  initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  {activeProcedureInfo.desc}
-                </motion.p>
-              </AnimatePresence>
+      {/* Pinned Procedures & Surgeries Section - Only on Centre of Excellence */}
+      {isCoE && (
+        <div id="procedures" className={styles.pinnedProceduresTrack} data-nav-theme="light">
+          <section className={styles.pinnedProceduresSticky}>
+            <div className="container">
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
+                  <TextSweepEffect
+                    key={activeCategory}
+                    words={[activeProcedureInfo.title]}
+                    sweepMs={2600}
+                    delayMs={80}
+                    finalColor="var(--color-text)"
+                  />
+                </h2>
+                <AnimatePresence mode="wait">
+                  <motion.p 
+                    key={activeCategory}
+                    className={styles.sectionDesc} 
+                    style={{ color: "var(--color-text-secondary)" }}
+                    initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  >
+                    {activeProcedureInfo.desc}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </div>
-          </div>
-            
-          <div
-            style={{
-              width: "100%",
-              margin: "0 auto",
-              padding: "0 16px",
-              boxSizing: "border-box",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <ModernCarousel 
-              items={proceduresData.map(proc => ({
-                id: proc.id,
-                title: proc.title,
-                desc: proc.desc,
-                bg: proc.bg,
-                stat: proc.stat
-              }))}
-              activeId={activeProcedure}
-              onActiveChange={setActiveProcedure}
-            />
-          </div>
-        </section>
-      </div>
+              
+            <div
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                padding: "0 16px",
+                boxSizing: "border-box",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <ModernCarousel 
+                items={proceduresData.map(proc => ({
+                  id: proc.id,
+                  title: proc.title,
+                  desc: proc.desc,
+                  bg: proc.bg,
+                  stat: proc.stat
+                }))}
+                activeId={activeProcedure}
+                onActiveChange={setActiveProcedure}
+              />
+            </div>
+          </section>
+        </div>
+      )}
 
-      {/* Dynamic Sections as per design sequence */}
-      {[
-        { id: "technology", title: activeTechnologyInfo.title, desc: activeTechnologyInfo.desc },
-        { id: "tests", title: activeTestsInfo.title, desc: activeTestsInfo.desc },
-        { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
-        { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
-        { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
-        { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
-        { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
-        { id: "faqs", title: "FAQs", desc: "Find answers to common questions about our specialities, treatments, and patient care processes." }
-      ].map((section, idx) => {
+      {/* Dynamic Sections as per design sequence & CoE logic */}
+      {(isCoE
+        ? [
+            { id: "technology", title: activeTechnologyInfo.title, desc: activeTechnologyInfo.desc },
+            { id: "tests", title: activeTestsInfo.title, desc: activeTestsInfo.desc },
+            { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
+            { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
+          ]
+        : [
+            { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
+            { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
+            { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
+            { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
+            { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
+            { id: "faqs", title: "FAQs", desc: "Find answers to common questions about our specialities, treatments, and patient care processes." }
+          ]
+      ).map((section, idx) => {
         if (section.id === "patient-stories") {
           return (
             <div id={section.id} key={idx} data-nav-theme="light" style={{ width: "100%", maxWidth: "100%", overflow: "hidden", background: "var(--color-surface, var(--white))" }}>

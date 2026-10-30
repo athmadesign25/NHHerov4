@@ -6,10 +6,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import SpecialityDesign1 from "@/components/speciality/SpecialityDesign1";
 import SpecialityDesign2 from "@/components/speciality/SpecialityDesign2";
 import SpecialityDesignController, { SpecialityDesignId } from "@/components/speciality/SpecialityDesignController";
+import { ALL_SPECIALITIES } from "@/data/specialities";
 
 function SpecialityPageContent({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
   const queryDesign = searchParams.get("design");
+  const coeParam = searchParams.get("coe");
+  const currentSpec = ALL_SPECIALITIES.find((s) => s.slug === slug);
+  const isCoE = coeParam !== null ? coeParam === "true" : Boolean(currentSpec?.isCoE);
+
   const initialDesign: SpecialityDesignId = queryDesign === "2" ? 2 : 1;
   const [activeDesign, setActiveDesign] = useState<SpecialityDesignId>(initialDesign);
 
@@ -66,9 +71,9 @@ function SpecialityPageContent({ slug }: { slug: string }) {
           transition={{ duration: 0.2, ease: "easeInOut" }}
         >
           {activeDesign === 1 ? (
-            <SpecialityDesign1 slug={slug} />
+            <SpecialityDesign1 slug={slug} isCoE={isCoE} />
           ) : (
-            <SpecialityDesign2 slug={slug} />
+            <SpecialityDesign2 slug={slug} isCoE={isCoE} />
           )}
         </motion.div>
       </AnimatePresence>
