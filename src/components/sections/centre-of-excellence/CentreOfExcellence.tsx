@@ -57,11 +57,11 @@ function SpecialityCardItem({ spec, screenMode = "desktop" }: { spec: typeof SPE
   const ref = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Require the card to intersect the middle 30% of the viewport to play
-  const isInView = useInView(ref, { 
-    amount: "some", 
-    margin: "-35% 0px -35% 0px" 
+  const isInView = useInView(ref, {
+    amount: "some",
+    margin: "-35% 0px -35% 0px"
   });
 
   useEffect(() => {
@@ -307,7 +307,7 @@ export default function CentreOfExcellence() {
           {/* Seamless Dark Grid Extension with View All Specialties CTA */}
           <div className={styles.gridBottomStrip}>
             <motion.a
-              href="/specialities"
+              href="/specialities?category=Centres+of+Excellence"
               ref={viewAllBtnRef}
               className={styles.viewAllBtn}
               style={{ opacity: dimOpacity, filter: dimBlur }}

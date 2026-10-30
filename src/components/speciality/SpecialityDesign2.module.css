@@ -768,7 +768,7 @@
   flex: 0 1 auto;
 }
 
-/* Pinned Breadcrumb (Text Only: Cancer Care > Adult > Selected Tab) */
+/* Pinned Breadcrumb (Text Only: Specialities > Cancer Care > Adult > Selected Tab) */
 .pinnedBreadcrumbRow {
   display: flex;
   align-items: center;
@@ -776,7 +776,13 @@
   width: 100%;
 }
 
-.breadcrumbSpecialityBtn {
+.breadcrumbCombinedDropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumbLink {
   background: transparent;
   border: none;
   padding: 4px 6px 4px 0;
@@ -787,17 +793,21 @@
   font-weight: 500;
   color: rgba(var(--white-rgb), 0.72);
   border-radius: var(--radius-sm);
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease, background 0.2s ease;
   white-space: nowrap;
   line-height: 1.2;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.breadcrumbSpecialityBtn:hover {
+.breadcrumbLink:hover {
   color: var(--white);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-.breadcrumbTypeBtn {
+.breadcrumbSpecialityBtn {
   background: transparent;
   border: none;
   padding: 4px 6px;
@@ -808,14 +818,48 @@
   font-weight: 500;
   color: rgba(var(--white-rgb), 0.72);
   border-radius: var(--radius-sm);
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease, background 0.2s ease;
   white-space: nowrap;
   line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.breadcrumbSpecialityBtn:hover {
+  color: var(--white);
+  opacity: 0.95;
+  background: rgba(var(--white-rgb), 0.08);
+}
+
+.breadcrumbTypeBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--white);
+  border-radius: var(--radius-md);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  outline: none;
 }
 
 .breadcrumbTypeBtn:hover {
-  color: var(--white);
   background: rgba(var(--white-rgb), 0.08);
+  border-color: rgba(var(--white-rgb), 0.16);
+}
+
+.breadcrumbTypeBtnOpen {
+  background: rgba(var(--white-rgb), 0.14) !important;
+  border-color: rgba(var(--sky-400-rgb), 0.5) !important;
+  color: var(--sky-400) !important;
 }
 
 .breadcrumbChevron {
@@ -875,25 +919,33 @@
 :global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned,
 .programmeTabsWrapperPinned.programmeTabsWrapperLight,
 .programmeTabsWrapperPinned[data-theme="light"] {
-  background: rgba(var(--white-rgb), 0.9) !important;
+  background: rgba(var(--white-rgb), 0.95) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   border-bottom: 1px solid rgba(var(--black-rgb), 0.08) !important;
   box-shadow: 0 4px 20px rgba(var(--black-rgb), 0.06) !important;
 }
 
 /* Light theme breadcrumb adaptations */
+:global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbLink,
 :global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbSpecialityBtn,
 :global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbTypeBtn,
+.programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbLink,
 .programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbSpecialityBtn,
 .programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbTypeBtn,
+.programmeTabsWrapperPinned[data-theme="light"] .breadcrumbLink,
 .programmeTabsWrapperPinned[data-theme="light"] .breadcrumbSpecialityBtn,
 .programmeTabsWrapperPinned[data-theme="light"] .breadcrumbTypeBtn {
   color: var(--slate-500) !important;
 }
 
+:global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbLink:hover,
 :global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbSpecialityBtn:hover,
 :global(html[data-nav-theme-active="light"]) .programmeTabsWrapperPinned .breadcrumbTypeBtn:hover,
+.programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbLink:hover,
 .programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbSpecialityBtn:hover,
 .programmeTabsWrapperPinned.programmeTabsWrapperLight .breadcrumbTypeBtn:hover,
+.programmeTabsWrapperPinned[data-theme="light"] .breadcrumbLink:hover,
 .programmeTabsWrapperPinned[data-theme="light"] .breadcrumbSpecialityBtn:hover,
 .programmeTabsWrapperPinned[data-theme="light"] .breadcrumbTypeBtn:hover {
   color: var(--color-primary) !important;
@@ -1089,9 +1141,11 @@
 :global(html[data-nav-theme-active="dark"]) .programmeTabsWrapperPinned,
 .programmeTabsWrapperPinned.programmeTabsWrapperDark,
 .programmeTabsWrapperPinned[data-theme="dark"] {
-  background: rgba(var(--navy-900-rgb), 0.72);
-  border-bottom: 1px solid rgba(var(--white-rgb), 0.14);
-  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.32);
+  background: rgba(8, 15, 28, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.14) !important;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.32) !important;
 }
 
 /* Hide or push away gracefully when footer is reached */
@@ -2364,4 +2418,3 @@
     padding-bottom: 32px;
   }
 }
-

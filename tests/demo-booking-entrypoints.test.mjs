@@ -57,3 +57,17 @@ test("search identities override colliding fixture IDs without inventing unknown
  assert.equal(getDesign20DirectoryDoctor("external-api-id", "Dr. Abhinandan S Punit")?.id, "d20-dr-abhinandan-s-punit");
  assert.equal(getDesign20DirectoryDoctor("dr-1", "Dr. Unknown Person"), null);
 });
+
+const { specialityBookingEntry } = await import("../src/features/search/specialityBookingEntry.ts");
+test("speciality detail appointment links keep the existing directory filters and location", () => {
+ const url = asUrl(specialityBookingEntry("oncology", "Bangalore"));
+ assert.equal(url.pathname, "/search/doctors");
+ assert.equal(url.searchParams.get("design"), "d20");
+ assert.deepEqual(readListingParams(url.searchParams).filters.specialties, ["Oncologist"]);
+ assert.equal(readSearchLocation(url.searchParams), "Bangalore");
+});
+test("unmapped speciality departments use discovery without creating unsupported facets", () => {
+ const url = asUrl(specialityBookingEntry("unknown-department"));
+ assert.equal(url.pathname, "/search/doctors");
+ assert.equal(url.searchParams.has("specialties"), false);
+});
