@@ -32,7 +32,9 @@ import {
   SidebarSpecialityFilters,
   SpecialityFilterDialog,
 } from "./filters";
+import { DoctorSearchTop, chipStyles } from "./toolbar";
 import styles from "./page.module.css";
+
 
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -84,42 +86,8 @@ function SpecialitiesContent() {
   const [sortBy, setSortBy] = useState("relevance");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  const refinementScrollRef = useRef<HTMLDivElement>(null);
-  const [refinementEdges, setRefinementEdges] = useState<{
-    overflow: boolean;
-    previous: boolean;
-    next: boolean;
-  }>({ overflow: false, previous: false, next: false });
-
-  // Sync scroll edge indicators for DoctorRefinementRow styling
-  useEffect(() => {
-    const el = refinementScrollRef.current;
-    if (!el) return;
-
-    const measureEdges = () => {
-      const overflow = el.scrollWidth > el.clientWidth + 1;
-      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-      const previous = overflow && el.scrollLeft > 2;
-      const next = overflow && el.scrollLeft < maxScroll - 2;
-      setRefinementEdges((prev) =>
-        prev.overflow === overflow && prev.previous === previous && prev.next === next
-          ? prev
-          : { overflow, previous, next }
-      );
-    };
-
-    measureEdges();
-    el.addEventListener("scroll", measureEdges, { passive: true });
-    const ro = new ResizeObserver(measureEdges);
-    ro.observe(el);
-
-    return () => {
-      el.removeEventListener("scroll", measureEdges);
-      ro.disconnect();
-    };
-  }, []);
-
   // Sync query params whenever searchParams changes
+
   useEffect(() => {
     const query = searchParams?.get("search") || searchParams?.get("q") || "";
     const rawCat = searchParams?.get("category") || searchParams?.get("filter") || "";
@@ -160,17 +128,8 @@ function SpecialitiesContent() {
     return () => observer.disconnect();
   }, []);
 
-  // Refinement scroll handler
-  const scrollRefinements = (direction: -1 | 1) => {
-    if (refinementScrollRef.current) {
-      refinementScrollRef.current.scrollBy({
-        left: direction * (refinementScrollRef.current.clientWidth * 0.75),
-        behavior: "smooth",
-      });
-    }
-  };
-
   // Categories list with Centres of Excellence
+
   const categories = useMemo(() => {
     return [
       "All",
@@ -379,183 +338,66 @@ function SpecialitiesContent() {
         </p>
       </header>
 
-      {/* ── 2. STICKY UNIFIED SEARCH & REFINEMENT TOOLBAR ── */}
-      <div className={`${styles.searchToolbarWrapper} ${!navVisible ? styles.navHidden : ""}`} data-d3-search-bar>
-        <div className={styles.searchToolbarInner}>
-          <div className={styles.searchRow}>
-            {/* Unified Search Input (Location + Query) */}
-            <div className={styles.combinedSearch}>
-              {/* Leading City Location dropdown */}
-              <label className={styles.leadingLocation}>
-                <MapPin size={16} aria-hidden="true" />
-                <span className={styles.srOnly}>Select location</span>
-                <select
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  aria-label="Filter specialities by location"
-                >
-                  <option value="All">All Locations</option>
-                  {NH_CITIES.map((c) => (
-                    <option key={c.id} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+      {/* ── 2. STICKY UNIFIED SEARCH & REFINEMENT TOOLBAR (Matching DoctorSearchTop & Design16Refinements) ── */}
+      <DoctorSearchTop
+        search={search}
+        onSearch={setSearch}
+        location={selectedCity}
+        onLocation={setSelectedCity}
+        navVisible={navVisible}
+        filterCount={activeFiltersCount}
+        onOpenFilters={() => setMobileFilterOpen(true)}
+      >
+        {/* All Specialities */}
+        <button
+          type="button"
+          className={chipStyles.chip}
+          aria-pressed={selectedCategory === "All" && selectedClassification === "All"}
+          onClick={() => {
+            setSelectedCategory("All");
+            setSelectedClassification("All");
+          }}
+        >
+          All Specialities
+        </button>
 
-              {/* Search Form */}
-              <form
-                className={styles.searchForm}
-                role="search"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <div className={styles.searchField}>
-                  <input
-                    id="speciality-search-input"
-                    type="search"
-                    className={styles.searchFieldInput}
-                    placeholder="Search speciality, condition or treatment (e.g. Heart, Knee, Cancer)..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    autoComplete="off"
-                    aria-label="Search medical specialities"
-                  />
-                  {search && (
-                    <button
-                      type="button"
-                      onClick={() => setSearch("")}
-                      className={styles.searchClearBtn}
-                      aria-label="Clear search query"
-                      title="Clear search"
-                    >
-                      <X size={16} />
-                    </button>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  className={styles.searchSubmitBtn}
-                  aria-label="Search"
-                  title="Search"
-                >
-                  <Search size={18} />
-                </button>
-              </form>
-            </div>
+        {/* Centres of Excellence */}
+        <button
+          type="button"
+          className={chipStyles.chip}
+          aria-pressed={
+            selectedCategory === "Centres of Excellence" ||
+            selectedClassification === "Centres of Excellence Only"
+          }
+          onClick={() => {
+            setSelectedCategory("Centres of Excellence");
+            setSelectedClassification("Centres of Excellence Only");
+          }}
+        >
+          <Star size={13} fill="#f59e0b" color="#f59e0b" aria-hidden="true" />
+          Centres of Excellence
+        </button>
 
-            {/* Mobile Filter Button */}
+        {/* Top Categories */}
+        {SPECIALITY_CATEGORIES.filter((c) => c !== "All").map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
             <button
+              key={cat}
               type="button"
-              className={styles.mobileFilterBtn}
-              data-active={hasActiveFilters}
-              onClick={() => setMobileFilterOpen(true)}
-              aria-label="Open filter sidebar"
+              className={chipStyles.chip}
+              aria-pressed={isActive}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setSelectedClassification("All");
+              }}
             >
-              <Filter size={15} />
-              <span>Filters</span>
-              {activeFiltersCount > 0 && (
-                <span className={styles.mobileFilterBadge}>{activeFiltersCount}</span>
-              )}
+              {cat}
             </button>
-          </div>
+          );
+        })}
+      </DoctorSearchTop>
 
-          {/* Horizontal Refinement Bar (DoctorRefinementRow styling) */}
-          <div
-            className={styles.refinementRow}
-            role="group"
-            aria-label="Category shortcuts"
-            data-overflow={refinementEdges.overflow ? "true" : undefined}
-            data-has-previous={refinementEdges.previous ? "true" : undefined}
-            data-has-next={refinementEdges.next ? "true" : undefined}
-          >
-            <button
-              type="button"
-              className={`${styles.refinementArrow} ${styles.refinementArrowLeft}`}
-              onClick={() => scrollRefinements(-1)}
-              aria-label="Scroll categories left"
-              data-visible={refinementEdges.previous ? "true" : "false"}
-              tabIndex={refinementEdges.previous ? 0 : -1}
-              disabled={!refinementEdges.previous}
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <div ref={refinementScrollRef} className={styles.refinementViewport}>
-              {/* All */}
-              <button
-                type="button"
-                className={`${styles.refinementChip} ${
-                  selectedCategory === "All" && selectedClassification === "All"
-                    ? styles.refinementChipActive
-                    : ""
-                }`}
-                aria-pressed={selectedCategory === "All" && selectedClassification === "All"}
-                onClick={() => {
-                  setSelectedCategory("All");
-                  setSelectedClassification("All");
-                }}
-              >
-                All Specialities
-              </button>
-
-              {/* Centres of Excellence */}
-              <button
-                type="button"
-                className={`${styles.refinementChip} ${
-                  selectedCategory === "Centres of Excellence" ||
-                  selectedClassification === "Centres of Excellence Only"
-                    ? styles.refinementChipActive
-                    : ""
-                }`}
-                aria-pressed={
-                  selectedCategory === "Centres of Excellence" ||
-                  selectedClassification === "Centres of Excellence Only"
-                }
-                onClick={() => {
-                  setSelectedCategory("Centres of Excellence");
-                  setSelectedClassification("Centres of Excellence Only");
-                }}
-              >
-                <Star size={13} fill="#f59e0b" color="#f59e0b" />
-                Centres of Excellence
-              </button>
-
-              {/* Top Categories */}
-              {SPECIALITY_CATEGORIES.filter((c) => c !== "All").map((cat) => {
-                const isActive = selectedCategory === cat;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    className={`${styles.refinementChip} ${
-                      isActive ? styles.refinementChipActive : ""
-                    }`}
-                    aria-pressed={isActive}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      setSelectedClassification("All");
-                    }}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button
-              type="button"
-              className={`${styles.refinementArrow} ${styles.refinementArrowRight}`}
-              onClick={() => scrollRefinements(1)}
-              aria-label="Scroll categories right"
-              data-visible={refinementEdges.next ? "true" : "false"}
-              tabIndex={refinementEdges.next ? 0 : -1}
-              disabled={!refinementEdges.next}
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* ── 3. MAIN TWO-COLUMN LAYOUT ── */}
       <div className={styles.layout}>
