@@ -28,7 +28,6 @@ import { NH_CITIES } from "@/lib/searchService";
 import {
   SpecialityFilters,
   FilterScrollArea,
-  ActiveSpecialityFilters,
   SidebarSpecialityFilters,
   SpecialityFilterDialog,
 } from "./filters";
@@ -451,43 +450,6 @@ function SpecialitiesContent() {
 
         {/* Right Main Results Area */}
         <section className={styles.resultsArea} aria-label="Medical specialities results">
-          {/* Applied Filter Chips matching Doctor listing flow */}
-          {appliedChips.length > 0 && (
-            <div style={{ marginBottom: "var(--sp-2, 16px)" }}>
-              <ActiveSpecialityFilters
-                chips={appliedChips}
-                reducedMotion={reducedMotion}
-                focusFallback={() => {
-                  document.getElementById("refinement-all")?.focus({ preventScroll: true });
-                }}
-              />
-            </div>
-          )}
-
-          {/* Results Header: Count & Sort Select */}
-          <div className={styles.resultsHeader}>
-            <div className={styles.resultsCount} id="specialities-results-count">
-              Showing <strong>{filtered.length}</strong> {filtered.length === 1 ? "speciality" : "specialities"}
-              {selectedCity !== "All" ? ` in ${selectedCity}` : ""}
-            </div>
-
-            <div className={styles.sortSelectWrapper}>
-              <select
-                id="speciality-sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className={styles.sortSelect}
-                aria-label="Sort specialities"
-              >
-                <option value="relevance">Sort: Relevance</option>
-                <option value="doctors">Specialists: High to Low</option>
-                <option value="procedures">Procedures: High to Low</option>
-                <option value="name">Name: A to Z</option>
-              </select>
-              <ChevronDown className={styles.sortSelectArrow} size={15} aria-hidden="true" />
-            </div>
-          </div>
-
           {/* Speciality Cards Grid (Exact match to Landing Page Specialty Card) */}
           <AnimatePresence mode="popLayout">
             <motion.div className={styles.cardsGrid} layout>
