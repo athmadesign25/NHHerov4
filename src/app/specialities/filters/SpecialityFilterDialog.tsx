@@ -75,7 +75,7 @@ export default function SpecialityFilterDialog({
       <header className={styles.header}>
         <div>
           <h2 id="speciality-filter-title">Refine Specialities</h2>
-          <p>Choose categories, classification, or browse A–Z.</p>
+          <p>Choose medical specialities by category.</p>
         </div>
         <button
           type="button"

@@ -1,17 +1,13 @@
 "use client";
 
-import { Fragment, useId, useLayoutEffect, useRef, useState } from "react";
+import React, { Fragment, useId, useLayoutEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, LayoutGroup, useReducedMotion } from "framer-motion";
 import {
   Stethoscope,
-  BadgeCheck,
-  Building2,
-  CalendarDays,
-  Languages,
-  UserRound,
   ChevronDown,
   Search,
   Check,
+  Star,
 } from "lucide-react";
 import { keepFilterHeadingVisible, prepareFilterListToggle } from "./filterScrolling";
 import styles from "./SpecialityFilters.module.css";
@@ -31,65 +27,50 @@ export interface SpecialityFiltersProps {
   availableLetters: Set<string>;
 }
 
-type FilterGroupKey =
-  | "specialties"
-  | "expertise"
-  | "hospitals"
-  | "availability"
-  | "languages"
-  | "genders";
+type FilterGroupKey = "categories";
 
 interface FilterOption {
   value: string;
   label: string;
   count?: number;
+  icon?: React.ReactNode;
 }
 
 interface FilterGroupConfig {
   key: FilterGroupKey;
   label: string;
   plural: string;
+  searchPlaceholder: string;
+  searchAriaLabel: string;
   Icon: typeof Stethoscope;
 }
 
 const GROUPS: readonly FilterGroupConfig[] = [
-  { key: "specialties", label: "Speciality", plural: "specialities", Icon: Stethoscope },
-  { key: "expertise", label: "Expertise", plural: "areas of expertise", Icon: BadgeCheck },
-  { key: "hospitals", label: "Hospital", plural: "hospitals", Icon: Building2 },
-  { key: "availability", label: "Availability", plural: "options", Icon: CalendarDays },
-  { key: "languages", label: "Language", plural: "languages", Icon: Languages },
-  { key: "genders", label: "Doctor gender", plural: "gender options", Icon: UserRound },
+  {
+    key: "categories",
+    label: "Speciality Category",
+    plural: "categories",
+    searchPlaceholder: "Search category",
+    searchAriaLabel: "Search speciality category filters",
+    Icon: Stethoscope,
+  },
 ] as const;
 
 export default function SpecialityFilters({
   selectedCategory,
   onSelectCategory,
-  selectedClassification,
   onSelectClassification,
-  selectedLetter,
-  onSelectLetter,
-  selectedCity = "All",
-  onSelectCity,
   categories,
   categoryCounts,
-  classificationCounts,
 }: SpecialityFiltersProps) {
   const id = useId();
   const reducedMotion = Boolean(useReducedMotion());
   const transition = { duration: reducedMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] as const };
 
-  // Only "specialties" is open initially, matching DoctorFilters
-  const [openGroup, setOpenGroup] = useState<FilterGroupKey | null>("specialties");
+  // Speciality Category group is open initially
+  const [openGroup, setOpenGroup] = useState<FilterGroupKey | null>("categories");
   const [searches, setSearches] = useState<Partial<Record<FilterGroupKey, string>>>({});
   const [expanded, setExpanded] = useState<Partial<Record<FilterGroupKey, boolean>>>({});
-
-  // Additional mock multi-select states for preview groups
-  const [selectedSpecialities, setSelectedSpecialities] = useState<string[]>([]);
-  const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
-  const [selectedHospitals, setSelectedHospitals] = useState<string[]>([]);
-  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 
   const finishListToggle = useRef<(() => void) | null>(null);
   useLayoutEffect(() => {
@@ -98,210 +79,64 @@ export default function SpecialityFilters({
     finish?.();
   }, [expanded]);
 
-  // Options provider for each group
+  // Options provider for the category group
   const getOptionsForGroup = (groupKey: FilterGroupKey): FilterOption[] => {
-    switch (groupKey) {
-      case "specialties": {
-        // Full list of specialities matching Narayana Health directory
-        const list = [
-          "Adult Cardiac Surgery",
-          "Adult Cardiology",
-          "Adult Critical Care Medicine",
-          "Breast Oncology & Oncoplastic Surgery",
-          "Cardiologist",
-          "Cardiology & Cardiac Surgery",
-          "Cancer Care (Oncology)",
-          "Neurology & Neurosurgery",
-          "Orthopaedics & Joint Replacement",
-          "Nephrology & Renal Transplant",
-          "Gastroenterology & Hepatology",
-          "Paediatrics & Neonatology",
-          "Pulmonology & Respiratory Medicine",
-          "Obstetrics & Gynaecology",
-          "Urology & Andrology",
-          "Vascular & Endovascular Surgery",
-          "Dermatology & Cosmetology",
-          "ENT / Otorhinolaryngology",
-          "Endocrinology & Diabetology",
-          "Rheumatology & Clinical Immunology",
-          "Psychiatry & Clinical Psychology",
-          "Ophthalmology",
-          "Dental Sciences & Maxillofacial Surgery",
-          "Haematology & BMT",
-          "Plastic & Reconstructive Surgery",
-          "Emergency & Trauma Care",
-          "General & Laparoscopic Surgery",
-          "Internal Medicine",
-          "Physiotherapy & Rehabilitation",
-          "Nuclear Medicine & PET-CT",
-          "Interventional Radiology",
-          "Anaesthesiology & Pain Management",
-          "Infectious Diseases",
-          "Medical Genetics",
-          "Geriatric Medicine",
-          "Palliative Care",
-          "Robotic Surgery",
-          "Liver Transplant & HPB Surgery",
-          "Cardiac Electrophysiology",
-        ];
-        return list.map((name) => ({
-          value: name,
-          label: name,
-          count: categoryCounts[name] || (categoryCounts[name.split(" ")[0]] ?? undefined),
-        }));
-      }
-
-      case "expertise":
-        return [
-          { value: "Centres of Excellence", label: "Centres of Excellence", count: classificationCounts["Centres of Excellence Only"] || 8 },
-          { value: "Clinical Specialities", label: "Clinical Specialities", count: 32 },
-          { value: "Robotic Surgery", label: "Robotic Surgery", count: 14 },
-          { value: "Organ Transplant", label: "Organ Transplant", count: 18 },
-          { value: "Comprehensive Cancer Care", label: "Comprehensive Cancer Care", count: 24 },
-          { value: "Pediatric Super Specialities", label: "Pediatric Super Specialities", count: 16 },
-          { value: "Minimally Invasive Procedures", label: "Minimally Invasive Procedures", count: 28 },
-          { value: "Critical Care & ECMO", label: "Critical Care & ECMO", count: 12 },
-        ];
-
-      case "hospitals":
-        return [
-          { value: "Bangalore", label: "Narayana Health City, Bangalore", count: 42 },
-          { value: "Mazumdar Shaw", label: "Mazumdar Shaw Medical Centre, Bangalore", count: 38 },
-          { value: "Kolkata", label: "Rabindranath Tagore Institute (RTIICS), Kolkata", count: 36 },
-          { value: "Howrah", label: "Narayana Superspeciality Hospital, Howrah", count: 28 },
-          { value: "Delhi NCR", label: "Narayana Hospital, Gurugram", count: 32 },
-          { value: "Ahmedabad", label: "Narayana Multispeciality Hospital, Ahmedabad", count: 26 },
-          { value: "Jaipur", label: "Narayana Multispeciality Hospital, Jaipur", count: 24 },
-          { value: "Mumbai", label: "SRCC Children's Hospital, Mumbai", count: 22 },
-        ];
-
-      case "availability":
-        return [
-          { value: "24/7 Emergency Support", label: "24/7 Emergency Support", count: 15 },
-          { value: "OPD Today", label: "OPD Appointments Today", count: 38 },
-          { value: "Weekend Consultations", label: "Weekend Consultations Available", count: 29 },
-          { value: "Video Consultation", label: "Online Video Consultation", count: 41 },
-        ];
-
-      case "languages":
-        return [
-          { value: "English", label: "English", count: 64 },
-          { value: "Hindi", label: "Hindi", count: 52 },
-          { value: "Kannada", label: "Kannada", count: 45 },
-          { value: "Bengali", label: "Bengali", count: 38 },
-          { value: "Telugu", label: "Telugu", count: 30 },
-          { value: "Tamil", label: "Tamil", count: 26 },
-        ];
-
-      case "genders":
-        return [
-          { value: "Female", label: "Female doctors", count: 142 },
-          { value: "Male", label: "Male doctors", count: 285 },
-        ];
+    if (groupKey === "categories") {
+      return categories.map((cat) => ({
+        value: cat,
+        label: cat,
+        count: categoryCounts[cat] ?? 0,
+        icon:
+          cat === "Centres of Excellence" ? (
+            <Star
+              size={13}
+              fill="#f59e0b"
+              color="#f59e0b"
+              style={{ marginRight: 6, flexShrink: 0, display: "inline-block", verticalAlign: "middle" }}
+              aria-hidden="true"
+            />
+          ) : undefined,
+      }));
     }
+    return [];
   };
 
   const getSelectedValues = (groupKey: FilterGroupKey): string[] => {
-    switch (groupKey) {
-      case "specialties":
-        if (selectedCategory && selectedCategory !== "All") {
-          return Array.from(new Set([selectedCategory, ...selectedSpecialities]));
-        }
-        return selectedSpecialities;
-      case "expertise":
-        if (selectedClassification && selectedClassification !== "All") {
-          return Array.from(new Set([selectedClassification, ...selectedExpertise]));
-        }
-        return selectedExpertise;
-      case "hospitals":
-        if (selectedCity && selectedCity !== "All") {
-          return Array.from(new Set([selectedCity, ...selectedHospitals]));
-        }
-        return selectedHospitals;
-      case "availability":
-        return selectedAvailability;
-      case "languages":
-        return selectedLanguages;
-      case "genders":
-        return selectedGenders;
+    if (groupKey === "categories") {
+      if (selectedCategory && selectedCategory !== "All") {
+        return [selectedCategory];
+      }
+      return [];
     }
+    return [];
   };
 
   const toggleOption = (groupKey: FilterGroupKey, val: string) => {
-    switch (groupKey) {
-      case "specialties": {
-        const current = getSelectedValues("specialties");
-        const next = current.includes(val) ? current.filter((x) => x !== val) : [...current, val];
-        setSelectedSpecialities(next);
-        // Connect with page category selection if primary selected
-        if (next.length > 0) {
-          onSelectCategory(next[0]);
-        } else {
-          onSelectCategory("All");
-        }
-        break;
+    if (groupKey === "categories") {
+      if (val === "All") {
+        onSelectCategory("All");
+        onSelectClassification("All");
+        return;
       }
-      case "expertise": {
-        const current = getSelectedValues("expertise");
-        const next = current.includes(val) ? current.filter((x) => x !== val) : [...current, val];
-        setSelectedExpertise(next);
-        if (next.includes("Centres of Excellence")) {
+
+      if (selectedCategory === val) {
+        onSelectCategory("All");
+        onSelectClassification("All");
+      } else {
+        onSelectCategory(val);
+        if (val === "Centres of Excellence") {
           onSelectClassification("Centres of Excellence Only");
         } else {
           onSelectClassification("All");
         }
-        break;
       }
-      case "hospitals": {
-        const current = getSelectedValues("hospitals");
-        const next = current.includes(val) ? current.filter((x) => x !== val) : [...current, val];
-        setSelectedHospitals(next);
-        if (onSelectCity) {
-          onSelectCity(next[0] || "All");
-        }
-        break;
-      }
-      case "availability":
-        setSelectedAvailability((prev) =>
-          prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
-        );
-        break;
-      case "languages":
-        setSelectedLanguages((prev) =>
-          prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
-        );
-        break;
-      case "genders":
-        setSelectedGenders((prev) =>
-          prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]
-        );
-        break;
     }
   };
 
   const clearGroup = (groupKey: FilterGroupKey) => {
-    switch (groupKey) {
-      case "specialties":
-        setSelectedSpecialities([]);
-        onSelectCategory("All");
-        break;
-      case "expertise":
-        setSelectedExpertise([]);
-        onSelectClassification("All");
-        break;
-      case "hospitals":
-        setSelectedHospitals([]);
-        if (onSelectCity) onSelectCity("All");
-        break;
-      case "availability":
-        setSelectedAvailability([]);
-        break;
-      case "languages":
-        setSelectedLanguages([]);
-        break;
-      case "genders":
-        setSelectedGenders([]);
-        break;
+    if (groupKey === "categories") {
+      onSelectCategory("All");
+      onSelectClassification("All");
     }
   };
 
@@ -316,9 +151,11 @@ export default function SpecialityFilters({
             option.label.toLowerCase().includes(search.trim().toLowerCase())
           );
           const isExpanded = expanded[group.key] ?? false;
-          const visible = search.trim() || isExpanded
-            ? matching
-            : matching.filter((option, index) => index < 5 || selected.includes(option.value));
+          // Show initial 6 categories (matching prompt 3) or all matching search
+          const visible =
+            search.trim() || isExpanded
+              ? matching
+              : matching.filter((option, index) => index < 6 || selected.includes(option.value));
           const hidden = matching.length - visible.length;
           const Icon = group.Icon;
           const open = openGroup === group.key;
@@ -387,7 +224,6 @@ export default function SpecialityFilters({
                   aria-hidden={!open}
                   inert={!open}
                 >
-
                   <AnimatePresence initial={false} mode="popLayout">
                     {open && (
                       <motion.div
@@ -410,8 +246,8 @@ export default function SpecialityFilters({
                               onChange={(e) =>
                                 setSearches({ ...searches, [group.key]: e.target.value })
                               }
-                              placeholder={`Search ${group.label.toLowerCase()}`}
-                              aria-label={`Search ${group.label.toLowerCase()} filters`}
+                              placeholder={group.searchPlaceholder}
+                              aria-label={group.searchAriaLabel}
                             />
                           </label>
                         )}
@@ -424,7 +260,11 @@ export default function SpecialityFilters({
                             </p>
                           )}
                           {visible.map((option) => {
-                            const isSelected = selected.includes(option.value);
+                            const isSelected =
+                              option.value === "All"
+                                ? selectedCategory === "All" || !selectedCategory
+                                : selected.includes(option.value);
+
                             return (
                               <motion.label
                                 key={option.value}
@@ -439,6 +279,7 @@ export default function SpecialityFilters({
                                   <input
                                     type="checkbox"
                                     checked={isSelected}
+                                    id={`filter-cat-${option.value.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
                                     onChange={() => toggleOption(group.key, option.value)}
                                   />
                                   <Check
@@ -449,7 +290,10 @@ export default function SpecialityFilters({
                                     aria-hidden
                                   />
                                 </span>
-                                <span className={styles.optionLabel}>{option.label}</span>
+                                <span className={styles.optionLabel}>
+                                  {option.icon}
+                                  {option.label}
+                                </span>
                                 {option.count !== undefined && (
                                   <span
                                     className={styles.resultCount}
@@ -468,7 +312,7 @@ export default function SpecialityFilters({
                           )}
                         </fieldset>
 
-                        {!search.trim() && (hidden > 0 || isExpanded) && options.length > 5 && (
+                        {!search.trim() && (hidden > 0 || isExpanded) && options.length > 6 && (
                           <button
                             type="button"
                             className={styles.showMore}
