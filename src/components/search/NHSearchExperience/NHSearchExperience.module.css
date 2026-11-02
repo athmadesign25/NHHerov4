@@ -2804,14 +2804,14 @@
   justify-content: flex-end;
   border-radius: 8px;
   background: #0B111E;
-  border: none;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   overflow: hidden;
   height: 285px;
   min-height: 285px;
   touch-action: pan-y;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.22s ease;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
 
@@ -2822,8 +2822,9 @@
 
 .refDoctorCard:hover {
   transform: translateY(-3px);
-  border: none;
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Full background photo covering 100% of the card - Zoomed in on face, positioned slightly above center */
@@ -6803,13 +6804,15 @@
   background: #0B111E !important;
   border-radius: 8px !important;
   border: none !important;
-  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12) !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .themeWhite .refDoctorCard:hover,
 [data-search-theme="white"] .refDoctorCard:hover {
   border: none !important;
-  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.20) !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .themeWhite .refDocName,

@@ -1523,8 +1523,9 @@
 
 .refDoctorCard:hover {
   transform: translateY(-3px);
-  border: none;
-  box-shadow: 0 16px 36px -6px rgba(var(--black-rgb), 0.6);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .refDocFullImage {

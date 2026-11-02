@@ -266,119 +266,6 @@
   display: none;
 }
 
-@media (max-width: 960px) {
-  .twoColumnGrid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .stickySidebar {
-    position: sticky;
-    top: 56px;
-    z-index: 40;
-    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) 16px;
-    padding: 8px clamp(16px, 4vw, 24px);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .tocSectionSelector {
-    flex: 1;
-    min-width: 0;
-    gap: 0;
-  }
-
-  .tocEyebrow {
-    display: none;
-  }
-
-  .tocNavRail {
-    border-left: none;
-    padding-left: 0;
-    max-height: none;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    width: 100%;
-  }
-
-  .tocNavRail::-webkit-scrollbar {
-    display: none;
-  }
-
-  .tocList {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    padding: 2px 0;
-    white-space: nowrap;
-    width: max-content;
-  }
-
-  .tocListItem {
-    flex-shrink: 0;
-  }
-
-  .tocLink {
-    padding: 6px 14px;
-    border-radius: 9999px;
-    background: #F8FAFC;
-    border: 1px solid #E2E8F0;
-    font-size: 13px;
-    font-weight: 500;
-    color: #475569;
-    transform: none !important;
-  }
-
-  .tocLink:hover {
-    transform: none !important;
-  }
-
-  .tocLinkActive {
-    background: #EFF6FF !important;
-    border-color: #BFDBFE !important;
-    color: #034EA2 !important;
-    font-weight: 700 !important;
-    box-shadow: 0 1px 4px rgba(3, 78, 162, 0.12);
-  }
-
-  .tocIndicatorMarker {
-    display: none;
-  }
-
-  .mobileStickyShareBtn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 9999px;
-    background: #034EA2;
-    color: #ffffff;
-    border: none;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25);
-    transition: background 0.15s ease;
-  }
-
-  .mobileStickyShareBtn:hover {
-    background: #023D80;
-  }
-
-  .shareWidgetBorderless {
-    display: none;
-  }
-}
 
 /* ─── STICKY LEFT SIDEBAR (AIRY MINIMAL NAVIGATION RAIL) ─────────────────── */
 .stickySidebar {
@@ -1156,17 +1043,18 @@
   justify-content: flex-end;
   border-radius: 14px;
   background: #0B111E;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   overflow: hidden;
   height: 290px;
   min-height: 290px;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .refDoctorCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+  box-shadow: none !important;
 }
 
 .refDocFullImage {
@@ -2062,6 +1950,187 @@
   line-height: 1.6;
   color: #475569;
   margin: 0;
+}
+
+/* ─── TABLET & MOBILE RESPONSIVE ENGINE (OVERRIDING ALL DESKTOP RULES) ─── */
+@media (max-width: 960px) {
+  .mainLayoutContainer {
+    padding: 0 clamp(16px, 4vw, 24px) 96px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .twoColumnGrid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Sticky Horizontal TOC Rail directly sticking on top of the viewport on mobile */
+  .stickySidebar {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 40 !important;
+    margin: 0 calc(-1 * clamp(16px, 4vw, 24px)) 16px !important;
+    padding: 10px clamp(16px, 4vw, 24px) 10px !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.05) !important;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: calc(100% + 2 * clamp(16px, 4vw, 24px)) !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* Smooth gradient fade below the sticky bar & share button to eliminate sharp cut */
+  .stickySidebar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 16px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(255, 255, 255, 0.5) 45%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  .tocSectionSelector {
+    flex: 1 !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+  }
+
+  .tocEyebrow {
+    display: none !important;
+  }
+
+  .tocNavRail {
+    border-left: none !important;
+    padding-left: 0 !important;
+    max-height: none !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%) !important;
+    mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%) !important;
+  }
+
+  .tocNavRail::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tocList {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    padding: 2px 0 !important;
+    white-space: nowrap !important;
+    width: max-content !important;
+    margin: 0 !important;
+  }
+
+  .tocListItem {
+    flex-shrink: 0 !important;
+  }
+
+  .tocLink {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 6px 14px !important;
+    border-radius: 9999px !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    transform: none !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+  }
+
+  .tocLink:hover {
+    transform: none !important;
+  }
+
+  .tocLinkActive {
+    background: #EFF6FF !important;
+    border-color: #BFDBFE !important;
+    color: #034EA2 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 1px 4px rgba(3, 78, 162, 0.12) !important;
+  }
+
+  .tocIndicatorMarker {
+    display: none !important;
+  }
+
+  /* Persistent Mobile Sticky Share Pill Button */
+  .mobileStickyShareBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    height: 32px !important;
+    padding: 0 12px !important;
+    border-radius: 9999px !important;
+    background: #034EA2 !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 2px 8px rgba(3, 78, 162, 0.25) !important;
+    white-space: nowrap !important;
+    transition: background 0.15s ease;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  /* Smooth gradient fade before the share button so scrolling chips don't cut sharply */
+  .mobileStickyShareBtn::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: -8px;
+    bottom: -8px;
+    width: 22px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.98));
+    pointer-events: none;
+  }
+
+  .mobileStickyShareBtn:hover {
+    background: #023D80 !important;
+  }
+
+  /* Hide Desktop side widgets on mobile to prevent overlapping */
+  .shareWidgetBorderless,
+  .sidebarHelpCallout {
+    display: none !important;
+  }
+
+  /* Reading Content Focus Canvas spans full width without squeezing */
+  .contentFocusCanvas,
+  .articleContent {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
 }
 
 /* ─── BESPOKE MOBILE WEB (MWEB <= 640PX) OPTIMIZATIONS ───────────────────── */

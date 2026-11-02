@@ -109,6 +109,10 @@ export default function Navbar() {
   }, []);
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-nav-visible", isVisible ? "true" : "false");
+  }, [isVisible]);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
   const isOverLightRef = useRef(false);
   const lastScrollY = useRef(0);

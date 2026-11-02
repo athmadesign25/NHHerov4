@@ -110,7 +110,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "Sub-Millimeter Dual Source CT",
     summary: "Non-invasive coronary artery imaging detecting arterial stenosis, soft plaque, and Agatston calcium score in 5 heartbeats.",
     overview: "Cardiac CT Angiography visualizes the coronary arteries non-invasively using ECG-gated ultrafast multi-slice scanning. It accurately rules out coronary blockages in low-to-intermediate risk chest pain patients without invasive catheterization.",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/Specialities icons/Cardiology.jpeg",
     whyItIsDone: [
       "Evaluating atypical chest pain or unexplained shortness of breath",
       "Calculating Agatston coronary calcium score for preventive risk assessment",
@@ -172,7 +172,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "Ultrasound Soundwaves",
     summary: "Real-time ultrasound evaluation of heart chambers, ejection fraction (EF), cardiac valves, and blood flow velocity.",
     overview: "A 2D Echo uses harmless high-frequency ultrasound waves to measure left ventricular ejection fraction, detect valve regurgitation or stenosis, evaluate wall motion abnormalities, and detect pericardial effusion.",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/nurse-holding-tablet-with-heart-figure-cardiology-diagnosis 1.png",
     whyItIsDone: [
       "Assessing heart pumping efficiency and ejection fraction (normal 55-65%)",
       "Diagnosing heart valve diseases (mitral/aortic stenosis or regurgitation)",
@@ -203,7 +203,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "High-Definition Video Endoscope",
     summary: "Direct visual examination of esophagus, stomach lining, and duodenum with optical zoom and targeted biopsy.",
     overview: "An upper endoscopy uses a slender, flexible tube with a high-definition camera to examine the upper digestive tract. It detects acid reflux damage, gastritis, peptic ulcers, H. pylori, and early tumors, with rapid tissue biopsy.",
-    image: "/Specialities icons/General Surgery.jpeg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     whyItIsDone: [
       "Investigating persistent acidity, chronic heartburn, or indigestion",
       "Evaluating difficulty or pain during swallowing (dysphagia/odynophagia)",
@@ -265,7 +265,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "Venous Blood (3 ml)",
     summary: "Measurement of Total & Direct Bilirubin, SGOT/AST, SGPT/ALT, Alkaline Phosphatase (ALP), Total Protein, and Albumin.",
     overview: "The liver function test assesses hepatocyte integrity, biliary excretion, and synthetic capability. Elevated transaminases indicate liver inflammation or fatty liver, while elevated alkaline phosphatase suggests biliary tract obstruction.",
-    image: "/Specialities icons/Liver Transplant.svg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     whyItIsDone: [
       "Investigating jaundice, dark urine, pale stools, or right upper belly pain",
       "Screening for Fatty Liver Disease (NAFLD / NASH) and metabolic syndrome",
@@ -358,7 +358,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "Tumor Tissue Block / Peripheral Blood",
     summary: "Massively parallel high-throughput DNA and RNA sequencing detecting actionable cancer driver mutations and biomarker matches.",
     overview: "NGS comprehensive genomic profiling analyzes over 500 genes simultaneously to identify driver mutations (EGFR, ALK, KRAS, BRAF, BRCA1/2, NTRK), Tumor Mutational Burden (TMB), and Microsatellite Instability (MSI) to guide targeted therapies.",
-    image: "/images/procedures/genomics_hd.jpg",
+    image: "/Specialities icons/Cancer Care.jpeg",
     whyItIsDone: [
       "Selecting FDA-approved targeted therapies for solid tumors and lymphomas",
       "Determining patient eligibility for novel immunotherapy checkpoint inhibitors",
@@ -389,7 +389,7 @@ export const DIAGNOSTICS_DATA: DiagnosticItem[] = [
     sampleType: "HD Colonoscope Video",
     summary: "High-definition endoscopic visualization of the entire large intestine and terminal ileum with on-table polyp removal.",
     overview: "Colonoscopy is both diagnostic and preventive. By identifying and removing precancerous adenomatous polyps in real-time, colonoscopy reduces the risk of colorectal cancer by up to 90%.",
-    image: "/Specialities icons/General Surgery.jpeg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     whyItIsDone: [
       "Routine colorectal cancer screening starting at age 45 or earlier with family risk",
       "Investigating unexplained rectal bleeding, chronic diarrhea, or constipation",

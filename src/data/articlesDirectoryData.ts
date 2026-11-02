@@ -31,7 +31,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     authorAvatar: "/doctor_patient.png",
     readTime: "5 min read",
     publishedDate: "October 2026",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/images/articles/blog_heart_health.png",
     summary: "Discover essential lifestyle habits, dietary strategies, and preventive cardiovascular screening guidelines.",
     overview: "Cardiovascular diseases remain the leading cause of mortality worldwide. Yet, over 80% of premature heart attacks and strokes are preventable through proactive lifestyle interventions, blood pressure regulation, and timely lipid management.",
     keyTakeaways: [
@@ -108,7 +108,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     authorAvatar: "/images/procedures/genomics_hd.jpg",
     readTime: "7 min read",
     publishedDate: "September 2026",
-    image: "/images/procedures/radiation_oncology_hd.jpg",
+    image: "/Specialities icons/Cancer Care.jpeg",
     summary: "Why early detection saves lives: recommended screening timelines for breast, cervical, colorectal, and lung cancer.",
     overview: "When detected at Stage 1, five-year survival rates for cancers like breast, cervix, and colon exceed 90%. Modern digital imaging, molecular liquid biopsies, and genetic panels allow oncologists to intercept disease before metastatic spread.",
     keyTakeaways: [
@@ -172,7 +172,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     authorAvatar: "/doctor_patient.png",
     readTime: "6 min read",
     publishedDate: "August 2026",
-    image: "/Specialities icons/General Surgery.jpeg",
+    image: "/Specialities icons/Endocrinology.jpeg",
     summary: "How modern SGLT2 inhibitors and continuous glucose monitoring protect your kidneys, heart, and retinas.",
     overview: "Diabetes management is no longer merely about maintaining a normal HbA1c; modern evidence emphasizes preserving the vascular endothelial lining against microvascular and macrovascular complications.",
     keyTakeaways: [

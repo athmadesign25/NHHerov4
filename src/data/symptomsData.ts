@@ -46,7 +46,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Immediate Attention",
     summary: "Tightness, squeezing, or burning in the central chest radiating to jaw, neck, shoulder, or left arm.",
     overview: "Chest pain is one of the most critical symptoms requiring immediate clinical evaluation to distinguish between life-threatening coronary syndromes, aortic emergencies, and non-cardiac causes such as GERD or musculoskeletal strain.",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/Specialities icons/Cardiology.jpeg",
     commonCauses: [
       "Coronary Artery Disease & Acute Coronary Syndrome",
       "Myocardial Infarction (Heart Attack)",
@@ -110,7 +110,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Consult Specialist",
     summary: "Persistent dry or productive cough lasting longer than 8 weeks with throat clearing or nocturnal spasms.",
     overview: "A cough lasting over 8 weeks in adults is considered chronic. Common etiologies include cough-variant asthma, upper airway cough syndrome (post-nasal drip), gastroesophageal reflux, and pulmonary tuberculosis.",
-    image: "/images/procedures/procedure_surgery.png",
+    image: "/Specialities icons/Pulmonology.jpeg",
     commonCauses: [
       "Cough-Variant Asthma & Environmental Allergies",
       "Gastroesophageal Reflux Disease (Silent Reflux)",
@@ -142,7 +142,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Evaluate within 24 hrs",
     summary: "Sensation of racing, fluttering, pounding, or skipped heartbeats while resting or under mild stress.",
     overview: "Cardiac palpitations range from benign premature ventricular contractions to serious arrhythmias like Atrial Fibrillation or Supraventricular Tachycardia (SVT) that elevate stroke risk.",
-    image: "/images/procedures/procedure_cardiology.png",
+    image: "/nurse-holding-tablet-with-heart-figure-cardiology-diagnosis 1.png",
     commonCauses: [
       "Atrial Fibrillation (AFib) & Atrial Flutter",
       "Supraventricular Tachycardia (SVT)",
@@ -174,7 +174,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Emergency if Sudden",
     summary: "Sudden thunderclap pain, throbbing unilateral temple headache, or pain accompanied by visual aura and nausea.",
     overview: "While many headaches are migraines or tension headaches, a 'thunderclap' headache reaching maximum intensity within 60 seconds is a red-flag symptom for intracranial aneurysmal subarachnoid hemorrhage.",
-    image: "/images/specialities/Brain and Spine.png",
+    image: "/Specialities icons/Neurology.jpeg",
     commonCauses: [
       "Migraine with or without Neurological Aura",
       "Intracranial Aneurysm Rupture / Subarachnoid Hemorrhage",
@@ -270,7 +270,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Evaluate within 24-48 hrs",
     summary: "Yellowish discoloration of whites of eyes (sclera) and skin, accompanied by dark tea-colored urine and pale stools.",
     overview: "Jaundice occurs when bilirubin levels build up in the blood. It indicates pre-hepatic hemolysis, hepatic parenchyma dysfunction (hepatitis, cirrhosis), or post-hepatic biliary duct obstruction by stones or tumors.",
-    image: "/Specialities icons/Liver Transplant.svg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     commonCauses: [
       "Acute Viral Hepatitis (A, B, C, or E)",
       "Gallstones Obstructing Common Bile Duct (Choledocholithiasis)",
@@ -302,7 +302,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Consult GI Specialist",
     summary: "Cramping, burning, dull, or sharp pain in the abdomen that recurs frequently or interferes with digestion.",
     overview: "Abdominal pain may arise from gastric ulcers, gallbladder inflammation, irritable bowel syndrome, inflammatory bowel disease, or appendicitis. Localizing the quadrant guides accurate diagnosis.",
-    image: "/Specialities icons/General Surgery.jpeg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     commonCauses: [
       "Peptic Ulcer Disease & Helicobacter Pylori Infection",
       "Irritable Bowel Syndrome (IBS) & Food Intolerances",
@@ -366,7 +366,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Comprehensive Workup",
     summary: "Losing more than 5% of body weight within 6 to 12 months without dieting, exercise, or intentional lifestyle changes.",
     overview: "Involuntary weight loss is a key systemic symptom that warrants systematic evaluation to exclude occult malignancy, endocrine disorders like hyperthyroidism or Type 1 diabetes, and chronic malabsorption syndromes.",
-    image: "/images/procedures/genomics_hd.jpg",
+    image: "/Specialities icons/Cancer Care.jpeg",
     commonCauses: [
       "Occult Malignancies (GI, Lymphoma, Lung, Pancreas)",
       "Hyperthyroidism & Accelerated Metabolism",
@@ -430,7 +430,7 @@ export const SYMPTOMS_DATA: SymptomItem[] = [
     urgencyLevel: "Early Evaluation",
     summary: "Feeling that food or liquid is sticking, hanging up, or refusing to go down into the stomach comfortably.",
     overview: "Dysphagia can be mechanical (esophageal stricture, ring, or cancer) or motility-related (achalasia, scleroderma, stroke). Any progressive dysphagia requires prompt endoscopic evaluation.",
-    image: "/Specialities icons/General Surgery.jpeg",
+    image: "/Specialities icons/Gastroenterology.jpeg",
     commonCauses: [
       "Esophageal Stricture from Acid Reflux",
       "Esophageal Carcinoma (Adenocarcinoma or Squamous Cell)",

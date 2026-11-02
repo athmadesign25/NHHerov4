@@ -872,7 +872,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   min-height: 44px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  text-shadow: none !important;
 }
 
 .cardSub {
@@ -1269,28 +1269,29 @@
   transform: translateY(-2px);
 }
 
-/* ─── MWEB (MOBILE <= 640PX) IMMERSIVE SCRIM CARD: VISUAL EXCELLENCE ─────── */
+/* ─── MWEB (MOBILE <= 640PX) CLINICAL SPECIALITY CARD VISUAL ARCHITECTURE ─── */
 @media (max-width: 640px) {
   .procedureCard {
     position: relative;
-    min-height: 200px;
+    aspect-ratio: 1 / 1.15;
+    min-height: 350px;
     height: auto;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.38);
-    background: #091322;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+    background: #090d16;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .procedureCard:hover {
-    transform: none; /* Avoid touch jank */
+  .procedureCard:active {
+    transform: scale(0.985);
   }
 
+  /* Full-bleed background image with crystal clarity (matching Image 1) */
   .cardImageWrap {
     position: absolute;
     inset: 0;
@@ -1299,150 +1300,226 @@
     min-height: 100%;
     border-radius: 0;
     border: none;
-    z-index: 0;
-    background: #060e1b;
+    z-index: 1;
+    background: #090d16;
   }
 
   .cardBgImage {
     object-fit: cover;
-    object-position: center 30%;
-    filter: brightness(0.85);
+    object-position: center 25%;
+    filter: brightness(1.05) saturate(92%);
   }
 
-  /* Multi-stop atmospheric dark gradient scrim covering the entire card for 100% legibility */
+  /* Bottom-up atmospheric gradient scrim (top 45% stays bright & visible) */
   .cardGradient {
     display: block !important;
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to top,
-      #060e1b 0%,
-      rgba(6, 14, 27, 0.94) 45%,
-      rgba(6, 14, 27, 0.55) 75%,
-      rgba(6, 14, 27, 0.22) 100%
+      rgba(9, 13, 22, 0.96) 0%,
+      rgba(9, 13, 22, 0.80) 38%,
+      rgba(9, 13, 22, 0.28) 65%,
+      rgba(9, 13, 22, 0) 82%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.50) 0%,
+      transparent 32%
     );
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
   }
 
+  /* Card content covers entire card; content is pushed to bottom */
   .cardContent {
-    position: relative;
-    z-index: 2;
-    padding: 16px 16px 14px;
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    padding: 16px 18px 18px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     width: 100%;
+    height: 100%;
     box-sizing: border-box;
-    flex: 1;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  /* Top-left speciality text pinned to the true top-left corner (NO chip / pill format) */
+  .cardEyebrow {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 5;
+    display: block;
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: none !important;
+    margin: 0;
+    max-width: calc(100% - 36px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
   }
 
   .cardTextGroup {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    pointer-events: auto;
   }
 
-  .cardEyebrow {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    margin-bottom: 5px;
-    color: rgba(255, 255, 255, 0.65);
-    text-transform: uppercase;
+  /* NO CHIPS on mobile: clean uncluttered stream as requested */
+  .cardRestingMeta {
+    display: none !important;
   }
 
+  /* Prominent, bold title */
   .cardTitle {
-    font-size: 15.5px;
-    font-weight: 600;
-    line-height: 1.38;
+    font-size: clamp(18px, 4.8vw, 21px);
+    font-weight: 700;
+    line-height: 1.25;
     letter-spacing: -0.015em;
     color: #ffffff;
-    margin: 0 0 5px 0;
+    margin: 0;
     min-height: auto;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: none !important;
   }
 
+  /* Stretched link so tapping anywhere on the card navigates to detail */
+  .cardTitleLink::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  /* Clean summary snippet */
   .cardSub {
-    font-size: 11.5px;
-    line-height: 1.4;
-    color: rgba(255, 255, 255, 0.68);
-    margin: 0 0 10px 0;
+    font-size: 12px;
+    line-height: 1.42;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 2px 0 8px 0;
     min-height: auto;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    text-shadow: none !important;
   }
 
+  /* Action row: seamless "Read more →" row without dividing lines or chips */
   .cardBottomSlot {
     margin: 0;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    padding-top: 2px;
+    border-top: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: auto;
-    min-height: 28px;
+    min-height: 32px;
     width: 100%;
-  }
-
-  .cardRestingMeta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    height: auto;
-  }
-
-  .metaBadge {
-    height: 22px;
-    padding: 0 7px;
-    font-size: 10px;
-    background: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.85);
+    pointer-events: auto;
   }
 
   .cardActions {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    width: auto;
+    justify-content: space-between;
+    width: 100%;
     height: auto;
     opacity: 1;
     transform: none;
     pointer-events: auto;
     position: static;
+    margin-left: 0;
   }
 
-  /* Eliminate blue button fatigue: hide secondary 'Find doctors' button in mobile card stream */
   .cardDoctorBtn {
     display: none;
   }
 
+  /* Sleek "Read more →" action row matching Image 1 */
   .cardDetailBtn {
-    height: 26px;
-    width: auto;
-    padding: 0 10px;
-    font-size: 10.5px;
+    height: 32px;
+    width: 100%;
+    padding: 0;
+    font-size: 13.5px;
     font-weight: 600;
-    border-radius: 9999px;
-    background: rgba(3, 78, 162, 0.85);
+    background: transparent;
+    border: none;
+    box-shadow: none;
     color: #ffffff;
-    box-shadow: 0 2px 6px rgba(3, 78, 162, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    position: relative;
+    z-index: 4;
   }
 
-  /* Entrance Skeletons match */
+  .cardDetailBtn span {
+    display: inline-block;
+    position: relative;
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .cardDetailBtn span::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 1px;
+  }
+
+  .pillBtnArrow {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+    padding: 6px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
+  /* Skeletons match new card aspect ratio */
   .skeletonCard {
-    min-height: 200px;
+    aspect-ratio: 1 / 1.15;
+    min-height: 350px;
     height: auto;
-    padding: 16px;
-    border-radius: 16px;
+    padding: 22px 18px 18px;
+    border-radius: 20px;
   }
 
   .skeletonImageWrap {
@@ -1451,6 +1528,7 @@
     width: 100%;
     height: 100%;
     border-radius: 0;
+    border: none;
   }
 
   .skeletonContent {
@@ -1466,6 +1544,7 @@
 }
 
 /* Aliases for filter sheet names across library templates */
+
 .filterSheetOverlay {
   position: fixed;
   inset: 0;

@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+.faqListFluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 /* Each row */
 .faqItem {
   border-bottom: 1px solid rgba(var(--slate-900-rgb), 0.1);

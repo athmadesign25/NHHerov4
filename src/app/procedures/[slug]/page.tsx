@@ -22,6 +22,7 @@ import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDet
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -36,7 +37,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
-  const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Scroll listener for:
@@ -651,35 +651,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             {/* 12. FAQs Accordion */}
             <section id="faqs" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>Frequently Asked Questions</h2>
-              <div className={styles.faqAccordionList}>
-                {detail.faqs.map((faq, i) => {
-                  const isOpen = openFaqIdx === i;
-                  return (
-                    <div key={i} className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ""}`}>
-                      <button
-                        className={styles.faqTrigger}
-                        onClick={() => setOpenFaqIdx(isOpen ? null : i)}
-                        aria-expanded={isOpen}
-                      >
-                        <span>{faq.q}</span>
-                        {isOpen ? <Minus size={18} color="#034EA2" /> : <Plus size={18} color="#64748b" />}
-                      </button>
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25, ease: "easeOut" }}
-                          >
-                            <div className={styles.faqAnswer}>{faq.a}</div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-              </div>
+              <SpecialityFAQ faqs={detail.faqs} theme="light" fluid />
             </section>
           </article>
         </div>
