@@ -76,3 +76,39 @@
   .search:focus-within { border-color: Highlight; outline-color: Highlight; }
   .count { background: ButtonFace; color: ButtonText; outline: 1px solid ButtonText; outline-offset: -1px; }
 }
+
+/* ── Alphabet Grid (A-Z Directory) ── */
+.alphabet {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--sp-1);
+  padding-block: calc(var(--sp-1) / 2);
+}
+
+.alphabet button {
+  min-height: 32px;
+  border: 1px solid var(--d3-ui-border, var(--color-border-light));
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-card);
+  color: var(--d3-ui-text, var(--color-text-secondary));
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.alphabet button:hover:not(:disabled),
+.alphabet button[aria-pressed="true"] {
+  color: var(--d3-ui-selection-label, var(--color-primary));
+  background: var(--d3-ui-selection-surface, var(--color-primary-light));
+  border-color: var(--d3-ui-selection, var(--color-primary));
+}
+
+.alphabet button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: var(--color-bg-alt);
+}
