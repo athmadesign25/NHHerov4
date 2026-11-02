@@ -32,6 +32,7 @@ import {
   SpecialityFilterDialog,
 } from "./filters";
 import { DoctorSearchTop, chipStyles } from "./toolbar";
+import themeStyles from "./toolbar/DoctorSearchTheme.module.css";
 import styles from "./page.module.css";
 
 
@@ -323,7 +324,11 @@ function SpecialitiesContent() {
   };
 
   return (
-    <div className={styles.page} data-nav-theme="light">
+    <div
+      className={`${styles.page} ${styles.doctorPage} ${themeStyles.theme}`}
+      data-design="d20"
+      data-nav-theme="light"
+    >
       {/* ── 1. HEADER & HERO (Matching DoctorSearchTop from aditya4_work) ── */}
       <header className={`${styles.container} ${styles.titleRow}`}>
         <div className={styles.title}>
