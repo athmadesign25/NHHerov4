@@ -1,6 +1,6 @@
 .container {
   width: calc(100% - var(--d3-gutter-start, 24px) - var(--d3-gutter-end, 24px));
-  margin-inline: var(--d3-gutter-start, 24px) var(--d3-gutter-end, 24px);
+  margin-inline: auto;
   max-width: var(--doctor-listing-max-width, 1440px);
 }
 

@@ -33,8 +33,8 @@
   --doctor-listing-max-width: 1440px;
   --d16-content-max: var(--doctor-listing-max-width);
   --d16-page-gutter: var(--sp-2, 16px);
-  --d3-gutter-start: clamp(calc(var(--sp-1, 8px) * 1.5), 3.5vw, calc(var(--sp-2, 16px) + var(--sp-1, 8px) / 4));
-  --d3-gutter-end: var(--d3-gutter-start);
+  --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
+  --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
   --d3-nav-height: calc(var(--nav-height, 72px) - var(--sp-2, 16px));
   --filter-bottom-gap: var(--sp-2, 16px);
 
@@ -60,6 +60,10 @@
 
 .page.doctorPage,
 .page[data-design="d20"] {
+  --d16-content-max: var(--doctor-listing-max-width);
+  --d16-page-gutter: var(--sp-2, 16px);
+  --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
+  --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
   --d20-canvas-glow-height: clamp(calc(var(--sp-16, 128px) * 3), 65vw, calc(var(--sp-16, 128px) * 6));
   background:
     radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
@@ -89,13 +93,17 @@
 }
 
 @media (min-width: 640px) {
-  .page {
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
     --d16-page-gutter: var(--sp-3, 24px);
   }
 }
 
 @media (min-width: 1024px) {
-  .page {
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
     --d16-page-gutter: clamp(var(--sp-4, 32px), 3.5vw, var(--sp-6, 48px));
   }
 }
@@ -103,7 +111,7 @@
 /* ── 1. HEADER & HERO (Exact match to DoctorSearchTop from aditya4_work) ─────── */
 .container {
   width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
-  margin-inline: var(--d3-gutter-start) var(--d3-gutter-end);
+  margin-inline: auto;
   max-width: var(--doctor-listing-max-width, 1440px);
 }
 
@@ -564,7 +572,7 @@
 /* ── 3. MAIN TWO-COLUMN LAYOUT (Matching Doctor Listing from aditya4_work) ── */
 .layout {
   width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
-  margin-inline: var(--d3-gutter-start) var(--d3-gutter-end);
+  margin-inline: auto;
   max-width: var(--doctor-listing-max-width, 1440px);
   padding-block: var(--sp-3, 24px) var(--sp-8, 64px);
   display: grid;
