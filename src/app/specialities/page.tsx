@@ -29,9 +29,11 @@ import {
   SpecialityFilters,
   FilterScrollArea,
   ActiveSpecialityFilters,
+  SidebarSpecialityFilters,
   SpecialityFilterDialog,
 } from "./filters";
 import styles from "./page.module.css";
+
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
@@ -558,38 +560,35 @@ function SpecialitiesContent() {
       {/* ── 3. MAIN TWO-COLUMN LAYOUT ── */}
       <div className={styles.layout}>
         {/* Sticky Sidebar Filters */}
-        <aside className={styles.sidebar} aria-label="Speciality filters">
-          <div className={styles.sidebarHeader}>
-            <div className={styles.sidebarTitle}>
-              <SlidersHorizontal size={16} style={{ color: "var(--color-primary)" }} />
+        <aside
+          className={styles.sidebar}
+          aria-label="Speciality filters"
+          aria-describedby="d3-refinement-help"
+          data-lenis-prevent="true"
+          data-d3-ui="true"
+        >
+          <div className={styles.filterHeading}>
+            <h2>
+              <Filter size={16} aria-hidden />
               Filters
-            </div>
+            </h2>
             {hasActiveFilters && (
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className={styles.sidebarResetBtn}
+                aria-label="Clear all filters"
                 title="Clear all filters"
-                id="sidebar-reset-filters-btn"
               >
                 Clear all
               </button>
             )}
           </div>
 
-          {/* Active Filter Chips in Sidebar */}
-          {appliedChips.length > 0 && (
-            <ActiveSpecialityFilters
-              chips={appliedChips}
-              reducedMotion={reducedMotion}
-              focusFallback={() => {
-                document.getElementById("sidebar-reset-filters-btn")?.focus({ preventScroll: true });
-              }}
-              wrap
-            />
-          )}
-
           <FilterScrollArea>
+            <SidebarSpecialityFilters
+              chips={appliedChips}
+              onClearAll={handleResetFilters}
+            />
             <SpecialityFilters
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
@@ -597,6 +596,8 @@ function SpecialitiesContent() {
               onSelectClassification={setSelectedClassification}
               selectedLetter={selectedLetter}
               onSelectLetter={setSelectedLetter}
+              selectedCity={selectedCity}
+              onSelectCity={setSelectedCity}
               categories={categories}
               categoryCounts={categoryCounts}
               classificationCounts={classificationCounts}
@@ -604,6 +605,7 @@ function SpecialitiesContent() {
             />
           </FilterScrollArea>
         </aside>
+
 
         {/* Right Main Results Area */}
         <section className={styles.resultsArea} aria-label="Medical specialities results">

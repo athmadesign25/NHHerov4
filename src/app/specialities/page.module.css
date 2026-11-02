@@ -524,43 +524,91 @@
   }
 }
 
-/* ── 4. STICKY FILTERS SIDEBAR (Matching SidebarDoctorFilters) ─────────── */
+/* ── 4. STICKY FILTERS SIDEBAR (Matching Design3SearchResults.module.css) ── */
 .sidebar {
+  --filter-header-height: var(--sp-4, 32px);
+  --filter-category-height: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  --filter-glass-surface: color-mix(in srgb, var(--color-text, #0f172a) 5%, var(--color-bg-card, #ffffff));
+  --filter-glass-fill: color-mix(in srgb, var(--filter-glass-surface) 56%, transparent);
+  --filter-glass-blur: calc(var(--sp-1, 8px) * 1.5);
+  --filter-glass-height: calc(var(--filter-header-height) + var(--sp-3, 24px) + var(--filter-pinned-height, 0px));
   display: none;
+  min-width: 0;
+  padding: var(--sp-3, 24px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xl, 20px);
+  background: var(--color-bg-card, #ffffff);
 }
 
-@media (min-width: 1024px) {
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: calc(var(--nav-actual-height, var(--page-nav-height, 68px)) + 130px);
-    max-height: calc(100dvh - var(--nav-actual-height, var(--page-nav-height, 68px)) - 146px);
-    overflow: hidden;
-    padding: var(--sp-3, 24px);
-    border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-xl, 20px);
-    background: var(--color-bg-card, #ffffff);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  :global(html[data-nav-visible="false"]) .sidebar {
-    top: 130px;
-    max-height: calc(100dvh - 146px);
-  }
+/* One backdrop spans both headings. Labels never create their own glass panes. */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  pointer-events: none;
+  height: var(--filter-glass-height);
+  border-radius: calc(var(--radius-xl, 20px) - 1px) calc(var(--radius-xl, 20px) - 1px) 0 0;
+  background: var(--filter-glass-surface);
 }
 
-.sidebarHeader {
+/* Draw the panel edge above the frosted heading so blur cannot wash it out. */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: inherit;
+}
+
+.sidebar [data-filter-group][data-expanded] > [data-filter-category-header] {
+  z-index: auto;
+  background: transparent;
+}
+
+.sidebar [data-filter-group][data-expanded] > [data-filter-category-header]::before {
+  content: none;
+}
+
+.sidebar [data-filter-group] > [data-filter-category-header][data-pinned] {
+  z-index: 2;
+  /* Clip the outgoing label as its section pushes it under Filters; leave room for focus. */
+  clip-path: inset(calc(var(--filter-pinned-clip, 0px) - var(--sp-1, 8px)) calc(var(--sp-1, 8px) * -1) calc(var(--sp-1, 8px) * -1));
+}
+
+.filterHeading {
+  position: relative;
+  z-index: 3;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--sp-2, 16px);
-  padding-bottom: var(--sp-2, 16px);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  gap: var(--sp-1, 8px);
+  height: calc(var(--filter-header-height) + var(--sp-3, 24px));
+  margin: calc(var(--sp-3, 24px) * -1) calc(var(--sp-3, 24px) * -1) 0;
+  padding: var(--sp-1, 8px) var(--sp-3, 24px);
 }
 
-.sidebarTitle {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sidebar::before {
+    height: calc(var(--filter-glass-height) + var(--sp-1, 8px));
+    background: var(--filter-glass-fill);
+    -webkit-backdrop-filter: blur(var(--filter-glass-blur));
+    backdrop-filter: blur(var(--filter-glass-blur));
+    -webkit-mask-image: linear-gradient(180deg, var(--color-text-inverse, #fff) calc(var(--filter-glass-height) - var(--sp-1, 8px)), transparent);
+    mask-image: linear-gradient(180deg, var(--color-text-inverse, #fff) calc(var(--filter-glass-height) - var(--sp-1, 8px)), transparent);
+  }
+}
+
+.filterHeading h2,
+.filterHeading button {
+  position: relative;
+  z-index: 1;
+}
+
+.filterHeading h2 {
   display: flex;
   align-items: center;
   gap: var(--sp-1, 8px);
@@ -569,22 +617,56 @@
   color: var(--color-text, #0f172a);
 }
 
-.sidebarResetBtn {
-  background: transparent;
-  border: 0;
-  font-size: var(--font-size-sm, 13px);
+.filterHeading button {
+  min-height: var(--sp-6, 48px);
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: var(--font-size-sm, 14px);
   font-weight: 500;
-  color: var(--color-primary, #034EA2);
-  cursor: pointer;
-  padding: 4px 6px;
+  color: var(--d3-ui-neutral-ink, var(--color-primary, #034EA2));
   border-radius: var(--radius-sm, 4px);
-  transition: color var(--transition-fast, 0.15s);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity var(--d3-ui-fast, var(--transition-fast, 0.15s)), color var(--d3-ui-fast, var(--transition-fast, 0.15s));
 }
 
-.sidebarResetBtn:hover {
-  color: var(--color-primary-dark, #023a78);
-  text-decoration: underline;
+.filterHeading button:disabled {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
+
+.filterHeading button:not(:disabled):active {
+  color: var(--d3-ui-neutral-ink, var(--color-primary-dark, #023877));
+}
+
+@media (hover: hover) {
+  .filterHeading button:not(:disabled):hover {
+    color: var(--d3-ui-neutral-ink, var(--color-primary-dark, #023877));
+    text-decoration: underline;
+  }
+}
+
+.sidebar :is(button, a, input, select) {
+  scroll-margin-block: var(--sp-1, 8px);
+}
+
+.sidebar:hover [data-overflow="true"] [data-filter-scrollbar] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: calc(var(--nav-height, 72px) + var(--sp-12, 96px));
+    max-height: var(--filter-panel-max-height, calc(100dvh - var(--nav-height, 72px) - var(--sp-16, 128px)));
+  }
+}
+
 
 /* Active Filter Chips in Sidebar */
 .activeChipsRow {
