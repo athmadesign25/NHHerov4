@@ -1,0 +1,40 @@
+.editor {
+  --target: calc(var(--sp-6) - var(--sp-1) / 2);
+  --d7-surface: var(--journey-paper-surface);
+  --d7-muted: var(--color-text-secondary);
+  --scroll-chevron: var(--color-text-secondary);
+  --scroll-chevron-hover: var(--color-text);
+  --d7-text: var(--d17-lite-ink);
+  --d3-ui-selection: var(--color-emergency);
+  --d3-ui-selection-label: color-mix(in srgb, var(--color-emergency) 78%, var(--color-text));
+  --d3-ui-selection-surface: var(--color-emergency-light);
+  --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
+  display: grid;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-primary-light) 40%, var(--color-bg-card));
+  color: var(--d17-lite-ink);
+}
+.editor > h3 { margin: 0; color: inherit; font-weight: 600; line-height: 1.5; }
+.editor > h3 { font-size: var(--font-size-base); }
+.editor h3:focus { outline: none; }
+.controls { display: grid; gap: var(--sp-3); min-width: 0; margin: 0; padding: 0; border: 0; }
+.empty, .notice { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; }
+.notice { padding: var(--sp-1) var(--sp-2); border-radius: var(--radius-sm); background: var(--color-primary-light); }
+.actions { display: flex; justify-content: flex-end; gap: var(--sp-1); }
+.actions button { min-height: var(--sp-5); padding: var(--sp-1) var(--sp-2); border-radius: var(--radius-md); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; cursor: pointer; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.cancel { border: 1px solid var(--color-border); background: transparent; color: var(--color-text-secondary); }
+.save { border: 1px solid transparent; background: var(--color-primary); color: var(--color-text-inverse); }
+.actions button:disabled { opacity: .5; cursor: not-allowed; }
+.editor button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (min-width: 640px) { .editor { padding: var(--sp-3); } }
+@media (max-width: 639px) { .actions button { min-height: var(--target); } }
+@media (hover: hover) {
+  .cancel:not(:disabled):hover { color: var(--d17-lite-ink); background: var(--color-bg-alt); }
+  .save:not(:disabled):hover { background: var(--color-primary-dark); }
+}
+@media (prefers-reduced-motion: reduce) { .editor button { transition: none; } }

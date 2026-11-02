@@ -1499,3 +1499,10 @@ export function formatAudioDuration(seconds: number): string {
   const s = seconds % 60;
   return `${m}:${s < 10 ? "0" : ""}${s}`;
 }
+
+
+export const allSearchDataDoctors: DoctorCardData[] = [
+  ...(SEMANTIC_C_RESULTS?.doctors ?? []),
+  ...(CARDIOLOGY_RESULTS?.doctors ?? []),
+  ...(ORTHOPAEDICS_RESULTS?.doctors ?? []),
+];

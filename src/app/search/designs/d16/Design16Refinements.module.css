@@ -1,0 +1,25 @@
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--sp-1) / 2) var(--sp-3); align-items: start; }
+.shortcuts { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--sp-1) / 2) var(--sp-3); min-width: 0; }
+.shortcuts > * { min-width: 0; max-width: 100%; }
+.shortcutBar { display: contents; }
+.shortcutBar > * { min-width: 0; max-width: 100%; }
+.filterButton { display: none; }
+.filterCount { position: absolute; inset-block-start: 0; inset-inline-end: 0; display: grid; place-items: center; min-width: var(--sp-2); min-height: var(--sp-2); padding-inline: calc(var(--sp-1) / 4); border-radius: var(--radius-full); color: var(--d3-ui-selection-label, var(--color-text)); background: var(--d3-ui-selection-surface, var(--color-emergency-light)); font-size: var(--font-size-xs); line-height: 1; font-variant-numeric: tabular-nums; }
+.context { display: contents; }
+.context > * { min-width: 0; max-width: 100%; }
+.context:empty { display: none; }
+.group { display: flex; align-items: center; gap: calc(var(--sp-1) * .75); }
+.hint { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; clip-path: inset(50%); white-space: nowrap; overflow: hidden; }
+/* The filter control stays outside the scroller while the smart choices move. */
+@media (width < 1200px) {
+  .compactMobile .shortcutBar { display: grid; grid-template-columns: var(--sp-6) minmax(0, 1fr); align-items: center; gap: var(--sp-1); width: 100%; }
+  .compactMobile .filterButton { display: inline-flex; width: var(--sp-6); min-height: var(--sp-6); padding-inline: 0; }
+  .compactMobile .filterButton::before { inset: calc(var(--sp-1) / 2); }
+}
+@media (min-width: 1200px) {
+  .layout { grid-template-columns: var(--d16-filter-width) minmax(0, 1fr); }
+  .hint { grid-column: 2; }
+}
+.layout.videoSmartFilter { grid-template-columns: minmax(0, 1fr); }
+.videoSmartFilter .hint { grid-column: 1; }

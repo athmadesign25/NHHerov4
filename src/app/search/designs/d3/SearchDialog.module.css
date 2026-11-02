@@ -1,0 +1,27 @@
+.dialog { width: min(100%, calc(var(--sp-16) * 4)); max-width: 100%; max-height: 88dvh; margin: auto auto 0; padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-xl) var(--radius-xl) 0 0; color: var(--color-text); background: var(--color-bg-card); box-shadow: var(--shadow-xl); overflow: hidden; }
+.dialog[data-doctor-preview] { box-shadow: none; }
+.dialog[data-doctor-preview]::backdrop { background: color-mix(in srgb, var(--color-text) 28%, transparent); animation: backdropEnter var(--d3-ui-base); transition: opacity var(--d3-ui-fast); }
+.dialog[data-doctor-preview][data-closing]::backdrop { opacity: 0; }
+@keyframes backdropEnter { from { opacity: 0; } to { opacity: 1; } }
+.dialog[open] { display: flex; flex-direction: column; }
+.dialog::backdrop { background: color-mix(in srgb, var(--color-primary-dark) 45%, transparent); backdrop-filter: blur(4px); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); }
+.header h2 { font-size: clamp(var(--font-size-lg), 3vw, var(--font-size-xl)); line-height: 1.3; }
+.header button { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-6); height: var(--sp-6); border-radius: var(--radius-full); background: var(--color-bg-alt); color: var(--d3-ui-text, var(--color-text-secondary)); transition: background-color var(--d3-ui-fast, var(--transition-fast)), color var(--d3-ui-fast, var(--transition-fast)); }
+.dialog[data-doctor-preview] .header button { background: transparent; transition: color var(--d3-ui-fast, var(--transition-fast)); }
+@media (hover: hover) { .header button:hover:not(:active) { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-hover, var(--color-bg-alt)); } }
+.header button:active { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-pressed, var(--color-primary-light)); }
+@media (hover: hover) { .dialog[data-doctor-preview] .header button:hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); background: transparent; } }
+.dialog[data-doctor-preview] .header button:active { color: var(--d3-ui-ink-pressed, var(--color-text)); background: transparent; }
+.content { padding: var(--sp-3); overflow-y: auto; overscroll-behavior: contain; }
+.content[data-filter-scroll-viewport] { padding-block-start: 0; scroll-padding-block-start: calc(var(--sp-6) + var(--sp-1)); }
+/* Preserve the initial spacing without leaving a gap above a pinned category. */
+.content[data-filter-scroll-viewport] > :first-child { padding-block-start: var(--sp-3); }
+.content p + p { margin-top: var(--sp-2); }
+.footer { display: flex; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3) max(var(--sp-2), env(safe-area-inset-bottom)); border-top: 1px solid var(--color-border); }
+.dialog :is(button, a):focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: 2px; }
+@media (min-width: 640px) { .dialog { margin: auto; border-radius: var(--radius-xl); } }
+
+@media (prefers-reduced-motion: reduce) { .header button, .dialog[data-doctor-preview] .header button, .dialog[data-doctor-preview]::backdrop { transition: none; } .dialog[data-doctor-preview]::backdrop { animation: none; } }
+@media (prefers-reduced-transparency: reduce) { .dialog::backdrop { backdrop-filter: none; } }
+@media (forced-colors: active) { .dialog[data-doctor-preview] :is(button, a):focus-visible { outline-color: Highlight; } }

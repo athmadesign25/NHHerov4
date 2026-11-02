@@ -1,0 +1,15 @@
+.area { position: relative; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; min-width: 0; margin-inline: calc(var(--sp-3) * -1); margin-block-start: calc(var(--filter-header-height, 0px) * -1); }
+.viewport { min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: none; padding-inline: var(--sp-3); scroll-padding-block-start: calc(var(--filter-header-height, 0px) + var(--sp-6) + var(--sp-1)); }
+.viewport::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.viewport:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: -2px; border-radius: var(--radius-sm); }
+.content { display: flow-root; padding-block-start: var(--filter-header-height, 0px); }
+/* Keep the drag area in the right gutter, above the pinned heading's glass. */
+.rail { --thumb-min: var(--sp-4); position: absolute; z-index: 4; inset-block-start: calc(var(--filter-header-height, 0px) + var(--sp-1)); inset-block-end: var(--sp-1); inset-inline-end: 0; width: var(--sp-3); opacity: 0; pointer-events: none; touch-action: none; user-select: none; transition: opacity var(--d3-ui-base, var(--transition-base)); }
+.thumb { position: absolute; top: 0; inset-inline-end: calc(var(--sp-1) * .75); width: calc(var(--sp-1) / 2); border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-text-secondary) 38%, transparent); cursor: grab; transition: background-color var(--d3-ui-fast, var(--transition-fast)); }
+.area[data-overflow="true"]:is(:hover, [data-dragging="true"], :has(.viewport:focus-visible)) .rail { opacity: 1; pointer-events: auto; }
+.area[data-overflow="false"] .rail { transition: none; }
+.rail:hover .thumb, .area[data-dragging="true"] .thumb { background: color-mix(in srgb, var(--color-text-secondary) 65%, transparent); }
+.area[data-dragging="true"] .thumb { cursor: grabbing; }
+@media (hover: none) { .area[data-overflow="true"]:not(:has(.viewport:focus-visible)) .rail { display: none; } }
+@media (prefers-reduced-motion: reduce) { .rail, .thumb { transition: none; } }
+@media (forced-colors: active) { .viewport:focus-visible { outline-color: Highlight; } }

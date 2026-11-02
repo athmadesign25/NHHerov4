@@ -20,16 +20,24 @@ import AdvanceTechnology from "@/components/sections/advance-technology/AdvanceT
 import AdvanceTestsCarousel from "@/components/ui/AdvanceTestsCarousel";
 import DoctorOverviewCarousel from "@/components/ui/DoctorOverviewCarousel";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
+import AboutSpecialitySection from "./AboutSpecialitySection";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
 import { ALL_SPECIALITIES } from "@/data/specialities";
 
-const TOC_ITEMS: TOCItem[] = [
+const COE_TOC_ITEMS: TOCItem[] = [
   { id: "overview", label: "Overview" },
   { id: "treatments", label: "Conditions We Treat" },
-  { id: "doctors", label: "Our Doctors" },
   { id: "procedures", label: "Procedures & Surgeries" },
   { id: "technology", label: "Advance Technology" },
   { id: "tests", label: "Advance Tests" },
+  { id: "patient-stories", label: "Patient Stories" },
+  { id: "hospitals", label: "Hospitals & Clinics" },
+];
+
+const NON_COE_TOC_ITEMS: TOCItem[] = [
+  { id: "overview", label: "Overview" },
+  { id: "treatments", label: "Conditions We Treat" },
+  { id: "about-speciality", label: "About Speciality" },
   { id: "doctor-overview", label: "Doctor Video Insights" },
   { id: "why-us", label: "Why Choose Us" },
   { id: "patient-stories", label: "Patient Stories" },
@@ -38,7 +46,7 @@ const TOC_ITEMS: TOCItem[] = [
 ];
 
 // Add specific images manually (using generic assets or Next.js Image fallbacks)
-const heroImage = "/assets/hero_modern.png"; // Placeholder
+const heroImage = "/assets/hero_bg.png"; // Placeholder
 const gastroImage = "/assets/doctor_1.png"; // Placeholder
 const breastImage = "/assets/doctor_2.png"; // Placeholder
 const neuroImage = "/assets/doctor_3.png"; // Placeholder
@@ -142,7 +150,7 @@ const paediatricCancerCategories = [
     id: "paed-blood-disorders",
     title: "Paediatric Blood Disorders",
     programmeTitle: "Paediatric Blood Disorders Programme",
-    icon: "/speciality-media/2v70sJfGlQ4DODbvIqdV.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/2v70sJfGlQ4DODbvIqdV.webp",
     bg: "/assets/hero_modern.png",
     desc: "Comprehensive diagnostic and therapeutic care for children with benign blood conditions, including thalassaemia, sickle cell disease, haemophilia, and aplastic anaemia.",
     subConditions: [
@@ -156,7 +164,7 @@ const paediatricCancerCategories = [
     id: "paed-blood-cancers",
     title: "Paediatric Blood Cancers",
     programmeTitle: "Paediatric Blood Cancers Programme",
-    icon: "/speciality-media/gFWCGpcgxgt6RRgpP1QS.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/gFWCGpcgxgt6RRgpP1QS.webp",
     bg: "/assets/patient_in_1.png",
     desc: "Dedicated childhood leukaemia and lymphoma programmes delivering advanced multi-agent chemotherapy, immunotherapy, and bone marrow transplants with world-class survival rates.",
     subConditions: [
@@ -169,7 +177,7 @@ const paediatricCancerCategories = [
     id: "paed-brain-tumours",
     title: "Paediatric Brain Tumours",
     programmeTitle: "Paediatric Brain Tumours Programme",
-    icon: "/speciality-media/3DRjQiYG4tICdZ8nuWJ9.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/3DRjQiYG4tICdZ8nuWJ9.webp",
     bg: "/assets/neuro_cancer.png",
     desc: "Multidisciplinary neuro-oncology care combining paediatric neurosurgeons, radiation oncologists, and oncologists utilizing neuronavigation, proton therapy, and targeted treatment.",
     subConditions: [
@@ -183,7 +191,7 @@ const paediatricCancerCategories = [
     id: "paed-solid-tumours",
     title: "Paediatric Solid Tumours",
     programmeTitle: "Paediatric Solid Tumours Programme",
-    icon: "/speciality-media/4iPN1V0pzmJ9qb0Rvxth.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/4iPN1V0pzmJ9qb0Rvxth.webp",
     bg: "/assets/patient_in_2.png",
     desc: "Specialized treatment protocols for kidney, liver, bone, muscle, and nerve tumours in children with limb preservation and organ-sparing surgical focus.",
     subConditions: [
@@ -959,12 +967,14 @@ const faqData = [
   },
 ];
 
-export default function SpecialityDesign2({ slug }: { slug: string }) {
-
+export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: string; isCoE?: boolean }) {
+  
   const currentSpec = ALL_SPECIALITIES.find(s => s.slug === slug);
+  const isCoE = propIsCoE !== undefined ? propIsCoE : Boolean(currentSpec?.isCoE);
+  const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = currentSpec?.name || 'Cancer Care';
   const videoSrc = currentSpec?.detailVideo || currentSpec?.video || "/videos/Hero-Video-New.mp4";
-
+  
   const [patientType, setPatientType] = useState<"Adult" | "Paediatric">("Adult");
 
   const currentCategories = patientType === "Adult" ? adultCancerCategories : paediatricCancerCategories;
@@ -1028,47 +1038,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
   const [isTabsPinned, setIsTabsPinned] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const tabsSentinelRef = useRef<HTMLDivElement>(null);
-  const pinnedTabsRef = useRef<HTMLDivElement>(null);
   const footerSentinelRef = useRef<HTMLDivElement>(null);
-
-  // Track the existing navbar's rendered edge, including its slide animation.
-  // The speciality bar follows it without changing the shared navbar.
-  useEffect(() => {
-    const tabs = pinnedTabsRef.current;
-    const nav = document.querySelector("nav");
-    if (!isTabsPinned || !tabs || !nav) return;
-    let frame = 0;
-    let until = 0;
-    let previous = "";
-    const transitionTime = () => Math.max(...getComputedStyle(nav).transitionDuration.split(",").map(value => parseFloat(value) * 1000));
-    const follow = () => {
-      const offset = `${Math.max(0, nav.getBoundingClientRect().bottom)}px`;
-      if (offset !== previous) {
-        tabs.style.setProperty("--speciality-nav-offset", offset);
-        previous = offset;
-      }
-      frame = performance.now() < until ? requestAnimationFrame(follow) : 0;
-    };
-    const schedule = () => {
-      until = performance.now() + transitionTime();
-      if (!frame) frame = requestAnimationFrame(follow);
-    };
-    follow();
-    const observer = new MutationObserver(schedule);
-    observer.observe(nav, { attributes: true, attributeFilter: ["style", "class"] });
-    const resize = new ResizeObserver(schedule);
-    resize.observe(nav);
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      observer.disconnect();
-      resize.disconnect();
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      if (frame) cancelAnimationFrame(frame);
-      tabs.style.removeProperty("--speciality-nav-offset");
-    };
-  }, [isTabsPinned]);
 
   useEffect(() => {
     const sentinel = tabsSentinelRef.current;
@@ -1115,6 +1085,22 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
       const active = document.documentElement.getAttribute("data-nav-theme-active");
       if (active === "light" || active === "dark") {
         setNavTheme(active);
+        return;
+      }
+
+      const probeX = window.innerWidth / 2;
+      const probeY = 100;
+      const elements = document.elementsFromPoint(probeX, probeY);
+      for (const el of elements) {
+        if (el.closest("nav") || el.closest('[class*="programmeTabsWrapper"]') || el.closest("footer")) continue;
+        const themeEl = el.closest("[data-nav-theme]");
+        if (themeEl) {
+          const t = themeEl.getAttribute("data-nav-theme");
+          if (t === "light" || t === "dark") {
+            setNavTheme(t);
+            return;
+          }
+        }
       }
     };
 
@@ -1133,7 +1119,12 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
       attributeFilter: ["data-nav-theme-active"]
     });
 
-    return () => observer.disconnect();
+    window.addEventListener("scroll", updateTheme, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateTheme);
+    };
   }, []);
 
   useEffect(() => {
@@ -1197,7 +1188,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
     }
   };
 
-  const doctorsRef = useRef<HTMLElement>(null);
+  const doctorsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: doctorsRef,
     offset: ["start end", "start center"]
@@ -1215,12 +1206,12 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
 
   return (
     <div className={styles.pageContainer}>
-      <FloatingTOC items={TOC_ITEMS} />
+      <FloatingTOC items={tocItems} />
 
       {/* Hero Section */}
       <section id="overview" className={styles.hero} data-nav-theme="dark">
         <div className={styles.heroBg}>
-          <video
+          <video 
             src={videoSrc}
             autoPlay
             loop
@@ -1229,22 +1220,22 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
           />
           <div className={styles.heroRightBlur} />
         </div>
-
+        
         <div className={styles.heroInner}>
           <div className={styles.heroSplitLayout}>
             <div className={styles.heroContent}>
-              <motion.div
+              <motion.div 
                 style={{ marginBottom: "-8px", opacity: 0.6 }}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
                 animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
                 transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
               >
-                <Breadcrumbs
+                <Breadcrumbs 
                   items={[
                     { label: "Home", href: "/" },
                     { label: "Specialities", href: "/specialities" },
                     { label: title }
-                  ]}
+                  ]} 
                 />
               </motion.div>
               <h1 className={styles.heroTitle}>
@@ -1256,7 +1247,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ delay: 0.25, duration: 0.5, ease: "easeOut" }}
               >
-                At Narayana Health, we're dedicated to providing advanced cancer care with expert doctors,
+                At Narayana Health, we're dedicated to providing advanced cancer care with expert doctors, 
                 modern technology, and compassionate support at every step of your journey.
               </motion.p>
               <motion.div
@@ -1265,7 +1256,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                 transition={{ delay: 0.6, duration: 0.5, ease: "easeOut" }}
                 style={{ display: "inline-flex" }}
               >
-                <Link href="#doctors" className={styles.heroButton}>
+                <Link href="/doctors" className={styles.heroButton}>
                   Find a specialist
                 </Link>
               </motion.div>
@@ -1293,8 +1284,8 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                     { value: 74000, suffix: "+", label: "Yearly chemotherapies, enabling\ncomplete patient treatment access." },
                     { value: 100000, suffix: "+", label: "Radiation fractions yearly, enabled by\nadvanced expertise." },
                   ].map((stat, i) => (
-                    <div
-                      className={styles.metricItem}
+                    <div 
+                      className={styles.metricItem} 
                       key={i}
                       ref={(el) => { statCardRefs.current[i] = el; }}
                     >
@@ -1330,7 +1321,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
 
                   <div className={styles.statsDivider} />
 
-                  <motion.div
+                  <motion.div 
                     className={styles.milestoneSection}
                     ref={(el) => { statCardRefs.current[4] = el as HTMLDivElement | null; }}
                     initial={{ opacity: 0, y: 15 }}
@@ -1396,7 +1387,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         <section id="treatments" className={styles.treatmentsSection} data-nav-theme="dark">
         <div className="container">
           <div className={styles.sectionHeader}>
-            <motion.h2
+            <motion.h2 
               className={styles.sectionTitle}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1405,14 +1396,14 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
             >
               <TextSweepEffect words={["Cancer We Treat"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
             </motion.h2>
-            <motion.p
+            <motion.p 
               className={styles.sectionDesc}
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
             >
-              At Narayana Health, we're dedicated to providing advanced cancer care with expert doctors,
+              At Narayana Health, we're dedicated to providing advanced cancer care with expert doctors, 
               modern technology, and compassionate support at every step of your journey.
             </motion.p>
           </div>
@@ -1427,14 +1418,25 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         )}
 
         {/* Pinned Programme Dropdown Bar */}
-        <div
-          ref={pinnedTabsRef}
+        <div 
           data-theme={isTabsPinned ? navTheme : undefined}
           className={`${styles.programmeTabsWrapper} ${isTabsPinned ? `${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark}` : ""} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""}`}
         >
           <div className={isTabsPinned ? styles.programmeTabsContainerPinned : styles.programmeTabsContainer}>
             {isTabsPinned ? (
               <div className={styles.pinnedBreadcrumbRow}>
+                {/* 0. All Specialities Link */}
+                <Link
+                  href="/specialities"
+                  className={styles.breadcrumbLink}
+                  title="All Specialities"
+                  aria-label="View all medical specialities"
+                >
+                  Specialities
+                </Link>
+
+                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+
                 {/* 1. Main Speciality Root */}
                 <button
                   type="button"
@@ -1449,47 +1451,47 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                   {title}
                 </button>
 
-                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                {/* 2. Patient Type */}
-                <button
-                  type="button"
-                  className={styles.breadcrumbTypeBtn}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const nextType = patientType === "Adult" ? "Paediatric" : "Adult";
-                    handlePatientTypeChange(nextType, true);
-                  }}
-                  title={`Patient type: ${patientType}. Click to switch.`}
-                  aria-label={`Current patient type: ${patientType}. Click to switch.`}
-                >
-                  {patientType}
-                </button>
-
-                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                {/* 3. Selected tab as text dropdown trigger */}
+                {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
                 <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
-                  <button
-                    type="button"
-                    className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsDropdownOpen((prev) => !prev);
-                    }}
-                    aria-haspopup="listbox"
-                    aria-expanded={isDropdownOpen}
-                    aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
-                  >
-                    <span className={styles.breadcrumbSelectedTabTitle}>
-                      {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
-                    </span>
-                    <ChevronDown
-                      size={14}
-                      className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
-                      aria-hidden="true"
-                    />
-                  </button>
+                  <div className={styles.breadcrumbCombinedDropdown}>
+                    <button
+                      type="button"
+                      className={`${styles.breadcrumbTypeBtn} ${isDropdownOpen ? styles.breadcrumbTypeBtnOpen : ""}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen((prev) => !prev);
+                      }}
+                      title={`Patient type: ${patientType}. Click to change programme or patient type.`}
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-label={`Current patient type: ${patientType}. Click to change.`}
+                    >
+                      <span>{patientType}</span>
+                    </button>
+
+                    <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+
+                    <button
+                      type="button"
+                      className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen((prev) => !prev);
+                      }}
+                      aria-haspopup="listbox"
+                      aria-expanded={isDropdownOpen}
+                      aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
+                    >
+                      <span className={styles.breadcrumbSelectedTabTitle}>
+                        {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
+                      </span>
+                      <ChevronDown
+                        size={14}
+                        className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
 
                   <AnimatePresence>
                     {isDropdownOpen && (
@@ -1740,7 +1742,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
           const selectedCat = currentCategories.find(c => c.id === activeCategory) || currentCategories[0];
           const prevCat = currentCategories.find(c => c.id === prevCategory) || selectedCat;
           return (
-            <motion.div
+            <motion.div 
               className={styles.accordionContainerFullWidth}
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1749,7 +1751,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
             >
               <div className={styles.selectedProgrammeHero}>
                 {/* HeroWipeSlideshow mask-wipe transition between background images */}
-                <div
+                <div 
                   className={styles.selectedProgrammeBgImage}
                   style={{ backgroundImage: `url("${prevCat.bg}")`, zIndex: 1 }}
                 />
@@ -1757,7 +1759,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                   <motion.div
                     key={`${prevCategory}->${activeCategory}`}
                     className={styles.selectedProgrammeBgImage}
-                    style={{
+                    style={{ 
                       backgroundImage: `url("${selectedCat.bg}")`,
                       zIndex: 2,
                       transformOrigin: "50% 50%",
@@ -1765,8 +1767,8 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                       backfaceVisibility: "hidden"
                     }}
                     initial={{
-                      clipPath: wipeDirection === "rightToLeft"
-                        ? "inset(0% 0% 0% 100%)"
+                      clipPath: wipeDirection === "rightToLeft" 
+                        ? "inset(0% 0% 0% 100%)" 
                         : "inset(0% 100% 0% 0%)",
                       scale: 1.025
                     }}
@@ -1789,7 +1791,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
 
                 {/* Right / Main Programme Details */}
                 <AnimatePresence initial={false}>
-                  <motion.div
+                  <motion.div 
                     key={selectedCat.id}
                     className={styles.selectedProgrammeContent}
                     initial={{ opacity: 0, y: 10 }}
@@ -1809,7 +1811,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                         {selectedCat.desc}
                       </p>
                       <div className={styles.selectedProgrammeActions}>
-                        <Link href="#doctors" className={styles.heroButton}>
+                        <Link href="/doctors" className={styles.heroButton}>
                           Find a specialist
                         </Link>
                       </div>
@@ -1824,7 +1826,7 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         <div className={styles.subConditionsContainer}>
           <AnimatePresence mode="wait">
             {currentCategories.find(c => c.id === activeCategory)?.subConditions?.length ? (
-              <motion.div
+              <motion.div 
                 key={activeCategory}
                 className={styles.subConditionsGrid}
                 initial="hidden"
@@ -1843,8 +1845,8 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                 exit={{ opacity: 0, y: -16, filter: "blur(6px)", transition: { duration: 0.25 } }}
               >
                 {currentCategories.find(c => c.id === activeCategory)?.subConditions.map((cond, i) => (
-                  <motion.div
-                    key={i}
+                  <motion.div 
+                    key={i} 
                     className={styles.subConditionCard}
                     variants={{
                       hidden: { opacity: 0, y: 28, filter: "blur(10px)", scale: 0.96 },
@@ -1889,162 +1891,83 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         </div>
       </section>
 
-      <section ref={doctorsRef} id="doctors" className={styles.doctorsSection} data-nav-theme="light">
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
-              <TextSweepEffect
-                key={activeCategory}
-                words={[activeDoctorInfo.title]}
-                sweepMs={2600}
-                delayMs={80}
-                finalColor="var(--color-text)"
-              />
-            </h2>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={activeCategory}
-                className={styles.sectionDesc}
-                style={{ color: "var(--color-text-secondary)" }}
-                initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {activeDoctorInfo.desc}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-        </div>
+      {/* Sentinel for smooth background scroll transition */}
+      <div ref={doctorsRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
 
-        <div className={styles.doctorsGridWrapper}>
-          <div className={styles.refDoctorsGrid}>
-            {doctors.map((doc, i) => (
-              <motion.div
-                key={i}
-                className={styles.refDoctorCard}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <Image
-                  src={doc.img}
-                  alt={doc.name}
-                  fill
-                  className={styles.refDocFullImage}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"
-                />
-                <div className={styles.refDocFullGradient}></div>
-
-                <div className={styles.refDocOverlayContent}>
-                  <div className={styles.refDocBottomFlex}>
-                    <div className={styles.refDocTextCol}>
-                      <h3 className={`${styles.refDocName} ${styles.refDocNameMultiLine}`} title={doc.name}>
-                        {doc.name}
-                      </h3>
-                      <div className={styles.refDocSpecialty} title={activeDoctorInfo.specialty}>
-                        {activeDoctorInfo.specialty}
-                      </div>
-                      <div className={styles.refDocExpRow}>
-                        <Clock size={12} className={styles.refDocExpIcon} />
-                        <span>{doc.exp}</span>
-                      </div>
-                      <div className={`${styles.refDocHospital} ${styles.refDocHospitalSingleLine}`} title={doc.loc}>
-                        {doc.loc}
-                      </div>
-                    </div>
-
-                    <Link href={`/doctors/${doc.id}`} className={styles.refBookBtnWhite}>
-                      Book
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <motion.div
-          style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-8)" }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link href="/doctors" className={styles.secondaryButton}>
-              View more
-            </Link>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Pinned Procedures & Surgeries Section */}
-      <div id="procedures" className={styles.pinnedProceduresTrack} data-nav-theme="light">
-        <section className={styles.pinnedProceduresSticky}>
-          <div className="container">
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
-                <TextSweepEffect
-                  key={activeCategory}
-                  words={[activeProcedureInfo.title]}
-                  sweepMs={2600}
-                  delayMs={80}
-                  finalColor="var(--color-text)"
-                />
-              </h2>
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={activeCategory}
-                  className={styles.sectionDesc}
-                  style={{ color: "var(--color-text-secondary)" }}
-                  initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  {activeProcedureInfo.desc}
-                </motion.p>
-              </AnimatePresence>
+      {/* Pinned Procedures & Surgeries Section - Only on Centre of Excellence */}
+      {isCoE && (
+        <div id="procedures" className={styles.pinnedProceduresTrack} data-nav-theme="light">
+          <section className={styles.pinnedProceduresSticky}>
+            <div className="container">
+              <div className={styles.sectionHeader}>
+                <h2 className={styles.sectionTitle} style={{ color: "var(--color-text)" }}>
+                  <TextSweepEffect
+                    key={activeCategory}
+                    words={[activeProcedureInfo.title]}
+                    sweepMs={2600}
+                    delayMs={80}
+                    finalColor="var(--color-text)"
+                  />
+                </h2>
+                <AnimatePresence mode="wait">
+                  <motion.p 
+                    key={activeCategory}
+                    className={styles.sectionDesc} 
+                    style={{ color: "var(--color-text-secondary)" }}
+                    initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  >
+                    {activeProcedureInfo.desc}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </div>
-          </div>
+              
+            <div
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                padding: "0 16px",
+                boxSizing: "border-box",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <ModernCarousel 
+                items={proceduresData.map(proc => ({
+                  id: proc.id,
+                  title: proc.title,
+                  desc: proc.desc,
+                  bg: proc.bg,
+                  stat: proc.stat
+                }))}
+                activeId={activeProcedure}
+                onActiveChange={setActiveProcedure}
+              />
+            </div>
+          </section>
+        </div>
+      )}
 
-          <div
-            style={{
-              width: "100%",
-              margin: "0 auto",
-              padding: "0 16px",
-              boxSizing: "border-box",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <ModernCarousel
-              items={proceduresData.map(proc => ({
-                id: proc.id,
-                title: proc.title,
-                desc: proc.desc,
-                bg: proc.bg,
-                stat: proc.stat
-              }))}
-              activeId={activeProcedure}
-              onActiveChange={setActiveProcedure}
-            />
-          </div>
-        </section>
-      </div>
-
-      {/* Dynamic Sections as per design sequence */}
-      {[
-        { id: "technology", title: activeTechnologyInfo.title, desc: activeTechnologyInfo.desc },
-        { id: "tests", title: activeTestsInfo.title, desc: activeTestsInfo.desc },
-        { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
-        { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
-        { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
-        { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
-        { id: "faqs", title: "FAQs", desc: "Find answers to common questions about our specialities, treatments, and patient care processes." }
-      ].map((section, idx) => {
+      {/* Dynamic Sections as per design sequence & CoE logic */}
+      {(isCoE
+        ? [
+            { id: "technology", title: activeTechnologyInfo.title, desc: activeTechnologyInfo.desc },
+            { id: "tests", title: activeTestsInfo.title, desc: activeTestsInfo.desc },
+            { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
+            { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
+          ]
+        : [
+            { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
+            { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
+            { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
+            { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
+            { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
+            { id: "faqs", title: "FAQs", desc: "Find answers to common questions about our specialities, treatments, and patient care processes." }
+          ]
+      ).map((section, idx) => {
         if (section.id === "patient-stories") {
           return (
             <div id={section.id} key={idx} data-nav-theme="light" style={{ width: "100%", maxWidth: "100%", overflow: "hidden", background: "var(--color-surface, var(--white))" }}>
@@ -2061,27 +1984,29 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
         const isHospitals = section.id === "hospitals";
         const isFaqs = section.id === "faqs";
         const isDarkTheme = isWhyUs;
-
-        const isTransparentSection = section.id === "technology" || isWhyUs;
+        
+        const isTransparentSection = section.id === "technology" || section.id === "about-speciality" || isWhyUs;
         let sectionBg = isTransparentSection ? "transparent" : (idx % 2 === 0 ? "var(--color-bg-alt)" : "var(--color-surface)");
-        if (section.id === "doctor-overview") {
+        if (section.id === "about-speciality") {
+          sectionBg = "transparent";
+        } else if (section.id === "doctor-overview") {
           sectionBg = "var(--color-surface)";
         } else if (isHospitals || isFaqs) {
           sectionBg = "var(--white)";
         }
-
+        
         const isDarkSection = false;
         const titleColor = isDarkSection ? "var(--white)" : "var(--color-text)";
         const descColor = isDarkSection ? "rgba(var(--white-rgb), 0.75)" : "var(--color-text-secondary)";
 
         return (
-        <section
-          key={idx}
-          id={section.id}
-          className={styles.doctorsSection}
-          data-nav-theme={isDarkTheme ? "dark" : "light"}
-          style={{
-            background: sectionBg,
+        <section 
+          key={idx} 
+          id={section.id} 
+          className={styles.doctorsSection} 
+          data-nav-theme={isDarkTheme ? "dark" : "light"} 
+          style={{ 
+            ...(sectionBg && sectionBg !== "transparent" ? { background: sectionBg } : {}),
             position: "relative"
           }}
         >
@@ -2102,9 +2027,9 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
               </h2>
               {section.id === "technology" || section.id === "tests" || section.id === "doctor-overview" || section.id === "why-us" || section.id === "hospitals" ? (
                 <AnimatePresence mode="wait">
-                  <motion.p
+                  <motion.p 
                     key={activeCategory}
-                    className={styles.sectionDesc}
+                    className={styles.sectionDesc} 
                     style={{ color: descColor }}
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -2115,8 +2040,8 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
                   </motion.p>
                 </AnimatePresence>
               ) : (
-                <motion.p
-                  className={styles.sectionDesc}
+                <motion.p 
+                  className={styles.sectionDesc} 
                   style={{ color: descColor }}
                   initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -2142,6 +2067,13 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
               >
                 <AdvanceTestsCarousel />
               </motion.div>
+            </div>
+          ) : section.id === "about-speciality" ? (
+            <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
+              <AboutSpecialitySection
+                specialitySlug={slug}
+                specialityTitle={title}
+              />
             </div>
           ) : section.id === "doctor-overview" ? (
             <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
@@ -2173,15 +2105,15 @@ export default function SpecialityDesign2({ slug }: { slug: string }) {
             </div>
           ) : (
             <div className="container">
-              <motion.div
-                style={{
-                  width: "100%",
-                  height: "280px",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-border-light)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+              <motion.div 
+                style={{ 
+                  width: "100%", 
+                  height: "280px", 
+                  borderRadius: "var(--radius-xl)", 
+                  background: "var(--color-border-light)", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
                   color: "var(--color-text-muted)",
                   fontSize: "var(--font-size-lg)",
                   fontWeight: 500,

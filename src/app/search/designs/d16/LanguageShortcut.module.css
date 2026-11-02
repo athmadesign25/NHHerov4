@@ -1,0 +1,4 @@
+.group { display: flex; align-items: center; min-width: 0; max-width: 100%; }
+.option { flex-shrink: 1; min-width: 0; max-width: 100%; text-align: start; }
+.value { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 639px) { .option { padding-inline: var(--sp-1); font-size: var(--font-size-xs); } }
