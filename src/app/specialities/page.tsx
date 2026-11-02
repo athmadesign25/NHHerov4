@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Search,
   X,
@@ -25,6 +25,12 @@ import {
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { ALL_SPECIALITIES, SPECIALITY_CATEGORIES, type SpecialityMeta } from "@/data/specialities";
 import { NH_CITIES } from "@/lib/searchService";
+import {
+  SpecialityFilters,
+  FilterScrollArea,
+  ActiveSpecialityFilters,
+  SpecialityFilterDialog,
+} from "./filters";
 import styles from "./page.module.css";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -53,6 +59,7 @@ function isCoEQuery(cat: string, classification: string, isCoEParam: boolean): b
 
 function SpecialitiesContent() {
   const searchParams = useSearchParams();
+  const reducedMotion = Boolean(useReducedMotion());
 
   const isCoE = useMemo(() => {
     const cat = searchParams?.get("category") || searchParams?.get("filter") || "";
@@ -74,18 +81,6 @@ function SpecialitiesContent() {
   const [selectedCity, setSelectedCity] = useState(() => searchParams?.get("location") || searchParams?.get("city") || "All");
   const [sortBy, setSortBy] = useState("relevance");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
-  const [openGroups, setOpenGroups] = useState<{
-    category: boolean;
-    classification: boolean;
-    alphabet: boolean;
-  }>({
-    category: true,
-    classification: true,
-    alphabet: true,
-  });
-  const [categorySearch, setCategorySearch] = useState("");
-  const [categoryExpanded, setCategoryExpanded] = useState(false);
 
   const refinementScrollRef = useRef<HTMLDivElement>(null);
   const [refinementEdges, setRefinementEdges] = useState<{
@@ -181,23 +176,6 @@ function SpecialitiesContent() {
       ...SPECIALITY_CATEGORIES.filter((c) => c !== "All"),
     ];
   }, []);
-
-  // Filtered categories for category search box
-  const filteredCategories = useMemo(() => {
-    if (!categorySearch.trim()) return categories;
-    return categories.filter((c) =>
-      c.toLowerCase().includes(categorySearch.toLowerCase().trim())
-    );
-  }, [categories, categorySearch]);
-
-  const visibleCategories = useMemo(() => {
-    if (categorySearch.trim() || categoryExpanded) {
-      return filteredCategories;
-    }
-    return filteredCategories.filter(
-      (c, index) => index < 6 || c === selectedCategory
-    );
-  }, [filteredCategories, categorySearch, categoryExpanded, selectedCategory]);
 
   // Dynamic counts for each category
   const categoryCounts = useMemo(() => {
@@ -599,349 +577,46 @@ function SpecialitiesContent() {
             )}
           </div>
 
-          {/* Active Filter Chips */}
-          {hasActiveFilters && (
-            <div className={styles.activeChipsRow}>
-              {search && (
-                <button
-                  type="button"
-                  className={styles.activeChip}
-                  onClick={() => setSearch("")}
-                  title="Remove search query"
-                >
-                  &ldquo;{search}&rdquo; <X size={11} />
-                </button>
-              )}
-              {selectedCategory !== "All" && (
-                <button
-                  type="button"
-                  className={styles.activeChip}
-                  onClick={() => {
-                    setSelectedCategory("All");
-                    if (selectedClassification === "Centres of Excellence Only") {
-                      setSelectedClassification("All");
-                    }
-                  }}
-                  title="Remove category filter"
-                >
-                  {selectedCategory} <X size={11} />
-                </button>
-              )}
-              {selectedClassification !== "All" &&
-                !(
-                  selectedCategory === "Centres of Excellence" &&
-                  selectedClassification === "Centres of Excellence Only"
-                ) && (
-                  <button
-                    type="button"
-                    className={styles.activeChip}
-                    onClick={() => {
-                      setSelectedClassification("All");
-                      if (selectedCategory === "Centres of Excellence") {
-                        setSelectedCategory("All");
-                      }
-                    }}
-                    title="Remove classification filter"
-                  >
-                    {selectedClassification} <X size={11} />
-                  </button>
-                )}
-              {selectedLetter !== "All" && (
-                <button
-                  type="button"
-                  className={styles.activeChip}
-                  onClick={() => setSelectedLetter("All")}
-                  title="Remove letter filter"
-                >
-                  Letter: {selectedLetter} <X size={11} />
-                </button>
-              )}
-              {selectedCity !== "All" && (
-                <button
-                  type="button"
-                  className={styles.activeChip}
-                  onClick={() => setSelectedCity("All")}
-                  title="Remove location filter"
-                >
-                  {selectedCity} <X size={11} />
-                </button>
-              )}
-            </div>
+          {/* Active Filter Chips in Sidebar */}
+          {appliedChips.length > 0 && (
+            <ActiveSpecialityFilters
+              chips={appliedChips}
+              reducedMotion={reducedMotion}
+              focusFallback={() => {
+                document.getElementById("sidebar-reset-filters-btn")?.focus({ preventScroll: true });
+              }}
+              wrap
+            />
           )}
 
-          <div className={styles.filters}>
-            {/* Group 1: Speciality Category */}
-            <section className={styles.group} data-expanded={openGroups.category}>
-              <div className={styles.groupHeader}>
-                <h3 className={styles.groupHeading}>
-                  <button
-                    type="button"
-                    className={styles.groupToggle}
-                    aria-expanded={openGroups.category}
-                    onClick={() => setOpenGroups((prev) => ({ ...prev, category: !prev.category }))}
-                  >
-                    <Stethoscope size={17} className={styles.groupIcon} aria-hidden />
-                    <span className={styles.groupLabel}>Speciality Category</span>
-                    {selectedCategory !== "All" && (
-                      <span className={styles.count}>1</span>
-                    )}
-                    <ChevronDown
-                      size={16}
-                      className={`${styles.chevron} ${openGroups.category ? styles.chevronOpen : ""}`}
-                      aria-hidden
-                    />
-                  </button>
-                </h3>
-                <button
-                  type="button"
-                  className={styles.clearGroup}
-                  disabled={selectedCategory === "All"}
-                  aria-hidden={selectedCategory === "All"}
-                  onClick={() => {
-                    setSelectedCategory("All");
-                    if (selectedClassification === "Centres of Excellence Only") {
-                      setSelectedClassification("All");
-                    }
-                  }}
-                >
-                  Clear
-                </button>
-              </div>
-
-              {openGroups.category && (
-                <div className={styles.panel}>
-                  {categories.length > 5 && (
-                    <label className={styles.search}>
-                      <Search size={16} aria-hidden />
-                      <input
-                        type="search"
-                        value={categorySearch}
-                        onChange={(e) => setCategorySearch(e.target.value)}
-                        placeholder="Search category"
-                        aria-label="Search speciality category filters"
-                      />
-                    </label>
-                  )}
-
-                  <div className={styles.options}>
-                    {visibleCategories.map((cat) => {
-                      const isSelected = selectedCategory === cat;
-                      const count = categoryCounts[cat] || 0;
-                      return (
-                        <label
-                          key={cat}
-                          className={`${styles.option} ${isSelected ? styles.optionActive : ""}`}
-                        >
-                          <span className={styles.checkControl}>
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              id={`filter-cat-${cat.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
-                              onChange={() => {
-                                if (isSelected && cat !== "All") {
-                                  setSelectedCategory("All");
-                                  setSelectedClassification("All");
-                                } else {
-                                  setSelectedCategory(cat);
-                                  if (cat === "Centres of Excellence") {
-                                    setSelectedClassification("Centres of Excellence Only");
-                                  } else {
-                                    setSelectedClassification("All");
-                                  }
-                                }
-                              }}
-                            />
-                            <Check size={14} strokeWidth={2} absoluteStrokeWidth className={styles.checkIcon} aria-hidden />
-                          </span>
-                          <span className={styles.optionLabel}>{cat}</span>
-                          <span className={styles.resultCount}>{count}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-
-                  {!categorySearch.trim() && filteredCategories.length > 6 && (
-                    <button
-                      type="button"
-                      className={styles.showMore}
-                      onClick={() => setCategoryExpanded((prev) => !prev)}
-                    >
-                      {categoryExpanded
-                        ? "Show less"
-                        : `Show ${filteredCategories.length - 6} more`}
-                    </button>
-                  )}
-                </div>
-              )}
-            </section>
-
-            {/* Group 2: Classification */}
-            <section className={styles.group} data-expanded={openGroups.classification}>
-              <div className={styles.groupHeader}>
-                <h3 className={styles.groupHeading}>
-                  <button
-                    type="button"
-                    className={styles.groupToggle}
-                    aria-expanded={openGroups.classification}
-                    onClick={() => setOpenGroups((prev) => ({ ...prev, classification: !prev.classification }))}
-                  >
-                    <Award size={17} className={styles.groupIcon} aria-hidden />
-                    <span className={styles.groupLabel}>Classification</span>
-                    {selectedClassification !== "All" && (
-                      <span className={styles.count}>1</span>
-                    )}
-                    <ChevronDown
-                      size={16}
-                      className={`${styles.chevron} ${openGroups.classification ? styles.chevronOpen : ""}`}
-                      aria-hidden
-                    />
-                  </button>
-                </h3>
-                <button
-                  type="button"
-                  className={styles.clearGroup}
-                  disabled={selectedClassification === "All"}
-                  aria-hidden={selectedClassification === "All"}
-                  onClick={() => {
-                    setSelectedClassification("All");
-                    if (selectedCategory === "Centres of Excellence") {
-                      setSelectedCategory("All");
-                    }
-                  }}
-                >
-                  Clear
-                </button>
-              </div>
-
-              {openGroups.classification && (
-                <div className={styles.panel}>
-                  <div className={styles.options}>
-                    {(["All", "Centres of Excellence Only", "24/7 Emergency Support"] as const).map((cls) => {
-                      const isSelected = selectedClassification === cls;
-                      const count = classificationCounts[cls];
-                      return (
-                        <label
-                          key={cls}
-                          className={`${styles.option} ${isSelected ? styles.optionActive : ""}`}
-                        >
-                          <span className={styles.checkControl}>
-                            <input
-                              type="radio"
-                              name="classification"
-                              checked={isSelected}
-                              onChange={() => {
-                                setSelectedClassification(cls);
-                                if (cls === "Centres of Excellence Only") {
-                                  setSelectedCategory("Centres of Excellence");
-                                } else if (selectedCategory === "Centres of Excellence") {
-                                  setSelectedCategory("All");
-                                }
-                              }}
-                            />
-                            <Check size={14} strokeWidth={2} absoluteStrokeWidth className={styles.checkIcon} aria-hidden />
-                          </span>
-                          <span className={styles.optionLabel}>{cls}</span>
-                          <span className={styles.resultCount}>{count}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </section>
-
-            {/* Group 3: A–Z Alphabet Directory */}
-            <section className={styles.group} data-expanded={openGroups.alphabet}>
-              <div className={styles.groupHeader}>
-                <h3 className={styles.groupHeading}>
-                  <button
-                    type="button"
-                    className={styles.groupToggle}
-                    aria-expanded={openGroups.alphabet}
-                    onClick={() => setOpenGroups((prev) => ({ ...prev, alphabet: !prev.alphabet }))}
-                  >
-                    <SlidersHorizontal size={17} className={styles.groupIcon} aria-hidden />
-                    <span className={styles.groupLabel}>A–Z Directory</span>
-                    {selectedLetter !== "All" && (
-                      <span className={styles.count}>1</span>
-                    )}
-                    <ChevronDown
-                      size={16}
-                      className={`${styles.chevron} ${openGroups.alphabet ? styles.chevronOpen : ""}`}
-                      aria-hidden
-                    />
-                  </button>
-                </h3>
-                <button
-                  type="button"
-                  className={styles.clearGroup}
-                  disabled={selectedLetter === "All"}
-                  aria-hidden={selectedLetter === "All"}
-                  onClick={() => setSelectedLetter("All")}
-                >
-                  Clear
-                </button>
-              </div>
-
-              {openGroups.alphabet && (
-                <div className={styles.panel}>
-                  <div className={styles.alphabet}>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedLetter("All")}
-                      aria-pressed={selectedLetter === "All"}
-                      id="filter-letter-all"
-                    >
-                      All
-                    </button>
-                    {ALPHABET.map((letter) => {
-                      const hasMatches = availableLetters.has(letter);
-                      const isPressed = selectedLetter === letter;
-                      return (
-                        <button
-                          key={letter}
-                          type="button"
-                          disabled={!hasMatches}
-                          aria-pressed={isPressed}
-                          onClick={() => setSelectedLetter(letter)}
-                          id={`filter-letter-${letter}`}
-                        >
-                          {letter}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </section>
-          </div>
+          <FilterScrollArea>
+            <SpecialityFilters
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              selectedClassification={selectedClassification}
+              onSelectClassification={setSelectedClassification}
+              selectedLetter={selectedLetter}
+              onSelectLetter={setSelectedLetter}
+              categories={categories}
+              categoryCounts={categoryCounts}
+              classificationCounts={classificationCounts}
+              availableLetters={availableLetters}
+            />
+          </FilterScrollArea>
         </aside>
 
         {/* Right Main Results Area */}
         <section className={styles.resultsArea} aria-label="Medical specialities results">
           {/* Applied Filter Chips matching Doctor listing flow */}
           {appliedChips.length > 0 && (
-            <div className={styles.chips} role="group" aria-label="Applied filters">
-              {appliedChips.map((chip) => (
-                <button
-                  key={chip.key}
-                  type="button"
-                  onClick={chip.remove}
-                  aria-label={`Remove filter: ${chip.label}`}
-                  title={`Remove filter: ${chip.label}`}
-                >
-                  <span>{chip.label}</span>
-                  <X size={14} aria-hidden />
-                </button>
-              ))}
-              <button
-                type="button"
-                className={styles.chipsClearAll}
-                onClick={handleResetFilters}
-                aria-label="Clear all applied filters"
-              >
-                Clear all
-              </button>
+            <div style={{ marginBottom: "var(--sp-2, 16px)" }}>
+              <ActiveSpecialityFilters
+                chips={appliedChips}
+                reducedMotion={reducedMotion}
+                focusFallback={() => {
+                  document.getElementById("refinement-all")?.focus({ preventScroll: true });
+                }}
+              />
             </div>
           )}
 
@@ -1008,240 +683,25 @@ function SpecialitiesContent() {
         </section>
       </div>
 
-      {/* ── 10. MOBILE FILTER MODAL / DRAWER (Matching SearchDialog) ── */}
-      <AnimatePresence>
-        {mobileFilterOpen && (
-          <>
-            <motion.div
-              className={styles.drawerOverlay}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileFilterOpen(false)}
-            />
-            <motion.div
-              className={styles.drawerModal}
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 280 }}
-            >
-              <div className={styles.drawerHeader}>
-                <div className={styles.drawerTitle}>Filters</div>
-                <button
-                  type="button"
-                  onClick={() => setMobileFilterOpen(false)}
-                  className={styles.drawerCloseBtn}
-                  aria-label="Close filters"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className={styles.drawerBody}>
-                <div className={styles.filters}>
-                  {/* Category */}
-                  <section className={styles.group} data-expanded={openGroups.category}>
-                    <div className={styles.groupHeader}>
-                      <h3 className={styles.groupHeading}>
-                        <button
-                          type="button"
-                          className={styles.groupToggle}
-                          aria-expanded={openGroups.category}
-                          onClick={() => setOpenGroups((prev) => ({ ...prev, category: !prev.category }))}
-                        >
-                          <Stethoscope size={17} className={styles.groupIcon} aria-hidden />
-                          <span className={styles.groupLabel}>Speciality Category</span>
-                          {selectedCategory !== "All" && (
-                            <span className={styles.count}>1</span>
-                          )}
-                          <ChevronDown
-                            size={16}
-                            className={`${styles.chevron} ${openGroups.category ? styles.chevronOpen : ""}`}
-                            aria-hidden
-                          />
-                        </button>
-                      </h3>
-                    </div>
-
-                    {openGroups.category && (
-                      <div className={styles.panel}>
-                        <div className={styles.options}>
-                          {categories.map((cat) => {
-                            const isSelected = selectedCategory === cat;
-                            const count = categoryCounts[cat] || 0;
-                            return (
-                              <label
-                                key={cat}
-                                className={`${styles.option} ${isSelected ? styles.optionActive : ""}`}
-                              >
-                                <span className={styles.checkControl}>
-                                  <input
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={() => {
-                                      if (isSelected && cat !== "All") {
-                                        setSelectedCategory("All");
-                                        setSelectedClassification("All");
-                                      } else {
-                                        setSelectedCategory(cat);
-                                        if (cat === "Centres of Excellence") {
-                                          setSelectedClassification("Centres of Excellence Only");
-                                        } else {
-                                          setSelectedClassification("All");
-                                        }
-                                      }
-                                    }}
-                                  />
-                                  <Check size={14} strokeWidth={2} absoluteStrokeWidth className={styles.checkIcon} aria-hidden />
-                                </span>
-                                <span className={styles.optionLabel}>{cat}</span>
-                                <span className={styles.resultCount}>{count}</span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </section>
-
-                  {/* Classification */}
-                  <section className={styles.group} data-expanded={openGroups.classification}>
-                    <div className={styles.groupHeader}>
-                      <h3 className={styles.groupHeading}>
-                        <button
-                          type="button"
-                          className={styles.groupToggle}
-                          aria-expanded={openGroups.classification}
-                          onClick={() => setOpenGroups((prev) => ({ ...prev, classification: !prev.classification }))}
-                        >
-                          <Award size={17} className={styles.groupIcon} aria-hidden />
-                          <span className={styles.groupLabel}>Classification</span>
-                          {selectedClassification !== "All" && (
-                            <span className={styles.count}>1</span>
-                          )}
-                          <ChevronDown
-                            size={16}
-                            className={`${styles.chevron} ${openGroups.classification ? styles.chevronOpen : ""}`}
-                            aria-hidden
-                          />
-                        </button>
-                      </h3>
-                    </div>
-
-                    {openGroups.classification && (
-                      <div className={styles.panel}>
-                        <div className={styles.options}>
-                          {(["All", "Centres of Excellence Only", "24/7 Emergency Support"] as const).map((cls) => {
-                            const isSelected = selectedClassification === cls;
-                            const count = classificationCounts[cls];
-                            return (
-                              <label
-                                key={cls}
-                                className={`${styles.option} ${isSelected ? styles.optionActive : ""}`}
-                              >
-                                <span className={styles.checkControl}>
-                                  <input
-                                    type="radio"
-                                    name="mobile-classification"
-                                    checked={isSelected}
-                                    onChange={() => {
-                                      setSelectedClassification(cls);
-                                      if (cls === "Centres of Excellence Only") {
-                                        setSelectedCategory("Centres of Excellence");
-                                      } else if (selectedCategory === "Centres of Excellence") {
-                                        setSelectedCategory("All");
-                                      }
-                                    }}
-                                  />
-                                  <Check size={14} strokeWidth={2} absoluteStrokeWidth className={styles.checkIcon} aria-hidden />
-                                </span>
-                                <span className={styles.optionLabel}>{cls}</span>
-                                <span className={styles.resultCount}>{count}</span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </section>
-
-                  {/* A-Z Directory */}
-                  <section className={styles.group} data-expanded={openGroups.alphabet}>
-                    <div className={styles.groupHeader}>
-                      <h3 className={styles.groupHeading}>
-                        <button
-                          type="button"
-                          className={styles.groupToggle}
-                          aria-expanded={openGroups.alphabet}
-                          onClick={() => setOpenGroups((prev) => ({ ...prev, alphabet: !prev.alphabet }))}
-                        >
-                          <SlidersHorizontal size={17} className={styles.groupIcon} aria-hidden />
-                          <span className={styles.groupLabel}>A–Z Directory</span>
-                          {selectedLetter !== "All" && (
-                            <span className={styles.count}>1</span>
-                          )}
-                          <ChevronDown
-                            size={16}
-                            className={`${styles.chevron} ${openGroups.alphabet ? styles.chevronOpen : ""}`}
-                            aria-hidden
-                          />
-                        </button>
-                      </h3>
-                    </div>
-
-                    {openGroups.alphabet && (
-                      <div className={styles.panel}>
-                        <div className={styles.alphabet}>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedLetter("All")}
-                            aria-pressed={selectedLetter === "All"}
-                          >
-                            All
-                          </button>
-                          {ALPHABET.map((letter) => {
-                            const hasMatches = availableLetters.has(letter);
-                            const isPressed = selectedLetter === letter;
-                            return (
-                              <button
-                                key={letter}
-                                type="button"
-                                disabled={!hasMatches}
-                                aria-pressed={isPressed}
-                                onClick={() => setSelectedLetter(letter)}
-                              >
-                                {letter}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </section>
-                </div>
-              </div>
-
-              <div className={styles.drawerFooter}>
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className={styles.drawerResetBtn}
-                >
-                  Clear all
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMobileFilterOpen(false)}
-                  className={styles.drawerApplyBtn}
-                >
-                  Show {filtered.length} Specialities
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* ── 10. MOBILE FILTER MODAL / DRAWER (Matching DoctorFilterDialog from aditya4_work) ── */}
+      {mobileFilterOpen && (
+        <SpecialityFilterDialog
+          count={filtered.length}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          selectedClassification={selectedClassification}
+          onSelectClassification={setSelectedClassification}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          categories={categories}
+          categoryCounts={categoryCounts}
+          classificationCounts={classificationCounts}
+          availableLetters={availableLetters}
+          onResetAll={handleResetFilters}
+          onApply={() => setMobileFilterOpen(false)}
+          onClose={() => setMobileFilterOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -1,0 +1,368 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkControl {
+  display: grid;
+  place-items: center;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.checkControl input[type="checkbox"],
+.checkControl input[type="radio"] {
+  grid-area: 1 / 1;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-border, #cbd5e1);
+  border-radius: 4px;
+  background: transparent;
+  cursor: inherit;
+  transition: border-color var(--transition-fast, 0.15s), background-color var(--transition-fast, 0.15s);
+}
+
+.checkControl input[type="radio"] {
+  border-radius: var(--radius-full);
+}
+
+.checkControl input:checked {
+  border-color: var(--color-primary, #034EA2);
+  background: var(--color-primary, #034EA2);
+}
+
+.checkControl input:focus-visible {
+  outline: 2px solid var(--color-primary, #034EA2);
+  outline-offset: 2px;
+}
+
+.checkIcon {
+  grid-area: 1 / 1;
+  pointer-events: none;
+  color: var(--color-text-inverse, #ffffff);
+  opacity: 0;
+  transition: opacity var(--transition-fast, 0.15s);
+}
+
+.checkControl input:checked + .checkIcon {
+  opacity: 1;
+}
+
+.checkControl input:disabled {
+  border-color: var(--color-border);
+  background: var(--color-bg-alt);
+  cursor: not-allowed;
+}
+
+.checkControl input:disabled + .checkIcon {
+  color: var(--color-text-muted);
+}
+
+.group {
+  position: relative;
+  padding-block: var(--sp-1, 8px);
+}
+
+.group + .group {
+  border-top: 1px solid var(--color-border-light, #e2e8f0);
+}
+
+.groupHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+/* Glassmorphism pinned category header from aditya4_work */
+.group[data-expanded="true"] > .groupHeader {
+  position: sticky;
+  top: var(--filter-header-height, 0px);
+  z-index: 1;
+  background: var(--color-bg-card, #ffffff);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .group[data-expanded="true"] > .groupHeader {
+    background: transparent;
+  }
+  .group[data-expanded="true"] > .groupHeader::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    inset: 0 calc(var(--sp-1, 8px) / -2) calc(var(--sp-1, 8px) * -1);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-bg-card, #ffffff) 94%, transparent),
+      color-mix(in srgb, var(--color-bg-card, #ffffff) 78%, transparent) 75%,
+      transparent
+    );
+    -webkit-backdrop-filter: blur(var(--sp-1, 8px));
+    backdrop-filter: blur(var(--sp-1, 8px));
+    -webkit-mask-image: linear-gradient(180deg, #000000 calc(100% - var(--sp-1, 8px)), transparent);
+    mask-image: linear-gradient(180deg, #000000 calc(100% - var(--sp-1, 8px)), transparent);
+  }
+}
+
+.groupHeading {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font: inherit;
+}
+
+.groupToggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1, 8px);
+  width: 100%;
+  height: 40px;
+  padding-inline-end: 48px;
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--color-text, #0f172a);
+  transition: color var(--transition-fast, 0.15s);
+  outline: none;
+}
+
+.groupToggle:hover {
+  color: var(--color-primary, #034EA2);
+}
+
+.groupLabel {
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.groupIcon {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  color: var(--color-primary, #034EA2);
+}
+
+.chevron {
+  position: absolute;
+  inset-inline-end: 0;
+  flex-shrink: 0;
+  color: var(--color-text-muted, #94a3b8);
+  transition: transform var(--transition-base, 0.25s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.count {
+  display: inline-block;
+  flex-shrink: 0;
+  background: var(--color-primary-light, #e0f2fe);
+  color: var(--color-primary, #034EA2);
+  border-radius: var(--radius-full);
+  padding: 0 var(--sp-1, 8px);
+  font-size: var(--font-size-xs, 11px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.clearGroup {
+  position: absolute;
+  inset-inline-end: 22px;
+  display: grid;
+  place-items: center;
+  height: 28px;
+  padding-inline: 6px;
+  border-radius: var(--radius-sm, 6px);
+  border: none;
+  background: transparent;
+  color: var(--color-emergency, #ED1C24);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition-fast, 0.15s), color var(--transition-fast, 0.15s);
+}
+
+.clearGroup:disabled {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.panel {
+  position: relative;
+  padding-top: 4px;
+  padding-bottom: var(--sp-1, 8px);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1, 8px);
+  min-height: 36px;
+  border: 1px solid var(--color-border, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  padding: 0 10px;
+  margin-bottom: var(--sp-1, 8px);
+  color: var(--color-text-secondary, #64748b);
+  background: var(--color-bg, #ffffff);
+  transition: border-color var(--transition-fast, 0.15s), box-shadow var(--transition-fast, 0.15s);
+}
+
+.search:focus-within {
+  border-color: var(--color-primary, #034EA2);
+  outline: 2px solid var(--color-primary, #034EA2);
+  outline-offset: -2px;
+}
+
+.search svg {
+  flex-shrink: 0;
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text, #0f172a);
+  font: inherit;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 500;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1, 8px);
+  min-height: 34px;
+  padding: 4px 8px;
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background-color var(--transition-fast, 0.15s), color var(--transition-fast, 0.15s);
+}
+
+.option:hover {
+  background: var(--color-bg-alt, #f8fafc);
+  color: var(--color-text, #0f172a);
+}
+
+.optionActive {
+  background: var(--color-primary-light, #e0f2fe) !important;
+  color: var(--color-primary, #034EA2) !important;
+  font-weight: 600;
+}
+
+.optionLabel {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.resultCount {
+  flex-shrink: 0;
+  font-size: var(--font-size-xs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 500;
+}
+
+.showMore {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm, 6px);
+  border: none;
+  background: transparent;
+  color: var(--color-primary, #034EA2);
+  font-size: var(--font-size-xs, 12.5px);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  overflow-anchor: none;
+  transition: color var(--transition-fast, 0.15s);
+}
+
+.showMore:hover {
+  color: var(--color-primary-dark, #023a78);
+  text-decoration: underline;
+}
+
+.showMore:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* 4-column Alphabet Grid from CatalogFilters.module.css */
+.alphabet {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.alphabet button {
+  min-height: 32px;
+  border: 1px solid var(--color-border-light, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  background: #ffffff;
+  color: var(--color-text-secondary, #64748b);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast, 0.15s);
+}
+
+.alphabet button:hover:not(:disabled),
+.alphabet button[aria-pressed="true"] {
+  color: var(--color-primary, #034EA2);
+  background: var(--color-primary-light, #e0f2fe);
+  border-color: var(--color-primary, #034EA2);
+}
+
+.alphabet button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: var(--color-bg-alt, #f8fafc);
+}
+
+.alphabet button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
