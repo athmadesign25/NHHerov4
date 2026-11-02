@@ -579,10 +579,10 @@ function SpecialityCardItem({ spec }: { spec: SpecialityMeta }) {
 
       <div className={styles.cardTopBadges}>
         {spec.isCoE && (
-          <div className={styles.cardCoEBadge}>
-            <Star size={11} fill="#f59e0b" color="#f59e0b" />
+          <span className={styles.cardCoEBadge}>
+            <Star size={13} strokeWidth={2} aria-hidden="true" />
             <span>Centre of Excellence</span>
-          </div>
+          </span>
         )}
       </div>
 

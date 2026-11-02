@@ -30,11 +30,11 @@
   --d3-ui-fast: 150ms cubic-bezier(.22, 1, .36, 1);
   --d3-ui-base: 250ms cubic-bezier(.22, 1, .36, 1);
 
-  --doctor-listing-max-width: 1440px;
+  --doctor-listing-max-width: 100%;
   --d16-content-max: var(--doctor-listing-max-width);
-  --d16-page-gutter: var(--sp-2, 16px);
-  --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
-  --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
+  --d16-page-gutter: 48px;
+  --d3-gutter-start: 0px;
+  --d3-gutter-end: 0px;
   --d3-nav-height: calc(var(--nav-height, 72px) - var(--sp-2, 16px));
   --filter-bottom-gap: var(--sp-2, 16px);
 
@@ -42,6 +42,9 @@
   padding-top: var(--nav-actual-height, var(--page-nav-height, 68px));
   min-height: 100dvh;
   padding-bottom: var(--sp-8, 64px);
+  padding-left: 48px;
+  padding-right: 48px;
+  box-sizing: border-box;
   overflow-anchor: none;
   color-scheme: light;
   font-family: var(--font-family, inherit);
@@ -60,10 +63,10 @@
 
 .page.doctorPage,
 .page[data-design="d20"] {
-  --d16-content-max: var(--doctor-listing-max-width);
-  --d16-page-gutter: var(--sp-2, 16px);
-  --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
-  --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
+  --d16-content-max: 100%;
+  --d16-page-gutter: 48px;
+  --d3-gutter-start: 0px;
+  --d3-gutter-end: 0px;
   --d20-canvas-glow-height: clamp(calc(var(--sp-16, 128px) * 3), 65vw, calc(var(--sp-16, 128px) * 6));
   background:
     radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
@@ -92,11 +95,23 @@
   }
 }
 
+@media (max-width: 640px) {
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
+    padding-left: 16px;
+    padding-right: 16px;
+    --d16-page-gutter: 16px;
+  }
+}
+
 @media (min-width: 640px) {
   .page,
   .page.doctorPage,
   .page[data-design="d20"] {
-    --d16-page-gutter: var(--sp-3, 24px);
+    padding-left: 48px;
+    padding-right: 48px;
+    --d16-page-gutter: 48px;
   }
 }
 
@@ -104,15 +119,17 @@
   .page,
   .page.doctorPage,
   .page[data-design="d20"] {
-    --d16-page-gutter: clamp(var(--sp-4, 32px), 3.5vw, var(--sp-6, 48px));
+    padding-left: 48px;
+    padding-right: 48px;
+    --d16-page-gutter: 48px;
   }
 }
 
 /* ── 1. HEADER & HERO (Exact match to DoctorSearchTop from aditya4_work) ─────── */
 .container {
-  width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
+  width: 100%;
   margin-inline: auto;
-  max-width: var(--doctor-listing-max-width, 1440px);
+  max-width: var(--doctor-listing-max-width, 100%);
 }
 
 .titleRow {
@@ -571,9 +588,9 @@
 
 /* ── 3. MAIN TWO-COLUMN LAYOUT (Matching Doctor Listing from aditya4_work) ── */
 .layout {
-  width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
+  width: 100%;
   margin-inline: auto;
-  max-width: var(--doctor-listing-max-width, 1440px);
+  max-width: var(--doctor-listing-max-width, 100%);
   padding-block: var(--sp-3, 24px) var(--sp-8, 64px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -1364,16 +1381,23 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
-  background: rgba(9, 13, 22, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  min-height: calc(var(--sp-3, 24px) + var(--sp-1, 8px) / 2);
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: var(--radius-full, 9999px);
-  font-size: 11px;
+  color: #92400e;
+  font-size: var(--font-size-xs, 12px);
   font-weight: 600;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+}
+
+.cardCoEBadge svg {
+  flex-shrink: 0;
+  color: #d97706;
 }
 
 .cardIconWrap {
