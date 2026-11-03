@@ -19,6 +19,8 @@ import TertiaryResults from "./TertiaryResults";
 import PulseAnalyzingCentral from "./PulseAnalyzingCentral";
 import PulseAIAvatar from "./PulseAIAvatar";
 import { analyzePulseIntent } from "./pulseClinicalEngine";
+import { getPulseEmergencyResponse } from "./pulseEmergency";
+import PulseEmergencyCard from "./PulseEmergencyCard";
 
 interface SearchResultsCanvasProps {
   query: string;
@@ -39,6 +41,7 @@ interface CompletedTurn {
   introText: string;
   narrative: string;
   doctor?: DoctorCardData;
+  emergency?: boolean;
   followupChips: string[];
   timestamp: string;
 }
@@ -51,6 +54,7 @@ interface ActiveTurnState {
   displayedNarrative: string;
   typedIndex: number;
   doctor?: DoctorCardData;
+  emergency?: boolean;
   followupChips: string[];
   phase: "thinking" | "drafting" | "skeleton" | "complete";
 }
@@ -256,6 +260,15 @@ export default function SearchResultsCanvas({
   // Staged automatic scroll on transition into Pulse AI or new prompt
   useEffect(() => {
     if (!isPulseActive || !activeTurn) return;
+
+    if (activeTurn.emergency) {
+      // Reveal the call action above the composer, including on narrow phones.
+      const frame = requestAnimationFrame(() => {
+        const container = unifiedScrollRef.current;
+        container?.scrollTo({ top: container.scrollHeight, behavior: "instant" });
+      });
+      return () => cancelAnimationFrame(frame);
+    }
 
     if (completedTurns.length === 0) {
       // First turn: smoothly glide semantic cards up so chat begins right at the top
@@ -784,8 +797,13 @@ export default function SearchResultsCanvas({
     const raw = (customPrompt ?? pulseInput).trim();
     if (!raw) return;
 
-    // If an animation is actively in progress, don't interrupt
-    if (activeTurn && activeTurn.phase !== "complete") return;
+    // Emergency updates take priority, even while a routine answer is animating.
+    const emergencyReply = getPulseEmergencyResponse(raw, [
+      activeQuery,
+      ...completedTurns.map((turn) => turn.userPrompt),
+      ...(activeTurn ? [activeTurn.userPrompt] : []),
+    ]);
+    if (activeTurn && activeTurn.phase !== "complete" && !emergencyReply) return;
 
     // Archive current completed turn if present
     if (activeTurn && activeTurn.phase === "complete") {
@@ -797,6 +815,7 @@ export default function SearchResultsCanvas({
           introText: activeTurn.introText,
           narrative: activeTurn.fullNarrative,
           doctor: activeTurn.doctor,
+          emergency: activeTurn.emergency,
           followupChips: activeTurn.followupChips,
           timestamp: "Just now",
         },
@@ -810,23 +829,26 @@ export default function SearchResultsCanvas({
     const userPrompt = raw;
 
     // Intelligent clinical conversation resolution based on user inquiry
-    const pulseReply = resolvePulseAIResponse(raw, selectedLocation, currentResults.doctors);
+    const pulseReply = emergencyReply
+      ? { ...emergencyReply, doctor: undefined, followupChips: [] }
+      : resolvePulseAIResponse(raw, selectedLocation, currentResults.doctors);
 
     // Step 1: Transition into unified AI mode
     setIsPulseActive(true);
     setIsScrolledToTop(false);
 
-    // Initialize Active Turn in thinking phase
+    // Emergency guidance and its call action appear immediately.
     setActiveTurn({
       id: turnId,
       userPrompt,
       introText: pulseReply.introText,
       fullNarrative: pulseReply.narrative,
-      displayedNarrative: "",
+      displayedNarrative: emergencyReply ? pulseReply.narrative : "",
       typedIndex: 0,
       doctor: pulseReply.doctor,
+      emergency: Boolean(emergencyReply),
       followupChips: pulseReply.followupChips,
-      phase: "thinking",
+      phase: emergencyReply ? "complete" : "thinking",
     });
   };
 
@@ -1067,6 +1089,8 @@ export default function SearchResultsCanvas({
                   <p className={styles.aiBotIntroText}>{turn.introText}</p>
                   <p className={styles.aiBotNarrativeText}>{turn.narrative}</p>
 
+                  {turn.emergency && <PulseEmergencyCard />}
+
                   {turn.doctor && (
                     <div className={styles.aiBotDoctorCardWrap}>
                       <div className={styles.refDoctorCard} style={{ minHeight: 230, height: 230 }}>
@@ -1108,7 +1132,7 @@ export default function SearchResultsCanvas({
                   )}
 
                   {/* Follow-up suggestion chips */}
-                  <div className={styles.aiBotFollowupsWrap}>
+                  {turn.followupChips.length > 0 && <div className={styles.aiBotFollowupsWrap}>
                     <div className={styles.aiBotFollowupsHeader}>
                       <Sparkles size={16} className={styles.aiBotSparkleIcon} />
                       <span>If you are looking for something else</span>
@@ -1126,7 +1150,7 @@ export default function SearchResultsCanvas({
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div>}
                 </div>
               </div>
             ))}
@@ -1169,6 +1193,7 @@ export default function SearchResultsCanvas({
                 {(activeTurn.phase === "drafting" || activeTurn.phase === "skeleton" || activeTurn.phase === "complete") && (
                   <motion.div
                     className={styles.aiBotResponseRow}
+                    role={activeTurn.emergency ? "alert" : undefined}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -1182,6 +1207,8 @@ export default function SearchResultsCanvas({
                         <span className={styles.typewriterCaret} />
                       )}
                     </p>
+
+                    {activeTurn.emergency && <PulseEmergencyCard />}
 
                     {/* Step 4: Doctor Skeleton Card with Shimmer appears while thinking/loading */}
                     {activeTurn.phase === "skeleton" && (
@@ -1250,7 +1277,7 @@ export default function SearchResultsCanvas({
                           </motion.div>
                         )}
 
-                        <motion.div
+                        {activeTurn.followupChips.length > 0 && <motion.div
                           className={styles.aiBotFollowupsWrap}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -1276,7 +1303,7 @@ export default function SearchResultsCanvas({
                               </motion.button>
                             ))}
                           </div>
-                        </motion.div>
+                        </motion.div>}
                       </>
                     )}
                   </motion.div>
