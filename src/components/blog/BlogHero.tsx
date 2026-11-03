@@ -87,9 +87,11 @@ export default function BlogHero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={styles.categoryLabel}
+            className={styles.metaRow}
           >
-            {FEATURED_MAIN_BLOG.category}
+            <span className={styles.categoryLabel}>{FEATURED_MAIN_BLOG.category}</span>
+            <span className={styles.metaDot}>•</span>
+            <span className={styles.publishDate}>{FEATURED_MAIN_BLOG.date}</span>
           </motion.div>
 
           <motion.h1
@@ -123,7 +125,6 @@ export default function BlogHero() {
               <span>Read Full Article</span>
               <ArrowRight size={16} />
             </Link>
-            <span className={styles.publishDate}>{FEATURED_MAIN_BLOG.date}</span>
           </motion.div>
         </div>
 
@@ -150,23 +151,17 @@ export default function BlogHero() {
                 {/* Scrim Overlay */}
                 <div className={styles.cardScrim} />
 
-                {/* Top Category Badge */}
-                <div className={styles.cardTopBadge}>
-                  <span>{card.category}</span>
-                </div>
-
-                {/* Bottom Content: Title and Date */}
+                {/* Bottom Content: Category + Date above Title */}
                 <div className={styles.cardBottomWrap}>
+                  <div className={styles.cardMetaRow}>
+                    <span className={styles.cardCategory}>{card.category}</span>
+                    <span className={styles.cardMetaDot}>•</span>
+                    <span className={styles.cardDate}>{card.date}</span>
+                  </div>
+
                   <h3 className={styles.cardTitle} title={card.title}>
                     {card.title}
                   </h3>
-                  
-                  <div className={styles.cardDateRow}>
-                    <span className={styles.cardDate}>{card.date}</span>
-                    <span className={styles.readMoreText}>
-                      Read more <ArrowRight size={13} className={styles.readMoreArrow} />
-                    </span>
-                  </div>
                 </div>
               </Link>
             </motion.div>
