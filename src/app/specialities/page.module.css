@@ -1,23 +1,92 @@
 /* ─── /specialities Page — Matching All Doctors Page from aditya4_work ─── */
 
 .page {
-  --d3-ui-accent: var(--color-primary, #034EA2);
-  --d3-ui-focus: var(--color-primary, #034EA2);
-  --d3-ui-border: var(--color-border-light, #e2e8f0);
-  --d3-control-surface: #ffffff;
-  --d3-control-muted: var(--color-bg-alt, #f8fafc);
-  --doctor-listing-max-width: 1440px;
+  --d3-ui-accent: #034EA1;
+  --d3-ui-accent-hover: var(--color-primary-dark);
+  --d3-ui-brand-accent: var(--color-emergency);
+  --d3-ui-action: var(--d3-ui-accent);
+  --d3-ui-action-hover: color-mix(in srgb, var(--d3-ui-accent) 92%, var(--color-text));
+  --d3-ui-action-pressed: color-mix(in srgb, var(--d3-ui-accent) 84%, var(--color-text));
+  /* Red marks selection, with enough contrast against the translucent surfaces. */
+  --d3-ui-selection: color-mix(in srgb, var(--d3-ui-brand-accent) 88%, var(--color-text));
+  --d3-ui-selection-label: color-mix(in srgb, var(--d3-ui-brand-accent) 78%, var(--color-text));
+  --d3-ui-selection-hover: color-mix(in srgb, var(--d3-ui-brand-accent) 72%, var(--color-text));
+  --d3-ui-selection-pressed: color-mix(in srgb, var(--d3-ui-brand-accent) 66%, var(--color-text));
+  --d3-ui-selection-border-hover: var(--d3-ui-selection);
+  --d3-ui-selection-border-pressed: var(--d3-ui-selection);
+  --d3-ui-selection-surface: color-mix(in srgb, var(--d3-ui-brand-accent) 5%, var(--color-bg-card));
+  --d3-ui-selection-surface-hover: color-mix(in srgb, var(--d3-ui-brand-accent) 6%, var(--color-bg-card));
+  --d3-ui-selection-surface-pressed: color-mix(in srgb, var(--d3-ui-brand-accent) 8%, var(--color-bg-card));
+  --d3-ui-neutral-ink: var(--color-text-secondary);
+  --d3-ui-ink-hover: color-mix(in srgb, var(--color-text-secondary) 45%, var(--color-text));
+  --d3-ui-ink-pressed: var(--color-text);
+  --d3-ui-mode-track: #F2F5FA;
+  --d3-ui-neutral-border: color-mix(in srgb, var(--color-border) 80%, var(--color-text-secondary));
+  --d3-ui-focus: var(--d3-ui-accent);
+  --d3-ui-border: var(--color-border);
+  --d3-ui-text: var(--color-text-secondary);
+  --d3-ui-hover: color-mix(in srgb, var(--color-text) 2%, var(--color-bg-card));
+  --d3-ui-pressed: color-mix(in srgb, var(--color-text) 4%, var(--color-bg-card));
+  --d3-ui-fast: 150ms cubic-bezier(.22, 1, .36, 1);
+  --d3-ui-base: 250ms cubic-bezier(.22, 1, .36, 1);
+
+  --doctor-listing-max-width: 100%;
   --d16-content-max: var(--doctor-listing-max-width);
-  --d16-page-gutter: var(--sp-2, 16px);
-  --d3-gutter-start: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
-  --d3-gutter-end: max(var(--d16-page-gutter), calc((100% - var(--d16-content-max)) / 2));
+  --d16-page-gutter: 48px;
+  --d3-gutter-start: 0px;
+  --d3-gutter-end: 0px;
+  --d3-nav-height: calc(var(--nav-height, 72px) - var(--sp-2, 16px));
+  --filter-bottom-gap: var(--sp-2, 16px);
 
   --page-nav-height: var(--nav-height);
   padding-top: var(--page-nav-height, var(--nav-height));
-  min-height: 100vh;
-  background: var(--white);
+  min-height: 100dvh;
+  padding-bottom: var(--sp-8, 64px);
+  padding-left: var(--space-48);
+  padding-right: var(--space-48);
+  box-sizing: border-box;
+  overflow-anchor: none;
+  color-scheme: light;
   font-family: var(--font-family, inherit);
   color: var(--color-text, #0f172a);
+
+  /* A quiet continuation of the booking-page canvas, bounded independently of result count. */
+  --d20-canvas-glow-height: clamp(calc(var(--sp-16, 128px) * 3), 65vw, calc(var(--sp-16, 128px) * 6));
+  background:
+    radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
+      color-mix(in srgb, var(--color-primary, #034EA2) 8%, transparent),
+      color-mix(in srgb, var(--color-primary, #034EA2) 4%, transparent) 40%,
+      color-mix(in srgb, var(--color-primary, #034EA2) 1%, transparent) 72%,
+      transparent 100%),
+    var(--d17-lite-surface, var(--color-bg, #fafcfc));
+}
+
+.page.doctorPage,
+.page[data-design="d20"] {
+  --d16-content-max: 100%;
+  --d16-page-gutter: 48px;
+  --d3-gutter-start: 0px;
+  --d3-gutter-end: 0px;
+  --d20-canvas-glow-height: clamp(calc(var(--sp-16, 128px) * 3), 65vw, calc(var(--sp-16, 128px) * 6));
+  background:
+    radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
+      color-mix(in srgb, var(--color-primary, #034EA2) 8%, transparent),
+      color-mix(in srgb, var(--color-primary, #034EA2) 4%, transparent) 40%,
+      color-mix(in srgb, var(--color-primary, #034EA2) 1%, transparent) 72%,
+      transparent 100%),
+    var(--d17-lite-surface, var(--color-bg, #fafcfc));
+}
+
+@media (forced-colors: active) {
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
+    background: Canvas;
+  }
+}
+
+.doctorPage {
+  overflow-anchor: none;
 }
 
 @media (max-width: 1024px) {
@@ -26,23 +95,41 @@
   }
 }
 
+@media (max-width: 640px) {
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
+    padding-left: 16px;
+    padding-right: 16px;
+    --d16-page-gutter: 16px;
+  }
+}
+
 @media (min-width: 640px) {
-  .page {
-    --d16-page-gutter: var(--sp-3, 24px);
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
+    padding-left: var(--space-48);
+    padding-right: var(--space-48);
+    --d16-page-gutter: 48px;
   }
 }
 
 @media (min-width: 1024px) {
-  .page {
-    --d16-page-gutter: clamp(var(--sp-4, 32px), 3.5vw, var(--sp-6, 48px));
+  .page,
+  .page.doctorPage,
+  .page[data-design="d20"] {
+    padding-left: var(--space-48);
+    padding-right: var(--space-48);
+    --d16-page-gutter: 48px;
   }
 }
 
 /* ── 1. HEADER & HERO (Exact match to DoctorSearchTop from aditya4_work) ─────── */
 .container {
-  width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
-  margin-inline: var(--d3-gutter-start) var(--d3-gutter-end);
-  max-width: var(--doctor-listing-max-width, 1440px);
+  width: 100%;
+  margin-inline: auto;
+  max-width: var(--doctor-listing-max-width, 100%);
 }
 
 .titleRow {
@@ -50,7 +137,7 @@
   flex-direction: column;
   gap: var(--sp-1, 8px);
   padding-block: var(--sp-4, 32px) var(--sp-2, 16px);
-  background: var(--white);
+  background: transparent;
 }
 
 .title {
@@ -497,9 +584,9 @@
 
 /* ── 3. MAIN TWO-COLUMN LAYOUT (Matching Doctor Listing from aditya4_work) ── */
 .layout {
-  width: calc(100% - var(--d3-gutter-start) - var(--d3-gutter-end));
-  margin-inline: var(--d3-gutter-start) var(--d3-gutter-end);
-  max-width: var(--doctor-listing-max-width, 1440px);
+  width: 100%;
+  margin-inline: auto;
+  max-width: var(--doctor-listing-max-width, 100%);
   padding-block: var(--sp-3, 24px) var(--sp-8, 64px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -520,45 +607,91 @@
   }
 }
 
-/* ── 4. STICKY FILTERS SIDEBAR (Matching SidebarDoctorFilters) ─────────── */
+/* ── 4. STICKY FILTERS SIDEBAR (Matching Design3SearchResults.module.css) ── */
 .sidebar {
+  --filter-header-height: var(--sp-4, 32px);
+  --filter-category-height: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  --filter-glass-surface: color-mix(in srgb, var(--color-text, #0f172a) 5%, var(--color-bg-card, #ffffff));
+  --filter-glass-fill: color-mix(in srgb, var(--filter-glass-surface) 56%, transparent);
+  --filter-glass-blur: calc(var(--sp-1, 8px) * 1.5);
+  --filter-glass-height: calc(var(--filter-header-height) + var(--sp-3, 24px) + var(--filter-pinned-height, 0px));
   display: none;
+  min-width: 0;
+  padding: var(--sp-3, 24px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xl, 20px);
+  background: var(--color-bg-card, #ffffff);
 }
 
-@media (min-width: 1024px) {
-  .sidebar {
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: calc(var(--nav-actual-height, var(--page-nav-height, 68px)) + 130px);
-    max-height: calc(100dvh - var(--nav-actual-height, var(--page-nav-height, 68px)) - 146px);
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    scrollbar-width: thin;
-    padding: var(--sp-3, 24px);
-    border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: var(--radius-xl, 20px);
-    background: var(--color-bg-card, #ffffff);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1), max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  :global(html[data-nav-visible="false"]) .sidebar {
-    top: 130px;
-    max-height: calc(100dvh - 146px);
-  }
+/* One backdrop spans both headings. Labels never create their own glass panes. */
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  pointer-events: none;
+  height: var(--filter-glass-height);
+  border-radius: calc(var(--radius-xl, 20px) - 1px) calc(var(--radius-xl, 20px) - 1px) 0 0;
+  background: var(--filter-glass-surface);
 }
 
-.sidebarHeader {
+/* Draw the panel edge above the frosted heading so blur cannot wash it out. */
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: inherit;
+}
+
+.sidebar [data-filter-group][data-expanded] > [data-filter-category-header] {
+  z-index: auto;
+  background: transparent;
+}
+
+.sidebar [data-filter-group][data-expanded] > [data-filter-category-header]::before {
+  content: none;
+}
+
+.sidebar [data-filter-group] > [data-filter-category-header][data-pinned] {
+  z-index: 2;
+  /* Clip the outgoing label as its section pushes it under Filters; leave room for focus. */
+  clip-path: inset(calc(var(--filter-pinned-clip, 0px) - var(--sp-1, 8px)) calc(var(--sp-1, 8px) * -1) calc(var(--sp-1, 8px) * -1));
+}
+
+.filterHeading {
+  position: relative;
+  z-index: 3;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--sp-2, 16px);
-  padding-bottom: var(--sp-2, 16px);
-  border-bottom: 1px solid var(--color-border, #e2e8f0);
+  gap: var(--sp-1, 8px);
+  height: calc(var(--filter-header-height) + var(--sp-3, 24px));
+  margin: calc(var(--sp-3, 24px) * -1) calc(var(--sp-3, 24px) * -1) 0;
+  padding: var(--sp-1, 8px) var(--sp-3, 24px);
 }
 
-.sidebarTitle {
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sidebar::before {
+    height: calc(var(--filter-glass-height) + var(--sp-1, 8px));
+    background: var(--filter-glass-fill);
+    -webkit-backdrop-filter: blur(var(--filter-glass-blur));
+    backdrop-filter: blur(var(--filter-glass-blur));
+    -webkit-mask-image: linear-gradient(180deg, var(--color-text-inverse, #fff) calc(var(--filter-glass-height) - var(--sp-1, 8px)), transparent);
+    mask-image: linear-gradient(180deg, var(--color-text-inverse, #fff) calc(var(--filter-glass-height) - var(--sp-1, 8px)), transparent);
+  }
+}
+
+.filterHeading h2,
+.filterHeading button {
+  position: relative;
+  z-index: 1;
+}
+
+.filterHeading h2 {
   display: flex;
   align-items: center;
   gap: var(--sp-1, 8px);
@@ -567,22 +700,56 @@
   color: var(--color-text, #0f172a);
 }
 
-.sidebarResetBtn {
-  background: transparent;
-  border: 0;
-  font-size: var(--font-size-sm, 13px);
+.filterHeading button {
+  min-height: var(--sp-6, 48px);
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: var(--font-size-sm, 14px);
   font-weight: 500;
-  color: var(--color-primary, #034EA2);
-  cursor: pointer;
-  padding: 4px 6px;
+  color: var(--d3-ui-neutral-ink, var(--color-primary, #034EA2));
   border-radius: var(--radius-sm, 4px);
-  transition: color var(--transition-fast, 0.15s);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity var(--d3-ui-fast, var(--transition-fast, 0.15s)), color var(--d3-ui-fast, var(--transition-fast, 0.15s));
 }
 
-.sidebarResetBtn:hover {
-  color: var(--color-primary-dark, #023a78);
-  text-decoration: underline;
+.filterHeading button:disabled {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
+
+.filterHeading button:not(:disabled):active {
+  color: var(--d3-ui-neutral-ink, var(--color-primary-dark, #023877));
+}
+
+@media (hover: hover) {
+  .filterHeading button:not(:disabled):hover {
+    color: var(--d3-ui-neutral-ink, var(--color-primary-dark, #023877));
+    text-decoration: underline;
+  }
+}
+
+.sidebar :is(button, a, input, select) {
+  scroll-margin-block: var(--sp-1, 8px);
+}
+
+.sidebar:hover [data-overflow="true"] [data-filter-scrollbar] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: calc(var(--d3-toolbar-bottom, var(--directory-nav-offset, var(--nav-height))) + var(--space-16));
+    max-height: var(--filter-panel-max-height, calc(100dvh - var(--nav-height, 72px) - var(--sp-16, 128px)));
+  }
+}
+
 
 /* Active Filter Chips in Sidebar */
 .activeChipsRow {
@@ -1210,16 +1377,23 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
-  background: rgba(9, 13, 22, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  min-height: calc(var(--sp-3, 24px) + var(--sp-1, 8px) / 2);
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: var(--radius-full, 9999px);
-  font-size: 11px;
+  color: #92400e;
+  font-size: var(--font-size-xs, 12px);
   font-weight: 600;
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+}
+
+.cardCoEBadge svg {
+  flex-shrink: 0;
+  color: #d97706;
 }
 
 .cardIconWrap {
