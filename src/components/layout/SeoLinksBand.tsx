@@ -212,7 +212,7 @@ export default function SeoLinksBand() {
                           <li key={`${section.id}-${i}`}>
                             {external ? (
                               <a
-                                href={link.href}
+                                href={seoDoctorHref(link.href)}
                                 className={styles.link}
                                 tabIndex={tab}
                                 rel="noopener noreferrer"

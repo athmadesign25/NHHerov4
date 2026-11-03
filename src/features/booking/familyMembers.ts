@@ -15,4 +15,3 @@ export const DEFAULT_MEMBERS: FamilyMember[] = [
   { id: 3, name: "Hazel", relation: "spouse", img: "https://i.pravatar.cc/150?img=5", age: "30", gender: "female" },
   { id: 4, name: "Rahul", relation: "parent", img: "https://i.pravatar.cc/150?img=8", age: "62", gender: "male" },
 ];
-

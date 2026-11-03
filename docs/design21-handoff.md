@@ -34,3 +34,9 @@ Unrelated website sections and their existing history are preserved.
 - Repository-wide lint has pre-existing errors in unrelated scripts/components; this handoff does not claim a clean full-repository lint result.
 
 This remains a stakeholder demo: mock login/OTP, benefits and the Razorpay-style payment screen do not implement production authentication, insurance eligibility or real payment processing.
+
+## Combined local preview — 3 November 2026
+
+Merged the reviewed `demo-no-tokens` commit `293c8a1` into this branch. The combined homepage, search experience, speciality pages and desktop menus are retained. Design 21 remains the doctor listing and booking flow, including the member picker in the combined navbar. Legacy design tokens needed by the booking surfaces remain available as compatibility aliases.
+
+Validation: 279 tests pass; TypeScript and the production build pass. Browser checks cover stale listing links, slot selection, profile booking, demo login, booking summary, navbar member selection and listing overflow at 375, 768 and 1440 pixels. Full repository lint reports 15 existing errors in reference/test scripts and the legacy DoctorFilterDialog; these are not merge-resolution errors.

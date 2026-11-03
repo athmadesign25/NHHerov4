@@ -205,7 +205,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--color-warning);
+  background: var(--amber-500);
   position: relative;
   z-index: 1;
 }

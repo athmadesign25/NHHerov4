@@ -71,10 +71,10 @@ export default function TimeSlotGrid({ slots, selectedTime, onSelect }: TimeSlot
               </span>
             </div>
 
-            <motion.div 
-              variants={container} 
-              initial="hidden" 
-              animate="show" 
+            <motion.div
+              variants={container}
+              initial="hidden"
+              animate="show"
               className={styles.chipGrid}
             >
               <AnimatePresence mode="popLayout">

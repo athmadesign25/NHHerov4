@@ -3,13 +3,13 @@
   overflow: hidden;
   border-radius: 0;
   background: radial-gradient(75% 55% at 50% 100%, rgba(13, 87, 189, 0.30) 0%, rgba(6, 17, 32, 0) 100%), #061120;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(var(--white-rgb), 0.85);
 }
 
 /* Emergency Strip */
 .emergencyStrip {
   background: var(--color-emergency);
-  padding: 10px 0;
+  padding: var(--space-10) 0;
 }
 
 .emergencyInner {
@@ -23,14 +23,14 @@
 .emergencyLeft {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .emergencyDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--color-surface);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -42,24 +42,24 @@
 .emergencyLabel {
   font-size: var(--font-size-sm);
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .emergencyNumber {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: #fff;
-  padding: 4px 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: var(--color-text-inverse);
+  padding: var(--space-4) var(--space-14);
+  border: 2px solid rgba(var(--white-rgb), 0.4);
   border-radius: var(--radius-full);
   transition: border-color var(--transition-fast);
 }
 
 .emergencyNumber:hover {
-  border-color: #fff;
+  border-color: var(--white);
 }
 
 /* Main */
@@ -91,7 +91,7 @@
 .brandLogo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   margin-left: -18px;
 }
 
@@ -99,32 +99,32 @@
 
 .brandDesc {
   font-size: var(--font-size-sm);
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.65);
+  line-height: var(--leading-relaxed);
+  color: rgba(var(--white-rgb), 0.7);
 }
 
 .contact {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .contactItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-8);
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--white-rgb), 0.7);
   transition: color var(--transition-fast);
 }
 
 a.contactItem:hover {
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 .socials {
   display: flex;
-  gap: 8px;
+  gap: var(--space-8);
   flex-wrap: wrap;
 }
 
@@ -135,21 +135,21 @@ a.contactItem:hover {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(var(--white-rgb), 0.1);
+  color: rgba(var(--white-rgb), 0.7);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .socialIcon:hover {
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-inverse);
 }
 
 /* Link Columns */
 .colHeading {
   font-size: var(--font-size-sm);
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text-inverse);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: var(--sp-2);
@@ -158,24 +158,24 @@ a.contactItem:hover {
 .linkList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-8);
 }
 
 .link {
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--white-rgb), 0.6);
   transition: color var(--transition-fast), padding-left var(--transition-fast);
   display: block;
 }
 
 .link:hover {
-  color: #fff;
-  padding-left: 4px;
+  color: var(--color-text-inverse);
+  padding-left: var(--space-4);
 }
 
 /* Bottom Bar */
 .bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(var(--white-rgb), 0.1);
   padding: var(--sp-3) 0;
 }
 
@@ -189,7 +189,7 @@ a.contactItem:hover {
 
 .copyright {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--white-rgb), 0.4);
 }
 
 .bottomLinks {
@@ -200,12 +200,12 @@ a.contactItem:hover {
 
 .bottomLink {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(var(--white-rgb), 0.4);
   transition: color var(--transition-fast);
 }
 
 .bottomLink:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(var(--white-rgb), 0.8);
 }
 
 @media (max-width: 1024px) {
@@ -237,8 +237,8 @@ a.contactItem:hover {
     grid-column: 1 / -1;
   }
   .bottom {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: var(--space-12);
+    padding-right: var(--space-12);
   }
   .bottomInner {
     flex-direction: column;
@@ -257,7 +257,7 @@ a.contactItem:hover {
      rule is later in the file and sets `padding` as a shorthand, so it
      would reset any left/right set earlier. Adds to .container's own 16px. */
   .main {
-    padding: 100px 12px;
+    padding: 100px var(--space-12);
   }
   .brandLogo {
     margin-left: -2px;

@@ -87,6 +87,12 @@ const featuredLegacySlugs = new Set(["dr-rajiv-menon", "dr-priya-sharma", "dr-ar
 /** Older public profile URLs keep their clinician identity when entering the current journey. */
 export function getDesign20DirectoryDoctor(id: string, requestedName?: string | null): DoctorListingItem | null {
   const direct = design20Directory.find(doctor => doctor.id === id);
+  if (requestedName) {
+    const requestedKey = doctorNameKey(requestedName);
+    const byName = design20Directory.find(doctor => doctorNameKey(doctor.name) === requestedKey);
+    if (byName) return byName;
+    if (direct && doctorNameKey(direct.name) !== requestedKey) return null;
+  }
   if (direct) return direct;
   const key = doctorNameKey(id);
   const named = design20Directory.find(doctor => doctorNameKey(doctor.name) === key);

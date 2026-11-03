@@ -1,0 +1,672 @@
+.sectionWrap {
+  position: relative;
+  width: 100%;
+  background: transparent;
+}
+
+/* Solid — matches CentreOfExcellence's own handoff-plate color exactly, so
+   the boundary between that section (already solid by the time this one
+   surfaces) and this one is a seamless, identical color with no edge.
+   Stays this same solid dark for this section's entire height; the
+   dark -> light handoff into HealthPackages is handled over there instead
+   (see HealthPackages.module.css/.tsx), timed to switch only once that
+   section's own card is fully full-page and hides it. */
+.section {
+  position: relative;
+  background: #031224;
+  overflow: hidden;
+  /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
+     below 1024px, where the mobile swipe carousel's own full-bleed trick
+     (.mobileCarouselContainer) needs an unpadded ancestor to work. */
+  padding: 44px 16px 64px;
+  box-sizing: border-box;
+  min-height: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -2px; /* Close any sub-pixel rendering gaps from the previous section */
+}
+
+.headerContainer {
+  position: relative;
+  z-index: 10;
+  margin-bottom: 48px;
+}
+
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyebrowWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.eyebrowText {
+  color: #FFFFFF !important;
+}
+
+.eyebrowDash {
+  width: 24px;
+  height: 2px;
+  background: var(--color-emergency, #ED1C24);
+  margin-top: 4px;
+}
+
+.sectionTitle {
+  font-size: 42px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+}
+
+.sectionSubtitle {
+  color: #F1F1F1;
+  font-size: 18px;
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Outer Container for Track, Navigation Arrows, and CTA */
+.carouselOuter {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Viewport for Card Track: explicit height = card height (676px) + 60px top + 60px bottom padding */
+.trackViewport {
+  position: relative;
+  width: 100%;
+  height: 796px;
+  overflow: hidden;
+}
+
+/* Fixed Track: cards sit at absolute slot positions (slot * 572px) */
+.track {
+  position: absolute;
+  width: 2860px; /* 5 slots * 572px */
+  height: 676px;
+  left: 50%;
+  transform: translateX(-1408px);
+  top: 60px;
+}
+
+/* Card Specs: 528px width, 676px height */
+.card {
+  display: flex;
+  width: 528px;
+  height: 676px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.35);
+  background: #001124;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: filter 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Mobile Native Swipe Carousel */
+.mobileCarouselContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 16px;
+  padding: 0 24px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 24px;
+}
+
+.mobileCarouselContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.mobileCarouselItem {
+  flex: 0 0 82%;
+  scroll-snap-align: center;
+  position: relative;
+}
+
+.card:hover {
+  filter: brightness(1.08);
+  transform: translateY(-4px);
+}
+
+/* Video element inside card with slightly rounded inner corners */
+.cardVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+/* Mute Button (Top Left) */
+.muteBtn {
+  position: absolute;
+  bottom: 104px;
+  top: auto;
+  right: 24px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+
+.muteBtn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.06);
+}
+
+/* Bottom Overlay Gradient for Text Readability — reach and blur both pulled
+   back from the old 420px/18px so it only darkens enough for the patient
+   name/condition + caption area, leaving the middle of the frame (where
+   faces usually sit) clear. */
+.bottomOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 260px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 17, 36, 0) 0%,
+    rgba(0, 17, 36, 0.1) 30%,
+    rgba(0, 17, 36, 0.25) 55%,
+    rgba(0, 17, 36, 0.4) 75%,
+    rgba(0, 17, 36, 0.5) 100%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dark wash behind the overview unit — pulled up tighter to the top (just
+   enough reach for the overview icon/text block near the mute button)
+   and much less blurred, so it no longer washes out most of the frame —
+   faces sitting in the upper-middle of these portrait videos stay visible. */
+.topOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 190px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 17, 36, 0.85) 0%,
+    rgba(0, 17, 36, 0.6) 30%,
+    rgba(0, 17, 36, 0.3) 60%,
+    rgba(0, 17, 36, 0) 100%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Shimmer sweep bridging the overview-card blur-out / caption blur-in handoff,
+   same recipe as the speciality grid card shimmer. */
+.cardShimmerSweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 16;
+}
+
+.cardShimmerSweep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 65%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.05) 75%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  animation: patientCardShimmer 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes patientCardShimmer {
+  0% {
+    left: -100%;
+    opacity: 0.9;
+  }
+  100% {
+    left: 175%;
+    opacity: 0;
+  }
+}
+
+/* Caption Container (~21px above text unit, 48px space from card sides) */
+.captionContainer {
+  position: absolute;
+  bottom: 32px;
+  left: 48px;
+  right: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Dark glass caption box, wrapping onto a second line when it needs to */
+.captionBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  white-space: normal;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  font-family: Inter, sans-serif;
+  font-size: 19px;
+  line-height: normal;
+}
+
+/* Text Info Unit Container */
+.textUnit {
+  display: flex;
+  width: calc(100% - 90px); /* Leave room for mute button on the right */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  bottom: auto;
+  z-index: 5;
+}
+
+/* Normal State 2-Liner Testimonial Glass Container Box — left-aligned with text unit, 70% width */
+.overviewBox {
+  width: 70%;
+  max-width: 70%;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 28px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+/* Overview unit: no glass panel — bare icon + text sitting directly on the
+   .topOverlay wash above. Top-aligned with the mute/unmute button, and
+   left-aligned with the bottom text unit (34px) rather than its own
+   separate inset. */
+.overviewBoxTop {
+  position: absolute;
+  bottom: 24px;
+  top: auto;
+  left: 24px;
+  z-index: 8;
+  width: calc(100% - 74px);
+  max-width: calc(100% - 74px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.overviewQuoteIcon {
+  width: 30px;
+  height: 26px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+
+.overviewText {
+  color: #FFFFFF;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* allow up to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patientName {
+  color: #FFF;
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: normal;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.patientSubtext {
+  align-self: stretch;
+  color: #E0E0E0;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 2px 0 0 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark edge fades: same solid color as the section's own background
+   (#031224), fading to transparent toward the carousel's center, so the
+   track's outer edges blend seamlessly into the surrounding section on
+   both sides instead of cutting off hard. Sit above the card content but
+   below the nav arrows (z-index 25 vs. the arrows' 30), which are placed
+   on top of them. carouselOuter (their positioning parent) stays
+   overflow:visible, so these reach the section's own edges rather than
+   being clipped by trackViewport's own overflow:hidden. */
+.edgeFade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 260px;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.edgeFadeLeft {
+  left: 0;
+  background: linear-gradient(90deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+}
+
+.edgeFadeRight {
+  right: 0;
+  background: linear-gradient(270deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+}
+
+/* Glass navigation arrows — overlaid directly on the carousel track
+   (carouselOuter is their positioning parent) on top of the dark edge
+   fades above, vertically centered on it so they read as part of the
+   carousel itself rather than a separate control row. Solid dark-navy
+   glass (not just a white tint) so the icon stays legible over any video
+   frame behind it, bright or dark, instead of nearly disappearing over
+   lighter footage. Both sides sit at the same inset from their own edge —
+   FloatingQuickActions now sits low near the page's Pulse button (see
+   FloatingQuickActions.module.css) rather than vertically centered, so it
+   no longer competes with this arrow for the same screen band. */
+.arrowBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(3, 18, 36, 0.55);
+  backdrop-filter: blur(16px);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  flex-shrink: 0;
+}
+
+.arrowBtnLeft {
+  left: 28px;
+}
+
+.arrowBtnRight {
+  right: 28px;
+}
+
+.arrowBtn:hover {
+  background: rgba(3, 18, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Secondary CTA Button — dark/navy for light-background accessibility */
+/* .trackViewport already leaves 60px of empty space below the cards
+   themselves (see its own comment above) before this wrapper begins, so
+   the negative margin here pulls back up into that empty space to land
+   the button exactly 44px below the cards, not 44px below the viewport's
+   own (taller) box. */
+.ctaWrapper {
+  margin-top: -16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 30;
+}
+
+/* White-outlined — this section's own background is solid dark for its
+   full height (see .section), so the previous blue-on-dark styling read
+   as low-contrast; white matches the section's own text/eyebrow color. */
+.secondaryCtaBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  color: #FFFFFF;
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: normal;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+.secondaryCtaBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+}
+
+@media (max-width: 1023px) {
+  .desktopOnly {
+    display: none !important;
+  }
+  .section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@media (min-width: 1024px) {
+  .mobileOnly {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    height: 480px;
+    border-width: 1px;
+    border-radius: 10px;
+  }
+  .cardVideo {
+    border-radius: 6px;
+  }
+  .captionContainer {
+    bottom: 24px;
+    left: 20px;
+    right: 20px;
+  }
+  .muteBtn {
+    bottom: 74px; /* Lower slightly on mobile since button is smaller */
+    right: 16px;
+    width: 34px;
+    height: 34px;
+  }
+  .overviewText {
+    font-size: 14px;
+  }
+  .ctaWrapper {
+    margin-top: 8px;
+  }
+  .captionBox {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  .textUnit {
+    width: calc(100% - 40px);
+    left: 20px;
+    bottom: 20px;
+  }
+  .patientName {
+    font-size: 20px;
+  }
+  .patientSubtext {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Navigator */
+.mobileNavigator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+.navDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+.navDotActive {
+  width: 18px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Light Mode Variant (Design 2) using Design Tokens ─── */
+.sectionWrapLight {
+  background: var(--color-surface, var(--white));
+}
+
+.sectionLight {
+  background: var(--color-surface, var(--white)) !important;
+}
+
+.sectionTitleLight {
+  color: var(--color-text, var(--navy-ink)) !important;
+}
+
+.sectionSubtitleLight {
+  color: var(--color-text-secondary, var(--slate-600)) !important;
+}
+
+.sectionWrapLight .edgeFade,
+.edgeFadeLeftLight,
+.edgeFadeRightLight {
+  display: none !important;
+}
+
+.arrowBtnLight {
+  background: rgba(var(--white-rgb), 0.92) !important;
+  border-color: rgba(var(--black-rgb), 0.12) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.12) !important;
+}
+
+.arrowBtnLight:hover {
+  background: var(--white) !important;
+  border-color: rgba(var(--black-rgb), 0.28) !important;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.18) !important;
+  color: var(--color-primary, var(--navy-ink)) !important;
+  transform: translateY(-50%) scale(1.08) !important;
+}
+
+.navDotLight {
+  background: rgba(var(--black-rgb), 0.2) !important;
+}
+
+.navDotActiveLight {
+  background: var(--color-primary) !important;
+}
+
+/* Light Mode Card Styling (Design 2) */
+.cardLight,
+.sectionWrapLight .card,
+.sectionLight .card {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+.cardLight .cardVideo,
+.sectionWrapLight .cardVideo,
+.sectionLight .cardVideo {
+  border-radius: 10px !important;
+}
+
+.cardLight .topOverlay,
+.sectionWrapLight .topOverlay,
+.sectionLight .topOverlay {
+  display: none !important;
+}
+

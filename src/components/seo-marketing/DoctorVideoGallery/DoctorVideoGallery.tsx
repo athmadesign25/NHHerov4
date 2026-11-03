@@ -47,15 +47,15 @@ export default function DoctorVideoGallery({ doctorName, videos = DEFAULT_VIDEOS
     <div className={styles.wrapper}>
       <h2 className={styles.heading}>Videos & Insights by {doctorName}</h2>
       <p className={styles.subheading}>Watch educational videos and procedure explanations directly from the specialist.</p>
-      
+
       <div className={styles.grid}>
         {videos.map((vid) => (
           <div key={vid.id} className={styles.videoCard}>
             <div className={styles.thumbnailWrap} onClick={() => setActiveVideo(vid.id)}>
-              <Image 
-                src={vid.thumbnail} 
-                alt={vid.title} 
-                fill 
+              <Image
+                src={vid.thumbnail}
+                alt={vid.title}
+                fill
                 className={styles.thumbnail}
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
@@ -70,7 +70,7 @@ export default function DoctorVideoGallery({ doctorName, videos = DEFAULT_VIDEOS
           </div>
         ))}
       </div>
-      
+
       {activeVideo && (
         <div className={styles.modalOverlay} onClick={() => setActiveVideo(null)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>

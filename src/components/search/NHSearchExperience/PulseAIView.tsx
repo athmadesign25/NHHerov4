@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ArrowLeft, 
-  Paperclip, 
-  Mic, 
-  Briefcase, 
-  Send, 
+import {
+  ArrowLeft,
+  Paperclip,
+  Mic,
+  Briefcase,
+  Send,
   Activity,
   Heart,
   Brain,
@@ -25,19 +24,19 @@ import {
   Clock
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
-import { 
-  DoctorCardData, 
-  getSearchResults, 
-  countWords, 
-  enforceWordLimit, 
-  formatAudioDuration, 
-  MAX_SEARCH_WORDS, 
-  MAX_AUDIO_DURATION_SECONDS 
+import {
+  DoctorCardData,
+  getSearchResults,
+  countWords,
+  enforceWordLimit,
+  formatAudioDuration,
+  MAX_SEARCH_WORDS,
+  MAX_AUDIO_DURATION_SECONDS
 } from "./searchData";
-import { 
-  analyzePulseIntent, 
-  ClinicalAnalysisResult, 
-  ActionChipItem 
+import {
+  analyzePulseIntent,
+  ClinicalAnalysisResult,
+  ActionChipItem
 } from "./pulseClinicalEngine";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
@@ -48,12 +47,13 @@ interface PulseAIViewProps {
   doctors: DoctorCardData[];
   onBack: () => void;
   onClose?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
   attachedFile?: { name: string; size?: number } | null;
 }
 
 type ActionChipType = "none" | "symptoms" | "tests" | "slots" | "video";
 
-type ChatPhase = 
+type ChatPhase =
   | "prompt_sent"     // Stage 1: User prompt sent/bubble appears
   | "bot_thinking"    // Stage 2: Pulse AI analysing/thinking ("Analyzing symptoms...")
   | "typewriter"      // Stage 3: Bot text types out in typewriter format
@@ -97,6 +97,7 @@ export default function PulseAIView({
   doctors,
   onBack,
   onClose,
+  onNavigateOut,
   attachedFile,
 }: PulseAIViewProps) {
   // 1. Multi-turn chat state & conversation memory
@@ -119,6 +120,19 @@ export default function PulseAIView({
   const [phase, setPhase] = useState<ChatPhase>("prompt_sent");
   const [displayedText, setDisplayedText] = useState("");
   const [typedIndex, setTypedIndex] = useState(0);
+
+  const handlePulseRedirect = (e: React.MouseEvent, href: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      return;
+    }
+    e.preventDefault();
+    if (onNavigateOut) {
+      onNavigateOut(href);
+    } else {
+      onClose?.();
+      window.location.href = href;
+    }
+  };
 
   // Sync doctors when query / location changes or if passed doctors updates
   useEffect(() => {
@@ -304,17 +318,17 @@ export default function PulseAIView({
         if (searchRes && searchRes.doctors.length > 0) {
           if (chipAction === "video") {
             setCurrentDoctors(
-              searchRes.doctors.map((d) => ({ 
-                ...d, 
+              searchRes.doctors.map((d) => ({
+                ...d,
                 consultationType: "video" as const,
-                hospital: `${d.hospital} · Video Consult Available` 
+                hospital: `${d.hospital} · Video Consult Available`
               }))
             );
           } else if (chipAction === "slots") {
             setCurrentDoctors(
-              searchRes.doctors.map((d) => ({ 
-                ...d, 
-                availableToday: true 
+              searchRes.doctors.map((d) => ({
+                ...d,
+                availableToday: true
               }))
             );
           } else {
@@ -675,12 +689,18 @@ export default function PulseAIView({
                         {reportSpecialistRecommendations[selectedSpecialistIndex].desc}
                       </p>
 
-                      <Link
-                        href={`/search/doctors?design=${DEFAULT_DOCTOR_DESIGN}&specialties=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&location=${encodeURIComponent(selectedLocation)}`}
-                        className={styles.pulseConsultBtn}
-                      >
-                        Consult
-                      </Link>
+                      {(() => {
+                        const consultHref = `/doctors?speciality=${encodeURIComponent(reportSpecialistRecommendations[selectedSpecialistIndex].specialty)}&city=${encodeURIComponent(selectedLocation)}`;
+                        return (
+                          <Link
+                            href={consultHref}
+                            className={styles.pulseConsultBtn}
+                            onClick={(e) => handlePulseRedirect(e, consultHref)}
+                          >
+                            Consult
+                          </Link>
+                        );
+                      })()}
                     </div>
 
                     {/* 3 Dots Carousel Pagination */}
@@ -862,12 +882,18 @@ export default function PulseAIView({
                                   {doc.hospital}
                                 </div>
                               </div>
-                              <Link
-                                href={`/doctors/${encodeURIComponent(doc.id)}/book?design=${DEFAULT_DOCTOR_DESIGN}&city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`}
-                                className={styles.pulseDocBookBtnWhite}
-                              >
-                                Book
-                              </Link>
+                              {(() => {
+                                const bookHref = `/doctors/${encodeURIComponent(doc.id)}/book?hospital=${encodeURIComponent(doc.hospital)}&name=${encodeURIComponent(doc.name)}&city=${encodeURIComponent(selectedLocation)}${activeChip === "video" ? "&mode=video" : ""}`;
+                                return (
+                                  <Link
+                                    href={bookHref}
+                                    className={styles.pulseDocBookBtnWhite}
+                                    onClick={(e) => handlePulseRedirect(e, bookHref)}
+                                  >
+                                    Book
+                                  </Link>
+                                );
+                              })()}
                             </div>
                           </div>
                         </div>
@@ -953,7 +979,7 @@ export default function PulseAIView({
           />
 
           {countWords(inputValue) >= MAX_SEARCH_WORDS && (
-            <span 
+            <span
               className={styles.pulseWordLimitError}
               role="alert"
             >
@@ -962,7 +988,7 @@ export default function PulseAIView({
           )}
 
           {isListening && pulseAudioSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && pulseAudioSeconds < MAX_AUDIO_DURATION_SECONDS && (
-            <span 
+            <span
               className={styles.pulseLastSecondsBlink}
               role="status"
               aria-live="polite"
