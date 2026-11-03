@@ -3,11 +3,13 @@
 import { useState, useEffect, useRef, Fragment } from "react";
 import Link from "next/link";
 import DoctorNavigationLink from "./DoctorNavigationLink";
+import BookingMemberMenu from "./BookingMemberMenu";
+import { resetBookingMemberSelection } from "@/features/booking/design20/memberSelection";
 import LoginModal from "@/features/auth/LoginModal";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe, Sun, Moon } from "lucide-react";
+import { ChevronDown, MapPin, Search, Menu, ChevronRight, ChevronLeft, X, User , UserCog , CalendarCheck , FileText , LogOut , Users , Check, Phone, Stethoscope, Activity, Building2, Globe } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 function EmergencyIcon({ size = 18 }: { size?: number }) {
@@ -27,6 +29,10 @@ const MOCK_FAMILY_MEMBERS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isBookingJourney = pathname === "/search/doctors" || pathname === "/find-a-doctor"
+    || pathname === "/doctors" || pathname.startsWith("/doctors/")
+    || pathname === "/book-an-appointment" || pathname.startsWith("/book-an-appointment/");
+  const isBookingConfirmation = pathname.endsWith("/book/confirmation");
   const isHomePage = pathname === "/";
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const doctorMenuLinkRef = useRef<HTMLAnchorElement>(null);
@@ -35,28 +41,15 @@ export default function Navbar() {
   const [activePane, setActivePane] = useState<string>('main');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
-  // Search theme state ("dark" | "white") for stakeholder simulation
-  const [searchTheme, setSearchTheme] = useState<"dark" | "white">("dark");
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('nh_search_theme') as "dark" | "white" | null;
       if (saved === 'white' || saved === 'dark') {
-        setSearchTheme(saved);
         document.documentElement.setAttribute('data-search-theme', saved);
       }
     }
   }, []);
 
-  const handleToggleSearchTheme = () => {
-    const nextTheme = searchTheme === 'dark' ? 'white' : 'dark';
-    setSearchTheme(nextTheme);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('nh_search_theme', nextTheme);
-      document.documentElement.setAttribute('data-search-theme', nextTheme);
-      window.dispatchEvent(new CustomEvent('nh:search-theme-change', { detail: { theme: nextTheme } }));
-    }
-  };
   
   useEffect(() => {
     if (!isMobileMenuOpen) {
@@ -83,6 +76,14 @@ export default function Navbar() {
       window.removeEventListener('storage', checkLogin);
     };
   }, [pathname]);
+  const logout = () => {
+    localStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userName");
+    resetBookingMemberSelection();
+    setIsLoggedIn(false);
+    window.dispatchEvent(new Event("login-state-changed"));
+  };
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const [activeUserId, setActiveUserId] = useState(1);
@@ -188,6 +189,8 @@ export default function Navbar() {
 
   return (
     <nav
+      data-site-nav
+      data-nav-hidden={!isVisible}
       style={{
         position: "fixed",
         top: "0px",
@@ -469,27 +472,7 @@ export default function Navbar() {
             <span className={styles.emergencyLabelText}>24/7 Emergency</span>
           </Link>
 
-          {/* Search Theme Toggle (Dark / White Mode simulation for stakeholders) */}
-          <button
-            type="button"
-            onClick={handleToggleSearchTheme}
-            className={styles.searchThemeToggle}
-            data-search-theme-toggle
-            title={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
-            aria-label={`Switch to ${searchTheme === "dark" ? "White" : "Dark"} Mode Search`}
-          >
-            <span className={`${styles.themeTogglePill} ${searchTheme === "white" ? styles.themeWhiteActive : styles.themeDarkActive}`}>
-              <span className={styles.themeToggleThumb}>
-                {searchTheme === "dark" ? <Moon size={12} strokeWidth={2.5} /> : <Sun size={12} strokeWidth={2.5} />}
-              </span>
-              <span className={styles.themeToggleLabel}>
-                {searchTheme === "dark" ? "Dark" : "White"}
-              </span>
-            </span>
-          </button>
-
-
-          {isLoggedIn ? (
+          {isLoggedIn && isBookingJourney ? <BookingMemberMenu key={pathname} onLogout={logout} confirmed={isBookingConfirmation} /> : isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
               <button 
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -583,11 +566,7 @@ export default function Navbar() {
                   <button 
                     onClick={() => {
                       setIsProfileDropdownOpen(false);
-                      localStorage.removeItem('isLoggedIn');
-                      sessionStorage.removeItem('isLoggedIn');
-                      localStorage.removeItem('userName');
-                      setIsLoggedIn(false);
-                      window.dispatchEvent(new Event('login-state-changed'));
+                      logout();
                     }}
                     style={{ 
                       width: "100%", 
@@ -695,6 +674,7 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.mobileActionGroup}>
+            {isLoggedIn && isBookingJourney && !isMobileMenuOpen && <BookingMemberMenu key={pathname} onLogout={logout} confirmed={isBookingConfirmation} />}
             <AnimatePresence>
               {isMobileMenuOpen && (
                 <motion.button 

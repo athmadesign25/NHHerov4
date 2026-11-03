@@ -1,3 +1,30 @@
 .chip { max-width: 100%; text-align: left; }
 .chip span { min-width: 0; overflow-wrap: anywhere; }
 .chip:disabled { pointer-events: none; }
+
+/* Applied filters use quiet white surfaces with NH-red labels and removal icons. */
+.chip.neutral {
+  min-height: calc(var(--sp-6) - var(--sp-1) / 2);
+  max-width: min(calc(var(--sp-16) * 3), var(--applied-tag-max, 100cqi));
+  padding-inline: var(--sp-2);
+  gap: calc(var(--sp-1) / 2);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--d3-ui-selection-label, var(--color-emergency));
+}
+.chip.neutral span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip.neutral svg { width: calc(var(--sp-2) - var(--sp-1) / 4); height: calc(var(--sp-2) - var(--sp-1) / 4); color: inherit; transition: color var(--transition-fast); }
+.chip.neutral::before { inset-block: var(--sp-1); border-color: var(--color-border); background: var(--d3-control-surface, var(--color-bg-card)); }
+.chip.neutral:not(:disabled):hover { color: var(--d3-ui-selection-hover, var(--color-emergency)); }
+.chip.neutral:not(:disabled):active { color: var(--d3-ui-selection-pressed, var(--color-emergency)); }
+.chip.neutral:not(:disabled):hover svg { color: inherit; }
+.chip.neutral:not(:disabled):is(:hover, :active)::before { border-color: var(--color-border); background: var(--d3-control-surface, var(--color-bg-card)); }
+@media (prefers-reduced-motion: reduce) { .chip.neutral svg { transition: none; } }
+@media (forced-colors: active) {
+  .chip.neutral { color: ButtonText; }
+  .chip.neutral::before { border-color: ButtonText; background: Canvas; }
+  .chip.neutral:not(:disabled):is(:hover, :active) { color: Highlight; }
+  .chip.neutral:not(:disabled):is(:hover, :active)::before { border-color: Highlight; background: Canvas; }
+  .chip.neutral svg, .chip.neutral:not(:disabled):hover svg { color: inherit; }
+}

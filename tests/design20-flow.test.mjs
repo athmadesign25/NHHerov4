@@ -177,7 +177,7 @@ test("review and return links retain D20, filters and appointment context withou
   assert.equal(inline.pathname, "/search/doctors");
   assert.equal(inline.searchParams.get("booking"), doctor.id);
   assert.equal(inline.searchParams.get("languages"), "Kannada");
-  assert.equal(inline.searchParams.get("design"), "d20");
+  assert.equal(inline.searchParams.get("design"), "d21");
   assert.equal(inline.searchParams.get("mode"), "video");
   assert.equal(inline.searchParams.get("bookingMode"), "hospital");
   const cleanReturn = new URL(review.searchParams.get("returnTo"), "https://nh.local");
@@ -189,7 +189,7 @@ test("review and return links retain D20, filters and appointment context withou
     assert.equal(url.href.includes(encodeURIComponent(patients[0].patient.name)), false);
   }
   for (const unsafe of ["https://evil.test", "//evil.test", "/\\evil.test", "javascript:alert(1)"]) {
-    assert.equal(design20ListingReturnTo(unsafe), "/search/doctors?design=d20&location=All");
+    assert.equal(design20ListingReturnTo(unsafe), "/search/doctors?design=d21&location=All");
   }
 });
 

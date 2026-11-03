@@ -20,8 +20,14 @@ import { DOCTOR_LANDING_CITIES, getDoctorLandingContext, getDoctorListingCopy } 
 import { doctorListingParams, doctorListingUrl } from "@/features/search/doctorListingNavigation";
 import { DESIGN16_BOOKING_DAYS, indiaDate } from "@/features/booking/appointmentTime";
 import { design16DoctorsInLocation, readDesign16Date, refineDesign16Doctors, findDesign16NextAvailability, hasDesign16Availability } from "@/features/search/design16Refinements";
+import AppliedFilterSummary from "../d21/AppliedFilterSummary";
+import FilterSearch from "../d21/FilterSearch";
+import Design21Refinements from "../d21/Design21Refinements";
+import d21 from "../d21/Design21Filters.module.css";
+import { refineDesign21Doctors, findDesign21NextAvailability, design21CardMode, design21FilterRecovery, incompatibleHospitalFilters } from "@/features/search/design21Filters";
 import Design16Refinements from "../d16/Design16Refinements";
 import ExpertiseShortcuts from "../d16/ExpertiseShortcuts";
+import { getDesign16LanguageShortcut } from "@/features/search/design16Language";
 import LanguageShortcut from "../d16/LanguageShortcut";
 import Design17DoctorDetails from "../d17/DoctorDetails";
 import { design17ConsultationHistory } from "@/features/search/design17ConsultationHistory";
@@ -63,14 +69,18 @@ const titles: Record<SearchTabId, string> = {
 
 interface Props {
   catalogs: SearchCatalogs;
-  previewVariant?: "d3" | "d4" | "d5" | "d6" | "d16" | "d17" | "d17-lite" | "d18" | "d19" | "d20";
+  previewVariant?: "d3" | "d4" | "d5" | "d6" | "d16" | "d17" | "d17-lite" | "d18" | "d19" | "d20" | "d21";
   cardComponent?: ComponentType<ComponentProps<typeof DoctorCard> & { priority?: boolean; bookingDate?: string; focusTerms?: string[]; cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20"; listingReturnTo?: string; active?: boolean; onClose?: () => void; initialSelection?: AppointmentSelection; resume?: boolean }>;
   gridClassName?: string;
 }
 
 export default function Design3SearchResults({ catalogs, previewVariant = "d3", cardComponent: Card = DoctorCard, gridClassName = "" }: Props) {
-  const directory = previewVariant === "d20" ? design20Directory : previewDirectory;
-  const scheduleContext = previewVariant === "d20" ? "d20" : undefined;
+  const isDesign21 = previewVariant === "d21";
+  const isDesign20 = previewVariant === "d20" || isDesign21;
+  const Refinements = isDesign21 ? Design21Refinements : Design16Refinements;
+  const refineDoctors = isDesign21 ? refineDesign21Doctors : refineDesign16Doctors;
+  const directory = isDesign20 ? design20Directory : previewDirectory;
+  const scheduleContext = isDesign20 ? "d20" : undefined;
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -83,14 +93,14 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const { filters: listingFilters, mode, sort } = readListingParams(params);
   const [availabilityNow, refreshAvailability] = useState(() => new Date());
   const isDesign18 = previewVariant === "d18";
-  const isDesign19 = previewVariant === "d19" || previewVariant === "d20";
+  const isDesign19 = previewVariant === "d19" || isDesign20;
   const isDesign17 = previewVariant === "d17" || previewVariant === "d17-lite" || isDesign18 || isDesign19;
-  const cardDesign = isDesign19 ? (previewVariant === "d20" ? "d20" : "d19") : isDesign18 ? "d18" : previewVariant === "d17-lite" ? "d17-lite" : "d17";
+  const cardDesign = isDesign19 ? (isDesign20 ? "d20" : "d19") : isDesign18 ? "d18" : previewVariant === "d17-lite" ? "d17-lite" : "d17";
   const smartRefinements = previewVariant === "d16" || isDesign17;
-  const listingReturnToForCard = previewVariant === "d20" ? design20ListingReturnTo : design19ListingReturnTo;
+  const listingReturnToForCard = isDesign20 ? design20ListingReturnTo : design19ListingReturnTo;
   const listingReturnTo = isDesign19 ? listingReturnToForCard(`${pathname}?${searchParams}`) : isDesign18 ? design18ListingReturnTo(`${pathname}?${searchParams}`) : isDesign17 ? design17ListingReturnTo(`${pathname}?${searchParams}`, cardDesign) : undefined;
   const bookingId = isDesign18 || isDesign19 ? searchParams.get("booking") : null;
-  const bookingSource = bookingId ? (previewVariant === "d20" ? getDesign20BookingDoctor(bookingId) : getDesign3BookingDoctor(bookingId)) : null;
+  const bookingSource = bookingId ? (isDesign20 ? getDesign20BookingDoctor(bookingId) : getDesign3BookingDoctor(bookingId)) : null;
   const activeBooking = bookingSource ? { ...bookingSource, name: presentationDoctorName(bookingSource.name) } : null;
   const workspacePosition = useRef<{ scroll: number; doctorId: string } | null>(null);
   const previousBooking = useRef<string | null>(null);
@@ -155,7 +165,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const cardSelectionParams = new URLSearchParams(searchParams.toString());
   if (isDesign19 && searchParams.get("bookingMode")) cardSelectionParams.set("mode", searchParams.get("bookingMode")!);
   const activeCardSelection = isDesign19 && activeBooking
-    ? (previewVariant === "d20" ? design20RequestedSelection : design17RequestedSelection)(activeBooking, cardSelectionParams) : undefined;
+    ? (isDesign20 ? design20RequestedSelection : design17RequestedSelection)(activeBooking, cardSelectionParams) : undefined;
   const customDate = smartRefinements ? readDesign16Date(params.get("appointmentDate") ?? "", availabilityNow) : "";
   const filters = customDate ? { ...listingFilters, availability: "any" as const } : listingFilters;
   const catalogFilters = readCatalogFilters(params, tab.id);
@@ -174,14 +184,18 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const bookedDoctors = useMemo(() => design17ConsultationHistory(sessionBookedDoctors, {
     variant: previewVariant, live, authenticated: doctorTab && isUserLoggedIn,
   }), [sessionBookedDoctors, previewVariant, live, doctorTab, isUserLoggedIn]);
-  const historyLabel = isDesign17 ? "Previously consulted" : "Previously booked";
+  const historyLabel = isDesign21 ? "Previously booked" : isDesign17 ? "Previously consulted" : "Previously booked";
   const [pendingUrl, setPendingUrl] = useState<string | null>(null);
   const detailsBookingUrl = useRef<string | null>(null);
   const [historyLogin, setHistoryLogin] = useState(false);
   const [doctorDetails, setDoctorDetails] = useState<DoctorListingItem | null>(null);
   const [itemDetails, setItemDetails] = useState<SearchResultItem | null>(null);
   const [filterDrawer, setFilterDrawer] = useState(false);
+  const [filterQuery, setFilterQuery] = useState("");
+  const [draftFilterQuery, setDraftFilterQuery] = useState("");
   const [draftDoctors, setDraftDoctors] = useState(emptyDoctorFilters);
+  const [draftVideo, setDraftVideo] = useState(false);
+  const filterMode = isDesign21 && mode !== "video" ? "all" as const : mode;
   const [draftDate, setDraftDate] = useState("");
   const [draftHistory, setDraftHistory] = useState(false);
   const [draftCatalog, setDraftCatalog] = useState(emptyCatalogFilters);
@@ -205,6 +219,11 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const returnToResultsTop = useCallback(() => {
     if (!returnToTopPending.current) return;
     returnToTopPending.current = false;
+    if (isDesign21) {
+      const results = document.getElementById("d21-result-count");
+      if (results && results.getBoundingClientRect().top < 0) results.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "center" });
+      return;
+    }
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
     // Keep keyboard focus and the sidebar's own scroll position intact. Use the
@@ -213,33 +232,35 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       lenis.resize();
       lenis.scrollTo(0, { duration: .4, immediate: reducedMotion });
     } else window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
-  }, []);
+  }, [isDesign21]);
 
-  const doctors = localDoctorSearch ? searchDesign17Directory(design16DoctorsInLocation(directory, location), query, previewVariant === "d20" ? design20SearchableIds : undefined)
+  const doctors = localDoctorSearch ? searchDesign17Directory(design16DoctorsInLocation(directory, location), query, isDesign20 ? design20SearchableIds : undefined)
     : live ? (request.data?.doctors ?? []).map(fromApiDoctor)
     : smartRefinements ? design16DoctorsInLocation(directory, location)
     : directory.filter((doctor) => location === "All" || getCityId(doctor.city) === getCityId(location));
   const filteredResults = smartRefinements
-    ? refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, nearestUnits, scheduleContext)
+    ? refineDoctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, nearestUnits, scheduleContext)
     : sortDoctors(filterDoctors(doctors, filters, mode), sort, mode).map((doctor) => withSelectedDoctorHospital(doctor, filters.hospitals));
   // A direct Book action has a specific doctor intent. Keep that card available
   // while booking, even when prior directory filters would otherwise hide it.
-  const entryDoctor = previewVariant === "d20" && bookingId && !filteredResults.some(doctor => doctor.id === bookingId)
+  const entryDoctor = isDesign20 && bookingId && !filteredResults.some(doctor => doctor.id === bookingId)
     ? getDesign20ProfileDoctor(bookingId, cardSelectionParams) : null;
   const results = entryDoctor ? [entryDoctor, ...filteredResults] : filteredResults;
-  const hasDates = smartRefinements && hasDesign16Availability(doctors, mode, availabilityNow, scheduleContext);
+  const hasDates = smartRefinements && (hasDesign16Availability(doctors, mode, availabilityNow, scheduleContext) || (isDesign21 && mode !== "video" && hasDesign16Availability(doctors, "video", availabilityNow, scheduleContext)));
+  const incompatibleHospitals = isDesign21 ? incompatibleHospitalFilters(doctors, filters) : [];
   const recovery = smartRefinements && !loading && !error && !results.length && (customDate || filters.availability !== "any")
-    ? findDesign16NextAvailability(doctors, filters, mode, customDate, previouslyBooked, bookedDoctors, availabilityNow, scheduleContext) : null;
+    ? (isDesign21 ? findDesign21NextAvailability(doctors, filters, mode, "relevance", customDate, previouslyBooked, bookedDoctors, availabilityNow) : findDesign16NextAvailability(doctors, filters, mode, customDate, previouslyBooked, bookedDoctors, availabilityNow, scheduleContext)) : null;
+  const filterRecovery = isDesign21 && !results.length && !recovery ? design21FilterRecovery(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow) : null;
   const catalog = catalogResults(catalogs, query, location, request.data);
   const items = doctorTab ? [] : filterCatalog(catalog[tab.id as Exclude<SearchTabId, "doctors">], catalogFilters);
   const currentItems = doctorTab ? [] : catalog[tab.id as Exclude<SearchTabId, "doctors">];
   const total = doctorTab ? results.length : items.length;
   const shownDoctors = isDesign19 && bookingId ? Math.max(visible, results.findIndex(doctor => doctor.id === bookingId) + 1) : visible;
-  const filterCount = doctorTab ? activeFilterCount(filters) + Number(Boolean(customDate)) + Number(previouslyBooked) : Object.values(catalogFilters).flat().length;
+  const filterCount = doctorTab ? activeFilterCount(filters) + Number(Boolean(customDate)) + Number(previouslyBooked) + Number(isDesign21 && mode === "video") : Object.values(catalogFilters).flat().length;
 
   const chooseNearestUnit = (doctorId: string, hospital: string) => {
     const selected = { ...nearestUnits, [doctorId]: hospital };
-    const reordered = refineDesign16Doctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, selected, scheduleContext);
+    const reordered = refineDoctors(doctors, filters, mode, sort, customDate, previouslyBooked, bookedDoctors, availabilityNow, selected, scheduleContext);
     setNearestUnits(selected);
     // Keep a manually changed card mounted even if its new distance moves it
     // beyond the current batch, preserving its location-control focus.
@@ -250,7 +271,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
     if (url.split("?")[0] !== pathname) {
       // Resolve a new server route so metadata and back/forward state stay correct.
       // Same-page refinements keep native history for instant, focus-preserving edits.
-      router[replace ? "replace" : "push"](url);
+      router[replace ? "replace" : "push"](url, isDesign21 ? { scroll: false } : undefined);
     } else window.history[replace ? "replaceState" : "pushState"](null, "", url);
   };
   const update = (change: (next: URLSearchParams) => void, replace = false, returnToTop = false) => {
@@ -266,7 +287,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
     if (query) next.set("q", query);
     if (location !== "All") next.set("location", location);
     change(next);
-    if (doctorTab && returnToTop) returnToTopPending.current = true;
+    if (doctorTab && returnToTop && (!isDesign21 || filterDrawer)) returnToTopPending.current = true;
     navigate(doctorTab ? doctorListingUrl(pathname, next) : `${getSearchTabPath(tab.id)}?${next}`, replace);
   };
   const changeDoctorFilters = (nextFilters: DoctorFilterValues) => update((next) => {
@@ -281,6 +302,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const clearFilters = () => doctorTab ? update((next) => {
     Object.keys(emptyDoctorFilters()).forEach((key) => next.delete(key));
     if (smartRefinements) { next.delete("appointmentDate"); next.delete("previouslyBooked"); }
+    if (isDesign21) next.delete("mode");
   }, false, true) : changeCatalogFilters(emptyCatalogFilters());
   const changeDate = (date: string) => update(next => {
     next.delete("availability"); next.delete("appointmentDate");
@@ -296,15 +318,18 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
   const clearDraftDate = () => setDraftDate("");
   const clearHistory = () => setHistory(false);
   const clearDraftHistory = () => setDraftHistory(false);
+  const clearVideo = () => update(next => next.delete("mode"));
   const appliedExtraChips = [
+    ...(isDesign21 && mode === "video" ? [{ key: "mode", label: "Video consultation", remove: clearVideo }] : []),
     ...(customDate ? [{ key: "appointmentDate", label: dateLabel(customDate), remove: clearDate }] : []),
     ...(previouslyBooked ? [{ key: "previouslyBooked", label: historyLabel, remove: clearHistory }] : []),
   ];
   const draftExtraChips = [
+    ...(isDesign21 && draftVideo ? [{ key: "mode", label: "Video consultation", remove: () => setDraftVideo(false) }] : []),
     ...(draftDate ? [{ key: "appointmentDate", label: dateLabel(draftDate), remove: clearDraftDate }] : []),
     ...(draftHistory ? [{ key: "previouslyBooked", label: historyLabel, remove: clearDraftHistory }] : []),
   ];
-  const openFilters = () => { setDraftDoctors(filters); setDraftDate(customDate); setDraftHistory(previouslyBooked); setDraftCatalog(catalogFilters); setFilterDrawer(true); };
+  const openFilters = () => { setDraftFilterQuery(""); setDraftVideo(mode === "video"); setDraftDoctors(filters); setDraftDate(customDate); setDraftHistory(previouslyBooked); setDraftCatalog(catalogFilters); setFilterDrawer(true); };
   const continueBooking = (url: string) => {
     if (isUserLoggedIn) router.push(url); else setPendingUrl(url);
   };
@@ -319,7 +344,7 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       const next = new URLSearchParams(searchParams.toString());
       next.delete("bookingResume");
       next.set("design", previewVariant); next.set("booking", doctor.id); next.set("bookingMode", selectedMode); next.set("hospital", doctor.hospital);
-      const cardDate = previewVariant === "d20" && event.currentTarget instanceof HTMLAnchorElement
+      const cardDate = isDesign20 && event.currentTarget instanceof HTMLAnchorElement
         ? new URL(event.currentTarget.href).searchParams.get("date") : null;
       if (customDate || cardDate) next.set("date", customDate || cardDate!); else next.delete("date");
       if (bookingId) window.history.replaceState(null, "", `${pathname}?${next}`);
@@ -364,36 +389,54 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
     return () => observer.disconnect();
   }, [total, visible, loading, error]);
 
-  const dateFilteredDoctors = (draft: boolean) => smartRefinements ? refineDesign16Doctors(doctors.map(doctor => withSelectedDoctorHospital(doctor, (draft ? draftDoctors : filters).hospitals)),
+  const dateFilteredDoctors = (draft: boolean) => smartRefinements ? refineDoctors(doctors.map(doctor => withSelectedDoctorHospital(doctor, (draft ? draftDoctors : filters).hospitals)),
     { ...emptyDoctorFilters(), availability: (draft ? draftDoctors : filters).availability },
-    mode, "relevance", draft ? draftDate : customDate, draft ? draftHistory : previouslyBooked, bookedDoctors, availabilityNow, {}, scheduleContext) : undefined;
+    isDesign21 && draft ? (draftVideo ? "video" : "hospital") : mode, "relevance", draft ? draftDate : customDate, draft ? draftHistory : previouslyBooked, bookedDoctors, availabilityNow, {}, scheduleContext) : undefined;
+  const smartLanguage = isDesign21 ? getDesign16LanguageShortcut(doctors, filters, filterMode, location, availabilityNow, dateFilteredDoctors(false), true)?.value : undefined;
+  const doctorFilterProps = (draft: boolean): Omit<ComponentProps<typeof DoctorFilters>, "onChange" | "onClearCustomDate"> => ({
+    doctors, matchingDoctors: dateFilteredDoctors(draft), value: draft ? draftDoctors : filters,
+    // Search matches live in their own popover; browsing keeps its accordion state.
+    filterQuery: isDesign21 ? "" : undefined,
+    customDateLabel: isDesign21 && (draft ? draftDate : customDate) ? dateLabel(draft ? draftDate : customDate) : undefined,
+    smartSearch: isDesign21, showResultCounts: !isDesign17,
+    availabilityEnabled: isDesign21 && draft ? (hasDesign16Availability(doctors, draftVideo ? "video" : "hospital", availabilityNow, scheduleContext) || (!draftVideo && hasDesign16Availability(doctors, "video", availabilityNow, scheduleContext))) : smartRefinements ? hasDates : doctors.some(doctor => Boolean(doctor.availability[mode])),
+    mode: isDesign21 ? (draft ? (draftVideo ? "video" : "all") : filterMode) : mode,
+  });
+  const changeDraftDoctorFilters = (value: DoctorFilterValues) => { setDraftDoctors(value); if (value.availability !== draftDoctors.availability) setDraftDate(""); };
+  const renderFilterSearch = (draft: boolean) => <FilterSearch value={draft ? draftFilterQuery : filterQuery}
+    onChange={draft ? setDraftFilterQuery : setFilterQuery} filters={doctorFilterProps(draft)}
+    onFiltersChange={draft ? changeDraftDoctorFilters : changeDoctorFilters} onClearCustomDate={draft ? clearDraftDate : clearDate} />;
   const renderFilters = (draft: boolean) => doctorTab
-    ? <DoctorFilters doctors={doctors} matchingDoctors={dateFilteredDoctors(draft)} value={draft ? draftDoctors : filters} onChange={draft ? (value) => { setDraftDoctors(value); if (value.availability !== draftDoctors.availability) setDraftDate(""); } : changeDoctorFilters}
-        showResultCounts={!isDesign17} availabilityEnabled={smartRefinements ? hasDates : doctors.some((doctor) => Boolean(doctor.availability[mode]))} mode={mode} />
+    ? <DoctorFilters {...doctorFilterProps(draft)} onChange={draft ? changeDraftDoctorFilters : changeDoctorFilters} onClearCustomDate={isDesign21 ? (draft ? clearDraftDate : clearDate) : undefined} />
     : <CatalogFilters tab={tab.id} items={currentItems} value={draft ? draftCatalog : catalogFilters} onChange={draft ? setDraftCatalog : changeCatalogFilters} />;
-  const draftCount = doctorTab ? (smartRefinements ? refineDesign16Doctors(doctors, draftDoctors, mode, sort, draftDate, draftHistory, bookedDoctors, availabilityNow, {}, scheduleContext).length : filterDoctors(doctors, draftDoctors, mode).length) : filterCatalog(currentItems, draftCatalog).length;
+  const draftCount = doctorTab ? (smartRefinements ? refineDoctors(doctors, draftDoctors, isDesign21 ? (draftVideo ? "video" : "hospital") : mode, sort, draftDate, draftHistory, bookedDoctors, availabilityNow, {}, scheduleContext).length : filterDoctors(doctors, draftDoctors, mode).length) : filterCatalog(currentItems, draftCatalog).length;
   const sample = !live || !apiCategory;
+  const draftHasFilters = activeFilterCount(draftDoctors) > 0 || Boolean(draftDate) || draftHistory || draftVideo;
+  const clearDraftFilters = () => { setDraftDoctors(emptyDoctorFilters()); setDraftVideo(false); setDraftDate(""); setDraftHistory(false); setDraftFilterQuery(""); };
+  const filterHeading = <div className={styles.filterHeading}><h2><Filter size={16} aria-hidden />Filters</h2>{(isDesign21 ? filterCount > 0 : !(doctorTab && smartRefinements)) && <button type="button" disabled={filterCount === 0} aria-hidden={filterCount === 0} aria-label="Clear all filters"
+    onClick={event => { const panel = event.currentTarget.closest("aside"); clearFilters(); if (isDesign21) setFilterQuery(""); panel?.querySelector<HTMLElement>(isDesign21 ? "[data-filter-search] input" : 'button[aria-expanded]')?.focus({ preventScroll: true }); }}>Clear all</button>}</div>;
 
   return <div className={`${styles.page} ${doctorTab ? `${styles.doctorPage} ${ui.theme}` : ""}`} data-design={previewVariant} data-nav-theme="light">
-    {doctorTab && <p id="d3-refinement-help" className={styles.srOnly}>Changing the city, consultation type, appointment order or applied filters updates the results and returns to the top of the page.</p>}
-    {!workspaceOpen && (doctorTab ? <DoctorSearchTop compactMobile={isDesign17} hideTotal={isDesign17} locationFirst={smartRefinements} query={query} location={location} total={total} mode={mode} heading={doctorCopy.heading} summary={doctorCopy.summary}
+    {doctorTab && <p id="d3-refinement-help" className={styles.srOnly}>{isDesign21 ? "Filters update matching doctors. Sort changes their order. Video consultation limits results to doctors offering video." : "Changing the city, consultation type, appointment order or applied filters updates the results and returns to the top of the page."}</p>}
+    {!workspaceOpen && (doctorTab ? <DoctorSearchTop compactMobile={isDesign17} hideTotal={isDesign17} allConsultationTypes={isDesign21 && mode !== "video"} locationFirst={smartRefinements} query={query} location={location} total={total} mode={mode} heading={doctorCopy.heading} summary={doctorCopy.summary}
       loading={loading} error={error} filterCount={filterCount} onOpenFilters={openFilters}
       onQuery={(value) => update((next) => { if (value) next.set("q", value); else next.delete("q"); }, true)}
-      onLocation={(value) => update((next) => { next.delete("location"); if (value !== "All") next.set("location", value); if (smartRefinements && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}>
-      {smartRefinements ? <Design16Refinements compactMobile={isDesign17} videoSmartFilter={previewVariant === "d20"} onOpenFilters={openFilters} filterCount={filterCount} location={location} mode={mode} sort={sort} filters={filters} date={customDate}
+      onLocation={(value) => update((next) => { next.delete("location"); if (isDesign21) next.delete("nearby"); if (value !== "All") next.set("location", value); if (smartRefinements && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}>
+      {smartRefinements ? <Refinements compactMobile={isDesign17} videoSmartFilter={isDesign20} onOpenFilters={openFilters} filterCount={filterCount} location={location} mode={mode} sort={sort} filters={filters} date={customDate}
         minDate={indiaDate(availabilityNow)} maxDate={indiaDate(availabilityNow, DESIGN16_BOOKING_DAYS - 1)} hasDates={hasDates} loading={loading} error={error}
         historyRequiresLogin={!isUserLoggedIn} historySelected={previouslyBooked} historyLabel={historyLabel}
-        onNearMe={city => { setNearestUnits({}); update(next => { next.set("location", city); next.set("sort", "nearest"); }, false, true); }}
-        onModeChange={value => update(next => { next.set("mode", value); if (value === "video" && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}
+        onNearMe={city => { setNearestUnits({}); update(next => { if (isDesign21) { next.delete("location"); next.delete("nearby"); if (city) { next.set("location", city); next.set("nearby", city); } } else { next.set("location", city); next.set("sort", "nearest"); } }, false, true); }}
+        onModeChange={value => update(next => { if (isDesign21 && value !== "video") next.delete("mode"); else next.set("mode", value); if (value === "video" && next.get("sort") === "nearest") next.delete("sort"); }, false, true)}
         onSortChange={value => { if (value === "nearest") setNearestUnits({}); update(next => { if (value === "relevance") next.delete("sort"); else next.set("sort", value); }, false, true); }}
         onFiltersChange={changeDoctorFilters} onDateChange={changeDate} onHistoryChange={changeHistory}>
-        <LanguageShortcut doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={mode} location={location} now={availabilityNow} requireSuppliedLanguage={previewVariant === "d20"} onChange={changeDoctorFilters} />
-        <ExpertiseShortcuts doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={mode} query={query} onChange={changeDoctorFilters} />
-      </Design16Refinements> : <DoctorListingControls mode={mode} sort={sort} filters={filters}
+        <LanguageShortcut showSelectionClear={!isDesign21} doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={filterMode} location={location} now={availabilityNow} requireSuppliedLanguage={isDesign20} onChange={changeDoctorFilters} />
+        {!isDesign21 && <ExpertiseShortcuts doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={filterMode} query={query} onChange={changeDoctorFilters} />}
+      </Refinements> : <DoctorListingControls mode={mode} sort={sort} filters={filters}
         onModeChange={(value) => { if (value !== mode) update((next) => next.set("mode", value), false, true); }}
         onSortChange={(value) => { if (value !== sort) update((next) => { if (value === "relevance") next.delete("sort"); else next.set("sort", value); }, false, true); }}
         onFiltersChange={changeDoctorFilters} loading={loading} error={error} hasDoctors={doctors.length > 0}
         hasSlots={doctors.some((doctor) => Boolean(doctor.availability[mode]))} />}
+      {isDesign21 && <AppliedFilterSummary value={filters} smartLanguage={smartLanguage} extraChips={appliedExtraChips} onChange={changeDoctorFilters} />}
     </DoctorSearchTop>
       : <SearchHeader query={query} location={location}
       onQuery={(value) => update((next) => { if (value) next.set("q", value); else next.delete("q"); }, true)}
@@ -407,27 +450,32 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       </header>}
       <div className={`${styles.layout} ${workspaceOpen ? `${workspaceStyles.workspaceLayout} ${workspaceStyles.listingWorkspace}` : ""}`}>
         <aside className={`${styles.sidebar} ${workspaceOpen ? workspaceStyles.hidden : ""}`} aria-label={`${tab.label} filters`} aria-describedby={doctorTab ? "d3-refinement-help" : undefined} data-lenis-prevent data-d3-ui>
-          <div className={styles.filterHeading}><h2><Filter size={16} aria-hidden />Filters</h2>{!(doctorTab && smartRefinements) && <button type="button" disabled={filterCount === 0} aria-hidden={filterCount === 0}
-            onClick={(event) => { clearFilters(); event.currentTarget.closest("aside")?.querySelector<HTMLButtonElement>('button[aria-expanded]')?.focus({ preventScroll: true }); }}>Clear all</button>}</div>
-          <FilterScrollArea key={tab.id}>{doctorTab && smartRefinements && <SidebarDoctorFilters value={filters} onChange={changeDoctorFilters} onClearAll={clearFilters} extraChips={appliedExtraChips} />}{renderFilters(false)}</FilterScrollArea>
+          {isDesign21 ? <div className={d21.filterTools} data-filter-tools>{filterHeading}</div> : filterHeading}
+          <FilterScrollArea key={tab.id}>{isDesign21 && <div className={d21.scrollSearch}>{renderFilterSearch(false)}</div>}{doctorTab && smartRefinements && !isDesign21 && <SidebarDoctorFilters value={filters} onChange={changeDoctorFilters} onClearAll={clearFilters} extraChips={appliedExtraChips} />}{renderFilters(false)}</FilterScrollArea>
         </aside>
         <section className={styles.results} aria-label={tab.label}>
           {workspaceOpen && activeBooking && <BookingWorkspace key={activeBooking.id} doctor={activeBooking} initialSelection={design17RequestedSelection(activeBooking, new URLSearchParams(searchParams.toString()))} returnTo={listingReturnTo!} onClose={closeWorkspace} />}
           <div hidden={workspaceOpen} inert={workspaceOpen} className={workspaceOpen ? workspaceStyles.hidden : undefined}>
+          {doctorTab && isDesign21 && <>
+            <p id="d21-result-count" tabIndex={-1} className={d21.srOnly} role="status" aria-live="polite" aria-atomic="true">{loading ? "Finding doctors…" : error ? "Results unavailable" : "Doctor results updated"}</p>
+            {incompatibleHospitals.length > 0 && <p className={d21.recovery}>A selected hospital is not in these search results.
+              <button type="button" onClick={() => changeDoctorFilters({ ...filters, hospitals: filters.hospitals.filter(name => !incompatibleHospitals.includes(name)) })}>Clear unavailable hospital filters</button>
+            </p>}
+          </>}
           {!doctorTab && filterCount > 0 && <div className={styles.chips}>{(Object.keys(catalogFilters) as (keyof CatalogFilterValues)[]).flatMap((key) => catalogFilters[key].map((value) => <button type="button" key={`${key}-${value}`} aria-label={`Remove filter: ${value}`} onClick={() => changeCatalogFilters({ ...catalogFilters, [key]: catalogFilters[key].filter((item) => item !== value) })}>{value}<X size={14} aria-hidden /></button>))}</div>}
           {!doctorTab && <div className={styles.resultMeta}><p role="status" aria-live="polite" aria-atomic="true">{loading ? "Searching…" : error ? "Results unavailable" : <><strong>{total}</strong> {total === 1 ? "result" : "results"}</>}</p>
             {sample && <span className={styles.sample}><Info size={14} aria-hidden />Sample directory</span>}
           </div>}
           {!sample && doctorTab && !loading && !error && <p className={styles.dataNote}>Contact NH to confirm appointment times and consultation fees.</p>}
           <div className={`${styles.grid} ${doctorTab ? gridClassName || styles.doctorGrid : ""}`} aria-busy={loading}>
-            {loading ? <ResultSkeletons doctors={doctorTab} /> : error || !total ? <SearchState recovery={recovery ? { message: `The next matching appointments are on ${dateLabel(recovery.date)}. Your other filters will stay selected.`, label: `View ${dateLabel(recovery.date)}`, onApply: () => changeDate(recovery.date) } : undefined}
+            {loading ? <ResultSkeletons doctors={doctorTab} /> : error || !total ? <SearchState recovery={recovery ? { message: `The next matching appointments are on ${dateLabel(recovery.date)}. Your other filters will stay selected.`, label: `View ${dateLabel(recovery.date)}`, onApply: () => changeDate(recovery.date) } : filterRecovery ? { message: `${filterRecovery.count} doctors are available without the ${filterRecovery.label} filter. Your other preferences will stay selected.`, label: `Clear ${filterRecovery.label} filter`, onApply: () => changeDoctorFilters(filterRecovery.filters) } : undefined}
               emptyState={previouslyBooked ? {
                 title: bookedDoctors.size ? `No ${historyLabel.toLowerCase()} doctors match` : `No ${historyLabel.toLowerCase()} doctors yet`,
-                message: bookedDoctors.size ? `Try another location or remove a filter to find a doctor you’ve ${isDesign17 ? "consulted" : "booked"} before.` : "Doctors you book will appear here, making your next visit easier.",
+                message: bookedDoctors.size ? `Try another location or remove a filter to find a doctor you’ve ${isDesign17 && !isDesign21 ? "consulted" : "booked"} before.` : "Doctors you book will appear here, making your next visit easier.",
                 action: "Browse doctors",
               } : undefined}
               error={error} filtered={filterCount > 0} onRetry={request.retry} onReset={previouslyBooked ? () => setHistory(false) : filterCount ? clearFilters : () => update((next) => { next.delete("q"); next.delete("location"); })} />
-              : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={smartRefinements ? `${doctor.id}:${sort === "nearest"}` : doctor.id} doctor={doctor} mode={mode} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} demoBookedEarlier={!smartRefinements && !live && (doctor.id === doctors[1]?.id || doctor.id === doctors[3]?.id)} onBook={book} onDetails={setDoctorDetails} priority={isDesign17 && index < 3} bookingDate={isDesign17 ? customDate : undefined}
+              : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={smartRefinements ? `${doctor.id}:${sort === "nearest"}` : doctor.id} doctor={doctor} mode={isDesign21 ? design21CardMode(doctor, mode, availabilityNow) : mode} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} demoBookedEarlier={!smartRefinements && !live && (doctor.id === doctors[1]?.id || doctor.id === doctors[3]?.id)} onBook={book} onDetails={setDoctorDetails} priority={isDesign17 && index < 3} bookingDate={isDesign17 ? customDate : undefined}
                 listingReturnTo={listingReturnTo} cardDesign={cardDesign} focusTerms={isDesign17 ? [...filters.expertise, query] : undefined}
                 active={isDesign19 && bookingId === doctor.id} onClose={isDesign19 ? closeBookingCard : undefined} initialSelection={isDesign19 && bookingId === doctor.id ? activeCardSelection : undefined} resume={isDesign19 && resumeCard}
                 onHospitalChange={smartRefinements && sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined} />)
@@ -447,17 +495,20 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       const url = detailsBookingUrl.current;
       if (url) { detailsBookingUrl.current = null; continueBooking(url); }
     }); }}>
-    {filterDrawer && <SearchDialog key="filters" title={doctorTab && isDesign17 ? "Filters" : "Refine your search"} mobileOnly doctorPreview={doctorTab} onClose={() => setFilterDrawer(false)} footer={<>
-      {doctorTab && <span className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{loading ? "Searching…" : error ? "Results unavailable" : isDesign17 ? (draftCount ? "Matching doctors available" : "No matching doctors") : `${draftCount} ${draftCount === 1 ? "doctor matches" : "doctors match"} your filters`}</span>}
-      {!(doctorTab && smartRefinements) && <button type="button" className={styles.secondaryButton} disabled={doctorTab ? (activeFilterCount(draftDoctors) === 0 && !draftDate && !draftHistory) : Object.values(draftCatalog).every((values) => values.length === 0)} onClick={() => { if (doctorTab) { setDraftDoctors(emptyDoctorFilters()); setDraftDate(""); setDraftHistory(false); } else setDraftCatalog(emptyCatalogFilters()); }}>Clear all</button>}
-      <button type="button" className={styles.primaryButton} onClick={() => { if (doctorTab && smartRefinements) update(next => {
+    {filterDrawer && <SearchDialog key="filters" title={doctorTab && isDesign17 ? "Filters" : "Refine your search"} mobileOnly doctorPreview={doctorTab} onClose={() => setFilterDrawer(false)}
+      headerAction={isDesign21 && draftHasFilters ? <button type="button" className={d21.drawerClear} aria-label="Clear all filters" onClick={event => { const dialog = event.currentTarget.closest("dialog"); clearDraftFilters(); dialog?.querySelector<HTMLInputElement>("[data-filter-search] input")?.focus(); }}>Clear all</button> : undefined}
+      footer={<>
+      {doctorTab && <span className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{loading ? "Searching…" : error ? "Results unavailable" : !isDesign21 && isDesign17 ? (draftCount ? "Matching doctors available" : "No matching doctors") : `${draftCount} ${draftCount === 1 ? "doctor matches" : "doctors match"} your filters`}</span>}
+      {!isDesign21 && !(doctorTab && smartRefinements) && <button type="button" className={styles.secondaryButton} disabled={doctorTab ? (activeFilterCount(draftDoctors) === 0 && !draftDate && !draftHistory) : Object.values(draftCatalog).every((values) => values.length === 0)} onClick={() => { if (doctorTab) clearDraftFilters(); else setDraftCatalog(emptyCatalogFilters()); }}>Clear all</button>}
+      <button type="button" disabled={isDesign21 && draftCount === 0} className={styles.primaryButton} onClick={() => { if (doctorTab && smartRefinements) update(next => {
+        if (isDesign21) { next.delete("mode"); if (draftVideo) next.set("mode", "video"); }
         for (const key of ["specialties", "hospitals", "languages", "genders", "expertise"] as const) { next.delete(key); draftDoctors[key].forEach(value => next.append(key, value)); }
         next.delete("availability"); next.delete("appointmentDate"); next.delete("previouslyBooked");
         if (draftDate) next.set("appointmentDate", draftDate);
         else if (draftDoctors.availability !== "any") next.set("availability", draftDoctors.availability);
         if (draftHistory) next.set("previouslyBooked", "true");
-      }, false, true); else if (doctorTab) changeDoctorFilters(draftDoctors); else changeCatalogFilters(draftCatalog); setFilterDrawer(false); }}>{doctorTab && isDesign17 ? "Show doctors" : <>Show {draftCount} {doctorTab && smartRefinements ? (draftCount === 1 ? "doctor" : "doctors") : (draftCount === 1 ? "result" : "results")}</>}</button>
-    </>}>{doctorTab && smartRefinements && <SidebarDoctorFilters value={draftDoctors} onChange={setDraftDoctors} onClearAll={() => { setDraftDoctors(emptyDoctorFilters()); setDraftDate(""); setDraftHistory(false); }} extraChips={draftExtraChips} />}{renderFilters(true)}</SearchDialog>}
+      }, false, true); else if (doctorTab) changeDoctorFilters(draftDoctors); else changeCatalogFilters(draftCatalog); setFilterDrawer(false); }}>{doctorTab && isDesign17 && !isDesign21 ? "Show doctors" : <>Show {draftCount} {doctorTab && smartRefinements ? (draftCount === 1 ? "doctor" : "doctors") : (draftCount === 1 ? "result" : "results")}</>}</button>
+    </>}>{isDesign21 && <div className={d21.scrollSearch}>{renderFilterSearch(true)}</div>}{isDesign21 && draftCount === 0 && <p className={d21.feedback} role="status">No doctors match. Remove a filter to see more options.</p>}{isDesign21 && <button type="button" className={d21.videoOption} aria-pressed={draftVideo} onClick={() => setDraftVideo(!draftVideo)}>Video consultation{draftVideo && <X size={14} aria-hidden />}</button>}{isDesign21 && previouslyBooked && <button type="button" className={d21.videoOption} aria-pressed={draftHistory} onClick={() => setDraftHistory(!draftHistory)}>Previously booked{draftHistory && <X size={14} aria-hidden />}</button>}{doctorTab && smartRefinements && !isDesign21 && <SidebarDoctorFilters value={draftDoctors} onChange={setDraftDoctors} onClearAll={() => { setDraftDoctors(emptyDoctorFilters()); setDraftVideo(false); setDraftDate(""); setDraftHistory(false); }} extraChips={draftExtraChips} />}{renderFilters(true)}</SearchDialog>}
     {doctorDetails && <SearchDialog key="doctor-details" title={doctorDetails.name} doctorPreview={doctorTab} onClose={() => setDoctorDetails(null)} footer={isDesign17 && !live && doctorDetails.modes[mode] === true && directory.some(doctor => doctor.id === doctorDetails.id)
       ? <button type="button" className={styles.primaryButton} onClick={event => book(event, doctorDetails, mode, false)}>Book appointment <ArrowRight size={16} aria-hidden /></button>
       : <a className={styles.primaryButton} href="tel:18602080208"><PhoneCall size={16} aria-hidden />Contact NH</a>}>
@@ -476,8 +527,8 @@ export default function Design3SearchResults({ catalogs, previewVariant = "d3", 
       <p>{tab.id === "packages_tests" ? "Online booking for this package or test is currently unavailable here." : "Contact Narayana Health for further information."}</p>
     </SearchDialog>}
     </AnimatePresence>
-    {pendingUrl && <LoginModal previewOtp={previewVariant === "d20"} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }} />}
-    {historyLogin && <LoginModal previewOtp={previewVariant === "d20"} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }} />}
+    {pendingUrl && <LoginModal previewOtp={isDesign20} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }} />}
+    {historyLogin && <LoginModal previewOtp={isDesign20} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }} />}
     {!workspaceOpen && !(isDesign19 && bookingId) && <DesignSwitcher scope="search-top" currentVariant={previewVariant} onVariantChange={(variant) => {
       const next = new URLSearchParams(params);
       next.set("design", variant);

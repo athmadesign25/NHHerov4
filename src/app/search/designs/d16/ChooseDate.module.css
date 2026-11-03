@@ -27,6 +27,24 @@
 .grid td button[data-selected]:active .dayNumber { background: var(--calendar-selected-hover); }
 .grid td button[aria-current="date"]:active .dayNumber { background: var(--d3-ui-selection-pressed, var(--color-emergency)); }
 @media (prefers-reduced-motion: reduce) { .dayNumber { transition: none; } }
+/* The D21 smart-filter calendar shares its blue selected state. */
+.blue {
+  --calendar-selected-fill: var(--color-primary);
+  --calendar-selected-hover: var(--color-primary-dark);
+  --d3-ui-selection: var(--color-primary);
+  --d3-ui-selection-label: var(--color-text-inverse);
+  --d3-ui-selection-hover: var(--color-primary-dark);
+  --d3-ui-selection-pressed: var(--color-primary-dark);
+  --d3-ui-hover: var(--color-primary-light);
+  --d3-ui-pressed: var(--color-primary-tint-hover);
+}
+.blue .grid td button[aria-current="date"]:not([data-selected]) .dayNumber { color: var(--color-primary); background: var(--color-primary-light); }
+.blueClear { color: var(--color-primary); }
+@media (hover: hover) {
+  .blue .grid td button[aria-current="date"]:not([data-selected]):hover .dayNumber { background: var(--color-primary-tint-hover); }
+  .blueClear:hover { color: var(--color-primary-dark); background: var(--color-primary-light); }
+}
+.blueClear:active { color: var(--color-primary-dark); background: var(--color-primary-tint-hover); }
 @media (forced-colors: active) {
   .grid td button[aria-current="date"] .dayNumber { outline: 1px solid CanvasText; }
   .grid td button[data-selected] .dayNumber { color: HighlightText; background: Highlight; forced-color-adjust: none; }

@@ -16,16 +16,16 @@ import MemberSelector, { type FamilyMember } from "@/components/booking/MemberSe
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import { saveBooking } from "@/features/booking/bookingStore";
-import { design17ProfileAvailability, design17ProfileDetails, design17ProfileUrl, getDesign17ProfileDoctor, getDesign17RelatedDoctors, selectDesign17ProfileHospital } from "@/features/search/design17Profile";
+import { design17ProfileAvailability, design17ProfileDetails, getDesign17ProfileDoctor, selectDesign17ProfileHospital } from "@/features/search/design17Profile";
 import { design17BookingUrl } from "@/features/search/design17Booking";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
-import { getDesign20ProfileDoctor, getDesign20RelatedDoctors } from "@/features/search/design20Directory";
-import { fromDirectoryDoctor } from "@/features/search/doctorListing";
+import { getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
 import { resolveDoctorDesign } from "@/features/design-preview/doctorJourney";
 import { design20BookingEntryUrl, design20DoctorRecoveryUrl } from "@/features/search/design20BookingEntry";
 import bookingStyles from "@/features/booking/design17/Booking.module.css";
 import profileStyles from "./DoctorProfile.module.css";
+import DoctorProfileView from "./DoctorProfileView";
 
 const doctors: Record<string, {
   name: string; speciality: string; subSpeciality: string; hospital: string;
@@ -204,7 +204,8 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
   const { slug } = React.use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const requestedDesign = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  const resolvedDesign = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  const requestedDesign = resolvedDesign === "d21" ? "d20" : resolvedDesign;
   const directoryDesign = requestedDesign === "d17-lite" || requestedDesign === "d18" || (requestedDesign === "d19" || requestedDesign === "d20") ? requestedDesign : "d17";
   const isDesign17 = ["d17", "d17-lite", "d18", "d19", "d20"].includes(requestedDesign ?? "");
   const listingReturnTo = design17ListingReturnTo(searchParams.get("returnTo"), directoryDesign);
@@ -336,17 +337,6 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
     }
   };
 
-  const similarScrollRef = useRef<HTMLDivElement>(null);
-  const scrollSimilar = (direction: "left" | "right") => {
-    if (similarScrollRef.current) {
-      const scrollAmount = 340;
-      similarScrollRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const handleDateSelect = (d: (typeof actualDates)[0]) => {
     setSelectedDate(d.date);
     setIsLoadingSlots(true);
@@ -399,21 +389,6 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
     proceedToBooking();
   };
 
-  const relatedMode = consultationType === "Video Consultation" ? "video" : "hospital";
-  const relatedDoctors = requestedDesign === "d20" ? getDesign20RelatedDoctors(slug, relatedMode) : isDesign17 ? getDesign17RelatedDoctors(slug, relatedMode, doc.name) : searchDoctorsData
-    .filter((d) => d.id !== slug && d.name.toLowerCase() !== doc.name.toLowerCase())
-    .slice(0, 8).map(fromDirectoryDoctor);
-  const similarDoctors = relatedDoctors.map(doctor => {
-      return {
-        ...doctor,
-        availabilityLabel: isDesign17 ? design17ProfileAvailability(doctor, relatedMode) : "",
-        profileHref: isDesign17 ? design17ProfileUrl(doctor, relatedMode, searchParams.get("date") ?? "", false, directoryDesign, listingReturnTo)
-          : `/doctors/${encodeURIComponent(doctor.id)}?name=${encodeURIComponent(doctor.name)}`,
-        bookingHref: directoryDesign === "d20" ? design20BookingEntryUrl(doctor, relatedMode, searchParams.get("date") ?? "", listingReturnTo)
-          : isDesign17 ? design17BookingUrl(doctor, relatedMode, searchParams.get("date") ?? "", new Date(), directoryDesign, listingReturnTo)
-          : `/doctors/${encodeURIComponent(doctor.id)}/book?mode=hospital`,
-      };
-    });
   if (directoryDesign === "d20" && !listingDoctor) return <div className={bookingStyles.page} data-design17-booking="d20">
     <div className={bookingStyles.container}><section className={bookingStyles.panel}>
       <h1>Choose a doctor to continue</h1>
@@ -421,6 +396,7 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
       <Link href={design20DoctorRecoveryUrl(searchParams)} className={bookingStyles.primary}>Find a doctor</Link>
     </section></div>
   </div>;
+  if (directoryDesign === "d20" && listingDoctor) return <DoctorProfileView key={`${listingDoctor.id}-${listingDoctor.hospital}-${requestedMode}`} doctor={listingDoctor} returnTo={listingReturnTo} initialMode={requestedMode === "video" ? "video" : "hospital"} date={searchParams.get("date") ?? ""} />;
   return (
     <div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
       <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
@@ -851,162 +827,6 @@ export default function DoctorDetailPage({ params }: { params: Promise<{ slug: s
           </motion.div>
         </div>
 
-        {/* Similar Doctors Carousel (Taken from Toshib work) */}
-        {similarDoctors.length > 0 && (
-          <div style={{ marginTop: "var(--sp-8)", marginBottom: "var(--sp-6)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--sp-4)" }}>
-              <h2 style={{ fontSize: "var(--font-size-2xl)", fontWeight: 800, color: "var(--color-text)", letterSpacing: "-0.01em" }}>
-                Similar doctors
-              </h2>
-              <div style={{ display: "flex", gap: "var(--sp-2)" }}>
-                <button
-                  type="button"
-                  onClick={() => scrollSimilar("left")}
-                  style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}
-                  aria-label="Previous similar doctors"
-                >
-                  <ChevronLeft size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollSimilar("right")}
-                  style={{ width: 40, height: 40, borderRadius: "50%", border: "1px solid var(--color-border)", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--color-text)", transition: "all 0.2s" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-bg-subtle)"; e.currentTarget.style.borderColor = "var(--color-text)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "var(--color-border)"; }}
-                  aria-label="Next similar doctors"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </div>
-            </div>
-
-            <div style={{ position: "relative" }}>
-              <div
-                ref={similarScrollRef}
-                style={{
-                  display: "flex",
-                  gap: "var(--sp-4)",
-                  overflowX: "auto",
-                  paddingBottom: "var(--sp-4)",
-                  scrollSnapType: "x mandatory",
-                  scrollbarWidth: "none",
-                  paddingRight: "100px",
-                }}
-              >
-                {similarDoctors.map((sDoc) => (
-                  <div
-                    key={sDoc.id}
-                    style={{
-                      background: "var(--color-bg-card)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: 16,
-                      overflow: "visible",
-                      boxShadow: "var(--shadow-sm)",
-                      position: "relative",
-                      minWidth: 320,
-                      flexShrink: 0,
-                      scrollSnapAlign: "start",
-                    }}
-                  >
-                    <div
-                      style={{
-                        background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)",
-                        padding: 18,
-                        borderTopLeftRadius: 16,
-                        borderTopRightRadius: 16,
-                      }}
-                    >
-                      <div style={{ display: "flex", gap: 16 }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0 }}>
-                          <Link
-                            style={{ position: "relative", width: 120, height: 120, borderRadius: 12, overflow: "hidden", background: "var(--color-border)", display: "block" }}
-                            href={sDoc.profileHref}
-                          >
-                            <div style={{ width: "100%", height: "100%", position: "relative" }}>
-                              {requestedDesign === "d20" && !sDoc.img ? <User size={64} aria-label="Doctor photo unavailable" /> : <Image
-                                alt={sDoc.name}
-                                loading="lazy"
-                                fill
-                                style={{ objectFit: "cover" }}
-                                sizes="120px"
-                                src={sDoc.img || "/images/misc/doctor_avatar_male_v2.png"}
-                              />}
-                            </div>
-                          </Link>
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
-                          <Link style={{ textDecoration: "none" }} href={sDoc.profileHref}>
-                            <h3 style={{ fontSize: "var(--font-size-lg)", fontWeight: 700, color: "var(--color-text)", marginBottom: 4, cursor: "pointer", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                              {sDoc.name}
-                            </h3>
-                          </Link>
-                          <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            {sDoc.speciality}
-                          </p>
-                          <p style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {sDoc.degrees || (requestedDesign === "d20" ? "" : "MBBS, MD")}
-                          </p>
-                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
-                            <span style={{ fontSize: 12, background: "#FFFFFF", padding: "2px 8px", borderRadius: 12, color: "#475569", fontWeight: 500 }}>
-                              {sDoc.experience}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{ padding: 18 }}>
-                      <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 12 }}>
-                        <MapPin size={16} style={{ color: "var(--color-text-secondary)", flexShrink: 0, marginTop: 2 }} />
-                        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {sDoc.hospital} <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>+1</span>
-                        </p>
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                        <Clock size={16} style={{ color: "var(--color-text-secondary)" }} />
-                        <p style={{ fontSize: "var(--font-size-sm)", color: "var(--color-text)" }}>{isDesign17 ? "Availability" : "Next available at"}</p>
-                      </div>
-                      <div style={{ display: "flex", flexWrap: "nowrap", overflowX: "auto", scrollbarWidth: "none", gap: 10, marginBottom: 16 }}>
-                        {isDesign17 ? <div aria-label={`${relatedMode === "hospital" ? "Hospital visit" : "Video consultation"}: ${sDoc.availabilityLabel}`} style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
-                          <Image alt="" width={16} height={16} src={relatedMode === "hospital" ? "/Appointment/Hospital_visit.svg" : "/Appointment/Video_consultation.svg"} />
-                          {sDoc.availabilityLabel}
-                        </div> : <>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
-                          <Image alt="" width={16} height={16} src="/Appointment/Hospital_visit.svg" />
-                          Available Today
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, var(--color-emergency-light) 0%, #ffffff 100%)", color: "var(--color-text)", padding: "6px 10px", borderRadius: 20, fontSize: "var(--font-size-xs)", fontWeight: 600, whiteSpace: "nowrap" }}>
-                          <Image alt="" width={16} height={16} src="/Appointment/Video_consultation.svg" />
-                          Today, 10:00 AM
-                        </div>
-                        </>}
-                      </div>
-                      <div style={{ height: 1, background: "var(--color-border)", margin: "16px 0" }} />
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <div style={{ display: "flex", flexDirection: "column" }}>
-                          <span style={{ fontSize: "var(--font-size-lg)", fontWeight: 800, color: "var(--color-text)", lineHeight: 1 }}>{sDoc.fee}</span>
-                          <span style={{ fontSize: "var(--font-size-xs)", color: "var(--color-text-muted)", marginTop: 4, lineHeight: 1 }}>onwards</span>
-                        </div>
-                        <div style={{ display: "flex", gap: 8 }}>
-                          <a href={isDesign17 ? "tel:18602080208" : "tel:18001030"} aria-label={isDesign17 ? `Call Narayana Health about ${sDoc.name}` : undefined} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 44, height: 44, borderRadius: 22, border: "1px solid var(--color-border)", color: "var(--color-primary)", textDecoration: "none", transition: "var(--transition-fast)", flexShrink: 0 }}>
-                            <PhoneCall size={18} />
-                          </a>
-                          <Link style={{ height: 44, padding: "0 22px", background: "var(--color-primary)", color: "var(--color-text-inverse)", borderRadius: 22, fontSize: "var(--font-size-sm)", fontWeight: 700, textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }} href={sDoc.bookingHref}>
-                            Book now
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Right side fade overlay */}
-              <div style={{ position: "absolute", top: 0, right: 0, bottom: "var(--sp-4)", width: 120, background: "linear-gradient(to right, transparent, var(--color-bg-card))", pointerEvents: "none" }} />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Auth Login Modal */}

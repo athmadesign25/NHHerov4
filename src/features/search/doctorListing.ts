@@ -64,7 +64,7 @@ export function doctorFilterValues(doctor: DoctorListingItem, key: DoctorMultiFi
 }
 
 /** Counts respect other groups and mode; selections within one group are ORed. */
-export function doctorFilterOptions(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode, key: DoctorMultiFilterKey) {
+export function doctorFilterOptions(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode | "all", key: DoctorMultiFilterKey) {
   const candidates = filterDoctors(doctors, { ...filters, [key]: [] }, mode);
   const counts = new Map<string, number>();
   candidates.forEach((doctor) => {
@@ -124,23 +124,26 @@ export function nextSlot(doctor: DoctorListingItem, mode: ConsultationMode, now 
   return timestamp !== null && timestamp > now.getTime() ? new Date(timestamp) : null;
 }
 
-export function filterDoctors(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode, now = new Date()) {
+export function filterDoctors(doctors: readonly DoctorListingItem[], filters: DoctorFilters, mode: ConsultationMode | "all", now = new Date()) {
   const start = indiaAppointmentTimestamp(indiaDate(now), "12:00 AM")!;
   const tomorrow = start + 24 * 60 * 60 * 1000;
   const afterTomorrow = tomorrow + 24 * 60 * 60 * 1000;
   const week = start + 7 * 24 * 60 * 60 * 1000;
   return doctors.filter((doctor) => {
-    if (doctor.modes[mode] === false) return false;
+    if (mode === "all" ? doctor.modes.hospital === false && doctor.modes.video === false : doctor.modes[mode] === false) return false;
     for (const key of ["specialties", "hospitals", "languages", "genders", "expertise"] as const) {
       const values = key === "specialties" ? [...doctorFilterValues(doctor, key), ...(doctor.specialityAliases ?? [])] : doctorFilterValues(doctor, key);
       if (filters[key].length && !values.some((value) => filters[key].includes(value))) return false;
     }
     if (filters.availability === "any") return true;
-    const slot = nextSlot(doctor, mode, now)?.getTime();
-    if (slot === undefined) return false;
-    if (filters.availability === "today") return slot >= start && slot < tomorrow;
-    if (filters.availability === "tomorrow") return slot >= tomorrow && slot < afterTomorrow;
-    return slot >= start && slot < week;
+    const modes: readonly ConsultationMode[] = mode === "all" ? ["hospital", "video"] : [mode];
+    return modes.some(type => {
+      const slot = nextSlot(doctor, type, now)?.getTime();
+      if (slot === undefined) return false;
+      if (filters.availability === "today") return slot >= start && slot < tomorrow;
+      if (filters.availability === "tomorrow") return slot >= tomorrow && slot < afterTomorrow;
+      return slot >= start && slot < week;
+    });
   });
 }
 
@@ -189,7 +192,7 @@ export function readListingParams(params: URLSearchParams) {
   const availability = params.get("availability");
   if (availability && Object.hasOwn(availabilityLabels, availability)) filters.availability = availability as AvailabilityFilter;
   const sort = params.get("sort");
-  const nearest = sort === "nearest" && ["d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(params.get("design") ?? "") && params.get("mode") !== "video";
+  const nearest = sort === "nearest" && ["d16", "d17", "d17-lite", "d18", "d19", "d20", "d21"].includes(params.get("design") ?? "") && params.get("mode") !== "video";
   return {
     filters,
     mode: (params.get("mode") === "video" ? "video" : "hospital") as ConsultationMode,

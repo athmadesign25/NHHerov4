@@ -33,6 +33,7 @@ import Design16SearchResults from "./designs/d16/Design16SearchResults";
 import Design17SearchResults from "./designs/d17/Design17SearchResults";
 import Design18SearchResults from "./designs/d18/Design18SearchResults";
 import Design19SearchResults from "./designs/d19/Design19SearchResults";
+import Design21SearchResults from "./designs/d21/Design21SearchResults";
 import Design20SearchResults from "./designs/d20/Design20SearchResults";
 import Design7SearchResults from "./designs/d7/Design7SearchResults";
 import Design15SearchResults from "./designs/d15/Design15SearchResults";
@@ -2943,6 +2944,7 @@ function SearchPreviewContent() {
   if (variant === "d18") {
     return <Design18SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
   }
+  if (variant === "d21") return <Design21SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
   if (variant === "d20") return <Design20SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;
   if (variant === "d19") {
     return <Design19SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />;

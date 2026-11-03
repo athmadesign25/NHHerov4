@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import type { BookingDoctorSummary } from "../types";
@@ -11,14 +11,17 @@ import { failureHoldExpired, holdAfterPaymentFailure, patientErrors, type Design
 import { getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import { defaultSponsorshipForPatient, isDesign20CouponEligible, isSponsorshipId, normalizeDesign20Coupon, type SponsorshipId } from "./pricing";
 import { design17Patients } from "../design17/patients";
+import { getBookingMemberSelection, getServerBookingMemberSelection, rememberBookingMembers, resetBookingMemberSelection, subscribeBookingMembers } from "./memberSelection";
 import { loadDesign20Draft, rememberDesign20Draft, saveDesign20Draft } from "./draft";
-import { confirmDesign20, design20Available, design20RequestedSelection, design20CanRestoreSelection, design20ChangedSelection, design20ContinuePhase, design20DefaultMember, design20FlowUrl, design20HealthCreditDraft, design20InlineUrl, design20ListingReturnTo, design20PaymentIntent, design20SavedAppointment, design20SignedInDraft, design20SummaryDraft, design20SafeStep, type Design20Draft, type Design20Phase } from "./model";
+import { design20WithBookingMember, confirmDesign20, design20Available, design20RequestedSelection, design20CanRestoreSelection, design20ChangedSelection, design20ContinuePhase, design20DefaultMember, design20FlowUrl, design20HealthCreditDraft, design20InlineUrl, design20ListingReturnTo, design20PaymentIntent, design20SavedAppointment, design20SignedInDraft, design20SummaryDraft, design20SafeStep, type Design20Draft, type Design20Phase } from "./model";
 
 const ACCOUNT: AuthIdentity = { method: "email", value: "signed-in@nh.example" };
 export interface Design20BookingOptions {
   initialSelection?: AppointmentSelection;
   returnTo: string;
   inline?: boolean;
+  /** Keep the doctor profile in browser history when continuing from its booking bar. */
+  preserveEntry?: boolean;
   /** Restore unfinished choices when reopening this card without a new filter intent. */
   resume?: boolean;
   confirmationRef?: string;
@@ -27,6 +30,7 @@ export interface Design20BookingOptions {
 export default function useDesign20Booking(doctor: BookingDoctorSummary, options: Design20BookingOptions) {
   const params = useSearchParams();
   const router = useRouter();
+  const memberPreference = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
   const returnTo = design20ListingReturnTo(options.returnTo);
   const { isUserLoggedIn } = useAuthState();
   const [authReady, setAuthReady] = useState(false);
@@ -85,7 +89,8 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
       if (!authenticated.current && !next.receipt) next = { ...next, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined };
       if (authenticated.current && !next.identity) next = design20SignedInDraft(next, ACCOUNT);
       if (next.identity && !next.receipt) next = { ...next, patients: design17Patients(next.identity, next.patients) };
-      next = design20DefaultMember(next, authenticated.current);
+      next = design20DefaultMember(design20WithBookingMember(next, getBookingMemberSelection()), authenticated.current);
+      if (authenticated.current) rememberBookingMembers(next.patients, next.selectedPatientId);
       if (!next.receipt) next = reconcileCoupon(next);
       if (!next.receipt && next.selection.time && (!design20Available(next.selection) || failureHoldExpired(next.failureHold, next.selection))) {
         next = { ...next, selection: { ...next.selection, time: "" }, failureHold: null, stage: "patient" };
@@ -127,12 +132,14 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     // Reauthentication reveals the completed receipt as booked. It must not
     // turn the receipt back into an editable draft or recheck a past slot.
     if (current.receipt) {
+      rememberBookingMembers(current.patients, current.selectedPatientId);
       update({ ...current, stage: "confirmation" });
       changePhase("member");
       setNotice("");
       return;
     }
-    const next = reconcileCoupon(design20SignedInDraft(current, identity));
+    const next = reconcileCoupon(design20WithBookingMember(design20SignedInDraft(current, identity), getBookingMemberSelection()));
+    rememberBookingMembers(next.patients, next.selectedPatientId);
     update(next);
     changePhase("member");
     if (design20ContinuePhase(next, true) === "slots") {
@@ -168,6 +175,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
         : defaultSponsorshipForPatient(current.patients.find(entry => entry.id === id));
       const next = reconcileCoupon({ ...current, selectedPatientId: id, stage: "appointment", sponsorshipId });
       update(next);
+      rememberBookingMembers(next.patients, id);
       setNotice(current.discountCode && !next.discountCode ? "The coupon no longer meets its minimum amount after this benefit. Choose another coupon." : "");
     }
   };
@@ -175,7 +183,9 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const current = latest.current;
     if (busy || committing.current || reviewing.current || current.receipt || !authenticated.current || !current.identity || current.patients.length >= 10 || Object.keys(patientErrors(patient, current.identity)).length) return;
     const id = crypto.randomUUID();
-    update(reconcileCoupon({ ...current, patients: [...current.patients, { id, patient }], selectedPatientId: id, stage: "appointment", sponsorshipId: null }));
+    const next = reconcileCoupon({ ...current, patients: [...current.patients, { id, patient }], selectedPatientId: id, stage: "appointment" as const, sponsorshipId: null });
+    update(next);
+    rememberBookingMembers(next.patients, id);
     setNotice("");
   };
   const selectTime = (incoming: AppointmentSelection) => {
@@ -223,7 +233,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   const openBookingSummary = async () => {
     if (busy || committing.current || reviewing.current || !validSlot() || !authenticated.current || !latest.current.identity) return;
     reviewing.current = true; setBusy(true);
-    const next: Design20Draft = { ...latest.current, stage: "patient" };
+    const next: Design20Draft = { ...reconcileCoupon(design20WithBookingMember(latest.current, getBookingMemberSelection())), stage: "patient" };
     update(next); changePhase("member"); setNotice("");
     const saved = await saveDesign20Draft(next);
     setRecoveryUnavailable(!saved);
@@ -233,7 +243,12 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (authenticated.current && sameAccount && sameSelection(latest.current.selection, next.selection) && options.inline) {
       // Back from the summary must reopen the choices the user actually made, even if
       // they changed the hospital or date after entering from the doctor card.
-      window.history.replaceState(null, "", design20InlineUrl(next, returnTo));
+      if (options.preserveEntry) {
+        const entry = new URL(window.location.href);
+        entry.searchParams.set("booking", doctor.id);
+        entry.searchParams.set("bookingResume", "1");
+        window.history.replaceState(null, "", `${entry.pathname}?${entry.searchParams}${entry.hash}`);
+      } else window.history.replaceState(null, "", design20InlineUrl(next, returnTo));
       router.push(design20FlowUrl(next, returnTo));
     }
     else if (authenticated.current && sameAccount && !options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
@@ -243,14 +258,22 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (!loaded) return;
     const current = latest.current;
     if (!isUserLoggedIn) {
+      resetBookingMemberSelection();
       if (current.identity && !current.receipt) update({ ...current, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined });
       return;
     }
+    if (current.receipt) { rememberBookingMembers(current.patients, current.selectedPatientId); return; }
     // An auth event may arrive before or after the shared dialog's callback.
     // Both paths use the same continuation; its synchronous lock prevents double navigation.
     if (currentPhase.current === "auth") onSignedIn(current.identity ?? ACCOUNT);
-    else if (!current.identity) update(reconcileCoupon(design20SignedInDraft(current, ACCOUNT)));
+    else if (!current.identity) update(reconcileCoupon(design20WithBookingMember(design20SignedInDraft(current, ACCOUNT), getBookingMemberSelection())));
   }, [loaded, isUserLoggedIn]);
+  useEffect(() => {
+    if (!loaded || !isUserLoggedIn || busy || committing.current || reviewing.current) return;
+    const current = latest.current;
+    const next = design20WithBookingMember(current, memberPreference);
+    if (next !== current) update(reconcileCoupon(next));
+  }, [loaded, isUserLoggedIn, busy, memberPreference]);
   // Retained for existing entry points; the destination combines member selection and review.
   const reviewAppointment = () => openBookingSummary();
   const continueBooking = () => {

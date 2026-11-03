@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
-import { Check, ChevronDown, Plus } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 import type { SavedPatient } from "../design14/patients";
 import MemberAvatar from "../design17/MemberAvatar";
 import { design17PatientAvatar } from "../design17/patients";
@@ -160,10 +160,10 @@ export default function BookingMemberPicker({ patients, selectedId, busy, onSele
   return <div ref={root} className={styles.container} data-open={open || undefined} onKeyDown={onKeyDown} onBlur={event => {
     if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget) && !popup.current?.contains(event.relatedTarget)) setOpen(false);
   }}>
-    <button ref={trigger} type="button" className={styles.trigger} disabled={busy} aria-label={`Select member${selected ? `: ${selected.patient.name}` : ""}`} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? menuId : undefined} onClick={() => open ? close() : show()}>
+    <button ref={trigger} type="button" className={styles.trigger} disabled={busy} aria-label={selected ? `Change patient. Booking for ${selected.patient.name}` : "Choose a patient"} aria-haspopup="listbox" aria-expanded={open} aria-controls={open ? menuId : undefined} onClick={() => open ? close() : show()}>
       <MemberAvatar src={design17PatientAvatar(selected)} className={styles.avatar} />
       <span className={styles.copy}><strong>{selected?.patient.name ?? "Choose a member"}</strong><small>{selected ? memberMeta(selected) : "Who is this appointment for?"}</small></span>
-      <ChevronDown className={styles.chevron} size={16} aria-hidden />
+      <span className={styles.change} aria-hidden>{selected ? "Change" : "Choose"}</span>
     </button>
     {open && createPortal(<div ref={popup} className={styles.popup} data-lenis-prevent>
       <div id={menuId} role="listbox" aria-label="Select member">

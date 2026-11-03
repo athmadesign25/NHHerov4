@@ -14,6 +14,7 @@ import RazorpayDemo from "./RazorpayDemo";
 import { design20Pricing } from "./pricing";
 import AppointmentConfirmation from "../design18/AppointmentConfirmation";
 import useDesign20Booking from "./useDesign20Booking";
+import { protectConfirmedBookingMember } from "./memberSelection";
 import BookingSummary from "./BookingSummary";
 import styles from "../design17/Booking.module.css";
 import summaryStyles from "./BookingSummary.module.css";
@@ -21,11 +22,14 @@ import summaryStyles from "./BookingSummary.module.css";
 export default function Design20BookingFlow({ doctor, confirmationRef }: { doctor: BookingDoctorSummary; confirmationRef?: string }) {
   const params = useSearchParams();
   const router = useRouter();
-  const flow = useDesign20Booking(doctor, { returnTo: params.get("returnTo") ?? "/search/doctors?design=d20", confirmationRef });
+  const flow = useDesign20Booking(doctor, { returnTo: params.get("returnTo") ?? "/search/doctors?design=d21", confirmationRef });
   const { draft } = flow;
   const heading = useRef<HTMLHeadingElement>(null);
   const [loginDismissed, setLoginDismissed] = useState(false);
   const confirmed = Boolean(draft.receipt);
+  useEffect(() => {
+    if (confirmed && flow.isUserLoggedIn) return protectConfirmedBookingMember();
+  }, [confirmed, flow.isUserLoggedIn]);
   useEffect(() => { if (flow.loaded) heading.current?.focus({ preventScroll: true }); }, [flow.loaded, confirmed]);
   const listingDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: draft.selection.hospital }));
   const activeDoctor = listingDoctor ? { ...doctor, name: listingDoctor.name, hospital: listingDoctor.hospital, fee: listingDoctor.fee } : doctor;

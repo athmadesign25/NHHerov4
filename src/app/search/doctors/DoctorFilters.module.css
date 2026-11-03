@@ -1,4 +1,6 @@
 .filters { display: flex; flex-direction: column; }
+.searchGroupTitle { display: flex; align-items: center; gap: var(--sp-1); min-height: var(--sp-6); color: var(--color-text); font-size: var(--font-size-sm); font-weight: 600; }
+.groupToggle.unclutteredToggle { padding-inline-end: var(--sp-4); }
 .option { display: flex; align-items: center; gap: var(--sp-1); min-height: calc(var(--sp-5) + var(--sp-1)); padding: var(--sp-1); border-radius: var(--radius-md); font-size: var(--font-size-sm); font-weight: 500; color: var(--d3-ui-text, var(--color-text-secondary)); cursor: pointer; line-height: 1.5; transition: color var(--d3-ui-fast, var(--transition-fast)); }
 .option span { min-width: 0; overflow-wrap: anywhere; }
 .option input { flex-shrink: 0; width: var(--font-size-lg); height: var(--font-size-lg); accent-color: var(--d3-ui-selection, var(--color-emergency)); }

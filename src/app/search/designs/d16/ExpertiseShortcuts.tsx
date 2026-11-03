@@ -10,17 +10,18 @@ export interface ExpertiseShortcutsProps {
   doctors: readonly DoctorListingItem[];
   matchingDoctors?: readonly DoctorListingItem[];
   filters: DoctorFilters;
-  mode: ConsultationMode;
+  mode: ConsultationMode | "all";
   query: string;
+  label?: string;
   onChange: (filters: DoctorFilters) => void;
 }
 
-export default function ExpertiseShortcuts({ doctors, matchingDoctors, filters, mode, query, onChange }: ExpertiseShortcutsProps) {
+export default function ExpertiseShortcuts({ doctors, matchingDoctors, filters, mode, query, onChange, label = "Focus of care" }: ExpertiseShortcutsProps) {
   const options = getDesign16ExpertiseShortcuts(doctors, filters, mode, query, undefined, matchingDoctors);
   if (!options.length) return null;
 
-  return <div className={styles.group} role="group" aria-label="Focus of care" data-d3-ui>
-    <span className={styles.label} aria-hidden="true">Focus of care</span>
+  return <div className={styles.group} role="group" aria-label={label} data-d3-ui>
+    <span className={styles.label} aria-hidden="true">{label}</span>
     <div className={styles.options}>
       {options.map(({ value, count, selected }) => <button
         key={value}

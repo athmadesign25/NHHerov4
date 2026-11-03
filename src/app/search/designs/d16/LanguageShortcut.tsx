@@ -10,14 +10,15 @@ export interface LanguageShortcutProps {
   doctors: readonly DoctorListingItem[];
   matchingDoctors?: readonly DoctorListingItem[];
   filters: DoctorFilters;
-  mode: ConsultationMode;
+  mode: ConsultationMode | "all";
   location: string;
   now?: Date;
   requireSuppliedLanguage?: boolean;
+  showSelectionClear?: boolean;
   onChange: (filters: DoctorFilters) => void;
 }
 
-export default function LanguageShortcut({ doctors, matchingDoctors, filters, mode, location, now, requireSuppliedLanguage, onChange }: LanguageShortcutProps) {
+export default function LanguageShortcut({ doctors, matchingDoctors, filters, mode, location, now, requireSuppliedLanguage, showSelectionClear = true, onChange }: LanguageShortcutProps) {
   const option = getDesign16LanguageShortcut(doctors, filters, mode, location, now, matchingDoctors, requireSuppliedLanguage);
   if (!option) return null;
   return <div className={styles.group} role="group" aria-label="Consultation language" data-d3-ui>
@@ -25,7 +26,7 @@ export default function LanguageShortcut({ doctors, matchingDoctors, filters, mo
       aria-label={`Consult in ${option.value}${option.selected ? ". Remove language filter" : option.count === 0 ? ". No matching doctors" : ""}`}
       disabled={!option.selected && option.count === 0} onClick={() => onChange(toggleDesign16Language(filters, option.value))}>
       <Languages size={16} aria-hidden /><span className={styles.value}>Consult in {option.value}</span>
-      {option.selected && <X size={14} aria-hidden />}
+      {option.selected && showSelectionClear && <X size={14} aria-hidden />}
     </button>
   </div>;
 }

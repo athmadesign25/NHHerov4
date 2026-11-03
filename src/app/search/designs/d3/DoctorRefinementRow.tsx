@@ -11,7 +11,7 @@ interface ScrollEdges {
   next: boolean;
 }
 
-export default function DoctorRefinementRow({ children }: { children: ReactNode }) {
+export default function DoctorRefinementRow({ children, label = "Consultation and filters" }: { children: ReactNode; label?: string }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const spacerRef = useRef<HTMLSpanElement>(null);
@@ -138,7 +138,7 @@ export default function DoctorRefinementRow({ children }: { children: ReactNode 
   };
 
   return (
-    <div className={styles.root} role="group" aria-label="Consultation and filters" data-d3-refinement-row data-overflow={edges.overflow}>
+    <div className={styles.root} role="group" aria-label={label} data-d3-refinement-row data-overflow={edges.overflow}>
       <motion.div
         ref={viewportRef}
         id={viewportId}
@@ -158,12 +158,12 @@ export default function DoctorRefinementRow({ children }: { children: ReactNode 
         </div>
       </motion.div>
       <div className={`${styles.affordance} ${styles.previous}`} data-visible={edges.previous}>
-        <button ref={previousRef} type="button" aria-label="Show earlier consultation and filter controls" aria-controls={viewportId} aria-hidden={!edges.previous} tabIndex={edges.previous ? 0 : -1} disabled={!edges.previous} onPointerDown={event => event.preventDefault()} onClick={() => scrollControls(-1)}>
+        <button ref={previousRef} type="button" aria-label={label === "Applied filters" ? "Show earlier applied filters" : "Show earlier consultation and filter controls"} aria-controls={viewportId} aria-hidden={!edges.previous} tabIndex={edges.previous ? 0 : -1} disabled={!edges.previous} onPointerDown={event => event.preventDefault()} onClick={() => scrollControls(-1)}>
           <ChevronLeft size={18} aria-hidden="true" />
         </button>
       </div>
       <div className={`${styles.affordance} ${styles.next}`} data-visible={edges.next}>
-        <button ref={nextRef} type="button" aria-label="Show more consultation and filter controls" aria-controls={viewportId} aria-hidden={!edges.next} tabIndex={edges.next ? 0 : -1} disabled={!edges.next} onPointerDown={event => event.preventDefault()} onClick={() => scrollControls(1)}>
+        <button ref={nextRef} type="button" aria-label={label === "Applied filters" ? "Show more applied filters" : "Show more consultation and filter controls"} aria-controls={viewportId} aria-hidden={!edges.next} tabIndex={edges.next ? 0 : -1} disabled={!edges.next} onPointerDown={event => event.preventDefault()} onClick={() => scrollControls(1)}>
           <ChevronRight size={18} aria-hidden="true" />
         </button>
       </div>

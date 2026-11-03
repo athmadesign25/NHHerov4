@@ -20,7 +20,7 @@ export function design20BookingEntryUrl(
   date = "",
   returnTo?: string | null,
 ): string {
-  const target = new URL(design17ListingReturnTo(returnTo, "d20"), "https://nh.local");
+  const target = new URL(design17ListingReturnTo(returnTo, "d21"), "https://nh.local");
   if (!returnTo && doctor.city) target.searchParams.set("location", doctor.city);
   target.searchParams.set("booking", doctor.id);
   target.searchParams.set("bookingMode", mode);

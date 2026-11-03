@@ -12,6 +12,7 @@ import Design17SearchResults from "@/app/search/designs/d17/Design17SearchResult
 import Design18SearchResults from "@/app/search/designs/d18/Design18SearchResults";
 import Design19SearchResults from "@/app/search/designs/d19/Design19SearchResults";
 import Design20SearchResults from "@/app/search/designs/d20/Design20SearchResults";
+import Design21SearchResults from "@/app/search/designs/d21/Design21SearchResults";
 import Design7SearchResults from "@/app/search/designs/d7/Design7SearchResults";
 import Design15SearchResults from "@/app/search/designs/d15/Design15SearchResults";
 import { isDesign15Variant, isJourneyDesign } from "@/features/design-preview/journeyDesigns";
@@ -25,6 +26,7 @@ export default function DoctorLandingPreview({ catalogs }: { catalogs: SearchCat
   if (variant === "d17" || variant === "d17-lite") return <Design17SearchResults variant={variant} catalogs={catalogs} />;
   if (variant === "d18") return <Design18SearchResults catalogs={catalogs} />;
   if (variant === "d20") return <Design20SearchResults catalogs={catalogs} />;
+  if (variant === "d21") return <Design21SearchResults catalogs={catalogs} />;
   if (variant === "d19") return <Design19SearchResults catalogs={catalogs} />;
   if (variant === "d6") return <Design6SearchResults catalogs={catalogs} />;
   if (variant === "d5") return <Design5SearchResults catalogs={catalogs} />;

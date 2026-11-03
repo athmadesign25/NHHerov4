@@ -33,7 +33,7 @@ export interface DesignScope {
 }
 
 /** Current public doctor discovery and appointment journey. */
-export const DEFAULT_DOCTOR_DESIGN = "d20";
+export const DEFAULT_DOCTOR_DESIGN = "d21";
 
 export const DESIGN_SCOPES = {
   "search-top": {
@@ -63,6 +63,7 @@ export const DESIGN_SCOPES = {
       { id: "d18", label: "Design 18", note: "Pearl glass · appointment workspace · connected booking" },
       { id: "d19", label: "Design 19", note: "Pearl glass · book inside the doctor card" },
       { id: "d20", label: "Design 20", note: "Design 19 baseline · doctor card refinements" },
+      { id: "d21", label: "Design 21", note: "Clear filters · visible results · simpler doctor discovery" },
     ],
   },
 } satisfies Record<string, DesignScope>;

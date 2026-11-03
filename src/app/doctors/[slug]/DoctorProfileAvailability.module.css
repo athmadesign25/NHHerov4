@@ -1,0 +1,8 @@
+.availability {
+  --card-ink: var(--d17-lite-ink);
+  --card-muted: var(--color-text-secondary);
+  --card-slot-size: calc((var(--font-size-xs) + var(--font-size-sm)) / 2);
+  min-width: 0;
+}
+.options { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); padding-left: var(--sp-3); }
+@media (min-width: 640px) { .options { column-gap: var(--sp-4); } }

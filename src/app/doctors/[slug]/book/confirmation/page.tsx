@@ -27,7 +27,8 @@ const subscribeNoop = () => () => {};
 
 function ConfirmationRoute({ slug }: { slug: string }) {
   const params = useSearchParams();
-  const design = resolveDoctorDesign(params.get("design"), DESIGN_PREVIEW_ENABLED);
+  const requestedDesign = resolveDoctorDesign(params.get("design"), DESIGN_PREVIEW_ENABLED);
+  const design = requestedDesign === "d21" ? "d20" : requestedDesign;
   if (design === "d17" || design === "d17-lite" || design === "d18" || (design === "d19" || design === "d20")) {
     const source = design === "d20" ? getDesign20BookingDoctor(slug, params.get("name")) : getDesign3BookingDoctor(slug);
     const listing = design === "d20" ? getDesign20ProfileDoctor(slug, params) : getDesign17ProfileDoctor(slug, params);

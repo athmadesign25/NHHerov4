@@ -92,11 +92,28 @@
 
 .times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--sp-6); position: relative; display: grid; grid-template-rows: repeat(2, var(--slot-target)); grid-auto-flow: column; grid-auto-columns: minmax(calc(var(--sp-12) + var(--sp-1)), max-content); gap: 0 var(--sp-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: calc(var(--sp-1) / 2); margin-inline: calc(var(--sp-1) / -2); scroll-padding-inline: var(--sp-3); --fade-start: 0px; --fade-end: 0px; --fade-clear-start: 0px; --fade-clear-end: 0px; mask-image: linear-gradient(to right, transparent var(--fade-clear-start), black var(--fade-start), black calc(100% - var(--fade-end)), transparent calc(100% - var(--fade-clear-end))); }
 .times::-webkit-scrollbar { display: none; }
+/* In-card booking uses one horizontal rail; the full-page editor can use two rows. */
+.card .times { grid-template-rows: var(--slot-target); }
 .times[data-rows="1"] { grid-template-rows: var(--slot-target); }
 /* Use the existing horizontal rail when a second row would crowd the footer. */
 @container booking-content (max-height: 22rem) {
   .times { grid-template-rows: var(--slot-target); }
 }
+/* Design 21 reserves the extra height in its browsing card. Keep the second
+   row even in a shorter content container; discovery remains horizontal. */
+:global([data-design="d21"]) .card .times[data-rows="2"] {
+  grid-template-rows: repeat(2, var(--slot-target));
+}
+/* The footer already overlaps the viewport: retain clearance without an
+   extra invisible padding strip creating vertical overflow in tighter cards. */
+:global([data-design="d21"]) .card .content {
+  padding-block-end: var(--sp-3);
+  scroll-padding-block-end: var(--sp-3);
+}
+/* Appointment, price and action form one summary group. Tighten inside that
+   group while preserving the separation from the date and time controls. */
+:global([data-design="d21"]) .card .footer { gap: var(--sp-1); }
+:global([data-design="d21"]) .card .reassurance { padding-block: 0; }
 .times[data-fade-start="true"] { --fade-start: var(--sp-4); --fade-clear-start: var(--sp-1); }
 .times[data-fade-end="true"] { --fade-end: var(--sp-4); --fade-clear-end: var(--sp-1); }
 .times button { min-width: 0; padding-inline: var(--sp-2); font-variant-numeric: tabular-nums; }

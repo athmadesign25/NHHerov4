@@ -48,11 +48,11 @@
 .offer p, .offer small { margin-top: calc(var(--sp-1) / 2); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: 1.5; }
 .offer small { display: block; }
 .offerAction { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.applied { display: inline-flex; align-items: center; gap: calc(var(--sp-1) / 2); color: var(--benefit-success); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
+.applied { display: inline-flex; align-items: center; min-height: calc(var(--sp-1) * 5.5); padding-inline: calc(var(--sp-1) * 1.5); gap: calc(var(--sp-1) / 2); color: var(--benefit-success); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
 .check { flex-shrink: 0; color: var(--benefit-success); }
 .offer.selected { background: color-mix(in srgb, var(--color-success) 7%, transparent); }
 .footer { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
-.remove { min-height: calc(var(--sp-1) * 5.5); padding: var(--sp-1); border: 0; border-radius: var(--radius-full); color: var(--color-emergency); background: transparent; font: inherit; font-size: var(--font-size-sm); font-weight: 400; cursor: pointer; transition: color var(--transition-fast); }
+.dialog .remove { min-height: calc(var(--sp-1) * 5.5); padding: var(--sp-1); border: 0; border-radius: var(--radius-full); color: var(--color-emergency); background: transparent; font: inherit; font-size: var(--font-size-sm); font-weight: 400; cursor: pointer; transition: color var(--transition-fast); }
 .planOffer { display: grid; grid-template-columns: var(--sp-4) minmax(0, 1fr) auto; gap: var(--sp-1); }
 .planIcon { color: var(--benefit-success); }
 .planIcon { align-self: start; margin-top: calc(var(--sp-1) / 4); }
@@ -61,7 +61,7 @@
 .dialog button:disabled { opacity: .45; cursor: not-allowed; }
 .dialog :is(button, input):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 @media (hover: hover) {
-  .remove:hover:not(:disabled) { color: color-mix(in srgb, var(--color-emergency) 78%, var(--benefit-ink)); }
+  .dialog .remove:hover:not(:disabled) { color: color-mix(in srgb, var(--color-emergency) 78%, var(--benefit-ink)); }
   .close:hover:not(:disabled) { background: color-mix(in srgb, var(--color-primary) 8%, transparent); }
   .apply:hover:not(:disabled) { color: var(--color-primary-dark); }
 }

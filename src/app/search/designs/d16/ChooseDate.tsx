@@ -11,6 +11,7 @@ interface Props {
   min: string;
   max: string;
   disabled?: boolean;
+  tone?: "red" | "blue";
   onChange: (date: string) => void;
 }
 
@@ -31,7 +32,7 @@ function shiftMonth(value: string, amount: number): string {
   return iso(first);
 }
 
-export default function ChooseDate({ value, min, max, disabled = false, onChange }: Props) {
+export default function ChooseDate({ value, min, max, disabled = false, tone = "red", onChange }: Props) {
   const [open, setOpen] = useState(false);
   const validRange = Boolean(readDate(min) && readDate(max) && min <= max);
   const selected = readDate(value) && value >= min && value <= max ? value : "";
@@ -40,12 +41,12 @@ export default function ChooseDate({ value, min, max, disabled = false, onChange
     <button type="button" className={chipStyles.chip} data-selected={Boolean(selected) || undefined} disabled={disabled || !validRange}
       aria-haspopup="dialog" aria-expanded={open} aria-label={selected ? `Appointment date: ${format(selected, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. Change date` : "Choose appointment date"}
       onClick={() => setOpen(true)}><CalendarDays size={16} aria-hidden /><span>{label}</span></button>
-    {open && validRange && <Calendar key={`${min}-${max}`} value={selected} min={min} max={max} onClose={() => setOpen(false)}
+    {open && validRange && <Calendar key={`${min}-${max}`} tone={tone} value={selected} min={min} max={max} onClose={() => setOpen(false)}
       onChange={(date) => { onChange(date); setOpen(false); }} />}
   </>;
 }
 
-function Calendar({ value, min, max, onChange, onClose }: Omit<Props, "disabled"> & { onClose: () => void }) {
+function Calendar({ value, min, max, tone = "red", onChange, onClose }: Omit<Props, "disabled"> & { onClose: () => void }) {
   const id = useId();
   const grid = useRef<HTMLTableElement>(null);
   const [focused, setFocused] = useState(value >= min && value <= max ? value : min);
@@ -86,8 +87,8 @@ function Calendar({ value, min, max, onChange, onClose }: Omit<Props, "disabled"
   };
 
   return <SearchDialog title="Choose appointment date" doctorPreview onClose={onClose}
-    footer={value ? <button type="button" className={styles.clear} onClick={() => onChange("")}><X size={16} aria-hidden />Clear date</button> : undefined}>
-    <div className={styles.calendar}>
+    footer={value ? <button type="button" className={`${styles.clear} ${tone === "blue" ? styles.blueClear : ""}`} onClick={() => onChange("")}><X size={16} aria-hidden />Clear date</button> : undefined}>
+    <div className={`${styles.calendar} ${tone === "blue" ? styles.blue : ""}`}>
       <div className={styles.monthNav}>
         <button type="button" disabled={month <= min.slice(0, 7)} aria-label="Previous month" onClick={() => move(`${shiftMonth(focused, -1).slice(0, 7)}-01`)}><ChevronLeft size={20} aria-hidden /></button>
         <h3 id={`${id}-month`} aria-live="polite" aria-atomic="true">{format(`${month}-01`, { month: "long", year: "numeric" })}</h3>

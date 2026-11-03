@@ -512,7 +512,8 @@ export default function BookingPage({ params }: { params: Promise<{ slug: string
 
 function BookingPreviewRoute({ slug }: { slug: string }) {
   const searchParams = useSearchParams();
-  const design = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  const requestedDesign = resolveDoctorDesign(searchParams.get("design"), DESIGN_PREVIEW_ENABLED);
+  const design = requestedDesign === "d21" ? "d20" : requestedDesign;
   if (design === "d17" || design === "d17-lite" || design === "d18" || design === "d19" || design === "d20") {
     const source = design === "d20" ? getDesign20BookingDoctor(slug, searchParams.get("name")) : getDesign3BookingDoctor(slug);
     const listing = design === "d20" ? getDesign20ProfileDoctor(slug, searchParams) : getDesign17ProfileDoctor(slug, searchParams);
