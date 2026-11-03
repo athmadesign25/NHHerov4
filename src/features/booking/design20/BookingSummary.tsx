@@ -84,7 +84,7 @@ export default function BookingSummary({ doctor, flow }: { doctor: BookingDoctor
     <motion.div layout={reduced ? false : "position"} transition={{ layout: layoutTransition }} className={styles.content}>
       <div className={styles.bookingDetails}>
         <section className={styles.section} aria-labelledby={`${id}-members`}>
-          <h2 id={`${id}-members`} ref={memberHeading} tabIndex={-1}>Select member</h2>
+          <h2 id={`${id}-members`} ref={memberHeading} tabIndex={-1}>Booking for</h2>
           {addingMember && draft.identity ? <div className={styles.newMember}><NewPatient identity={draft.identity} onSave={patient => { flow.addPatient(patient); closeMemberForm(); }} onCancel={closeMemberForm} /></div>
             : <BookingMemberPicker patients={draft.patients} selectedId={draft.selectedPatientId} busy={busy} onSelect={flow.selectPatient} onAdd={() => setAddingMember(true)} />}
         </section>

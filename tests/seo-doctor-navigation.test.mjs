@@ -31,14 +31,14 @@ const { SEO_LINK_SECTIONS } = await import('../src/data/seo-links.ts');
 
 const asUrl = href => new URL(href, 'https://nh.local');
 
-test('every existing footer doctor link reaches D20 with its city and specialty filters', () => {
+test('every existing footer doctor link reaches D21 with its city and specialty filters', () => {
   const doctorLinks = SEO_LINK_SECTIONS.flatMap(section => section.links)
     .filter(link => link.href.startsWith('/ocaapp/doctors/'));
   assert.ok(doctorLinks.length > 0);
   for (const { href } of doctorLinks) {
     const result = asUrl(seoDoctorHref(href));
     assert.equal(result.pathname, '/search/doctors', href);
-    assert.equal(result.searchParams.get('design'), 'd20', href);
+    assert.equal(result.searchParams.get('design'), 'd21', href);
     assert.ok(result.searchParams.get('location'), href);
     assert.ok(result.searchParams.getAll('specialties').length, href);
   }

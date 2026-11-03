@@ -1,0 +1,39 @@
+.picker {
+  position: sticky;
+  top: var(--profile-nav-height);
+  z-index: 10;
+  padding: var(--sp-1) var(--profile-gutter);
+}
+.picker::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 calc(var(--sp-1) * -1);
+  pointer-events: none;
+  background: var(--journey-paper-surface);
+  mask-image: linear-gradient(to bottom, black calc(100% - var(--sp-1)), transparent);
+}
+.navHidden { top: 0; }
+.track { position: relative; display: flex; width: max-content; max-width: 100%; margin-inline: auto; border-radius: var(--radius-full); }
+.track::before { content: ""; position: absolute; inset: calc(var(--sp-1) / 2) 0; border-radius: inherit; background: var(--color-bg-alt); pointer-events: none; }
+.rail { position: relative; display: flex; min-width: 0; padding-inline: calc(var(--sp-1) / 4); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; border-radius: inherit; }
+.rail::-webkit-scrollbar { display: none; }
+.rail[data-fade-start] { mask-image: linear-gradient(to right, transparent, black var(--sp-1)); }
+.rail[data-fade-end] { mask-image: linear-gradient(to left, transparent, black var(--sp-1)); }
+.rail[data-fade-start][data-fade-end] { mask-image: linear-gradient(to right, transparent, black var(--sp-1), black calc(100% - var(--sp-1)), transparent); }
+.rail a { position: relative; display: inline-flex; flex: 0 0 auto; justify-content: center; align-items: center; min-height: var(--sp-6); padding-inline: var(--sp-2); border-radius: var(--radius-full); color: var(--color-text-secondary); text-decoration: none; font-size: var(--font-size-sm); font-weight: 600; line-height: 1.25; white-space: nowrap; transition: color var(--transition-fast); }
+.rail a[aria-current] { color: color-mix(in srgb, var(--color-emergency) 78%, var(--color-text)); }
+.selected { position: absolute; inset: calc(var(--sp-1) * .75) 0; border: 1px solid var(--color-border); border-radius: inherit; background: var(--color-bg-card); pointer-events: none; }
+.label { position: relative; z-index: 1; }
+.arrow { position: relative; display: grid; place-items: center; flex: 0 0 var(--target); min-height: var(--sp-6); padding: 0; border: 0; background: transparent; color: var(--color-text-secondary); cursor: pointer; border-radius: inherit; }
+.arrow:disabled { visibility: hidden; }
+.rail[data-dragging] { cursor: grabbing; user-select: none; }
+.rail[data-dragging] a { cursor: grabbing; }
+.picker :is(a, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .picker::before { background: color-mix(in srgb, var(--journey-paper-surface) 62%, transparent); backdrop-filter: blur(var(--sp-2)); -webkit-backdrop-filter: blur(var(--sp-2)); }
+  .track::before { background: color-mix(in srgb, var(--color-bg-alt) 72%, transparent); }
+}
+@media (hover: hover) { .rail a:not([aria-current]):hover, .arrow:hover { color: var(--color-text); } }
+@media (prefers-reduced-motion: reduce) { .picker, .rail a { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .picker::before { background: var(--journey-paper-surface); backdrop-filter: none; -webkit-backdrop-filter: none; mask-image: none; } .track::before { background: var(--color-bg-alt); } }
+@media (forced-colors: active) { .picker::before { background: Canvas; } .selected { border-color: Highlight; } .rail a[aria-current] { color: LinkText; } }

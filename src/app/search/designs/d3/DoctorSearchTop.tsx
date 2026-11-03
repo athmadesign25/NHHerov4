@@ -12,6 +12,7 @@ import DoctorSearchHint from "./DoctorSearchHint";
 import styles from "./DoctorSearchTop.module.css";
 
 interface Props {
+  allConsultationTypes?: boolean;
   query: string; location: string; total: number; mode: ConsultationMode;
   heading: string; summary: string; locationFirst?: boolean;
   compactMobile?: boolean; hideTotal?: boolean;
@@ -20,7 +21,7 @@ interface Props {
   onOpenFilters: () => void;
 }
 
-export default function DoctorSearchTop({ query, location, total, mode, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
+export default function DoctorSearchTop({ query, location, total, mode, allConsultationTypes = false, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
   const reducedMotion = Boolean(useReducedMotion());
   const [navVisible, setNavVisible] = useState(true);
   const [hintsPaused, setHintsPaused] = useState(false);
@@ -162,7 +163,7 @@ export default function DoctorSearchTop({ query, location, total, mode, heading,
       <div className={`${styles.summary} ${hideTotal && !loading && !error ? styles.srOnly : ""}`}>
         <p role="status" aria-live="polite" aria-atomic="true">
           {loading ? "Searching…" : error ? "Results unavailable" : hideTotal ? "Doctor results updated" : <><strong>{total}</strong> {total === 1 ? "doctor" : "doctors"}</>}
-          <span className={styles.srOnly}>{query.trim() ? ` matching ${query.trim()}` : ""}, {location === "All" ? "all locations" : location}, {mode === "hospital" ? "hospital visits" : "video consultations"}</span>
+          <span className={styles.srOnly}>{query.trim() ? ` matching ${query.trim()}` : ""}, {location === "All" ? "all locations" : location}, {allConsultationTypes ? "all consultation types" : mode === "hospital" ? "hospital visits" : "video consultations"}</span>
         </p>
       </div>
       <p className={styles.pageSummary}>{summary}</p>

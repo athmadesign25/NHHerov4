@@ -3926,7 +3926,7 @@ function Workspace({
     // Pulse's private mock IDs overlap other directories. Resolve the clinician by name.
     const doctorSlug = `dr-${doctor.name.toLowerCase().replace(/^dr[.\s]*/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
     const matchedDoctor = getDesign20DirectoryDoctor(doctorSlug);
-    const listingParams = new URLSearchParams({ design: "d20", location: matchedDoctor?.city || "Bangalore", mode });
+    const listingParams = new URLSearchParams({ design: "d21", location: matchedDoctor?.city || "Bangalore", mode });
     if (!matchedDoctor) {
       const speciality = doctor.speciality.split("·")[0].trim();
       listingParams.set("specialties", speciality === "General Physician" ? "General Medicine" : speciality);

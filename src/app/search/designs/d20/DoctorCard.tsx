@@ -45,7 +45,7 @@ export default function DoctorCard({ active, onClose, initialSelection, resume, 
     </div>
     <AnimatePresence initial={false}>{bookingDoctor && <BookingCard key="booking" doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
     initialSelection={initialSelection ?? design20RequestedSelection(bookingDoctor, query)}
-    returnTo={props.listingReturnTo ?? "/search/doctors?design=d20"} onClose={onClose ?? (() => undefined)} resume={resume} />}</AnimatePresence>
+    returnTo={props.listingReturnTo ?? "/search/doctors?design=d21"} onClose={onClose ?? (() => undefined)} resume={resume} />}</AnimatePresence>
   </div></LayoutGroup>;
 }
 

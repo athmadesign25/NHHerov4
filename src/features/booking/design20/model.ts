@@ -3,7 +3,8 @@ import { sameSelection } from "../design7/model";
 import type { BookingDoctorSummary } from "../types";
 import { appointmentDates, DESIGN16_BOOKING_DAYS } from "../appointmentTime";
 import { getDesign3BookingSlots, isDesign3BookingSlotAvailable } from "../design3Availability";
-import { confirmDesign15, failureHoldExpired, parseDesign15Draft, patientErrors, type Design15Draft, type Design15Step } from "../design15/model";
+import { confirmDesign15, failureHoldExpired, parseDesign15Draft, patientErrors, patientForIdentity, type Design15Draft, type Design15Step } from "../design15/model";
+import type { BookingMemberSelection } from "./memberSelection";
 import type { AuthIdentity } from "../design15/auth";
 import { design17Patients } from "../design17/patients";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
@@ -38,6 +39,17 @@ export function design20SignedInDraft(draft: Design20Draft, identity: AuthIdenti
     selectedPatientId: sameAccount ? draft.selectedPatientId : null, stage: "patient",
     sponsorshipId: sameAccount ? draft.sponsorshipId : undefined, discountCode: sameAccount ? draft.discountCode : undefined,
     useHealthCredits: sameAccount ? draft.useHealthCredits : undefined, payment: sameAccount ? draft.payment : "online" }, true);
+}
+
+/** Apply the navbar's patient choice without changing appointment or payment selections. */
+export function design20WithBookingMember(draft: Design20Draft, preference: BookingMemberSelection): Design20Draft {
+  if (!draft.identity || draft.receipt) return draft;
+  const missing = preference.members.filter(member => !draft.patients.some(entry => entry.id === member.id));
+  const patients = missing.length ? [...draft.patients, ...missing.map(({ id, ...profile }) => ({ id, patient: patientForIdentity(draft.identity!, { ...profile, phone: "", email: "" }) }))].slice(0, 10) : draft.patients;
+  const member = patients.find(entry => entry.id === preference.selectedId);
+  const changed = member && member.id !== draft.selectedPatientId;
+  if (!changed && patients === draft.patients) return draft;
+  return { ...draft, patients, ...(changed ? { selectedPatientId: member.id, sponsorshipId: defaultSponsorshipForPatient(member) } : {}) };
 }
 
 /** The restored featured IDs keep their D20 affiliations throughout the booking journey. */
@@ -135,7 +147,7 @@ export function parseDesign20Draft(value: unknown, expectedDoctorId?: string): D
 
 export function design20ListingReturnTo(returnTo: string): string {
   const safe = new URL(design17ListingReturnTo(returnTo, "d17-lite"), "https://nh.local");
-  safe.searchParams.set("design", "d20");
+  safe.searchParams.set("design", "d21");
   safe.searchParams.delete("booking");
   safe.searchParams.delete("bookingMode");
   safe.searchParams.delete("bookingResume");

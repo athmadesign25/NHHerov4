@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import Design20SearchResults from "./designs/d20/Design20SearchResults";
+import Design21SearchResults from "./designs/d21/Design21SearchResults";
 import styles from "./search.module.css";
 
 const hospitalsData = [
@@ -331,6 +331,6 @@ const articlesData = [
 
 export default function SearchResultsPage() {
   return <Suspense fallback={<div className={styles.previewLoading} role="status">Loading search results…</div>}>
-    <Design20SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />
+    <Design21SearchResults catalogs={{ hospitals: hospitalsData, treatments: treatmentsData, packages: packagesData, labs: labsData, articles: articlesData }} />
   </Suspense>;
 }
