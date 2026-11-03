@@ -23,7 +23,7 @@ const FEATURED_MAIN_BLOG = {
   title: "Sugar Free Sweets for Diabetics: How to Enjoy Diwali Without Blood Sugar Spikes?",
   subtext: "Doctor-backed festive dietary guide on natural low-glycemic sweeteners, portion control, and fiber pairing to prevent acute glucose spikes.",
   date: "Nov 2, 2026",
-  image: "/Specialities icons/Endocrinology.jpeg",
+  image: "/images/articles/sugar_free_sweets_diwali.jpg",
 };
 
 const SUB_BLOG_CARDS: SubBlogCard[] = [
@@ -33,7 +33,7 @@ const SUB_BLOG_CARDS: SubBlogCard[] = [
     category: "Neurology",
     title: "Can Stroke Symptoms Disappear Within Minutes? TIA Warning Signs You Should Never Ignore",
     date: "Oct 30, 2026",
-    image: "/Specialities icons/Neurology.jpeg",
+    image: "/images/specialities/Brain and Spine.jpg",
   },
   {
     id: "chikungunya-joint-pain-why-it-lasts",
@@ -41,7 +41,7 @@ const SUB_BLOG_CARDS: SubBlogCard[] = [
     category: "Rheumatology",
     title: "Chikungunya Joint Pain: Why It Lasts for Months and When to See a Doctor",
     date: "Oct 30, 2026",
-    image: "/Specialities icons/Rheumatology.jpeg",
+    image: "/images/specialities/Bone & Joint.jpg",
   },
   {
     id: "impact-of-air-pollution-on-heart-health",
@@ -49,7 +49,7 @@ const SUB_BLOG_CARDS: SubBlogCard[] = [
     category: "Cardiology",
     title: "Impact of Air Pollution on Heart Health: Risks, Symptoms and Prevention",
     date: "Oct 30, 2026",
-    image: "/Specialities icons/Cardiology.jpeg",
+    image: "/images/specialities/Advance Heart Care.jpg",
   },
 ];
 
@@ -127,32 +127,46 @@ export default function BlogHero() {
           </motion.div>
         </div>
 
-        {/* 3 Sub-Cards with Glassmorphism (Only Image, Category, Title, Date) */}
+        {/* 3 Sub-Cards: Same as Procedure Cards (Full Image + Scrim + Category + Title + Date) */}
         <div className={styles.subCardsGrid}>
           {SUB_BLOG_CARDS.map((card, idx) => (
             <motion.div
               key={card.id}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.25 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className={styles.cardMotionWrapper}
             >
-              <Link href={`/blog/${card.slug}`} className={styles.subCard}>
-                <div className={styles.subCardBody}>
-                  <span className={styles.subCardCategory}>{card.category}</span>
-                  <h3 className={styles.subCardTitle} title={card.title}>
-                    {card.title}
-                  </h3>
-                  <span className={styles.subCardDate}>{card.date}</span>
+              <Link href={`/blog/${card.slug}`} className={styles.procedureStyleCard}>
+                {/* Full Card Image Background */}
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className={styles.cardImage}
+                />
+                
+                {/* Scrim Overlay */}
+                <div className={styles.cardScrim} />
+
+                {/* Top Category Badge */}
+                <div className={styles.cardTopBadge}>
+                  <span>{card.category}</span>
                 </div>
 
-                <div className={styles.subCardImageWrap}>
-                  <Image
-                    src={card.image}
-                    alt={card.title}
-                    fill
-                    sizes="110px"
-                    className={styles.subCardImage}
-                  />
+                {/* Bottom Content: Title and Date */}
+                <div className={styles.cardBottomWrap}>
+                  <h3 className={styles.cardTitle} title={card.title}>
+                    {card.title}
+                  </h3>
+                  
+                  <div className={styles.cardDateRow}>
+                    <span className={styles.cardDate}>{card.date}</span>
+                    <span className={styles.readMoreText}>
+                      Read more <ArrowRight size={13} className={styles.readMoreArrow} />
+                    </span>
+                  </div>
                 </div>
               </Link>
             </motion.div>

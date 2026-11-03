@@ -200,7 +200,7 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     authorAvatar: "/assets/doctor_1.png",
     readTime: "4 min read",
     publishedDate: "Nov 2, 2026",
-    image: "/Specialities icons/Endocrinology.jpeg",
+    image: "/images/articles/sugar_free_sweets_diwali.jpg",
     summary: "Doctor-backed festive dietary guide on natural low-glycemic sweeteners, portion control, and fiber pairing.",
     overview: "Festivals often pose a unique dietary challenge for individuals living with Type 1 or Type 2 diabetes. Choosing natural low-glycemic alternatives and pairing sweets with protein and fiber helps prevent acute post-prandial glycemic excursions.",
     keyTakeaways: [
