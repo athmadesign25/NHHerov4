@@ -12,7 +12,7 @@ export const footerLinks = {
     { label: "Leadership", href: "/about-us/leadership" },
     { label: "Awards & Recognition", href: "/about-us" },
     { label: "Press & Media", href: "/" },
-    { label: "CSR Initiatives", href: "/" },
+    { label: "CSR Initiatives", href: "/csr" },
     { label: "Careers", href: "/" },
   ],
   "Resources": [

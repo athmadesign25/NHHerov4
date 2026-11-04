@@ -132,8 +132,8 @@ export default function DiagnosticsLibraryPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {/* ─── TWO-COLUMN HERO SECTION ───────────────────────────────────────── */}
-      <section className={styles.hero} data-nav-theme="dark">
+      {/* ─── TWO-COLUMN HERO SECTION (WHITE MODE HERO) ────────────────────── */}
+      <section className={styles.hero} data-nav-theme="light">
         <div className={styles.heroBg}>
           <motion.div
             className={styles.heroBgMotion}
@@ -167,7 +167,7 @@ export default function DiagnosticsLibraryPage() {
                   { label: "Home", href: "/" },
                   { label: "Diagnostics & Lab Tests" },
                 ]}
-                theme="dark"
+                theme="light"
               />
             </motion.div>
 
@@ -181,7 +181,7 @@ export default function DiagnosticsLibraryPage() {
                 words={["Diagnostics & Lab Tests"]} 
                 sweepMs={2400} 
                 delayMs={80} 
-                finalColor="#FFFFFF" 
+                finalColor="#0f172a" 
               />
             </motion.h1>
 
@@ -291,8 +291,10 @@ export default function DiagnosticsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
-      <motion.section
+      {/* ─── DIRECTORY SECTION (CLEAN WHITE WALL) ─────────────────────────── */}
+      <div className={styles.directorySection}>
+        {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
+        <motion.section
         className={styles.categorySection}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -536,6 +538,7 @@ export default function DiagnosticsLibraryPage() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

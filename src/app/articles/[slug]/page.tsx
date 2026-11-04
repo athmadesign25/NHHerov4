@@ -17,8 +17,10 @@ import {
   HeartPulse
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { getArticleDetailData, ArticleDetailData } from "@/data/articlesDirectoryData";
+import { getArticleDetailData, ArticleDetailData, ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
+import BlogLanguageChanger from "@/components/blog/BlogLanguageChanger";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -31,6 +33,29 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
+
+  // Exact 3 in-article cards matching Screenshot 3
+  const inArticleMorePosts = React.useMemo(() => {
+    const preferredSlugs = [
+      "cough-syrup-for-kids-parents-guide",
+      "what-indias-nfhs-6-survey-reveals",
+      "sugar-free-sweets-for-diabetics",
+    ];
+
+    const matched = preferredSlugs
+      .filter((s) => s !== detail.slug)
+      .map((s) => ARTICLES_DIRECTORY_DATA.find((a) => a.slug === s))
+      .filter(Boolean) as ArticleItem[];
+
+    if (matched.length < 3) {
+      const remaining = ARTICLES_DIRECTORY_DATA.filter(
+        (a) => a.slug !== detail.slug && !matched.some((m) => m.slug === a.slug)
+      );
+      return [...matched, ...remaining].slice(0, 3);
+    }
+
+    return matched.slice(0, 3);
+  }, [detail.slug]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,18 +131,23 @@ export default function ArticleDetailPage({ params }: PageProps) {
         <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
-          <div className={styles.heroLeftCol}>
+          {/* Top Utility Bar: Breadcrumbs on Left, Language Changer on Right (Matching OG Blog) */}
+          <div className={styles.topUtilityRow}>
             <div className={styles.breadcrumbsWrapper}>
               <Breadcrumbs
                 items={[
                   { label: "Home", href: "/" },
-                  { label: "Health Articles", href: "/articles" },
+                  { label: "Blog", href: "/blog" },
                   { label: detail.title },
                 ]}
                 theme="dark"
               />
             </div>
 
+            <BlogLanguageChanger theme="dark" />
+          </div>
+
+          <div className={styles.heroLeftCol}>
             <div className={styles.heroEyebrow}>
               {detail.category}
             </div>
@@ -387,37 +417,56 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 </div>
               </section>
 
-              {/* SECTION: Related Articles */}
-              <section id="related" className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Related Health Articles</h2>
-                <p className={styles.sectionLeadText}>
-                  Explore more doctor-curated guides and clinical wellness insights:
-                </p>
-                <div className={styles.cardsStack}>
-                  {detail.relatedArticles.map((rel) => (
-                    <Link 
-                      key={rel.id} 
-                      href={`/articles/${rel.slug}`} 
-                      className={styles.causeCard}
-                      style={{ textDecoration: "none", display: "block" }}
+              {/* SECTION: More from Narayana Health (Signature NH Cards: Full Image + Scrim + Text Overlay) */}
+              <section id="more-from-nh" className={styles.moreFromNhSection}>
+                <h2 className={styles.moreFromNhTitle}>More from Narayana Health</h2>
+                <div className={styles.moreFromNhGrid}>
+                  {inArticleMorePosts.map((art) => (
+                    <Link
+                      key={art.id}
+                      href={`/blog/${art.slug}`}
+                      className={styles.moreFromNhCard}
                     >
-                      <div className={styles.causeCardHeader}>
-                        <h4 className={styles.causeTitle}>{rel.title}</h4>
-                        <span className={styles.causeTag}>{rel.readTime}</span>
-                      </div>
-                      <p className={styles.causeDesc}>{rel.summary}</p>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "12px", color: "#034EA2", fontSize: "13px", fontWeight: 600 }}>
-                        <span>Read full article</span>
-                        <ArrowUpRight size={13} />
+                      <Image
+                        src={art.image || "/images/articles/sugar_free_sweets_diwali.jpg"}
+                        alt={art.title}
+                        fill
+                        sizes="(max-width: 640px) 80vw, (max-width: 960px) 45vw, 300px"
+                        className={styles.moreFromNhBgImage}
+                      />
+                      <div className={styles.moreFromNhScrim} />
+                      <div className={styles.moreFromNhTextWrap}>
+                        <span className={styles.moreFromNhCategory}>{art.category}</span>
+                        <div className={styles.moreFromNhTitleRow}>
+                          <h3 className={styles.moreFromNhItemTitle}>{art.title}</h3>
+                          <ArrowUpRight size={17} className={styles.moreFromNhArrow} />
+                        </div>
+                        <div className={styles.moreFromNhMetaRow}>
+                          <div className={styles.moreFromNhAuthorRow}>
+                            <span className={styles.moreFromNhAuthorBadge}>NH</span>
+                            <span className={styles.moreFromNhAuthorName}>{art.author || "Narayana Health"}</span>
+                          </div>
+                          <span className={styles.moreFromNhDate}>{art.publishedDate}</span>
+                        </div>
                       </div>
                     </Link>
                   ))}
                 </div>
               </section>
+
+              {/* SECTION: Related Articles Anchor */}
+              <div id="related" />
             </div>
           </div>
         </main>
       </div>
+
+      {/* FULL-WIDTH SECTION: More from Our Blog (Cards in Our Procedure Style + Controls) */}
+      <MoreFromOurBlogCarousel
+        articles={detail.relatedArticles}
+        title="More from Our Blog"
+        subtitle="Explore more doctor-curated guides, symptom breakthroughs, and evidence-based clinical insights"
+      />
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions

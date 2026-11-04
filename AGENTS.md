@@ -231,6 +231,111 @@ src/
 
 ---
 
+## 🏛️ Narayana Health Universal Page Anatomy & Component Design Tokens (Mandatory Rulebook)
+
+All pages in this repository (Clinical Specialities, Treatments, Procedures, CSR, Articles/Blogs, Hospitals, Diagnostics) **MUST** strictly adhere to these architectural standards and visual tokens. Never improvise or create inconsistent one-off variants.
+
+### 1. Mandatory Page Structure & Anatomy Contract
+
+Every detail and landing page follows this universal hierarchy from top to bottom:
+
+| Order | Page Region | Standard Component / Pattern | Rules & Constraints |
+|:---:|:---|:---|:---|
+| **1** | **Global Navigation** | `<Navbar />` (in `layout.tsx`) | 72px fixed height (`--nav-height: 72px`). Supports `data-nav-theme="dark"` or `"light"`. |
+| **2** | **Hero / Header Section** | Page-specific Hero (e.g. `CsrHero`, `ArticleHero`, `SpecialityHero`) | **Balanced vertical placement**: Content must NEVER hug the navbar. `padding-top: calc(var(--nav-height, 72px) + clamp(64px, 10vh, 120px))`. Includes breadcrumbs at top, H1 title, subtitle, CTA button, and stats row below. |
+| **3** | **Interactive Editorial Content** | BENTO grids, 3-column editorial cards, or clinical tabs | High-contrast photography, fluid typography (`clamp()`), clean semantic markup. |
+| **4** | **Flagship Programs / Flow** | Pinned folder card stack or alternating features | Follows the **Folder Stacking Contract** (see Section 3 below). |
+| **5** | **Pre-Footer CTA Card Banner** | `<BlogCtaBanner />` | **MANDATORY UNIVERSAL BANNER**: Dark blue gradient card (`linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%)`). *"Connect with a Narayana Health Specialist Today"*. Buttons: Book Doctor Appointment, Explore Health Packages, Call 24×7 (`1800 309 0309`). Never use custom light/gray banners above the footer. |
+| **6** | **Global Footer** | `<Footer />` (in `layout.tsx`) | Global dark footer with 4-column directory, helpline, accreditations. |
+| **Overlay** | **Clinical Floating Actions** | `<ClinicalFloatingSideActions />` | Fixed right on desktop. Quick Book OPD, Call Support, Ask Pulse AI. |
+
+---
+
+### 2. Card Design Tokens & Typographic Rules
+
+#### A. Full Photography Editorial Cards (CSR, Articles, Impact Bulletins)
+- **Background**: Image with `object-fit: cover` and smooth hover zoom (`transform: scale(1.05)`).
+- **Dual-Scrim System**:
+  - **Bottom Scrim**: `linear-gradient(to top, rgba(6, 12, 24, 0.98) 0%, rgba(6, 12, 24, 0.70) 50%, transparent 100%)`.
+  - **Top Scrim**: `linear-gradient(180deg, rgba(6, 12, 24, 0.70) 0%, transparent 100%)` for 70–80px height.
+- **Category Tag Rules**:
+  - Category must be **clean uppercase text** (`font-size: 11.5px`, `font-weight: 700`, `letter-spacing: 0.08em`, `#ffffff`, text-shadow) positioned at top-left (`.cardTopCategoryText`).
+  - ❌ **STRICTLY FORBIDDEN**: Bulky dark pill containers, button-like badges, or thick borders around category tags.
+- **Card Borders & Contrast Rules**:
+  - **On White / Light Background**: ❌ **NO outlines or borders**. Use subtle elevation (`box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)`), 16px–24px rounded corners (`--radius-xl`), and hover lift (`translateY(-4px)`).
+  - **On Dark Background**: Subtle translucent border (`1px solid rgba(255, 255, 255, 0.12)`).
+
+#### B. Doctor & Specialist Cards (Clinical Consultations)
+- **Desktop**: Grid of doctor cards showing portrait, name, clinical speciality, years of experience, hospital location, and a clean "Book" action button.
+- **Mobile Web (MV / MWeb) Rules**:
+  - ❌ **Do NOT squeeze 2 tiny cards per row on mobile screens.**
+  - Show **1 card + peeking next card** (`1.2–1.5 cards` in a horizontal snap track: `flex: 0 0 78vw; scroll-snap-align: start;`).
+  - Below the cards, the CTA must be a **clean clickable text link** (*"View All Specialities →"* or *"View All Doctors →"*), ❌ **NOT an oversized button**.
+
+---
+
+### 3. Motion & Animation Design Tokens
+
+#### A. Card Stacking Pattern (Folder / Wallet Tab Interaction)
+When a section features sequential card stacking as the user scrolls (e.g. `CsrProgramsFlow`):
+- **Container Architecture**: Must use a **pinned scroll container** (`.stackingTrack` with `height: 250vh–280vh` + `.stickyViewport` with `position: sticky; top: calc(var(--nav-height) + 20px)`).
+- **Sequential Docking**:
+  - Card 0 starts at base (`top: 0px`).
+  - Card 1 zooms in and docks cleanly at `top: 22px`.
+  - Card 2 zooms in and docks cleanly at `top: 44px`.
+  - Card 3 (the final card) **docks 100% completely** at `top: 66px`, showing all folder tabs.
+- **Eyeball Distraction Rule**:
+  - Subsequent cards **MUST remain completely hidden** (`opacity: 0`, `pointerEvents: "none"`) while the currently active card is settling. Users must never see half-visible moving objects below.
+- **Section Exit & Gap Rule**:
+  - As soon as the final card docks, the track ends naturally and the entire 4-card stack scrolls away together into the pre-footer CTA banner with a **standard 40px–60px section gap**.
+  - ❌ **NEVER leave an empty 500px void below the last card.**
+- **Mobile Fallback**:
+  - On mobile screens (`< 768px`), automatically degrade to a clean vertical stacked list or horizontal swipeable cards with 60fps native scrolling.
+
+#### B. Signature NH Gradient Shimmer Titles
+Section titles across major editorial sections use the signature animated gradient shimmer:
+```css
+.sectionTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(28px, 3.4vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.18;
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #034EA2 0%,
+    #0284c7 25%,
+    #ED1C24 50%,
+    #0284c7 75%,
+    #034EA2 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleGradientShimmer 4.5s ease infinite;
+}
+
+@keyframes titleGradientShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+```
+
+---
+
+### 4. Mobile Web (MV / MWeb) First Principles
+- **Touch Targets**: Minimum 44×44px for all buttons and interactive elements.
+- **Horizontal Overflow**: `overflow-x: hidden` on page roots. Never allow accidental horizontal scrolling.
+- **Nav Anchor Offsets**: Use `scroll-margin-top: calc(var(--nav-height, 72px) + 20px)` on all anchored sections so titles are never obscured by the fixed navbar.
+- **Text Link CTAs**: Prefer subtle, clickable text links with icons over heavy filled buttons when presenting secondary navigation (e.g. *"View All Specialities →"*).
+
+---
+
+---
+
 ## Security & VAPT Compliance Requirements
 
 ### 1. Static Application Security Testing (SAST)

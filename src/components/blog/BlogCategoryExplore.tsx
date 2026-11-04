@@ -4,7 +4,8 @@ import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight } from "lucide-react";
+import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight } from "lucide-react";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
 
@@ -89,15 +90,48 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
   return (
     <section className={styles.exploreSection} data-nav-theme="light" id="explore-categories">
       <div className={styles.container}>
-        {/* Section Header */}
+        {/* Section Header (Centered with Signature Color Gradient Title) */}
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Explore By Category</h2>
+          <motion.h2
+            className={styles.sectionTitle}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className={styles.gradientTitle}>Explore By Category</span>
+          </motion.h2>
           <p className={styles.sectionSubtitle}>
             Here are a few categories of blogs that you can explore
           </p>
         </div>
 
-        {/* Category Circle Selector (Matching Screenshot 1) */}
+        {/* Search Bar Centered ABOVE Filters */}
+        <div className={styles.searchBarWrapper}>
+          <div className={styles.searchBox}>
+            <Search size={18} className={styles.searchIcon} />
+            <input
+              type="search"
+              placeholder="Search by topic, disease, treatment or doctor name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput}
+              aria-label="Search articles"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className={styles.clearSearchBtn}
+                aria-label="Clear search"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Category Circle Selector Followed Below Search Bar */}
         <div className={styles.categoryCircleTrack}>
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
@@ -125,53 +159,29 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
           })}
         </div>
 
-        {/* Search & Filter Toolbar */}
+        {/* Metadata & Sort Row */}
         <div className={styles.toolbarRow}>
-          <div className={styles.searchBox}>
-            <Search size={18} className={styles.searchIcon} />
-            <input
-              type="search"
-              placeholder="Search by topic, disease, treatment or doctor name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.searchInput}
-              aria-label="Search articles"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className={styles.clearSearchBtn}
-                aria-label="Clear search"
-              >
-                <X size={15} />
-              </button>
-            )}
+          <div className={styles.countBadge}>
+            <strong>{filteredArticles.length}</strong> articles found
           </div>
 
-          <div className={styles.toolbarRight}>
-            <div className={styles.countBadge}>
-              <strong>{filteredArticles.length}</strong> articles found
-            </div>
-
-            <div className={styles.sortWrapper}>
-              <label htmlFor="blog-sort" className={styles.srOnly}>
-                Sort articles
-              </label>
-              <select
-                id="blog-sort"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "latest" | "popular")}
-                className={styles.sortSelect}
-              >
-                <option value="latest">Sort: Latest Published</option>
-                <option value="popular">Sort: Most Popular</option>
-              </select>
-            </div>
+          <div className={styles.sortWrapper}>
+            <label htmlFor="blog-sort" className={styles.srOnly}>
+              Sort articles
+            </label>
+            <select
+              id="blog-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "latest" | "popular")}
+              className={styles.sortSelect}
+            >
+              <option value="latest">Sort: Latest Published</option>
+              <option value="popular">Sort: Most Popular</option>
+            </select>
           </div>
         </div>
 
-        {/* 3-Column Card Grid (Matching Screenshot 1) */}
+        {/* 3-Column Card Grid (Matching Our Standard Card Structure) */}
         {filteredArticles.length > 0 ? (
           <div className={styles.cardsGrid}>
             {filteredArticles.map((article, idx) => {
@@ -187,26 +197,32 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                   className={styles.blogCard}
                 >
                   <Link href={`/blog/${article.slug}`} className={styles.cardLink}>
-                    {/* Top Image */}
-                    <div className={styles.cardImageContainer}>
-                      <Image
-                        src={article.image || "/images/articles/blog_heart_health.png"}
-                        alt={article.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className={styles.cardImage}
-                      />
-                    </div>
+                    {/* Full Card Image Background */}
+                    <Image
+                      src={article.image || "/images/articles/blog_heart_health.png"}
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={styles.cardBgImage}
+                    />
 
-                    {/* Card Body */}
-                    <div className={styles.cardBody}>
-                      <div className={styles.cardCategory}>{article.category}</div>
+                    {/* Gradient Scrim Overlay */}
+                    <div className={styles.cardOverlay} />
 
-                      <h3 className={styles.cardTitle} title={article.title}>
-                        {article.title}
-                      </h3>
+                    {/* Bottom Card Content Layered On Gradient */}
+                    <div className={styles.cardTextContent}>
+                      <div className={styles.cardMetaRow}>
+                        <span className={styles.cardCategory}>{article.category}</span>
+                        <span className={styles.cardMetaDot}>•</span>
+                        <span className={styles.cardDate}>{article.publishedDate}</span>
+                      </div>
 
-                      <div className={styles.cardDate}>{article.publishedDate}</div>
+                      <div className={styles.cardTitleRow}>
+                        <h3 className={styles.cardTitle} title={article.title}>
+                          {article.title}
+                        </h3>
+                        <ArrowRight size={17} strokeWidth={2.5} className={styles.cardArrow} />
+                      </div>
 
                       {/* Author Row */}
                       <div className={styles.cardAuthorRow}>

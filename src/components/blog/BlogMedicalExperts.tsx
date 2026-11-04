@@ -4,7 +4,8 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Award, Stethoscope } from "lucide-react";
+import { ArrowRight, Award } from "lucide-react";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./BlogMedicalExperts.module.css";
 
 interface ExpertDoctor {
@@ -55,25 +56,14 @@ export default function BlogMedicalExperts() {
   return (
     <section className={styles.expertsSection} data-nav-theme="light">
       <div className={styles.container}>
-        {/* Section Header */}
+        {/* Section Header (Centered Consistency) */}
         <div className={styles.sectionHeader}>
-          <div className={styles.headerLeft}>
-            <div className={styles.eyebrowBadge}>
-              <Stethoscope size={14} />
-              <span>CLINICAL ADVISORY BOARD</span>
-            </div>
-            <h2 className={styles.sectionTitle}>
-              Authored &amp; Verified by Leading Medical Experts
-            </h2>
-            <p className={styles.sectionSubtitle}>
-              Every health guide, symptom breakdown, and treatment explanation on Narayana Health is written or clinically reviewed by senior department heads, surgeons, and specialists.
-            </p>
-          </div>
-
-          <Link href="/doctors" className={styles.viewAllDoctorsLink}>
-            <span>View All 4,500+ Specialists</span>
-            <ArrowRight size={15} />
-          </Link>
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect words={["Authored & Verified by Leading Medical Experts"]} sweepMs={1400} finalColor="#0f172a" />
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Every health guide, symptom breakdown, and treatment explanation on Narayana Health is written or clinically reviewed by senior department heads, surgeons, and specialists.
+          </p>
         </div>
 
         {/* Doctor Cards Grid (Exact refDoctorCard style) */}
@@ -119,6 +109,14 @@ export default function BlogMedicalExperts() {
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Centered Clickable Text CTA (Clean Text Only, No Button Frame) */}
+        <div className={styles.centerActionWrap}>
+          <Link href="/doctors" className={styles.viewAllTextLink}>
+            <span>View all specialists</span>
+            <ArrowRight size={16} className={styles.textLinkArrow} />
+          </Link>
         </div>
       </div>
     </section>

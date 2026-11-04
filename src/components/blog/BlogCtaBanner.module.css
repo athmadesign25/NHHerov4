@@ -2,13 +2,15 @@
 
 .ctaSection {
   width: 100%;
-  padding-block: 20px 80px;
-  background-color: var(--white, #ffffff);
+  padding-block: 72px 96px;
+  background-color: #060c18;
+  color: #ffffff;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   .ctaSection {
-    padding-block: 10px 56px;
+    padding-block: 48px 64px;
   }
 }
 
@@ -27,11 +29,12 @@
 .ctaCard {
   position: relative;
   border-radius: var(--radius-2xl, 24px);
-  background: linear-gradient(135deg, #060e1d 0%, #034EA2 100%);
+  background: linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%);
   color: #ffffff;
   padding: 56px 48px;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(3, 78, 162, 0.25);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 @media (max-width: 768px) {
@@ -69,16 +72,17 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #7dd3fc;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .ctaTitle {
-  font-size: clamp(26px, 3.2vw, 38px);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(28px, 3.4vw, 42px);
   font-weight: 800;
   letter-spacing: -0.025em;
   color: #ffffff;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.18;
 }
 
 .ctaSubtitle {

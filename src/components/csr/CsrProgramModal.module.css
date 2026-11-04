@@ -1,0 +1,184 @@
+/* ─── CSR PROGRAM DETAIL MODAL ─────────────────────────────────────────── */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modalCard {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.modalImageBanner {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.modalBannerImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modalImageScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.modalCloseBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+.modalCloseBtn:hover {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.modalHeaderContent {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  color: #ffffff;
+}
+
+.modalEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.modalTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.modalBody {
+  padding: 28px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalLead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary, #034EA2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modalParagraph {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+}
+
+/* ── Metrics Grid ── */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+@media (max-width: 640px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.metricBox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricVal {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-primary, #034EA2);
+}
+
+.metricLbl {
+  font-size: 11.5px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.modalDoneBtn {
+  padding: 9px 24px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+.modalDoneBtn:hover {
+  background: #023877;
+}
+

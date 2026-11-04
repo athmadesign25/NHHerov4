@@ -425,6 +425,70 @@ export const ARTICLES_DIRECTORY_DATA: ArticleItem[] = [
     ],
     isPopular: false,
   },
+  {
+    id: "cough-syrup-for-kids-parents-guide",
+    slug: "cough-syrup-for-kids-parents-guide",
+    title: "Cough Syrup for Kids: A Parent's Complete Guide to Cough and Cold Medicines",
+    category: "Pediatric",
+    categorySlug: "pediatric",
+    author: "Narayana Health",
+    authorRole: "Clinical Paediatrics Advisory Panel",
+    authorAvatar: "/assets/nh_doctor_avatar.png",
+    readTime: "4 min read",
+    publishedDate: "November 04, 2026",
+    image: "/Specialities icons/Paediatrics.jpeg",
+    summary: "Essential pediatric safety guide on over-the-counter cough syrups, active ingredients, age-appropriate dosages, and doctor-approved soothing remedies.",
+    overview: "Cough in young children is a frequent reason for pediatric visits. While cough syrups are ubiquitous, pediatric clinical guidelines advise careful scrutiny of active ingredients, especially in children under 6 years of age.",
+    keyTakeaways: [
+      "Avoid multi-symptom cold formulations in children under 4 without pediatric consultation",
+      "Honey is a proven, safe demulcent for cough in children older than 1 year (never under 12 months)",
+      "Always measure doses using the oral syringe or calibrated cup provided, never household kitchen spoons",
+      "Seek emergency care if child displays stridor, intercostal retractions, or persistent high fever",
+    ],
+    sections: [
+      {
+        heading: "1. Understanding What is in Pediatric Syrups",
+        body: "Most pediatric cough syrups contain either antitussives (dextromethorphan) or expectorants (guaifenesin). Pediatricians recommend warm fluid hydration and saline nasal drops as initial frontline relief.",
+      },
+      {
+        heading: "2. Age-Based Safety Benchmarks",
+        body: "Regulatory health authorities advise against OTC cough suppressants in toddlers. Warm steam inhalations and elevated head position during sleep offer gentle, non-pharmacological airway soothing.",
+      },
+    ],
+    isPopular: true,
+  },
+  {
+    id: "what-indias-nfhs-6-survey-reveals",
+    slug: "what-indias-nfhs-6-survey-reveals",
+    title: "What India's NFHS-6 Survey Reveals About Obesity, Anaemia and Diabetes",
+    category: "Diabetes",
+    categorySlug: "diabetes",
+    author: "Narayana Health",
+    authorRole: "Epidemiology & Preventive Health Desk",
+    authorAvatar: "/assets/nh_doctor_avatar.png",
+    readTime: "5 min read",
+    publishedDate: "November 03, 2026",
+    image: "/images/articles/sugar_free_sweets_diwali.jpg",
+    summary: "Clinical insights from the National Family Health Survey-6: understanding the surge in abdominal adiposity, early metabolic syndrome, and proactive prevention.",
+    overview: "The National Family Health Survey highlights shifting epidemiological patterns across urban and semi-urban India. While undernutrition remains a challenge, abdominal obesity and pre-diabetes are rising across younger age cohorts.",
+    keyTakeaways: [
+      "Waist-to-height ratio > 0.5 is an early marker of visceral adiposity and insulin resistance",
+      "Annual HbA1c screening is recommended for all adults above 25 with family history of diabetes",
+      "Dietary shift towards minimally processed whole grains blunts postprandial glycemic excursions",
+      "Moderate physical activity for 30 minutes daily reduces visceral fat accumulation by up to 25%",
+    ],
+    sections: [
+      {
+        heading: "1. The Rising Curve of Pre-Diabetes in Young Working Adults",
+        body: "Sedentary occupations and high-glycemic refined carbohydrates are driving metabolic dysregulation a decade earlier than previous generations. Routine preventive screening detects impaired fasting glucose before beta-cell exhaustion.",
+      },
+      {
+        heading: "2. Integrative Strategies for Sustainable Glycemic Control",
+        body: "Adopting a plate method with 50% non-starchy vegetables, 25% lean protein, and 25% complex carbohydrates helps maintain consistent energy levels while protecting cardiovascular and renal function.",
+      },
+    ],
+    isPopular: true,
+  },
 ];
 
 export interface ArticleDetailData {
@@ -466,7 +530,7 @@ export function getArticleDetailData(slug: string): ArticleDetailData {
     speciality: d.speciality,
   }));
 
-  const related = ARTICLES_DIRECTORY_DATA.filter((a) => a.slug !== match.slug).slice(0, 3);
+  const related = ARTICLES_DIRECTORY_DATA.filter((a) => a.slug !== match.slug).slice(0, 8);
 
   const toc = [
     { id: "overview", label: "Overview & Introduction" },
@@ -476,7 +540,8 @@ export function getArticleDetailData(slug: string): ArticleDetailData {
       label: s.heading.replace(/^\d+\.\s*/, ""),
     })),
     { id: "specialists", label: "Consult Specialists" },
-    { id: "related", label: "Related Health Articles" },
+    { id: "more-from-nh", label: "More from Narayana Health" },
+    { id: "related", label: "More from Our Blog" },
   ];
 
   return {

@@ -124,3 +124,38 @@ Framer Motion is primarily used for complex micro-interactions, utilizing spring
 2. **CSS Variables**: Never hardcode colors or spacing. Always use `var(--color-...)` or `var(--sp-...)`.
 3. **Glassmorphism**: When implementing glass layers (like the Pulse AI overlay), use `backdrop-filter: blur(12px)` with a semi-transparent `rgba()` background.
 4. **Scrollbars**: Native scrollbars are hidden across the application globally (`::-webkit-scrollbar { display: none }`) to rely on Lenis smooth scroll and custom visual implementations.
+
+---
+
+## 7. Universal Page Anatomy & Component Design Tokens (Mandatory Rulebook)
+
+### A. Mandatory Page Structure Contract
+1. **Hero / Header**:
+   - Must start in the balanced lower-middle zone: `padding-top: calc(var(--nav-height, 72px) + clamp(64px, 10vh, 120px))`. Never hug the navbar.
+   - Includes `<Breadcrumbs />` at the top, H1 title, subtitle, CTA button, and stats row below.
+   - Clean layered directional dark scrims on image/video heroes (`rgba(6, 12, 24, 0.70) -> transparent -> rgba(6, 12, 24, 0.98)`). No dark text shadows.
+2. **Pre-Footer CTA Card Banner**:
+   - Universal across ALL detail pages: `<BlogCtaBanner />` (`linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%)`).
+   - Title: *"Connect with a Narayana Health Specialist Today"*.
+   - Never use custom gray or light banners above the footer.
+3. **Clinical Floating Side Actions**:
+   - Detail pages render `<ClinicalFloatingSideActions />` fixed on the right on desktop.
+
+### B. Card Design Tokens
+1. **Full Photography Editorial Cards**:
+   - Dual-scrim system: Bottom gradient scrim + 70–80px soft top gradient vignette.
+   - **Category Tag**: Pure clean uppercase text (`font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; color: #ffffff`). **NO bulky pill containers or button borders**.
+   - **Card Contrast**: On white/light backgrounds, NO borders or outlines. Rely on `--radius-xl` and subtle elevation (`box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)`).
+2. **Doctor & Specialist Cards**:
+   - On Mobile Web (MV / MWeb): Compress to a 1.2–1.5 card horizontal snap carousel (`flex: 0 0 78vw; scroll-snap-align: start;`).
+   - Action CTA below cards must be a **clean clickable text link** (*"View All Specialities →"*), NOT an oversized button.
+
+### C. Motion & Interaction Standards
+1. **Card Stacking Pattern**:
+   - Must use a **pinned scroll container** (`.stackingTrack` with `height: 250vh–280vh` + `.stickyViewport`).
+   - Sequential docking: Card 0 at base, Card 1 at `+22px`, Card 2 at `+44px`, Card 3 at `+66px` (100% complete stack).
+   - Subsequent cards remain completely hidden (`opacity: 0; pointer-events: none`) while active card settles.
+   - Clean transition into pre-footer CTA with standard **40px–60px gap** (no 500px empty void).
+   - Mobile: Clean vertical list or swipeable carousel with 60fps native scroll.
+2. **Shimmer Gradient Section Titles**:
+   - Signature NH animated title shimmer: `linear-gradient(90deg, #034EA2 0%, #0284c7 25%, #ED1C24 50%, #0284c7 75%, #034EA2 100%)` with `titleGradientShimmer 4.5s ease infinite`.

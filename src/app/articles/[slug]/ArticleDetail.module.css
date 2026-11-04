@@ -83,13 +83,33 @@
   }
 }
 
+.topUtilityRow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 30;
+}
+
+@media (max-width: 640px) {
+  .topUtilityRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
 .heroLeftCol {
   display: flex;
   flex-direction: column;
 }
 
 .breadcrumbsWrapper {
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 /* Eyebrow - Clean Uppercase with proper breathing room */
@@ -2152,4 +2172,245 @@
     margin-top: 12px !important;
   }
 }
+
+/* ─── IN-ARTICLE "MORE FROM NARAYANA HEALTH" SECTION (OUR SIGNATURE VISUAL LANGUAGE) ─── */
+.moreFromNhSection {
+  margin-top: 44px;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-border-light, #e2e8f0);
+}
+
+@keyframes titleGradientShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.moreFromNhTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(22px, 2.5vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 20px 0;
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    #034EA2 0%,
+    #0284c7 25%,
+    #ED1C24 50%,
+    #0284c7 75%,
+    #034EA2 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleGradientShimmer 4s ease infinite;
+}
+
+.moreFromNhGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 960px) {
+  .moreFromNhGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .moreFromNhGrid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 14px !important;
+    padding-bottom: 8px !important;
+    margin: 0 -16px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    scrollbar-width: none !important;
+  }
+
+  .moreFromNhGrid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .moreFromNhCard {
+    flex: 0 0 80vw !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+  }
+}
+
+/* Card with Full Background Image, Subtle Scrim, No Outline/Box-Shadow (Matching refDoctorCard) */
+.moreFromNhCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  background-color: #0b1220;
+  height: 290px;
+  min-height: 290px;
+  padding: 18px;
+  box-sizing: border-box;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.moreFromNhCard:hover {
+  transform: translateY(-4px);
+  box-shadow: none !important;
+}
+
+.moreFromNhBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.moreFromNhCard:hover .moreFromNhBgImage {
+  transform: scale(1.06);
+}
+
+/* Appropriate Scrim: 100% transparent on upper 50%, gentle tint only at the bottom text area */
+.moreFromNhScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 11, 20, 0.90) 0%,
+    rgba(6, 11, 20, 0.60) 30%,
+    rgba(6, 11, 20, 0.15) 52%,
+    transparent 72%
+  );
+  z-index: 2;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.moreFromNhCard:hover .moreFromNhScrim {
+  opacity: 0.95;
+}
+
+.moreFromNhTextWrap {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #ffffff;
+}
+
+.moreFromNhCategory {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.moreFromNhTitleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.moreFromNhItemTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.moreFromNhArrow {
+  flex-shrink: 0;
+  color: #ffffff;
+  opacity: 0.9;
+  margin-top: 2px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, color 0.2s ease;
+}
+
+.moreFromNhCard:hover .moreFromNhArrow {
+  transform: translateX(4px);
+  opacity: 1;
+  color: #38bdf8;
+}
+
+.moreFromNhMetaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.moreFromNhAuthorRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moreFromNhAuthorBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(3, 78, 162, 0.92);
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.moreFromNhAuthorName {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.moreFromNhDate {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 

@@ -63,6 +63,7 @@ export default function BlogHero() {
           alt={FEATURED_MAIN_BLOG.title}
           fill
           priority
+          loading="eager"
           sizes="100vw"
           className={styles.heroBgImage}
         />
@@ -128,44 +129,54 @@ export default function BlogHero() {
           </motion.div>
         </div>
 
-        {/* 3 Sub-Cards: Same as Procedure Cards (Full Image + Scrim + Category + Title + Date) */}
-        <div className={styles.subCardsGrid}>
-          {SUB_BLOG_CARDS.map((card, idx) => (
-            <motion.div
-              key={card.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.25 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className={styles.cardMotionWrapper}
-            >
-              <Link href={`/blog/${card.slug}`} className={styles.procedureStyleCard}>
-                {/* Full Card Image Background */}
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className={styles.cardImage}
-                />
-                
-                {/* Scrim Overlay */}
-                <div className={styles.cardScrim} />
+        {/* 3 Sub-Cards: Moved down with Header label & Arrow indicator */}
+        <div className={styles.subCardsSection}>
+          <div className={styles.subCardsHeader}>
+            <span className={styles.subCardsLabel}>More Blogs</span>
+            <div className={styles.subCardsLine} />
+          </div>
 
-                {/* Bottom Content: Category + Date above Title */}
-                <div className={styles.cardBottomWrap}>
-                  <div className={styles.cardMetaRow}>
-                    <span className={styles.cardCategory}>{card.category}</span>
-                    <span className={styles.cardMetaDot}>•</span>
-                    <span className={styles.cardDate}>{card.date}</span>
+          <div className={styles.subCardsGrid}>
+            {SUB_BLOG_CARDS.map((card, idx) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.25 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className={styles.cardMotionWrapper}
+              >
+                <Link href={`/blog/${card.slug}`} className={styles.procedureStyleCard}>
+                  {/* Full Card Image Background */}
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className={styles.cardImage}
+                  />
+                  
+                  {/* Scrim Overlay */}
+                  <div className={styles.cardScrim} />
+
+                  {/* Bottom Content: Category + Date above Title + Arrow Marker */}
+                  <div className={styles.cardBottomWrap}>
+                    <div className={styles.cardMetaRow}>
+                      <span className={styles.cardCategory}>{card.category}</span>
+                      <span className={styles.cardMetaDot}>•</span>
+                      <span className={styles.cardDate}>{card.date}</span>
+                    </div>
+
+                    <div className={styles.cardTitleRow}>
+                      <h3 className={styles.cardTitle} title={card.title}>
+                        {card.title}
+                      </h3>
+                      <ArrowRight size={17} strokeWidth={2.5} className={styles.cardArrow} />
+                    </div>
                   </div>
-
-                  <h3 className={styles.cardTitle} title={card.title}>
-                    {card.title}
-                  </h3>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
