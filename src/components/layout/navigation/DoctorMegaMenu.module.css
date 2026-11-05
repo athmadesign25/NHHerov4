@@ -10,5 +10,5 @@
 .conditionPanel .item { white-space: normal; overflow-wrap: break-word; }
 .conditionPanel .item > span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
 .item:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(-1 * var(--space-2)); border-radius: var(--radius-sm); }
-@media (max-width: 1280px) { .columns { column-gap: var(--space-8); } .item { padding-block: var(--space-4); } }
+@media (max-width: 1280px) { .columns { column-gap: var(--space-8); } .item { padding-block: var(--space-4); } .conditionPanel .item > span { -webkit-line-clamp: 2; line-clamp: 2; } }
 @media (prefers-reduced-motion: reduce) { .item { transition: none; } }
