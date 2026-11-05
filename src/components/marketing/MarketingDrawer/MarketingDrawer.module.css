@@ -107,13 +107,13 @@
 .contentTall {
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: var(--space-40);
 }
 
 .contentWide {
   left: 0;
   top: 0;
-  bottom: 0;
+  bottom: var(--space-40);
   width: min(56%, 560px);
   justify-content: center;
   padding-left: var(--space-48);
@@ -569,4 +569,22 @@
   mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
   -webkit-mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
   pointer-events: none;
+}
+
+/* The countdown has its own row; content and sticky CTAs end above it. */
+.content { min-height: 0; max-height: calc(100% - var(--space-40)); overflow-y: auto; }
+.progressSlot {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  height: var(--space-40);
+  padding-inline: var(--space-24);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .contentTall, .contentWide { max-height: none; }
+  .content > * { flex-shrink: 0; }
+  .progressSlot { position: relative; inset: auto; flex: 0 0 var(--space-40); width: 100%; padding-inline: var(--space-16); }
 }

@@ -13,10 +13,12 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import CloseIcon from "@/components/marketing/CloseIcon";
 import { useIsMobile } from "@/components/marketing/MarketingDrawer/useIsMobile";
-import { ease } from "@/lib/motion";
+import { duration, ease } from "@/lib/motion";
+import { bannerCollapse } from "../MarketingDrawer/bannerCollapse";
+import { announcementStore, SUPPORTING_ANNOUNCEMENTS } from "../AnnouncementCenter/announcementStore";
 import styles from "./AnnouncementBand.module.css";
 
 export type BandConfig = {
@@ -37,6 +39,7 @@ const SCROLL_OUT = 24;
 
 export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: BandConfig }) {
   const [open, setOpen] = useState(true);
+  const reduced = useReducedMotion();
   const [gradientReady, setGradientReady] = useState(false);
   const [atTop, setAtTop] = useState(true);
   const bandRef = useRef<HTMLElement>(null);
@@ -56,6 +59,17 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
   }, []);
 
   const shown = open && atTop;
+  useEffect(() => announcementStore.register("l2", [
+    { id: "top-announcement", title: config.message, image: "/doctor_patient.png", href: config.link.href },
+    ...SUPPORTING_ANNOUNCEMENTS,
+  ]), [config.message, config.link.href]);
+  useEffect(() => {
+    if (!isMobile || !open) return;
+    if (atTop) bannerCollapse.clear();
+    else bannerCollapse.show("island");
+  }, [isMobile, atTop, open]);
+  useEffect(() => () => bannerCollapse.clear(), []);
+  const dismiss = () => { bannerCollapse.show("island"); setOpen(false); };
 
   // The navbar is fixed at `top: var(--band-height, 0px)`. Publishing the
   // height from here rather than hard-coding it there keeps every route
@@ -101,10 +115,10 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
           }}
           role="region"
           aria-label="Announcement"
-          initial={{ y: "-100%" }}
+          initial={{ y: reduced ? 0 : "-100%" }}
           animate={{ y: 0 }}
-          exit={{ y: "-100%", transition: { duration: 0.35, ease: ease.out } }}
-          transition={{ duration: 0.6, ease: ease.out }}
+          exit={{ y: "-100%", transition: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}
+          transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.out }}
         >
           {/* Pattern and inner shading sit under the copy and
               take no pointer events, so the band stays one flat row to
@@ -120,19 +134,14 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
                travels exactly -50% and no further. */
             <div className={styles.marquee}>
               <div className={styles.marqueeTrack}>
-                <span className={styles.marqueeItem}>{config.message}</span>
+                <span className={styles.marqueeItem} title={config.message}>{config.message}</span>
                 <span className={styles.marqueeItem} aria-hidden>
                   {config.message}
                 </span>
               </div>
             </div>
           ) : (
-            /* data-text duplicates the copy into a ::after that carries
-               the hover wipe. The sweep is a gradient clipped to glyphs,
-               and a gradient needs its own box to travel across — it
-               cannot be applied to the live text without replacing its
-               colour. */
-            <p className={styles.message} data-text={config.message}>
+            <p className={styles.message}>
               {config.message}
             </p>
           )}
@@ -144,7 +153,7 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
             <button
               type="button"
               className={styles.close}
-              onClick={() => setOpen(false)}
+              onClick={dismiss}
               aria-label="Dismiss announcement"
             >
               <CloseIcon size={18} />

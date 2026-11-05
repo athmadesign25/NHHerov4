@@ -1,22 +1,9 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useSyncExternalStore } from "react";
+import { getDemoSession, setDemoSession, subscribeDemoSession } from "../demo-session";
 
 export function useAuthState() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem("isLoggedIn");
-      setIsUserLoggedIn(stored !== "false");
-    }
-    
-    const handleLoginChange = () => {
-      const stored = sessionStorage.getItem("isLoggedIn");
-      setIsUserLoggedIn(stored !== "false");
-    };
-    
-    window.addEventListener("login-state-changed", handleLoginChange);
-    return () => window.removeEventListener("login-state-changed", handleLoginChange);
-  }, []);
-
-  return { isUserLoggedIn, setIsUserLoggedIn };
+  const isUserLoggedIn = useSyncExternalStore(subscribeDemoSession, getDemoSession, () => false);
+  return { isUserLoggedIn, setIsUserLoggedIn: setDemoSession };
 }

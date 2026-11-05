@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useId, useRef, useState, type ClipboardEvent, type FormEvent, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
-import styles from "./LoginModal.module.css";
 import Image from "next/image";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChevronDown, Mail, Smartphone, X } from "lucide-react";
+import { duration, ease } from "@/lib/motion";
+import styles from "./LoginModal.module.css";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,490 +15,143 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
-  const [activeTab, setActiveTab] = useState<"mobile" | "email">("mobile");
-  const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [mobileError, setMobileError] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mounted, setMounted] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [tab, setTab] = useState<"mobile" | "email">("mobile");
+  const [step, setStep] = useState<"identity" | "otp">("identity");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("+91");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const dialog = useRef<HTMLDivElement>(null);
+  const fields = useRef<(HTMLInputElement | null)[]>([]);
+  const verified = useRef(false);
+  const closeRef = useRef(onClose);
+  const id = useId();
+  const reduced = useReducedMotion();
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  useEffect(() => { setMounted(true); }, []);
 
-  const handleContinue = () => {
-    if (activeTab === "mobile") {
-      if (mobileNumber.length !== 10) {
-        setMobileError(true);
-        return;
-      }
-      setStep("otp");
-    }
-  };
-
-  const handleVerify = () => {
-    if (isVerifying) return;
-    setIsVerifying(true);
-    setTimeout(() => {
-      setIsVerifying(false);
-      if (onLoginSuccess) onLoginSuccess();
-      onClose();
-    }, 1500);
-  };
-
-  const handleOtpChange = (index: number, value: string) => {
-    if (value && !/^\d+$/.test(value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1);
-    setOtp(newOtp);
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    } else if (e.key === "Enter") {
-      handleVerify();
-    }
-  };
-  
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Reset modal state when it opens
-  useEffect(() => {
-    if (isOpen) {
-      setStep("phone");
-      setMobileNumber("");
-      setMobileError(false);
-      setOtp(["", "", "", "", "", ""]);
-      setActiveTab("mobile");
-    }
+    if (!isOpen) return;
+    setTab("mobile"); setStep("identity"); setPhone(""); setEmail(""); setCountry("+91");
+    setOtp(Array(6).fill("")); setError(""); setNotice(""); verified.current = false;
   }, [isOpen]);
-  
-  // Prevent body scroll when modal is open and pause the hero background video.
-  // Scoped to #hero-section-search-first only — other sections (e.g. HealthPackages) drive
-  // their own video play/pause via scroll position and must not be touched here.
-  useEffect(() => {
-    const videos = document.querySelectorAll<HTMLVideoElement>("#hero-section-search-first video");
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-      videos.forEach(v => v.pause());
-    } else {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      videos.forEach(v => v.play().catch(err => console.log("Playback prevented:", err)));
-    }
 
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      // Only force play on unmount if we were open
-      if (isOpen) {
-        document.querySelectorAll<HTMLVideoElement>("#hero-section-search-first video").forEach(v => v.play().catch(() => {}));
-      }
+  useEffect(() => {
+    if (!isOpen || !mounted || !dialog.current) return;
+    const panel = dialog.current;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousBody = document.body.style.overflow;
+    const previousHtml = document.documentElement.style.overflow;
+    const background = [...document.body.children].filter((node): node is HTMLElement => node instanceof HTMLElement && !node.contains(panel));
+    const previousInert = background.map(node => node.inert);
+    const playing = [...document.querySelectorAll<HTMLVideoElement>("#hero-section-search-first video")].filter(video => !video.paused);
+    background.forEach(node => { node.inert = true; });
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    playing.forEach(video => video.pause());
+    panel.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true });
+    const focusable = () => [...panel.querySelectorAll<HTMLElement>('button:not(:disabled), input, select, a[href], [tabindex="0"]')].filter(node => node.getClientRects().length > 0);
+    const keydown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeRef.current(); return; }
+      if (event.key !== "Tab") return;
+      const items = focusable(), first = items[0], last = items.at(-1);
+      if (event.shiftKey && (document.activeElement === first || !panel.contains(document.activeElement))) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && (document.activeElement === last || !panel.contains(document.activeElement))) { event.preventDefault(); first?.focus(); }
     };
-  }, [isOpen]);
+    document.addEventListener("keydown", keydown, true);
+    return () => {
+      document.removeEventListener("keydown", keydown, true);
+      background.forEach((node, index) => { node.inert = previousInert[index]; });
+      document.body.style.overflow = previousBody;
+      document.documentElement.style.overflow = previousHtml;
+      playing.forEach(video => video.play().catch(() => {}));
+      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+      else document.querySelector<HTMLButtonElement>(window.innerWidth >= 1100 ? '[data-account-trigger]' : '[aria-controls="mobile-navigation-menu"]')?.focus({ preventScroll: true });
+    };
+  }, [isOpen, mounted]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (step === "otp") fields.current[0]?.focus();
+    else dialog.current?.querySelector<HTMLInputElement>("input")?.focus();
+  }, [step, tab, isOpen]);
+
+  const continueLogin = (event: FormEvent) => {
+    event.preventDefault();
+    if (tab === "mobile" ? !/^\d{10}$/.test(phone) : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError(tab === "mobile" ? "Enter a valid 10-digit mobile number." : "Enter a valid email address.");
+      return;
+    }
+    setError(""); setNotice(""); setStep("otp");
+  };
+  const verify = (code = otp.join("")) => {
+    if (!/^\d{6}$/.test(code)) { setError("Enter all 6 digits of your verification code."); return; }
+    if (verified.current) return;
+    // Match the booking demo: a complete code previews sign-in, with no OTP service.
+    verified.current = true;
+    onLoginSuccess?.();
+    onClose();
+  };
+  const changeDigit = (index: number, value: string) => {
+    const digit = value.replace(/\D/g, "").slice(-1);
+    const next = [...otp]; next[index] = digit; setOtp(next); setError("");
+    if (digit && index < 5) fields.current[index + 1]?.focus();
+    if (digit && next.every(Boolean)) verify(next.join(""));
+  };
+  const pasteCode = (event: ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const code = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!code) return;
+    setOtp(Array.from({ length: 6 }, (_, index) => code[index] ?? "")); setError("");
+    fields.current[Math.min(code.length, 5)]?.focus();
+    if (code.length === 6) verify(code);
+  };
+  const otpKey = (event: KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (event.key === "Backspace" && !otp[index] && index > 0) fields.current[index - 1]?.focus();
+  };
 
   if (!mounted) return null;
-
-  return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <div 
-          data-lenis-prevent="true"
-          style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "20px"
-        }}>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(var(--black-rgb), 0.4)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-            }}
-          />
-
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={styles.modalContainer}
-          >
-            {/* Image Column */}
-            <div className={styles.imageColumn}>
-              <Image 
-                src="/assets/doctor_team.png" 
-                alt="Narayana Health" 
-                fill 
-                style={{ objectFit: "cover", objectPosition: "center" }}
-                priority
-              />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(var(--black-rgb), 0.8), transparent)", zIndex: 1 }}></div>
-              <div style={{ position: "absolute", bottom: "32px", left: "32px", right: "32px", zIndex: 2, color: "var(--color-text-inverse)" }}>
-                <h3 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "8px" }}>World-Class Care, Close to Home.</h3>
-                <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.5 }}>Join India&apos;s most trusted healthcare network and manage your health seamlessly.</p>
-              </div>
+  return createPortal(<AnimatePresence>{isOpen && <motion.div className={styles.layer} data-lenis-prevent
+    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}>
+    <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
+    <motion.div ref={dialog} role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} aria-describedby={`${id}-description`} data-login-dialog className={styles.modalContainer}
+      initial={{ opacity: 0, scale: reduced ? 1 : 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: reduced ? 1 : 0.98 }} transition={{ duration: reduced ? 0 : duration.emphasis, ease: ease.out }}>
+      <div className={styles.imageColumn}>
+        <Image src="/assets/doctor_team.png" alt="Narayana Health care team" fill sizes="(min-width: 768px) 440px, 1px" preload className={styles.image} />
+        <div className={styles.imageCopy}><h3>World-Class Care, Close to Home.</h3><p>Manage your health and stay connected with your care team.</p></div>
+      </div>
+      <div className={styles.formColumn}>
+        <div className={styles.header}><button type="button" className={styles.close} onClick={onClose} aria-label="Close login"><X aria-hidden="true" /></button></div>
+        <div className={styles.body}>
+          <div className={styles.intro}><h2 id={`${id}-title`}>Login / Register</h2><p id={`${id}-description`}>Manage appointments, access reports, and stay connected with your doctors.</p></div>
+          {step === "identity" ? <form onSubmit={continueLogin} noValidate className={styles.form}>
+            <div className={styles.tabs} role="group" aria-label="Sign-in method">
+              <button type="button" aria-pressed={tab === "mobile"} onClick={() => { setTab("mobile"); setError(""); }}><Smartphone aria-hidden="true" />Mobile</button>
+              <button type="button" aria-pressed={tab === "email"} onClick={() => { setTab("email"); setError(""); }}><Mail aria-hidden="true" />Email</button>
             </div>
-          <div className={styles.formColumn}>
-            {/* Header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "24px" }}>
-              <button 
-                onClick={onClose}
-                style={{ 
-                  background: "var(--color-bg-alt, var(--slate-50))", 
-                  border: "none", 
-                  width: "36px", 
-                  height: "36px", 
-                  borderRadius: "50%", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  cursor: "pointer", 
-                  color: "var(--color-text-secondary, var(--slate-600))",
-                  transition: "background 0.2s"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#e2e8f0"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "var(--color-bg-alt, #f8fafc)"}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: "0px 24px 32px 24px", height: "510px", display: "flex", flexDirection: "column" }}>
-              <div style={{ flexShrink: 0, textAlign: "center", marginBottom: "24px" }}>
-                <h2 style={{ fontSize: "var(--font-size-xl, 20px)", fontWeight: 700, color: "var(--color-text, var(--slate-900))", margin: "0 0 8px 0" }}>Login / Register</h2>
-                <p style={{ fontSize: "var(--font-size-sm, 14px)", color: "var(--color-text-secondary, var(--slate-600))", margin: 0, lineHeight: 1.5 }}>
-                  Sign in to manage appointments, access reports, and stay connected with your doctors.
-                </p>
-              </div>
-              
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: step === "otp" ? "space-between" : "flex-start" }}>
-              {step === "phone" ? (
-                <>
-              {/* Tabs */}
-              <div style={{ display: "flex", background: "var(--slate-100)", borderRadius: 24, padding: "4px", gap: "4px", marginBottom: "24px" }}>
-                <button
-                  onClick={() => setActiveTab("mobile")}
-                  style={{
-                    position: "relative",
-                    flex: 1,
-                    padding: "6px 16px",
-                    borderRadius: "20px",
-                    border: "none",
-                    background: "transparent",
-                    color: activeTab === "mobile" ? "var(--color-emergency)" : "var(--color-text-secondary)",
-                    fontWeight: activeTab === "mobile" ? 600 : 500,
-                    fontSize: "var(--font-size-sm, 14px)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    outline: "none"
-                  }}
-                >
-                  {activeTab === "mobile" && (
-                    <motion.div
-                      layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: "8px" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                      <path d="M10.5 18.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                      <path fillRule="evenodd" d="M8.625.75A3.375 3.375 0 0 0 5.25 4.125v15.75a3.375 3.375 0 0 0 3.375 3.375h6.75a3.375 3.375 0 0 0 3.375-3.375V4.125A3.375 3.375 0 0 0 15.375.75h-6.75ZM7.5 4.125C7.5 3.504 8.004 3 8.625 3H9.75v.375c0 .621.504 1.125 1.125 1.125h2.25c.621 0 1.125-.504 1.125-1.125V3h1.125c.621 0 1.125.504 1.125 1.125v15.75c0 .621-.504 1.125-1.125 1.125h-6.75A1.125 1.125 0 0 1 7.5 19.875V4.125Z" clipRule="evenodd" />
-                    </svg> Mobile
-                  </span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("email")}
-                  style={{
-                    position: "relative",
-                    flex: 1,
-                    padding: "6px 16px",
-                    borderRadius: "20px",
-                    border: "none",
-                    background: "transparent",
-                    color: activeTab === "email" ? "var(--color-emergency)" : "var(--color-text-secondary)",
-                    fontWeight: activeTab === "email" ? 600 : 500,
-                    fontSize: "var(--font-size-sm, 14px)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    outline: "none"
-                  }}
-                >
-                  {activeTab === "email" && (
-                    <motion.div
-                      layoutId="loginToggle"
-                      style={{ position: "absolute", inset: 0, background: "var(--color-surface)", borderRadius: 20, boxShadow: "0 1px 3px rgba(var(--black-rgb), 0.1)", zIndex: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: "8px" }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
-                      <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-                      <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
-                    </svg> Email
-                  </span>
-                </button>
-              </div>
-
-              {/* Form Fields */}
-              <div style={{ marginBottom: "24px" }}>
-                {activeTab === "mobile" ? (
-                  <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Mobile Number</label>
-                    <div style={{ display: "flex", gap: "12px" }}>
-                      {/* Country Code */}
-                      <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
-                        <select
-                          style={{
-                            width: "100%",
-                            padding: "14px 32px 14px 16px",
-                            borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--color-surface)",
-                            fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, var(--slate-900))",
-                            fontWeight: 500,
-                            appearance: "none",
-                            outline: "none",
-                            cursor: "pointer"
-                          }}
-                          defaultValue="+91"
-                        >
-                          <option value="+91">🇮🇳 +91</option>
-                          <option value="+880">🇧🇩 +880</option>
-                        </select>
-                        <div style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "var(--color-text-secondary, var(--slate-600))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <ChevronDown size={16} />
-                        </div>
-                      </div>
-                      
-                      {/* Phone Input */}
-                      <input 
-                        type="tel"
-                        maxLength={10}
-                        placeholder="Enter your mobile number"
-                        value={mobileNumber}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/\D/g, '').substring(0, 10);
-                          setMobileNumber(val);
-                          setMobileError(false);
-                        }}
-                        style={{
-                          flex: 1,
-                          padding: "14px 16px",
-                          borderRadius: "100px",
-                          border: `1.5px solid ${mobileError ? "var(--color-emergency)" : "var(--color-border, var(--slate-200))"}`,
-                          background: "var(--color-surface)",
-                          fontSize: "var(--font-size-base, 16px)",
-                          color: "var(--color-text, var(--slate-900))",
-                          outline: "none"
-                        }}
-                        onFocus={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-primary)"}
-                        onBlur={(e) => e.target.style.borderColor = mobileError ? "var(--color-emergency)" : "var(--color-border)"}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleContinue();
-                          }
-                        }}
-                      />
-                    </div>
-                    {mobileError && (
-                      <div style={{ color: "var(--color-emergency)", fontSize: "12px", fontWeight: 500, marginTop: "8px", marginLeft: "108px" }}>
-                        Please enter a valid 10-digit mobile number.
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, var(--slate-900))", marginBottom: "8px" }}>Email ID</label>
-                    <input 
-                      type="email"
-                      placeholder="Enter your email address"
-                      style={{
-                        width: "100%",
-                        padding: "14px 16px",
-                        borderRadius: "100px",
-                        border: "1.5px solid var(--color-border, var(--slate-200))",
-                        background: "var(--color-surface)",
-                        fontSize: "var(--font-size-base, 16px)",
-                        color: "var(--color-text, var(--slate-900))",
-                        outline: "none"
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Continue Button */}
-              <button 
-                onClick={handleContinue}
-                style={{
-                  width: "100%",
-                  padding: "14px",
-                  background: "var(--color-primary, var(--blue-brand))",
-                  color: "var(--color-text-inverse)",
-                  fontSize: "var(--font-size-base, 16px)",
-                  fontWeight: 700,
-                  borderRadius: "100px",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background 0.2s"
-                }}
-              >
-                Get OTP
-              </button>
-
-              {/* Divider */}
-              <div style={{ display: "flex", alignItems: "center", margin: "24px 0" }}>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
-                <span style={{ padding: "0 16px", fontSize: "12px", color: "var(--color-text-secondary, var(--slate-600))", fontWeight: 500, textTransform: "uppercase" }}>OR</span>
-                <div style={{ flex: 1, height: "1px", background: "var(--color-border, var(--slate-200))" }} />
-              </div>
-
-              {/* Google Button */}
-              <button
-                style={{
-                  width: "100%",
-                  padding: "14px",
-                  background: "var(--color-surface)",
-                  border: "1.5px solid var(--color-border, var(--slate-200))",
-                  borderRadius: "100px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "12px",
-                  cursor: "pointer",
-                  fontSize: "var(--font-size-base, 16px)",
-                  fontWeight: 600,
-                  color: "var(--color-text, var(--slate-900))",
-                  transition: "background 0.2s"
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "var(--color-bg-alt, #f8fafc)"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "#ffffff"}
-              >
-                <img 
-                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-                  alt="Google" 
-                  style={{ width: "20px", height: "20px" }}
-                />
-                Sign in with Google
-              </button>
-              
-              <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, var(--slate-400))", textAlign: "center", lineHeight: 1.5 }}>
-                By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
-              </p>
-                </>
-              ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "24px", animation: "fadeIn 0.3s ease-in-out", height: "100%", justifyContent: "space-between" }}>
-                  <div style={{ marginTop: "32px" }}>
-                    <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 500, color: "var(--color-text-secondary, var(--slate-600))", marginBottom: "8px", textAlign: "center" }}>
-                      Enter the 6-digit OTP sent to <br/>
-                      <span style={{ fontWeight: 700, color: "var(--color-text, var(--slate-900))" }}>{mobileNumber}</span>
-                      <button onClick={() => setStep("phone")} style={{ background: "none", border: "none", color: "var(--color-primary)", fontSize: "12px", fontWeight: 600, cursor: "pointer", marginLeft: "8px", textDecoration: "underline" }}>Edit</button>
-                    </label>
-                    <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "16px" }}>
-                      {[0, 1, 2, 3, 4, 5].map((i) => (
-                        <input
-                          key={i}
-                          ref={(el) => { otpRefs.current[i] = el; }}
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={1}
-                          value={otp[i]}
-                          onChange={(e) => handleOtpChange(i, e.target.value)}
-                          onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                          style={{
-                            width: "48px",
-                            height: "56px",
-                            textAlign: "center",
-                            fontSize: "24px",
-                            fontWeight: 600,
-                            borderRadius: "12px",
-                            border: "1.5px solid var(--color-border, var(--slate-200))",
-                            background: "var(--color-surface)",
-                            color: "var(--color-text, var(--slate-900))",
-                            outline: "none"
-                          }}
-                          onFocus={(e) => e.target.style.borderColor = "var(--color-primary)"}
-                          onBlur={(e) => e.target.style.borderColor = "var(--color-border)"}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <button 
-                    onClick={handleVerify}
-                    disabled={isVerifying}
-                    style={{
-                      width: "100%",
-                      padding: "14px",
-                      background: "var(--color-primary, var(--blue-brand))",
-                      opacity: isVerifying ? 0.9 : 1,
-                      color: "var(--color-text-inverse)",
-                      fontSize: "var(--font-size-base, 16px)",
-                      fontWeight: 700,
-                      borderRadius: "100px",
-                      border: "none",
-                      cursor: isVerifying ? "progress" : "pointer",
-                      transition: "background 0.2s",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "8px"
-                    }}
-                  >
-                    {isVerifying ? (
-                      <>
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                          style={{ width: 18, height: 18, border: "2px solid rgba(var(--white-rgb), 0.3)", borderTopColor: "var(--white)", borderRadius: "50%" }}
-                        />
-                        Verifying...
-                      </>
-                    ) : (
-                      "Verify & Proceed"
-                    )}
-                  </button>
-                </div>
-              )}
-              </div>
-
-            </div>
-            </div>
-            
-            </motion.div>
+            {tab === "mobile" ? <div className={styles.field}>
+              <label htmlFor={`${id}-phone`}>Mobile Number</label><div className={styles.phoneRow}>
+                <div className={styles.country}><select aria-label="Country code" value={country} onChange={event => setCountry(event.target.value)}><option value="+91">+91</option><option value="+880">+880</option></select><ChevronDown aria-hidden="true" /></div>
+                <input id={`${id}-phone`} type="tel" autoComplete="tel-national" inputMode="numeric" maxLength={10} placeholder="Mobile number" value={phone} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={event => { setPhone(event.target.value.replace(/\D/g, "").slice(0, 10)); setError(""); }} />
+              </div></div> : <div className={styles.field}><label htmlFor={`${id}-email`}>Email ID</label><input id={`${id}-email`} type="email" autoComplete="email" placeholder="Enter your email address" value={email} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={event => { setEmail(event.target.value); setError(""); }} /></div>}
+            {error && <p id={`${id}-error`} className={styles.error} role="alert">{error}</p>}
+            <button type="submit" className={styles.primary}>Get OTP</button>
+            <div className={styles.divider}><span>OR</span></div>
+            <button type="button" className={styles.secondary} onClick={() => setNotice("Google sign-in isn’t connected in this preview. Continue with mobile or email.")}><span aria-hidden="true" className={styles.google}>G</span>Sign in with Google</button>
+            {notice && <p className={styles.note} role="status">{notice}</p>}
+            <p className={styles.note}>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+          </form> : <form className={styles.form} onSubmit={event => { event.preventDefault(); verify(); }}>
+            <p className={styles.destination}>Enter the 6-digit OTP for<br /><strong>{tab === "mobile" ? `${country} ${phone}` : email}</strong> <button type="button" className={styles.edit} onClick={() => { setStep("identity"); setOtp(Array(6).fill("")); setError(""); }}>Edit</button></p>
+            <div className={styles.otp} role="group" aria-label="Six-digit verification code">{otp.map((digit, index) => <input key={index} ref={node => { fields.current[index] = node; }} type="text" inputMode="numeric" autoComplete={index === 0 ? "one-time-code" : "off"} maxLength={1} value={digit} aria-label={`Verification code digit ${index + 1}`} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={event => changeDigit(index, event.target.value)} onKeyDown={event => otpKey(event, index)} onPaste={pasteCode} />)}</div>
+            {error && <p id={`${id}-error`} className={styles.error} role="alert">{error}</p>}
+            <p className={styles.note}>Demo preview: enter any 6 digits. No OTP is sent.</p>
+            <button type="submit" className={styles.primary}>Verify &amp; Proceed</button>
+          </form>}
         </div>
-      )}
-    </AnimatePresence>,
-    document.body
-  );
+      </div>
+    </motion.div>
+  </motion.div>}</AnimatePresence>, document.body);
 }

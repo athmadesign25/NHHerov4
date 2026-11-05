@@ -83,6 +83,7 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
       // The banner is always centred, so the panel no longer has an edge
       // to dodge — it sits in the corner furthest from it.
       className={`${styles.panel} ${styles.atBottomRight}`}
+      data-banner-controls
       drag
       // Drag starts from the header ONLY. On the whole panel, framer captures
       // the pointer and the scrollable body never receives it.
@@ -111,6 +112,14 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
         {/* The only spatial choice left. Position (four edges) and overlay
             tone (dark/light) were both controls; each one let two banners
             stop looking like the same brand without buying any range. */}
+        <section className={styles.row}>
+          <label className={styles.label} htmlFor="banner-duration">Auto-close duration (seconds)</label>
+          <input id="banner-duration" type="number" min={3} max={30} step={1} className={styles.input} value={config.autoCloseSeconds}
+            onChange={event => {
+              const seconds = Number(event.target.value);
+              if (Number.isFinite(seconds) && seconds >= 3 && seconds <= 30) set({ autoCloseSeconds: seconds });
+            }} />
+        </section>
         <section className={styles.row}>
           <label className={styles.label}>Orientation</label>
           <div className={styles.seg}>

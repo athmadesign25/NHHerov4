@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorLocations.module.css";
+import MenuAction from "./MenuAction";
+import surfaces from "./DesktopMenuSurfaces.module.css";
 
 const cities = [
   { name: "Bangalore", slug: "bangalore" },
@@ -30,7 +32,8 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
           <li key={city.slug}>
             <Link href={`/search?q=${encodeURIComponent(city.name)}`} onClick={onNavigate} className={styles.tile}>
               <Image src={`/navigation/cities/${city.slug}.webp`} alt="" fill sizes="(min-width: 1600px) 18vw, 16vw" className={styles.image} />
-              <span className={styles.wash} aria-hidden="true" />
+              <span className={surfaces.linearWash} aria-hidden="true" />
+              <span className={styles.pattern} aria-hidden="true" />
               <span className={styles.name}>{city.name}</span>
             </Link>
           </li>
@@ -38,7 +41,7 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
       </ul>
       <div className={styles.footer}>
         <a className={styles.credits} href="/navigation/cities/credits.json" target="_blank" rel="noopener noreferrer">Photo credits</a>
-        <Link href="/doctors" className={styles.viewAll} onClick={onNavigate}>View All</Link>
+        <MenuAction label="View All Locations" href="/doctors" context="View all doctor locations" onClick={onNavigate} />
       </div>
     </div>
   );

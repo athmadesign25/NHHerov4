@@ -1,0 +1,82 @@
+.menu { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: var(--space-24); }
+.content { display: grid; grid-template-columns: max-content repeat(3, minmax(0, 1fr)); gap: var(--space-32); flex: 1; min-height: 0; }
+.editorialContent { grid-template-columns: max-content minmax(0, 1fr); }
+.editorialColumns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-24); min-width: 0; align-content: start; }
+.group { min-width: 0; }
+.menu .groupTitle { display: block; width: 100%; margin: 0 0 var(--space-8); color: color-mix(in srgb, var(--red-600) 75%, var(--color-text-secondary)); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; text-align: left; }
+.menu .groupTitle::after { display: none; }
+.links { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.links[hidden] { display: none; }
+.links li { min-width: 0; }
+.link { display: flex; align-items: flex-start; gap: var(--space-8); min-height: var(--space-32); padding: var(--space-8) 0; border-radius: var(--radius-sm); text-decoration: none; color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
+.label { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 400; transition: color var(--duration-fast) var(--ease-out); }
+.link:hover, .link:hover .label, .link:focus-visible .label { color: var(--color-primary); }
+.itemCopy { display: flex; align-items: flex-start; gap: var(--space-8); min-width: 0; }
+.itemIcon { flex: 0 0 var(--space-16); width: var(--space-16); height: var(--space-16); margin-top: var(--space-2); color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
+.menu .link:hover .itemIcon, .menu .link:focus-visible .itemIcon { color: var(--color-primary); }
+.cta { display: inline-flex; align-items: center; min-height: var(--space-40); max-width: 100%; color: var(--white); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; text-decoration: none; }
+.cta span { position: relative; }
+.cta span::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: var(--space-1); background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--duration-base) var(--ease-out); }
+.feature:hover .cta span::after, .feature:focus-within .cta span::after, .cta:focus-visible span::after { transform: scaleX(1); }
+.feature header p { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 400; }
+.link:focus-visible, .cta:focus-visible, .toggle:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+.cta:focus-visible { outline-color: var(--white); }
+.library .content { min-height: calc(var(--space-96) * 2); }
+.library .itemIcon { color: var(--color-text); }
+.menu .feature.learningFeature img { object-position: 40% center; }
+.about .content { align-items: stretch; gap: var(--space-24); }
+.about .feature { height: 100%; }
+.aboutColumns { grid-template-columns: minmax(0, 1fr) minmax(max-content, 1.1fr) minmax(0, 1fr); gap: var(--space-24); align-content: stretch; }
+.ecosystemLinks { grid-template-columns: minmax(0, 1fr); gap: var(--space-24); padding-top: var(--space-8); }
+.ecosystemTile { display: flex; flex-direction: column; align-items: stretch; gap: var(--space-8); min-width: 0; padding: 0; border: 0; }
+.ecosystemVisual { position: relative; display: block; width: min(100%, calc(var(--space-128) + var(--space-32))); height: var(--space-80); overflow: hidden; border: 0; border-radius: var(--radius-md); background: linear-gradient(135deg, var(--blue-tint-100), var(--slate-50)); transition: transform var(--duration-base) var(--ease-out); }
+.ecosystemLogo { object-fit: contain; padding: var(--space-16); }
+.medhaLogo { padding-inline: var(--space-20); }
+.athmaLogo { transform: scale(0.8); }
+.ecosystemPhoto { object-fit: cover; object-position: center 35%; }
+.ecosystemTile:hover .ecosystemVisual { transform: translateY(calc(-1 * var(--space-2))); }
+.ecosystemTile .label { white-space: nowrap; }
+.ecosystemAcademicMark { position: absolute; top: 50%; left: 50%; translate: -50% -50%; display: grid; place-items: center; width: var(--space-40); height: var(--space-40); color: var(--white); }
+.ecosystemAcademicMark svg { width: 100%; height: 100%; }
+.menu .link:hover .ecosystemAcademicMark, .menu .link:focus-visible .ecosystemAcademicMark { color: var(--color-primary); }
+.menu .feature.storyFeature img { object-position: center top; }
+.menu .storyVisual { top: calc(-1 * var(--space-8)); }
+.storyFeature header { max-width: 80%; }
+.founderPill { display: flex; flex-direction: column; gap: var(--space-4); width: fit-content; max-width: 100%; padding: var(--space-8) var(--space-12); border: var(--space-1) solid rgba(var(--white-rgb), 0.25); border-radius: var(--radius-md); background: rgba(var(--navy-900-rgb), 0.4); backdrop-filter: blur(var(--blur-md)); -webkit-backdrop-filter: blur(var(--blur-md)); box-shadow: var(--elevation-2), var(--shadow-inset-highlight); color: var(--white); }
+.founderPill strong { font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; }
+.founderPill span { font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 400; }
+
+@media (min-width: 1100px) and (max-width: 1280px) {
+  .menu { padding: var(--space-20); }
+  .content { gap: var(--space-20); }
+  .editorialColumns { gap: var(--space-16); }
+  .link { gap: var(--space-6); }
+  .aboutColumns { gap: var(--space-12); }
+  .about .content { gap: var(--space-12); }
+  .about .feature { width: clamp(calc(var(--space-128) * 2 - var(--space-48)), calc(100vw - var(--space-128) * 7 - var(--space-64)), calc(var(--space-128) * 2 + var(--space-64))); }
+}
+@media (max-width: 1099px) { .content, .editorialColumns { grid-template-columns: 1fr; } }
+.mobile { height: auto; padding: 0; }
+.mobile .content { display: flex; flex-direction: column; gap: 0; min-height: 0; }
+.mobile .group { border-left: 0; border-bottom: var(--space-1) solid rgba(var(--white-rgb), 0.12); padding: 0; background: transparent; }
+.mobile .groupTitle { min-height: 0; margin: 0; color: var(--slate-200); }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-12); width: 100%; min-height: var(--space-56); padding: var(--space-12) 0; border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-align: left; cursor: pointer; }
+.toggle svg { flex-shrink: 0; width: var(--space-16); height: var(--space-16); transition: transform var(--duration-fast) var(--ease-out); }
+.toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.mobile .links { padding-bottom: var(--space-12); }
+.mobile .link { align-items: center; min-height: var(--space-48); padding: var(--space-12) var(--space-8); }
+.mobile .label { color: var(--white); }
+.mobile .link:hover { background: rgba(var(--white-rgb), 0.08); }
+.mobile .link:hover .label, .mobile .link:focus-visible .label { color: var(--sky-400); }
+.mobile .link:hover .itemIcon, .mobile .link:focus-visible .itemIcon { color: var(--sky-400); }
+.mobile .link:hover .ecosystemAcademicMark, .mobile .link:focus-visible .ecosystemAcademicMark { color: var(--sky-400); }
+.mobile .feature { margin-block: var(--space-24) 0; height: auto; }
+.mobile .cta { min-height: var(--space-48); }
+.mobile .groupTitle { color: var(--red-400); }
+.mobile .itemIcon { color: var(--white); }
+.mobile .link:focus-visible, .mobile .toggle:focus-visible { outline-color: var(--sky-400); }
+.mobile .ecosystemLinks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-12); padding-block: var(--space-12) var(--space-24); }
+.mobile .ecosystemTile { align-items: stretch; padding: 0; }
+.mobile .ecosystemTile .label { white-space: normal; }
+.mobile .ecosystemTile:hover { background: transparent; }
+@media (prefers-reduced-motion: reduce) { .link, .label, .itemIcon, .cta span::after, .toggle svg, .ecosystemVisual { transition: none; } .ecosystemTile:hover .ecosystemVisual { transform: none; } }

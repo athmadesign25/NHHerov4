@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import MarketingDrawer from "./MarketingDrawer";
 import CollapsedToast from "./CollapsedToast";
+import { announcementStore, SUPPORTING_ANNOUNCEMENTS } from "../AnnouncementCenter/announcementStore";
 import { bannerCollapse } from "./bannerCollapse";
 import DrawerControlPanel from "./DrawerControlPanel";
 import { type BannerConfig, DEFAULT_CONFIG } from "./types";
@@ -67,11 +68,11 @@ export default function MarketingDrawerLab() {
   }, []);
 
   useEffect(() => setMounted(true), []);
-  // The FAB tile lives inside FloatingQuickActions, so it reaches back
-  // through the store rather than a prop.
-  useEffect(() => {
-    (window as unknown as { __reopenBanner?: () => void }).__reopenBanner = reopen;
-  }, [reopen]);
+  useEffect(() => announcementStore.register("l1", [
+    { id: "new-hospital", title: config.headline.parts.map(part => part.text).join(" "), image: "/navigation/hospitals/l3-hospital.webp", href: config.cta.primary.href, onSelect: () => { l3InIsland.current = false; reopen(); } },
+    ...SUPPORTING_ANNOUNCEMENTS,
+  ]), [config.headline.parts, config.cta.primary.href, reopen]);
+  useEffect(() => () => bannerCollapse.clear(), []);
   if (!mounted) return null;
 
   const ui = (

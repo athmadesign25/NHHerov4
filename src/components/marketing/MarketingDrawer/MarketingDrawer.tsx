@@ -27,6 +27,7 @@ import {
 } from "./types";
 import CloseIcon from "@/components/marketing/CloseIcon";
 import { useIsMobile } from "./useIsMobile";
+import BannerProgress from "./BannerProgress";
 import BannerScene, { SCENE_LEAD } from "./BannerScene";
 
 type Props = {
@@ -43,11 +44,13 @@ export default function MarketingDrawer({ open, config, onClose, onClosed }: Pro
   const pausedRef = useRef<HTMLVideoElement[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
   const [sweep, setSweep] = useState(false);
+  const [countdownReady, setCountdownReady] = useState(false);
   const reduced = useReducedMotion();
 
   useEffect(() => {
     if (!open) {
       setSweep(false);
+      setCountdownReady(false);
       return;
     }
 
@@ -223,6 +226,7 @@ export default function MarketingDrawer({ open, config, onClose, onClosed }: Pro
             role="dialog"
             aria-modal="true"
             aria-label="Promotional message"
+            onAnimationComplete={() => { if (open) setCountdownReady(true); }}
             style={{ transformOrigin: "center center" }}
             // Centred, so it grows from its own middle rather than an edge.
             initial={{ opacity: 0, scale: 0.84, y: 18, filter: "blur(16px)" }}
@@ -308,6 +312,7 @@ export default function MarketingDrawer({ open, config, onClose, onClosed }: Pro
               {(config.form.enabled || hasCta) && (
               <form
                 className={styles.actions}
+                data-banner-form
                 // Prototype: there is no endpoint yet, and nothing here is
                 // persisted. Values live in the inputs and die with the
                 // panel — no state, no storage, nothing written down.
@@ -398,6 +403,9 @@ export default function MarketingDrawer({ open, config, onClose, onClosed }: Pro
               )}
             </div>
             )}
+            <div className={styles.progressSlot} data-banner-progress-slot>
+              {countdownReady && <BannerProgress key={config.autoCloseSeconds} seconds={config.autoCloseSeconds} onComplete={onClose} />}
+            </div>
           </motion.div>
 
           <motion.button
