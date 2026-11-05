@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type KeyboardEvent } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { Search } from "lucide-react";
 import styles from "./DoctorMegaMenu.module.css";
 import DoctorLocations from "./DoctorLocations";
@@ -11,7 +11,8 @@ import DoctorAvailabilityMenu from "./DoctorAvailabilityMenu";
 import { DOCTOR_SPECIALTIES as specialties } from "./doctor-specialties";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 import MenuAction from "./MenuAction";
-import { doctorNavUrl } from "@/features/search/navigationEntries";
+import MenuImageCard from "./MenuImageCard";
+import patterns from "./MegaMenuPatterns.module.css";
 
 const splitColumns = (items: string[]) => {
   const length = Math.ceil(items.length / 3);
@@ -20,7 +21,7 @@ const splitColumns = (items: string[]) => {
 const sections = [
   { id: "speciality", label: "Find Doctor By Speciality", columns: specialties, viewAll: "View All Specialties", href: "/specialities" },
   { id: "location", label: "Find Doctor By Location", columns: [], viewAll: "View All Doctors", href: "/doctors" },
-  { id: "condition", label: "Find Doctor By Disease/Condition", columns: splitColumns(DOCTOR_CONDITIONS), viewAll: "Look up a condition or disease", href: "/search" },
+  { id: "condition", label: "Find Doctor By Disease/Condition", columns: splitColumns(DOCTOR_CONDITIONS), viewAll: "Search a condition or disease", href: "/search" },
   { id: "sunday", label: "Doctors Available on Sunday", columns: [], viewAll: "", href: "/doctors" },
   { id: "today", label: "Doctors Available Today", columns: [], viewAll: "", href: "/doctors" },
 ];
@@ -53,30 +54,28 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
   };
 
   return (
-    <div className={styles.menu}>
-      <div className={styles.rail} role="tablist" aria-label="Find a doctor by" aria-orientation="vertical">
+    <div className={patterns.submenu}>
+      <div className={patterns.rail} role="tablist" aria-label="Find a doctor by" aria-orientation="vertical">
         {sections.map((item, index) => (
           <button key={item.id} id={`doctor-menu-tab-${item.id}`} type="button" role="tab"
             aria-selected={selected === index} aria-controls="doctor-menu-panel" tabIndex={selected === index ? 0 : -1}
-            className={styles.tab} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)}
+            className={patterns.tab} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)}
             onClick={() => setSelected(index)} onKeyDown={(event) => handleKeys(event, index)}>
             {item.id === "condition" ? <>Find Doctor By <span>Disease/Condition</span></> : <span>{item.label}</span>}
           </button>
         ))}
       </div>
-      <div className={`${styles.panel} ${isLocation || isAvailability ? styles.singlePanel : ""} ${isAvailability ? styles.availabilityPanel : ""} ${isCondition ? styles.conditionPanel : ""}`} id="doctor-menu-panel" role="tabpanel" aria-labelledby={`doctor-menu-tab-${section.id}`}>
+      <div className={`${patterns.panel} ${styles.panel} ${isLocation || isAvailability ? styles.singlePanel : ""} ${isCondition ? styles.conditionPanel : ""}`} id="doctor-menu-panel" role="tabpanel" aria-labelledby={`doctor-menu-tab-${section.id}`}>
         {isLocation ? <DoctorLocations onNavigate={onNavigate} /> : isAvailability ? (
           <DoctorAvailabilityMenu availability={section.id === "sunday" ? "sunday" : "today"} onNavigate={onNavigate} />
         ) : <>
-          <div className={styles.imageWrap}>
-            <Image src={section.id === "speciality" ? "/assets/doctor_team.png" : "/bento-patient-first.jpg"} alt={section.id === "speciality" ? "Two specialist doctors in white coats" : "Patient-first support and compassionate care"} fill sizes="640px" className={styles.image} />
-          </div>
+          <MenuImageCard title="Find a Doctor" description={isCondition ? "By disease or condition" : "By specialty"} image={isCondition ? "/bento-patient-first.jpg" : "/assets/doctor_2.png"} alt={isCondition ? "Patient-first support and compassionate care" : "Specialist doctor in a white coat"} portrait className={styles.imageCard} />
           <ul className={styles.columns}>
-            {section.columns.flat().map(label => <li key={label}><Link href={itemHref(label)} title={label} className={styles.item} onClick={onNavigate}><strong>{label.charAt(0)}</strong>{label.slice(1)}</Link></li>)}
+            {section.columns.flat().map(label => <li key={label}><Link href={itemHref(label)} title={label} className={styles.item} onClick={onNavigate}><span><strong>{label.charAt(0)}</strong>{label.slice(1)}</span></Link></li>)}
           </ul>
           <div className={styles.footer}>
             {isCondition
-              ? <MenuAction label="Look up a condition or disease" context="Look up a condition or disease" icon={<Search aria-hidden="true" />} onClick={openConditionSearch} />
+              ? <MenuAction label={section.viewAll} context={section.viewAll} icon={<Search aria-hidden="true" />} onClick={openConditionSearch} />
               : <MenuAction label={section.viewAll} href={doctorNavUrl()} context={section.viewAll} onClick={onNavigate} />}
           </div>
         </>}

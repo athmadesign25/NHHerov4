@@ -1,27 +1,37 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion, useIsPresent } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, ChevronRight, ChevronDown, MapPin, User, TriangleAlert, Search } from "lucide-react";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import { duration, ease } from "@/lib/motion";
-import { DESKTOP_NAV_ITEMS, OTHER_MENU_GROUPS } from "./menu-data";
+import { DESKTOP_NAV_ITEMS } from "./menu-data";
+import EditorialMegaMenu from "./EditorialMegaMenu";
 import { HOSPITAL_LOCALITIES as HOSPITAL_CITIES } from "./hospital-data";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 import { DOCTOR_SPECIALTIES } from "./doctor-specialties";
-import { SERVICE_CENTRES, SERVICE_TILES } from "./service-menu-data";
-import styles from "./MobileMegaMenu.module.css";
-
+import ServicesMegaMenu from "./ServicesMegaMenu";
+import MenuImageCard from "./MenuImageCard";
 import { doctorNavUrl } from "@/features/search/navigationEntries";
+import styles from "./MobileMegaMenu.module.css";
+import AccountMenu from "../AccountMenu";
 
 type Page = "main" | "find-a-doctor" | "hospitals" | "specialities" | "health-library" | "about-us" | "specialty" | "city" | "condition" | "sunday" | "today";
 const titles: Record<Page, string> = { main: "How can we help?", "find-a-doctor": "Find a Doctor", hospitals: "Find Hospital", specialities: "Services", "health-library": "Health Library", "about-us": "About Us", specialty: "By specialty", city: "By location", condition: "By disease / condition", sunday: "Doctors available on Sunday", today: "Doctors available today" };
 const descriptions = ["By specialty, city or condition", "Explore our hospitals by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
 const doctorChoices: { page: Page; label: string }[] = [{page:"specialty",label:"By specialty"},{page:"city",label:"By location"},{page:"condition",label:"By disease / condition"},{page:"sunday",label:"Doctors available on Sunday"},{page:"today",label:"Doctors available today"}];
 
-export default function MobileMegaMenu({ onClose, onLogin }: { onClose: () => void; onLogin: () => void }) {
+interface MobileMegaMenuProps {
+  onClose: () => void;
+  onLogin: () => void;
+  isLoggedIn: boolean;
+  memberId: string;
+  onMemberChange: (id: string) => void;
+  onLogout: () => void;
+}
+
+export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId, onMemberChange, onLogout }: MobileMegaMenuProps) {
   const [history, setHistory] = useState<Page[]>(["main"]);
   const [query, setQuery] = useState("");
   const [city, setCity] = useState<string | null>(null);
@@ -59,11 +69,9 @@ export default function MobileMegaMenu({ onClose, onLogin }: { onClose: () => vo
   return <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:reduced?0:duration.emphasis,ease:ease.out}} className={styles.menu} inert={!present} id="mobile-navigation-menu" data-lenis-prevent>
     <div className={styles.location}><MapPin aria-hidden="true" /><span>Bangalore</span></div>
     <div className={styles.actions}>
-      <div className={styles.primaryActions}>
-        <a href="tel:18003090309" className={styles.emergency}><TriangleAlert aria-hidden="true" />24/7 Emergency</a>
-      </div>
-      <div className={styles.secondaryActions}>
-        <a href="tel:18003090309"><PhoneCall animate />Call Us</a>
+      <div className={styles.contactActions}>
+        <a href="tel:18003090309" className={styles.callUs}><PhoneCall animate aria-hidden="true" />Call Us</a>
+        <a href="tel:18003090309" className={styles.emergency}><TriangleAlert aria-hidden="true" />Emergency</a>
       </div>
     </div>
     <div className={styles.heading}>
@@ -77,15 +85,15 @@ export default function MobileMegaMenu({ onClose, onLogin }: { onClose: () => vo
           {page === "main" && <>
             <ul className={`${styles.list} ${styles.rootList}`}>{DESKTOP_NAV_ITEMS.map((item,index)=><li key={item.id}><button className={styles.mainRow} onClick={()=>go(item.id)}><span><strong>{item.label}</strong><small>{descriptions[index]}</small></span><ChevronRight aria-hidden="true" /></button></li>)}</ul>
           </>}
-          {page === "find-a-doctor" && <><div className={styles.feature}><Image src="/nav-doctor-speciality.png" alt="Doctor consulting a patient" fill sizes="100vw"/><span>Find the right care<br/>for you.</span></div><ul className={styles.list}>{doctorChoices.map(item=><li key={item.page}><button className={styles.row} onClick={()=>go(item.page)}>{item.label}<ChevronRight aria-hidden="true" /></button></li>)}</ul></>}
+          {page === "find-a-doctor" && <><MenuImageCard title="Find a Doctor" image="/nav-doctor-speciality.png" alt="Doctor consulting a patient" /><ul className={styles.list}>{doctorChoices.map(item=><li key={item.page}><button className={styles.row} onClick={()=>go(item.page)}>{item.label}<ChevronRight aria-hidden="true" /></button></li>)}</ul></>}
           {(page === "specialty" || page === "city" || page === "condition") && <><ul className={styles.list}>{labels.filter(matches).map(label=><li key={label}><Link className={styles.row} href={doctorNavUrl(page === "specialty" ? "specialty" : page === "city" ? "location" : "condition", label)} onClick={onClose}>{label}<ChevronRight aria-hidden="true" /></Link></li>)}</ul>{!labels.some(matches)&&<p className={styles.empty}>No matches. Try another name.</p>}<Link href={doctorNavUrl()} onClick={onClose} className={styles.viewAll}>View all {page==="specialty"?"specialties":"doctors"}<ArrowUpRight aria-hidden="true" /></Link></>}
           {page === "hospitals" && <><ul className={styles.list}>{HOSPITAL_CITIES.filter(c=>matches(c.city)||c.hospitals.some(h=>matches(h.label))).map(c=><li key={c.slug}><button className={styles.row} aria-expanded={city===c.slug||!!query.trim()} aria-controls={`mobile-hospitals-${c.slug}`} onClick={()=>setCity(city===c.slug?null:c.slug)}>{c.city}<ChevronDown className={city===c.slug?styles.rotated:undefined} aria-hidden="true" /></button>{(city===c.slug||!!query.trim())&&<ul className={styles.nested} id={`mobile-hospitals-${c.slug}`}>{c.hospitals.filter(h=>matches(c.city)||matches(h.label)).map(h=><li key={h.label}><Link href={h.href} onClick={onClose}>{h.label}<ArrowUpRight aria-hidden="true" /></Link></li>)}</ul>}</li>)}</ul>{!HOSPITAL_CITIES.some(c=>matches(c.city)||c.hospitals.some(h=>matches(h.label)))&&<p className={styles.empty}>No matches. Try another city or hospital.</p>}<Link className={styles.viewAll} href="https://www.narayanahealth.org/hospitals-clinics" onClick={onClose}>View all hospitals & clinics<ArrowUpRight aria-hidden="true" /></Link></>}
-          {page === "specialities" && <><details className={styles.centres}><summary>Centres of Excellence<ChevronDown aria-hidden="true" /></summary><ul className={styles.nested}>{SERVICE_CENTRES.map(c=><li key={c.href}><Link href={c.href} onClick={onClose}>{c.label}<ChevronRight aria-hidden="true" /></Link></li>)}</ul><Link href="/specialities" onClick={onClose} className={styles.viewAll}>View all centres<ArrowUpRight aria-hidden="true" /></Link></details><div className={styles.tiles}>{SERVICE_TILES.map(s=><Link href={s.href} key={s.label} onClick={onClose} className={styles.tile}><div><Image src={s.image} alt="" fill sizes="50vw"/></div><span>{s.label}<ArrowUpRight aria-hidden="true" /></span></Link>)}</div></>}
-          {(page==="health-library"||page==="about-us")&&<ul className={styles.list}>{OTHER_MENU_GROUPS[page].flatMap(g=>g.links).map(l=><li key={l.href}><Link href={l.href} onClick={onClose} className={styles.row}>{l.label}<ChevronRight aria-hidden="true" /></Link></li>)}</ul>}
+          {page === "specialities" && <ServicesMegaMenu onNavigate={onClose} mobile />}
+          {(page==="health-library"||page==="about-us")&&<EditorialMegaMenu kind={page} onNavigate={onClose} mobile />}
           {(page==="sunday"||page==="today")&&<><ul className={styles.list}>{HOSPITAL_CITIES.map(c=><li key={c.slug}><Link className={styles.row} href={`${doctorNavUrl(page === "sunday" ? "sunday" : "today")}&location=${encodeURIComponent(c.city)}`} onClick={onClose}>{c.city}<ChevronRight aria-hidden="true" /></Link></li>)}</ul><Link className={styles.viewAll} href={doctorNavUrl(page === "sunday" ? "sunday" : "today")} onClick={onClose}>View all doctors<ArrowUpRight aria-hidden="true" /></Link></>}
         </motion.div>
       </AnimatePresence>
     </div>
-    <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>
+    {isLoggedIn ? <AccountMenu mobile tone="dark" memberId={memberId} onMemberChange={onMemberChange} onLogout={onLogout} onNavigate={onClose} /> : <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>}
   </motion.div>;
 }

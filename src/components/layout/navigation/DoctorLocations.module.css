@@ -1,4 +1,4 @@
-.locations { min-width: 0; height: 100%; display: flex; flex-direction: column; gap: var(--space-12); }
+.locations { padding: var(--space-24); min-width: 0; height: 100%; display: flex; flex-direction: column; gap: var(--space-12); }
 .grid { flex: 1; min-height: 0; grid-auto-flow: column; grid-template-rows: repeat(4, minmax(0, 1fr)); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-16); padding: 0; margin: 0; list-style: none; }
 .grid li { min-width: 0; min-height: 0; }
 .tile {
@@ -23,6 +23,7 @@
 .credits { display: block; width: fit-content; margin: var(--space-8) 0 0 auto; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
 .credits:hover { color: var(--color-primary); text-decoration: underline; }
 @media (max-width: 1280px) {
+  .locations { padding: var(--space-20); }
   .grid { grid-template-rows: repeat(4, minmax(0, 1fr)); grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-12); }
   .tile { padding: var(--space-12); }
 }
@@ -31,4 +32,4 @@
 .footer .credits { margin: 0; }
 
 .pattern { position: absolute; left: 0; bottom: 0; width: var(--space-80); height: var(--space-24); background: url('/band-pattern-edge.svg') left bottom / auto var(--space-32); opacity: 0.5; pointer-events: none; }
-.tile:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.tile:focus-visible, .credits:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }

@@ -13,6 +13,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import MarketingDrawer from "./MarketingDrawer";
 import CollapsedToast from "./CollapsedToast";
+import { announcementStore, SUPPORTING_ANNOUNCEMENTS } from "../AnnouncementCenter/announcementStore";
 import { bannerCollapse } from "./bannerCollapse";
 import DrawerControlPanel from "./DrawerControlPanel";
 import { type BannerConfig, DEFAULT_CONFIG } from "./types";
@@ -67,17 +68,14 @@ export default function MarketingDrawerLab() {
   }, []);
 
   useEffect(() => setMounted(true), []);
-  // Keep the island announcement and its reopen hook local to this route.
+  useEffect(() => announcementStore.register("l1", [
+    { id: "new-hospital", title: config.headline.parts.map(part => part.text).join(" "), image: "/navigation/hospitals/l3-hospital.webp", href: config.cta.primary.href, onSelect: () => { l3InIsland.current = false; reopen(); } },
+    ...SUPPORTING_ANNOUNCEMENTS,
+  ]), [config.headline.parts, config.cta.primary.href, reopen]);
   useEffect(() => {
-    const host = window as unknown as { __reopenBanner?: () => void };
     bannerCollapse.clear();
-    host.__reopenBanner = reopen;
-    return () => {
-      pendingCollapse.current = null;
-      bannerCollapse.clear();
-      if (host.__reopenBanner === reopen) delete host.__reopenBanner;
-    };
-  }, [reopen]);
+    return () => { pendingCollapse.current = null; bannerCollapse.clear(); };
+  }, []);
   if (!mounted) return null;
 
   const ui = (

@@ -1,10 +1,10 @@
 "use client";
 
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorLocations.module.css";
 import MenuAction from "./MenuAction";
-import { doctorNavUrl } from "@/features/search/navigationEntries";
 import surfaces from "./DesktopMenuSurfaces.module.css";
 
 const cities = [

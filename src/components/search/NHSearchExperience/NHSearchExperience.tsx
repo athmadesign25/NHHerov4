@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
-import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
-import { duration, ease } from "@/lib/motion";
+import AnnouncementCenter from "@/components/marketing/AnnouncementCenter/AnnouncementCenter";
+import { announcementStore } from "@/components/marketing/AnnouncementCenter/announcementStore";
 import { searchDockProgress } from "./dockProgress";
 import { createPortal } from "react-dom";
-import { animate, motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
 import { Search, X, CalendarCheck, Activity, HeartPulse, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
@@ -40,6 +40,8 @@ import { playFemaleEmpatheticVoice } from "./voiceSynthesizer";
  * - 'results': Full search results canvas with doctors, treatments, articles, and tags
  * - 'pulse': Attached Pulse AI window with navigation back to search results
  */
+const ISLAND_READY_PROGRESS = 0.34;
+
 export type SearchState = "landing" | "active" | "skeleton" | "results" | "pulse";
 
 export interface AnchorRect {
@@ -100,18 +102,15 @@ export default function NHSearchExperience({
 
   const isMobile = winSize.w <= 900;
   const router = useRouter();
-  const pathname = usePathname();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
+  const [isIslandReady, setIsIslandReady] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
-  const bannerBubble =
-    useSyncExternalStore(
-      bannerCollapse.subscribe,
-      bannerCollapse.get,
-      bannerCollapse.getServerSnapshot,
-    ) === "island" && pathname === "/L1banner";
+  const collapseMode = useSyncExternalStore(bannerCollapse.subscribe, bannerCollapse.get, bannerCollapse.getServerSnapshot);
+  const announcements = useSyncExternalStore(announcementStore.subscribe, announcementStore.get, announcementStore.getServerSnapshot);
+  const bannerBubble = announcements.length > 0;
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -121,17 +120,11 @@ export default function NHSearchExperience({
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
   // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
-  const naturalProgress = isMobile ? fastMobileProgress : baseProgress;
-  const announcementDockProgress = useMotionValue(0);
-  // An announcement closes into the real island even at the top of the hero.
-  // Scroll resumes control when L3 is restored.
+  // Announcements wait for the existing search morph to finish.
+  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
   useEffect(() => {
-    const animation = animate(announcementDockProgress, bannerBubble ? 1 : 0, {
-      duration: prefersReducedMotion ? 0 : duration.slowest, ease: ease.out,
-    });
-    return () => animation.stop();
-  }, [announcementDockProgress, bannerBubble, prefersReducedMotion]);
-  const activeProgress = useTransform([naturalProgress, announcementDockProgress], ([scroll, announcement]) => Math.max(Number(scroll), Number(announcement)));
+    setIsIslandReady(activeProgress.get() >= ISLAND_READY_PROGRESS);
+  }, [activeProgress]);
 
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
@@ -183,6 +176,7 @@ export default function NHSearchExperience({
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
+    setIsIslandReady(latest >= ISLAND_READY_PROGRESS);
     searchDockProgress.set(latest);
     setIsMorphing(latest > 0.02 && latest < 0.35);
     const docked = latest >= 0.22;
@@ -727,6 +721,7 @@ export default function NHSearchExperience({
     <div
       className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
       data-search-theme={searchTheme}
+      data-search-island={isIslandReady}
       ref={containerRef}
       style={
         hasScroll
@@ -973,40 +968,9 @@ export default function NHSearchExperience({
             )}
           </motion.button>
 
-          {/* Water-Bubble 4: a collapsed marketing banner. Present only
-              while a banner has something to come back to, so the dock is
-              three bubbles wide the rest of the time. It re-opens the
-              banner through the same global hook the bar used. */}
-          {bannerBubble && (
-            <motion.button
-              type="button"
-              data-banner-bubble
-              className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
-              style={{
-                position: "fixed",
-                top: targetTop,
-                left: dockBtn3Left,
-                width: bubbleWidth3,
-                height: spotlightHeight,
-                borderRadius: 9999,
-                opacity: 1,
-                scale: 1,
-                pointerEvents: "auto",
-                zIndex: 9990,
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                (window as unknown as { __reopenBanner?: () => void }).__reopenBanner?.();
-              }}
-              aria-label="Announcements, 3 unread"
-            >
-              <motion.div className={styles.morphingActionIcon} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slow, duration: prefersReducedMotion ? 0 : duration.slow, ease: ease.out }}>
-                <AnnouncementIcon size={19} />
-              </motion.div>
-              <motion.span className={styles.announcementCount} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slowest, duration: prefersReducedMotion ? 0 : duration.base, ease: ease.spring }} aria-hidden="true">3</motion.span>
-              <span className={styles.bubbleTooltip}>3 announcements</span>
-            </motion.button>
-          )}
+          {bannerBubble && isIslandReady && <AnnouncementCenter entries={announcements} top={targetTop} left={dockBtn3Left} size={bubbleWidth3} mobile={isMobile} docked={isDocked} emphasized={collapseMode === "island"}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isDocked ? (isDockOverDark ? styles.dockBtnDark : styles.dockBtnLight) : ""}`} />}
+
         </>
       )}
 

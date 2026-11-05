@@ -89,6 +89,8 @@ export type BannerConfig = {
    */
   cta: { primary: CtaConfig; secondary: CtaConfig };
   collapse: CollapseMode;
+  /** Content timeout in seconds, adjustable in the prototype controls. */
+  autoCloseSeconds: number;
 };
 
 /**
@@ -215,4 +217,5 @@ export const DEFAULT_CONFIG: BannerConfig = {
     secondary: { enabled: false, label: "Know more", href: "/specialities" },
   },
   collapse: "toast",
+  autoCloseSeconds: 10,
 };

@@ -84,41 +84,14 @@ export default function CollapsedToast({ parts, ctaLabel, onExpand, onDismiss, o
         opacity: [1, 1, 0],
         transition: { duration: duration.slowest, ease: ease.out },
       });
+    } else if (!reduced) {
+      // At the hero there is no island target yet. Preserve the announcement
+      // for the eventual dock, and dismiss L3 in place.
+      await controls.start({ opacity: 0, scale: 0.96, transition: { duration: duration.slow, ease: ease.out } });
     }
     onDismiss();
     destination?.focus({ preventScroll: true });
   };
-
-  // Follow the real navbar edge while its scroll animation is in progress.
-  useEffect(() => {
-    const element = ref.current;
-    if (!isMobile) {
-      element?.style.removeProperty("top");
-      return;
-    }
-    const nav = document.querySelector("nav");
-    if (!nav) return;
-    const tokens = getComputedStyle(document.documentElement);
-    const gap = parseFloat(tokens.getPropertyValue("--space-12"));
-    const minTop = parseFloat(tokens.getPropertyValue("--space-8"));
-    let raf = 0;
-    let until = 0;
-    const follow = () => {
-      if (element) element.style.top = `${Math.max(minTop, nav.getBoundingClientRect().bottom + gap)}px`;
-      raf = performance.now() < until ? requestAnimationFrame(follow) : 0;
-    };
-    const onScroll = () => {
-      until = performance.now() + duration.slowest * 1000;
-      if (!raf) raf = requestAnimationFrame(follow);
-    };
-    follow();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-      element?.style.removeProperty("top");
-    };
-  }, [isMobile]);
 
   // Three short campaign lines at most; extra content belongs in L1.
   const headline = parts.length ? parts.slice(0, 3) : [{ id: "fallback", text: COLLAPSED_LABEL, colorId: "black" }];

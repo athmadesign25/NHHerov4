@@ -19,3 +19,7 @@
   .slide { transform: none !important; opacity: 1 !important; }
   .body[inert] { visibility: hidden; }
 }
+
+/* One height for all grouped menus, matching the Services content and footer. */
+.shell:is([data-desktop-menu="specialities"], [data-desktop-menu="health-library"], [data-desktop-menu="about-us"]) { height: min(calc(var(--space-128) * 3 + var(--space-96) + var(--space-8)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
+.shell[data-desktop-menu="about-us"] { left: calc(var(--desktop-menu-inset) + var(--space-16)); right: calc(var(--desktop-menu-inset) + var(--space-16)); }

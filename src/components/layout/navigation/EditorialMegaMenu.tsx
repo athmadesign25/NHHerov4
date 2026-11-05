@@ -1,59 +1,87 @@
-import Image from "next/image";
+"use client";
+
+import { useId, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { OTHER_MENU_GROUPS } from "./menu-data";
-import { EDITORIAL_MENU_LINKS } from "./editorial-menu-data";
-import surfaces from "./DesktopMenuSurfaces.module.css";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import {
+  EDITORIAL_FEATURES, EDITORIAL_MENU_GROUPS,
+  type EditorialGroup as EditorialGroupData, type EditorialMenuKind,
+} from "./editorial-menu-data";
 import styles from "./EditorialMegaMenu.module.css";
+import MenuImageCard from "./MenuImageCard";
 
-const visualContent = {
-  "health-library": {
-    title: "Health Library",
-    description: "Information and stories to support your health journey.",
-    image: "/doctor_patient.png",
-    alt: "A doctor listening to a patient",
-    images: ["/images/articles/blog_heart_health.png", "/assets/patient_story_1.png", "/bento-top-medical-experts.jpg"],
-  },
-  "about-us": {
-    title: "About Narayana Health",
-    description: "Meet the people and purpose behind our care.",
-    image: "/navigation/hospitals/cardiac-sciences-banner.webp",
-    alt: "Narayana Health hospital campus",
-    images: ["/assets/doctor_team.png", "/chairman-portrait.png", "/doctor_patient.png"],
-  },
-} as const;
+function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
+  group: EditorialGroupData;
+  id: string;
+  mobile: boolean;
+  initiallyOpen: boolean;
+  onNavigate: () => void;
+}) {
+  const [expanded, setExpanded] = useState(initiallyOpen);
+  const headingId = `${id}-heading`;
+  const linksId = `${id}-links`;
+  const tiles = group.id === "ecosystem";
 
-export default function EditorialMegaMenu({ kind, onNavigate }: { kind: keyof typeof visualContent; onNavigate: () => void }) {
-  const content = visualContent[kind];
-  const links = OTHER_MENU_GROUPS[kind][0].links;
-  const menuLinks = EDITORIAL_MENU_LINKS[kind];
   return (
-    <div className={styles.menu}>
-      <section className={styles.feature} aria-labelledby={`nav-${kind}-title`}>
-        <Image src={content.image} alt={content.alt} fill sizes={kind === "about-us" ? "1400px" : "640px"} className={styles.featureImage} />
-        <div className={styles.featureWash} aria-hidden="true" />
-        <div className={styles.featureText}>
-          <h2 id={`nav-${kind}-title`}>{content.title}</h2>
-          <p>{content.description}</p>
-        </div>
-      </section>
-      <div className={styles.content}>
-        <div className={styles.tiles} aria-label={`Featured ${content.title} links`}>
-          {links.map((link, index) => <Link key={link.href} href={link.href} onClick={onNavigate} className={styles.tile}>
-            <Image src={content.images[index]} alt="" fill sizes="(min-width: 1600px) 20vw, 16vw" className={styles.tileImage} />
-            <span className={surfaces.radialWash} aria-hidden="true" />
-            <div className={styles.tileText}><h3>{menuLinks.featuredLabels[index]}</h3></div>
-            <span className={surfaces.arrow} aria-hidden="true"><ArrowUpRight /></span>
-          </Link>)}
-        </div>
-        <ul className={styles.resources} aria-label={`More ${content.title} links`}>
-          {menuLinks.resources.map(link => <li key={link.href}>
-            <Link href={link.href} onClick={onNavigate} className={styles.resourceLink}>
-              <span>{link.label}</span><ArrowUpRight aria-hidden="true" />
+    <section className={styles.group} aria-labelledby={headingId}>
+      <h3 id={headingId} className={`section-eyebrow ${styles.groupTitle}`}>
+        {mobile ? (
+          <button type="button" className={styles.toggle} aria-expanded={expanded} aria-controls={linksId} onClick={() => setExpanded(!expanded)}>
+            {group.label}<ChevronDown aria-hidden="true" />
+          </button>
+        ) : group.label}
+      </h3>
+      <ul id={linksId} className={`${styles.links} ${tiles ? styles.ecosystemLinks : ""}`} hidden={mobile && !expanded}>
+        {group.links.map(({ icon: Icon, ...item }) => (
+          <li key={item.href}>
+            <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${tiles ? styles.ecosystemTile : ""}`}>
+              {tiles && item.visual && <span className={styles.ecosystemVisual}>
+                <Image src={item.visual.src} alt="" fill sizes="(max-width: 1099px) 30vw, 160px" className={item.visual.kind === "logo" ? `${styles.ecosystemLogo} ${item.label === "Medha Analytics" ? styles.medhaLogo : styles.athmaLogo}` : styles.ecosystemPhoto} />
+                {item.visual.kind === "photo" && <span className={styles.ecosystemAcademicMark} aria-hidden="true"><Icon /></span>}
+              </span>}
+              {tiles ? <span className={styles.label}>{item.label}</span> : <span className={styles.itemCopy}><Icon className={styles.itemIcon} aria-hidden="true" /><span className={styles.label}>{item.label}</span></span>}
             </Link>
-          </li>)}
-        </ul>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export default function EditorialMegaMenu({ kind, onNavigate, mobile = false }: {
+  kind: EditorialMenuKind;
+  onNavigate: () => void;
+  mobile?: boolean;
+}) {
+  const id = useId();
+  const feature = EDITORIAL_FEATURES[kind];
+  const groups = EDITORIAL_MENU_GROUPS[kind].map((group, index) => (
+    <MenuGroup key={group.id} group={group} id={`${id}-${group.id}`} mobile={mobile} initiallyOpen={index === 0} onNavigate={onNavigate} />
+  ));
+  const featuredCard = kind === "health-library" ? (
+    <MenuImageCard title="Health Library" image={feature.image} imageSizes="(min-width: 1100px) 1000px, 100vw" imageLoading="eager" alt={feature.alt} portrait className={`${styles.feature} ${styles.learningFeature}`} />
+  ) : (
+    <MenuImageCard title={feature.title} description={feature.description} image={feature.image} alt={feature.alt} portrait className={`${styles.feature} ${styles.storyFeature}`} visualClassName={styles.storyVisual}>
+      <div className={styles.founderPill}>
+        <strong>Dr. Devi Prasad Shetty</strong>
+        <span>Founder and Chairman</span>
       </div>
+    </MenuImageCard>
+  );
+
+  return (
+    <div className={`${styles.menu} ${kind === "health-library" ? styles.library : styles.about} ${mobile ? styles.mobile : ""}`} data-editorial-menu={kind}>
+      <div className={`${styles.content} ${styles.editorialContent}`}>
+        {!mobile && featuredCard}
+        {mobile ? groups : (
+          <div className={`${styles.editorialColumns} ${kind === "about-us" ? styles.aboutColumns : ""}`}>
+            {groups}
+          </div>
+        )}
+        {mobile && featuredCard}
+      </div>
+
     </div>
   );
 }
