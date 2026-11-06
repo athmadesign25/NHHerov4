@@ -1,0 +1,363 @@
+{
+  "sample": {
+    "doctorCount": 20,
+    "specialityCategoryCount": 5,
+    "perCategory": {
+      "Cardiology": 4,
+      "Orthopaedics": 4,
+      "Neurology": 4,
+      "Gastro Sciences": 4,
+      "Cancer Care": 4
+    },
+    "city": "Bangalore",
+    "captureDate": "2026-11-05",
+    "selection": "Four source-listed profiles per category; Cancer Care skips an empty-speciality listing in favor of four populated profiles. All names and IDs matched live filtered listing data and profile h1.",
+    "scopeLimit": "This is a sampled source census, not a claim that no other NH profile contains additional sections."
+  },
+  "sectionCounts": {
+    "doctorOverview": 20,
+    "doctorAbout": 17,
+    "doctorTreatments": 19,
+    "doctorAchivements": 13,
+    "doctorVideos": 7,
+    "doctorBlogs": 10,
+    "enquirySectionData": 20,
+    "doctorFaqData": 0
+  },
+  "itemCounts": {
+    "qualifications": 74,
+    "treatmentOrSearchTerms": 237,
+    "achievementItems": 76,
+    "videos": 26,
+    "blogs": 27,
+    "hospitalAffiliations": 38
+  },
+  "topLevelUnknownKeys": [],
+  "semanticContentTypes": [
+    {
+      "key": "identity",
+      "contentType": "Name, designation, image, doctor IDs",
+      "sourceShape": "hero",
+      "example": {
+        "doctor": "Dr. Nidhi Tandon",
+        "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+        "sourcePath": "doctorOverview",
+        "observation": "Role and contact fields are separate from narrative biography."
+      }
+    },
+    {
+      "key": "qualifications",
+      "contentType": "Formal qualifications",
+      "sourceShape": "structured array",
+      "example": {
+        "doctor": "Dr. Abhinandan S Punit",
+        "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-abhinandan-s-punit",
+        "sourcePath": "doctorOverview.qualification.value",
+        "observation": "Eight supplied qualifications; preserve full values."
+      }
+    },
+    {
+      "key": "clinicalExpertise",
+      "contentType": "Broad speciality and specific expertise",
+      "sourceShape": "two structured arrays",
+      "example": {
+        "doctor": "Dr. Bagirath Raghuraman",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+        "sourcePath": "doctorOverview.specialties",
+        "observation": "One broad speciality plus four narrower entries."
+      }
+    },
+    {
+      "key": "consultationLocations",
+      "contentType": "Hospitals and clinics",
+      "sourceShape": "array with id/code/checked/name",
+      "example": {
+        "doctor": "Dr. Arunkumar Ullegaddi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+        "sourcePath": "doctorOverview.locations.value",
+        "observation": "Four practice locations."
+      }
+    },
+    {
+      "key": "experience",
+      "contentType": "Published numeric experience",
+      "sourceShape": "optional string",
+      "example": {
+        "doctor": "Dr. Abhinandan S Punit",
+        "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-abhinandan-s-punit",
+        "sourcePath": "doctorOverview.experience",
+        "observation": "Published field 17. Most profiles leave field empty."
+      }
+    },
+    {
+      "key": "about",
+      "contentType": "Biography",
+      "sourceShape": "short and full narrative",
+      "example": {
+        "doctor": "Dr. Bagirath Raghuraman",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Long narrative spanning training, clinical domains, achievements, current leadership and past roles."
+      }
+    },
+    {
+      "key": "educationAndTraining",
+      "contentType": "Education, institutions, residency and fellowship",
+      "sourceShape": "embedded in About",
+      "example": {
+        "doctor": "Dr. Aditi Singhvi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-aditi-singhvi",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Residency and two fellowships with named US institutions."
+      }
+    },
+    {
+      "key": "pastAppointments",
+      "contentType": "Previous positions",
+      "sourceShape": "explicit subheading inside About",
+      "example": {
+        "doctor": "Dr. Arunkumar Ullegaddi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Post held in past followed by three previous positions."
+      }
+    },
+    {
+      "key": "rareSkills",
+      "contentType": "Rare or unique clinical skills",
+      "sourceShape": "explicit subheading inside About",
+      "example": {
+        "doctor": "Dr. Arunkumar Ullegaddi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Rare/ Unique Skills is separate from Key Procedures Performed."
+      }
+    },
+    {
+      "key": "procedures",
+      "contentType": "Key procedures",
+      "sourceShape": "explicit subheading inside About and Treatments",
+      "example": {
+        "doctor": "Dr. Arunkumar Ullegaddi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Named intervention and imaging procedures appear under Key Procedures Performed."
+      }
+    },
+    {
+      "key": "conditionsAndTreatments",
+      "contentType": "Clinical conditions, procedures and search aliases",
+      "sourceShape": "mixed source array",
+      "example": {
+        "doctor": "Dr. Aditi Singhvi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-aditi-singhvi",
+        "sourcePath": "doctorTreatments.list",
+        "observation": "42 terms include specific clinical concepts and broad/duplicated search tags; preserve raw, classify explicitly."
+      }
+    },
+    {
+      "key": "languages",
+      "contentType": "Spoken languages",
+      "sourceShape": "embedded in About",
+      "example": {
+        "doctor": "Dr. Aditya H Kumar",
+        "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-joint-replacement/dr-aditya-h-kumar",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "English, Kannada, Hindi and Tamil explicitly supplied in biography."
+      }
+    },
+    {
+      "key": "leadershipAndTeaching",
+      "contentType": "Current clinical leadership, teaching and mentorship",
+      "sourceShape": "embedded in About and Awards items",
+      "example": {
+        "doctor": "Dr. Nidhi Tandon",
+        "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Clinical/academic leadership and mentoring DNB students."
+      }
+    },
+    {
+      "key": "awards",
+      "contentType": "Awards, scholarships and recognitions",
+      "sourceShape": "nested Achievements groups",
+      "example": {
+        "doctor": "Dr. Nidhi Tandon",
+        "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+        "sourcePath": "doctorAchivements.list[0].items",
+        "observation": "Awards, scholarships and editorial/professional subsection headings are intermixed."
+      }
+    },
+    {
+      "key": "membershipsAndCertifications",
+      "contentType": "Professional memberships and certifications",
+      "sourceShape": "nested groups or misfiled Awards items",
+      "example": {
+        "doctor": "Dr. Gopal Krishna Dash",
+        "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-gopal-krishna-dash",
+        "sourcePath": "doctorAchivements.list[0].items",
+        "observation": "Membership heading and societies are stored inside Awards & Recognition."
+      }
+    },
+    {
+      "key": "researchInterests",
+      "contentType": "Research interests and clinical trials",
+      "sourceShape": "embedded in About and Awards items",
+      "example": {
+        "doctor": "Dr. Bagirath Raghuraman",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+        "sourcePath": "doctorAchivements.list[0].items",
+        "observation": "Principal investigator in clinical trials is stored under Awards."
+      }
+    },
+    {
+      "key": "publications",
+      "contentType": "Publications, abstracts, book chapters and citations",
+      "sourceShape": "nested Achievements groups or embedded statements",
+      "example": {
+        "doctor": "Dr. Gayathri Gopalakrishnan",
+        "url": "https://www.narayanahealth.org/c/bangalore/medical-gastroenterology/dr-gayathri-gopalakrishnan",
+        "sourcePath": "doctorAchivements.list[0]",
+        "observation": "Singular Publication heading with three citation strings."
+      }
+    },
+    {
+      "key": "talksAndPresentations",
+      "contentType": "Invited lectures, conference presentations, abstracts and posters",
+      "sourceShape": "embedded in About/Awards",
+      "example": {
+        "doctor": "Dr. Bagirath Raghuraman",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+        "sourcePath": "doctorAchivements.list[0].items",
+        "observation": "Invited lectures and conference presentations are stored under Awards."
+      }
+    },
+    {
+      "key": "milestones",
+      "contentType": "Clinical milestones and volume claims",
+      "sourceShape": "embedded in About",
+      "example": {
+        "doctor": "Dr. Abhinandan S Punit",
+        "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-abhinandan-s-punit",
+        "sourcePath": "doctorAbout.full_description",
+        "observation": "Published surgery volume and work with athletes; keep source context rather than invented headline stats."
+      }
+    },
+    {
+      "key": "videos",
+      "contentType": "Educational videos and patient success stories",
+      "sourceShape": "array subtitle/name/location/embed URL",
+      "example": {
+        "doctor": "Dr. Abhinandan S Punit",
+        "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-abhinandan-s-punit",
+        "sourcePath": "doctorVideos.list",
+        "observation": "Six videos mix explanation and patient-story formats; use item title, not generic section heading, to classify."
+      }
+    },
+    {
+      "key": "blogs",
+      "contentType": "Authored health articles",
+      "sourceShape": "array title/date/slug/image/alt/author/category",
+      "example": {
+        "doctor": "Dr. Gopal Krishna Dash",
+        "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-gopal-krishna-dash",
+        "sourcePath": "doctorBlogs.items[0]",
+        "observation": "Article exists but date is null and image is empty; keep text-only fallback."
+      }
+    },
+    {
+      "key": "enquiry",
+      "contentType": "Make an Enquiry",
+      "sourceShape": "heading/image/alt plus rendered form",
+      "example": {
+        "doctor": "Dr. Aditi Singhvi",
+        "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-aditi-singhvi",
+        "sourcePath": "enquirySectionData",
+        "observation": "Existing enquiry is distinct from marketing-requested Request a Callback."
+      }
+    }
+  ],
+  "sourceAnomalies": [
+    {
+      "type": "mixed categories",
+      "examples": [
+        "Abhinandan association names filed under Awards",
+        "Gopal and Kuldeep memberships filed under Awards",
+        "Nidhi editorial and membership subheadings embedded as Award items",
+        "Bagirath trial-investigator work and invited talks under Awards",
+        "Hashmath fellowships under Awards"
+      ]
+    },
+    {
+      "type": "inconsistent heading spelling/encoding",
+      "examples": [
+        "Awards & Recognition",
+        "Professional Memberships & Certifications",
+        "Publications",
+        "Professional Memberships &amp; Certifications",
+        "Awards &amp; Recognition",
+        "Professional Memberships and Certifications",
+        "Publication",
+        "Professional Membership"
+      ]
+    },
+    {
+      "type": "missing content is structurally variable",
+      "examples": [
+        "About is [] on three profiles, object on seventeen",
+        "Achievements and Blogs may be [] rather than object",
+        "Videos keeps title/list/tabs even when list empty",
+        "FAQ key is {} for all20"
+      ]
+    },
+    {
+      "type": "narrative contains structured content",
+      "examples": [
+        "Arunkumar: past posts, rare skills, key procedures",
+        "Aditya H Kumar: four spoken languages",
+        "Bagirath: multiple training destinations and service milestone",
+        "Aditi: previous Assistant Professor role"
+      ]
+    },
+    {
+      "type": "optional media metadata",
+      "examples": [
+        "Gopal blog: null date and empty image",
+        "Two source portraits null",
+        "Video records omit explicit thumbnail; provide YouTube embed URL"
+      ]
+    },
+    {
+      "type": "unverified presentation risk",
+      "examples": [
+        "All20 overview ratings equal4.0; source does not supply review counts",
+        "Only5 of20 publish experience field",
+        "Published dates and current availability must not be treated as permanent source facts"
+      ]
+    },
+    {
+      "type": "source text reliability",
+      "examples": [
+        "Gopal biography contains historical current-employment wording inconsistent with present header; needs editorial validation",
+        "Abhinandan association names should not be upgraded to award claims",
+        "Broad treatment tags should not all be relabelled as specific procedures"
+      ]
+    }
+  ],
+  "notObservedAsStandalonePopulatedSections": [
+    "Doctor-specific FAQs",
+    "News/media mentions",
+    "Standalone Education",
+    "Standalone Past appointments",
+    "Standalone Languages",
+    "Standalone Clinical trials",
+    "Standalone Talks/presentations",
+    "Separate textual patient-testimonial list"
+  ],
+  "marketingAdditionsNotToConfuseWithSource": [
+    "Request a Callback at profile end",
+    "Doctor-specific FAQs",
+    "Relevant speciality/procedure video fallback when doctor video unavailable"
+  ],
+  "rawRetention": "All20 original HTTP responses, RSC text, resolved source JSON and complete source fields retained. No raw source item dropped or recategorized in inventory."
+}

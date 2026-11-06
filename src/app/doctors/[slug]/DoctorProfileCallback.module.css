@@ -1,0 +1,116 @@
+.section {
+  display: grid;
+  align-items: center;
+  gap: var(--space-24);
+  padding: var(--space-32) var(--space-24);
+  margin-top: var(--space-32);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(115deg, var(--color-primary-light), rgba(var(--white-rgb), 0.7));
+  border: var(--space-1) solid rgba(var(--blue-brand-rgb), 0.08);
+}
+
+.copy { display: flex; align-items: flex-start; gap: var(--space-16); min-width: 0; }
+.copy h2 { margin: 0; font-size: clamp(var(--font-size-xl), 2vw, var(--font-size-2xl)); line-height: var(--leading-snug); font-weight: 600; color: var(--color-text); }
+.copy p { margin: var(--space-8) 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.icon, .dialogIcon { display: grid; place-items: center; flex-shrink: 0; color: var(--color-primary); background: rgba(var(--blue-brand-rgb), 0.08); border-radius: var(--radius-full); width: var(--space-48); height: var(--space-48); }
+.icon svg, .dialogIcon svg { width: var(--space-24); height: var(--space-24); }
+.requestButton, .primaryButton { display: inline-flex; align-items: center; justify-content: center; min-height: var(--space-48); gap: var(--space-8); padding: var(--space-12) var(--space-24); border-radius: var(--radius-md); border: 0; font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; cursor: pointer; transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out); }
+.requestButton { background: var(--color-surface); color: var(--color-primary); box-shadow: var(--elevation-1); }
+.requestButton:hover { color: var(--color-primary-dark); background: var(--color-primary-light); box-shadow: var(--elevation-2); }
+.primaryButton { color: var(--color-text-inverse); background: var(--color-primary); }
+.primaryButton:hover { background: var(--color-primary-dark); }
+.requestButton:focus-visible, .primaryButton:focus-visible, .close:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(calc(100% - var(--space-32)), calc(var(--space-128) * 4));
+  max-height: calc(100dvh - var(--space-32));
+  overflow-y: auto;
+  padding: var(--space-32);
+  border: var(--space-1) solid rgba(var(--white-rgb), 0.8);
+  border-radius: var(--radius-xl);
+  background: rgba(var(--white-rgb), 0.95);
+  backdrop-filter: blur(var(--blur-md));
+  color: var(--color-text);
+  box-shadow: var(--elevation-5);
+}
+.dialog::backdrop { background: var(--scrim); backdrop-filter: blur(var(--blur-sm)); }
+.dialog[open] { animation: arrive var(--duration-base) var(--ease-out); }
+.close { position: absolute; inset-block-start: var(--space-16); inset-inline-end: var(--space-16); display: grid; place-items: center; width: var(--space-48); height: var(--space-48); border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out); }
+.close:hover { color: var(--color-text); background: var(--color-bg-alt); }
+.close svg { width: var(--space-20); height: var(--space-20); }
+.dialogIcon { margin-bottom: var(--space-24); }
+.dialog h2 { margin: 0; padding-right: var(--space-24); font-size: var(--font-size-2xl); font-weight: 600; line-height: var(--leading-snug); }
+.dialog p { margin: var(--space-12) 0 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.form { display: grid; gap: var(--space-12); margin-top: var(--space-24); }
+.form label { font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 500; }
+.phoneField { display: flex; align-items: center; gap: var(--space-12); min-height: var(--space-48); padding: 0 var(--space-16); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.phoneField:focus-within { border-color: var(--color-primary); outline: var(--space-2) solid rgba(var(--blue-brand-rgb), 0.12); }
+.phoneField[data-invalid="true"] { border-color: var(--red-600); }
+.phoneField > span { padding-right: var(--space-12); border-right: var(--space-1) solid var(--color-border); font-size: var(--font-size-base); line-height: var(--leading-normal); color: var(--color-text-secondary); }
+.phoneField input { min-width: 0; flex: 1; width: 100%; padding: var(--space-12) 0; border: 0; outline: none; background: transparent; font-size: var(--font-size-base); line-height: var(--leading-normal); color: var(--color-text); }
+.phoneField input::placeholder { color: var(--color-text-secondary); }
+.dialog .note { margin: 0; font-size: var(--font-size-xs); line-height: var(--leading-normal); }
+.dialog .error { margin: 0; color: var(--red-600); }
+.form .primaryButton { margin-top: var(--space-8); }
+.confirmation .primaryButton { width: 100%; margin-top: var(--space-24); }
+
+@keyframes arrive { from { opacity: 0; transform: translateY(var(--space-8)); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 768px) {
+  .section { grid-template-columns: minmax(0, 1fr) auto; padding: var(--space-32); }
+  .copy { align-items: center; }
+}
+@media (max-width: 639px) {
+  .dialog { padding: var(--space-24); }
+  .copy { flex-direction: column; }
+  .requestButton { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open] { animation: none; }
+  .requestButton, .primaryButton, .close { transition: none; }
+}
+
+/* A final chapter on the dark profile, rather than another boxed promotion. */
+.section.dark {
+  margin: 0;
+  padding: var(--profile-section-gap, var(--section-y-sm)) var(--profile-gutter, 0);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.dark .copy { align-items: flex-start; }
+.dark .copy h2 { color: var(--color-text-inverse); font-size: clamp(var(--font-size-2xl), 2.5vw, var(--font-size-3xl)); line-height: var(--leading-snug); }
+.dark .copy p { color: rgba(var(--white-rgb), 0.7); }
+.dark .icon { width: var(--space-32); height: var(--space-32); color: var(--sky-400); background: transparent; border-radius: 0; }
+.dark .requestButton { color: var(--navy-900); background: var(--color-text-inverse); box-shadow: none; border-radius: var(--radius-full); white-space: nowrap; }
+.dark .requestButton:hover { background: var(--slate-200); color: var(--navy-900); box-shadow: none; }
+.dark.dialog { color: var(--color-text-inverse); background: var(--navy-900); border-color: rgba(var(--white-rgb), 0.16); }
+.dark.dialog p { color: rgba(var(--white-rgb), 0.7); }
+.dark .dialogIcon { color: var(--sky-400); background: rgba(var(--white-rgb), 0.08); }
+.dark .close { color: rgba(var(--white-rgb), 0.7); }
+.dark .close:hover { color: var(--color-text-inverse); background: rgba(var(--white-rgb), 0.08); }
+.dark .phoneField { background: rgba(var(--white-rgb), 0.05); border-color: rgba(var(--white-rgb), 0.3); }
+.dark .phoneField:focus-within { border-color: var(--sky-400); outline-color: var(--sky-400); }
+.dark .phoneField > span { color: rgba(var(--white-rgb), 0.7); border-color: rgba(var(--white-rgb), 0.2); }
+.dark .phoneField input { color: var(--color-text-inverse); }
+.dark .phoneField input::placeholder { color: rgba(var(--white-rgb), 0.6); }
+.dark .phoneField[data-invalid="true"] { border-color: var(--red-400); }
+.dark.dialog .error { color: var(--red-400); }
+.dark .primaryButton { color: var(--navy-900); background: var(--color-text-inverse); }
+.dark .primaryButton:hover { background: var(--slate-200); }
+.dark button:focus-visible { outline: var(--space-2) solid var(--sky-400); outline-offset: var(--space-4); }
+@media (min-width: 768px) { .dark .copy { align-items: center; } }
+
+/* The light Design 2 ends with an editorial assistance row, not a card. */
+.section.editorial { margin: 0; padding: var(--profile-section-gap, var(--section-y-sm)) var(--profile-gutter, 0); border: 0; border-radius: 0; background: transparent; }
+.editorial .copy h2 { font-size: clamp(var(--font-size-2xl), 2.4vw, var(--font-size-3xl)); line-height: var(--leading-snug); font-weight: 500; }
+.editorial .icon { width: var(--space-32); height: var(--space-32); background: transparent; }
+.editorial .requestButton { border: var(--space-1) solid var(--color-border); background: transparent; box-shadow: none; color: var(--color-primary); white-space: nowrap; }
+.editorial .requestButton:hover { border-color: var(--color-primary); background: var(--color-primary-light); box-shadow: none; }
+
+.inlineRequest { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); min-height: var(--space-48); padding: var(--space-12) var(--space-20); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-full); background: transparent; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out); }
+.inlineRequest:hover { background: var(--color-primary-light); border-color: var(--color-primary); }
+.inlineRequest:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+@media (prefers-reduced-motion: reduce) { .inlineRequest { transition: none; } }

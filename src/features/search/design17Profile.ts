@@ -1,3 +1,4 @@
+import { doctorProfilePath } from "./doctorProfileUrl";
 import { searchDoctorsData } from "@/app/search/mockDoctors";
 import { presentationDoctorName } from "@/features/design-preview/presentationCopy";
 import { indiaClock, indiaDate } from "@/features/booking/appointmentTime";
@@ -43,7 +44,7 @@ export function design17ProfileUrl(doctor: DoctorListingItem, mode: Consultation
     params.set("source", "search");
     for (const key of ["name", "speciality", "degrees", "city", "experience", "img", "fee"] as const) params.set(key, doctor[key]);
   }
-  return `/doctors/${encodeURIComponent(doctor.id)}?${params}`;
+  return `${doctorProfilePath(doctor)}?${params}`;
 }
 
 export function getDesign17ProfileDoctor(id: string, params: ProfileParams): DoctorListingItem | null {

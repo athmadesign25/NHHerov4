@@ -1,0 +1,219 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/May2026/SV0H5mFjahOB6UbHZ3k5.webp",
+    "name": "Dr. Nidhi Tandon",
+    "id": 56,
+    "doctorCode": "106536",
+    "designation": "Senior Consultant, Clinical Lead",
+    "rating": "4.0",
+    "experience": "14",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Medical Oncology)",
+        "Certificate (Clinical & Transiational Science)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Medical Oncology"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 32,
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "code": "1011",
+          "checked": false
+        },
+        {
+          "id": 1413,
+          "name": "Narayana Clinic, HSR Layout",
+          "code": "3012",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "10th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Nidhi Tandon is a highly accomplished medical oncologist, renowned for her expertise in advanced cancer treatments like targeted therapy and immunotherapy. After receiving her oncology training from two of the world's most prestigious institutions, Tata Memorial Hospital in India and the Mayo Clinic in the United States, she's practising as a clinical and academic lead of medical oncology and advisor to oncology collegium at Narayana Health City, Bengaluru. Apart from authoring more than 50 research articles in...",
+    "full_description": "Dr. Nidhi Tandon is a highly accomplished medical oncologist, renowned for her expertise in advanced cancer treatments like targeted therapy and immunotherapy. After receiving her oncology training from two of the world's most prestigious institutions, Tata Memorial Hospital in India and the Mayo Clinic in the United States, she's practising as a clinical and academic lead of medical oncology and advisor to oncology collegium at Narayana Health City, Bengaluru. Apart from authoring more than 50 research articles in various national and international journals, she is also the recipient of prestigious awards like the Conquer Cancer Merit award from American Society of Clinical Oncology, SIOP Scholarship from International Society of Paediatric Oncology and Best Thesis Award at Indian Oncology Cooperative Network. She is also a mentor and guide to DNB Oncology students. Her clinical acumen, coupled with a passion for innovation, positions her as a leading figure in the evolving landscape of oncology. "
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Hematological Malignancies",
+      "Breast Cancer",
+      "Ovarian Cancer",
+      "Lung Cancer",
+      "Oncology",
+      "Medical Oncology",
+      "Cancer Care",
+      "Cancer",
+      "Oncology/Cancer Care",
+      "MEDICAL ONCOLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Leadership and Recognition:",
+            "link": ""
+          },
+          {
+            "text": "Recognized for her outstanding contributions in oncology, Dr. Tandon has received prestigious awards and scholarships.",
+            "link": ""
+          },
+          {
+            "text": "Conquer Cancer Merit Award for a poster presentation at the ASCO annual meeting in 2016.",
+            "link": ""
+          },
+          {
+            "text": "SIOP Scholarship for a poster presentation at the 46th Congress of the International Society of Pediatric Oncology in 2014.",
+            "link": ""
+          },
+          {
+            "text": "Best thesis award at the 30th Annual Meeting of the Indian Oncology Cooperative Network in 2014.",
+            "link": ""
+          },
+          {
+            "text": "Travel Scholarship for ACORD Workshop on Cancer Clinical Research Methods in 2012.",
+            "link": ""
+          },
+          {
+            "text": "Editorial Contributions:",
+            "link": ""
+          },
+          {
+            "text": "Dr. Tandon has made significant contributions to the field of oncology literature.",
+            "link": ""
+          },
+          {
+            "text": "Multiple presentations at various international conferences.",
+            "link": ""
+          },
+          {
+            "text": "Authored various original articles, review articles, editorials, and book chapters in peer-reviewed journals and international books.",
+            "link": ""
+          },
+          {
+            "text": "Professional Memberships & Certifications:",
+            "link": ""
+          },
+          {
+            "text": "Active member of prestigious medical associations.",
+            "link": ""
+          },
+          {
+            "text": "Association of Physicians of India.",
+            "link": ""
+          },
+          {
+            "text": "Indian Society of Medical and Pediatric Oncology.",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "Breast Cancer | Dr. Nidhi Tandon",
+        "name": "Dr. Nidhi Tandon",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/mChLoc7Iiw0"
+      },
+      {
+        "subtitle": "Types of Cancer and Treatments | Dr. Nidhi Tandon & Dr. Kushal Gupta",
+        "name": "Dr. Nidhi Tandon",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/eQpeUmQyad4"
+      },
+      {
+        "subtitle": "Cervical Cancer - Causes, Symptoms & Treatment | Dr. Saurabh, Dr. Rohit, and Dr. Nidhi",
+        "name": "Dr. Nidhi Tandon",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/rNXJTrsbPPI"
+      },
+      {
+        "subtitle": "Patient Success Story | Colon Cancer | Dr. Mansi, Dr. Nidhi & Dr. Ashwinikumar",
+        "name": "Dr. Nidhi Tandon",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/_OpowBdwYj8"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Lung Cancer: What Are The Early Signs?",
+        "date": "February 27, 2025",
+        "slug": "lung-cancer-what-are-early-signs",
+        "image": "",
+        "imgAlt": "Lung Cancer: What Are The Early Signs?",
+        "authorInitial": "NT",
+        "author": "Dr. Nidhi Tandon",
+        "category": "Medical Oncology|Oncology"
+      },
+      {
+        "title": "Coping with Cancer Diagnosis: Mental Health Support",
+        "date": "February 18, 2025",
+        "slug": "coping-with-cancer-diagnosis-mental-health-support",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/February2025/pV2W0ik69LbX3ks1u746.webp",
+        "imgAlt": "Coping with Cancer Diagnosis: Mental Health Support",
+        "authorInitial": "NT",
+        "author": "Dr. Nidhi Tandon",
+        "category": "Oncology"
+      },
+      {
+        "title": "How Genomic Testing is Personalising Cancer Treatments",
+        "date": "November 08, 2024",
+        "slug": "how-genomic-testing-is-personalising-cancer-treatments",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/November2024/n27Mx2rtEAFdodCkBmDj.webp",
+        "imgAlt": "How Genomic Testing is Personalising Cancer Treatments",
+        "authorInitial": "NT",
+        "author": "Dr. Nidhi Tandon",
+        "category": "Cancer"
+      },
+      {
+        "title": "Advances in Early Cancer Detection Methods - Fight Against the Disease",
+        "date": "August 01, 2024",
+        "slug": "advances-early-cancer-detection-methods-fight-disease",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/August2024/RpU7B4Og3nAtJuadlcGX.webp",
+        "imgAlt": "Advances in Early Cancer Detection Methods - Fight Against the Disease",
+        "authorInitial": "NT",
+        "author": "Dr. Nidhi Tandon",
+        "category": "Oncology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

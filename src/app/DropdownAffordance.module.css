@@ -1,0 +1,30 @@
+/* Shared feedback for disclosure controls; paint stays outside the icon box,
+   preserving existing alignment, wrapping and chevron rotation. */
+.root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]) :global(.lucide-chevron-down),
+.root :where(button[aria-haspopup]) :global(.lucide-chevron-up),
+.root :where(select) ~ :global(.lucide-chevron-down) {
+  --chevron-hover-fill: color-mix(in srgb, currentColor 10%, transparent);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  box-shadow: 0 0 0 var(--space-4) transparent;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+.root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]):is(:focus-visible, [aria-expanded="true"]):not(:disabled) :global(.lucide-chevron-down),
+.root :where(button[aria-haspopup]):is(:focus-visible, [aria-expanded="true"]):not(:disabled) :global(.lucide-chevron-up),
+.root :where(select:focus-visible:not(:disabled)) ~ :global(.lucide-chevron-down) {
+  background-color: var(--chevron-hover-fill);
+  box-shadow: 0 0 0 var(--space-4) var(--chevron-hover-fill);
+}
+@media (hover: hover) {
+  .root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]):hover:not(:disabled) :global(.lucide-chevron-down),
+  .root :where(button[aria-haspopup]):hover:not(:disabled) :global(.lucide-chevron-up),
+  .root :where(select:hover:not(:disabled)) ~ :global(.lucide-chevron-down) {
+    background-color: var(--chevron-hover-fill);
+    box-shadow: 0 0 0 var(--space-4) var(--chevron-hover-fill);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]) :global(.lucide-chevron-down),
+  .root :where(button[aria-haspopup]) :global(.lucide-chevron-up),
+  .root :where(select) ~ :global(.lucide-chevron-down) { transition: none; }
+}

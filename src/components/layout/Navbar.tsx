@@ -332,6 +332,8 @@ export default function Navbar() {
           {isLoggedIn && isBookingJourney ? <BookingMemberMenu key={pathname} onLogout={logout} confirmed={isBookingConfirmation} /> : isLoggedIn ? (
             <div style={{ position: "relative" }} ref={profileDropdownRef}>
               <button
+                aria-haspopup="menu"
+                aria-expanded={isProfileDropdownOpen}
                 onClick={() => {
                   setIsProfileDropdownOpen(!isProfileDropdownOpen);
                   if (isProfileDropdownOpen) setIsMembersExpanded(false);

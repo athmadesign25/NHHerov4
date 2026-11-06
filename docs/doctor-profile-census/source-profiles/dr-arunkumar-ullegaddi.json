@@ -1,0 +1,101 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/March2025/wgvq5sT6s3d1dxsS0X31.jpg",
+    "name": "Dr. Arunkumar Ullegaddi",
+    "id": 3076,
+    "doctorCode": "119730",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "10",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Cardiology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Adult Cardiology"
+      ],
+      "subSpecialties": [
+        "Interventional Cardiology"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 121,
+          "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+          "code": "1001",
+          "checked": true
+        },
+        {
+          "id": 1134,
+          "name": "Narayana Clinic, Electronic City",
+          "code": "3010",
+          "checked": false
+        },
+        {
+          "id": 1272,
+          "name": "Narayana Clinic, Manipal County",
+          "code": "3011",
+          "checked": false
+        },
+        {
+          "id": 1729,
+          "name": "Narayana Clinic, JP Nagar",
+          "code": "6028",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Arunkumar Ullegaddi is a highly skilled and experienced Consultant Cardiologist at Narayana Institute of Cardiac Sciences, Bangalore. With a strong focus on interventional cardiology, Dr. Arunkumar has developed rare and advanced expertise in performing complex coronary angioplasties, a critical procedure for patients with severe coronary artery disease. His proficiency extends to the use of cutting-edge imaging technologies such as Intravascular Ultrasound (IVUS) and Optical Coherence Tomography (OCT), which p...",
+    "full_description": "Dr. Arunkumar Ullegaddi is a highly skilled and experienced Consultant Cardiologist at Narayana Institute of Cardiac Sciences, Bangalore. With a strong focus on interventional cardiology, Dr. Arunkumar has developed rare and advanced expertise in performing complex coronary angioplasties, a critical procedure for patients with severe coronary artery disease. His proficiency extends to the use of cutting-edge imaging technologies such as Intravascular Ultrasound (IVUS) and Optical Coherence Tomography (OCT), which provide highly detailed visualizations of the coronary arteries, enabling precise diagnosis and optimal treatment planning.\r\nDr. Arunkumar is also adept at handling challenging cases involving significant coronary calcification, using advanced calcium modification techniques like Rotational Atherectomy (ROTA), Intravascular Lithotripsy (IVL), and Orbital Atherectomy, ensuring safer and more effective stent deployment in heavily calcified vessels. His expertise covers a wide range of complex and high-risk procedures, including left main bifurcation interventions, chronic total occlusion (CTO) interventions, and specialized imaging-guided interventions using IVUS and OCT for precision treatment.\r\nThrough his meticulous approach, in-depth knowledge, and commitment to incorporating the latest advancements in cardiac care, Dr. Arunkumar Ullegaddi consistently delivers exceptional outcomes, even in the most challenging coronary interventions. His dedication to patient care and his advanced procedural skills have earned him recognition among both peers and patients, making him a trusted name in interventional cardiology at Narayana Institute of Cardiac Sciences.\"\r\nPost held in past\r\n\r\nAssistant professor - Sri Jayadeva Institute of Cardiovascular Sciences Research\r\nSenior Interventional Cardiologist - Manipal Hospital, Bengaluru\r\nSenior Interventional Cardiologist - Apollo hospitals, Bengaluru\r\n\r\nRare/ Unique Skills\r\n\r\nComplex coronary angioplasty\r\nImaging like IVUS n OCT ,\r\nCalcium modification like ROTA / IVL/ Orbital Atherectomy\r\n\r\nKey Procedures Performed\r\n\r\nLeft main Bifurcation\r\nCTO intervention,\r\nROTA - Rotational Atherectomy\r\nIVUS - Cardiac intravascular ultrasound\r\nOCT - Optical Coherence Tomography\r\nIVL - Intravascular Lithotripsy"
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Cardiology - Adult",
+      "CARDIOLOGY - ADULT"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Professional Memberships &amp; Certifications",
+        "items": [
+          {
+            "text": "Life Member of Indian College of Cardiology",
+            "link": ""
+          },
+          {
+            "text": "Life Member of Cardiological Society Of India",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

@@ -1,0 +1,75 @@
+{
+  "items": [
+    {
+      "category": "Cardiology",
+      "doctor": "Dr. Aditi Singhvi",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-aditi-singhvi",
+      "sourcePath": "doctorAbout.full_description",
+      "embeddedHeading": "Post held in past"
+    },
+    {
+      "category": "Cardiology",
+      "doctor": "Dr. Arunkumar Ullegaddi",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+      "sourcePath": "doctorAbout.full_description",
+      "embeddedHeading": "Post held in past"
+    },
+    {
+      "category": "Cardiology",
+      "doctor": "Dr. Arunkumar Ullegaddi",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+      "sourcePath": "doctorAbout.full_description",
+      "embeddedHeading": "Rare/ Unique Skills"
+    },
+    {
+      "category": "Cardiology",
+      "doctor": "Dr. Arunkumar Ullegaddi",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+      "sourcePath": "doctorAbout.full_description",
+      "embeddedHeading": "Key Procedures Performed"
+    },
+    {
+      "category": "Cardiology",
+      "doctor": "Dr. Bagirath Raghuraman",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+      "sourcePath": "doctorAbout.full_description",
+      "embeddedHeading": "Post held in past"
+    },
+    {
+      "category": "Neurology",
+      "doctor": "Dr. Gopal Krishna Dash",
+      "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-gopal-krishna-dash",
+      "sourcePath": "doctorAchivements.list[0].items[4].text",
+      "embeddedHeading": "Professional Memberships and Certifications"
+    },
+    {
+      "category": "Cancer Care",
+      "doctor": "Dr. Akshita Singh",
+      "url": "https://www.narayanahealth.org/c/bangalore/breast-oncology-and-oncoplastic-surgery/dr-akshita-singh",
+      "sourcePath": "doctorAchivements.list[0].items[0].text",
+      "embeddedHeading": "Awards & Recognition"
+    },
+    {
+      "category": "Cancer Care",
+      "doctor": "Dr. Nidhi Tandon",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+      "sourcePath": "doctorAchivements.list[0].items[0].text",
+      "embeddedHeading": "Leadership and Recognition:"
+    },
+    {
+      "category": "Cancer Care",
+      "doctor": "Dr. Nidhi Tandon",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+      "sourcePath": "doctorAchivements.list[0].items[6].text",
+      "embeddedHeading": "Editorial Contributions:"
+    },
+    {
+      "category": "Cancer Care",
+      "doctor": "Dr. Nidhi Tandon",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+      "sourcePath": "doctorAchivements.list[0].items[10].text",
+      "embeddedHeading": "Professional Memberships & Certifications:"
+    }
+  ],
+  "interpretation": "Exact heading-like lines reviewed inside full About narrative or achievement item strings; not separate top-level CMS fields. Broad statements and formal standalone groups remain separate in source inventory."
+}

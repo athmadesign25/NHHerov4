@@ -8,8 +8,14 @@
 .trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
 
 .picker button[aria-pressed]:focus-visible { outline-offset: -3px; color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
-@media (hover: hover) {
-  .trigger:hover .chevron { transform: translateY(calc(var(--sp-1) / 4)); }
-  .trigger[aria-expanded="true"]:hover .chevron { transform: rotate(180deg); }
-}
 @media (prefers-reduced-motion: reduce) { .trigger > span, .chevron, .option { transition: none; } }
+
+/* Keep hospital selection and directions separate, aligned to the first text line. */
+.hospitalRow { display: flex; align-items: flex-start; gap: var(--space-8); min-width: 0; }
+.hospitalRow > .hospital { flex: 0 1 auto; width: auto; min-width: 0; }
+.directions { --distance-tint: color-mix(in srgb, var(--d7-muted) 25%, var(--color-primary)); position: relative; display: inline-flex; flex-shrink: 0; align-items: center; gap: var(--space-4); min-height: var(--space-24); margin-top: calc(var(--space-4) - var(--space-1)); padding-inline: var(--space-8); border-radius: var(--radius-full); background: color-mix(in srgb, var(--distance-tint) 6%, transparent); color: var(--d7-muted); font-size: var(--font-size-xs); font-weight: 400; line-height: var(--leading-body); text-decoration: none; white-space: nowrap; backdrop-filter: blur(var(--space-8)); transition: background-color var(--transition-fast); }
+.directions::before { content: ""; position: absolute; inset: calc(var(--space-8) * -1.25) 0; }
+.directions:is(:focus-visible, :active) { background: color-mix(in srgb, var(--distance-tint) 11%, transparent); }
+.directions:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+@media (hover: hover) { .directions:hover { background: color-mix(in srgb, var(--distance-tint) 11%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .directions { transition: none; } }

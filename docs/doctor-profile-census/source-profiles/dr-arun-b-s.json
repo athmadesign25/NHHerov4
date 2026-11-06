@@ -1,0 +1,68 @@
+{
+  "doctorOverview": {
+    "image": null,
+    "name": "Dr. Arun B S",
+    "id": 2362,
+    "doctorCode": "110013",
+    "designation": "Visiting Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DNB (Cardiology)",
+        "DM (Cardiology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Adult Cardiology"
+      ],
+      "subSpecialties": [
+        "Interventional Cardiology"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 32,
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "code": "1011",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "5th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": [],
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Cardiology",
+      "Cardiology Adult",
+      "Cardiac Sciences",
+      "heart",
+      "Interventional Cardiology",
+      "Interventional",
+      "CARDIOLOGY - ADULT"
+    ]
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

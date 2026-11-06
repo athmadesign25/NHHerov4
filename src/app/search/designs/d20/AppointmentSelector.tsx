@@ -16,11 +16,12 @@ import chip from "../../doctors/DoctorControlChip.module.css";
 import styles from "./DoctorCard.module.css";
 import { cardLayoutTransition } from "./cardMotion";
 
-export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false }: {
+export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false, showHospitalDirections = false }: {
   doctor: BookingDoctorSummary;
   selection: AppointmentSelection;
   now: number;
   autoSelectFirst?: boolean;
+  showHospitalDirections?: boolean;
   onChange: (selection: AppointmentSelection) => void;
 }) {
   const dates = appointmentDates(now, DESIGN16_BOOKING_DAYS);
@@ -106,7 +107,7 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
   return <div className={styles.picker}>
     {availableModes.length > 1 && <div className={styles.consultationControl}><DoctorConsultationToggle mode={selection.mode} availableModes={availableModes} iconVariant="availability" onModeChange={mode => setContext(mode, selection.hospital)} /></div>}
     <AnimatePresence initial={false} mode="popLayout">{selection.mode === "hospital" && <motion.section key="hospital" className={styles.fieldset} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .16 }} aria-labelledby={`${id}-hospital-title`}><h3 className={styles.fieldTitle} id={`${id}-hospital-title`}>Hospital</h3>
-      <HospitalPicker doctorName={doctor.name} locations={locations} value={selection.hospital} onChange={hospital => setContext(selection.mode, hospital)} />
+      <HospitalPicker showDirections={showHospitalDirections} distanceKm={profile?.practiceLocations?.find(location => location.hospital === selection.hospital)?.distanceKm} doctorName={doctor.name} locations={locations} value={selection.hospital} onChange={hospital => setContext(selection.mode, hospital)} />
     </motion.section>}</AnimatePresence>
     <motion.section layout={reduced ? false : "position"} transition={{ layout: cardLayoutTransition }} className={styles.fieldset} aria-labelledby={`${id}-date-title`}><div className={styles.timeHeading}><h3 id={`${id}-date-title`}>Select date</h3></div><div className={styles.scrollRow} data-date-row data-fade-start={dateEdges.start} data-lenis-prevent-horizontal><div className={styles.dates} id={`${id}-dates`} ref={dateStrip} onScroll={updateDateEdges} data-fade-start={dateEdges.start} data-fade-end={dateEdges.end} data-lenis-prevent-horizontal>{months.map(month => <div key={month.key} className={styles.monthGroup}>
       <span className={styles.monthPill} data-month-pill data-month-label={month.label} aria-hidden><span>{month.label}</span></span>{month.dates.map(date => {

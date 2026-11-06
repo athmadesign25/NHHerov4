@@ -1346,3 +1346,47 @@
 
 .mobileEmergency::before { content: ""; position: absolute; inset: calc(-1 * var(--space-8)) 0; }
 .mobileEmergency:hover { background: var(--red-emergency); }
+
+/* Keep profile and booking account controls reachable on small screens. */
+@media (max-width: 639px) {
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav {
+    --profile-mobile-action-size: calc(var(--space-40) + var(--space-4));
+    gap: var(--space-8);
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileActionGroup {
+    flex: 1;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu]) {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: calc(var(--space-128) + var(--space-32));
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu] > button) {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileEmergency {
+    flex-shrink: 0;
+    width: var(--profile-mobile-action-size);
+    min-height: var(--profile-mobile-action-size);
+    margin: 0;
+    padding: 0;
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileEmergency > span { display: none; }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileEmergency::before { inset: 0; }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .appleHamburgerBtn { flex-shrink: 0; }
+}
+@media (max-width: 374px) {
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu]) { flex: 0 0 var(--profile-mobile-action-size); }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu] > button) {
+    min-height: var(--profile-mobile-action-size);
+    justify-content: center;
+    padding: 0;
+    gap: 0;
+  }
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu] > button > :nth-child(2)),
+  :global(body:has([data-profile-design="2"], [data-design17-booking="d20"])) .mobileNav :global([data-booking-member-menu] > button > svg) { display: none; }
+}

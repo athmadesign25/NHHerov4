@@ -185,12 +185,15 @@ test('featured surgeons use surgical labels and aliases while older design fixtu
   const swapped = design20Directory.find(doctor => doctor.id === 'dr-3');
   const abhinandan = design20BangaloreDoctors.find(doctor => doctor.id === 'd20-dr-abhinandan-s-punit');
   assert.deepEqual(swapped, { ...untouched, hospital: abhinandan.hospital,
-    hospitals: abhinandan.hospitals, hospitalCount: '+3' });
+    hospitals: abhinandan.hospitals, hospitalCount: '+3', profileSlug: 'dr-arun-krishnan' });
   const swappedAbhinandan = design20Directory.find(doctor => doctor.id === abhinandan.id);
   assert.equal(swappedAbhinandan.hospital, untouched.hospital);
   assert.deepEqual(swappedAbhinandan.hospitals, untouched.hospitals);
   assert.deepEqual(getDesign20BookingDoctor(swapped.id).locations.map(location => location.name), abhinandan.hospitals);
-  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name), untouched.hospitals);
+  // Keep the requested preview units first while allowing the complete published
+  // profile affiliations to survive the profile -> booking handoff.
+  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name),
+    [...new Set([...untouched.hospitals, ...abhinandan.hospitals])]);
 });
 
 test('D20 featured profile selection and draft recovery accept only their corrected official affiliations', () => {

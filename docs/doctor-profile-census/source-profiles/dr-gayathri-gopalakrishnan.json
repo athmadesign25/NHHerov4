@@ -1,0 +1,101 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/May2024/fngyretqzqAFN7fXFRrc.webp",
+    "name": "Dr. Gayathri Gopalakrishnan",
+    "id": 784,
+    "doctorCode": "100792",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DrNB (Gastroenterology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Medical Gastroenterology"
+      ],
+      "subSpecialties": [
+        "Advanced Therapeutic Endoscopy",
+        "Advanced Diagnostic Endoscopy",
+        "Gastrointestinal Malignancy"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 1139,
+          "name": "Narayana Clinic, Jayanagar",
+          "code": "2015",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "11th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr.Gopalakrishnan is a highly experienced professional with years of experience in the field of Gastrointestinology and Endoscopic techniques. Having worked in various professional setups and having undergone meticulous training in leading institutions, Dr. Gopalakrishnan is also a recipient of the prestigious Dr. PN Berry Scholarship, 1998-1998.",
+    "full_description": "Dr.Gopalakrishnan is a highly experienced professional with years of experience in the field of Gastrointestinology and Endoscopic techniques. Having worked in various professional setups and having undergone meticulous training in leading institutions, Dr. Gopalakrishnan is also a recipient of the prestigious Dr. PN Berry Scholarship, 1998-1998."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Gastro Sciences",
+      "Medical Gastroenterology",
+      "Gastroenterology",
+      "Gastro",
+      "Advanced & Interventional Endocscopy",
+      "Interventional Endocscopy",
+      "Endocscopy",
+      "MEDICAL GASTROENTEROLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Publication",
+        "items": [
+          {
+            "text": "Mucocutaneous exposure to body fluids during digestive endoscopy: the need for universal precautions. KM Mohandas, Gayathri Gopalakrishnan, IJG 1999 Vol 18 (3) 109 - 111",
+            "link": ""
+          },
+          {
+            "text": "Endoscopic palliation of malignant obstructive jaundice using resterilized accessories: an audit of success, complications, mortality and cost. V Santhi Swaroop, V Dhir, K M Mohandas, S D Wagle, KF Vazifdar, Gayathri Gopalakrishnan, O P Sharma, P Jagannath, L J Desouza, IJG 1997 Vol 16; 91-93",
+            "link": ""
+          },
+          {
+            "text": "Removal of the impacted basket during endoscopic papillotomy: A novel method using Precut papillote. V Dhir, SD Wagle, Gayathri Gopalakrishnan, IJG 1996, Vol 15 (4): 150",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

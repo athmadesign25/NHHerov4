@@ -8,6 +8,8 @@ import type { BookingMemberSelection } from "./memberSelection";
 import type { AuthIdentity } from "../design15/auth";
 import { design17Patients } from "../design17/patients";
 import { design17ListingReturnTo } from "@/features/search/design17Navigation";
+import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
+import { doctorProfilePath } from "@/features/search/doctorProfileUrl";
 import { defaultSponsorshipForPatient, design20Pricing, isSponsorshipId, type SponsorshipId } from "./pricing";
 
 export type Design20Phase = "slots" | "auth" | "member";
@@ -151,6 +153,7 @@ export function design20ListingReturnTo(returnTo: string): string {
   safe.searchParams.delete("booking");
   safe.searchParams.delete("bookingMode");
   safe.searchParams.delete("bookingResume");
+  safe.searchParams.delete("bookingEntry");
   safe.searchParams.delete("hospital");
   safe.searchParams.delete("date");
   safe.searchParams.delete("step");
@@ -173,9 +176,40 @@ export function design20InlineUrl(draft: Design15Draft, returnTo: string): strin
   return `${url.pathname}?${url.searchParams}`;
 }
 
-export function design20FlowUrl(draft: Design15Draft, returnTo: string): string {
+/** Retain only this clinician's local profile route and its deliberate design preview. */
+export function design20ProfileEntryUrl(entry: string | null | undefined, doctorId: string): string | undefined {
+  if (!entry?.startsWith("/") || entry.startsWith("//") || /[\\\u0000-\u001f\u007f]/.test(entry)) return undefined;
+  try {
+    const url = new URL(entry, "https://nh.local");
+    const match = /^\/doctors\/([^/]+)\/?$/.exec(url.pathname);
+    const doctor = getDesign20DirectoryDoctor(doctorId);
+    const source = match ? getDesign20DirectoryDoctor(decodeURIComponent(match[1])) : null;
+    if (url.origin !== "https://nh.local" || !doctor || source?.id !== doctor.id) return undefined;
+    const profileDesign = url.searchParams.get("profileDesign");
+    return `${doctorProfilePath(doctor)}${profileDesign === "1" || profileDesign === "2" ? `?profileDesign=${profileDesign}` : ""}`;
+  } catch { return undefined; }
+}
+
+/** A visible Back action also works after refresh, without depending on browser history. */
+export function design20BackUrl(draft: Design15Draft, returnTo: string, bookingEntry?: string | null): string {
+  const entry = design20ProfileEntryUrl(bookingEntry, draft.doctorId);
+  if (!entry) return design20InlineUrl(draft, returnTo);
+  const url = new URL(entry, "https://nh.local");
+  url.searchParams.set("design", "d20");
+  url.searchParams.set("returnTo", design20ListingReturnTo(returnTo));
+  url.searchParams.set("booking", draft.doctorId);
+  url.searchParams.set("bookingResume", "1");
+  url.searchParams.set("mode", draft.selection.mode);
+  url.searchParams.set("hospital", draft.selection.hospital);
+  url.searchParams.set("date", draft.selection.date);
+  return `${url.pathname}?${url.searchParams}`;
+}
+
+export function design20FlowUrl(draft: Design15Draft, returnTo: string, bookingEntry?: string | null): string {
   const params = new URLSearchParams({ design: "d20", returnTo: design20ListingReturnTo(returnTo),
     mode: draft.selection.mode, hospital: draft.selection.hospital, date: draft.selection.date });
+  const entry = design20ProfileEntryUrl(bookingEntry, draft.doctorId);
+  if (entry) params.set("bookingEntry", entry);
   if (draft.receipt) {
     params.set("ref", draft.receipt.ref);
     return `/doctors/${encodeURIComponent(draft.doctorId)}/book/confirmation?${params}`;

@@ -421,6 +421,15 @@
   --d17-lite-ink: color-mix(in srgb, var(--d17-card-surface) 90%, var(--color-primary-dark));
   --d17-lite-accent: var(--color-primary);
 
+  /* Keep the booking canvas consistent without stretching the glow on long profiles. */
+  --booking-page-background:
+    radial-gradient(ellipse 100% clamp(calc(var(--sp-16) * 3), 65vw, calc(var(--sp-16) * 6)) at 15% 0,
+      color-mix(in srgb, var(--color-primary) 8%, transparent),
+      color-mix(in srgb, var(--color-primary) 4%, transparent) 40%,
+      color-mix(in srgb, var(--color-primary) 1%, transparent) 72%,
+      transparent 100%),
+    var(--d17-lite-surface);
+
   /* Immutable journey palettes: islands never inherit a surrounding palette. */
   --journey-ink-bg: #0a101c;
   --journey-ink-surface: #121c2b;
@@ -440,6 +449,7 @@
   --journey-paper-bg: var(--color-bg);
   --journey-paper-surface: #ffffff;
   --journey-paper-raised: #eaf0f8;
+  --journey-paper-icon-bg: #f2f5fa;
   --journey-paper-glass: rgba(255, 255, 255, 0.78);
   --journey-paper-border: rgba(40, 70, 109, 0.22);
   --journey-paper-text: #152c48;

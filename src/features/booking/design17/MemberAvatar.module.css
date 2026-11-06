@@ -1,0 +1,17 @@
+.monogram.monogram {
+  display: inline-grid;
+  place-items: center;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.monogram[data-size="48"] { font-size: var(--font-size-base); }
+
+@media (forced-colors: active) {
+  .monogram.monogram { background: Canvas; color: CanvasText; outline: var(--space-1) solid CanvasText; outline-offset: calc(-1 * var(--space-1)); }
+}

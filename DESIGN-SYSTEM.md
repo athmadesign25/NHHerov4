@@ -247,6 +247,25 @@ resolve `var()`.
 
 ---
 
+## Booking confirmation typography
+
+The latest confirmation preview uses `src/features/booking/design20/BookingTypography.module.css`.
+Reuse its roles for booking details; do not introduce a separate size for each field.
+
+| Role | Size / line height | Weight | Colour |
+|---|---|---|---|
+| `value` — patient, doctor, hospital | 16 / 24px | 500 | `--color-text` |
+| `emphasis` — appointment date/time, payable amount | 16 / 24px | 600 | `--color-text` |
+| `supporting` — labels, age, speciality, timezone, payment rows | 14 / 21px | 400 | `--color-text-secondary` |
+| `action` — calendar and payment disclosure | 14 / 21px | 500 | `--color-primary` |
+| `savings` — savings message | 14 / 21px | 400; amount 600 | `--journey-paper-success` |
+
+The page heading remains separate: fluid 24–30px, weight 600. Detail sizes stay
+constant across breakpoints and wrap naturally. Use 4px between labels and values,
+12px within appointment information, and 24px between sections. Distance text uses
+the 14px supporting scale while retaining the shared directions-pill treatment.
+Older comparison previews retain their existing styles.
+
 ## Before you open a PR
 
 - [ ] `npm run check:tokens` passes

@@ -1,0 +1,88 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/April2024/c0I77X0pzNaYrx8BUtxf.webp",
+    "name": "Dr. Hashmath Khanum B N",
+    "id": 2522,
+    "doctorCode": "110830",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "6",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (Radiation Oncology)",
+        "Fellowship (Clinical Oncology & Research)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Radiation Oncology"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "5th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "MBBS from RGUHS Bangalore, MD in Radiation oncology from Bangalore medical College, senior residency in Radiation oncology from kidwai memorial institute of oncology, fellowship in clinical oncology from Tata medical centre Kolkata, Associate consultant radiation oncology Apollo hospital Bangalore, FRCR currently from NHS UK",
+    "full_description": "MBBS from RGUHS Bangalore, MD in Radiation oncology from Bangalore medical College, senior residency in Radiation oncology from kidwai memorial institute of oncology, fellowship in clinical oncology from Tata medical centre Kolkata, Associate consultant radiation oncology Apollo hospital Bangalore, FRCR currently from NHS UK"
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Gold medal in Radiation Oncology RGUHS 2018. FRCR candidate (NHS UK)",
+      "Oncology",
+      "Radiation Oncology",
+      "Radiation",
+      "Cancer Care",
+      "Cancer Radiation",
+      "Cancer",
+      "Oncology/Cancer Care",
+      "RADIATION ONCOLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Fellowship (Tata Medical Centre)",
+            "link": ""
+          },
+          {
+            "text": "Fellow of RCR",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

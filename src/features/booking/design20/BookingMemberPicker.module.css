@@ -1,36 +1,52 @@
-.container { position: relative; min-width: 0; }
-.container[data-open] { z-index: 8; }
-.trigger, .option, .add { display: flex; align-items: center; gap: var(--sp-1); width: 100%; min-width: 0; min-height: calc(var(--sp-1) * 7); padding: var(--sp-1) calc(var(--sp-1) * 1.5); border: 0; color: var(--d7-text); font: inherit; text-align: left; cursor: pointer; transition: background-color var(--transition-fast), box-shadow var(--transition-fast); }
-.trigger { gap: var(--sp-2); border: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent); border-radius: var(--radius-md); background: linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 45%, transparent), transparent), color-mix(in srgb, var(--color-primary-light) 65%, transparent); backdrop-filter: blur(var(--sp-1)); -webkit-backdrop-filter: blur(var(--sp-1)); }
-.avatar { display: inline-grid; place-items: center; width: var(--sp-4); height: var(--sp-4); flex: 0 0 var(--sp-4); border-radius: var(--radius-full); object-fit: cover; color: var(--d7-muted); background: var(--journey-paper-raised); }
+.container { min-width: 0; }
+.members { display: grid; gap: var(--space-8); }
+.option {
+  position: relative; display: flex; align-items: center; gap: var(--space-12); min-width: 0;
+  min-height: var(--space-64); padding: var(--space-8) var(--space-12);
+  border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md);
+  color: var(--d7-text); background: var(--color-bg-card); cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+.option[data-selected] {
+  border-color: color-mix(in srgb, var(--d7-action) 30%, var(--color-border));
+  background: color-mix(in srgb, var(--d7-action) 3%, var(--color-bg-card));
+}
+.radio { position: absolute; width: var(--space-1); height: var(--space-1); margin: 0; clip-path: inset(50%); overflow: hidden; }
+.check {
+  display: grid; place-items: center; width: var(--space-20); height: var(--space-20); flex: 0 0 var(--space-20);
+  border: var(--space-1) solid var(--color-text-secondary); border-radius: var(--radius-full); background: var(--color-bg-card);
+}
+.radio:checked + .check { background: var(--d7-action); border-color: var(--d7-action); color: var(--color-text-inverse); }
+.option:has(.radio:focus-visible) { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.avatar {
+  display: inline-grid; place-items: center; width: var(--space-40); height: var(--space-40); flex: 0 0 var(--space-40);
+  border-radius: var(--radius-full); object-fit: cover; color: var(--d7-muted); background: var(--journey-paper-raised);
+}
 .copy { flex: 1; min-width: 0; }
-.copy strong { display: block; color: var(--d7-text); font-size: var(--font-size-sm); font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
-.copy small { display: block; color: var(--d7-muted); font-size: var(--font-size-xs); line-height: 1.5; }
-.trigger .avatar { width: var(--sp-5); height: var(--sp-5); flex-basis: var(--sp-5); }
-.trigger .copy strong { font-size: var(--font-size-base); font-weight: 600; }
-.change { flex-shrink: 0; color: var(--color-primary); font-size: var(--font-size-sm); font-weight: 500; transition: color var(--transition-fast); }
-.popup { --d7-text: var(--d17-lite-ink); --d7-muted: var(--journey-paper-muted); position: fixed; z-index: 50; left: var(--member-popup-left); top: var(--member-popup-top); width: var(--member-popup-width); max-height: min(calc(var(--sp-16) * 2.5), var(--member-popup-space, 45dvh)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--d7-muted) 25%, transparent) transparent; padding: calc(var(--sp-1) / 2); border: 1px solid color-mix(in srgb, var(--d7-text) 12%, transparent); border-radius: var(--radius-lg); color-scheme: light; background: var(--journey-paper-surface); box-shadow: var(--shadow-lg); }
-.option { border-radius: var(--radius-md); background: transparent; }
-.option[aria-selected="true"] { background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
-.check { display: grid; place-items: center; width: var(--sp-2); height: var(--sp-2); flex: 0 0 var(--sp-2); border: 1px solid color-mix(in srgb, var(--d7-muted) 34%, transparent); border-radius: var(--radius-full); }
-.option[aria-selected="true"] .check { background: var(--color-emergency); border-color: var(--color-emergency); color: var(--color-text-inverse); }
-.add { color: var(--color-primary); background: transparent; border-radius: var(--radius-md); font-size: var(--font-size-sm); font-weight: 500; }
-.addIcon { display: grid; place-items: center; width: var(--sp-4); height: var(--sp-4); flex: 0 0 var(--sp-4); border: 1px dashed color-mix(in srgb, var(--color-primary) 45%, transparent); border-radius: var(--radius-full); }
-.container button:disabled, .popup button:disabled { cursor: not-allowed; opacity: .55; }
-.container button:focus-visible, .popup button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .popup { background: linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 28%, transparent), transparent 65%), color-mix(in srgb, var(--d17-lite-surface) 70%, transparent); backdrop-filter: blur(var(--sp-2)) saturate(130%); -webkit-backdrop-filter: blur(var(--sp-2)) saturate(130%); }
+.copy strong { display: block; color: var(--d7-text); font-size: var(--font-size-sm); font-weight: 600; line-height: var(--leading-body); overflow-wrap: anywhere; }
+.copy small { display: block; color: var(--d7-muted); font-size: var(--font-size-xs); line-height: var(--leading-body); }
+.actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0 var(--space-16); padding-top: var(--space-4); }
+.add, .expand {
+  display: inline-flex; align-items: center; justify-content: flex-start; gap: var(--space-8); min-height: var(--space-48);
+  padding: 0; border: 0; border-radius: var(--radius-sm); color: var(--color-primary); background: transparent;
+  font: inherit; font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-body); cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
 }
+.addIcon { display: grid; place-items: center; width: var(--space-24); height: var(--space-24); border: var(--space-1) dashed color-mix(in srgb, var(--color-primary) 50%, transparent); border-radius: var(--radius-full); }
+.expand svg { transition: transform var(--duration-base) var(--ease-out); }
+.expand[aria-expanded="true"] svg { transform: rotate(180deg); }
+.container button:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.option[data-disabled], .container button:disabled { cursor: not-allowed; opacity: .5; }
 @media (hover: hover) and (pointer: fine) {
-  .trigger:hover:not(:disabled) .change { color: var(--color-primary-dark); }
-  .option:hover:not(:disabled), .add:hover:not(:disabled) { background: color-mix(in srgb, var(--color-primary) 7%, transparent); }
+  .option:hover:not([data-disabled]) { border-color: var(--color-text-secondary); }
+  .option[data-selected]:hover:not([data-disabled]) { border-color: var(--d7-action); }
+  .add:hover:not(:disabled), .expand:hover:not(:disabled) { color: var(--color-primary-dark); }
 }
-@media (max-width: 640px) { .trigger { gap: var(--sp-1); } }
-@media (prefers-reduced-motion: reduce) { .trigger, .option, .add, .change { transition: none; } }
-@media (prefers-reduced-transparency: reduce) { .popup, .trigger { background: var(--journey-paper-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (max-width: 640px) { .option { gap: var(--space-8); } }
+@media (prefers-reduced-motion: reduce) { .option, .add, .expand, .expand svg { transition: none; } }
 @media (forced-colors: active) {
-  .trigger, .popup { background: Canvas; border-color: CanvasText; box-shadow: none; }
-  .option[aria-selected="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
+  .option, .option[data-selected] { background: Canvas; color: CanvasText; border-color: ButtonText; }
+  .option[data-selected] { border-color: Highlight; }
   .check, .addIcon { border-color: ButtonText; }
-  .option[aria-selected="true"] .check { background: Highlight; color: HighlightText; }
+  .radio:checked + .check { forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; }
 }

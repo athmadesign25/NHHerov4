@@ -16,9 +16,9 @@ import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/s
 import type { ConsultationMode, DoctorListingItem } from "@/features/search/doctorListing";
 import styles from "./DoctorProfileBooking.module.css";
 
-interface Props { doctor: DoctorListingItem; initialMode: ConsultationMode; date: string; returnTo: string }
+interface Props { doctor: DoctorListingItem; initialMode: ConsultationMode; date: string; returnTo: string; tone?: "light" | "dark" }
 
-export default function DoctorProfileBooking({ doctor, initialMode, date, returnTo }: Props) {
+export default function DoctorProfileBooking({ doctor, initialMode, date, returnTo, tone = "light" }: Props) {
   const params = useSearchParams();
   const resume = params.get("booking") === doctor.id && params.get("bookingResume") === "1";
   const [started, setStarted] = useState(resume);
@@ -36,7 +36,7 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     setExpanded(false);
     requestAnimationFrame(() => action.current?.focus({ preventScroll: true }));
   };
-  return <motion.aside className={styles.dock} layout={reduced ? false : "size"} data-profile-booking data-expanded={expanded}
+  return <motion.aside className={styles.dock} layout={reduced ? false : "size"} data-profile-booking data-expanded={expanded} data-tone={tone}
     onKeyDown={event => {
       if (event.key === "Escape" && expanded && !document.querySelector(':popover-open, dialog[open], [role="dialog"]')) {
         event.preventDefault(); close();

@@ -1,0 +1,198 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/February2024/Jx5MszE6VUjgyobF3YI6.jpg",
+    "name": "Dr. Bagirath Raghuraman",
+    "id": 115,
+    "doctorCode": "102836",
+    "designation": "Senior Consultant, Director - Heart Transplant Program",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Cardiology)",
+        "Fellowship (Interventional Cardiology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Adult Cardiology"
+      ],
+      "subSpecialties": [
+        "Heart Failure & Transplant Cardiology",
+        "Advanced Cardio-Pulmonary Therapeutics",
+        "Structural Heart Intervention",
+        "Interventional Cardiology"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 121,
+          "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+          "code": "1001",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "11th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Bagirath Raghuraman is an esteemed Senior Consultant Cardiologist renowned for his leadership as the Program Director of Heart Transplant services. His illustrious academic journey commenced with an MBBS from J.J.M Medical College, Davangere, followed by MD in General Medicine from Kasturba Medical College, Manipal which was followed by DNB in General Medicine. He furthered his specialization in Cardiology, achieving a DM from Sri Jayadeva Institute of Cardiology.\r\nDriven by a passion for excellence in cardiac...",
+    "full_description": "Dr. Bagirath Raghuraman is an esteemed Senior Consultant Cardiologist renowned for his leadership as the Program Director of Heart Transplant services. His illustrious academic journey commenced with an MBBS from J.J.M Medical College, Davangere, followed by MD in General Medicine from Kasturba Medical College, Manipal which was followed by DNB in General Medicine. He furthered his specialization in Cardiology, achieving a DM from Sri Jayadeva Institute of Cardiology.\r\nDriven by a passion for excellence in cardiac care, Dr. Raghuraman pursued comprehensive training across esteemed international institutions. Noteworthy among his training includes specialized programs in advanced Heart Failure and Cardiac Transplantation at Papworth Hospital, Cambridge, UK. He honed his expertise in utilizing Cardiac Assist devices for heart failure management at The University of Minnesota, USA. His pursuit of excellence in Interventional Cardiology led him to The Rotenburg India Cardiovascular Clinic, Germany, where he gained invaluable insights. Additionally, he mastered the use of Intravascular Ultrasound, Rotablater techniques, and management of Chronic Total Occlusions in specialized programs in Japan.\r\nDr. Raghuraman's expertise encompasses various domains within Cardiology:\r\nInterventional Cardiology: Proficiency in conducting complex coronary interventions and employing advanced intracoronary imaging techniques, ensuring precision and superior patient care.\r\nStructural Heart Disease Interventions: Mastery in performing device closures for adult congenital heart diseases (ASD, VSD), TAVI (Transcatheter Aortic Valve Implantation), MitraClip procedures, and intricate interventions on mitral and tricuspid valves.\r\nCardiac Implantable Electronic Devices (CIED): Skilled in managing and implanting pacemakers, AICD (Automatic Implantable Cardioverter Defibrillator), and CRT (Cardiac Resynchronization Therapy) devices for optimal patient outcomes.\r\nManagement of Pulmonary Embolism: Profound experience in managing acute and chronic pulmonary embolism, including specialized expertise in Balloon Pulmonary Angioplasty for CTEPH (Chronic Thromboembolic Pulmonary Hypertension).\r\nAdvanced Heart Failure Management: Comprehensive skills in Mechanical Circulatory Support (MCS), encompassing both temporary and durable solutions such as LVAD (Left Ventricular Assist Device), Percutaneous ECMO, and expertise in Heart Transplant procedures.\r\nBeyond his clinical expertise, Dr. Raghuraman has been recognized with numerous awards and accolades, including the Best Outgoing Student Gold Medal from J.J.M Medical College, Davangere, and the University Gold Medal at the 2nd Annual Convocation of Kuvempu University. His contributions in various conferences, as a principal investigator in clinical trials, and his presentations have earned him widespread acclaim.\r\nHis key procedures and unique skills include Temporary and Durable Mechanical Circulatory Support, Structural Heart Disease Interventions, Balloon Pulmonary Angioplasty, Cardiac Implantable Electronic Devices (CIED), and Complex Coronary Interventions with intracoronary imaging.\r\nDr. Bagirath Raghuraman's leadership as the Program Director of Heart Transplant services reflects his dedication to pioneering advancements in cardiac care and ensuring superior patient outcomes through innovation and comprehensive expertise He is also the member of Cardiology team at Narayana Hrudayalaya that performed India’s first permanent LV assist device (LVAD).\r\nPost held in past\r\n \r\n\r\nZonal Clinical Director, Vice President and Head of Department of Cardiology, Chinmaya Narayana Superspeciality Centre, Bangalore.\r\nLecturer in Cardiology, Sri Jayadeva Institute of Cardiology, Bangalore.\r\nRegistrar in Cardiology, Manipal Hospital, Bangalore."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Interventional Cardiology – Complex Coronary Interventions and Intracoronary Imaging",
+      "Structural Heart Disease – Device Closures for Adult Congenital Heart Disease (ASD, VSD), TAVI, Mitra Clip, Interventions on Mitral and Tricuspid Valves",
+      "Cardiac Implantable Electronic Devices (Pacemakers, AICD, CRT)",
+      "Management of Acute and Chronic Pulmonary Embolism (CTEPH), Balloon Pulmonary Angioplasty for CTEPH",
+      "Advanced management of Heart failure, Mechanical Circulatory Support MCS – Temporary and Durable (LVAD), Percutaneous ECMO, Heart Transplant",
+      "Temporary Mechanical Circulatory Support",
+      "Percutaneous ECMO",
+      "Durable Mechanical Circulatory Support",
+      "Structural Heart Disease Interventions",
+      "Balloon Pulmonary Angioplasty",
+      "Cardiac Implantable Electronic Devices (CIED)",
+      "Complex Coronary Interventions and intracoronary imaging",
+      "Interventional Cardiology",
+      "Mechanical Circulatory Support",
+      "Structural Heart Interventions",
+      "Cardiac Device Implantation",
+      "Cardiology",
+      "Cardiology Adult",
+      "Cardiac Sciences",
+      "heart",
+      "Interventional",
+      "Structural Heart Intervention",
+      "Structural Heart",
+      "Advanced Cardio-Pulmonary Therapeutics",
+      "heart Failure",
+      "Heart Transplant",
+      "transplant",
+      "CARDIOLOGY - ADULT"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Best Outgoing Student Gold Medal - J.J.M Medical College, Davangere.",
+            "link": ""
+          },
+          {
+            "text": "University Gold Medal at 2nd Annual Convocation - Kuvempu University",
+            "link": ""
+          },
+          {
+            "text": "Best Paper Award - 16th Annual Conference of IMA, Bangalore.",
+            "link": ""
+          },
+          {
+            "text": "Best Angiogram CD Presentation - 3rd Indo European course on Revascularization, European Chapter held at George Pompidou Hospital, Paris.",
+            "link": ""
+          },
+          {
+            "text": "Worked as Principal investigator in various clinical trials.",
+            "link": ""
+          },
+          {
+            "text": "Invited lectures, Case presentations, Abstracts and poster presentations in various International and National conferences.",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Professional Memberships & Certifications",
+        "items": [
+          {
+            "text": "FESC - International Fellow of European Society of Cardiology",
+            "link": ""
+          },
+          {
+            "text": "FSCAI - Fellow of The Society for Cardiovascular Angiography and Interventions",
+            "link": ""
+          },
+          {
+            "text": "FHFA - Fellowship of Heart Failure Association",
+            "link": ""
+          },
+          {
+            "text": "FICC - Fellow of Indian College of Cardiology",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Publications",
+        "items": [
+          {
+            "text": "Published research articles and abstracts in various national and international journals.",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "Patient Success Story | Heart Transplant | Dr. Bagirath Raghuraman",
+        "name": "Dr. Bagirath Raghuraman",
+        "location": "Narayana Institute of Cardiac Sciences, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/XBd2xuiyp3M"
+      },
+      {
+        "subtitle": "Patient Success Story | Balloon Pulmonary Angioplasty | Dr. George Cherian & Dr. Bagirath Raghuraman",
+        "name": "Dr. Bagirath Raghuraman",
+        "location": "Narayana Institute of Cardiac Sciences, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/GZ8kIMZHKt0"
+      },
+      {
+        "subtitle": "A stitch on the Heart and for the Heart | Patient success Story | Mitra Clip Procedure",
+        "name": "Dr. Bagirath Raghuraman",
+        "location": "Narayana Institute of Cardiac Sciences, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/rTUmAhkbIaU"
+      },
+      {
+        "subtitle": "Patient Success Story | Ischemic Cardiomyopathy | Dr.Varun, Dr. Julius, Dr. Bagirath",
+        "name": "Dr. Bagirath Raghuraman",
+        "location": "Narayana Institute of Cardiac Sciences, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/jOD-4FzP42Y"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Sugar and Your Heart: The Bitter Truth",
+        "date": "December 05, 2025",
+        "slug": "sugar-and-heart-disease-the-bitter-truth",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/December2025/vGva7aMnibpoIHysHDTr.webp",
+        "imgAlt": "Sugar and Your Heart: The Bitter Truth",
+        "authorInitial": "BR",
+        "author": "Dr. Bagirath Raghuraman",
+        "category": "Cardiology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}
