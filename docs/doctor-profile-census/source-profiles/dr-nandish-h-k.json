@@ -1,0 +1,180 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/May2024/xp0lSVpKSD72siXOXKmI.webp",
+    "name": "Dr. Nandish H K",
+    "id": 1053,
+    "doctorCode": "104694",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DrNB (Gastroenterology)",
+        "Fellowship (Advanced Therapeutic Endoscopies)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Medical Gastroenterology"
+      ],
+      "subSpecialties": [
+        "Advanced Therapeutic Endoscopy",
+        "Advanced Diagnostic Endoscopy",
+        "Gastrointestinal Malignancy"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 1134,
+          "name": "Narayana Clinic, Electronic City",
+          "code": "3010",
+          "checked": false
+        },
+        {
+          "id": 1729,
+          "name": "Narayana Clinic, JP Nagar",
+          "code": "6028",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Nandish H K is currently working as senior consultant gastroenterologist at nh hospitals, bengaluru. He obtained his md in internal medicine from kempegowda institiute of medical sciences, bengaluru and dnb (gastroenterology) from prestigious amrita institute of medical science. He also has post - doctoral fellowship in advanced therapeutic endoscopy and endoscopic ultrasound from amrita institute of medical sciences, kochi. Dr. Nandish H K is an expert in the diagnosis and management of various gastrointestina...",
+    "full_description": "Dr. Nandish H K is currently working as senior consultant gastroenterologist at nh hospitals, bengaluru. He obtained his md in internal medicine from kempegowda institiute of medical sciences, bengaluru and dnb (gastroenterology) from prestigious amrita institute of medical science. He also has post - doctoral fellowship in advanced therapeutic endoscopy and endoscopic ultrasound from amrita institute of medical sciences, kochi. Dr. Nandish H K is an expert in the diagnosis and management of various gastrointestinal and liver diseases as well in performing various diagnostic and advanced endoscopic therapeutic procedures. He has a keen interest and expertise in pancreaticobiliary interventions including ercp, eus and cholangioscopy as well in image- enchanced endoscopy. Dr. Nandish H K has a number of papers and publications to his credit including award paper presentation in national conferences and peer reviewed journals."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Therapeutic endoscopy including ERCP/ EUS/ image enhanced endoscopies",
+      "Management of IBD",
+      "Management of cirrhosis and other liver related diseases",
+      "Management of pancreatico-biliary disease, endoscopic retrograde cholangiopancreatography interventions",
+      "Diagnostic and therapeutic endoscopic ultrasound",
+      "Endoscopic metallic stent placement for malignant strictures in GI tract including esophagus, duodenum, colon, and biliary tract",
+      "Diagnostic and therapeutic cholangioscopy",
+      "Benign stricture dilatation (balloon and bougie)",
+      "Endoscopic variceal ligation",
+      "Achalasia balloon dilatation",
+      "Argon plasma coagulation",
+      "Endoscopic polypectomy",
+      "EUS-guided pseudocyst drainage",
+      "Esophageal manometry",
+      "Gastro Sciences",
+      "Medical Gastroenterology",
+      "Gastroenterology",
+      "Gastro",
+      "Advanced & Interventional Endocscopy",
+      "Interventional Endocscopy",
+      "Endocscopy",
+      "MEDICAL GASTROENTEROLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "1st prize for oral research paper presentation at isg national mid term conference (2014)",
+            "link": ""
+          },
+          {
+            "text": "2nd prize for oral research paper presentation at annual kerala state isg conference (2013)",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Professional Memberships & Certifications",
+        "items": [
+          {
+            "text": "Karantaka medical council,",
+            "link": ""
+          },
+          {
+            "text": "Indian society of gastroenterology",
+            "link": ""
+          },
+          {
+            "text": "Indian medical assosciation",
+            "link": ""
+          },
+          {
+            "text": "Fellowship in advanced therapeutic endoscopy (AIMS)",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Publications",
+        "items": [
+          {
+            "text": "Adrenal insuficiency in decompensated cirrhotic patients without infection prevalence, predictors and impact on mortality.hullenahalli K Nandish Chankramanth S Arun, Harikumar R Nair, Rajesh Gopalakrishna, Harish Kumar. Journal of royal college of physicians of edinburgh.dec 2019;vol 49:277-281 2)",
+            "link": ""
+          },
+          {
+            "text": "Efficacy and feasibility of stroop test (smart phone application ) in the diagnosis if minimal hepatic encephalopathy . Antony Raphel Joy, Chandrashekar Sorake, H K Nandish, P Sagar, M Geetha, Ismail Siyad. Journal of of clinical and experimental hepatology.2015.07.235 3) .",
+            "link": ""
+          },
+          {
+            "text": "Hepatoadrenal syndrome follows meld and not crp. Nandish HK. Indian journal of gastroenterology  2013;32;:a138",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Diet for a Healthy Liver: Do’s and Don’ts",
+        "date": "February 25, 2025",
+        "slug": "diet-for-a-healthy-liver-dos-and-donts",
+        "image": "",
+        "imgAlt": "Diet for a Healthy Liver: Do’s and Don’ts",
+        "authorInitial": "NK",
+        "author": "Dr. Nandish H K",
+        "category": "Gastroenterology"
+      },
+      {
+        "title": "Abdominal bloating: Causes, symptoms and treatment",
+        "date": "July 09, 2024",
+        "slug": "abdominal-bloating-causes-symptoms-and-treatment",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/July2024/7xsWzbeb2O4l1u4NTZ2o.webp",
+        "imgAlt": "Abdominal bloating: Causes, symptoms and treatment",
+        "authorInitial": "NK",
+        "author": "Dr. Nandish H K",
+        "category": "Narayana Health"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

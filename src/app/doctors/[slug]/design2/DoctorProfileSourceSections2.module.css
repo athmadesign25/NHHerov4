@@ -1,0 +1,23 @@
+.sourceText { white-space: pre-line; overflow-wrap: anywhere; }
+.sourceItems { display: grid; gap: var(--space-16); margin: 0; padding: 0 0 var(--space-24) var(--space-20); color: var(--profile-muted, var(--color-text-secondary)); font-size: var(--font-size-sm); line-height: var(--leading-relaxed); }
+.sourceItems li { padding-left: var(--space-4); white-space: pre-line; overflow-wrap: anywhere; }
+.sourceItems a { color: inherit; text-decoration-color: var(--profile-line, var(--color-border)); text-underline-offset: var(--space-4); transition: color var(--duration-fast) var(--ease-out), text-decoration-color var(--duration-fast) var(--ease-out); }
+.sourceItems a > svg { display: inline; vertical-align: middle; margin-inline-start: var(--space-6); color: var(--color-primary); }
+.sourceItems a:hover { color: var(--color-primary); text-decoration-color: currentColor; }
+.additionalContent { display: grid; gap: var(--space-24); }
+.additionalContent .sourceItems { padding-bottom: 0; }
+.anchored { scroll-margin-top: var(--profile-scroll-offset); }
+.anchored summary h3 { margin: 0; font-size: inherit; line-height: inherit; font-weight: inherit; }
+.anchored > .additionalContent { padding-bottom: var(--space-24); }
+.qualifications { margin-bottom: var(--space-24); }
+.qualifications h3, .achievementTitle { margin: 0 0 var(--space-16); color: var(--profile-ink, var(--color-text)); font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 500; }
+.achievementTitle { margin-top: var(--space-32); }
+.biography { max-width: 75ch; }
+.biography p[hidden], .biography span[hidden] { display: none; }
+.readMore { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--target); margin-top: var(--space-8); padding: 0; border: 0; background: transparent; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; text-align: left; cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
+.readMore svg { flex-shrink: 0; transition: transform var(--duration-base) var(--ease-out); }
+.readMore[aria-expanded="true"] svg { transform: rotate(180deg); }
+.biography + .anchored { margin-top: var(--space-24); }
+@media (hover: hover) { .readMore:hover { color: var(--color-text); } }
+@media (prefers-reduced-motion: reduce) { .sourceItems a, .readMore, .readMore svg { transition: none; } }
+@media (forced-colors: active) { .sourceItems a { color: LinkText; } }

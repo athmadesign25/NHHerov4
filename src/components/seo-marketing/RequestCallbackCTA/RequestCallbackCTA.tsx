@@ -35,12 +35,12 @@ export default function RequestCallbackCTA() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputGroup}>
           <span className={styles.prefix}>+91</span>
-          <input 
-            type="tel" 
-            className={styles.input} 
-            placeholder="Enter mobile number" 
+          <input
+            type="tel"
+            className={styles.input}
+            placeholder="Enter mobile number"
             pattern="[0-9]{10}"
-            required 
+            required
           />
         </div>
         <button type="submit" className={styles.btn}>

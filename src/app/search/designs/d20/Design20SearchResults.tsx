@@ -6,5 +6,5 @@ import DoctorCard from "./DoctorCard";
 import styles from "../d17/Design17SearchResults.module.css";
 
 export default function Design20SearchResults({ catalogs }: { catalogs: SearchCatalogs }) {
-  return <Design3SearchResults catalogs={catalogs} previewVariant="d20" cardComponent={DoctorCard} gridClassName={styles.grid} />;
+  return <Design3SearchResults catalogs={catalogs} cardComponent={DoctorCard} gridClassName={styles.grid} />;
 }

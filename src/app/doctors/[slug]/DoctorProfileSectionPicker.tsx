@@ -7,7 +7,7 @@ import type Lenis from "lenis";
 import useMouseDragScroll from "@/app/search/designs/d20/useMouseDragScroll";
 import styles from "./DoctorProfileSectionPicker.module.css";
 
-export default function DoctorProfileSectionPicker({ sections }: { sections: string[][] }) {
+export default function DoctorProfileSectionPicker({ sections, tone = "light" }: { sections: string[][]; tone?: "light" | "dark" }) {
   const [active, setActive] = useState(sections[0]?.[0] ?? "");
   const [edges, setEdges] = useState({ overflow: false, start: false, end: false });
   const [navHidden, setNavHidden] = useState(false);
@@ -120,7 +120,7 @@ export default function DoctorProfileSectionPicker({ sections }: { sections: str
     else { window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" }); unlockTimer.current = window.setTimeout(complete, reduced ? 0 : 800); }
   };
   const scrollRail = (direction: number) => rail.current?.scrollBy({ left: direction * rail.current.clientWidth * .7, behavior: reduced ? "auto" : "smooth" });
-  return <motion.nav ref={nav} layout="position" transition={{ layout: { duration: reduced ? 0 : .6, ease: [.16, 1, .3, 1] } }} className={`${styles.picker} ${navHidden ? styles.navHidden : ""}`} aria-label="Doctor profile sections" data-profile-section-picker>
+  return <motion.nav ref={nav} layout="position" transition={{ layout: { duration: reduced ? 0 : .6, ease: [.16, 1, .3, 1] } }} className={`${styles.picker} ${navHidden ? styles.navHidden : ""}`} aria-label="Doctor profile sections" data-profile-section-picker data-tone={tone}>
     <div className={styles.track}>
       {edges.overflow && <button className={styles.arrow} type="button" disabled={!edges.start} aria-hidden={!edges.start} tabIndex={edges.start ? 0 : -1} onClick={() => scrollRail(-1)} aria-label="Earlier sections"><ChevronLeft size={16} aria-hidden /></button>}
       <div ref={rail} className={styles.rail} onScroll={measureEdges} data-lenis-prevent-horizontal data-fade-start={edges.start || undefined} data-fade-end={edges.end || undefined}>

@@ -25,7 +25,7 @@ import Design2BookingControls from "./designs/Design2BookingControls";
 import DoctorCardD2 from "./designs/DoctorCardD2";
 import DoctorCardCompact from "./designs/DoctorCardCompact";
 import DoctorCardOriginal from "./designs/DoctorCardOriginal";
-import Design3SearchResults from "./designs/d3/Design3SearchResults";
+import Design3SearchResults from "./designs/d3/LegacyDesign3SearchResults";
 import Design4SearchResults from "./designs/d4/Design4SearchResults";
 import Design5SearchResults from "./designs/d5/Design5SearchResults";
 import Design6SearchResults from "./designs/d6/Design6SearchResults";

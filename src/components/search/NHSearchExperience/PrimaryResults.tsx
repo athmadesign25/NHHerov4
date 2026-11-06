@@ -2,15 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
-import { buildSearchUrl } from "@/features/search/searchTabs";
 import { motion } from "framer-motion";
-import { 
-  ArrowRight, 
-  Briefcase, 
-  MapPin, 
-  Video, 
-  RefreshCw, 
+import {
+  ArrowRight,
+  Briefcase,
+  MapPin,
+  Video,
+  RefreshCw,
   SearchX,
   AlertCircle,
   Heart,
@@ -24,15 +22,17 @@ import {
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { DoctorCardData, ProximityTier } from "./searchData";
+import PulseAIAvatar from "./PulseAIAvatar";
 
 interface PrimaryResultsProps {
   doctors: DoctorCardData[];
+  totalDoctors?: number;
   selectedLocation: string;
   proximityMessage?: string;
   proximityTier?: ProximityTier;
   query: string;
   pulseRecommendationText?: string;
-  onAskPulse?: () => void;
+  onAskPulse?: (customText?: string) => void;
   isPulseExpanded?: boolean;
   onTogglePulseExpand?: (expanded: boolean) => void;
   hidePulse?: boolean;
@@ -50,16 +50,19 @@ function formatExperienceText(exp: string): string {
 
 export default function PrimaryResults({
   doctors,
+  totalDoctors,
   selectedLocation,
   proximityMessage,
   proximityTier,
   query,
   pulseRecommendationText,
+  onAskPulse,
   status = "success",
   errorMessage,
   onRetry,
   onSelectSpecialty,
 }: PrimaryResultsProps) {
+  const [pulsePrompt, setPulsePrompt] = useState("");
   // Staggered loading sequence stage: "text" -> "skeleton" -> "cards"
   const [animStage, setAnimStage] = useState<"text" | "skeleton" | "cards">("text");
 
@@ -78,9 +81,8 @@ export default function PrimaryResults({
       { text: "clinical", isBold: false },
       { text: "inquiry", isBold: false },
       { text: "regarding", isBold: false },
-      { text: `"${query || "your health query"}"`, isBold: true },
-      { text: "—", isBold: false },
-      { text: "here", isBold: false },
+      { text: `"${query || "your health query"}".`, isBold: true },
+      { text: "Here", isBold: false },
       { text: isSingleDoc ? "is" : "are", isBold: false },
       { text: "our", isBold: false },
       { text: "top", isBold: false },
@@ -126,103 +128,131 @@ export default function PrimaryResults({
     return doctors.slice(0, 8);
   }, [doctors]);
 
+  const displayedCount = displayDoctors.length;
+  const totalCount = totalDoctors ?? (displayedCount === 1 ? 1 : displayedCount <= 3 ? displayedCount : 24);
+
   // Determine if results context is video consultations (e.g. no in-person NH care within 100 km)
-  const isVideoContext = 
-    proximityTier === "videoOnly" || 
+  const isVideoContext =
+    proximityTier === "videoOnly" ||
     Boolean(proximityMessage?.toLowerCase().includes("video consultations"));
 
-  // ── ERROR STATE (Simulation trigger: 'XZ' or service/network failure) ──
+  // ── ERROR STATE (Simulation trigger: 'XZ' or network failure) ──
   if (status === "error") {
     return (
-      <div className={styles.searchErrorContainer}>
-        {/* Soft Ambient Lens */}
-        <div className={styles.searchErrorHaloWrap}>
-          <div className={styles.searchErrorHaloGlow} aria-hidden="true" />
-          <div className={styles.searchErrorIconBadge}>
-            <AlertCircle size={26} className={styles.searchErrorIcon} />
-          </div>
-        </div>
-
-        <span className={styles.searchStateEyebrow}>SERVICE STATUS</span>
-
-        <h3 className={styles.searchErrorTitle}>
+      <div className={styles.openEmptyWrapper}>
+        <h2 className={styles.openEmptyTitle}>
           Directory temporarily unavailable
-        </h3>
-
-        <p className={styles.searchErrorSub}>
-          {errorMessage || "We are having trouble connecting to our live clinical provider directory. This is usually momentary. Please try again or connect directly with our round-the-clock help desk."}
+        </h2>
+        <p className={styles.openEmptySub}>
+          {errorMessage || "We're experiencing a temporary connection issue while searching our directory. Please try again or reach our 24/7 care desk."}
         </p>
 
-        <div className={styles.searchErrorBtnRow}>
+        {/* Dual Actions: Retry Search + Ask Pulse AI */}
+        <div className={styles.openErrorBtnRow}>
           <button
             type="button"
-            className={styles.searchRetryBtn}
+            className={styles.openRetryBtn}
             onClick={onRetry}
           >
-            <RefreshCw size={14} className={styles.searchRetryIcon} />
+            <RefreshCw size={15} />
             <span>Retry Search</span>
           </button>
 
-          <a
-            href="tel:18602080208"
-            className={styles.searchHelplineCallout}
-            aria-label="Call 24/7 hospital helpline"
+          <button
+            type="button"
+            className={styles.openErrorPulseBtn}
+            onClick={() => onAskPulse?.(`Help me find specialists in ${selectedLocation}`)}
           >
-            <PhoneCall size={13} className={styles.searchHelplineIcon} />
-            <span>24/7 Helpline: 1860 208 0208</span>
-          </a>
+            <PulseAIAvatar size={20} />
+            <span>Ask Pulse AI</span>
+          </button>
+        </div>
+
+        {/* Minimal helpline */}
+        <div className={styles.openHelplineRow}>
+          <span>24/7 Helpline: 1860 208 0208 • Emergency: 1062</span>
         </div>
       </div>
     );
   }
 
-  // ── EMPTY STATE (Simulation trigger: 'XY' or zero doctors found) ──
+  // ── EMPTY STATE (Zero doctors found or status === 'empty') ──
   if (status === "empty" || doctors.length === 0) {
     const popularDepartments = [
-      { name: "Cardiology", icon: Heart },
-      { name: "Orthopaedics", icon: Activity },
-      { name: "Neurology", icon: Brain },
-      { name: "Pediatrics", icon: User },
-      { name: "Oncology", icon: Shield },
-      { name: "General Medicine", icon: Stethoscope },
+      "Cardiology",
+      "Orthopaedics",
+      "Neurology",
+      "Pediatrics",
+      "Oncology",
     ];
 
+    const handlePulseSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      const text = pulsePrompt.trim();
+      if (text) {
+        onAskPulse?.(text);
+      } else {
+        onAskPulse?.(query ? `Help me understand care options for ${query}` : undefined);
+      }
+    };
+
     return (
-      <div className={styles.searchEmptyContainer}>
-        {/* Soft Ambient Lens */}
-        <div className={styles.searchEmptyHaloWrap}>
-          <div className={styles.searchEmptyHaloGlow} aria-hidden="true" />
-          <div className={styles.searchEmptyIconBadge}>
-            <SearchX size={26} className={styles.searchEmptyIcon} />
-          </div>
-        </div>
-
-        <span className={styles.searchStateEyebrow}>CARE DIRECTORY</span>
-
-        <h3 className={styles.searchEmptyTitle}>
-          No exact matches for &ldquo;{query}&rdquo;
-        </h3>
-
-        <p className={styles.searchEmptySub}>
-          We couldn&apos;t find an exact clinical match in {selectedLocation}. Check your spelling, describe your symptoms, or explore our primary departments:
+      <div className={styles.openEmptyWrapper}>
+        {/* Simple, clear message directly in viewport without card */}
+        <h2 className={styles.openEmptyTitle}>
+          No matches found for &ldquo;{query}&rdquo;
+        </h2>
+        <p className={styles.openEmptySub}>
+          We couldn&apos;t find an exact listing in {selectedLocation}. Let Pulse AI assist you:
         </p>
 
-        {/* Popular Specialty Suggestions with Icons */}
-        <div className={styles.searchEmptyChipsRow}>
-          {popularDepartments.map((dept) => {
-            const Icon = dept.icon;
-            return (
-              <button
-                key={dept.name}
-                type="button"
-                className={styles.searchEmptyChipBtn}
-                onClick={() => onSelectSpecialty?.(dept.name)}
-              >
-                <Icon size={13} className={styles.searchEmptyChipIcon} />
-                <span>{dept.name}</span>
-              </button>
-            );
-          })}
+        {/* ── PULSE AI SEARCH BAR (Below Pulse / Text) ── */}
+        <form
+          className={styles.openPulseSearchBar}
+          onSubmit={handlePulseSubmit}
+        >
+          <div className={styles.openPulseAvatarWrap}>
+            <PulseAIAvatar size={28} isPulsing={true} />
+          </div>
+          <input
+            type="text"
+            className={styles.openPulseInput}
+            value={pulsePrompt}
+            onChange={(e) => setPulsePrompt(e.target.value)}
+            placeholder={
+              query
+                ? `Ask Pulse AI about "${query}" or describe your symptoms...`
+                : "Ask Pulse AI about symptoms, treatments or doctors..."
+            }
+            aria-label="Ask Pulse AI"
+          />
+          <button
+            type="submit"
+            className={styles.openPulseSubmitBtn}
+            aria-label="Ask Pulse AI"
+            title="Ask Pulse AI"
+          >
+            <ArrowRight size={17} />
+          </button>
+        </form>
+
+        {/* Quick specialty chips - single harmonious row */}
+        <div className={styles.openSpecialtiesRow}>
+          {popularDepartments.map((dept) => (
+            <button
+              key={dept}
+              type="button"
+              className={styles.openSpecialtyChip}
+              onClick={() => onSelectSpecialty?.(dept)}
+            >
+              <span>{dept}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Minimal clean helpline */}
+        <div className={styles.openHelplineRow}>
+          <span>24/7 Helpline: 1860 208 0208 • Emergency: 1062</span>
         </div>
       </div>
     );
@@ -233,7 +263,7 @@ export default function PrimaryResults({
   return (
     <div className={styles.primaryResultsSection}>
       {/* ── STAGE 1: Word-by-Word Word-Reveal Animated Clinical Summary ── */}
-      <motion.div 
+      <motion.div
         key={query}
         className={styles.chatSummaryTextRow}
         variants={{
@@ -257,6 +287,19 @@ export default function PrimaryResults({
             </motion.span>
           ))}
         </p>
+
+        {displayedCount > 0 && (
+          <motion.div
+            className={styles.doctorCountSimpleRow}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.25 }}
+          >
+            <span className={styles.doctorCountSimpleText}>
+              Showing {displayedCount} of {totalCount} {totalCount === 1 ? "doctor" : "doctors"}
+            </span>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* ── STAGE 2: Doctor Card Skeleton Shimmer Loader (Matches Doctor Count up to 8) ── */}
@@ -277,7 +320,7 @@ export default function PrimaryResults({
 
       {/* ── STAGE 3: Real Verified Doctor Cards Reveal (Maximum 8 cards) ── */}
       {(animStage === "cards" || animStage === "text") && (
-        <motion.div 
+        <motion.div
           className={`${styles.refDoctorsGrid} ${isSingleDoctor ? styles.refDoctorsGridSingle : ""}`}
           initial={{ opacity: animStage === "cards" ? 0 : 1 }}
           animate={{ opacity: 1 }}
@@ -285,14 +328,14 @@ export default function PrimaryResults({
         >
           {displayDoctors.map((doc) => {
             const isLongName = doc.name.length > 18;
-            const isVcDoctor = 
-              doc.consultationType === "video" || 
-              isVideoContext || 
+            const isVcDoctor =
+              doc.consultationType === "video" ||
+              isVideoContext ||
               Boolean(doc.isVideoConsult);
 
             return (
-              <div 
-                key={doc.id} 
+              <div
+                key={doc.id}
                 className={`${styles.refDoctorCard} ${isSingleDoctor ? styles.refDocCardSingle : ""}`}
               >
                 {/* Full background doctor photo spanning entire card */}
@@ -303,11 +346,14 @@ export default function PrimaryResults({
                   draggable={false}
                 />
 
-                {/* Video Consult Tag at Top Right */}
+                {/* Video Consult Tag at Top Right (Minimal Icon Only) */}
                 {isVcDoctor && (
-                  <div className={styles.refDocVideoTag}>
-                    <Video size={13} strokeWidth={2.4} className={styles.refDocVideoIcon} />
-                    <span>Video Consult</span>
+                  <div
+                    className={styles.refDocVideoTag}
+                    title="Video consultation available"
+                    aria-label="Video consultation available"
+                  >
+                    <Video size={13} strokeWidth={2.0} className={styles.refDocVideoIcon} />
                   </div>
                 )}
 
@@ -319,8 +365,8 @@ export default function PrimaryResults({
                   <div className={styles.refDocBottomFlex}>
                     {/* Left Column: Name, Specialty, Experience, Hospital */}
                     <div className={styles.refDocTextCol}>
-                      <h3 
-                        className={`${styles.refDocName} ${isLongName ? styles.refDocNameMultiLine : styles.refDocNameSingleLine}`} 
+                      <h3
+                        className={`${styles.refDocName} ${isLongName ? styles.refDocNameMultiLine : styles.refDocNameSingleLine}`}
                         title={doc.name}
                       >
                         {doc.name}
@@ -335,17 +381,17 @@ export default function PrimaryResults({
                         <span>{formatExperienceText(doc.experience)}</span>
                       </div>
 
-                      <div 
-                        className={`${styles.refDocHospital} ${isLongName ? styles.refDocHospitalSingleLine : styles.refDocHospitalTwoLines}`} 
+                      <div
+                        className={`${styles.refDocHospital} ${isLongName ? styles.refDocHospitalSingleLine : styles.refDocHospitalTwoLines}`}
                         title={doc.hospital}
                       >
                         {doc.hospital}
                       </div>
                     </div>
 
-                    {/* Right Side: White Book Button → opens Doctor Profile page with inline fallback data */}
+                    {/* Right Side: White Book Button */}
                     <Link
-                      href={`/doctors/${encodeURIComponent(doc.id)}?design=${DEFAULT_DOCTOR_DESIGN}&name=${encodeURIComponent(doc.name)}&specialty=${encodeURIComponent(doc.speciality)}&hospital=${encodeURIComponent(doc.hospital)}&experience=${encodeURIComponent(doc.experience)}&city=${encodeURIComponent(doc.city)}&img=${encodeURIComponent(doc.image)}`}
+                      href={`/doctors/${encodeURIComponent(doc.id)}/book?hospital=${encodeURIComponent(doc.hospital)}&name=${encodeURIComponent(doc.name)}&city=${encodeURIComponent(selectedLocation)}`}
                       className={styles.refBookBtnWhite}
                     >
                       Book
@@ -361,7 +407,7 @@ export default function PrimaryResults({
       {/* Clean View all doctors Link */}
       <div className={styles.refViewAllRow}>
         <Link
-          href={buildSearchUrl({ q: query, location: selectedLocation })}
+          href={`/doctors?q=${encodeURIComponent(query)}&city=${encodeURIComponent(selectedLocation)}`}
           className={styles.refViewAllLink}
         >
           <span>View all doctors ({doctors.length > 8 ? `${doctors.length}+` : doctors.length})</span>
@@ -371,4 +417,3 @@ export default function PrimaryResults({
     </div>
   );
 }
-

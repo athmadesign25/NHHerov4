@@ -1,0 +1,149 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/September2024/akTEdGnx5HhiI9m8HwoV.webp",
+    "name": "Dr. Gopal Krishna Dash",
+    "id": 61,
+    "doctorCode": "101527",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Neurology)",
+        "Fellowship (Epilepsy)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Neurology"
+      ],
+      "subSpecialties": [
+        "Epileptology"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "7th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Gopal Krishna Dash passed MBBS from Sambalpur Medical University, Odisha, India in 2001 and served the government of Orissa for 2 years and completed his post graduation in general medicine from SCB Medical College, Cuttack, Odisha, India in the year of 2007. He then worked in Institute of Human Behavior and Allied sciences, Delhi for a period of 6 months as a senior resident in the department of Neurology and joined the prestigious institute of national importance under government of India, Sree Chitra Tirunal...",
+    "full_description": "Dr. Gopal Krishna Dash passed MBBS from Sambalpur Medical University, Odisha, India in 2001 and served the government of Orissa for 2 years and completed his post graduation in general medicine from SCB Medical College, Cuttack, Odisha, India in the year of 2007. He then worked in Institute of Human Behavior and Allied sciences, Delhi for a period of 6 months as a senior resident in the department of Neurology and joined the prestigious institute of national importance under government of India, Sree Chitra Tirunal Institute for Medical Sciences and Technology in 2008 as a senior resident (DM Neurology) in the department of Neurology. After successfully completing the same, he underwent advanced training in the comprehensive epilepsy care centre of the same institute for one year. During his DM training, he gained a vast experience in treating various complex neurological disorders which include both acute and chronic cases. During the postdoctoral fellowship period, he gained further experience in reporting scalp EEG, prolonged Video-EEG, intracranial monitoring and presurgical evaluation of patients with medically refractory epilepsy. Dr Dash continued his academic carrier in the same institute as a consultant after obtaining his advanced training.He is an expert in the field of epileptology with vast experience in treating various complex and difficult to manage patients with epilepsy. In addition, he is also an expert in treating various sleep disorders. Currently, he works as a consultant neurologist, epileptologist and sleep medicine specialist in the same institute. His current activities include teaching DM neurology residents, post-doctoral fellows in the division of epilepsy and he supervises the sleep lab. Of late for the past one month, Dr Dash works as an epilepsy specialist in a JCI accredited hospital in India, Hyderabad."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Pre-surgical evaluation of drug resistant epilepsy",
+      "Management of medically refractory Epilepsy and their evaluation and surgical treatment",
+      "Sleep Disorders",
+      "Neuroimmunology",
+      "Vascular Neurology",
+      "Neuro Sciences",
+      "Neurology",
+      "Neuro",
+      "Epileptology",
+      "NEUROLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Best medical paper award in ECON 2011",
+            "link": ""
+          },
+          {
+            "text": "Predictors of seizure outcome in drug-resistant focal epilepsy- paper presentation in ILAE 2011",
+            "link": ""
+          },
+          {
+            "text": "Gold medal award in general medicine in final year MBBS 2000",
+            "link": ""
+          },
+          {
+            "text": "Gold medal in combined medicine and surgery in final year MBBS 2000",
+            "link": ""
+          },
+          {
+            "text": "Professional Memberships and Certifications",
+            "link": ""
+          },
+          {
+            "text": "Indian academy of neurology",
+            "link": ""
+          },
+          {
+            "text": "Indian epilepsy association",
+            "link": ""
+          },
+          {
+            "text": "American Academy of Neurology",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "Understanding and Recognizing Epileptic Seizures | Dr. Gopal Dash",
+        "name": "Dr. Gopal Krishna Dash",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/Hng2aOnzqt0"
+      },
+      {
+        "subtitle": "Can Ladies with Epilepsy Get Pregnant? | Dr. Gopal Krishna Dash",
+        "name": "Dr. Gopal Krishna Dash",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/5irLE1SLTU4"
+      },
+      {
+        "subtitle": "Is driving safe for people with Epilepsy | Dr. Gopal Krishna Dash",
+        "name": "Dr. Gopal Krishna Dash",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/c4geg2Nen3s"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "National Epilepsy Awareness Month: Key Insights",
+        "date": null,
+        "slug": "national-epilepsy-awareness-month-seizure-control-guide",
+        "image": "",
+        "imgAlt": "National Epilepsy Awareness Month: Key Insights",
+        "authorInitial": "GD",
+        "author": "Dr. Gopal Krishna Dash",
+        "category": "Neurology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

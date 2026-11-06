@@ -128,7 +128,8 @@ test("D17 reuses all four D16 members and applies the signed-in contact", () => 
   assert.deepEqual(members.map(entry => [entry.patient.name, entry.patient.age, entry.patient.relation]), [
     ["Aditya", "32", "self"], ["Aarav", "6", "child"], ["Hazel", "30", "spouse"], ["Rahul", "62", "parent"],
   ]);
-  assert.ok(members.every(entry => entry.patient.email === identity.value && design17PatientAvatar(entry)));
+  assert.ok(members.every(entry => entry.patient.email === identity.value));
+  assert.equal(members.filter(entry => design17PatientAvatar(entry)).length, 2);
   const custom = { id: "custom-member", patient: { ...members[0].patient, name: "Added member" } };
   const updated = design17Patients(identity, [...patientsForIdentity(identity), custom]);
   assert.equal(updated.length, 5);
@@ -149,23 +150,23 @@ test("review discounts have one consistent total and survive draft recovery", ()
 });
 
 const { design17DoctorNavigationHref } = await import("../src/features/search/design17Navigation.ts");
-test("navbar returns from every internal D17 screen to the same refined directory", () => {
+test("navbar leaves archived D17 previews for D21 while retaining refinements", () => {
   for (const design of ["d17", "d17-lite"]) {
     const returnTo = `/search/doctors?design=d3&location=Bangalore&mode=video&languages=Kannada`;
     for (const pathname of ["/doctors/dr-1", "/doctors/dr-1/book", "/doctors/dr-1/book/confirmation"]) {
       const params = new URLSearchParams({ design, returnTo, step: "review" });
       const url = new URL(design17DoctorNavigationHref("/book-an-appointment", pathname, params), "https://nh.local");
       assert.equal(url.pathname, "/search/doctors");
-      assert.equal(url.searchParams.get("design"), design);
+      assert.equal(url.searchParams.get("design"), "d21");
       assert.equal(url.searchParams.get("location"), "Bangalore");
       assert.equal(url.searchParams.get("languages"), "Kannada");
       assert.equal(url.searchParams.get("step"), null);
     }
     const params = new URLSearchParams({ design, location: "Kolkata" });
-    assert.equal(new URL(design17DoctorNavigationHref("/book-an-appointment/cardiologist", "/doctors/dr-1", params), "https://nh.local").searchParams.get("design"), design);
+    assert.equal(new URL(design17DoctorNavigationHref("/book-an-appointment/cardiologist", "/doctors/dr-1", params), "https://nh.local").searchParams.get("design"), "d21");
     assert.equal(new URL(design17DoctorNavigationHref("/book-an-appointment", "/search/doctors", params), "https://nh.local").searchParams.get("location"), "Kolkata");
-    assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/doctors/dr-1", new URLSearchParams({ design, returnTo: "https://evil.test" })), `/search/doctors?design=${design}&location=All`);
+    assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/doctors/dr-1", new URLSearchParams({ design, returnTo: "https://evil.test" })), "/search/doctors?design=d21&location=All");
   }
-  assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/", new URLSearchParams()), "/search/doctors?design=d17-lite&location=All");
-  assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/doctors/dr-1", new URLSearchParams({ design: "d16" })), "/book-an-appointment");
+  assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/", new URLSearchParams()), "/search/doctors?design=d21&location=All");
+  assert.equal(design17DoctorNavigationHref("/book-an-appointment", "/doctors/dr-1", new URLSearchParams({ design: "d16" })), "/search/doctors?design=d21&location=All");
 });

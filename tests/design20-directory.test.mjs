@@ -42,7 +42,6 @@ const { indiaClock, indiaDate } = await import('../src/features/booking/appointm
 const { Design15DraftStore } = await import('../src/features/booking/design15/serverDraftStore.ts');
 const { Design20DraftStore, restoreDesign20DraftMethods } = await import('../src/features/booking/design20/serverDraftStore.ts');
 const { patientsForIdentity } = await import('../src/features/booking/design15/model.ts');
-const { design17Available } = await import('../src/features/booking/design17/model.ts');
 const { design20Available, design20RequestedSelection, confirmDesign20, design20SafeStep, design20ContinuePhase, design20InlineUrl, design20FlowUrl } = await import('../src/features/booking/design20/model.ts');
 const now = new Date('2026-10-28T02:00:00Z');
 
@@ -186,12 +185,15 @@ test('featured surgeons use surgical labels and aliases while older design fixtu
   const swapped = design20Directory.find(doctor => doctor.id === 'dr-3');
   const abhinandan = design20BangaloreDoctors.find(doctor => doctor.id === 'd20-dr-abhinandan-s-punit');
   assert.deepEqual(swapped, { ...untouched, hospital: abhinandan.hospital,
-    hospitals: abhinandan.hospitals, hospitalCount: '+3' });
+    hospitals: abhinandan.hospitals, hospitalCount: '+3', profileSlug: 'dr-arun-krishnan' });
   const swappedAbhinandan = design20Directory.find(doctor => doctor.id === abhinandan.id);
   assert.equal(swappedAbhinandan.hospital, untouched.hospital);
   assert.deepEqual(swappedAbhinandan.hospitals, untouched.hospitals);
   assert.deepEqual(getDesign20BookingDoctor(swapped.id).locations.map(location => location.name), abhinandan.hospitals);
-  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name), untouched.hospitals);
+  // Keep the requested preview units first while allowing the complete published
+  // profile affiliations to survive the profile -> booking handoff.
+  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name),
+    [...new Set([...untouched.hospitals, ...abhinandan.hospitals])]);
 });
 
 test('D20 featured profile selection and draft recovery accept only their corrected official affiliations', () => {
@@ -247,7 +249,6 @@ test('corrected featured affiliations retain matching D20 filter, card, booking 
     const legacyHospital = 'Narayana Health City, Bangalore';
     const legacySlots = getDesign3BookingSlots(id, date, 'hospital', legacyHospital, now, 21);
     const legacySelection = { doctorId: id, mode: 'hospital', hospital: legacyHospital, date, time: legacySlots.find(slot => slot.available).time };
-    assert.equal(design17Available(legacySelection, now.getTime()), true);
     assert.equal(design20Available(legacySelection, now.getTime()), false);
     assert.deepEqual(getDesign3BookingSlots(id, date, 'hospital', legacyHospital, now, 21, 'd20'), []);
   }

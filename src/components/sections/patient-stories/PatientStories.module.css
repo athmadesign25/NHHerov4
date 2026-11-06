@@ -13,12 +13,12 @@
    section's own card is fully full-page and hides it. */
 .section {
   position: relative;
-  background: #031224;
+  background: var(--navy-900);
   overflow: hidden;
   /* 16px side inset matches CentreOfExcellence's --gx-pad — reset to 0
      below 1024px, where the mobile swipe carousel's own full-bleed trick
      (.mobileCarouselContainer) needs an unpadded ancestor to work. */
-  padding: 44px 16px 64px;
+  padding: var(--space-48) var(--space-16) var(--space-64);
   box-sizing: border-box;
   min-height: 900px;
   display: flex;
@@ -48,26 +48,26 @@
 }
 
 .eyebrowText {
-  color: #FFFFFF !important;
+  color: var(--color-text-inverse) !important;
 }
 
 .eyebrowDash {
   width: 24px;
   height: 2px;
-  background: var(--color-emergency, #ED1C24);
+  background: var(--color-emergency, var(--red-emergency));
   margin-top: 4px;
 }
 
 .sectionTitle {
-  font-size: 42px;
+  font-size: var(--font-size-display);
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-text-inverse);
   margin-bottom: 12px;
 }
 
 .sectionSubtitle {
   color: #F1F1F1;
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   text-align: center;
   max-width: 600px;
 }
@@ -106,16 +106,16 @@
   width: 528px;
   height: 676px;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-10);
   flex-shrink: 0;
   position: relative;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  box-shadow: var(--elevation-4);
   background: #001124;
   overflow: hidden;
   box-sizing: border-box;
-  transition: filter 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: filter var(--duration-emphasis) var(--ease-spring), transform var(--duration-emphasis) var(--ease-spring);
 }
 
 /* Mobile Native Swipe Carousel */
@@ -123,8 +123,8 @@
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  gap: 16px;
-  padding: 0 24px;
+  gap: var(--space-16);
+  padding: 0 var(--space-24);
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   scrollbar-width: none;
@@ -167,22 +167,22 @@
   height: 44px;
   padding: 0;
   border-radius: 22px;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(var(--black-rgb), 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  color: var(--color-text-inverse);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.25s ease;
+  box-shadow: var(--elevation-2);
+  transition: all var(--duration-moderate) ease;
 }
 
 .muteBtn:hover {
-  background: rgba(0, 0, 0, 0.6);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(var(--black-rgb), 0.6);
+  border-color: rgba(var(--white-rgb), 0.3);
   transform: scale(1.06);
 }
 
@@ -206,8 +206,8 @@
     rgba(0, 17, 36, 0.5) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 30%, #000 60%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(var(--black-rgb), 0.4) 30%, var(--black) 60%, var(--black) 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(var(--black-rgb), 0.4) 30%, var(--black) 60%, var(--black) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -231,8 +231,8 @@
     rgba(0, 17, 36, 0) 100%
   );
   backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, var(--black) 0%, var(--black) 40%, rgba(var(--black-rgb), 0.4) 70%, transparent 100%);
+  mask-image: linear-gradient(180deg, var(--black) 0%, var(--black) 40%, rgba(var(--black-rgb), 0.4) 70%, transparent 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -257,9 +257,9 @@
   background: linear-gradient(
     115deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.05) 25%,
-    rgba(255, 255, 255, 0.35) 50%,
-    rgba(255, 255, 255, 0.05) 75%,
+    rgba(var(--white-rgb), 0.05) 25%,
+    rgba(var(--white-rgb), 0.35) 50%,
+    rgba(var(--white-rgb), 0.05) 75%,
     transparent 100%
   );
   transform: skewX(-20deg);
@@ -297,17 +297,17 @@
   align-items: center;
   flex-wrap: wrap;
   white-space: normal;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(var(--black-rgb), 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 10px 16px;
+  padding: var(--space-10) var(--space-16);
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--elevation-3);
   text-align: center;
   max-width: 100%;
   overflow: hidden;
-  font-family: Inter, sans-serif;
-  font-size: 19px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-xl);
   line-height: normal;
 }
 
@@ -329,14 +329,14 @@
 .overviewBox {
   width: 70%;
   max-width: 70%;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.16);
   backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: var(--space-10) var(--space-14);
   margin-bottom: 28px;
   box-sizing: border-box;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--elevation-3);
 }
 
 /* Overview unit: no glass panel — bare icon + text sitting directly on the
@@ -355,7 +355,7 @@
   flex-direction: column;
   align-items: flex-start;
   box-sizing: border-box;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 2px 8px rgba(var(--black-rgb), 0.6);
 }
 
 .overviewQuoteIcon {
@@ -366,11 +366,11 @@
 }
 
 .overviewText {
-  color: #FFFFFF;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 22px;
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-2xl);
   font-weight: 400;
-  line-height: 1.45;
+  line-height: var(--leading-body);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3; /* allow up to 3 lines */
@@ -380,31 +380,31 @@
 }
 
 .patientName {
-  color: #FFF;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-xl);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   letter-spacing: normal;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.5);
 }
 
 .patientSubtext {
   align-self: stretch;
   color: #E0E0E0;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   margin: 2px 0 0 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.5);
 }
 
 /* Dark edge fades: same solid color as the section's own background
-   (#031224), fading to transparent toward the carousel's center, so the
+   (var(--navy-900)), fading to transparent toward the carousel's center, so the
    track's outer edges blend seamlessly into the surrounding section on
    both sides instead of cutting off hard. Sit above the card content but
    below the nav arrows (z-index 25 vs. the arrows' 30), which are placed
@@ -422,12 +422,12 @@
 
 .edgeFadeLeft {
   left: 0;
-  background: linear-gradient(90deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+  background: linear-gradient(90deg, var(--navy-900) 0%, rgba(var(--navy-900-rgb), 0.7) 45%, rgba(var(--navy-900-rgb), 0) 100%);
 }
 
 .edgeFadeRight {
   right: 0;
-  background: linear-gradient(270deg, #031224 0%, rgba(3, 18, 36, 0.7) 45%, rgba(3, 18, 36, 0) 100%);
+  background: linear-gradient(270deg, var(--navy-900) 0%, rgba(var(--navy-900-rgb), 0.7) 45%, rgba(var(--navy-900-rgb), 0) 100%);
 }
 
 /* Glass navigation arrows — overlaid directly on the carousel track
@@ -446,18 +446,18 @@
   transform: translateY(-50%);
   z-index: 30;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(3, 18, 36, 0.55);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
+  background: rgba(var(--navy-900-rgb), 0.6);
   backdrop-filter: blur(16px);
-  color: #ffffff;
+  color: var(--color-text-inverse);
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  transition: background var(--duration-moderate) ease, border-color var(--duration-moderate) ease, box-shadow var(--duration-moderate) ease, transform var(--duration-moderate) ease;
+  box-shadow: var(--elevation-3);
   flex-shrink: 0;
 }
 
@@ -470,10 +470,10 @@
 }
 
 .arrowBtn:hover {
-  background: rgba(3, 18, 36, 0.72);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(var(--navy-900-rgb), 0.7);
+  border-color: rgba(var(--white-rgb), 0.6);
   transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--elevation-3);
 }
 
 /* Secondary CTA Button — dark/navy for light-background accessibility */
@@ -498,28 +498,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
+  gap: var(--space-8);
+  padding: var(--space-12) var(--space-24);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.5);
+  background: rgba(var(--white-rgb), 0.05);
   backdrop-filter: blur(12px);
-  color: #FFFFFF;
-  font-family: Inter, sans-serif;
-  font-size: 15px;
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
   font-weight: 600;
   line-height: normal;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+  transition: all var(--duration-moderate) ease;
+  box-shadow: var(--elevation-3);
 }
 
 .secondaryCtaBtn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: #FFFFFF;
+  background: rgba(var(--white-rgb), 0.16);
+  border-color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+  box-shadow: var(--elevation-3);
 }
 
 @media (max-width: 1023px) {
@@ -559,14 +559,14 @@
     height: 34px;
   }
   .overviewText {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
   .ctaWrapper {
     margin-top: 8px;
   }
   .captionBox {
-    font-size: 14px;
-    padding: 6px 12px;
+    font-size: var(--font-size-sm);
+    padding: var(--space-6) var(--space-12);
   }
   .textUnit {
     width: calc(100% - 40px);
@@ -574,10 +574,10 @@
     bottom: 20px;
   }
   .patientName {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
   }
   .patientSubtext {
-    font-size: 14px;
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -586,7 +586,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-6);
   margin-top: 16px;
   margin-bottom: 32px;
 }
@@ -594,11 +594,23 @@
   width: 6px;
   height: 6px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  background: rgba(var(--white-rgb), 0.2);
+  transition: all var(--duration-emphasis) ease;
 }
 .navDotActive {
   width: 18px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--white-rgb), 0.9);
+}
+
+@media (max-width: 1024px) {
+  .header {
+    box-sizing: border-box;
+    width: 100%;
+    padding-inline: var(--space-32);
+  }
+}
+
+@media (max-width: 1024px) {
+  .headerContainer { padding-inline: 0; }
 }

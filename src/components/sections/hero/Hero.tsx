@@ -31,7 +31,7 @@ const STAT_GROUPS = [
   ],
 ];
 
-function MetricValueReveal({ value, suffix = "" }: { value: number; suffix?: string }) {
+export function MetricValueReveal({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10px" });
 
@@ -386,7 +386,8 @@ export default function Hero() {
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
             <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
               <h1 className={styles.headline}>
-                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+                <span className={styles.headlineDesktop}><TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /></span>
+                <span className={styles.headlineMobile}><TextSweepEffect words={["Trusted Care,"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /><br /><TextSweepEffect words={["Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /></span>
               </h1>
               <motion.p
                 className={styles.subHeadline}
@@ -403,6 +404,9 @@ export default function Hero() {
               ref={heroAnchorRef}
               style={{
                 width: "min(840px, calc(100vw - 48px))",
+                // 132 + 64 from chetan_work: the composer grew a row of
+                // morphing action pills, so the anchor it measures itself
+                // against had to move up to leave room.
                 height: 132,
                 marginBottom: 64,
                 pointerEvents: "none",

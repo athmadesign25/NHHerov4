@@ -70,34 +70,34 @@ test("D19 landing refinements and leaving the defining city retain the new desig
   assert.equal(search.searchParams.get("mode"), "video");
 });
 
-test("global links from D19 enter D20 while maintaining filters, mode and city", () => {
+test("global links from D19 enter D21 while maintaining filters, mode and city", () => {
   const params = new URLSearchParams({ design: "d19", location: "Mumbai", mode: "video", q: "heart", languages: "Hindi" });
   const current = "/search/doctors";
   const back = asUrl(design17DoctorNavigationHref("/book-an-appointment", current, params));
-  assert.equal(back.searchParams.get("design"), "d20");
+  assert.equal(back.searchParams.get("design"), "d21");
   assert.equal(back.searchParams.get("q"), "heart");
   assert.equal(back.searchParams.get("languages"), "Hindi");
   const speciality = asUrl(design17DoctorNavigationHref("/book-an-appointment/cardiologist", current, params));
-  assert.equal(speciality.searchParams.get("design"), "d20");
+  assert.equal(speciality.searchParams.get("design"), "d21");
   assert.equal(speciality.searchParams.get("location"), "Mumbai");
   assert.equal(speciality.searchParams.get("mode"), "video");
   assert.equal(design17DoctorNavigationHref("https://external.test/doctors", current, params), "https://external.test/doctors");
 });
 
-test("homepage doctor entry uses D20 after visiting the D19 preview", () => {
+test("homepage doctor entry uses D21 after visiting the D19 preview", () => {
   for (const params of [new URLSearchParams(), new URLSearchParams({ design: "d19", mode: "video" })]) {
     const target = asUrl(design17DoctorNavigationHref("/book-an-appointment", "/", params));
-    assert.equal(target.searchParams.get("design"), "d20");
+    assert.equal(target.searchParams.get("design"), "d21");
   }
 });
 
-test("global Find a doctor leaves D19 for D20 and retains discovery refinements", () => {
+test("global Find a doctor leaves D19 for D21 and retains discovery refinements", () => {
   const params = new URLSearchParams({ design: "d19", location: "Mumbai", mode: "video", q: "heart",
     languages: "Hindi", appointmentDate: "2026-10-28", booking: "dr-3", bookingMode: "hospital", hospital: "Selected hospital",
     date: "2026-10-28", time: "10:30 AM", step: "review", ref: "NH7-12345678" });
   const target = asUrl(design17DoctorNavigationHref("/book-an-appointment", "/search/doctors", params));
   assert.equal(target.pathname, "/search/doctors");
-  assert.equal(target.searchParams.get("design"), "d20");
+  assert.equal(target.searchParams.get("design"), "d21");
   for (const key of ["location", "mode", "q", "languages", "appointmentDate"]) {
     assert.equal(target.searchParams.get(key), params.get(key));
   }
@@ -149,14 +149,14 @@ test("D19 is selectable and an explicit URL wins over a saved older preview", t 
 });
 
 
-test("global navigation from D19 booking enters D20 with listing mode instead of the chosen card mode", () => {
+test("global navigation from D19 booking enters D21 with listing mode instead of the chosen card mode", () => {
   const returnTo = "/search/doctors?design=d19&location=Bangalore&mode=hospital&languages=Kannada";
   const params = new URLSearchParams({ design: "d19", mode: "video", hospital: "Narayana Health City, Bangalore", returnTo });
   const directory = asUrl(design17DoctorNavigationHref("/book-an-appointment", "/doctors/dr-1/book", params));
   assert.equal(directory.searchParams.get("mode"), "hospital");
   assert.equal(directory.searchParams.get("languages"), "Kannada");
   const speciality = asUrl(design17DoctorNavigationHref("/book-an-appointment/cardiologist", "/doctors/dr-1/book", params));
-  assert.equal(speciality.searchParams.get("design"), "d20");
+  assert.equal(speciality.searchParams.get("design"), "d21");
   assert.equal(speciality.searchParams.get("mode"), "hospital");
   assert.equal(speciality.searchParams.get("location"), "Bangalore");
 });

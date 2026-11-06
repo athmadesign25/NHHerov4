@@ -90,7 +90,7 @@
 
 .text {
   color: #fff;
-  font-family: Inter, -apple-system, sans-serif;
+  font-family: var(--font-family);
   font-weight: 600;
   font-size: 12px;
   text-align: center;

@@ -162,7 +162,7 @@ function KaraokeCaption({
             <span
               key={`${lineIndex}-${wIdx}`}
               style={{
-                color: isHighlighted ? "#FFFFFF" : "rgba(255, 255, 255, 0.4)",
+                color: isHighlighted ? "var(--white)" : "rgba(var(--white-rgb), 0.4)",
                 fontWeight: 600,
                 transition: "color 0.18s ease-in-out",
                 marginRight: wIdx === words.length - 1 ? "0px" : "6px",
@@ -461,12 +461,12 @@ export default function PatientStories() {
               <div className={styles.eyebrowDash} />
             </motion.div>
 
-            <h2 className={`section-title ${styles.sectionTitle}`}>
+            <h2 className={`section-title mobile-section-title ${styles.sectionTitle}`}>
               <TextSweepEffect words={["Lives Changed, Stories Told"]} sweepMs={1200} finalColor="#FFFFFF" />
             </h2>
 
             <motion.p
-              className={styles.sectionSubtitle}
+              className={`mobile-section-subtitle ${styles.sectionSubtitle}`}
               initial={{ opacity: 0, filter: "blur(16px)", y: -24 }}
               whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
               viewport={{ once: true, margin: "-30px" }}

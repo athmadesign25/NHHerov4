@@ -1,0 +1,71 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/May2026/rVBw6FX9hLiVQyVxuYyt.webp",
+    "name": "Dr. Naveen B S",
+    "id": 101996,
+    "doctorCode": "108744",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "BDS",
+        "MDS (Oral & Maxillo Facial Surgery)",
+        "Fellowship (Head & Neck Surgical Oncology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Head & Neck Oncology"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "6th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Naveen B S is a head and neck oncology specialist with expertise in managing cancers of the oral cavity, throat, thyroid, and related structures. He is skilled in complex oncologic surgeries, including organ-preserving and reconstructive procedures. With a patient-focused approach, he emphasizes early diagnosis, multidisciplinary care, and precise surgical treatment to improve outcomes and quality of life.",
+    "full_description": "Dr. Naveen B S is a head and neck oncology specialist with expertise in managing cancers of the oral cavity, throat, thyroid, and related structures. He is skilled in complex oncologic surgeries, including organ-preserving and reconstructive procedures. With a patient-focused approach, he emphasizes early diagnosis, multidisciplinary care, and precise surgical treatment to improve outcomes and quality of life."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Head and Neck Oncology",
+      "Oral & Maxillo Facial Surgery",
+      "Head & Neck Surgical Oncology",
+      "Complex oncologic surgeries",
+      "Organ Preserving Surgeries",
+      "Reconstructive Procedures",
+      "Cancers of the Oral Cavity",
+      "HEAD AND NECK ONCOLOGY",
+      "Head And Neck Oncology"
+    ]
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

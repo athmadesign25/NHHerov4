@@ -140,7 +140,7 @@
 .locationOption:active { background: color-mix(in srgb, var(--card-ink) 16%, transparent); }
 .locationHint { display: block; margin-top: calc(var(--sp-1) / 2); color: var(--card-muted); font-size: var(--font-size-xs); }
 .locationCheck { display: grid; place-items: center; width: var(--sp-2); height: var(--sp-2); flex-shrink: 0; border: 1px solid var(--card-line); border-radius: var(--radius-full); }
-.locationOption[aria-pressed="true"] .locationCheck { background: var(--color-emergency); color: var(--card-ink); border-color: var(--color-emergency); }
+.locationOption[aria-pressed="true"] .locationCheck { background: var(--color-emergency); color: var(--color-text-inverse); border-color: var(--color-emergency); }
 .bookingGroup { display: grid; gap: var(--sp-2); margin-top: auto; padding-top: var(--sp-2); border-top: 1px solid var(--card-line); }
 .bookingFacts { display: grid; grid-template-columns: minmax(0, 1fr) max-content; align-items: start; gap: var(--sp-2); }
 .availability { display: grid; gap: calc(var(--sp-1) / 2); min-width: 0; }

@@ -1,0 +1,89 @@
+.menu {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.35fr);
+  gap: var(--space-24);
+  padding: var(--space-24);
+  min-height: 100%;
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr);
+  background: var(--color-surface);
+}
+.centres {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--amber-500) 20%, var(--white));
+}
+.centreImage { position: absolute; inset: 0; }
+.centreImage img { object-fit: cover; object-position: center 65%; }
+.centreImage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, color-mix(in srgb, var(--amber-500) 35%, var(--red-50)), color-mix(in srgb, var(--amber-500) 25%, var(--red-50)) 40%, rgba(var(--amber-500-rgb), 0.35) 65%, transparent 95%); }
+.centreContent { position: relative; margin-top: auto; padding: var(--space-24) var(--space-16) var(--space-80); display: flex; flex-direction: column; gap: var(--space-12); }
+.centreContent h2 { font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 600; color: var(--color-text); margin: 0; }
+.centreLinks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); list-style: none; margin: 0; padding: 0; }
+.centreLinks a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  min-height: var(--space-48);
+  padding: var(--space-8);
+  border: var(--space-1) solid rgba(var(--white-rgb), 0.6);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--amber-500) 12%, rgba(var(--white-rgb), 0.8));
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--elevation-2), var(--shadow-inset-highlight);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+  transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+}
+.centreLinks a:hover { background: var(--color-surface); color: var(--color-primary); }
+.tiles { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); align-content: stretch; gap: var(--space-20); min-width: 0; }
+.tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--space-16);
+  border: var(--space-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  box-shadow: var(--elevation-1);
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+.tileImage { object-fit: cover; object-position: right center; transition: transform var(--duration-slow) var(--ease-out); }
+.tileTitle { position: relative; z-index: 1; display: flex; flex-direction: column; max-width: 85%; font-size: var(--font-size-base); font-weight: 600; line-height: var(--leading-snug); }
+.emergency { color: var(--red-emergency-dark); }
+.tile:hover { transform: translateY(calc(-1 * var(--space-2))); box-shadow: var(--elevation-2); }
+.tile:hover .tileImage { transform: scale(1.04); }
+@media (max-width: 1280px) {
+  .menu { gap: var(--space-16); padding: var(--space-16); grid-template-columns: minmax(0, 1.15fr) minmax(0, 2.2fr); }
+  .centreContent { padding-inline: var(--space-12); }
+  .centreLinks a { font-size: var(--font-size-xs); }
+  .centreLinks { gap: var(--space-8); }
+  .centreLinks a { padding: var(--space-8); }
+  .tiles { gap: var(--space-12); }
+  .tile { padding: var(--space-12); min-height: 0; }
+  .tileTitle { font-size: var(--font-size-sm); line-height: var(--leading-snug); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tileImage, .centreLinks a { transition: none; }
+  .tile:hover, .tile:hover .tileImage { transform: none; }
+}
+
+.oneHealth { grid-column: 1; justify-content: center; }
+.oneHealthLogo { position: relative; width: 75%; max-width: 100%; height: auto; max-height: calc(var(--space-64) + var(--space-24)); object-fit: contain; }
+.tile:focus-visible, .centreLinks a:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+
+.centreAction { position: absolute; z-index: 2; left: var(--space-16); right: var(--space-16); bottom: var(--space-16); display: flex; justify-content: flex-start; }

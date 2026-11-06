@@ -1,0 +1,83 @@
+.page.page[data-booking-confirmed] {
+  --color-text: var(--d17-lite-ink);
+  --color-text-secondary: var(--journey-paper-muted);
+  color: var(--color-text);
+  background: var(--booking-page-background);
+  padding-top: calc(var(--nav-height) + var(--space-40));
+  padding-bottom: var(--space-64);
+}
+
+.page.page[data-confirmation-design="2"],
+.page.page[data-confirmation-design="3"],
+.page.page[data-confirmation-design="4"],
+.page.page[data-confirmation-design="5"],
+.page.page[data-confirmation-design="6"] { padding-top: calc(var(--nav-height) + var(--space-24)); }
+
+.confirmation {
+  --confirmation-line: var(--color-border);
+  --confirmation-target: var(--space-48);
+  min-width: 0;
+  color: var(--color-text);
+  animation: appear var(--duration-slower) var(--ease-out) both;
+}
+.heading { display: flex; align-items: center; gap: var(--space-16); padding-bottom: var(--space-32); }
+.successMark { display: grid; place-items: center; flex-shrink: 0; width: var(--space-56); height: var(--space-56); border-radius: var(--radius-full); color: var(--journey-paper-success); background: color-mix(in srgb, var(--journey-paper-success) 8%, transparent); }
+.successMark svg { animation: confirm var(--duration-slowest) var(--ease-out) both; }
+.heading h1 { margin: 0; color: var(--color-text); font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl)); font-weight: 600; line-height: var(--leading-tight); letter-spacing: -.025em; }
+.heading h1:focus { outline: none; }
+.content { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-32); padding-block: var(--space-32); border-top: var(--space-1) solid var(--confirmation-line); }
+.appointment, .payment { min-width: 0; }
+.doctor { display: flex; align-items: center; gap: var(--space-16); margin-bottom: var(--space-24); }
+.doctor > div { min-width: 0; }
+.portrait { flex-shrink: 0; display: grid; place-items: center; width: var(--space-80); height: var(--space-96); object-fit: cover; object-position: center 20%; border-radius: var(--radius-md); color: var(--color-text-secondary); background: var(--color-primary-light); }
+.doctor h2 { margin: 0; font-size: var(--font-size-xl); line-height: var(--leading-snug); font-weight: 600; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.doctor p { margin-top: var(--space-6); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.details { display: grid; gap: var(--space-20); margin: 0; }
+.detail { min-width: 0; }
+.detail dt { display: flex; align-items: center; gap: var(--space-12); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
+.detail dt > svg { flex-shrink: 0; }
+.detail dd { margin: var(--space-4) 0 0 var(--space-32); font-size: var(--font-size-base); font-weight: 500; line-height: var(--leading-body); overflow-wrap: anywhere; }
+.slot { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-8); }
+.slot > span { white-space: nowrap; }
+.dot { margin-right: var(--space-8); color: var(--color-text-secondary); font-weight: 400; }
+.timezone { color: var(--color-text-secondary); font-size: var(--font-size-xs); font-weight: 400; }
+.secondaryText { color: var(--color-text-secondary); font-size: var(--font-size-sm); font-weight: 400; }
+.payment { border-top: var(--space-1) solid var(--confirmation-line); padding-top: var(--space-24); }
+.payment h2, .footer h2 { margin: 0; font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 600; }
+.paymentStatus, .paymentSuccess { display: flex; align-items: center; gap: var(--space-6); margin-top: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.paymentSuccess { color: var(--journey-paper-success); }
+.breakdown { display: grid; gap: var(--space-12); margin: var(--space-24) 0 0; }
+.breakdown > div { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-16); font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--color-text-secondary); }
+.breakdown dt { min-width: 0; }
+.breakdown dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.breakdown .discount { color: var(--journey-paper-success); }
+.breakdown .total { padding-top: var(--space-16); margin-top: var(--space-4); border-top: var(--space-1) solid var(--confirmation-line); color: var(--color-text); font-weight: 500; }
+.total dd { font-size: var(--font-size-xl); font-weight: 600; line-height: var(--leading-snug); }
+.note { max-width: 50ch; margin: var(--space-16) 0 0; font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--color-text-secondary); }
+.footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-24); padding-top: var(--space-24); border-top: var(--space-1) solid var(--confirmation-line); }
+.footer > div { min-width: 0; }
+.footer p { margin-top: var(--space-8); font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--color-text-secondary); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8) var(--space-24); }
+.primary, .home { display: inline-flex; align-items: center; justify-content: center; min-height: var(--confirmation-target); gap: var(--space-8); font-size: var(--font-size-sm); line-height: var(--leading-normal); text-decoration: none; transition: background-color var(--duration-base), color var(--duration-base); }
+.primary { padding: var(--space-12) var(--space-20); background: var(--color-primary); color: var(--color-text-inverse); border-radius: var(--radius-md); font-weight: 600; }
+.home { color: var(--color-primary); }
+.confirmation a:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+
+@media (min-width: 768px) {
+  .content { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-48); }
+  .payment { border-top: 0; border-left: var(--space-1) solid var(--confirmation-line); padding: 0 0 0 var(--space-32); }
+}
+@media (max-width: 639px) {
+  .page.page[data-booking-confirmed] { padding-top: calc(var(--nav-height) + var(--space-24)); }
+  .heading { gap: var(--space-12); padding-bottom: var(--space-24); }
+  .successMark { width: var(--space-48); height: var(--space-48); }
+  .content { padding-block: var(--space-24); gap: var(--space-24); }
+  .portrait { width: var(--space-64); height: var(--space-80); }
+  .doctor h2 { font-size: var(--font-size-lg); }
+  .actions { width: 100%; }
+}
+@media (hover: hover) { .primary:hover { background: var(--color-primary-dark); } .home:hover { color: var(--color-primary-dark); } }
+@keyframes appear { from { opacity: 0; transform: translateY(var(--space-8)); } to { opacity: 1; transform: translateY(0); } }
+@keyframes confirm { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .confirmation, .successMark svg { animation: none; } .primary, .home { transition: none; } }
+@media (forced-colors: active) { .page.page[data-booking-confirmed] { background: Canvas; } .primary { border: var(--space-1) solid ButtonText; } }

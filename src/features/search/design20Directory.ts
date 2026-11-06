@@ -9,7 +9,9 @@ import { withDesign3DemoMetadata } from "./design3DoctorMetadata";
 import { selectDesign17ProfileHospital } from "./design17Profile";
 import { design20DirectorySource } from "./design20DirectoryData";
 import { withDesign20FeaturedClinicalMetadata } from "./design20FeaturedClinicalMetadata";
+import { withDoctorProfileSlugs } from "./doctorProfileUrl";
 import { design20PreviewPortrait } from "./design20PreviewPortrait";
+import { withPublishedProfileLocations } from "./doctorProfileLocations";
 import { fromDirectoryDoctor, type ConsultationMode, type DoctorListingItem } from "./doctorListing";
 
 /** These are interaction-preview values, not information from the official directory. */
@@ -67,7 +69,7 @@ const previewLocations = new Map([
   ["d20-dr-abhinandan-s-punit", featuredPreviewDoctors.find(doctor => doctor.id === "dr-3")],
 ]);
 
-export const design20Directory = [
+export const design20Directory = withDoctorProfileSlugs([
   ...featuredPreviewDoctors,
   ...design20BangaloreDoctors,
   ...legacyDirectory.filter(doctor => getCityId(doctor.city) !== getCityId("Bangalore")),
@@ -78,7 +80,7 @@ export const design20Directory = [
   const hospitals = [...(locationSource.hospitals ?? [locationSource.hospital])];
   return { ...doctor, hospital: locationSource.hospital, hospitals,
     hospitalCount: hospitals.length > 1 ? `+${hospitals.length - 1}` : "" };
-});
+}));
 export const design20SearchableIds = new Set(design20Directory.map(doctor => doctor.id));
 
 const doctorNameKey = (name: string) => name.toLowerCase().replace(/^dr[.\s-]*/i, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -86,7 +88,15 @@ const featuredLegacySlugs = new Set(["dr-rajiv-menon", "dr-priya-sharma", "dr-ar
 
 /** Older public profile URLs keep their clinician identity when entering the current journey. */
 export function getDesign20DirectoryDoctor(id: string, requestedName?: string | null): DoctorListingItem | null {
+  const slugMatch = design20Directory.find(doctor => doctor.profileSlug === id);
+  if (slugMatch && (!requestedName || doctorNameKey(slugMatch.name) === doctorNameKey(requestedName))) return slugMatch;
   const direct = design20Directory.find(doctor => doctor.id === id);
+  if (requestedName) {
+    const requestedKey = doctorNameKey(requestedName);
+    const byName = design20Directory.find(doctor => doctorNameKey(doctor.name) === requestedKey);
+    if (byName) return byName;
+    if (direct && doctorNameKey(direct.name) !== requestedKey) return null;
+  }
   if (direct) return direct;
   const key = doctorNameKey(id);
   const named = design20Directory.find(doctor => doctorNameKey(doctor.name) === key);
@@ -124,12 +134,13 @@ export function getDesign20VerifiedDoctor(id: string): DoctorListingItem | null 
 
 export function getDesign20ProfileDoctor(id: string, params: Pick<URLSearchParams, "get">): DoctorListingItem | null {
   const source = getDesign20DirectoryDoctor(id, params.get("name"));
-  return source ? { ...selectDesign17ProfileHospital(source, params.get("hospital") ?? ""), name: presentationDoctorName(source.name) } : null;
+  return source ? { ...selectDesign17ProfileHospital(withPublishedProfileLocations(source), params.get("hospital") ?? ""), name: presentationDoctorName(source.name) } : null;
 }
 
 export function getDesign20BookingDoctor(id: string, name?: string | null): BookingDoctorSummary | null {
-  const doctor = getDesign20DirectoryDoctor(id, name);
-  if (!doctor) return null;
+  const source = getDesign20DirectoryDoctor(id, name);
+  if (!source) return null;
+  const doctor = withPublishedProfileLocations(source);
   return {
     id: doctor.id, name: presentationDoctorName(doctor.name), speciality: doctor.speciality,
     subSpeciality: doctor.degrees, hospital: doctor.hospital, city: doctor.city,

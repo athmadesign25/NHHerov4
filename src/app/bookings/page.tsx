@@ -57,15 +57,15 @@ export default function BookingsPage() {
               </button>
             </div>
           </div>
-          
+
           <div className={styles.tabs}>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === "Upcoming" ? styles.tabActive : ""}`}
               onClick={() => setActiveTab("Upcoming")}
             >
               Upcoming
             </button>
-            <button 
+            <button
               className={`${styles.tab} ${activeTab === "Completed" ? styles.tabActive : ""}`}
               onClick={() => setActiveTab("Completed")}
             >
@@ -90,7 +90,7 @@ export default function BookingsPage() {
         ) : (
           <div className={styles.bookingList}>
             {displayedBookings.map((booking, index) => (
-              <motion.div 
+              <motion.div
                 key={booking.id}
                 className={styles.bookingCard}
                 initial={{ opacity: 0, y: 20 }}

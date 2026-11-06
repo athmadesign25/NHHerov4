@@ -1,0 +1,74 @@
+.confirmation {
+  --confirmation-line: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --confirmation-inset: var(--space-20);
+  width: 100%;
+  max-width: calc(var(--space-128) * 7.5);
+  margin-inline: auto;
+  color: var(--color-text);
+}
+
+.hero { display: grid; justify-items: center; gap: var(--space-12); padding-bottom: var(--space-24); }
+.heroHeading { display: flex; align-items: center; gap: var(--space-16); }
+.heroHeading > span { flex-shrink: 0; margin: 0; }
+.eyebrow { margin: 0 0 var(--space-4); color: var(--journey-paper-success); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; }
+.hero h1 { margin: 0; font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl)); line-height: var(--leading-tight); font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
+.hero h1:focus { outline: none; }
+.notification { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); text-align: center; }
+
+.pass { position: relative; isolation: isolate; border: var(--space-1) solid var(--journey-paper-border); border-radius: var(--radius-xl); background: radial-gradient(ellipse at 90% 100%, color-mix(in srgb, var(--color-primary) 5%, transparent), transparent 60%), linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 85%, transparent), transparent 75%), color-mix(in srgb, var(--d17-lite-surface) 80%, transparent); backdrop-filter: blur(var(--space-16)) saturate(108%); -webkit-backdrop-filter: blur(var(--space-16)) saturate(108%); --shadow-rgb: var(--blue-brand-rgb); box-shadow: var(--elevation-2), var(--shadow-inset-highlight); }
+.dateBand { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-8) var(--space-16); padding: var(--space-16) var(--confirmation-inset); border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-bottom: var(--space-1) solid var(--confirmation-line); background: radial-gradient(ellipse at 0 0, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 75%), linear-gradient(110deg, color-mix(in srgb, var(--color-primary) 5%, transparent), color-mix(in srgb, var(--color-surface) 50%, transparent)); }
+.dateStamp { display: grid; align-content: center; justify-items: center; gap: var(--space-6); width: var(--space-56); min-height: var(--space-64); border: var(--space-1) solid color-mix(in srgb, var(--color-surface) 85%, transparent); border-radius: var(--radius-md); color: var(--color-primary); background: color-mix(in srgb, var(--color-surface) 80%, transparent); box-shadow: var(--elevation-1), var(--shadow-inset-highlight); }
+.dateStamp > span { text-transform: uppercase; font-size: var(--font-size-xs); line-height: var(--leading-none); letter-spacing: .04em; font-weight: 500; }
+.dateStamp > strong { font-size: var(--font-size-2xl); line-height: var(--leading-none); font-weight: 600; }
+.dateText { min-width: 0; }
+.dateText h2 { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); font-weight: 400; }
+.dateText p { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-4) var(--space-8); margin: var(--space-4) 0 0; font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 600; }
+.dateText time, .time { white-space: nowrap; }
+.time { display: inline-flex; align-items: baseline; gap: var(--space-8); }
+.dateDot { display: none; color: var(--color-text-secondary); font-weight: 400; }
+.timezone { color: var(--color-text-secondary); font-size: var(--font-size-xs); font-weight: 400; }
+.calendar { grid-column: 2; justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); min-height: var(--space-48); color: var(--color-primary); border-radius: var(--radius-md); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; text-decoration: none; transition: color var(--duration-base), background-color var(--duration-base); }
+.calendar > svg { flex-shrink: 0; }
+
+.appointment { padding: var(--space-24) var(--confirmation-inset); }
+.appointment h2 { margin: 0 0 var(--space-16); font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 600; }
+.facts { display: grid; gap: var(--space-20) var(--space-32); margin: 0; }
+.fact { min-width: 0; }
+.fact dt { display: flex; align-items: center; gap: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
+.fact dt > svg { flex-shrink: 0; }
+.fact dd { margin: var(--space-4) 0 0 calc(var(--space-16) + var(--space-10)); }
+.value { font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 500; overflow-wrap: anywhere; }
+.supporting { display: block; margin-top: var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.location { grid-column: 1 / -1; }
+.distance { composes: distance from "../confirmation3/AppointmentConfirmation3.module.css"; }
+.payment > section { margin-inline: var(--confirmation-inset); }
+
+.footer { display: grid; justify-items: center; gap: var(--space-16); padding: var(--space-16) var(--confirmation-inset) var(--space-20); border-top: var(--space-1) solid var(--confirmation-line); border-radius: 0 0 var(--radius-xl) var(--radius-xl); background: linear-gradient(135deg, color-mix(in srgb, var(--color-surface) 60%, transparent), transparent); }
+.footer > p { width: 100%; margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); text-align: center; text-wrap: wrap; }
+.actions { display: flex; flex-direction: column; gap: var(--space-8); width: 100%; }
+.primary { composes: primary from "../confirmation3/AppointmentConfirmation3.module.css"; }
+.secondary { composes: secondary from "../confirmation3/AppointmentConfirmation3.module.css"; }
+.srOnly { composes: srOnly from "../confirmation3/AppointmentConfirmation3.module.css"; }
+.confirmation a:focus-visible, .confirmation summary:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+
+@media (min-width: 640px) {
+  .confirmation { --confirmation-inset: var(--space-32); }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dateBand { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .calendar { grid-column: auto; padding-inline: var(--space-12); background: color-mix(in srgb, var(--color-surface) 60%, transparent); box-shadow: var(--shadow-inset-highlight); }
+  .actions { flex-direction: row; justify-content: center; gap: var(--space-12); }
+}
+@media (min-width: 1024px) { .dateDot { display: inline; } .dateText p { font-size: var(--font-size-lg); } }
+@media (max-width: 1023px) { .time { flex-basis: 100%; } }
+@media (max-width: 639px) {
+  .confirmation { padding-bottom: var(--space-40); }
+  .heroHeading { flex-direction: column; gap: var(--space-8); text-align: center; }
+  .notification { font-size: var(--font-size-xs); }
+  .dateText time { white-space: normal; }
+  .distance { min-height: var(--space-48); }
+  .footer > p { font-size: var(--font-size-xs); }
+}
+@media (hover: hover) { .calendar:hover { color: var(--color-primary-dark); background: color-mix(in srgb, var(--color-surface) 85%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .calendar { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .pass { background: var(--color-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (forced-colors: active) { .pass, .dateBand, .dateStamp, .footer { color: CanvasText; background: Canvas; border-color: CanvasText; box-shadow: none; } }

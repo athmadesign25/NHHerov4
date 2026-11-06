@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChevronDown, MapPin, PhoneCall } from "lucide-react";
 import DoctorProfileAvailability from "./DoctorProfileAvailability";
 import DoctorProfileVideos from "./DoctorProfileVideos";
+import DoctorProfileCallback from "./DoctorProfileCallback";
 import { selectDesign17ProfileHospital } from "@/features/search/design17Profile";
 import type { DoctorListingItem } from "@/features/search/doctorListing";
 import type { DoctorProfileContent } from "@/features/search/doctorProfileContent";
@@ -16,6 +17,7 @@ interface Props { doctor: DoctorListingItem; content: DoctorProfileContent }
 export default function DoctorProfileDetails({ doctor, content }: Props) {
   const { editorial, qualifications, expertise, hospitals, hasBackground, faqs } = content;
   return <div className={styles.details}>
+    {(!!editorial?.summary.length || expertise.length > 0) && <div id="profile-overview" className={styles.overviewGroup}>
     {!!editorial?.summary.length && <section id="profile-about" className={styles.panel} aria-labelledby="profile-about-heading">
       <header className={styles.sectionHeading}><h2 id="profile-about-heading">About the doctor</h2></header>
       <div className={styles.biography}>{editorial.summary.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
@@ -25,6 +27,8 @@ export default function DoctorProfileDetails({ doctor, content }: Props) {
       <header className={styles.sectionHeading}><h2 id="profile-expertise-heading">Areas of expertise</h2></header>
       <ul className={styles.expertiseList}>{expertise.map(item => <li key={item}>{item}</li>)}</ul>
     </section>}
+
+    </div>}
 
     {hasBackground && <section id="profile-background" className={styles.panel} aria-labelledby="profile-background-heading">
       <header className={styles.sectionHeading}><h2 id="profile-background-heading">{editorial?.clinicalExperience?.length ? "Qualifications & experience" : editorial?.education?.length ? "Qualifications & training" : "Qualifications"}</h2></header>
@@ -40,7 +44,7 @@ export default function DoctorProfileDetails({ doctor, content }: Props) {
         </details>}
         {!!editorial?.awards?.length && <details className={styles.disclosure}>
           <summary>Awards & recognition<ChevronDown size={16} aria-hidden /></summary>
-          <ul className={styles.historyList}>{editorial.awards.map(item => <li key={item.title}><span>{item.title}</span>{item.subtitle && <small>{item.subtitle}</small>}</li>)}</ul>
+          <ul className={styles.historyList}>{editorial.awards.map(item => <li key={`${item.title}-${item.subtitle ?? ""}`}><span>{item.title}</span>{item.subtitle && <small>{item.subtitle}</small>}</li>)}</ul>
         </details>}
         {!!editorial?.memberships?.length && <details className={styles.disclosure}>
           <summary>Professional memberships<ChevronDown size={16} aria-hidden /></summary>
@@ -60,7 +64,7 @@ export default function DoctorProfileDetails({ doctor, content }: Props) {
       })}{doctor.modes.video === true && <li><Image src="/icons/doctor-card/video.svg" width={19} height={19} alt="" /><div className={styles.practiceDetails}><h3>Video consultation</h3><DoctorProfileAvailability doctor={doctor} mode="video" /></div></li>}</ul>
     </section>}
 
-    <DoctorProfileVideos doctorId={doctor.id} doctorName={doctor.name} />
+    <DoctorProfileVideos doctor={doctor} />
 
     {!!faqs.length && <section id="profile-faq" className={styles.panel} aria-labelledby="profile-faq-heading">
       <header className={styles.sectionHeading}><h2 id="profile-faq-heading">Frequently asked questions</h2></header>
@@ -74,5 +78,6 @@ export default function DoctorProfileDetails({ doctor, content }: Props) {
       <details className={styles.bookingHelp}><summary>Booking help<ChevronDown size={16} aria-hidden /></summary><p>Choose Book appointment to select your hospital, consultation type and time. Sign in when prompted, then choose the patient and review your booking. You can edit the appointment before payment.</p></details>
       <a href="tel:08067506836"><PhoneCall size={16} aria-hidden />Call 080 6750 6836</a>
     </aside>
+    <DoctorProfileCallback doctorName={doctor.name} />
   </div>;
 }

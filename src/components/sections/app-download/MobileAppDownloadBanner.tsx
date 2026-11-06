@@ -371,7 +371,7 @@ export default function MobileAppDownloadBanner() {
           {/* Centered copy: eyebrow, then title a beat later, sequentially */}
           <div className={styles.topTextBlock} ref={topTextBlockRef}>
             <motion.div
-              className={styles.eyebrow}
+              className={`mobile-section-eyebrow ${styles.eyebrow}`}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.3 }}
@@ -386,7 +386,7 @@ export default function MobileAppDownloadBanner() {
                 beat after the other — replaces the old per-word reveal for
                 this title specifically. Shimmer + red highlight on line 2
                 are unchanged. */}
-            <h2 id="mobile-app-download-title-unit" className={styles.title}>
+            <h2 id="mobile-app-download-title-unit" className={`mobile-section-title ${styles.title}`}>
               <span className={styles.titleLine}>
                 <TextSweepEffect words={["Your Health,"]} sweepMs={1500} />
               </span>
@@ -450,16 +450,16 @@ export default function MobileAppDownloadBanner() {
                         top: 0,
                         left: 0,
                         width: "100%",
-                        backgroundColor: "rgba(255, 255, 255, 0.55)",
+                        backgroundColor: "rgba(var(--white-rgb), 0.6)",
                         backdropFilter: "blur(20px) saturate(1.4)",
                         WebkitBackdropFilter: "blur(20px) saturate(1.4)",
                         borderRadius: "20px",
                         padding: "16px",
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                        border: "1px solid rgba(255,255,255,0.6)"
+                        boxShadow: "0 20px 40px rgba(var(--black-rgb), 0.12)",
+                        border: "1px solid rgba(var(--white-rgb), 0.6)"
                       }}
                     >
-                      <div style={{ textAlign: "center", color: "#334155", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
+                      <div style={{ textAlign: "center", color: "var(--slate-700)", fontSize: "14px", fontWeight: 500, lineHeight: "1.4" }}>
                         {POP_OVER_CARDS[activeIndex].text}
                       </div>
                       <Image

@@ -1,0 +1,67 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--space-96);
+  grid-template-areas: "identity portrait" "details details";
+  align-items: start;
+  column-gap: var(--space-16);
+  row-gap: var(--space-20);
+  min-width: 0;
+  padding-block: var(--space-16) var(--space-24);
+}
+
+.identity { grid-area: identity; min-width: 0; align-self: center; }
+.identity h1 {
+  margin: 0;
+  color: var(--profile-ink);
+  font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl));
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.speciality { margin: var(--space-8) 0 0; color: var(--profile-muted); font-size: var(--font-size-base); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.designation { margin: var(--space-8) 0 0; color: var(--profile-muted); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.portrait { grid-area: portrait; position: relative; min-width: 0; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-md); background: var(--color-primary-light); }
+.photo { object-fit: cover; object-position: center 20%; }
+.photoFallback { height: 100%; display: grid; place-content: center; color: var(--color-primary); font-size: var(--font-size-3xl); line-height: var(--leading-tight); font-weight: 500; }
+.details { grid-area: details; display: grid; gap: var(--space-16); min-width: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: var(--space-12) var(--space-24); margin: 0; }
+.facts > div { min-width: 0; }
+.facts dd { display: flex; align-items: flex-start; gap: var(--space-8); margin: 0; color: var(--profile-muted); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.facts dd > svg { flex-shrink: 0; margin-top: var(--space-2); }
+.facts strong { color: var(--profile-ink); font-weight: 500; }
+.consultsAt { display: flex; align-items: flex-start; gap: var(--space-8); width: fit-content; max-width: 100%; color: var(--profile-ink); font-size: var(--font-size-sm); line-height: var(--leading-body); text-decoration: none; transition: color var(--duration-base); }
+.consultsAt > svg { flex-shrink: 0; margin-top: var(--space-2); color: var(--color-primary); }
+.heroAvailability { min-width: 0; max-width: 42ch; padding-top: var(--space-16); border-top: var(--space-1) solid var(--profile-line); }
+.heroAvailability:empty, .heroAvailability:has(> :empty) { display: none; }
+.srOnly { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (min-width: 640px) {
+  .hero { grid-template-columns: minmax(0, 1fr) var(--space-128); column-gap: var(--space-24); }
+  .speciality { font-size: var(--font-size-lg); }
+}
+@media (min-width: 768px) {
+  .hero {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-areas: "identity portrait" "details portrait";
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-32);
+    row-gap: var(--space-16);
+    min-height: calc(var(--space-128) * 2 + var(--space-64));
+    padding-block: var(--space-24) var(--space-32);
+  }
+  .identity { align-self: end; }
+  .details { align-content: start; }
+  .portrait { align-self: stretch; height: 100%; min-height: calc(var(--space-128) * 2); max-height: calc(var(--space-128) * 2 + var(--space-64)); aspect-ratio: auto; border-radius: 0; background: transparent; }
+  .photo { object-fit: contain; object-position: center bottom; mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent), linear-gradient(to top, transparent, black 18%); mask-composite: intersect; }
+  .photoFallback { color: rgba(var(--blue-brand-rgb), .35); font-size: var(--font-size-5xl); background: radial-gradient(ellipse, var(--color-primary-light), transparent 70%); }
+  .hero[data-portrait="false"] { grid-template-columns: minmax(0, 1fr) var(--space-128); min-height: 0; }
+  .hero[data-portrait="false"] .portrait { height: var(--space-128); min-height: 0; align-self: start; border-radius: var(--radius-md); background: var(--color-primary-light); }
+  .hero[data-portrait="false"] .portrait::after { display: none; }
+  .hero[data-portrait="false"] .photoFallback { font-size: var(--font-size-3xl); color: var(--color-primary); background: none; }
+}
+@media (hover: hover) { .consultsAt:hover { color: var(--color-primary); } }
+@media (max-width: 639px) { .consultsAt { min-height: var(--target); align-items: center; } .consultsAt > svg { margin-top: 0; } }
+@media (prefers-reduced-motion: reduce) { .consultsAt { transition: none; } }
+@media (forced-colors: active) { .portrait::after { display: none; } .photo { mask-image: none; } }

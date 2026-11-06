@@ -65,10 +65,16 @@ export default function ScrollProgress() {
   };
 
   const active = isDragging || isHovering;
+  // Hidden until the page has actually moved. Dragging keeps it alive even
+  // if a drag takes the page back to the top.
+  const idle = progress <= 0.001 && !isDragging;
 
   return (
     <div
-      className={`${styles.trackWrap} ${active ? styles.active : ""}`}
+      className={`${styles.trackWrap} ${active ? styles.active : ""} ${
+        idle ? styles.idle : ""
+      }`}
+      aria-hidden={idle}
       onPointerEnter={() => setIsHovering(true)}
       onPointerLeave={() => setIsHovering(false)}
       onPointerDown={handlePointerDown}

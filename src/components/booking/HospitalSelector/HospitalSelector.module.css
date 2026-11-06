@@ -119,11 +119,11 @@
 
 .option:hover,
 .option:focus-visible {
-  background: var(--color-primary-tint);
+  background: rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .optionSelected {
-  background: var(--color-primary-tint);
+  background: rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .optionText {

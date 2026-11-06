@@ -2,7 +2,7 @@
 
 import { useDesignVariant } from "@/features/design-preview/useDesignVariant";
 import type { SearchCatalogs } from "@/features/search/design3Data";
-import Design3SearchResults from "@/app/search/designs/d3/Design3SearchResults";
+import Design3SearchResults from "@/app/search/designs/d3/LegacyDesign3SearchResults";
 import Design4SearchResults from "@/app/search/designs/d4/Design4SearchResults";
 
 import Design5SearchResults from "@/app/search/designs/d5/Design5SearchResults";

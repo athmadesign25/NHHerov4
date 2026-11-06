@@ -1,0 +1,66 @@
+.card {
+  width: 100%;
+  max-width: calc(var(--space-128) * 4);
+  overflow: hidden;
+  border: var(--space-1) solid rgba(var(--red-emergency-rgb), 0.2);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-1);
+}
+
+.visual {
+  position: relative;
+  min-height: var(--space-128);
+}
+
+.visual img { object-fit: cover; object-position: right center; }
+
+.wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--color-emergency-light), rgba(var(--white-rgb), 0.85) 40%, transparent);
+}
+
+.label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin: var(--space-20);
+  color: var(--color-emergency);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-normal);
+  font-weight: 600;
+}
+
+.label svg, .call svg { width: var(--space-20); height: var(--space-20); flex-shrink: 0; }
+
+.content { display: grid; gap: var(--space-12); padding: var(--space-20); }
+.content h3 { margin: 0; color: var(--color-text); font-size: var(--font-size-lg); line-height: var(--leading-normal); font-weight: 600; }
+.content p { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+
+.call {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: var(--space-48);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-md);
+  background: var(--color-emergency);
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  line-height: var(--leading-normal);
+  font-weight: 600;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.call:hover { background: var(--red-emergency-dark); }
+.call:focus-visible { outline: var(--space-2) solid var(--color-text); outline-offset: var(--space-4); }
+
+@media (max-width: 640px) {
+  .content { padding: var(--space-16); }
+  .label { margin: var(--space-16); }
+  .call { font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+}
+@media (prefers-reduced-motion: reduce) { .call { transition: none; } }

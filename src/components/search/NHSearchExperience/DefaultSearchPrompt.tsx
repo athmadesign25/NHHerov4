@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { buildSearchUrl } from "@/features/search/searchTabs";
 import { motion, MotionValue, AnimatePresence } from "framer-motion";
 import { Paperclip, Mic, ArrowRight, User, Heart, X, Square, Pause, FileText, Check, Clock, CalendarCheck, Activity } from "lucide-react";
 import Lottie from "lottie-react";
@@ -10,12 +9,12 @@ import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
 import TypewriterPrompt from "./TypewriterPrompt";
-import { 
-  MAX_SEARCH_WORDS, 
-  MAX_AUDIO_DURATION_SECONDS, 
-  countWords, 
-  enforceWordLimit, 
-  formatAudioDuration 
+import {
+  MAX_SEARCH_WORDS,
+  MAX_AUDIO_DURATION_SECONDS,
+  countWords,
+  enforceWordLimit,
+  formatAudioDuration
 } from "./searchData";
 
 interface DefaultSearchPromptProps {
@@ -38,6 +37,7 @@ interface DefaultSearchPromptProps {
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
   controlsOverflow?: MotionValue<"hidden" | "visible">;
+  promptBlur?: MotionValue<string>;
 }
 
 // Minimal SpeechRecognition interfaces for standard TypeScript
@@ -101,6 +101,7 @@ export default function DefaultSearchPrompt({
   searchTheme = "dark",
   isMobile = false,
   promptOpacity,
+  promptBlur,
   minimizedSearchOpacity,
   textColor,
   compactLabelOpacity,
@@ -366,9 +367,9 @@ export default function DefaultSearchPrompt({
     const file = e.target.files?.[0];
     if (file) {
       const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      setAttachedPdf({ 
-        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`, 
-        size: file.size 
+      setAttachedPdf({
+        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`,
+        size: file.size
       });
     } else {
       setAttachedPdf({ name: "Blood_Test_Report.pdf", size: 245000 });
@@ -412,19 +413,28 @@ export default function DefaultSearchPrompt({
   };
 
   return (
-    <div 
-      className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "flex-start", cursor: voiceMode === "idle" ? "pointer" : "default", position: "relative", overflow: "visible", zIndex: 5 }}
+    <motion.div
+      className={styles.landingContainer}
+      style={{
+        height: "100%",
+        justifyContent: "flex-start",
+        cursor: voiceMode === "idle" ? "pointer" : "default",
+        position: "relative",
+        overflow: "visible",
+        zIndex: 5,
+        opacity: promptOpacity,
+        filter: promptBlur,
+      }}
       onClick={handleContainerClick}
     >
       {/* Top row: Primary Prompt or Voice In-Place Mode */}
       <motion.div
         className={styles.landingInputRow}
         style={{
-          ...(voiceMode === "listening" 
-            ? { marginBottom: 0 } 
-            : controlsMarginBottom 
-            ? { marginBottom: controlsMarginBottom } 
+          ...(voiceMode === "listening"
+            ? { marginBottom: 0 }
+            : controlsMarginBottom
+            ? { marginBottom: controlsMarginBottom }
             : {}),
           position: "relative",
           alignItems: "center",
@@ -521,7 +531,7 @@ export default function DefaultSearchPrompt({
 
               {/* Only in last 10 seconds: slight blinking alert text */}
               {recordingSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && recordingSeconds < MAX_AUDIO_DURATION_SECONDS && (
-                <div 
+                <div
                   className={styles.voiceLastSecondsBlink}
                   role="status"
                   aria-live="polite"
@@ -554,7 +564,7 @@ export default function DefaultSearchPrompt({
                   title="Cancel recording"
                   aria-label="Cancel voice recording"
                 >
-                  <X size={15} strokeWidth={2.2} />
+                  <X size={15} strokeWidth={2.0} />
                 </button>
                 <button
                   type="button"
@@ -566,7 +576,7 @@ export default function DefaultSearchPrompt({
                   title="Done recording"
                   aria-label="Confirm and finish voice recording"
                 >
-                  <Check size={16} strokeWidth={2.4} />
+                  <Check size={15} strokeWidth={2.0} />
                 </button>
               </div>
             </motion.div>
@@ -615,7 +625,7 @@ export default function DefaultSearchPrompt({
 
               {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
                 <div className={styles.transcribedActions}>
-                  <span 
+                  <span
                     className={styles.transcribedWordLimitError}
                     role="alert"
                   >
@@ -647,21 +657,27 @@ export default function DefaultSearchPrompt({
             boxSizing: "border-box",
           }}
         >
-          {/* Docked state carries the mark alone — the label it used to sit
-              under duplicated the one the floating bar shows once this
-              lands there, so it read twice during the same transition. */}
           <div className={styles.floatingPulseIconWrap}>
             <div className={styles.pulseLottieContainer} aria-hidden="true">
               <Lottie animationData={pulseAnimation} loop={true} />
             </div>
           </div>
+          <motion.span
+            className={styles.floatingPulseSearchText}
+            style={{
+              color: textColor || "#FFFFFF",
+              marginTop: 1,
+            }}
+          >
+            Pulse AI<br />Search
+          </motion.span>
         </motion.div>
       )}
 
       {/* Continuous horizontal interaction row */}
       <AnimatePresence initial={false}>
         {voiceMode !== "listening" ? (
-          <motion.div 
+          <motion.div
             key="standard-bottom-controls"
             className={styles.landingBottomRow}
             initial={{ opacity: 0, y: 4 }}
@@ -703,34 +719,36 @@ export default function DefaultSearchPrompt({
                 onSelectLocation={onSelectLocation}
               />
 
-              {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
-              <button
-                type="button"
-                className={styles.insideActionPill}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const target = buildSearchUrl({ location: selectedLocation || "All" });
-                  router.push(target);
-                }}
-                title="Book Doctor Appointment"
-              >
-                <CalendarCheck size={14} className={styles.insideActionIcon} />
-                <span>Book Appointment</span>
-              </button>
+              {/* Quick Action Pills Group: Book Appointment & Book Tests */}
+              <div className={styles.insideActionPillsGroup}>
+                {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
+                <button
+                  type="button"
+                  className={styles.insideActionPill}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/search/doctors?design=d21&location=${encodeURIComponent(selectedLocation)}`);
+                  }}
+                  aria-label="Book Doctor Appointment"
+                >
+                  <CalendarCheck size={14} className={styles.insideActionIcon} />
+                  <span>Book Appointment</span>
+                </button>
 
-              {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
-              <button
-                type="button"
-                className={styles.insideActionPill}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelectActionPill("symptoms");
-                }}
-                title="Book Tests & Health Checkups"
-              >
-                <Activity size={14} className={styles.insideActionIcon} />
-                <span>Book Tests &amp; Checkups</span>
-              </button>
+                {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
+                <button
+                  type="button"
+                  className={styles.insideActionPill}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectActionPill("symptoms");
+                  }}
+                  aria-label="Book Tests & Health Checkups"
+                >
+                  <Activity size={14} className={styles.insideActionIcon} />
+                  <span>Book Tests &amp; Checkups</span>
+                </button>
+              </div>
             </div>
 
             {/* Right side controls: splits into Send + Mic */}
@@ -764,13 +782,13 @@ export default function DefaultSearchPrompt({
                     }
                   }}
                 >
-                  <ArrowRight size={16} strokeWidth={2.5} />
+                  <ArrowRight size={16} strokeWidth={2.0} />
                 </button>
               </div>
             </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

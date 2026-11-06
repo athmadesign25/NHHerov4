@@ -17,6 +17,8 @@ export interface DoctorPracticeLocation {
 export interface DoctorListingItem {
   id: string;
   name: string;
+  /** Stable, readable public profile URL; booking keeps the internal ID. */
+  profileSlug?: string;
   speciality: string;
   /** Optional navigation terms for source specialties, without changing the displayed clinical label. */
   specialityAliases?: readonly string[];

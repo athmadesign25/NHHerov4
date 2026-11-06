@@ -60,7 +60,7 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
   }}>
     <button ref={trigger} type="button" className={styles.trigger} aria-label={`${confirmed ? "Booked" : "Booking"} for ${member.name}. ${confirmed ? "Your account" : "Change patient"}`}
       aria-haspopup="menu" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => open ? close() : setOpen(true)}>
-      <MemberAvatar src={bookingMemberAvatar(member)} className={styles.triggerAvatar} />
+      <MemberAvatar src={bookingMemberAvatar(member)} name={member.name} className={styles.triggerAvatar} />
       <span className={styles.triggerCopy}><strong>{member.name}</strong></span>
       <ChevronDown size={14} className={styles.chevron} aria-hidden />
     </button>
@@ -69,7 +69,7 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
         <p id={`${id}-heading`} className={styles.heading}>{confirmed ? "Booked for" : "Booking for"}</p>
         {selection.members.filter(entry => !confirmed || entry.id === member.id).map(entry => <button key={entry.id} type="button" role="menuitemradio" tabIndex={-1} disabled={confirmed} aria-checked={entry.id === member.id} className={styles.member}
           onClick={() => { chooseBookingMember(entry.id); setAnnouncement(`Booking for ${entry.name}`); close(true); }}>
-          <MemberAvatar src={bookingMemberAvatar(entry)} className={styles.avatar} />
+          <MemberAvatar src={bookingMemberAvatar(entry)} name={entry.name} className={styles.avatar} />
           <span className={styles.memberCopy}><strong>{entry.name}</strong><small>{entry.relation === "self" ? "You" : entry.relation.charAt(0).toUpperCase() + entry.relation.slice(1)}{entry.age ? ` · ${entry.age} yrs` : ""}</small></span>
           {entry.id === member.id && <Check size={16} className={styles.check} aria-hidden />}
         </button>)}

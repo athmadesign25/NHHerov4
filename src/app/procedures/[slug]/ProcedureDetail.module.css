@@ -1,0 +1,1071 @@
+.detailPageContainer {
+  min-height: 100vh;
+  background-color: var(--color-bg, #fafcfc);
+  color: var(--color-text, #1a1a2e);
+}
+
+/* ─── DETAIL HERO (FULL BACKGROUND IMAGE & ATMOSPHERIC GRADIENT) ─────────── */
+.detailHero {
+  position: relative;
+  min-height: 54vh;
+  display: flex;
+  align-items: center;
+  padding-top: calc(var(--nav-height, 72px) + 36px);
+  padding-bottom: 56px;
+  overflow: hidden;
+  background: #060e1b;
+  color: #ffffff;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.heroBgMotion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Image positioned cleanly on the right side to visually communicate the procedure */
+.heroBgImage {
+  object-fit: cover;
+  object-position: 85% center;
+  filter: brightness(0.70) saturate(1.15);
+}
+
+.heroBgOverlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, #060e1b 0%, #060e1b 38%, rgba(6, 14, 27, 0.88) 58%, rgba(6, 14, 27, 0.35) 85%, transparent 100%),
+    linear-gradient(0deg, #060e1b 0%, rgba(6, 14, 27, 0.75) 25%, transparent 60%),
+    linear-gradient(180deg, rgba(6, 14, 27, 0.85) 0%, transparent 35%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Two-column layout identical to Treatments Library page */
+.heroInner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 clamp(20px, 4vw, 40px);
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: clamp(36px, 6vw, 72px);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+.heroLeftCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.breadcrumbsWrapper {
+  margin-bottom: 24px;
+}
+
+/* Eyebrow - Clean Uppercase with proper breathing room */
+.heroEyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 14px;
+}
+
+/* Refined, Balanced Title (Matching Library scale, not overly thick) */
+.heroMainTitle {
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 600;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  max-width: 760px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+
+/* Complementary Subtitle */
+.heroSubTitle {
+  font-size: clamp(14.5px, 1.3vw, 16.5px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+  max-width: 640px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Actions Row: NH Brand Blue Curved CTA + Clean Phone Number (No second pill button) */
+.heroActionsRow {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.heroPrimaryBtn {
+  background: linear-gradient(135deg, #034EA2 0%, #155cb4 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: var(--radius-md, 8px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heroPrimaryBtn:hover {
+  background: linear-gradient(135deg, #023d82 0%, #104e9c 100%);
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.5);
+}
+
+.btnArrow {
+  transition: transform 0.2s ease;
+}
+
+.heroPrimaryBtn:hover .btnArrow {
+  transform: translate(2px, -2px);
+}
+
+/* Clean Phone Number (Call icon + text, no second competing button) */
+.heroPhoneText {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13.5px;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.heroPhoneText strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.heroPhoneText:hover {
+  color: #ffffff;
+}
+
+.phoneIcon {
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
+}
+
+/* ─── RIGHT COLUMN: SECONDARY CREDENTIAL METRICS (MATCHING TREATMENTS LIBRARY) */
+.heroRightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding-left: clamp(20px, 2.5vw, 28px);
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+@media (max-width: 900px) {
+  .heroRightCol {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-left: 0;
+    padding-top: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.statNumber {
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.50);
+  font-weight: 400;
+  margin-top: 3px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Soft bottom melt transition into light content mode */
+.heroBottomMelt {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  background: linear-gradient(to bottom, transparent, rgba(6, 14, 27, 0.3) 45%, var(--color-bg, #fafcfc) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
+.mainLayoutContainer {
+  max-width: var(--max-width, 1240px);
+  margin: 0 auto;
+  padding: 48px clamp(16px, 4vw, 32px) 80px;
+}
+
+.twoColumnGrid {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .twoColumnGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ─── STICKY LEFT SIDEBAR (TOC + SHARING) ────────────────────────────────── */
+.stickySidebar {
+  position: sticky;
+  top: calc(var(--nav-height, 72px) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tocCard {
+  background: var(--color-surface, #ffffff);
+  border-radius: var(--radius-lg, 14px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  box-shadow: 0 4px 16px rgba(12, 24, 57, 0.04);
+  padding: 24px;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.tocHeaderTitle {
+  font-size: var(--font-size-base, 16px);
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--slate-100, #f1f5f9);
+}
+
+.tocList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tocLink {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary, #4a5568);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm, 6px);
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  transition: all var(--duration-fast, 0.15s) ease;
+}
+
+.tocLink:hover {
+  color: var(--color-primary, #034EA2);
+  background: var(--slate-50, #f8fafc);
+}
+
+.tocLinkActive {
+  color: var(--color-primary, #034EA2);
+  font-weight: 700;
+  background: rgba(3, 78, 162, 0.06);
+  border-left-color: var(--color-primary, #034EA2);
+}
+
+/* Social Share Block */
+.shareWidget {
+  background: var(--color-surface, #ffffff);
+  border-radius: var(--radius-lg, 14px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  padding: 18px 24px;
+  box-shadow: 0 4px 16px rgba(12, 24, 57, 0.04);
+}
+
+.shareWidgetTitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate-600, #475569);
+  margin-bottom: 12px;
+}
+
+.shareIconsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shareBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--slate-200, #e2e8f0);
+  background: var(--white, #ffffff);
+  color: var(--color-primary, #034EA2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--duration-fast, 0.15s) ease;
+}
+
+.shareBtn:hover {
+  background: var(--color-primary, #034EA2);
+  color: var(--white, #ffffff);
+  border-color: var(--color-primary, #034EA2);
+  transform: translateY(-2px);
+}
+
+/* Second Opinion Callback Card */
+.sidebarHelpCard {
+  background: linear-gradient(135deg, #eef7ff 0%, #f4faff 100%);
+  border: 1px solid #c7e1ff;
+  border-radius: var(--radius-lg, 14px);
+  padding: 20px;
+}
+
+.helpCardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary-dark, #023070);
+  margin-bottom: 6px;
+}
+
+.helpCardDesc {
+  font-size: 12px;
+  color: var(--color-text-secondary, #4a5568);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.helpCardPhoneBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-emergency, #ED1C24);
+  text-decoration: none;
+}
+
+.helpCardPhoneBtn:hover {
+  text-decoration: underline;
+}
+
+/* ─── RIGHT CONTENT AREA ─────────────────────────────────────────────────── */
+.articleContent {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.sectionBlock {
+  scroll-margin-top: calc(var(--nav-height, 72px) + 32px);
+}
+
+.mainSectionTitle {
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--color-text, #1a1a2e);
+  margin: 0 0 18px 0;
+}
+
+.subSectionTitle {
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin: 0 0 14px 0;
+}
+
+.leadParagraph {
+  font-size: var(--font-size-lg, 18px);
+  line-height: 1.65;
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: 24px;
+}
+
+.bodyParagraph {
+  font-size: var(--font-size-base, 16px);
+  line-height: 1.65;
+  color: var(--color-text-secondary, #4a5568);
+  margin-bottom: 16px;
+}
+
+/* ─── HIGHLIGHT CALLOUT BOX (MINT/CYAN FROSTED) ─────────────────────────── */
+.highlightBox {
+  background: #f0fbfb;
+  border: 1px solid #c7f2f2;
+  border-radius: var(--radius-lg, 14px);
+  padding: 28px;
+  margin: 28px 0;
+}
+
+.highlightBoxTitle {
+  font-size: var(--font-size-2xl, 24px);
+  font-weight: 700;
+  color: #0b6060;
+  margin: 0 0 14px 0;
+}
+
+.highlightKeyPointsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0 0;
+}
+
+.highlightKeyPoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--font-size-base, 16px);
+  line-height: 1.5;
+  color: #174e4e;
+}
+
+.checkIconWrapper {
+  margin-top: 3px;
+  flex-shrink: 0;
+  color: #0f766e;
+}
+
+/* ─── CONDITIONS GRID ────────────────────────────────────────────────────── */
+.conditionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+  .conditionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.conditionCard {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(12, 24, 57, 0.04);
+}
+
+.conditionName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary-dark, #023070);
+  margin-bottom: 6px;
+}
+
+.conditionDesc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary, #4a5568);
+  margin: 0;
+}
+
+/* ─── ELIGIBILITY SIDE-BY-SIDE CARDS ─────────────────────────────────────── */
+.eligibilityRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 680px) {
+  .eligibilityRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eligibilityCard {
+  border-radius: var(--radius-lg, 14px);
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(12, 24, 57, 0.04);
+}
+
+.eligibleCard {
+  background: #f6fdf9;
+  border: 1px solid #bbf7d0;
+}
+
+.notEligibleCard {
+  background: #fef8f8;
+  border: 1px solid #fecaca;
+}
+
+.eligibilityTitle {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eligibleTitle {
+  color: #15803d;
+}
+
+.notEligibleTitle {
+  color: #b91c1c;
+}
+
+.bulletList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bulletItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #4a5568);
+}
+
+/* ─── DONOR MATCHING TIMELINE STEPS ──────────────────────────────────────── */
+.matchingStepsList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 680px) {
+  .matchingStepsList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matchingStepCard {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(12, 24, 57, 0.04);
+  position: relative;
+}
+
+.matchingStepNumber {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-primary, #034EA2);
+  background: rgba(3, 78, 162, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.matchingStepTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 8px;
+}
+
+.matchingStepDesc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #4a5568);
+  margin: 0;
+}
+
+/* ─── COST & INSURANCE ESTIMATOR CARD ────────────────────────────────────── */
+.costCard {
+  background: linear-gradient(135deg, #021a38 0%, #032b5c 100%);
+  color: var(--white, #ffffff);
+  border-radius: var(--radius-xl, 20px);
+  padding: 36px;
+  box-shadow: 0 16px 40px rgba(2, 26, 56, 0.25);
+  margin-top: 20px;
+}
+
+.costHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.costBadge {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #38bdf8;
+  margin-bottom: 6px;
+}
+
+.costEstimateText {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  color: var(--white, #ffffff);
+  margin: 0;
+}
+
+.costInclusionsTitle {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+.costInclusionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  .costInclusionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.costInclusionItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.costInsuranceNote {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-md, 10px);
+  padding: 16px 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ─── CLICKABLE SYMPTOMS & WARNING SIGNS SECTION ─────────────────────────── */
+.symptomsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .symptomsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.symptomCard {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 14px rgba(12, 24, 57, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.symptomCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(3, 78, 162, 0.35);
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.12);
+}
+
+.symptomCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.symptomIconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary, #034EA2);
+}
+
+.symptomArrow {
+  color: #94a3b8;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.symptomCard:hover .symptomArrow {
+  color: var(--color-primary, #034EA2);
+  transform: translate(2px, -2px);
+}
+
+.symptomName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.symptomDesc {
+  font-size: 13px;
+  color: var(--color-text-secondary, #4a5568);
+  line-height: 1.5;
+  margin: 0 0 14px 0;
+}
+
+.symptomActionHint {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #034EA2);
+  margin-top: auto;
+}
+
+/* ─── DOCTORS TEAM CARDS (MATCHING PULSE AI & NH SEARCH EXPERIENCE) ───────── */
+.doctorsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .doctorsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .doctorsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.refDoctorCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 14px;
+  background: #0B111E;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  height: 290px;
+  min-height: 290px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease;
+}
+
+.refDoctorCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+}
+
+.refDocFullImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transition: transform 0.4s ease;
+}
+
+.refDoctorCard:hover .refDocFullImage {
+  transform: scale(1.06);
+}
+
+.refDocFullGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 11, 20, 0.96) 0%,
+    rgba(6, 11, 20, 0.72) 42%,
+    rgba(6, 11, 20, 0.25) 60%,
+    transparent 80%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.refDocOverlayContent {
+  position: relative;
+  z-index: 2;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.refDocBottomFlex {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.refDocTextCol {
+  flex: 1;
+  min-width: 0;
+}
+
+.refDocName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 3px 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.refDocSpecialty {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.refDocExpRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.refDocHospital {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.refBookBtnWhite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: var(--color-primary, #034EA2);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: var(--radius-full, 9999px);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.refBookBtnWhite:hover {
+  background: #f0f7ff;
+  transform: translateY(-1px);
+}
+
+/* ─── HOSPITALS CARDS (MATCHING PULSE AI FULL IMAGE CANVAS) ──────────────── */
+.hospitalsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .hospitalsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.refHospitalCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 14px;
+  background: #0B111E;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  height: 220px;
+  min-height: 220px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease;
+}
+
+.refHospitalCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+}
+
+.refHospFullImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease;
+}
+
+.refHospitalCard:hover .refHospFullImage {
+  transform: scale(1.06);
+}
+
+.refHospFullGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 11, 20, 0.95) 0%,
+    rgba(6, 11, 20, 0.65) 45%,
+    transparent 85%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.refHospOverlayContent {
+  position: relative;
+  z-index: 2;
+  padding: 16px;
+}
+
+.refHospName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.refHospCity {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 6px;
+}
+
+.refHospBedsBadge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #38bdf8;
+  display: inline-block;
+}
+
+/* ─── FAQS ACCORDION ─────────────────────────────────────────────────────── */
+.faqAccordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.faqItem {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  overflow: hidden;
+  transition: all var(--duration-fast, 0.15s) ease;
+}
+
+.faqItemOpen {
+  border-color: rgba(3, 78, 162, 0.3);
+  box-shadow: 0 4px 16px rgba(3, 78, 162, 0.08);
+}
+
+.faqTrigger {
+  width: 100%;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+}
+
+.faqTrigger:hover {
+  color: var(--color-primary, #034EA2);
+}
+
+.faqAnswer {
+  padding: 0 24px 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #4a5568);
+}

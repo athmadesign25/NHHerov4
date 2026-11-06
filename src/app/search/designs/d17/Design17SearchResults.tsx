@@ -1,7 +1,7 @@
 "use client";
 
 import type { SearchCatalogs } from "@/features/search/design3Data";
-import Design3SearchResults from "../d3/Design3SearchResults";
+import Design3SearchResults from "../d3/LegacyDesign3SearchResults";
 import DoctorCard from "./DoctorCard";
 import styles from "./Design17SearchResults.module.css";
 

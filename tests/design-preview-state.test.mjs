@@ -97,9 +97,9 @@ test('legacy manual choices survive filter-only changes until a new explicit des
   assert.equal(readDesignVariant(scope), 'd6');
 });
 
-test('a legacy page without a design parameter retains its manual preference', t => {
+test('a page without an explicit design defaults to D21 and supports manual changes', t => {
   const browser = preview(t, '/preview-no-param', '?q=heart', 'd2');
-  assert.equal(readDesignVariant(scope), 'd2');
+  assert.equal(readDesignVariant(scope), 'd21');
   setDesignVariant(scope, 'd1');
   browser.navigate('?q=heart&location=Mumbai');
   browser.otherTabSelect('d4');

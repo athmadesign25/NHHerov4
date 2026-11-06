@@ -13,7 +13,7 @@ import { defaultSponsorshipForPatient, isDesign20CouponEligible, isSponsorshipId
 import { design17Patients } from "../design17/patients";
 import { getBookingMemberSelection, getServerBookingMemberSelection, rememberBookingMembers, resetBookingMemberSelection, subscribeBookingMembers } from "./memberSelection";
 import { loadDesign20Draft, rememberDesign20Draft, saveDesign20Draft } from "./draft";
-import { design20WithBookingMember, confirmDesign20, design20Available, design20RequestedSelection, design20CanRestoreSelection, design20ChangedSelection, design20ContinuePhase, design20DefaultMember, design20FlowUrl, design20HealthCreditDraft, design20InlineUrl, design20ListingReturnTo, design20PaymentIntent, design20SavedAppointment, design20SignedInDraft, design20SummaryDraft, design20SafeStep, type Design20Draft, type Design20Phase } from "./model";
+import { design20WithBookingMember, design20BackUrl, design20ProfileEntryUrl, confirmDesign20, design20Available, design20RequestedSelection, design20CanRestoreSelection, design20ChangedSelection, design20ContinuePhase, design20DefaultMember, design20FlowUrl, design20HealthCreditDraft, design20InlineUrl, design20ListingReturnTo, design20PaymentIntent, design20SavedAppointment, design20SignedInDraft, design20SummaryDraft, design20SafeStep, type Design20Draft, type Design20Phase } from "./model";
 
 const ACCOUNT: AuthIdentity = { method: "email", value: "signed-in@nh.example" };
 export interface Design20BookingOptions {
@@ -32,6 +32,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   const router = useRouter();
   const memberPreference = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
   const returnTo = design20ListingReturnTo(options.returnTo);
+  const bookingEntry = useRef(design20ProfileEntryUrl(params.get("bookingEntry"), doctor.id));
   const { isUserLoggedIn } = useAuthState();
   const [authReady, setAuthReady] = useState(false);
   const authenticated = useRef(isUserLoggedIn);
@@ -157,7 +158,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (stage === "appointment" || stage === "patient") {
       next = { ...next, stage: authenticated.current && next.selectedPatientId ? "appointment" : "patient" };
       update(next); changePhase("slots"); setNotice("");
-      if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+      if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
       return;
     }
     if (!authenticated.current) { changePhase("auth"); return; }
@@ -165,7 +166,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (stage === "payment" && !validSlot()) return;
     update(next); setNotice("");
     // These are states of one summary page, including its payment overlay.
-    window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+    window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
   };
 
   const selectPatient = (id: string) => {
@@ -198,7 +199,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const next: Design20Draft = { ...current, stage: authenticated.current && current.selectedPatientId ? "appointment" : "patient", selection, failureHold,
       receipt: null, payment: selection.mode === "video" ? "online" : current.payment };
     update(reconcileCoupon(next));
-    if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+    if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
     // Keep the listing URL and scroll position stable while the visitor explores slots.
     if (currentPhase.current === "auth") changePhase("slots");
     setNotice(""); setNow(Date.now());
@@ -209,7 +210,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (!next) { setNotice("That time is no longer available. Choose another time; your other selections are kept."); return false; }
     const reconciled = reconcileCoupon(next);
     update(reconciled); setNotice(next.discountCode && !reconciled.discountCode ? "The coupon no longer meets its minimum amount. Choose another coupon." : ""); setNow(Date.now());
-    if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+    if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
     return true;
   };
   const validSlot = () => {
@@ -217,7 +218,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (design20ContinuePhase(current, authenticated.current) === "slots") {
       const next = design20SummaryDraft(current);
       update(next);
-      if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+      if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
       changePhase("slots"); setNotice("Choose an available time to continue. Your other selections are kept."); return false;
     }
     return true;
@@ -244,14 +245,12 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
       // Back from the summary must reopen the choices the user actually made, even if
       // they changed the hospital or date after entering from the doctor card.
       if (options.preserveEntry) {
-        const entry = new URL(window.location.href);
-        entry.searchParams.set("booking", doctor.id);
-        entry.searchParams.set("bookingResume", "1");
-        window.history.replaceState(null, "", `${entry.pathname}?${entry.searchParams}${entry.hash}`);
+        bookingEntry.current = design20ProfileEntryUrl(`${window.location.pathname}${window.location.search}`, doctor.id);
+        window.history.replaceState(null, "", design20BackUrl(next, returnTo, bookingEntry.current));
       } else window.history.replaceState(null, "", design20InlineUrl(next, returnTo));
-      router.push(design20FlowUrl(next, returnTo));
+      router.push(design20FlowUrl(next, returnTo, bookingEntry.current));
     }
-    else if (authenticated.current && sameAccount && !options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+    else if (authenticated.current && sameAccount && !options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
     setBusy(false); reviewing.current = false;
   };
   useEffect(() => {
@@ -290,7 +289,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const next: Design20Draft = { ...current, receipt, failureHold: null, stage: "confirmation" };
     const saved = await saveDesign20Draft(next);
     setRecoveryUnavailable(!saved); update(next); setNotice("");
-    if (saved) router.replace(design20FlowUrl(next, returnTo));
+    if (saved) router.replace(design20FlowUrl(next, returnTo, bookingEntry.current));
     setBusy(false);
   };
   const submitReview = async (payment: PaymentChoice = latest.current.payment) => {
@@ -308,7 +307,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const sameAccount = latest.current.identity?.method === next.identity?.method && latest.current.identity?.value === next.identity?.value;
     if (authenticated.current && sameAccount && sameSelection(latest.current.selection, next.selection) && validSlot()) {
       update(next); setNotice("");
-      window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+      window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
     }
     setBusy(false); reviewing.current = false;
   };
@@ -318,7 +317,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     update(next);
     changePhase(next.selection.time ? "member" : "slots");
     setNotice(next.selection.time ? "" : "Choose an available time to continue. Your other selections are kept.");
-    window.history.replaceState(null, "", design20FlowUrl(next, returnTo));
+    window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
   };
   const applyDiscount = (code: string): boolean => {
     if (!authenticated.current || busy || committing.current || reviewing.current || latest.current.receipt || latest.current.stage === "payment") return false;
@@ -354,14 +353,17 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     update({ ...latest.current, payment });
   };
   const backToSlots = async () => {
-    if (busy || committing.current || reviewing.current || latest.current.receipt) return;
+    if (!loaded || busy || committing.current || reviewing.current || latest.current.receipt) return;
     reviewing.current = true; setBusy(true);
     const current = latest.current;
     const next: Design20Draft = { ...current, stage: current.identity && current.selectedPatientId ? "appointment" : "patient" };
     update(next); changePhase("slots"); setNotice("");
     const saved = await saveDesign20Draft(next);
     setRecoveryUnavailable(!saved);
-    if (!options.inline) router.push(design20InlineUrl(next, returnTo), { scroll: false });
+    const sameAccount = latest.current.identity?.method === next.identity?.method && latest.current.identity?.value === next.identity?.value;
+    if (!options.inline && sameAccount && sameSelection(latest.current.selection, next.selection)) {
+      router.replace(design20BackUrl(next, returnTo, bookingEntry.current), { scroll: false });
+    }
     setBusy(false); reviewing.current = false;
   };
   const startAgain = async () => {

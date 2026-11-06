@@ -1,0 +1,124 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--sp-1, 8px) / 2) var(--sp-3, 24px);
+  align-items: start;
+}
+
+.shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--sp-1, 8px) / 2) var(--sp-3, 24px);
+  min-width: 0;
+}
+
+.shortcuts > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.shortcutBar {
+  display: contents;
+}
+
+.shortcutBar > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.filterButton {
+  display: none;
+}
+
+.filterCount {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  min-width: var(--sp-2, 16px);
+  min-height: var(--sp-2, 16px);
+  padding-inline: calc(var(--sp-1, 8px) / 4);
+  border-radius: var(--radius-full, 9999px);
+  color: var(--d3-ui-selection-label, var(--color-text, #0f172a));
+  background: var(--d3-ui-selection-surface, var(--color-emergency-light, #fef2f2));
+  font-size: var(--font-size-xs, 12px);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.context {
+  display: contents;
+}
+
+.context > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.context:empty {
+  display: none;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--sp-1, 8px) * .75);
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-text-secondary, #64748b);
+  font-size: var(--font-size-xs, 12px);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* The filter control stays outside the scroller while the smart choices move. */
+@media (width < 1200px) {
+  .compactMobile .shortcutBar {
+    display: grid;
+    grid-template-columns: var(--sp-6, 48px) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--sp-1, 8px);
+    width: 100%;
+  }
+
+  .compactMobile .filterButton {
+    display: inline-flex;
+    width: var(--sp-6, 48px);
+    min-height: var(--sp-6, 48px);
+    padding-inline: 0;
+  }
+
+  .compactMobile .filterButton::before {
+    inset: calc(var(--sp-1, 8px) / 2);
+  }
+}
+
+@media (min-width: 1200px) {
+  .layout {
+    grid-template-columns: var(--d16-filter-width, 320px) minmax(0, 1fr);
+  }
+
+  .hint {
+    grid-column: 2;
+  }
+}
+
+.layout.videoSmartFilter {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.videoSmartFilter .hint {
+  grid-column: 1;
+}

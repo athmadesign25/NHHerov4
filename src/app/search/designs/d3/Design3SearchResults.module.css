@@ -3,14 +3,7 @@
 .page.doctorPage { --d3-gutter-start: clamp(calc(var(--sp-1) * 1.5), 3.5vw, calc(var(--sp-2) + var(--sp-1) / 4)); --d3-gutter-end: var(--d3-gutter-start); --d3-nav-height: calc(var(--nav-height) - var(--sp-2)); --filter-bottom-gap: var(--sp-2); background: var(--color-bg); overflow-anchor: none; color-scheme: light; }
 /* A quiet continuation of the booking-page canvas, bounded independently of result count. */
 .page.doctorPage:is([data-design="d20"], [data-design="d21"]) {
-  --d20-canvas-glow-height: clamp(calc(var(--sp-16) * 3), 65vw, calc(var(--sp-16) * 6));
-  background:
-    radial-gradient(ellipse 100% var(--d20-canvas-glow-height) at 15% 0,
-      color-mix(in srgb, var(--color-primary) 8%, transparent),
-      color-mix(in srgb, var(--color-primary) 4%, transparent) 40%,
-      color-mix(in srgb, var(--color-primary) 1%, transparent) 72%,
-      transparent 100%),
-    var(--d17-lite-surface);
+  background: var(--booking-page-background);
 }
 @media (forced-colors: active) {
   .page.doctorPage:is([data-design="d20"], [data-design="d21"]) { background: Canvas; }

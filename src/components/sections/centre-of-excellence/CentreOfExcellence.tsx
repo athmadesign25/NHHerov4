@@ -57,11 +57,11 @@ function SpecialityCardItem({ spec, screenMode = "desktop" }: { spec: typeof SPE
   const ref = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // Require the card to intersect the middle 30% of the viewport to play
-  const isInView = useInView(ref, { 
-    amount: "some", 
-    margin: "-35% 0px -35% 0px" 
+  const isInView = useInView(ref, {
+    amount: "some",
+    margin: "-35% 0px -35% 0px"
   });
 
   useEffect(() => {
@@ -260,7 +260,7 @@ export default function CentreOfExcellence() {
         <div className={styles.centerContent}>
           <div className={styles.header} id="CentreOfExcellence_header">
             <motion.div
-              style={{ color: "#000000", marginBottom: "28px" }}
+              style={{ color: "var(--black)", marginBottom: "28px" }}
               className="section-eyebrow"
               initial={{ opacity: 0, y: 10, filter: "blur(14px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -270,30 +270,19 @@ export default function CentreOfExcellence() {
               CENTRES OF EXCELLENCE
             </motion.div>
 
-            <h2 className={styles.sectionTitle}>
+            <h2 className={`mobile-section-title ${styles.sectionTitle}`}>
               <TextSweepEffect words={["40+ Specialties, World-class care"]} className={styles.titleGroup} sweepMs={1200} />
             </h2>
 
-            <p className={styles.sectionSubtitle}>
-              <motion.span
-                className={styles.subtitleLine}
-                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
-              >
-                Integrated expertise across tertiary and quaternary care,
-              </motion.span>
-              <motion.span
-                className={styles.subtitleLine}
-                initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
-                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              >
-                delivered through one trusted network.
-              </motion.span>
-            </p>
+            <motion.p
+              className={`mobile-section-subtitle ${styles.sectionSubtitle}`}
+              initial={{ opacity: 0, y: -16, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            >
+              Integrated expertise across tertiary and quaternary care, delivered through one trusted network.
+            </motion.p>
           </div>
         </div>
       </section>
@@ -318,7 +307,7 @@ export default function CentreOfExcellence() {
           {/* Seamless Dark Grid Extension with View All Specialties CTA */}
           <div className={styles.gridBottomStrip}>
             <motion.a
-              href="/search/specialities"
+              href="/specialities?category=Centres+of+Excellence"
               ref={viewAllBtnRef}
               className={styles.viewAllBtn}
               style={{ opacity: dimOpacity, filter: dimBlur }}
