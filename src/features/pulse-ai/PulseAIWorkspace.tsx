@@ -1326,7 +1326,8 @@ function OverallHealthGlance({ userName = "Omkar" }: { userName?: string }) {
 }
 
 /* ─── NO DATA ORGAN CARD ────────────────────────────────────── */
-function NoDataOrganCard({ organName, onConsult }: { organName: string; onConsult: () => void }) {
+function NoDataOrganCard({ organName }: { organName: string }) {
+  const router = useRouter();
   return (
     <div className={styles.noDataCard}>
       <div className={styles.noDataIllustration}>🩺</div>
@@ -1359,7 +1360,7 @@ function NoDataOrganCard({ organName, onConsult }: { organName: string; onConsul
         <div className={styles.specialistRecNote}>
           Complete a health checkup or upload your reports to get personalized insights for {organName}.
         </div>
-        <button className={styles.consultBtn} onClick={onConsult}>Consult</button>
+        <button className={styles.consultBtn} onClick={() => router.push("/health-checkups")}>Explore packages</button>
       </div>
     </div>
   );
@@ -1371,6 +1372,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
   onViewFindings: (o: OrganHealth) => void;
   onConsult: () => void;
 }) {
+  const router = useRouter();
   const isAttention = organ.status === "needs_attention";
   const isModerate  = organ.status === "moderate";
   const isGood      = organ.status === "doing_good";
@@ -1384,7 +1386,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
   const svgSrc         = organIconMap[organ.id];
 
   if (hasNoData) {
-    return <NoDataOrganCard organName={organ.name} onConsult={onConsult} />;
+    return <NoDataOrganCard organName={organ.name} />;
   }
 
   return (
@@ -1452,7 +1454,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
             </div>
           </div>
           <div className={styles.specialistRecNote}>{organ.recommendation}</div>
-          <button className={styles.consultBtn} onClick={onConsult}>Consult</button>
+          <button className={styles.consultBtn} onClick={isGood ? () => router.push("/health-checkups") : onConsult}>{isGood ? "Explore packages" : "Consult"}</button>
         </div>
       </div>
     </div>
@@ -3914,13 +3916,19 @@ function Workspace({
       return;
     }
 
+    // Explicit checkup/test booking intent opens its own journey.
+    if (/\b(book|explore|find)\b.*\b(health[ -]?checkups?|health packages?|lab tests?)\b/i.test(text)) {
+      router.push(/\blab tests?\b/i.test(text) ? "/health-checkups?tab=tests" : "/health-checkups");
+      return;
+    }
+
     // Default regular message route
     const userMsg: Message = { id: `u-${Date.now()}`, role: "user", text: text.trim(), ts: new Date() };
     setMsgs(prev => [...prev, userMsg]);
     setInput("");
     const resp = aiResponse(text, isLoggedIn, activeProfile.name);
     injectAI(resp);
-  }, [isThinking, isLoggedIn, injectAI, tutorialStep, activeProfile]);
+  }, [isThinking, isLoggedIn, injectAI, tutorialStep, activeProfile, router]);
 
   const openDoctorBooking = useCallback((doctor: Doctor, mode: "hospital" | "video" = "hospital") => {
     // Pulse's private mock IDs overlap other directories. Resolve the clinician by name.

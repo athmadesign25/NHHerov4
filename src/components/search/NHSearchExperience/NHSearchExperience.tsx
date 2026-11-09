@@ -658,7 +658,13 @@ export default function NHSearchExperience({
   };
 
   // Handle quick action pill clicks (toggle on/off)
-  const handleSelectActionPill = (pill: "doctor" | "symptoms") => {
+  const handleSelectActionPill = (pill: "doctor" | "symptoms" | "checkups") => {
+    if (pill === "checkups") {
+      const params = new URLSearchParams();
+      if (selectedLocation && selectedLocation !== "All") params.set("location", selectedLocation);
+      router.push(`/health-checkups${params.size ? `?${params}` : ""}`);
+      return;
+    }
     captureOrigin();
     if (activePill === pill) {
       setActivePill(null);
@@ -956,10 +962,7 @@ export default function NHSearchExperience({
             }}
             onClick={(e) => {
               e.stopPropagation();
-              captureOrigin();
-              setActivePill("symptoms");
-              setSearchState("active");
-              setQuery("Book health checkup and lab tests");
+              handleSelectActionPill("checkups");
             }}
             aria-label="Book Health Checkups"
           >
@@ -1040,10 +1043,7 @@ export default function NHSearchExperience({
             className={styles.mwebHeroActionBtn}
             onClick={(e) => {
               e.stopPropagation();
-              captureOrigin();
-              setActivePill("symptoms");
-              setSearchState("active");
-              setQuery("Book health checkup and lab tests");
+              handleSelectActionPill("checkups");
             }}
           >
             <HeartPulse size={14} className={styles.mwebHeroActionIcon} strokeWidth={2} />

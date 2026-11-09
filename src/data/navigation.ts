@@ -6,7 +6,7 @@ export const footerLinks = {
     { label: "Find a Doctor", href: buildSearchUrl() },
     { label: "Our Specialities", href: "/specialities/cardiology" },
     { label: "Our Hospitals", href: "/" },
-    { label: "Health Packages", href: "/" },
+    { label: "Health Packages", href: "/health-checkups" },
     { label: "International Patients", href: "/" },
   ],
   "About": [

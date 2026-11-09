@@ -4,6 +4,7 @@ import { useId, useState, type RefObject } from "react";
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, CalendarPlus, MapPin, Video } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { duration, ease } from "@/lib/motion";
 import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
 import { getDesign20ProfileDoctor } from "@/features/search/design20Directory";
@@ -30,6 +31,7 @@ export default function AppointmentConfirmation6({ doctor, draft, pricing, headi
   const id = useId();
   const reduced = useReducedMotion();
   const [calendarReady, setCalendarReady] = useState(false);
+  const [headingComplete, setHeadingComplete] = useState(false);
   const member = draft.patients.find(item => item.id === draft.selectedPatientId);
   const patient = member?.patient;
   const selection = draft.receipt?.selection ?? draft.selection;
@@ -46,7 +48,15 @@ export default function AppointmentConfirmation6({ doctor, draft, pricing, headi
     <header className={`${styles.hero} ${layout.hero}`}>
       <SuccessMark />
       <div className={styles.heroCopy}>
-        <h1 id={`${id}-title`} ref={headingRef} tabIndex={-1}>Your appointment is confirmed</h1>
+        <div className={layout.title}>
+          <h1 id={`${id}-title`} ref={headingRef} tabIndex={-1}>Your appointment is confirmed</h1>
+          <div className={layout.titleSweep} aria-hidden="true">
+            <TextSweepEffect words={["Your appointment is confirmed"]} sweepMs={1200}
+              onSweepComplete={() => setHeadingComplete(true)}
+              active={!reduced} sweepColor="var(--journey-paper-success)"
+              sweepHighlightColor="var(--color-success)" finalColor="var(--color-text)" />
+          </div>
+        </div>
         <p className={styles.notice}>You’ll receive a confirmation email and SMS on your registered contact details.</p>
       </div>
     </header>
@@ -103,7 +113,7 @@ export default function AppointmentConfirmation6({ doctor, draft, pricing, headi
         </section>
       </div>
 
-      <div className={styles.payment}><ConfirmationPayment pricing={pricing} paid={payment === "online"} /></div>
+      <div className={styles.payment}><ConfirmationPayment pricing={pricing} paid={payment === "online"} animateSavings={headingComplete || Boolean(reduced)} /></div>
       <footer className={styles.footer}>
         <p className={styles.footerNote}>Track appointments, view your medical history and access health records in your patient portal.</p>
         <div className={styles.actions}>

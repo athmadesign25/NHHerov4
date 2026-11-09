@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Clock3 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { design17ProfileUrl } from "@/features/search/design17Profile";
 import { getDesign20ProfileDoctor } from "@/features/search/design20Directory";
@@ -11,6 +11,8 @@ import { design20BookingEntryUrl } from "@/features/search/design20BookingEntry"
 import type { BookingDoctorSummary } from "../types";
 import LoginModal from "@/features/auth/LoginModal";
 import RazorpayDemo from "./RazorpayDemo";
+import PaymentRecoveryNotice from "./PaymentRecoveryNotice";
+import PaymentReservation from "./PaymentReservation";
 import { design20Pricing } from "./pricing";
 import AppointmentConfirmation from "./AppointmentConfirmation";
 import AppointmentConfirmation2 from "./confirmation2/AppointmentConfirmation2";
@@ -44,9 +46,10 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
   const confirmationDesign: ConfirmationDesign = params.get("confirmationDesign") === "1" ? 1 : params.get("confirmationDesign") === "2" ? 2 : params.get("confirmationDesign") === "3" ? 3 : params.get("confirmationDesign") === "4" ? 4 : params.get("confirmationDesign") === "5" ? 5 : 6;
   const confirmed = Boolean(draft.receipt);
   const showConfirmation = confirmed && flow.isUserLoggedIn;
+  const reserved = Boolean(draft.reservationSkipped && !draft.receipt && flow.isUserLoggedIn);
   useEffect(() => {
-    if (confirmed && flow.isUserLoggedIn) return protectConfirmedBookingMember();
-  }, [confirmed, flow.isUserLoggedIn]);
+    if ((confirmed || reserved) && flow.isUserLoggedIn) return protectConfirmedBookingMember();
+  }, [confirmed, reserved, flow.isUserLoggedIn]);
   useEffect(() => { if (flow.loaded) heading.current?.focus({ preventScroll: true }); }, [flow.loaded, confirmed, flow.isUserLoggedIn]);
   const listingDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: draft.selection.hospital }));
   const activeDoctor = listingDoctor ? { ...doctor, name: listingDoctor.name, hospital: listingDoctor.hospital, fee: listingDoctor.fee } : doctor;
@@ -69,7 +72,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
   };
   return <div className={`${styles.page} ${summaryStyles.page} ${showConfirmation ? confirmationStyles.page : ""}`} data-design17-booking="d20" data-booking-confirmed={showConfirmation || undefined} data-confirmation-design={showConfirmation ? confirmationDesign : undefined}>
     <div className={`${styles.container} ${pageSummaryStyles.container}`}>
-      {!showConfirmation && <>{summaryDesign === 1 ? <Breadcrumbs theme="light" items={[{ label: "Home", href: "/" }, { label: "Doctors", href: flow.returnTo }, { label: doctor.name, href: profile }, { label: "Book appointment" }]} /> : summaryDesign === 2 && <nav className={summaryStyles.backNav} aria-label="Booking navigation">
+      {!showConfirmation && !reserved && <>{summaryDesign === 1 ? <Breadcrumbs theme="light" items={[{ label: "Home", href: "/" }, { label: "Doctors", href: flow.returnTo }, { label: doctor.name, href: profile }, { label: "Book appointment" }]} /> : summaryDesign === 2 && <nav className={summaryStyles.backNav} aria-label="Booking navigation">
         {confirmed || flow.missingReceipt ? <Link className={summaryStyles.back} href={flow.returnTo}><ArrowLeft size={16} aria-hidden />Back to doctors</Link>
           : <button type="button" className={summaryStyles.back} disabled={!flow.loaded || flow.busy} onClick={() => { void flow.backToSlots(); }}><ArrowLeft size={16} aria-hidden />Back</button>}
       </nav>}
@@ -84,14 +87,15 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
         : <div className={`${styles.layout} ${styles.reviewLayout}`}><div className={styles.main}>
           {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
           {flow.recoveryUnavailable && <p className={styles.muted} role="status">Keep this page open to retain your booking progress.</p>}
-          {draft.failureHold && !draft.receipt && <div className={styles.hold} role="status"><Clock3 size={19} aria-hidden /><div><strong>{flow.expired ? "Your slot reservation has expired" : "Your slot is reserved after the unsuccessful payment"}</strong><p>{flow.expired ? "Edit your appointment to choose another available time." : draft.selection.mode === "hospital" ? "Complete payment or choose pay at hospital before the reservation ends." : "Complete your online payment before the reservation ends."}</p></div>{!flow.expired && <time aria-label={`${Math.floor(flow.seconds / 60)} minutes ${flow.seconds % 60} seconds remaining`}>{Math.floor(flow.seconds / 60)}:{String(flow.seconds % 60).padStart(2, "0")}</time>}</div>}
-          {!draft.receipt && (summaryDesign === 4 ? <BookingSummary4 doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : summaryDesign === 2 ? <BookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : <PreviousBookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} doctorPlacement={summaryDesign === 3 ? "appointment" : "header"} />)}
+          {draft.paymentRecovery && !reserved && draft.stage !== "payment" && !draft.receipt && <PaymentRecoveryNotice status={draft.paymentRecovery} expired={flow.expired} covered={pricing.amounts.total === 0} />}
+          {reserved && <PaymentReservation seconds={flow.seconds} expired={flow.expired} doctor={activeDoctor} member={draft.patients.find(entry => entry.id === draft.selectedPatientId)} selection={draft.selection} total={pricing.total} onChooseSlot={() => { void flow.backToSlots(); }} />}
+          {!draft.receipt && !reserved && (summaryDesign === 4 ? <BookingSummary4 doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : summaryDesign === 2 ? <BookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : <PreviousBookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} doctorPlacement={summaryDesign === 3 ? "appointment" : "header"} />)}
           {draft.stage === "payment" && <RazorpayDemo fee={pricing.total} busy={flow.busy} expired={flow.expired} onPay={() => { void flow.pay(); }} onClose={flow.closePayment} />}
           {draft.receipt && (confirmationDesign === 1 ? <AppointmentConfirmation doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 2 ? <AppointmentConfirmation2 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 3 ? <AppointmentConfirmation3 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 4 ? <AppointmentConfirmation4 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 5 ? <AppointmentConfirmation5 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : <AppointmentConfirmation6 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} />)}
         </div></div>}
       {process.env.NODE_ENV === "development" && flow.isUserLoggedIn && !draft.receipt && <details className={styles.developer}><summary>Development tools</summary><label>Next payment result<select value={flow.paymentOutcome} onChange={event => flow.setPaymentOutcome(event.target.value as "success" | "failure")}><option value="success">Successful</option><option value="failure">Failed</option></select></label>{draft.failureHold && <button type="button" className={styles.textButton} onClick={flow.expireFailureHold}>Expire failed-payment reservation</button>}</details>}
     </div>
-    {flow.loaded && flow.isUserLoggedIn && !draft.receipt && !needsSlotSelection && !flow.missingReceipt && draft.stage !== "payment" && <BookingDesignSwitcher active={summaryDesign} disabled={flow.busy || editingSummary} onChange={changeSummaryDesign} />}
+    {flow.loaded && flow.isUserLoggedIn && !draft.receipt && !reserved && !needsSlotSelection && !flow.missingReceipt && draft.stage !== "payment" && <BookingDesignSwitcher active={summaryDesign} disabled={flow.busy || editingSummary} onChange={changeSummaryDesign} />}
     {flow.loaded && showConfirmation && !flow.missingReceipt && <ConfirmationDesignSwitcher active={confirmationDesign} onChange={changeConfirmationDesign} />}
     <LoginModal previewOtp isOpen={flow.loaded && !needsSlotSelection && !flow.isUserLoggedIn && !flow.missingReceipt && (flow.loginOpen || !loginDismissed)} onClose={() => { setLoginDismissed(true); flow.setLoginOpen(false); }} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </div>;

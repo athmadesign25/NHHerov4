@@ -792,7 +792,7 @@ export default function MobileHealthPackages() {
                         // edge up instead of the slot's bottom edge down.
                         <div key={pkg.id} className={`${styles.packageCardSlot} ${styles.packageCardSlotCompact}`}>
                           <Link
-                            href={`/health-packages/${pkg.id}`}
+                            href={`/health-checkups?item=${encodeURIComponent(pkg.id)}`}
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
                             className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${styles.packageCardCompact} ${pressedCard === pkg.id ? styles.packageCardPressed : ""}`}
                             onPointerDown={() => setPressedCard(pkg.id)}
@@ -845,7 +845,7 @@ export default function MobileHealthPackages() {
                   </div>
 
                   <Link
-                    href="/search/health-packages"
+                    href="/health-checkups"
                     ref={(el) => { railItemRefs.current[railSlots.indexOf("explore")] = el; }}
                     className={styles.exploreRow}
                   >

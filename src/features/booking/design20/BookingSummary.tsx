@@ -160,7 +160,7 @@ export default function BookingSummary({ doctor, flow, onEditingChange }: { doct
             </AnimatePresence>
           </div>
         </section>
-        <BookingPaymentBar pricing={pricing} hospitalVisit={selection.mode === "hospital"} disabled={paymentDisabled} busy={busy} feedback={paymentFeedback} onSubmit={payment => { void flow.submitReview(payment); }} />
+        <BookingPaymentBar paymentRecovery={Boolean(draft.paymentRecovery)} onSkip={flow.skipPayment} skipDisabled={Boolean(editor) || addingMember || !selectedMember} pricing={pricing} hospitalVisit={selection.mode === "hospital"} disabled={paymentDisabled} busy={busy} feedback={paymentFeedback} onSubmit={payment => { void flow.submitReview(payment); }} />
       </motion.div>
     </div>
     {benefits && <BenefitsDialog kind={benefits} fee={doctor.fee} discountCode={draft.discountCode} sponsorshipId={draft.sponsorshipId} memberName={selectedMember?.patient.name} onCoupon={applyCoupon} onSponsorship={flow.applySponsorship} onClose={() => setBenefits(null)} busy={busy} />}

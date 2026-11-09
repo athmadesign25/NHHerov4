@@ -7,13 +7,15 @@ import type { BookingDoctorSummary } from "../types";
 import type { AppointmentSelection, PatientDraft, PaymentChoice } from "../design7/model";
 import { remainingHoldSeconds, sameSelection } from "../design7/model";
 import type { AuthIdentity } from "../design15/auth";
-import { failureHoldExpired, holdAfterPaymentFailure, patientErrors, type Design15Step } from "../design15/model";
+import { failureHoldExpired, patientErrors, type Design15Step } from "../design15/model";
 import { getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import { defaultSponsorshipForPatient, isDesign20CouponEligible, isSponsorshipId, normalizeDesign20Coupon, type SponsorshipId } from "./pricing";
 import { design17Patients } from "../design17/patients";
 import { getBookingMemberSelection, getServerBookingMemberSelection, rememberBookingMembers, resetBookingMemberSelection, subscribeBookingMembers } from "./memberSelection";
 import { loadDesign20Draft, rememberDesign20Draft, saveDesign20Draft } from "./draft";
 import { design20WithBookingMember, design20BackUrl, design20ProfileEntryUrl, confirmDesign20, design20Available, design20RequestedSelection, design20CanRestoreSelection, design20ChangedSelection, design20ContinuePhase, design20DefaultMember, design20FlowUrl, design20HealthCreditDraft, design20InlineUrl, design20ListingReturnTo, design20PaymentIntent, design20SavedAppointment, design20SignedInDraft, design20SummaryDraft, design20SafeStep, type Design20Draft, type Design20Phase } from "./model";
+
+import { interruptDesign20Payment, skipDesign20Payment } from "./paymentRecovery";
 
 const ACCOUNT: AuthIdentity = { method: "email", value: "signed-in@nh.example" };
 export interface Design20BookingOptions {
@@ -83,18 +85,18 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
         if (saved?.receipt?.ref === options.confirmationRef) next = saved;
         else setMissingReceipt(true);
       } else if (saved && sameContext && !saved.receipt) {
-        next = { ...saved, stage: options.inline ? "patient" : design20SafeStep(query.get("step") ?? saved.stage, saved, authenticated.current) };
+        next = { ...saved, reservationSkipped: options.inline ? undefined : saved.reservationSkipped, stage: options.inline ? "patient" : design20SafeStep(query.get("step") ?? saved.stage, saved, authenticated.current) };
       } else if (saved && authenticated.current) {
         next = { ...next, identity: saved.identity, patients: saved.patients, selectedPatientId: saved.selectedPatientId, useHealthCredits: saved.useHealthCredits };
       }
-      if (!authenticated.current && !next.receipt) next = { ...next, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined };
+      if (!authenticated.current && !next.receipt) next = { ...next, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, paymentRecovery: undefined, reservationSkipped: undefined, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined };
       if (authenticated.current && !next.identity) next = design20SignedInDraft(next, ACCOUNT);
       if (next.identity && !next.receipt) next = { ...next, patients: design17Patients(next.identity, next.patients) };
       next = design20DefaultMember(design20WithBookingMember(next, getBookingMemberSelection()), authenticated.current);
       if (authenticated.current) rememberBookingMembers(next.patients, next.selectedPatientId);
       if (!next.receipt) next = reconcileCoupon(next);
-      if (!next.receipt && next.selection.time && (!design20Available(next.selection) || failureHoldExpired(next.failureHold, next.selection))) {
-        next = { ...next, selection: { ...next.selection, time: "" }, failureHold: null, stage: "patient" };
+      if (!next.receipt && !next.reservationSkipped && next.selection.time && (!design20Available(next.selection) || failureHoldExpired(next.failureHold, next.selection))) {
+        next = { ...next, selection: { ...next.selection, time: "" }, failureHold: null, paymentRecovery: undefined, reservationSkipped: undefined, stage: "patient" };
         setNotice("That time is no longer available. Choose another time; your other selections are kept.");
       }
       if (next.identity && next.selectedPatientId && next.stage === "patient") next = { ...next, stage: "appointment" };
@@ -156,7 +158,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (committing.current || reviewing.current) return;
     let next = { ...latest.current, ...changes, stage };
     if (stage === "appointment" || stage === "patient") {
-      next = { ...next, stage: authenticated.current && next.selectedPatientId ? "appointment" : "patient" };
+      next = { ...next, reservationSkipped: undefined, stage: authenticated.current && next.selectedPatientId ? "appointment" : "patient" };
       update(next); changePhase("slots"); setNotice("");
       if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
       return;
@@ -196,7 +198,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (selection.time && !design20Available(selection)) { setNotice("That time is no longer available. Choose another time."); return; }
     const failureHold = current.failureHold && sameSelection(current.failureHold.selection, selection) ? current.failureHold : null;
     if (failureHoldExpired(failureHold, selection)) { setNotice("That reservation has expired. Choose another time."); return; }
-    const next: Design20Draft = { ...current, stage: authenticated.current && current.selectedPatientId ? "appointment" : "patient", selection, failureHold,
+    const next: Design20Draft = { ...current, stage: authenticated.current && current.selectedPatientId ? "appointment" : "patient", selection, failureHold, paymentRecovery: failureHold ? current.paymentRecovery : undefined, reservationSkipped: undefined,
       receipt: null, payment: selection.mode === "video" ? "online" : current.payment };
     update(reconcileCoupon(next));
     if (!options.inline) window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
@@ -258,7 +260,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const current = latest.current;
     if (!isUserLoggedIn) {
       resetBookingMemberSelection();
-      if (current.identity && !current.receipt) update({ ...current, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined });
+      if (current.identity && !current.receipt) update({ ...current, identity: null, patients: [], selectedPatientId: null, stage: "patient", failureHold: null, paymentRecovery: undefined, reservationSkipped: undefined, sponsorshipId: undefined, discountCode: undefined, useHealthCredits: undefined });
       return;
     }
     if (current.receipt) { rememberBookingMembers(current.patients, current.selectedPatientId); return; }
@@ -286,7 +288,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     const receipt = confirmDesign20(current, authenticated.current, paid);
     if (!receipt) return;
     committing.current = true; setBusy(true);
-    const next: Design20Draft = { ...current, receipt, failureHold: null, stage: "confirmation" };
+    const next: Design20Draft = { ...current, receipt, failureHold: null, paymentRecovery: undefined, reservationSkipped: undefined, stage: "confirmation" };
     const saved = await saveDesign20Draft(next);
     setRecoveryUnavailable(!saved); update(next); setNotice("");
     if (saved) router.replace(design20FlowUrl(next, returnTo, bookingEntry.current));
@@ -313,10 +315,15 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   };
   const closePayment = () => {
     if (busy || committing.current || reviewing.current || latest.current.receipt || latest.current.stage !== "payment") return;
-    const next = design20SummaryDraft(latest.current);
-    update(next);
-    changePhase(next.selection.time ? "member" : "slots");
-    setNotice(next.selection.time ? "" : "Choose an available time to continue. Your other selections are kept.");
+    const next = interruptDesign20Payment(latest.current, "cancelled");
+    update(next); changePhase("member"); setNotice(""); setNow(Date.now());
+    window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
+  };
+  const skipPayment = () => {
+    if (busy || committing.current || reviewing.current || !authenticated.current) return;
+    const next = skipDesign20Payment(latest.current);
+    if (next === latest.current) return;
+    update(next); setNotice(""); setNow(Date.now());
     window.history.replaceState(null, "", design20FlowUrl(next, returnTo, bookingEntry.current));
   };
   const applyDiscount = (code: string): boolean => {
@@ -343,8 +350,8 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   const pay = async () => {
     if (busy || committing.current || !ready() || latest.current.stage !== "payment") return;
     if (paymentOutcome === "failure") {
-      go("review", { failureHold: holdAfterPaymentFailure(latest.current.failureHold, latest.current.selection) });
-      setNow(Date.now()); setNotice("Your payment wasn’t completed. Retry or choose another payment option while your appointment time is reserved.");
+      go("review", interruptDesign20Payment(latest.current, "failed"));
+      setNow(Date.now()); setNotice("");
       setPaymentOutcome("success");
     } else await finish(true);
   };
@@ -356,7 +363,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     if (!loaded || busy || committing.current || reviewing.current || latest.current.receipt) return;
     reviewing.current = true; setBusy(true);
     const current = latest.current;
-    const next: Design20Draft = { ...current, stage: current.identity && current.selectedPatientId ? "appointment" : "patient" };
+    const next: Design20Draft = { ...design20SummaryDraft(current), reservationSkipped: undefined, stage: current.identity && current.selectedPatientId ? "appointment" : "patient" };
     update(next); changePhase("slots"); setNotice("");
     const saved = await saveDesign20Draft(next);
     setRecoveryUnavailable(!saved);
@@ -369,7 +376,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   const startAgain = async () => {
     committing.current = false;
     const next: Design20Draft = { ...latest.current, stage: "patient", selectedPatientId: null,
-      selection: { ...latest.current.selection, time: "" }, receipt: null, failureHold: null, discountCode: undefined, sponsorshipId: undefined, useHealthCredits: undefined };
+      selection: { ...latest.current.selection, time: "" }, receipt: null, failureHold: null, paymentRecovery: undefined, reservationSkipped: undefined, discountCode: undefined, sponsorshipId: undefined, useHealthCredits: undefined };
     await saveDesign20Draft(next); update(next); changePhase("slots"); setNotice("");
     if (!options.inline) router.push(design20InlineUrl(next, returnTo));
   };
@@ -391,7 +398,7 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
     else if (currentPhase.current === "auth") cancelSignIn();
   };
   return { draft, loaded, phase, isUserLoggedIn, loginOpen: phase === "auth", setLoginOpen, busy, now, notice, recoveryUnavailable, missingReceipt, returnTo,
-    continueBooking, cancelSignIn, onSignedIn, go, backToSlots, selectPatient, addPatient, selectTime, saveAppointment, reviewAppointment, setPayment, submitReview, closePayment, applyDiscount, applySponsorship, setUseHealthCredits, pay,
+    continueBooking, cancelSignIn, onSignedIn, go, backToSlots, selectPatient, addPatient, selectTime, saveAppointment, reviewAppointment, setPayment, submitReview, closePayment, skipPayment, applyDiscount, applySponsorship, setUseHealthCredits, pay,
     startAgain, finishLater, expireFailureHold, paymentOutcome, setPaymentOutcome,
     expired: failureHoldExpired(draft.failureHold, draft.selection, now), seconds: remainingHoldSeconds(draft.failureHold, now) };
 }

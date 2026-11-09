@@ -10,7 +10,7 @@ import { DEFAULT_DOCTOR_DESIGN } from "../design-preview/doctorJourney";
  *   /search                  → Doctors (default)
  *   /search/doctors          → Doctors
  *   /search/specialities     → Specialty
- *   /search/health-packages  → Health Packages & Tests
+ *   /health-checkups         → Health Packages & Tests (legacy search path redirects)
  *   /search/treatments       → Treatments & Procedures
  *   /search/articles         → Articles & Blogs
  *
@@ -114,7 +114,7 @@ export function getSearchTabFromPathname(pathname: string | null): SearchTab {
 
 export function getSearchTabPath(tab: SearchTabId | SearchTab = DEFAULT_SEARCH_TAB): string {
   const resolved = typeof tab === "string" ? getSearchTabById(tab) ?? DEFAULT_SEARCH_TAB : tab;
-  return `${SEARCH_BASE_PATH}/${resolved.slug}`;
+  return resolved.id === "packages_tests" ? "/health-checkups" : `${SEARCH_BASE_PATH}/${resolved.slug}`;
 }
 
 export interface BuildSearchUrlOptions {

@@ -14,6 +14,9 @@ type Props = {
   disabled: boolean;
   busy: boolean;
   feedback?: string;
+  paymentRecovery?: boolean;
+  skipDisabled?: boolean;
+  onSkip?: () => void;
   onSubmit: (payment: PaymentChoice) => void;
 };
 
@@ -26,7 +29,7 @@ const subscribeMobile = (listener: () => void) => {
 const getMobileSnapshot = () => window.matchMedia(mobileQuery).matches;
 const getServerSnapshot = () => false;
 
-export default function BookingPaymentBar({ pricing, hospitalVisit, disabled, busy, feedback, onSubmit }: Props) {
+export default function BookingPaymentBar({ pricing, hospitalVisit, disabled, busy, feedback, paymentRecovery = false, skipDisabled = false, onSkip, onSubmit }: Props) {
   const [submitting, setSubmitting] = useState<PaymentChoice | null>(null);
   const feedbackId = useId();
   const reserve = useRef<HTMLDivElement>(null);
@@ -55,11 +58,12 @@ export default function BookingPaymentBar({ pricing, hospitalVisit, disabled, bu
       <motion.div layout={reduced ? false : "position"} transition={{ layout }} className={styles.amount}><span>Total payable</span><strong>{pricing.total}</strong>{covered && <small>Covered by your benefits</small>}</motion.div>
       <AnimatePresence initial={false} mode="popLayout">{feedback && <motion.p id={feedbackId} key="feedback" layout="position" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : duration.fast, layout }} className={styles.feedback} role="status">{feedback}</motion.p>}</AnimatePresence>
       <motion.div layout={reduced ? false : "position"} transition={{ layout }} className={styles.actions}>
-        {hospitalVisit && !covered && <button className={`${styles.submit} ${styles.secondary}`} type="button" disabled={disabled || busy} aria-describedby={feedback ? feedbackId : undefined} onClick={() => submit("hospital")}>
+        {paymentRecovery && !covered && onSkip && <button className={`${styles.submit} ${styles.secondary}`} type="button" disabled={skipDisabled || busy} onClick={onSkip}>Skip</button>}
+        {!paymentRecovery && hospitalVisit && !covered && <button className={`${styles.submit} ${styles.secondary}`} type="button" disabled={disabled || busy} aria-describedby={feedback ? feedbackId : undefined} onClick={() => submit("hospital")}>
           {busy && submitting === "hospital" ? "Confirming…" : "Pay at hospital"}
         </button>}
         <button className={styles.submit} type="button" disabled={disabled || busy} aria-describedby={feedback ? feedbackId : undefined} onClick={() => submit("online")}>
-          {busy && submitting === "online" ? "Preparing…" : covered ? "Confirm appointment" : "Pay online"}
+          {busy && submitting === "online" ? "Preparing…" : covered ? "Confirm appointment" : paymentRecovery ? "Retry payment" : "Pay online"}
         </button>
       </motion.div>
     </motion.section>;

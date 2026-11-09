@@ -23,7 +23,7 @@ interface DefaultSearchPromptProps {
   onDocumentSubmit?: (file: { name: string; size?: number }, prompt: string) => void;
   selectedLocation: string;
   onSelectLocation: (loc: string) => void;
-  onSelectActionPill: (action: "doctor" | "symptoms") => void;
+  onSelectActionPill: (action: "doctor" | "symptoms" | "checkups") => void;
   onOpenPulse?: () => void;
   searchTheme?: "dark" | "white";
   isMobile?: boolean;
@@ -741,7 +741,7 @@ export default function DefaultSearchPrompt({
                   className={styles.insideActionPill}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onSelectActionPill("symptoms");
+                    onSelectActionPill("checkups");
                   }}
                   aria-label="Book Tests & Health Checkups"
                 >

@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:46:32+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Jaipur",
+  "facility": "NH-Jaipur Health City",
+  "facilityId": "1501",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1501",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1501-packages.mhtml",
+      "sha256": "36b593807217d4602fbde84830c75a5f73bea1eda024cd12a4ac6b623bf5f388",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

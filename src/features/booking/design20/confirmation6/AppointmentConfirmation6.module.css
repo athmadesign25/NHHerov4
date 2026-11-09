@@ -1,5 +1,20 @@
 .hero.hero { padding-bottom: var(--space-32); }
 
+.title {
+  position: relative;
+  min-width: 0;
+  font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl));
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.title h1 { font: inherit; letter-spacing: inherit; }
+.titleSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; pointer-events: none; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .titleSweep { display: none; }
+}
+
 .patientAvatar.patientAvatar {
   width: var(--space-40);
   height: var(--space-40);

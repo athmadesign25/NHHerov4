@@ -30,7 +30,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const isBookingJourney = pathname === "/search/doctors" || pathname === "/find-a-doctor"
     || pathname === "/doctors" || pathname.startsWith("/doctors/")
-    || pathname === "/book-an-appointment" || pathname.startsWith("/book-an-appointment/");
+    || pathname === "/book-an-appointment" || pathname.startsWith("/book-an-appointment/")
+    || pathname === "/health-checkups" || pathname.startsWith("/health-checkups/");
   const isBookingConfirmation = pathname.endsWith("/book/confirmation");
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -504,7 +505,7 @@ export default function Navbar() {
         </div>
 
         {/* ─── Mobile Navbar (<= 1024px): [ NH Logo ] [ Search ] [ Book Appointment ] [ Menu ] ─── */}
-        <div className={styles.mobileNav}>
+        <div className={styles.mobileNav} data-booking-journey={isBookingJourney || undefined}>
           <Link aria-label="Narayana Health Home" href="/" className={styles.mobileLogoLink}>
             <div
               className={styles.mobileLogoContainer}

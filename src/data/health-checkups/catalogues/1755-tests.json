@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:43:41+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Guwahati",
+  "facility": "Narayana Superspeciality Hospital, Guwahati",
+  "facilityId": "1755",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1755",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1755-tests.mhtml",
+      "sha256": "3a52537fb7c6e39b5d5fa7eb4fef033fd0bc4aac5a50b2bc495895e956147212",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

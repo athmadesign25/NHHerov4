@@ -7,13 +7,14 @@ import styles from "./ConfirmationPayment.module.css";
 interface Props {
   pricing: ReturnType<typeof design20Pricing>;
   paid: boolean;
+  animateSavings?: boolean;
 }
 
 const formatAmount = (minorUnits: number) => new Intl.NumberFormat("en-IN", {
   style: "currency", currency: "INR", maximumFractionDigits: 2,
 }).format(minorUnits / 100).replace(/\.00$/, "");
 
-export default function ConfirmationPayment({ pricing, paid }: Props) {
+export default function ConfirmationPayment({ pricing, paid, animateSavings = true }: Props) {
   const covered = pricing.minorUnits.total === 0;
   const appliedSources = [
     pricing.hasSponsorship ? pricing.sponsorship?.label ?? "sponsorship benefit" : null,
@@ -41,6 +42,6 @@ export default function ConfirmationPayment({ pricing, paid }: Props) {
         {pricing.hasHealthCredits && <div className={styles.breakdownRow}><dt>Health credits used</dt><dd>−{pricing.healthCreditsDiscount}</dd></div>}
       </dl>
     </details>
-    {savings > 0 && <p className={styles.savings}><span>You saved <strong>{formatAmount(savings)}</strong> on this booking</span><span key={savings} className={styles.swipe} aria-hidden /></p>}
+    {savings > 0 && <p className={styles.savings}><span>You saved <strong>{formatAmount(savings)}</strong> on this booking</span>{animateSavings && <span key={savings} className={styles.swipe} aria-hidden />}</p>}
   </section>;
 }

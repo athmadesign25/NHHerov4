@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import SearchResultsView from "../SearchResultsView";
 import {
   SEARCH_TABS,
@@ -18,6 +18,7 @@ import {
 
 interface SearchRouteProps {
   params: Promise<{ tab?: string[] }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export async function generateMetadata({ params }: SearchRouteProps): Promise<Metadata> {
@@ -41,8 +42,18 @@ export function generateStaticParams() {
   return [{ tab: [] as string[] }, ...SEARCH_TABS.map((t) => ({ tab: [t.slug] as string[] }))];
 }
 
-export default async function SearchRoute({ params }: SearchRouteProps) {
+export default async function SearchRoute({ params, searchParams }: SearchRouteProps) {
   const { tab: segments } = await params;
-  if (!resolveSearchTabFromSegments(segments)) notFound();
+  const tab = resolveSearchTabFromSegments(segments);
+  if (!tab) notFound();
+  const supplied = searchParams ? await searchParams : {};
+  if (tab.id === "packages_tests" || (!segments?.length && supplied.tab === "packages_tests")) {
+    const query = new URLSearchParams();
+    for (const key of ["q", "location", "hospital", "item"] as const) {
+      const value = supplied[key];
+      if (typeof value === "string" && value.trim()) query.set(key, value.trim());
+    }
+    redirect(`/health-checkups${query.size ? `?${query}` : ""}`);
+  }
   return <SearchResultsView />;
 }

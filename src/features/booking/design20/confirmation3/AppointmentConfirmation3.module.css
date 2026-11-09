@@ -10,9 +10,9 @@
 .hero h1 { margin: 0; font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl)); line-height: var(--leading-tight); font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .hero h1:focus { outline: none; }
 .hero > p { max-width: 60ch; margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); text-wrap: balance; }
-.successMark { position: relative; display: grid; place-items: center; width: var(--space-48); height: var(--space-48); margin-bottom: var(--space-4); border-radius: var(--radius-full); color: var(--journey-paper-success); background: color-mix(in srgb, var(--journey-paper-success) 10%, var(--color-surface)); }
+.successMark { position: relative; display: grid; place-items: center; width: var(--space-48); height: var(--space-48); margin-bottom: var(--space-4); border-radius: var(--radius-full); color: var(--journey-paper-success); background: color-mix(in srgb, var(--journey-paper-success) 14%, var(--color-surface)); }
 .successMark > svg { position: relative; width: var(--space-32); height: var(--space-32); }
-.successRipple { position: absolute; inset: 0; border: var(--space-1) solid color-mix(in srgb, var(--journey-paper-success) 20%, transparent); border-radius: inherit; pointer-events: none; animation: successRipple calc(var(--duration-slowest) * 2) var(--ease-out) both; }
+.successRipple { position: absolute; inset: 0; border: var(--space-1) solid color-mix(in srgb, var(--journey-paper-success) 20%, transparent); border-radius: inherit; pointer-events: none; animation: successRipple calc(var(--duration-slowest) * 2) var(--ease-out) var(--duration-slow) both; }
 
 .receipt { border: var(--space-1) solid var(--confirmation-line); border-radius: var(--radius-xl); background: var(--journey-paper-surface); --shadow-rgb: var(--blue-brand-rgb); box-shadow: var(--elevation-2); }
 .appointment { padding: var(--space-24); }
@@ -101,7 +101,7 @@
   .distance:hover { color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); }
   .paymentDetails summary:hover .breakdownLink > svg { background: color-mix(in srgb, var(--color-primary) 8%, transparent); }
 }
-@keyframes successRipple { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(1.4); } }
+@keyframes successRipple { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(1.25); } }
 @keyframes detailReveal { from { opacity: 0; transform: translateY(calc(var(--space-4) * -1)); } to { opacity: 1; transform: translateY(0); } }
 @keyframes savingsSwipe { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 @media (prefers-reduced-motion: reduce) {

@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Filter, Loader2, MapPin, Search, X } from "lucide-react";
+import { Filter, Loader2, MapPin } from "lucide-react";
 import type Lenis from "lenis";
 import { NH_CITIES } from "@/lib/searchService";
 import type { ConsultationMode } from "@/features/search/doctorListing";
 import { requestDoctorCity } from "@/features/search/doctorLocation";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import SearchLocationUnit from "./SearchLocationUnit";
 import DoctorSearchHint from "./DoctorSearchHint";
 import styles from "./DoctorSearchTop.module.css";
 
@@ -24,7 +25,6 @@ interface Props {
 export default function DoctorSearchTop({ query, location, total, mode, allConsultationTypes = false, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
   const reducedMotion = Boolean(useReducedMotion());
   const [navVisible, setNavVisible] = useState(true);
-  const [hintsPaused, setHintsPaused] = useState(false);
   const [detectingLocation, setDetectingLocation] = useState<string | null>(null);
   const [locationFeedback, setLocationFeedback] = useState(false);
   const [locationStatus, setLocationStatus] = useState("");
@@ -172,22 +172,10 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
     <div className={`${styles.searchBar} ${!navVisible ? styles.navHidden : ""}`} data-d3-search-bar data-d3-ui>
       <div className={`${styles.container} ${styles.toolbarContent}`}>
         <div className={`${styles.searchRow} ${locationFirst ? styles.locationFirst : ""} ${compactMobile ? styles.compactMobile : ""}`}>
-          <div className={locationFirst ? styles.combinedSearch : styles.searchContents}>
-          {locationFirst && locationSelect(styles.leadingLocation)}
-          <form role="search" aria-label="Find a doctor" className={styles.form} onSubmit={submit}>
-            <div className={styles.searchField}>
-              <label className={styles.srOnly} htmlFor="d3-search">Search doctors by name, speciality or hospital</label>
-              <input id="d3-search" type="search" value={query} autoComplete="off" enterKeyHint="search"
-                placeholder=" " onFocus={() => setHintsPaused(true)} onBlur={() => setHintsPaused(false)} onChange={(event) => onQuery(event.target.value)} />
-              <DoctorSearchHint active={!query} paused={hintsPaused} />
-              <button type="button" className={styles.clear} aria-label="Clear search" disabled={!query} aria-hidden={!query}
-                onClick={() => { onQuery(""); document.getElementById("d3-search")?.focus({ preventScroll: true }); }}><X size={16} aria-hidden /></button>
-            </div>
-            <button type="submit" className={styles.submit} aria-label="Search and show doctor results" title="Search">
-              <Search size={20} aria-hidden />
-            </button>
-          </form>
-          </div>
+          <SearchLocationUnit id="d3-search" query={query} onQuery={onQuery} onSubmit={submit}
+            searchLabel="Find a doctor" inputLabel="Search doctors by name, speciality or hospital"
+            locationControl={locationFirst ? locationSelect(styles.leadingLocation) : undefined}
+            hint={paused => <DoctorSearchHint active={!query} paused={paused} />} />
           {!locationFirst && locationSelect(styles.desktopLocation)}
           {!compactMobile && filterButton}
         </div>

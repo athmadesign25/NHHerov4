@@ -18,6 +18,8 @@ export interface Design20Draft extends Design15Draft {
   sponsorshipId?: SponsorshipId | null;
   /** An account-level preference, independent of the selected member. */
   useHealthCredits?: boolean;
+  paymentRecovery?: "cancelled" | "failed";
+  reservationSkipped?: boolean;
 }
 
 /** Default only an unanswered member choice; returning bookings keep every explicit choice. */
@@ -40,12 +42,14 @@ export function design20SignedInDraft(draft: Design20Draft, identity: AuthIdenti
   return design20DefaultMember({ ...draft, identity, patients: design17Patients(identity, sameAccount ? draft.patients : []),
     selectedPatientId: sameAccount ? draft.selectedPatientId : null, stage: "patient",
     sponsorshipId: sameAccount ? draft.sponsorshipId : undefined, discountCode: sameAccount ? draft.discountCode : undefined,
-    useHealthCredits: sameAccount ? draft.useHealthCredits : undefined, payment: sameAccount ? draft.payment : "online" }, true);
+    useHealthCredits: sameAccount ? draft.useHealthCredits : undefined,
+    paymentRecovery: sameAccount ? draft.paymentRecovery : undefined, reservationSkipped: undefined,
+    failureHold: sameAccount ? draft.failureHold : null, payment: sameAccount ? draft.payment : "online" }, true);
 }
 
 /** Apply the navbar's patient choice without changing appointment or payment selections. */
 export function design20WithBookingMember(draft: Design20Draft, preference: BookingMemberSelection): Design20Draft {
-  if (!draft.identity || draft.receipt) return draft;
+  if (!draft.identity || draft.receipt || draft.reservationSkipped) return draft;
   const missing = preference.members.filter(member => !draft.patients.some(entry => entry.id === member.id));
   const patients = missing.length ? [...draft.patients, ...missing.map(({ id, ...profile }) => ({ id, patient: patientForIdentity(draft.identity!, { ...profile, phone: "", email: "" }) }))].slice(0, 10) : draft.patients;
   const member = patients.find(entry => entry.id === preference.selectedId);
@@ -81,7 +85,7 @@ export function design20PaymentDraft(draft: Design20Draft, payment: PaymentChoic
   if (!authenticated || !draft.identity || !member || Object.keys(patientErrors(member, draft.identity)).length || draft.receipt ||
     !design20Available(draft.selection, now) || failureHoldExpired(draft.failureHold, draft.selection, now) ||
     (payment === "hospital" && draft.selection.mode !== "hospital")) return null;
-  return { ...draft, payment, stage: payment === "online" ? "payment" : "review" };
+  return { ...draft, payment, reservationSkipped: undefined, paymentRecovery: payment === "online" ? draft.paymentRecovery : undefined, stage: payment === "online" ? "payment" : "review" };
 }
 
 /** A fully covered booking confirms directly, without ever opening the payment gateway. */
@@ -103,7 +107,8 @@ export function design20SummaryDraft(draft: Design20Draft, now = Date.now()): De
   const available = design20Available(draft.selection, now) && !failureHoldExpired(draft.failureHold, draft.selection, now);
   return { ...draft, stage: draft.identity && draft.selectedPatientId ? "appointment" : "patient",
     selection: available ? draft.selection : { ...draft.selection, time: "" },
-    failureHold: available ? draft.failureHold : null };
+    failureHold: available ? draft.failureHold : null, reservationSkipped: undefined,
+    paymentRecovery: available ? draft.paymentRecovery : undefined };
 }
 
 /** Save an editor's complete appointment atomically, keeping member and discount choices. */
@@ -111,7 +116,8 @@ export function design20SavedAppointment(draft: Design20Draft, selection: Appoin
   if (!authenticated || !draft.identity || draft.receipt || selection.doctorId !== draft.doctorId || !design20Available(selection, now)) return null;
   const failureHold = draft.failureHold && sameSelection(draft.failureHold.selection, selection) ? draft.failureHold : null;
   if (failureHoldExpired(failureHold, selection, now)) return null;
-  return { ...draft, selection: { ...selection }, failureHold,
+  return { ...draft, selection: { ...selection }, failureHold, reservationSkipped: undefined,
+    paymentRecovery: failureHold ? draft.paymentRecovery : undefined,
     stage: draft.selectedPatientId ? "appointment" : "patient", payment: selection.mode === "video" ? "online" : draft.payment };
 }
 
@@ -134,9 +140,15 @@ export function parseDesign20Draft(value: unknown, expectedDoctorId?: string): D
   const useHealthCredits = raw.useHealthCredits;
   if (useHealthCredits !== undefined && typeof useHealthCredits !== "boolean") return null;
   if (useHealthCredits && !raw.identity) return null;
+  const paymentRecovery = raw.paymentRecovery;
+  const reservationSkipped = raw.reservationSkipped;
+  if (paymentRecovery !== undefined && paymentRecovery !== "cancelled" && paymentRecovery !== "failed") return null;
+  if (reservationSkipped !== undefined && typeof reservationSkipped !== "boolean") return null;
+  if (paymentRecovery && (!raw.identity || !raw.selectedPatientId || !raw.failureHold || raw.receipt || raw.payment !== "online")) return null;
+  if (reservationSkipped && (!paymentRecovery || raw.stage !== "review")) return null;
   if (raw.identity) {
     const safe = parseDesign15Draft(raw, raw.doctorId);
-    return safe ? { ...safe, ...(sponsorshipId !== undefined ? { sponsorshipId } : {}), ...(useHealthCredits !== undefined ? { useHealthCredits } : {}) } : null;
+    return safe ? { ...safe, ...(sponsorshipId !== undefined ? { sponsorshipId } : {}), ...(useHealthCredits !== undefined ? { useHealthCredits } : {}), ...(paymentRecovery ? { paymentRecovery } : {}), ...(reservationSkipped ? { reservationSkipped } : {}) } : null;
   }
   if (raw.stage !== "patient" || !Array.isArray(raw.patients) || raw.patients.length || raw.selectedPatientId || raw.failureHold || raw.receipt ||
     typeof raw.selection !== "object" || raw.selection === null || Array.isArray(raw.selection)) return null;
@@ -215,6 +227,7 @@ export function design20FlowUrl(draft: Design15Draft, returnTo: string, bookingE
     return `/doctors/${encodeURIComponent(draft.doctorId)}/book/confirmation?${params}`;
   }
   params.set("step", draft.stage);
+  if ((draft as Design20Draft).reservationSkipped) params.set("reservation", "1");
   return `/doctors/${encodeURIComponent(draft.doctorId)}/book?${params}`;
 }
 
@@ -224,9 +237,10 @@ export function design20ContinuePhase(draft: Design15Draft, authenticated: boole
   return authenticated ? "member" : "auth";
 }
 
-export function design20SafeStep(requested: string | null, draft: Design15Draft, authenticated: boolean, now = Date.now()): Design15Step {
+export function design20SafeStep(requested: string | null, draft: Design20Draft, authenticated: boolean, now = Date.now()): Design15Step {
   if (!authenticated || !draft.identity || !draft.selectedPatientId) return "patient";
   if (draft.receipt) return "confirmation";
+  if (draft.reservationSkipped && draft.paymentRecovery && draft.failureHold) return "review";
   if (requested === "patient") return "patient";
   if (!design20Available(draft.selection, now) || failureHoldExpired(draft.failureHold, draft.selection, now) || requested === "appointment") return "appointment";
   return requested === "payment" && draft.payment === "online" ? "payment" : "review";

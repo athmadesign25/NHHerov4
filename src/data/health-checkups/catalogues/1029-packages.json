@@ -1,0 +1,61 @@
+{
+  "capturedAt": "2026-11-06T16:40:04+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Hospital - Banashankari, Bangalore",
+  "facilityId": "1029",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 1,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 1,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 1,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Advanced Heart & Cancer Screening Package",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Hospital - Banashankari, Bangalore",
+      "facilityId": "1029",
+      "amount": 999.0,
+      "localId": "snapshot-fcb3f3318a62b3fa",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For Male Senior Citizens",
+      "listPrice": 999.0,
+      "sourceDisplayName": "Nh Advanced Heart & Cancer Screening Package For Male Senior Citizens",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/null?unitCode=1029&code=PKG045955",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/null?unitCode=1029&code=PKG045955"
+      ],
+      "code": "PKG045955",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/null?unitCode=1029&code=PKG045955"
+  ],
+  "unitCode": "1029",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1029-packages.mhtml",
+      "sha256": "30ad531c597a0ffabbf4b45c776ef0361faa965d31a618a483f50f3b7b0d0290",
+      "format": "mhtml",
+      "renderedCardCount": 1,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

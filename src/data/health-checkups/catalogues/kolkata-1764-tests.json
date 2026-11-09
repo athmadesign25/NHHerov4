@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:54:23+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Kolkata",
+  "facility": "Narayana Multispeciality Hospital, Howrah",
+  "facilityId": "1764",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1764",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-kolkata-1764-tests.mhtml",
+      "sha256": "97fdf15790f306558ff145d347e7af974ad1f602d814306fc9d2f4628d5993ce",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

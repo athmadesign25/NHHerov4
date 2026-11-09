@@ -1,0 +1,19 @@
+import type { HealthItem } from "./catalog";
+
+const normalize = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+
+/** Search names, published abbreviations and verified coverage across both item types. */
+export function matchesHealthQuery(item: HealthItem, query: string): boolean {
+  const tokens = normalize(query).split(/\s+/).filter(Boolean);
+  const words = normalize([item.name, item.description, ...item.inclusions].join(" ")).split(/\s+/);
+  return tokens.every(token => words.some(word => word.startsWith(token)));
+}
+
+export function healthComparisonFacts(item: HealthItem): Record<string, string> {
+  return {
+    "Package overview": item.audience?.description || item.description || "Not listed",
+    "Coverage highlights": item.inclusions.length ? item.inclusions.join(" · ") : "Not listed",
+    "Preparation": item.preparation || "Not listed",
+    "Report availability": item.reportTime || "Not listed",
+  };
+}

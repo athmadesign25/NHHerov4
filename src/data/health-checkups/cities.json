@@ -1,0 +1,110 @@
+[
+  {
+    "value": 37,
+    "label": "Bangalore",
+    "checked": true,
+    "clusterId": null
+  },
+  {
+    "value": 38,
+    "label": "Guwahati",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 39,
+    "label": "Dharwad",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 40,
+    "label": "Shimoga",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 41,
+    "label": "Ahmedabad",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 42,
+    "label": "Jaipur",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 43,
+    "label": "Kolar",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 44,
+    "label": "Mumbai",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 45,
+    "label": "Raipur",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 46,
+    "label": "Kolkata",
+    "checked": false,
+    "clusterId": "46,48,51"
+  },
+  {
+    "value": 47,
+    "label": "Davangere",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 48,
+    "label": "Barasat",
+    "checked": false,
+    "clusterId": "48,46,51"
+  },
+  {
+    "value": 49,
+    "label": "Jamshedpur",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 50,
+    "label": "Gurugram",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 51,
+    "label": "Howrah",
+    "checked": false,
+    "clusterId": "51,46,48"
+  },
+  {
+    "value": 52,
+    "label": "Delhi",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 53,
+    "label": "Mysore",
+    "checked": false,
+    "clusterId": null
+  },
+  {
+    "value": 56,
+    "label": "Hosur",
+    "checked": false,
+    "clusterId": null
+  }
+]

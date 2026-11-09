@@ -14,6 +14,8 @@ export default function TextSweepEffect({
   className = "",
   finalColor = "#000000",
   sweepColor = "#034EA2",
+  sweepHighlightColor = "#ED1C24",
+  onSweepComplete,
   active,
 }: {
   words: string[];
@@ -23,6 +25,8 @@ export default function TextSweepEffect({
   className?: string;
   finalColor?: string;
   sweepColor?: string;
+  sweepHighlightColor?: string;
+  onSweepComplete?: () => void;
   active?: boolean;
 }) {
   const word = words?.[0] ?? "";
@@ -31,7 +35,7 @@ export default function TextSweepEffect({
     linear-gradient(90deg,
       ${finalColor} 0%, ${finalColor} 40%,
       ${sweepColor} 48%,
-      #ED1C24 56%,
+      ${sweepHighlightColor} 56%,
       transparent 64%, transparent 100%
     )
   `;
@@ -44,6 +48,7 @@ export default function TextSweepEffect({
         style={{ position: "relative", display: "inline" }}
       >
         <motion.span
+          onAnimationComplete={onSweepComplete}
           style={{
             display: "inline",
             backgroundOrigin: "padding-box",
