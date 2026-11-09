@@ -2,6 +2,7 @@
   --color-text: var(--d17-lite-ink);
   --color-text-secondary: var(--journey-paper-muted);
   --profile-gutter: var(--space-0);
+  --profile-page-gutter: var(--space-20);
   --profile-section-gap: var(--space-32);
   --profile-nav-height: var(--nav-height);
   --profile-picker-height: var(--space-80);
@@ -13,12 +14,12 @@
   --profile-line: var(--color-border);
   position: relative;
   min-height: 100dvh;
-  padding: var(--nav-height) var(--space-20) max(calc(var(--space-128) + var(--space-40)), var(--profile-focus-clearance, var(--space-0)));
+  padding: 0 0 max(calc(var(--space-128) + var(--space-40)), var(--profile-focus-clearance, var(--space-0)));
   color: var(--profile-ink);
   background: var(--booking-page-background);
   color-scheme: light;
 }
-.canvas { --profile-scroll-offset: calc(var(--profile-nav-offset, var(--profile-nav-height)) + var(--profile-picker-height) + var(--profile-anchor-gap)); width: 100%; max-width: var(--max-width); margin-inline: auto; }
+.canvas { --profile-scroll-offset: calc(var(--profile-nav-offset, var(--profile-nav-height)) + var(--profile-picker-height) + var(--profile-anchor-gap)); width: calc(100% - var(--profile-page-gutter) * 2); max-width: var(--max-width); margin-inline: auto; }
 .tools { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: var(--space-8); padding-block: var(--space-8); }
 .back { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--target); color: var(--profile-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); text-decoration: none; transition: color var(--duration-base); }
 .utilities { display: flex; gap: var(--space-8); align-items: center; }
@@ -35,14 +36,7 @@
 .phoneBooking { display: inline-flex; align-items: center; justify-self: start; gap: var(--space-8); min-height: var(--target); color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); text-decoration: none; }
 .phoneBooking a { display: inline-flex; align-items: center; min-height: var(--target); margin-left: var(--space-8); color: var(--color-primary); text-decoration: none; }
 .body { min-width: 0; }
-.page [data-profile-section-picker]::before { background: var(--profile-surface); }
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .page [data-profile-section-picker]::before { background: color-mix(in srgb, var(--profile-surface) 72%, transparent); }
-}
-@media (prefers-reduced-transparency: reduce) {
-  .page [data-profile-section-picker]::before { background: var(--profile-surface); }
-}
-.page [data-profile-section-picker] a[aria-current] { color: var(--color-primary); }
+.page [data-profile-section-picker] a[aria-current] { color: var(--color-emergency); }
 .sampleLabel { display: inline-block; flex-shrink: 0; margin-left: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); font-weight: 400; letter-spacing: 0; text-transform: none; vertical-align: middle; }
 .chapterHeading > .sampleLabel { margin: var(--space-8) 0 0; }
 .sampleArticle { display: flex; flex-direction: column; gap: var(--space-8); padding-block: var(--space-16); border-bottom: var(--space-1) solid var(--profile-line); color: var(--profile-muted); font-size: var(--font-size-base); line-height: var(--leading-body); }
@@ -83,11 +77,21 @@
 .more .clinicalList { padding-top: var(--space-12); }
 .whenOpen, .more[open] .whenClosed { display: none; }
 .more[open] .whenOpen { display: inline; }
-.locations { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-32); }
-.locations > li { display: flex; gap: var(--space-16); min-width: 0; }
-.locations > li > svg { flex-shrink: 0; margin-top: var(--space-4); color: var(--color-primary); }
-.locations > li > div { min-width: 0; flex: 1; }
-.locations h3 { margin: 0 0 var(--space-16); color: var(--profile-ink); font-size: var(--font-size-lg); font-weight: 500; line-height: var(--leading-relaxed); }
+.locations { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-16); }
+.locations > li { position: relative; display: flex; gap: var(--space-12); min-width: 0; padding: var(--space-24); border: var(--space-1) solid var(--profile-line); border-radius: var(--radius-lg); background: rgba(var(--white-rgb), .7); transition: background-color var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out); }
+.locationContent { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; flex: 1; }
+.locations h3 { margin: 0 0 var(--space-24); color: var(--profile-ink); font-size: var(--font-size-base); font-weight: 600; line-height: var(--leading-body); overflow-wrap: anywhere; }
+.locationFooter { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-12) var(--space-24); width: 100%; margin-top: auto; }
+.locations .distance { position: relative; z-index: 2; }
+.locationBooking { display: inline-flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); flex-shrink: 0; padding: var(--space-8) var(--space-16); border: 0; border-radius: var(--radius-full); background: var(--color-primary-light); color: var(--color-primary); font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-body); text-align: left; cursor: pointer; }
+.locationBooking::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius-lg); }
+.locationBooking:focus-visible { outline: none; }
+.locationBooking:focus-visible::after { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+@media (min-width: 768px) { .locations { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (hover: hover) { .locations > li[data-bookable="true"]:hover { background: var(--color-surface); border-color: color-mix(in srgb, var(--color-primary) 30%, var(--profile-line)); } .locationBooking:hover { color: var(--color-primary-dark); } }
+@media (max-width: 639px) { .locations > li { padding: var(--space-16); } }
+@media (prefers-reduced-motion: reduce) { .locations > li { transition: none; } }
+@media (forced-colors: active) { .locations > li { background: Canvas; border-color: CanvasText; } .locationBooking { color: LinkText; } }
 .distance { display: inline-flex; vertical-align: middle; align-items: center; gap: var(--space-6); margin-left: var(--space-8); min-height: var(--space-32); padding: var(--space-4) var(--space-12); border-radius: var(--radius-full); color: var(--color-text-secondary); background: rgba(var(--blue-brand-rgb), .05); font-size: var(--font-size-xs); font-weight: 400; line-height: var(--leading-body); text-decoration: none; white-space: nowrap; transition: background-color var(--duration-base), color var(--duration-base); }
 .locationNote { margin: calc(var(--space-8) * -1) 0 var(--space-16); font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--profile-muted); }
 .count { font-size: var(--font-size-xs); color: var(--color-text-secondary); font-weight: 400; }
@@ -109,7 +113,7 @@
 .page [data-profile-booking] { color-scheme: light; }
 .page [data-profile-booking][data-expanded="true"] :is(a, button):focus-visible, .page [popover] :is(a, button, input):focus-visible { outline-color: var(--color-primary); }
 @media (min-width: 640px) {
-  .page { padding-inline: var(--space-32); }
+  .page { --profile-page-gutter: var(--space-32); }
   .expertise, .clinicalList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 768px) {
@@ -117,7 +121,7 @@
 
 }
 @media (min-width: 1024px) {
-  .page { padding-inline: var(--space-48); }
+  .page { --profile-page-gutter: var(--space-48); }
 
 }
 @media (hover: hover) {
@@ -125,7 +129,7 @@
   .distance:hover { color: var(--profile-ink); background: rgba(var(--blue-brand-rgb), .1); }
   .articles a:hover > svg { transform: translate(var(--space-2), calc(var(--space-2) * -1)); }
 }
-@media (max-width: 374px) { .page { padding-inline: var(--space-16); } .utilities { gap: 0; } .back { font-size: var(--font-size-xs); gap: var(--space-4); } }
+@media (max-width: 374px) { .page { --profile-page-gutter: var(--space-16); } .utilities { gap: 0; } .back { font-size: var(--font-size-xs); gap: var(--space-4); } }
 @media (max-width: 639px) { .distance { min-height: var(--target); } }
 @media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; } }
 @media (forced-colors: active) { .page { background: Canvas; color: CanvasText; } .page :is(h1,h2,h3,p,li,dd,dt,summary,a) { color: CanvasText; } }
@@ -146,3 +150,15 @@
 @media (min-width: 768px) { .page { --profile-section-gap: var(--space-32); } }
 @media (max-width: 639px) { .page { --profile-section-gap: var(--space-24); } }
 @media (prefers-reduced-motion: reduce) { .enquiryDisclosure > summary svg { transition: none; } }
+
+.heroBack { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--target); color: var(--slate-100); font-size: var(--font-size-sm); line-height: var(--leading-body); text-decoration: none; transition: color var(--duration-fast) var(--ease-out); }
+.heroBack:hover { color: var(--white); }
+/* Only the trigger adapts to the portrait; the menu uses the shared surface. */
+.heroShare.heroShare > button { color: var(--white); }
+.heroShare > button::before { background: rgba(var(--navy-900-rgb), .4); border-color: rgba(var(--white-rgb), .25); box-shadow: none; }
+.heroShare > button:hover::before, .heroShare > button[aria-expanded="true"]::before { background: rgba(var(--navy-900-rgb), .6); }
+.appointmentHelp { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-8) var(--space-24); padding-block: var(--space-16); }
+.appointmentHelp p { margin: 0; color: var(--profile-muted); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.appointmentHelp a { display: inline-flex; align-items: center; min-height: var(--target); margin-inline-start: var(--space-8); color: var(--color-primary); font-weight: 500; white-space: nowrap; text-decoration: none; transition: color var(--duration-fast) var(--ease-out); }
+.appointmentHelp a:hover { color: var(--color-primary-dark); }
+@media (max-width: 639px) { .appointmentHelp { padding-block: var(--space-16) var(--space-8); } }

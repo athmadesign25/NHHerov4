@@ -37,7 +37,7 @@ export default function DoctorProfileView({ doctor, returnTo, initialMode, date 
   return <main className={styles.page} data-doctor-profile data-nav-theme="light">
     <div className={styles.container}>
       <Breadcrumbs theme="light" items={[{ label: "Home", href: "/" }, { label: "Doctors", href: returnTo }, { label: doctor.name }]} />
-      <div className={styles.pageTools}><Link className={styles.back} href={returnTo}><ArrowLeft size={16} aria-hidden />Back to doctors</Link><DoctorProfileDesignSwitch active={1} /><ProfileShare doctorName={doctor.name} profileUrl={profileHref} /></div>
+      <div className={styles.pageTools}><Link className={styles.back} href={returnTo}><ArrowLeft size={16} aria-hidden />Back to doctors</Link><ProfileShare doctorName={doctor.name} profileUrl={profileHref} /></div>
       <article className={styles.profileSurface}>
       <motion.header className={styles.hero} aria-labelledby="doctor-profile-name" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3, ease: [.22, 1, .36, 1] }}>
         <div className={styles.portrait}>
@@ -57,6 +57,7 @@ export default function DoctorProfileView({ doctor, returnTo, initialMode, date 
       <DoctorProfileDetails doctor={doctor} content={profile} />
       </article>
     </div>
+    <DoctorProfileDesignSwitch active={1} />
     <DoctorProfileBooking doctor={doctor} initialMode={initialMode} date={date} returnTo={returnTo} />
   </main>;
 }

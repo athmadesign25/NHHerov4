@@ -1,7 +1,8 @@
 /* Dark utility band continuing the footer surface. */
 .band {
   position: relative;
-  z-index: 1;
+  /* Stay below the main-content layer and its fixed booking controls. */
+  z-index: 0;
   width: 100%;
   background: radial-gradient(75% 55% at 50% 0%, rgba(var(--blue-brand-rgb), 0.3), transparent), var(--navy-900);
   border-top: 1px solid rgba(var(--white-rgb), 0.16);

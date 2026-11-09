@@ -168,7 +168,7 @@
 @media (min-width: 1024px) and (pointer: fine) { .times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--target); } }
 @media (hover: hover) {
   .dates button[aria-pressed="true"]:hover { color: var(--d3-ui-selection-hover, var(--d3-ui-selection-label, var(--color-emergency))); }
-  .back:hover::before { background: color-mix(in srgb, var(--d7-surface) 36%, transparent); }
+  .back:hover::before { background: color-mix(in srgb, var(--color-primary) 12%, var(--slate-100)); }
   .sectionHeading button:hover, .addMember:hover { color: var(--color-primary); text-decoration: underline; text-underline-offset: calc(var(--sp-1) / 2); }
   .member:not([aria-pressed="true"]):hover { background: color-mix(in srgb, var(--d7-text) 4%, transparent); }
   .member[aria-pressed="true"]:hover { background: var(--d3-ui-selection-surface-hover, var(--color-emergency-light)); }

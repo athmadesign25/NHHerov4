@@ -48,3 +48,31 @@
 @media (hover: hover) { .picker[data-tone="dark"] .rail a:hover, .picker[data-tone="dark"] .arrow:hover { color: var(--white); } }
 @media (prefers-reduced-transparency: reduce) { .picker[data-tone="dark"]::before { background: var(--navy-900); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media (forced-colors: active) { .picker[data-tone="dark"]::before { background: Canvas; } .picker[data-tone="dark"] .rail a { color: LinkText; } .picker[data-tone="dark"] .selected { border-color: Highlight; } }
+
+/* Keep the glass local to the floating picker, leaving the page visible around it. */
+.picker[data-tone="light"]::before { content: none; }
+.picker[data-tone="light"] .track {
+  isolation: isolate;
+}
+.picker[data-tone="light"] .track::before {
+  background: var(--color-bg-alt);
+  box-shadow: var(--elevation-1);
+}
+.picker[data-tone="light"] .rail a[aria-current] { color: var(--color-emergency); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .picker[data-tone="light"] .track::before {
+    background: color-mix(in srgb, var(--color-bg-alt) 70%, transparent);
+    backdrop-filter: blur(var(--space-16));
+    -webkit-backdrop-filter: blur(var(--space-16));
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .picker[data-tone="light"] .track::before {
+    background: var(--color-bg-alt);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (forced-colors: active) {
+  .picker[data-tone="light"] .rail a[aria-current] { color: LinkText; }
+}

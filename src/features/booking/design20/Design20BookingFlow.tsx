@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useReducedMotion } from "framer-motion";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { duration } from "@/lib/motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
@@ -39,6 +42,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
   const flow = useDesign20Booking(doctor, { returnTo: params.get("returnTo") ?? "/search/doctors?design=d21", confirmationRef });
   const { draft } = flow;
   const heading = useRef<HTMLHeadingElement>(null);
+  const reducedMotion = useReducedMotion();
   const [loginDismissed, setLoginDismissed] = useState(false);
   const [editingSummary, setEditingSummary] = useState(false);
   const summaryDesign: BookingSummaryDesign = params.get("summaryDesign") === "1" ? 1 : params.get("summaryDesign") === "2" ? 2 : params.get("summaryDesign") === "3" ? 3 : 4;
@@ -80,7 +84,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
           {summaryDesign >= 3 && (confirmed || flow.missingReceipt
             ? <Link className={previousSummaryStyles.titleBack} href={flow.returnTo} aria-label="Back to doctors" title="Back to doctors"><ArrowLeft size={20} aria-hidden /></Link>
             : <button type="button" className={previousSummaryStyles.titleBack} aria-label="Go back" title="Back" disabled={!flow.loaded || flow.busy} onClick={() => { void flow.backToSlots(); }}><ArrowLeft size={20} aria-hidden /></button>)}
-          <div><h1 ref={heading} tabIndex={-1}>{flow.missingReceipt ? "Booking details unavailable" : confirmed ? "Sign in to view your appointment" : "Complete your booking"}</h1>{!flow.missingReceipt && !confirmed && <p>Choose a member and review your appointment.</p>}</div></header></>}
+          <div><h1 ref={heading} tabIndex={-1} className={summaryStyles.headingSweepAnchor}>{flow.missingReceipt ? "Booking details unavailable" : confirmed ? "Sign in to view your appointment" : "Complete your booking"}{!flow.missingReceipt && !confirmed && <span className={summaryStyles.headingSweep} aria-hidden="true"><TextSweepEffect words={["Complete your booking"]} sweepMs={duration.slowest * 2000} active={flow.loaded && !reducedMotion} sweepColor="var(--color-primary)" finalColor="var(--d7-text)" /></span>}</h1>{!flow.missingReceipt && !confirmed && <p>Choose a member and review your appointment.</p>}</div></header></>}
       {!flow.loaded || needsSlotSelection ? <p className={styles.loading} role="status">{needsSlotSelection ? "Opening available times…" : "Preparing your appointment…"}</p>
         : flow.missingReceipt ? <section className={styles.panel}><h2>We couldn’t find this booking</h2><p className={styles.muted}>Return to the doctor list to choose an appointment.</p><Link href={flow.returnTo} className={styles.primary}>Find a doctor</Link></section>
         : !flow.isUserLoggedIn ? <section className={styles.panel}><h2>Sign in to continue</h2><p className={styles.muted}>{confirmed ? "Sign in to view your confirmed appointment." : "Your appointment choices are saved. Sign in to select a member."}</p><button type="button" className={styles.primary} onClick={() => { setLoginDismissed(false); flow.setLoginOpen(true); }}>Sign in</button></section>

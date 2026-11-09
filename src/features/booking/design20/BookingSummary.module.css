@@ -103,3 +103,10 @@
   .credits[aria-checked="true"] .switch { background: Highlight; }
   .credits[aria-checked="true"] .switch > span { background: HighlightText; }
 }
+
+/* Same decorative wipe as the listing heading; the real h1 stays readable. */
+.headingSweepAnchor { position: relative; }
+.headingSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; pointer-events: none; font: inherit; letter-spacing: inherit; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .headingSweep { display: none; }
+}

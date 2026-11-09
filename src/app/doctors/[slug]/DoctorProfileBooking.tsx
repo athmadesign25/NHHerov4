@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type RefObject } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import AppointmentSelector from "@/app/search/designs/d20/AppointmentSelector";
 import LoginModal from "@/features/auth/LoginModal";
 import useDesign20Booking from "@/features/booking/design20/useDesign20Booking";
@@ -14,20 +14,42 @@ import type { BookingDoctorSummary } from "@/features/booking/types";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/search/design20Directory";
 import type { ConsultationMode, DoctorListingItem } from "@/features/search/doctorListing";
+import { duration, ease } from "@/lib/motion";
 import styles from "./DoctorProfileBooking.module.css";
 
-interface Props { doctor: DoctorListingItem; initialMode: ConsultationMode; date: string; returnTo: string; tone?: "light" | "dark" }
+export interface ProfileBookingRequest { id: number; mode: ConsultationMode; hospital: string }
 
-export default function DoctorProfileBooking({ doctor, initialMode, date, returnTo, tone = "light" }: Props) {
+interface Props { bookingRequest?: ProfileBookingRequest; doctor: DoctorListingItem; initialMode: ConsultationMode; date: string; returnTo: string; tone?: "light" | "dark" }
+
+export default function DoctorProfileBooking({ doctor, initialMode, date, returnTo, tone = "light", bookingRequest }: Props) {
   const params = useSearchParams();
   const resume = params.get("booking") === doctor.id && params.get("bookingResume") === "1";
   const [started, setStarted] = useState(resume);
   const [expanded, setExpanded] = useState(resume);
   const action = useRef<HTMLButtonElement>(null);
+  const dock = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const bookingDoctor = getDesign20BookingDoctor(doctor.id);
   const available = !!bookingDoctor && Object.values(doctor.modes).some(Boolean);
   const id = useId();
+  useEffect(() => {
+    if (!bookingRequest || !available) return;
+    setStarted(true);
+    setExpanded(true);
+  }, [bookingRequest, available]);
+  useEffect(() => {
+    if (!expanded) return;
+    const dismissOutside = (event: PointerEvent) => {
+      if (event.button !== 0 || !(event.target instanceof Node)) return;
+      if (dock.current?.contains(event.target) || event.composedPath().includes(dock.current as EventTarget)) return;
+      // Portal-based login and modal interactions must not dismiss the booking panel.
+      if (document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]')) return;
+      // Keep focus on the page control the user clicked, rather than stealing it.
+      setExpanded(false);
+    };
+    document.addEventListener("pointerdown", dismissOutside);
+    return () => document.removeEventListener("pointerdown", dismissOutside);
+  }, [expanded]);
   const toggle = () => {
     setStarted(true);
     setExpanded(value => !value);
@@ -36,22 +58,31 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     setExpanded(false);
     requestAnimationFrame(() => action.current?.focus({ preventScroll: true }));
   };
-  return <motion.aside className={styles.dock} layout={reduced ? false : "size"} data-profile-booking data-expanded={expanded} data-tone={tone}
+  return <motion.aside ref={dock} className={styles.dock} layoutRoot data-profile-booking data-expanded={expanded} data-started={started} data-bookable={available} data-tone={tone}
     onKeyDown={event => {
       if (event.key === "Escape" && expanded && !document.querySelector(':popover-open, dialog[open], [role="dialog"]')) {
         event.preventDefault(); close();
       }
     }}
-    aria-label={`Book an appointment with ${doctor.name}`} transition={{ layout: { duration: reduced ? 0 : .32, ease: [.22, 1, .36, 1] } }}>
+    aria-label={`Book an appointment with ${doctor.name}`}>
+    <motion.div className={styles.animatedSurface} layout={!reduced} layoutAnchor={{ x: 0, y: 1 }} style={{ originY: 1 }}
+      transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
+    <span className={styles.bookingAccent} aria-hidden="true">
+      <span className={styles.accentGlow}><span className={styles.accentTrack} /></span>
+      <span className={styles.accentStroke}><span className={styles.accentTrack} /></span>
+    </span>
+    <div className={styles.surface}>
     {started && bookingDoctor ? <BookingControls doctor={bookingDoctor}
-      initialSelection={design20RequestedSelection(bookingDoctor, new URLSearchParams({ mode: initialMode, hospital: doctor.hospital, ...(date ? { date } : {}) }))}
-      returnTo={returnTo} resume={resume} expanded={expanded} toggle={toggle} close={close} action={action} panelId={id} />
-      : <div className={styles.summary}>
+      initialSelection={design20RequestedSelection(bookingDoctor, new URLSearchParams({ mode: bookingRequest?.mode ?? initialMode, hospital: bookingRequest?.hospital ?? doctor.hospital, ...(date ? { date } : {}) }))}
+      returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} toggle={toggle} close={close} action={action} panelId={id} />
+      : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary}>
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
-        {available ? <button ref={action} type="button" className={styles.primary} onClick={toggle} aria-expanded={false} aria-controls={id}>Book appointment</button>
-          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}
-      </div>}
+        <div className={styles.actionGroup}>{available ? <button ref={action} type="button" className={styles.primary} onClick={toggle} aria-expanded={false} aria-controls={id}>Book appointment</button>
+          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}</div>
+      </motion.div>}
+    </div>
+    </motion.div>
   </motion.aside>;
 }
 
@@ -60,8 +91,8 @@ function Price({ fee }: { fee: string }) {
   return <div className={styles.price}><strong>{priced ? appointmentPricing(fee).base : "Confirm fee"}</strong>{priced && <span>onwards</span>}</div>;
 }
 
-function BookingControls({ doctor, initialSelection, returnTo, resume, expanded, toggle, close, action, panelId }: {
-  doctor: BookingDoctorSummary; initialSelection: AppointmentSelection; returnTo: string; resume: boolean;
+function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, resume, expanded, toggle, close, action, panelId }: {
+  doctor: BookingDoctorSummary; initialSelection: AppointmentSelection; returnTo: string; bookingRequest?: ProfileBookingRequest; resume: boolean;
   expanded: boolean; toggle: () => void; close: () => void; action: RefObject<HTMLButtonElement | null>; panelId: string;
 }) {
   const flow = useDesign20Booking(doctor, { initialSelection, returnTo, inline: true, preserveEntry: true, resume });
@@ -69,28 +100,40 @@ function BookingControls({ doctor, initialSelection, returnTo, resume, expanded,
   const heading = useRef<HTMLHeadingElement>(null);
   const signingIn = flow.phase === "auth" && !flow.isUserLoggedIn;
   const { selection } = flow.draft;
+  const appliedRequest = useRef<number | null>(null);
+  useEffect(() => {
+    if (!bookingRequest || !flow.loaded || flow.busy || appliedRequest.current === bookingRequest.id) return;
+    const locations = doctor.locations?.length ? doctor.locations : [{ name: doctor.hospital }];
+    if (!locations.some(location => location.name === bookingRequest.hospital)) return;
+    appliedRequest.current = bookingRequest.id;
+    const sameContext = selection.hospital === bookingRequest.hospital && selection.mode === bookingRequest.mode;
+    flow.selectTime({ ...selection, hospital: bookingRequest.hospital, mode: bookingRequest.mode, time: sameContext ? selection.time : "" });
+    requestAnimationFrame(() => heading.current?.focus({ preventScroll: true }));
+  }, [bookingRequest, doctor, flow, selection]);
   const selectedDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: selection.hospital }));
   useEffect(() => {
     if (expanded) heading.current?.focus({ preventScroll: true });
   }, [expanded]);
   return <>
-    <AnimatePresence initial={false} mode="popLayout">{expanded && <motion.div key="options" id={panelId} className={styles.panel}
-      initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .2 }}>
+    <AnimatePresence initial={false} mode="popLayout">{expanded && <motion.div key="options" id={panelId} className={styles.panel} layout={reduced ? false : "position"}
+      initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: reduced ? 0 : duration.base, layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
       <header className={styles.header}><div><h2 ref={heading} tabIndex={-1}>Choose your appointment</h2><p>{doctor.name}</p></div>
         <button type="button" className={styles.collapse} onClick={close} aria-label="Minimise appointment options"><ChevronDown size={20} aria-hidden /></button></header>
       <div className={styles.options} data-lenis-prevent>
         {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
         {!flow.loaded ? <p className={styles.notice} role="status">Finding available times…</p>
-          : <AppointmentSelector doctor={doctor} selection={selection} now={flow.now} onChange={flow.selectTime} autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired} />}
+          : <AppointmentSelector showHospitalDirections doctor={doctor} selection={selection} now={flow.now} onChange={flow.selectTime} autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired} />}
       </div>
     </motion.div>}</AnimatePresence>
-    <motion.div layout={reduced ? false : "position"} className={styles.summary}>
-      {expanded ? <div className={styles.selected} aria-live="polite" aria-atomic="true"><span>Your appointment</span><strong>{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong></div>
+    <motion.div layout={reduced ? false : "position"} layoutId={`${panelId}-summary`} className={styles.summary}
+      transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
+      {expanded || selection.time ? <div className={styles.selected} aria-live="polite" aria-atomic="true"><span>Your appointment</span><strong>{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong>{!expanded && <span>{selection.mode === "hospital" ? selection.hospital : "Video consultation"}</span>}</div>
         : <div className={styles.doctor}><strong>{doctor.name}</strong><span>{selection.mode === "hospital" ? "Hospital visit" : "Video consultation"}</span></div>}
       <Price fee={selectedDoctor?.fee ?? doctor.fee} />
-      <button ref={action} type="button" className={styles.primary} aria-expanded={expanded} aria-controls={panelId}
+      <div className={styles.actionGroup}><button ref={action} type="button" className={styles.primary} aria-expanded={expanded} aria-controls={panelId}
         disabled={expanded && (!flow.loaded || !selection.time || flow.busy || flow.expired)}
-        onClick={expanded ? flow.continueBooking : toggle}>{expanded ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</button>
+        onClick={expanded ? flow.continueBooking : toggle}><span>{expanded ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{expanded && <ArrowRight className={styles.continueArrow} aria-hidden />}</button></div>
     </motion.div>
     <LoginModal previewOtp isOpen={signingIn} onClose={() => flow.setLoginOpen(false)} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </>;

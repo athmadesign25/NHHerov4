@@ -2,10 +2,10 @@
 
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight } from "lucide-react";
-import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { motion, useReducedMotion } from "framer-motion";
+import { Search, X } from "lucide-react";
+import BlogArticleCard from "./BlogArticleCard";
+import { duration, ease } from "@/lib/motion";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
 
@@ -34,6 +34,7 @@ interface BlogCategoryExploreProps {
 }
 
 export default function BlogCategoryExplore({ articles }: BlogCategoryExploreProps) {
+  const reduceMotion = useReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
@@ -77,15 +78,6 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
     return list;
   }, [articles, selectedCategory, searchQuery, sortBy]);
 
-  // Generate Author badge text
-  const getAuthorInitials = (author: string) => {
-    if (author.toLowerCase().includes("narayana health")) return "NH";
-    const parts = author.replace(/^Dr\.\s*/i, "").trim().split(" ");
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return author.slice(0, 2).toUpperCase();
-  };
 
   return (
     <section className={styles.exploreSection} data-nav-theme="light" id="explore-categories">
@@ -184,62 +176,23 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
         {/* 3-Column Card Grid (Matching Our Standard Card Structure) */}
         {filteredArticles.length > 0 ? (
           <div className={styles.cardsGrid}>
-            {filteredArticles.map((article, idx) => {
-              const initials = getAuthorInitials(article.author);
-              const isNH = initials === "NH";
-
-              return (
-                <motion.article
-                  key={article.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: Math.min(idx * 0.05, 0.4) }}
-                  className={styles.blogCard}
-                >
-                  <Link href={`/blog/${article.slug}`} className={styles.cardLink}>
-                    {/* Full Card Image Background */}
-                    <Image
-                      src={article.image || "/images/articles/blog_heart_health.png"}
-                      alt={article.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className={styles.cardBgImage}
-                    />
-
-                    {/* Gradient Scrim Overlay */}
-                    <div className={styles.cardOverlay} />
-
-                    {/* Bottom Card Content Layered On Gradient */}
-                    <div className={styles.cardTextContent}>
-                      <div className={styles.cardMetaRow}>
-                        <span className={styles.cardCategory}>{article.category}</span>
-                        <span className={styles.cardMetaDot}>•</span>
-                        <span className={styles.cardDate}>{article.publishedDate}</span>
-                      </div>
-
-                      <div className={styles.cardTitleRow}>
-                        <h3 className={styles.cardTitle} title={article.title}>
-                          {article.title}
-                        </h3>
-                        <ArrowRight size={17} strokeWidth={2.5} className={styles.cardArrow} />
-                      </div>
-
-                      {/* Author Row */}
-                      <div className={styles.cardAuthorRow}>
-                        <div
-                          className={`${styles.authorAvatarBadge} ${
-                            isNH ? styles.authorAvatarNH : styles.authorAvatarDoc
-                          }`}
-                        >
-                          {initials}
-                        </div>
-                        <span className={styles.authorName}>{article.author}</span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.article>
-              );
-            })}
+            {filteredArticles.map((article, idx) => (
+              <motion.div
+                key={article.id}
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduceMotion ? 0 : duration.slow, delay: reduceMotion ? 0 : Math.min(idx * 0.05, 0.4), ease: ease.out }}
+              >
+                <BlogArticleCard
+                  title={article.title}
+                  href={`/blog/${article.slug}`}
+                  image={article.image}
+                  category={article.category}
+                  date={article.publishedDate}
+                  author={article.author}
+                />
+              </motion.div>
+            ))}
           </div>
         ) : (
           <div className={styles.noResultsBox}>

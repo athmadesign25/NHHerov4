@@ -15,3 +15,9 @@
 .labelled .options > div > img { margin-top: var(--space-2); }
 .labelled .optionCopy { display: grid; gap: var(--space-4); }
 .modeLabel { display: block; color: var(--card-muted); font-size: var(--font-size-xs); line-height: var(--leading-body); font-weight: 400; }
+
+/* A single consultation mode is already identified by the location tile title. */
+.availability.compact { display: grid; gap: var(--space-4); --card-slot-size: var(--font-size-sm); }
+.compact .options { padding-left: 0; }
+.compact .options > div { padding: 0; }
+.compact .optionCopy > span { white-space: normal; line-height: var(--leading-body); }

@@ -24,7 +24,7 @@ export default function useProfileFocusClearance() {
 
     const reveal = (target: HTMLElement) => {
       if (!target.isConnected || !page.contains(target) || dock.contains(target)
-        || target.closest("dialog, [role='dialog'], [popover]")) return;
+        || target.closest("dialog, [role='dialog'], [popover], [data-profile-preview]")) return;
       const bounds = target.getBoundingClientRect();
       const dockBounds = dock.getBoundingClientRect();
       const navbar = document.querySelector<HTMLElement>("[data-site-nav]");

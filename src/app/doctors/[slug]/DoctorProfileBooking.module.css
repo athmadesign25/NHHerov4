@@ -15,6 +15,87 @@
   max-width: calc(var(--sp-16) * 7);
   margin-inline: auto;
   color: var(--d7-text);
+}
+/* The fixed shell anchors the bottom; only its surface projects upward.
+   It also gives the preview switcher an untransformed, reliable dock size. */
+.animatedSurface { position: relative; border-radius: var(--radius-xl); }
+
+/* Match the search field's rotating gradient, clipped to a thin border. */
+@property --profile-booking-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.bookingAccent {
+  --profile-booking-lap: calc(var(--duration-slow) * 10);
+  --profile-booking-spectrum: conic-gradient(
+    var(--color-primary), var(--cyan-bright) 24%, var(--blue-600) 48%,
+    var(--violet-400) 68%, var(--pink-500) 82%, var(--red-400) 90%, var(--color-primary)
+  );
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+.accentStroke, .accentGlow, .accentTrack {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.accentTrack {
+  padding: var(--space-1);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+/* The colour travels around the outline; no moving dot or surface fill. */
+.dock[data-started="false"] .accentTrack {
+  background: conic-gradient(
+    from var(--profile-booking-angle),
+    var(--color-primary), var(--cyan-bright) 24%, var(--blue-600) 48%,
+    var(--violet-400) 68%, var(--pink-500) 82%, var(--red-400) 90%, var(--color-primary)
+  );
+}
+/* The glow shares the stroke's rotation and fade, keeping the halo in sync. */
+.accentGlow { filter: blur(var(--space-8)); opacity: .5; }
+.accentGlow .accentTrack { padding: var(--space-4); }
+.dock[data-bookable="true"][data-started="false"] .bookingAccent {
+  animation: bookingAccentIntro var(--profile-booking-lap) linear both;
+}
+.dock[data-bookable="true"][data-started="false"] .accentTrack {
+  animation: bookingAccentLap var(--profile-booking-lap) linear both;
+}
+.dock[data-bookable="true"][data-expanded="true"] .bookingAccent {
+  animation: bookingAccentOpen calc(var(--duration-slower) * 6) linear both;
+}
+.dock[data-expanded="true"] .accentTrack { background: var(--profile-booking-spectrum); }
+@keyframes bookingAccentLap {
+  from { --profile-booking-angle: 0deg; }
+  to { --profile-booking-angle: 360deg; }
+}
+@keyframes bookingAccentIntro {
+  0%, 100% { opacity: 0; }
+  10%, 85% { opacity: .9; }
+}
+@keyframes bookingAccentOpen {
+  0% { opacity: 0; }
+  15%, 40% { opacity: .7; }
+  70% { opacity: .3; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .dock .bookingAccent { display: none; animation: none; }
+  .dock .accentTrack { animation: none; }
+}
+@media (prefers-reduced-transparency: reduce) { .accentGlow { display: none; } }
+
+.surface {
+  position: relative;
+  overflow: clip;
   border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
   border-radius: var(--radius-xl);
   background: linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 92%, transparent), color-mix(in srgb, var(--color-primary-light) 85%, transparent));
@@ -42,17 +123,22 @@
 .price > span { color: var(--d7-muted); font-size: var(--font-size-xs); line-height: 1.5; }
 .primary { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: var(--sp-6); border: 0; border-radius: var(--radius-md); padding: var(--sp-1) var(--sp-2); background: var(--color-primary); color: var(--color-text-inverse); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; text-align: center; text-decoration: none; cursor: pointer; transition: background-color var(--transition-fast), opacity var(--transition-fast); }
 .primary:disabled { opacity: .5; cursor: not-allowed; }
+.primary { gap: var(--space-8); }
+.continueArrow { flex-shrink: 0; width: var(--space-16); height: var(--space-16); }
 .notice { margin: 0 0 var(--sp-1); padding: var(--sp-1); border-radius: var(--radius-sm); background: var(--color-primary-light); font-size: var(--font-size-sm); line-height: 1.5; }
 .dock :is(a, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 @container profile-slots (max-width: 320px) { .options fieldset label > span { white-space: normal; font-size: var(--font-size-xs); padding-inline: calc(var(--sp-1) / 2); gap: calc(var(--sp-1) / 2); text-align: center; } }
 @media (min-width: 640px) { .summary { grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--sp-12) * 2), auto); padding: var(--sp-2) var(--sp-3); gap: var(--sp-3); } .doctor { display: block; } .selected { grid-column: auto; } .header { padding: var(--sp-3) var(--sp-3) var(--sp-1); } .options { padding: var(--sp-1) var(--sp-3) var(--sp-3); } }
 @media (hover: hover) { .primary:not(:disabled):hover { background: var(--color-primary-dark); } .collapse:hover { background: var(--color-bg-card); } }
 @media (prefers-reduced-motion: reduce) { .primary, .collapse { transition: none; } }
-@media (prefers-reduced-transparency: reduce) { .dock { background: var(--color-bg-card); backdrop-filter: none; } }
-@media (forced-colors: active) { .dock { background: Canvas; border-color: CanvasText; } .primary { border: 1px solid ButtonText; } }
+@media (prefers-reduced-transparency: reduce) { .surface { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (forced-colors: active) { .surface { background: Canvas; border-color: CanvasText; } .primary { border: 1px solid ButtonText; } }
 
-.dock[data-tone="dark"][data-expanded="false"] { --d7-text: var(--white); --d7-muted: var(--slate-300); background: rgba(var(--navy-900-rgb), .9); border-color: rgba(var(--white-rgb), .2); box-shadow: var(--elevation-4); }
+.dock[data-tone="dark"][data-expanded="false"] { --d7-text: var(--white); --d7-muted: var(--slate-300); }
+.dock[data-tone="dark"][data-expanded="false"] .surface { background: rgba(var(--navy-900-rgb), .9); border-color: rgba(var(--white-rgb), .2); box-shadow: var(--elevation-4); }
 .dock[data-tone="dark"][data-expanded="false"] .primary { border: var(--space-1) solid rgba(var(--white-rgb), .16); }
 .dock[data-tone="dark"][data-expanded="false"] :is(a, button):focus-visible { outline-color: var(--sky-400); }
-@media (prefers-reduced-transparency: reduce) { .dock[data-tone="dark"][data-expanded="false"] { background: var(--navy-900); } }
-@media (forced-colors: active) { .dock[data-tone="dark"][data-expanded="false"] { color: CanvasText; background: Canvas; } }
+@media (prefers-reduced-transparency: reduce) { .dock[data-tone="dark"][data-expanded="false"] .surface { background: var(--navy-900); } }
+@media (forced-colors: active) { .dock[data-tone="dark"][data-expanded="false"] .surface { color: CanvasText; background: Canvas; } }
+
+.actionGroup { display: grid; min-width: 0; gap: var(--space-4); }

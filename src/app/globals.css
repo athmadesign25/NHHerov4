@@ -15,6 +15,7 @@
  * one place later.
  */
 :root {
+  --color-heading-wipe: #034EA1;
   /* Compatibility tokens required by the Design 21 booking journey. */
   --color-primary-mid: #1565C0;
   --color-primary-tint: rgba(3, 78, 162, 0.08);
