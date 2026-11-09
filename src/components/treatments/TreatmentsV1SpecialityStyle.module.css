@@ -982,7 +982,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   border: none;
   background: var(--color-primary, #034EA2);
   color: #ffffff;
@@ -1057,7 +1057,7 @@
 .drawerApplyBtn {
   flex: 1;
   height: 44px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   border: none;
   background: var(--color-primary, #034EA2);
   color: #ffffff;
@@ -1069,7 +1069,7 @@
 .drawerResetBtn {
   height: 44px;
   padding-inline: 16px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   border: 1px solid var(--color-border, #cbd5e1);
   background: transparent;
   color: var(--color-text, #0f172a);

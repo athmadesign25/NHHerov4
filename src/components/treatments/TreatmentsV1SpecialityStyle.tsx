@@ -27,6 +27,7 @@ import {
   TREATMENTS_PROCEDURES_DATA, 
   TreatmentProcedureItem 
 } from "@/data/treatmentsProceduresData";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { NH_CITIES } from "@/lib/searchService";
 import styles from "./TreatmentsV1SpecialityStyle.module.css";
 
@@ -744,6 +745,23 @@ export default function TreatmentsV1SpecialityStyle({
           )}
         </section>
       </div>
+
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        eyebrow="WORLD-CLASS SURGICAL & CLINICAL EXCELLENCE"
+        title="Looking for a Surgical Second Opinion or Cost Estimate?"
+        subtitle="Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Book Surgical Consultation",
+        }}
+        secondaryBtn={{
+          href: "/health-packages",
+          text: "Explore Health Packages",
+        }}
+        phoneText="Surgical Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* ── 4. MOBILE FILTER DRAWER MODAL ── */}
       {mobileFilterOpen && (

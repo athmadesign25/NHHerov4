@@ -242,12 +242,25 @@ Every detail and landing page follows this universal hierarchy from top to botto
 | Order | Page Region | Standard Component / Pattern | Rules & Constraints |
 |:---:|:---|:---|:---|
 | **1** | **Global Navigation** | `<Navbar />` (in `layout.tsx`) | 72px fixed height (`--nav-height: 72px`). Supports `data-nav-theme="dark"` or `"light"`. |
-| **2** | **Hero / Header Section** | Page-specific Hero (e.g. `CsrHero`, `ArticleHero`, `SpecialityHero`) | **Balanced vertical placement**: Content must NEVER hug the navbar. `padding-top: calc(var(--nav-height, 72px) + clamp(64px, 10vh, 120px))`. Includes breadcrumbs at top, H1 title, subtitle, CTA button, and stats row below. |
+| **2** | **Hero / Header Section** | Page-specific Hero (e.g. `CsrHero`, `ArticleHero`, `SpecialityHero`) | **Balanced vertical placement**: Content must NEVER hug the navbar. `padding-top: calc(var(--nav-height, 72px) + clamp(64px, 10vh, 120px))`. Includes breadcrumbs at top, H1 title, subtitle, CTA button, and stats row below. **Photographic Sweet Spot**: Follows the balanced scrim rules in Section 1.B below. |
 | **3** | **Interactive Editorial Content** | BENTO grids, 3-column editorial cards, or clinical tabs | High-contrast photography, fluid typography (`clamp()`), clean semantic markup. |
 | **4** | **Flagship Programs / Flow** | Pinned folder card stack or alternating features | Follows the **Folder Stacking Contract** (see Section 3 below). |
 | **5** | **Pre-Footer CTA Card Banner** | `<BlogCtaBanner />` | **MANDATORY UNIVERSAL BANNER**: Dark blue gradient card (`linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%)`). *"Connect with a Narayana Health Specialist Today"*. Buttons: Book Doctor Appointment, Explore Health Packages, Call 24×7 (`1800 309 0309`). Never use custom light/gray banners above the footer. |
 | **6** | **Global Footer** | `<Footer />` (in `layout.tsx`) | Global dark footer with 4-column directory, helpline, accreditations. |
 | **Overlay** | **Clinical Floating Actions** | `<ClinicalFloatingSideActions />` | Fixed right on desktop. Quick Book OPD, Call Support, Ask Pulse AI. |
+
+---
+
+### 1.B Hero Scrim & Photographic Visibility Standard (The Sweet Spot)
+Across all dark mode heroes (Diagnostics, Symptoms, Diseases, Treatments, Hospitals, Articles, Procedures), hero photography must feel alive, warm, and clearly visible rather than murkily blacked out:
+- **Base Image Filter**: `filter: brightness(0.88) saturate(1.10) contrast(1.03);`. ❌ **NEVER** crush brightness down to `0.65–0.70`.
+- **Directional Gradient Scrim (`90deg`)**:
+  - `0%–34%`: Deep dark (`rgba(6, 14, 27, 0.96) 0%, rgba(6, 14, 27, 0.92) 34%`) to guarantee 100% WCAG AAA contrast for titles, subtitles, breadcrumbs, and search inputs.
+  - `34%–66%`: Soft, smooth feather (`rgba(6, 14, 27, 0.65) 50%, rgba(6, 14, 27, 0.20) 66%`).
+  - `66%–100%`: Crystal-clear photo visibility (`rgba(6, 14, 27, 0.04) 82%, transparent 100%`).
+- **Bottom Anchor Blend (`0deg`)**: Only a subtle 28% blend (`#060e1b 0%, rgba(6, 14, 27, 0.72) 6%, rgba(6, 14, 27, 0.18) 16%, transparent 28%`). ❌ **NEVER** allow dark bottom gradients to climb 60% up the hero and submerge the subjects in black.
+- **Top Edge Scrim (`180deg`)**: Gentle 24% navbar feathering (`rgba(6, 14, 27, 0.65) 0%, rgba(6, 14, 27, 0.15) 12%, transparent 24%`).
+- **Right Credential Stats Floating Style**: Right stat columns float cleanly and naturally over the atmospheric hero scrim with a subtle vertical line divider (`border-left: 1px solid rgba(255, 255, 255, 0.10);`). ❌ **NEVER** place a frosted glass backplate, background mat, or box behind the numbers that covers patient/doctor faces. Numbers use clean translucent white (`color: rgba(255, 255, 255, 0.85); font-weight: 500;`) and labels use muted white (`color: rgba(255, 255, 255, 0.52); font-weight: 400;`).
 
 ---
 
@@ -271,6 +284,14 @@ Every detail and landing page follows this universal hierarchy from top to botto
   - ❌ **Do NOT squeeze 2 tiny cards per row on mobile screens.**
   - Show **1 card + peeking next card** (`1.2–1.5 cards` in a horizontal snap track: `flex: 0 0 78vw; scroll-snap-align: start;`).
   - Below the cards, the CTA must be a **clean clickable text link** (*"View All Specialities →"* or *"View All Doctors →"*), ❌ **NOT an oversized button**.
+
+#### C. Universal CTA Buttons & Action Controls (Strict Shape Standard)
+- **Mandatory Geometry**: All CTA buttons across the website (card action buttons, pre-footer banner buttons, modal action buttons, filter buttons) **MUST be crisp rounded rectangles (square with rounded edges: `border-radius: 8px` to `10px`)**.
+- ❌ **STRICTLY FORBIDDEN**: Pill / capsule shapes (`border-radius: 9999px` or `var(--radius-full)`) on primary or secondary CTA buttons. All CTAs must maintain visual consistency with the Doctor Card "Book" CTA button in the search interaction (`.refBookBtnWhite`: `border-radius: 8px;`, `.refBookBtn`: `border-radius: 10px;`).
+- **Radius Guidelines**:
+  - Card Action CTAs (Opd Book, Read More, Test Book, Download PDF): `border-radius: 8px`.
+  - Banner & Modal CTAs (`BlogCtaBanner`, Hero CTAs, Drawer Buttons): `border-radius: 8px` or `10px`.
+  - Micro-interactions: Subtle hover lift (`transform: translateY(-1px)` to `translateY(-2px)`) with crisp typography and high contrast.
 
 ---
 
@@ -323,6 +344,19 @@ Section titles across major editorial sections use the signature animated gradie
   100% { background-position: 0% 50%; }
 }
 ```
+
+#### C. Universal Page-to-Detail Transition & Hero Entrance Contract
+Every route navigation across the site—and specifically from any library or listing page to a clinical detail page—**MUST** execute a seamless, immersive, cinematic expansion:
+1. **Expanding Canvas Immersion**:
+   - The hero canvas expands into full-page view (`scale: 1.12 -> 1, opacity: 0.5 -> 1`, `duration: 0.70s`, `ease: [0.16, 1, 0.3, 1]`), creating an optical illusion of the clicked card/carousel expanding into the full screen.
+   - ❌ **NEVER** place a CSS `transform` on the root route or reading sheet wrapper, as CSS transforms disable `position: fixed` (stationary canvas) and `position: sticky` (Table of Contents sidebar).
+2. **Coordinated Detail Hero Entrance**:
+   - **Scroll Reset**: Always scroll to `top: 0` on detail page mount.
+   - **Left Hero Column**: Breadcrumbs, eyebrow, H1 title, subtitle, and CTA expand up smoothly (`opacity: 0, scale: 0.97, y: 14` -> `opacity: 1, scale: 1, y: 0`, `delay: 0.08s–0.12s`).
+   - **Right Metrics Column**: Floats in with subtle scale (`opacity: 0, scale: 0.97, x: 14` -> `opacity: 1, scale: 1, x: 0`, `delay: 0.16s–0.18s`).
+   - **Reading Sheet Body**: Uses safe pure `opacity` fade-in, keeping sticky navigation 100% operational.
+3. **Hero Carousel Controls (Glassmorphism Standard)**:
+   - When interactive navigation controls (arrows, indicator dots) sit over photography or hero backgrounds, **MUST** use signature glassmorphism (`background: rgba(255, 255, 255, 0.14–0.16); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.22–0.28);`). ❌ **NEVER** use stark solid white buttons that feel disconnected from the image.
 
 ---
 

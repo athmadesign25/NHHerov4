@@ -21,6 +21,7 @@ import { getArticleDetailData, ArticleDetailData, ArticleItem, ARTICLES_DIRECTOR
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import BlogLanguageChanger from "@/components/blog/BlogLanguageChanger";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -56,6 +57,10 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
     return matched.slice(0, 3);
   }, [detail.slug]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -110,9 +115,9 @@ export default function ArticleDetailPage({ params }: PageProps) {
       <div className={styles.stationaryCanvas} aria-hidden="true">
         <motion.div
           className={styles.stationaryMotionWrapper}
-          initial={{ scale: 1.05, opacity: 0 }}
+          initial={{ scale: 1.12, opacity: 0.5 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <Image
             src={detail.heroImage}
@@ -132,7 +137,12 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
         <div className={styles.heroInner}>
           {/* Top Utility Bar: Breadcrumbs on Left, Language Changer on Right (Matching OG Blog) */}
-          <div className={styles.topUtilityRow}>
+          <motion.div 
+            className={styles.topUtilityRow}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className={styles.breadcrumbsWrapper}>
               <Breadcrumbs
                 items={[
@@ -145,9 +155,14 @@ export default function ArticleDetailPage({ params }: PageProps) {
             </div>
 
             <BlogLanguageChanger theme="dark" />
-          </div>
+          </motion.div>
 
-          <div className={styles.heroLeftCol}>
+          <motion.div 
+            className={styles.heroLeftCol}
+            initial={{ opacity: 0, scale: 0.97, y: 14 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className={styles.heroEyebrow}>
               {detail.category}
             </div>
@@ -197,10 +212,15 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 <span>{copyToast ? "Link Copied!" : "Share Article"}</span>
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Hero Analytics */}
-          <div className={styles.heroRightCol}>
+          <motion.div 
+            className={styles.heroRightCol}
+            initial={{ opacity: 0, scale: 0.97, x: 14 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className={styles.statBlock}>
               <span className={styles.statNumber}>100%</span>
               <span className={styles.statLabel}>Doctor Authored</span>
@@ -217,7 +237,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
               <span className={styles.statNumber}>{detail.publishedDate}</span>
               <span className={styles.statLabel}>Last Medical Review</span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -467,6 +487,9 @@ export default function ArticleDetailPage({ params }: PageProps) {
         title="More from Our Blog"
         subtitle="Explore more doctor-curated guides, symptom breakthroughs, and evidence-based clinical insights"
       />
+
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner />
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions

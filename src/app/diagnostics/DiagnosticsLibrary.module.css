@@ -15,22 +15,23 @@
 
 .pageContainer {
   min-height: 100vh;
-  background-color: #ffffff;
-  color: #0f172a;
+  background-color: #060e1b;
+  color: #ffffff;
   position: relative;
+  padding-bottom: 72px;
 }
 
 /* ─── TWO-COLUMN HERO SECTION (SPACIOUS & BREATHING) ─────────────────────── */
 .hero {
   position: relative;
-  min-height: 54vh;
+  min-height: 60vh;
   display: flex;
   align-items: center;
   padding-top: calc(var(--nav-height, 72px) + 36px);
   padding-bottom: 44px;
   overflow: hidden;
-  background: #ffffff;
-  color: #0f172a;
+  background: #060e1b;
+  color: #ffffff;
 }
 
 .heroBg {
@@ -50,32 +51,18 @@
 .heroBgImage {
   object-fit: cover;
   object-position: center 25%;
-  filter: brightness(1.02) saturate(1.08);
-  opacity: 0.92;
+  filter: brightness(0.78) saturate(1.08);
+  opacity: 1;
 }
 
-/* Multi-stop atmospheric white directional scrim overlay */
+/* Multi-stop atmospheric dark gradient overlays (slight refined scrim, seamless blending) */
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background: 
-    /* Horizontal white scrim: protective readability on left for dark text, soft feather on right for medical imagery */
-    linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(255, 255, 255, 0.93) 38%,
-      rgba(255, 255, 255, 0.62) 68%,
-      rgba(255, 255, 255, 0.18) 100%
-    ),
-    /* Vertical gentle white washes at top (navbar protection) and bottom (melting into white content) */
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.85) 0%,
-      transparent 24%,
-      transparent 60%,
-      rgba(255, 255, 255, 0.80) 88%,
-      #ffffff 100%
-    );
+    linear-gradient(90deg, rgba(6, 14, 27, 0.95) 0%, rgba(6, 14, 27, 0.78) 42%, rgba(6, 14, 27, 0.28) 72%, transparent 100%),
+    linear-gradient(0deg, #060e1b 0%, rgba(6, 14, 27, 0.65) 18%, transparent 45%),
+    linear-gradient(180deg, rgba(6, 14, 27, 0.75) 0%, transparent 30%);
   pointer-events: none;
   z-index: 1;
 }
@@ -84,10 +71,10 @@
   .heroBgOverlay {
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.96) 0%,
-      rgba(255, 255, 255, 0.88) 45%,
-      rgba(255, 255, 255, 0.96) 85%,
-      #ffffff 100%
+      rgba(6, 14, 27, 0.92) 0%,
+      rgba(6, 14, 27, 0.78) 40%,
+      rgba(6, 14, 27, 0.90) 85%,
+      #060e1b 100%
     );
   }
 }
@@ -95,10 +82,10 @@
 .heroInner {
   position: relative;
   z-index: 2;
-  max-width: 1240px;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
   margin: 0 auto;
-  width: 100%;
-  padding: 0 clamp(20px, 4vw, 40px);
+  padding: 0;
   display: grid;
   grid-template-columns: 1fr 280px;
   gap: clamp(36px, 6vw, 72px);
@@ -107,6 +94,7 @@
 
 @media (max-width: 900px) {
   .heroInner {
+    width: calc(100% - 32px);
     grid-template-columns: 1fr;
     gap: 36px;
   }
@@ -126,18 +114,18 @@
   font-weight: 700;
   line-height: 1.18;
   letter-spacing: -0.02em;
-  color: #0f172a;
+  color: #ffffff;
   margin: 0 0 16px 0;
-  text-shadow: none;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
 }
 
 .heroSubtitle {
   font-size: clamp(15px, 1.3vw, 17px);
-  color: #475569;
+  color: rgba(255, 255, 255, 0.84);
   line-height: 1.6;
   margin: 0 0 28px 0;
   max-width: 600px;
-  text-shadow: none;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* ─── SEARCH INPUT (COMPACT PULSE SEARCH WITH CONIC MOTION GRADIENT & SPOTLIGHT) ─── */
@@ -156,22 +144,23 @@
   width: 100%;
 }
 
-/* Compact Pulse search shell wrapper (Visible hairline gradient stroke with balanced contrast on white) */
+/* Compact Pulse search shell wrapper */
 .searchBoxWrap {
   position: relative;
   flex: 1;
   min-width: 0;
   border-radius: var(--radius-full, 9999px);
-  padding: 1.5px; /* Clearly visible outline stroke */
+  padding: 1.5px;
   background: linear-gradient(
     115deg,
-    rgba(3, 78, 162, 0.45) 0%,
-    rgba(59, 130, 246, 0.35) 35%,
-    rgba(0, 196, 255, 0.35) 65%,
-    rgba(237, 28, 36, 0.35) 100%
+    rgba(168, 85, 247, 0.55) 0%,
+    rgba(59, 130, 246, 0.45) 35%,
+    rgba(0, 196, 255, 0.45) 65%,
+    rgba(236, 72, 153, 0.45) 85%,
+    rgba(237, 28, 36, 0.40) 100%
   );
-  box-shadow: 0 4px 20px rgba(3, 78, 162, 0.08),
-              0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 20px -2px rgba(139, 92, 246, 0.22),
+              0 8px 24px rgba(0, 0, 0, 0.45);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -179,56 +168,57 @@
 .searchBoxWrap::before {
   content: "";
   position: absolute;
-  inset: -6px -10px;
+  inset: -8px -12px;
   background: radial-gradient(
     ellipse at center,
-    rgba(3, 78, 162, 0.10) 0%,
-    rgba(0, 196, 255, 0.04) 50%,
+    rgba(139, 92, 246, 0.18) 0%,
+    rgba(0, 196, 255, 0.08) 50%,
     transparent 72%
   );
   filter: blur(14px);
   z-index: -1;
   border-radius: var(--radius-full, 9999px);
   pointer-events: none;
-  opacity: 0.8;
+  opacity: 0.75;
   transition: opacity 0.3s ease;
 }
 
 .searchBoxWrap:hover {
-  box-shadow: 0 6px 24px rgba(3, 78, 162, 0.14),
-              0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 26px 1px rgba(139, 92, 246, 0.35),
+              0 10px 28px rgba(0, 0, 0, 0.55);
 }
 
 .searchBoxWrap:focus-within {
   background: linear-gradient(
     115deg,
-    rgba(3, 78, 162, 0.8) 0%,
+    rgba(168, 85, 247, 0.8) 0%,
     rgba(59, 130, 246, 0.65) 35%,
     rgba(0, 196, 255, 0.65) 65%,
     rgba(237, 28, 36, 0.6) 100%
   );
-  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.15),
-              0 8px 28px rgba(3, 78, 162, 0.16);
+  box-shadow: 0 0 32px 2px rgba(0, 196, 255, 0.3),
+              0 10px 32px rgba(0, 0, 0, 0.65);
 }
 
-/* Inner Glass Shell in Compact Size (44px) - Clean White Surface */
+/* Inner Glass Shell in Compact Size (44px) */
 .searchBox {
   width: 100%;
   display: flex;
   align-items: center;
-  background: #ffffff;
+  background: rgba(10, 15, 30, 0.90);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-radius: var(--radius-full, 9999px);
   padding: 0 16px;
   height: 44px;
   box-sizing: border-box;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-/* Clean Brand Blue Search Icon */
+/* Clean Crisp White Search Icon */
 .searchIcon {
-  color: #034EA2 !important;
-  stroke: #034EA2 !important;
-  opacity: 0.95;
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  opacity: 0.88;
   flex-shrink: 0;
   margin-right: 6px;
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -247,13 +237,13 @@
   outline: none;
   font-family: inherit;
   font-size: 13.5px;
-  color: #0f172a;
+  color: #ffffff;
   padding: 4px 6px;
   letter-spacing: -0.01em;
 }
 
 .searchInput::placeholder {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.55);
   font-weight: 400;
 }
 
@@ -261,7 +251,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -271,8 +261,8 @@
 }
 
 .clearSearchBtn:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* Mobile Filter Trigger Button (Beside Search Box on Mobile) */
@@ -289,36 +279,36 @@
     height: 44px;
     padding: 0 14px;
     border-radius: var(--radius-full, 9999px);
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    color: #0f172a;
+    background: rgba(10, 15, 30, 0.90);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     flex-shrink: 0;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .mobileFilterBtn:hover {
-    border-color: #94a3b8;
-    background: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.12);
   }
 
   .mobileFilterBtnActive {
-    border-color: #034EA2 !important;
-    background: #eff6ff !important;
-    color: #034EA2 !important;
-    box-shadow: 0 0 12px rgba(3, 78, 162, 0.18);
+    border-color: #00C4FF !important;
+    background: rgba(0, 196, 255, 0.15) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(0, 196, 255, 0.3);
   }
 
   .mobileFilterDot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #034EA2;
-    box-shadow: 0 0 6px rgba(3, 78, 162, 0.4);
+    background: #00C4FF;
+    box-shadow: 0 0 6px #00C4FF;
   }
 }
 
@@ -336,10 +326,10 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: 9999px;
-  background: #eff6ff;
-  border: 1px solid rgba(3, 78, 162, 0.25);
+  background: rgba(3, 78, 162, 0.35);
+  border: 1px solid rgba(59, 130, 246, 0.45);
   font-size: 11px;
-  color: #034EA2;
+  color: #ffffff;
   font-weight: 600;
   animation: feedbackFadeIn 0.2s ease;
 }
@@ -351,27 +341,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #034EA2;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
+}
+
+.removeActiveFilterBtn:hover {
+  color: #ffffff;
 }
 
 /* ─── LIVE SEARCH RESULT COUNT INDICATOR (WHEN TYPING) ──────────────────── */
 .searchCountFeedback {
   margin-top: 10px;
   font-size: 13px;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
   padding-left: 16px;
   letter-spacing: -0.01em;
-  text-shadow: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   animation: feedbackFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .searchCountHighlight {
-  color: #0f172a;
+  color: #ffffff;
   font-weight: 700;
 }
 
@@ -391,7 +385,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
   padding-left: clamp(20px, 2.5vw, 28px);
   padding-top: 4px;
   padding-bottom: 4px;
@@ -400,7 +394,7 @@
 @media (max-width: 900px) {
   .heroRightCol {
     border-left: none;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
     padding-left: 0;
     padding-top: 20px;
     flex-direction: row;
@@ -409,7 +403,6 @@
   }
 }
 
-/* mweb: Tight stack of two (2x2 grid) with reduced font-size taking minimal vertical room */
 @media (max-width: 640px) {
   .heroRightCol {
     display: grid;
@@ -417,20 +410,20 @@
     gap: 10px 16px;
     padding-top: 14px;
     margin-top: 14px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
     width: 100%;
   }
 
   .statNumber {
     font-size: 17px !important;
-    font-weight: 700 !important;
-    color: #034EA2 !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
     line-height: 1.15;
   }
 
   .statLabel {
     font-size: 10.5px !important;
-    color: #64748b !important;
+    color: rgba(255, 255, 255, 0.50) !important;
     margin-top: 2px !important;
     line-height: 1.25;
   }
@@ -443,44 +436,26 @@
 
 .statNumber {
   font-size: clamp(22px, 2vw, 28px);
-  font-weight: 700;
-  color: #034EA2;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
   font-size: 12px;
-  color: #64748b;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.52);
+  font-weight: 400;
   margin-top: 3px;
   line-height: 1.35;
 }
 
-/* ─── CLEAN WHITE WALL DIRECTORY CONTAINER ────────────────────────────────── */
-.directorySection {
-  background-color: #ffffff;
-  color: #0f172a;
-  padding-top: 24px;
-  padding-bottom: 96px;
-  width: 100%;
-}
-
-@media (max-width: 768px) {
-  .directorySection {
-    padding-top: 24px;
-    padding-bottom: 64px;
-  }
-}
-
-/* ─── CATEGORY CIRCLE BUBBLE FILTERS (ON CLEAN WHITE WALL) ───────────────── */
+/* ─── CATEGORY CIRCLE BUBBLE FILTERS (ALIGNED LEFT TO TITLE/CARDS) ───────── */
 .categorySection {
-  padding: 0 0 16px 0;
-  max-width: 1240px;
+  padding: 36px 0 16px 0;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
   margin: 0 auto;
-  width: 100%;
-  padding-left: clamp(20px, 4vw, 40px);
-  padding-right: clamp(20px, 4vw, 40px);
 }
 
 @media (max-width: 768px) {
@@ -523,16 +498,16 @@
   transform: translateY(-3px);
 }
 
-/* In resting state on white background */
+/* In resting state, border is clean neutral without active highlight */
 .bubbleImgWrap {
-  width: 58px;
-  height: 58px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
-  border: 1.5px solid #e2e8f0;
-  background: #f8fafc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.25s ease;
 }
 
@@ -540,14 +515,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(15%);
-  opacity: 0.92;
+  filter: grayscale(40%);
+  opacity: 0.85;
   transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
-}
-
-.bubbleBtn:hover .bubbleImgWrap {
-  border-color: #034EA2;
-  box-shadow: 0 6px 16px rgba(3, 78, 162, 0.16);
 }
 
 .bubbleBtn:hover .bubbleImg {
@@ -557,10 +527,9 @@
 }
 
 .bubbleLabel {
-  font-size: 11.5px;
+  font-size: 11px;
   line-height: 1.35;
-  color: #475569;
-  font-weight: 500;
+  color: rgba(255, 255, 255, 0.72);
   max-width: 84px;
   text-align: center;
   display: -webkit-box;
@@ -571,14 +540,13 @@
 }
 
 .bubbleBtn:hover .bubbleLabel {
-  color: #034EA2;
-  font-weight: 600;
+  color: #ffffff;
 }
 
-/* ACTIVE STATE on white background */
+/* ACTIVE STATE: Only triggers WHEN user explicitly clicks/applies filter */
 .bubbleBtnActive .bubbleImgWrap {
-  border-color: #034EA2;
-  box-shadow: 0 0 0 3px rgba(3, 78, 162, 0.18), 0 4px 14px rgba(3, 78, 162, 0.22);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55), 0 4px 16px rgba(0, 0, 0, 0.5);
   transform: scale(1.06);
 }
 
@@ -588,15 +556,23 @@
 }
 
 .bubbleBtnActive .bubbleLabel {
-  color: #034EA2;
+  color: #ffffff;
   font-weight: 700;
 }
 
-/* ─── DYNAMIC FEEDBACK TEXT ROW (ON WHITE WALL) ─────────────────────────── */
+/* ─── DYNAMIC FEEDBACK TEXT ROW (HIGHLIGHTING ORGAN & COUNT) ─────────────── */
 .feedbackTextRow {
-  max-width: 1240px;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
   margin: 16px auto 28px;
-  padding: 0 clamp(20px, 4vw, 40px);
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .feedbackTextRow {
+    width: calc(100% - 32px);
+    margin: 12px auto 20px;
+  }
 }
 
 .feedbackTextWrapper {
@@ -610,20 +586,20 @@
 .feedbackText {
   font-size: 14.5px;
   line-height: 1.6;
-  color: #475569;
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
   letter-spacing: -0.01em;
   margin: 0;
 }
 
 .feedbackHighlight {
-  color: #0f172a;
+  color: #ffffff;
   font-weight: 700;
 }
 
 .feedbackCount {
-  color: #034EA2;
-  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
 }
 
 .clearFilterChip {
@@ -632,9 +608,9 @@
   gap: 6px;
   padding: 5px 12px;
   border-radius: var(--radius-full, 9999px);
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #334155;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -642,13 +618,14 @@
 }
 
 .clearFilterChip:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
 
 /* Quick subtle pulse bar when API search/filtering is active */
 .apiPulseBar {
-  max-width: 1240px;
+  width: 100%;
+  max-width: 1320px;
   height: 2px;
   background: rgba(255, 255, 255, 0.06);
   margin: 10px auto 0;
@@ -672,14 +649,15 @@
   100% { left: 100%; }
 }
 
-/* ─── 3-COLUMN CARDS GRID (PARTIALLY VISIBLE ABOVE THE FOLD) ──────────────── */
+/* ─── 3-COLUMN CARDS GRID (MATCHING BLOG PAGE CARD WIDTH & PROPORTIONS) ───── */
 .cardsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  max-width: 1240px;
+  gap: 24px;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px) 80px;
+  padding: 0 0 80px;
 }
 
 @media (max-width: 1024px) {
@@ -691,50 +669,48 @@
 
 @media (max-width: 640px) {
   .cardsGrid {
+    width: calc(100% - 32px);
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 0 16px 40px;
+    gap: 14px;
+    padding: 0 0 40px;
   }
 }
 
 /* ─── ENTRANCE SKELETON CARDS (SHOWS DURING INITIAL OPENING SEQUENCE) ─────── */
 .skeletonCard {
-  background: #ffffff;
-  border-radius: 16px;
+  background: #090d16;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: none;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 415px;
+  justify-content: flex-end;
+  min-height: 400px;
   height: 100%;
   position: relative;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
 }
 
 .skeletonImageWrap {
-  width: 100%;
-  height: 210px;
-  background: #f1f5f9;
-  position: relative;
-  overflow: hidden;
+  display: none;
 }
 
 .skeletonContent {
-  padding: 18px 20px 20px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
+  justify-content: flex-end;
+  gap: 12px;
   position: relative;
-  overflow: hidden;
+  z-index: 2;
+  width: 100%;
 }
 
 .skeletonEyebrow {
   width: 80px;
   height: 10px;
   border-radius: 4px;
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.15);
   margin-bottom: 10px;
 }
 
@@ -742,7 +718,7 @@
   width: 85%;
   height: 18px;
   border-radius: 4px;
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.20);
   margin-bottom: 10px;
 }
 
@@ -750,7 +726,7 @@
   width: 100%;
   height: 12px;
   border-radius: 4px;
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.10);
   margin-bottom: 6px;
 }
 
@@ -758,7 +734,7 @@
   width: 62%;
   height: 12px;
   border-radius: 4px;
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.10);
   margin-bottom: 16px;
 }
 
@@ -772,29 +748,28 @@
   width: 80px;
   height: 28px;
   border-radius: 9999px;
-  background: #f1f5f9;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .skeletonFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
   padding-top: 14px;
-  border-top: 1px solid #f1f5f9;
+  border-top: none;
 }
 
 .skeletonPrice {
-  width: 100px;
-  height: 18px;
-  border-radius: 4px;
-  background: #f1f5f9;
+  height: 36px;
+  border-radius: 9999px;
+  background: rgba(3, 78, 162, 0.4);
 }
 
 .skeletonCta {
-  width: 84px;
-  height: 30px;
+  height: 36px;
   border-radius: 9999px;
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .skeletonShimmer {
@@ -820,82 +795,119 @@
   }
 }
 
-/* ─── PROCEDURE CARD (CRISP WHITE CARD ARCHITECTURE) ─────────────────────── */
+/* ─── PROCEDURE CARD (SIGNATURE NH FULL-IMAGE SCRIM ARCHITECTURE) ───────── */
 .procedureCard {
-  background: #ffffff;
-  border-radius: 16px;
+  position: relative;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 415px;
+  justify-content: flex-end;
+  min-height: 400px;
   height: 100%;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.25s ease;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  outline: none;
+  background-color: #090d16;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.36);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.25s ease;
+  text-decoration: none;
 }
 
 .procedureCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(3, 78, 162, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
-  border-color: rgba(3, 78, 162, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Content text group */
-.cardTextGroup {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Top Image Container */
-.cardImageWrap {
-  position: relative;
-  width: 100%;
-  height: 210px;
-  overflow: hidden;
-  background: #f1f5f9;
-}
-
+/* Full-bleed background image with crystal clarity */
 .cardBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 25%;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
 }
 
 .procedureCard:hover .cardBgImage {
   transform: scale(1.05);
 }
 
-.cardGradient {
+/* Top Vignette Scrim (Protects Top-Left Category Text) */
+.cardTopScrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 12, 24, 0.72) 0%,
+    rgba(6, 12, 24, 0.35) 45%,
+    transparent 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Pure Top-Left Category Text (NO bulky pill container) */
+.cardTopCategoryText {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  z-index: 3;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+}
+
+/* Rich Photography Bottom Gradient Scrim */
+.cardBottomScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(255, 255, 255, 0.25) 0%,
-    transparent 50%
+    rgba(6, 12, 24, 0.98) 0%,
+    rgba(6, 12, 24, 0.92) 36%,
+    rgba(6, 12, 24, 0.65) 62%,
+    rgba(6, 12, 24, 0.18) 82%,
+    transparent 95%
   );
+  z-index: 2;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
-/* Content block with structured typography and consistent vertical alignment */
-.cardContent {
-  padding: 18px 20px 20px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  background: #ffffff;
+.procedureCard:hover .cardBottomScrim {
+  opacity: 0.96;
 }
 
-.cardEyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #034EA2;
-  margin-bottom: 7px;
+/* Content block overlaid on bottom gradient scrim */
+.cardContent {
+  position: relative;
+  z-index: 3;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: auto;
+  background: transparent;
+}
+
+.cardTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .cardTitleLink {
@@ -904,49 +916,50 @@
 }
 
 .cardTitle {
-  font-size: 16.5px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.012em;
-  color: #0f172a;
-  margin: 0 0 7px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 44px;
-  transition: color 0.2s ease;
-  text-shadow: none !important;
-}
-
-.procedureCard:hover .cardTitle {
-  color: #034EA2;
-}
-
-.cardSub {
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: #64748b;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  color: #ffffff;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 38px;
+  min-height: 44px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+  transition: color 0.2s ease;
 }
 
-/* ─── CARD BOTTOM SLOT: COMPACT RESTING META VS REFINED ACTION BUTTONS ─────── */
+.cardTitleLink:hover .cardTitle {
+  color: #38bdf8;
+}
+
+.cardSub {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 2px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 36px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+/* ─── CARD BOTTOM SLOT: RESTING META & ACTION BUTTONS ─────── */
 .cardBottomSlot {
   position: relative;
-  margin-top: auto;
-  padding-top: 14px;
-  height: 48px;
+  margin-top: 4px;
+  height: 36px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   box-sizing: border-box;
 }
 
-/* Resting State: Procedure Clinical Metadata (Compact, unified scale) */
+/* Resting State: Procedure Clinical Metadata */
 .cardRestingMeta {
   display: flex;
   align-items: center;
@@ -954,7 +967,7 @@
   flex-wrap: nowrap;
   overflow: hidden;
   width: 100%;
-  height: 34px;
+  height: 32px;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -963,22 +976,25 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 28px;
+  height: 26px;
   padding: 0 10px;
   border-radius: var(--radius-full, 9999px);
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   font-size: 11px;
-  color: #475569;
-  font-weight: 500;
+  font-weight: 600;
+  color: #ffffff;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .metaIcon {
-  color: #034EA2;
+  color: #38bdf8;
   flex-shrink: 0;
 }
 
@@ -1036,7 +1052,7 @@
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors / Book test */
+/* Decision Button 1 (Secondary): Book test - NH Brand Blue filled */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
@@ -1044,26 +1060,27 @@
   width: 100%;
   height: 34px;
   padding: 0 10px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid #cbd5e1;
-  color: #0f172a;
-  background: #ffffff;
+  border: none;
+  color: #ffffff;
+  background: var(--color-primary, #034EA2);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.35);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDoctorBtn:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
+  background: var(--color-primary-dark, #023070);
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.45);
 }
 
-/* Decision Button 2 (Primary): Read more / Test details ↗ - Pure NH Brand Blue */
+/* Decision Button 2 (Secondary Frosted): Read more / Test details ↗ */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
@@ -1072,27 +1089,26 @@
   width: 100%;
   height: 34px;
   padding: 0 10px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  background: var(--color-primary, #034EA2);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDetailBtn:hover {
-  background: var(--color-primary-dark, #023070);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-1px);
-}
-
-.cardDetailBtn:hover {
-  background: var(--color-primary-dark, #023070);
-  transform: translateY(-1px);
+  color: #ffffff;
 }
 
 .pillBtnArrow {
@@ -1112,7 +1128,7 @@
   gap: 5px;
   height: 32px;
   padding: 0 14px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   font-size: 11.5px;
   font-weight: 500;
   text-decoration: none;
@@ -1135,9 +1151,9 @@
 .emptyState {
   text-align: center;
   padding: 60px 20px;
-  background: #f8fafc;
+  background: #091322;
   border-radius: 18px;
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
   max-width: 600px;
   margin: 0 auto;
 }
@@ -1147,23 +1163,23 @@
   height: 60px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  background: #e2e8f0;
+  background: rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .emptyTitle {
   font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: #ffffff;
   margin: 0 0 8px 0;
 }
 
 .emptyDesc {
   font-size: 14px;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.65);
   max-width: 440px;
   margin: 0 auto 24px auto;
   line-height: 1.5;
@@ -1173,12 +1189,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--color-primary, #034EA2);
   font-weight: 700;
   font-size: 13.5px;
   padding: 10px 20px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1186,7 +1202,7 @@
 
 .resetFiltersBtn:hover {
   transform: translateY(-2px);
-  background: #023070;
+  background: #f1f5f9;
 }
 
 /* ─── BOTTOM TRUST HIGHLIGHT BANNER (FLOATING BLUE BRAND CANVAS) ───────── */
@@ -1286,7 +1302,7 @@
   font-weight: 700;
   font-size: 13.5px;
   padding: 10.5px 22px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
@@ -1310,7 +1326,7 @@
   font-weight: 600;
   font-size: 13.5px;
   padding: 10px 20px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1393,18 +1409,18 @@
   }
 }
 
-/* ─── MWEB (MOBILE <= 640PX) CLINICAL SPECIALITY CARD VISUAL ARCHITECTURE ─── */
+/* ─── MWEB (MOBILE <= 640PX) SIGNATURE FULL-IMAGE CARD SYSTEM ─── */
 @media (max-width: 640px) {
   .procedureCard {
     position: relative;
-    aspect-ratio: 1 / 1.15;
-    min-height: 350px;
+    min-height: 380px;
     height: auto;
     border-radius: 20px;
     padding: 0;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    outline: none !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     background: #090d16;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     text-decoration: none;
@@ -1415,88 +1431,30 @@
     transform: scale(0.985);
   }
 
-  /* Full-bleed background image with crystal clarity (matching Image 1) */
-  .cardImageWrap {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-    border-radius: 0;
-    border: none;
-    z-index: 1;
-    background: #090d16;
-  }
-
   .cardBgImage {
     object-fit: cover;
     object-position: center 25%;
-    filter: brightness(1.05) saturate(92%);
+    filter: brightness(1.02) saturate(96%);
   }
 
-  /* Bottom-up atmospheric gradient scrim (top 45% stays bright & visible) */
-  .cardGradient {
-    display: block !important;
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(9, 13, 22, 0.96) 0%,
-      rgba(9, 13, 22, 0.80) 38%,
-      rgba(9, 13, 22, 0.28) 65%,
-      rgba(9, 13, 22, 0) 82%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.50) 0%,
-      transparent 32%
-    );
-    pointer-events: none;
-    z-index: 2;
+  .cardTopCategoryText {
+    top: 16px;
+    left: 16px;
+    font-size: 10.5px;
   }
 
-  /* Card content covers entire card; content is pushed to bottom */
+  /* Card content overlaid at bottom */
   .cardContent {
-    position: absolute;
-    inset: 0;
+    position: relative;
     z-index: 3;
-    padding: 16px 18px 18px;
+    padding: 18px 16px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     width: 100%;
-    height: 100%;
     box-sizing: border-box;
     gap: 6px;
-    pointer-events: none;
-  }
-
-  /* Top-left speciality text pinned to the true top-left corner (NO chip / pill format) */
-  .cardEyebrow {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    z-index: 5;
-    display: block;
-    background: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    font-size: 11px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.85);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-shadow: none !important;
-    margin: 0;
-    max-width: calc(100% - 36px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    pointer-events: none;
+    margin-top: auto;
   }
 
   .cardTextGroup {
@@ -1504,19 +1462,12 @@
     flex-direction: column;
     gap: 4px;
     width: 100%;
-    pointer-events: auto;
   }
 
-  /* NO CHIPS on mobile: clean uncluttered stream as requested */
-  .cardRestingMeta {
-    display: none !important;
-  }
-
-  /* Prominent, bold title */
   .cardTitle {
-    font-size: clamp(18px, 4.8vw, 21px);
+    font-size: 16.5px;
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.3;
     letter-spacing: -0.015em;
     color: #ffffff;
     margin: 0;
@@ -1525,115 +1476,70 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: none !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
   }
 
-  /* Stretched link so tapping anywhere on the card navigates to detail */
-  .cardTitleLink::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    cursor: pointer;
-  }
-
-  /* Clean summary snippet */
   .cardSub {
     font-size: 12px;
     line-height: 1.42;
-    color: rgba(255, 255, 255, 0.75);
-    margin: 2px 0 8px 0;
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0 0 4px 0;
     min-height: auto;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: none !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
   }
 
-  /* Action row: seamless "Read more →" row without dividing lines or chips */
+  /* Resting meta hidden on mobile for clean look */
+  .cardRestingMeta {
+    display: none !important;
+  }
+
+  /* Mobile Action Row: 2 Touch-friendly buttons (Book test + Test details) */
   .cardBottomSlot {
-    margin: 0;
-    padding-top: 2px;
+    margin: 4px 0 0 0;
+    padding-top: 0;
     border-top: none;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     height: auto;
-    min-height: 32px;
     width: 100%;
-    pointer-events: auto;
   }
 
   .cardActions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
     width: 100%;
     height: auto;
     opacity: 1;
     transform: none;
     pointer-events: auto;
     position: static;
-    margin-left: 0;
   }
 
   .cardDoctorBtn {
-    display: none;
-  }
-
-  /* Sleek "Read more →" action row matching Image 1 */
-  .cardDetailBtn {
-    height: 32px;
-    width: 100%;
-    padding: 0;
-    font-size: 13.5px;
-    font-weight: 600;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    color: #ffffff;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    text-decoration: none;
-    position: relative;
-    z-index: 4;
+    justify-content: center;
+    height: 38px;
+    font-size: 12px;
+    font-weight: 700;
   }
 
-  .cardDetailBtn span {
-    display: inline-block;
-    position: relative;
-    color: #ffffff;
-    font-size: 13.5px;
+  .cardDetailBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 38px;
+    font-size: 12px;
     font-weight: 600;
-  }
-
-  .cardDetailBtn span::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1.5px;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 1px;
   }
 
   .pillBtnArrow {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    color: #ffffff;
-    padding: 6px;
-    box-sizing: border-box;
     flex-shrink: 0;
   }
 

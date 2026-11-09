@@ -25,6 +25,7 @@ import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import styles from "./DiseaseDetail.module.css";
 
 interface PageProps {
@@ -38,6 +39,10 @@ export default function DiseaseDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,9 +98,9 @@ export default function DiseaseDetailPage({ params }: PageProps) {
       <div className={styles.stationaryCanvas} aria-hidden="true">
         <motion.div
           className={styles.stationaryMotionWrapper}
-          initial={{ scale: 1.05, opacity: 0 }}
+          initial={{ scale: 1.12, opacity: 0.5 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <Image
             src={detail.heroImage}
@@ -114,7 +119,12 @@ export default function DiseaseDetailPage({ params }: PageProps) {
         <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
-          <div className={styles.heroLeftCol}>
+          <motion.div 
+            className={styles.heroLeftCol}
+            initial={{ opacity: 0, scale: 0.97, y: 14 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className={styles.breadcrumbsWrapper}>
               <Breadcrumbs
                 items={[
@@ -153,10 +163,15 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 <span>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Hero Analytics */}
-          <div className={styles.heroRightCol}>
+          <motion.div 
+            className={styles.heroRightCol}
+            initial={{ opacity: 0, scale: 0.97, x: 14 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className={styles.statBlock}>
               <span className={styles.statNumber}>{detail.metrics.stage}</span>
               <span className={styles.statLabel}>Clinical Staging</span>
@@ -173,7 +188,7 @@ export default function DiseaseDetailPage({ params }: PageProps) {
               <span className={styles.statNumber}>Top Tier</span>
               <span className={styles.statLabel}>Institutional Center</span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -408,6 +423,23 @@ export default function DiseaseDetailPage({ params }: PageProps) {
           </div>
         </main>
       </div>
+
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        eyebrow="MULTIDISCIPLINARY TUMOR & HEART BOARDS"
+        title="Need an Expert Second Opinion on a Complex Diagnosis?"
+        subtitle="Our institutional clinical boards review imaging, histology, and molecular staging to formulate personalized treatment protocols with transparent care pathways."
+        primaryBtn={{
+          href: `/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`,
+          text: "Book Clinical Consultation",
+        }}
+        secondaryBtn={{
+          href: "/treatments",
+          text: "Explore Treatments",
+        }}
+        phoneText="Clinical Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
