@@ -8,7 +8,7 @@ export const DESKTOP_NAV_ITEMS = [
 
 export const OTHER_MENU_GROUPS = {
   "health-library": [{ label: "Health Library", links: [
-    { label: "Health Articles", href: "/health-library" },
+    { label: "Health Articles", href: "/articles" },
     { label: "Patient Stories", href: "/#patient-stories" },
     { label: "Health Videos", href: "/health-library/videos" },
   ] }],

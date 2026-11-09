@@ -185,6 +185,7 @@
      external request — exactly what next/font exists to avoid. The @import
      is gone; this is now the single source. */
   --font-family: var(--font-inter), 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-family);
   /* 10px, for the smallest badge and overline labels. The scale previously
      bottomed out at 12px, so everything below it was written as a literal. */
   --font-size-2xs: 10px;

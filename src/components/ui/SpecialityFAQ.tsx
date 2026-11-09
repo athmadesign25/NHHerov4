@@ -6,23 +6,30 @@ import { Plus, Minus } from "lucide-react";
 import styles from "./SpecialityFAQ.module.css";
 
 export interface FAQItem {
-  question: string;
-  answer: string;
+  question?: string;
+  answer?: string;
+  q?: string;
+  a?: string;
 }
 
-interface SpecialityFAQProps {
+export interface SpecialityFAQProps {
   faqs: FAQItem[];
   theme?: "light" | "dark";
+  fluid?: boolean;
+  className?: string;
+  defaultOpenIndex?: number | null;
 }
 
-export default function SpecialityFAQ({ faqs, theme = "dark" }: SpecialityFAQProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+export function SpecialityFAQ({ faqs, theme = "dark", fluid = false, className = "", defaultOpenIndex = 0 }: SpecialityFAQProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenIndex);
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
+  if (!faqs.length) return null;
+
   return (
     <motion.div
-      className={`${styles.faqList} ${theme === "dark" ? styles.themeDark : ""}`}
+      className={`${styles.faqList} ${fluid ? styles.faqListFluid : ""} ${theme === "dark" ? styles.themeDark : ""} ${className}`}
       role="list"
       initial="hidden"
       whileInView="visible"
@@ -59,13 +66,14 @@ export default function SpecialityFAQ({ faqs, theme = "dark" }: SpecialityFAQPro
             }}
           >
             <button
+              type="button"
               className={styles.faqQuestion}
               onClick={() => toggle(i)}
               aria-expanded={isOpen}
               aria-controls={`faq-answer-${i}`}
               id={`faq-question-${i}`}
             >
-              <span className={styles.questionText}>{faq.question}</span>
+              <span className={styles.questionText}>{faq.question || faq.q}</span>
               <motion.span
                 className={styles.icon}
                 animate={{ scale: [0.9, 1] }}
@@ -93,7 +101,7 @@ export default function SpecialityFAQ({ faqs, theme = "dark" }: SpecialityFAQPro
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   style={{ overflow: "hidden" }}
                 >
-                  <p className={styles.answerText}>{faq.answer}</p>
+                  <p className={styles.answerText}>{faq.answer || faq.a}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -103,3 +111,6 @@ export default function SpecialityFAQ({ faqs, theme = "dark" }: SpecialityFAQPro
     </motion.div>
   );
 }
+
+export { SpecialityFAQ as ClinicalFAQ };
+export default SpecialityFAQ;

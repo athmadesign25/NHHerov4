@@ -5,6 +5,7 @@ const facets: Record<string, string> = {
   neurology: "Neurologist", gastroenterology: "Gastroenterologist", nephrology: "Nephrologist",
   urology: "Urologist", pulmonology: "Pulmonologist", endocrinology: "Endocrinologist",
   dermatology: "Dermatologist", paediatrics: "Pediatrician", psychiatry: "Psychiatry",
+  pediatric: "Pediatrician", diabetes: "Endocrinologist", "general-medicine": "General Medicine", rheumatology: "Rheumatology",
   gynaecology: "Gynecologist", ophthalmology: "Ophthalmology", ent: "ENT Specialist",
 };
 
