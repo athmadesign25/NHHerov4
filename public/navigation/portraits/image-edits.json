@@ -1,0 +1,35 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "assets": [
+    {
+      "file": "public/navigation/portraits/specialty-doctor-v2.webp",
+      "source": "/assets/doctor_2.png",
+      "prompt": "Use case: identity-preserve. Asset type: high-resolution photo for a narrow vertical Narayana Health navbar image card. Image 1 is the edit target, image 2 is the supporting exact Narayana Health logo. Enhance image 1 to a crisp high-resolution portrait, preserving this woman's identity, pose, face, white coat, teal blouse, stethoscope, hair and natural expression. Replace the flat grey studio background with an empty, warm, sunlit hospital verandah with cream stone, warm wood and subtle glazing. Match perspective, lighting and scale naturally. No other people anywhere. On the existing ID badge replace the Medilife/Medlife branding with the Narayana Health logo from image 2. Render the brand words exactly \"Narayana Health\"; no competitor hospital branding. Preserve natural skin and cloth texture, no waxy skin or artificial oversharpening. Reframe as a portrait around 2:3, with enough background headroom above her hair for a short UI title, face centered horizontally and below that headroom; keep ID badge visible lower in the frame. No title, UI overlay, or watermark in the image itself."
+    },
+    {
+      "file": "public/navigation/portraits/sunday-doctor-v2.webp",
+      "source": "/assets/doctor_1.png",
+      "prompt": "Use case: identity-preserve. Asset type: high-resolution doctor portrait for a vertical hospital website navbar card. Image is the edit target. Preserve the same Indian male doctor exactly: face, age, salt-and-pepper hair and beard, friendly expression, white coat, blue shirt, tie and stethoscope. Replace only the plain grey background with a realistic empty modern hospital consultation room. Make camera perspective, background scale, lens depth, light direction and grounding agree with the existing portrait; softly defocused clean medical cabinetry, an examination bed and warm natural daylight can establish the room. No other people. Expand to portrait roughly 2:3 with comfortable room above the hair for an overlaid website title, keep the doctor centered horizontally with the face below this top headroom. Crisp natural detail, no artificial skin smoothing, no extra limbs, no signage text, UI or watermark."
+    },
+    {
+      "file": "public/navigation/portraits/today-doctor-v2.webp",
+      "source": "/assets/hero_doctor.png",
+      "prompt": "Use case: precise-object-edit. Asset type: high-resolution hospital doctor portrait for a narrow vertical navbar card. Image is the edit target. Remove every background person from the hospital corridor completely, reconstructing the empty hospital corridor naturally. Change the featured doctor's face to a different, clearly distinct Indian woman doctor around her forties, with a calm friendly expression, natural skin texture, dark hair neatly tied back and subtle glasses. Preserve the professional white coat, blue scrubs, stethoscope and hands-clasped standing pose. Recompose so she is in the CENTER of the picture rather than the right side and occupies a balanced portrait scale. Portrait aspect approximately 2:3. Leave clear corridor headroom above her hair for the website heading so the face is not under that future overlay. Match lighting and perspective, keep the blue and warm neutral hospital architecture, no other people in reflections or backgrounds. Remove invented doctor names or competitor marks on the coat. Photorealistic fine detail; no poster text, UI, or watermark."
+    },
+    {
+      "file": "public/navigation/portraits/health-library-v2.webp",
+      "source": "/book-pills-stethoscope-wooden-table-closeup.jpg",
+      "prompt": "Use case: precise-object-edit. Asset type: high-resolution photographic editorial still life for the Health Library navbar. Image is the edit target and material/lighting reference. Zoom out from this blue stethoscope on an open medical book on a wooden table to a wider tabletop scene with more medical books visible, preserving the realistic warm wooden table, blue stethoscope, modest pills, natural lighting and photographic texture. Reframe as a portrait around 2:3 so the entire still life reads clearly in a tall narrow navbar card. Include a small stack of beautifully bound books with crisp legible titles exactly \"Symptoms Guide\", \"Understanding Your Health\", and \"Medical Reference\". Replace the original open book's gibberish with sparse readable medical chapter text, using headings exactly \"Understanding Your Heart\" and \"Recognising Symptoms\"; keep body text small and subdued, do not invent treatment advice, doses or medical claims. Add one small subtle floating translucent rectangular video-player screen graphic above the books toward the lower-middle of the composition, showing a simple triangular play button, in muted blue glass. This graphic should be secondary and quiet, no glowing sci-fi effects or giant play button. Leave calm darker wooden negative space at the top for an external \"Health Library\" heading; do not render that website heading in the photo. Real photography with a restrained integrated video graphic, no people, no extra UI labels, no watermark."
+    },
+    {
+      "file": "public/navigation/portraits/devi-shetty-v2.webp",
+      "source": "/Dr.Devi Shetty.png",
+      "prompt": "Use case: identity-preserve. Asset type: high-resolution restoration of the supplied photograph of Dr. Devi Prasad Shetty, for the same hospital website navigation card. Input image is the edit target, NOT merely inspiration. Faithfully restore and upscale the exact man, preserving his recognizable facial identity, age, smile, glasses, hairline, ears, posture, crossed arms, wristwatch, blue scrubs and stethoscope. Preserve the original soft green and pale blue outdoor/hospital backdrop and natural lighting. Recover natural fine facial, hair, fabric and instrument detail while removing pixelation and blur. Do not beautify, change his identity, make younger, invent a different face, change expression, or create plastic skin. Expand only the backdrop above the head to give a modest amount of headroom for a website overlay; composition portrait roughly 2:3, face horizontally centered below the top headroom, crossed arms visible. No added titles, logos, UI, badges or watermark. Square corners, not a rounded-corner baked-in image."
+    }
+  ],
+  "existingHighResolutionSource": {
+    "file": "public/patient-first-support.png",
+    "usedFor": "Find a Doctor by Disease/Condition",
+    "note": "Uses the full-resolution original rather than the generated alternative; responsive image sizes account for the portrait crop."
+  }
+}

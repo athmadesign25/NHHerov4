@@ -1,0 +1,1516 @@
+{
+  "source": "https://www.narayanahealth.org/emergency",
+  "checkedOn": "2026-11-06",
+  "overview": {
+    "title": "Expert Emergency Care,  Anytime You Need It",
+    "subtitle": "At Narayana Health, we recognise that medical emergencies can happen anytime without warning and without an appointment. There might be a sudden cardiac arrest, a traumatic injury, as in a car crash, a stroke, a massive internal bleed, a complication of pregnancy, or a child in distress. Whether it's an acute emergency or not, our staff are trained for prompt response.",
+    "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency_overview/section_1/desktop/wAjBFwrCuBIU4gACNHc1bE4Ttc5ItQhua6KkiW8I.webp",
+    "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency_overview/section_1/mobile/xtTPzVAOv9KAGEIQuscKraq8h2KTYIxm8agzAxc5.webp",
+    "alt": "Expert Emergency Care,  Anytime You Need It alt"
+  },
+  "response": {
+    "title": "Rapid Response, Lifesaving Impact",
+    "subtitle": "Proven results that reflect our speed, skill, and commitment to saving lives.",
+    "image": {
+      "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency_overview/section_2/desktop/RA6mYjCooKPbwpOzpOk5YtBtjFtbzK6KTTQ0LXic.webp",
+      "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency_overview/section_2/mobile/1s99QqUT5kiTe4VELQgOvFZ8RrV0wqdbGnmTSEuH.webp",
+      "alt": "Rapid Care, Lifesaving Impact alt",
+      "text_title": "India’s Most Comprehensive Emergency Care Network",
+      "text_description": "Integrated systems, trained teams, and advanced technology all working to save lives."
+    },
+    "items": [
+      {
+        "title": "24/7",
+        "description": "Emergency Services with Specialist Access"
+      },
+      {
+        "title": "1.3 lac",
+        "description": "Patients received & treated every year in emergency rooms"
+      },
+      {
+        "title": "100%",
+        "description": "Ambulance GPS-Tracking coverage"
+      },
+      {
+        "title": "18+",
+        "description": "Emergency-ready hospitals nationwide"
+      }
+    ]
+  },
+  "team": {
+    "title": "Emergency Team's Expertise",
+    "subtitle": "Highly trained professionals delivering rapid and reliable emergency care",
+    "items": [
+      {
+        "icon": "qualified-er-medical-team",
+        "title": "Qualified ER Medical Team",
+        "subtitle": "Trained in advanced life support (ACLS, BLS, ATLS) to manage emergencies with speed, safety, and precision.",
+        "icon_path": null
+      },
+      {
+        "icon": "doctor",
+        "title": "24×7 Expert Doctors",
+        "subtitle": "Round-the-clock access to doctors and specialists to support critical decisions and initiate timely treatment.",
+        "icon_path": null
+      },
+      {
+        "icon": "syringe-filled",
+        "title": "Anaesthesiology & Critical Care (ICU Support)",
+        "subtitle": "Advanced monitoring, airway support, pain control, and life-support interventions for unstable or high-risk patients.",
+        "icon_path": null
+      },
+      {
+        "icon": "heart",
+        "title": "Cardiology & Cardiac Surgery (Heart)",
+        "subtitle": "Emergency heart care for chest pain, heart attacks, rhythm problems, and other urgent cardiac conditions.",
+        "icon_path": null
+      },
+      {
+        "icon": "brain",
+        "title": "Neurology & Neurosurgery (Brain)",
+        "subtitle": "Rapid care for stroke, seizures, head injuries, and other acute brain and spine emergencies.",
+        "icon_path": null
+      },
+      {
+        "icon": "bone",
+        "title": "Orthopaedics & Trauma Surgery (Bones & Injuries)",
+        "subtitle": "Comprehensive trauma care for fractures, dislocations, and injury-related emergencies, supported by prompt stabilisation.",
+        "icon_path": null
+      },
+      {
+        "icon": "person",
+        "title": "Paediatrics (Children)",
+        "subtitle": "Dedicated emergency support for infants, children, and adolescents, with careful assessment and monitoring.",
+        "icon_path": null
+      },
+      {
+        "icon": "gynaecology",
+        "title": "Obstetrics & Gynaecology (Women’s Care)",
+        "subtitle": "Specialised care for pregnancy-related emergencies and women’s health concerns requiring urgent attention.",
+        "icon_path": null
+      },
+      {
+        "icon": "clock-filled",
+        "title": "Round-the-Clock Support Services",
+        "subtitle": "24×7 access to ICUs, labs, imaging, dialysis, and theatres for seamless emergency-to-critical care continuity.",
+        "icon_path": null
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "title": "Trauma and Accident care",
+      "slug": "trauma-and-accident-care",
+      "image": "/emergency/condition-trauma-and-accident-care-photo.webp",
+      "items": [
+        {
+          "title": "Road traffic accidents & polytrauma",
+          "text": "Severe multi-injury cases are stabilised using standard trauma protocols and close monitoring. The team initiates polytrauma resuscitation and coordinates imaging and specialist care as needed.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Industrial/workplace injuries, crush injuries",
+          "text": "These injuries may involve deep tissue damage, bleeding, fractures, or nerve and vessel compromise. Emergency care focuses on pain control, wound management, and rapid escalation if surgery is required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Head trauma & concussion",
+          "text": "Head trauma may cause headache, vomiting, dizziness, or brief confusion after an injury. We assess neurological status and arrange imaging when indicated to rule out internal injury.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Head injury with loss of consciousness",
+          "text": "Loss of consciousness after injury is treated as a medical priority even if external wounds appear small. We stabilise airway and circulation, then proceed with urgent neurological assessment and scans as indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Fractures and dislocations",
+          "text": "Fractures and dislocations can cause severe pain, swelling, deformity and restricted movement. We provide immobilisation and pain relief, including dislocation reduction, splinting/casting, POP applications, when required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Spine injuries / paraplegia (suspected spinal cord injury)",
+          "text": "Spine trauma may present with severe neck/back pain, weakness, numbness or loss of control. We immobilise early and coordinate urgent imaging and specialist management to protect function.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Minor burns / scalds",
+          "text": "Burns and scalds are assessed for depth, area involved and risk of infection. We provide burn first aid, dressings and pain control, with escalation when required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Electric shock",
+          "text": "Electric injuries can affect the heart rhythm and internal tissues even when skin marks are minimal. We monitor ECG and vitals, assess for hidden injury, and treat complications promptly.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Trauma due to falls",
+          "text": "Falls can lead to fractures, head injury or internal injury, especially in older adults. Emergency evaluation includes stabilisation, pain control and imaging as clinically indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Chest trauma with breathing compromise",
+          "text": "Chest injuries can cause breathlessness, chest pain and reduced oxygen levels. We stabilise breathing and may perform needle thoracentesis or ICD insertion when indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Severe pain after trauma",
+          "text": "Severe pain can limit breathing and movement and may delay recovery if not controlled early. We use stepwise pain management including nerve blocks for selected injuries.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Airway compromise in trauma",
+          "text": "Airway compromise requires immediate assessment to protect breathing and oxygen delivery. Support may include endotracheal intubation or surgical airway insertion when required.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Cardiac and Heart Emergencies",
+      "slug": "cardiac-and-heart-emergencies",
+      "image": "/emergency/condition-cardiac-and-heart-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Acute chest pain",
+          "text": "Chest pain can have cardiac and non-cardiac causes that require urgent evaluation. We perform rapid ECG-based assessment and start treatment based on findings.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Heart attack",
+          "text": "A heart attack occurs when blood flow to the heart muscle is reduced or blocked. We activate time-sensitive pathways and initiate treatment including thrombolysis where indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Cardiac arrest & emergency resuscitation",
+          "text": "Cardiac arrest needs immediate resuscitation to restore circulation and protect organs. Our teams follow advanced protocols and escalate for ECMO/IABP initiation in selected cases.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Heart failure–related emergencies",
+          "text": "Heart failure emergencies can present with sudden breathlessness, swelling or fluid overload. We stabilise breathing and circulation and shift to ICU care when clinically required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Life-threatening rhythm disturbances",
+          "text": "Serious rhythm problems may cause palpitations, dizziness, fainting or sudden collapse. We provide monitoring and stabilisation and may initiate TPI where indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Pericardial tamponade suspicion",
+          "text": "Pericardial tamponade can cause low blood pressure, breathlessness and rapid deterioration. Urgent assessment is done and pericardiocentesis is performed when clinically required.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Brain Stroke and Neurological Emergencies",
+      "slug": "brain-stroke-and-neurological-emergencies",
+      "image": "/emergency/condition-brain-stroke-and-neurological-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Stroke (ischaemic and haemorrhagic)",
+          "text": "Stroke occurs due to a blocked vessel or bleeding in the brain and needs urgent action. We perform rapid imaging and initiate treatment including stroke fibrinolysis where indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Transient ischaemic attack (TIA)",
+          "text": "A TIA causes temporary stroke-like symptoms that resolve but can be a warning sign. Emergency care focuses on urgent evaluation and early prevention steps based on findings.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Seizures / fits",
+          "text": "Seizures may present with convulsions, staring episodes, confusion or loss of awareness. We ensure safety, control ongoing seizures when needed, and evaluate possible triggers.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Febrile seizures",
+          "text": "Febrile seizures can occur in children with a rapid rise in temperature during illness. We stabilise the child, manage fever, and assess for warning signs needing further care.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Head injuries with altered sensorium / unconsciousness",
+          "text": "Altered sensorium after head injury can indicate bleeding, swelling or brain involvement. We prioritise airway protection, neurological monitoring and urgent imaging as indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Raised intracranial pressure / hydrocephalus (selected cases)",
+          "text": "Some neurological emergencies require urgent pressure management to protect the brain. We stabilise the patient and may support neurosurgical intervention including EVD where indicated.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Breathing and Airway and Allergy Emergencies",
+      "slug": "breathing-and-airway-and-allergy-emergencies",
+      "image": "/emergency/condition-breathing-and-airway-and-allergy-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Severe asthma or breathing issues",
+          "text": "Severe asthma can cause chest tightness, wheeze and difficulty breathing that may not settle at home. We start rapid inhalation therapy, oxygen support and close monitoring for escalation.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Cough, stridor, wheezing & breathlessness",
+          "text": "These symptoms may indicate airway narrowing, infection or allergic causes depending on age and severity. We assess quickly and initiate targeted respiratory support without delay.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Choking / foreign body aspiration",
+          "text": "Choking can partially or completely block the airway and needs urgent attention. We manage airway safety first and coordinate specialist support for removal when required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Anaphylactic shock",
+          "text": "Anaphylaxis is a severe allergic reaction that can cause swelling, breathing difficulty and low blood pressure. Emergency care includes immediate stabilisation, emergency medications and observation as needed.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Respiratory failure requiring ventilatory support",
+          "text": "Severe respiratory distress may require assisted breathing to stabilise oxygen and carbon dioxide levels. We initiate non-invasive or invasive ventilation and oxygen support including HFNO as indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Difficult airway situations",
+          "text": "Some patients require advanced airway planning to secure breathing safely. We provide difficult airway management and intubation as needed with continuous monitoring.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "ENT Emergencies",
+      "slug": "ent-emergencies",
+      "image": "/emergency/condition-ent-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Ear-related emergencies",
+          "text": "Ear emergencies may involve severe pain, bleeding, infection complications or sudden symptoms. We provide focused assessment, pain control and timely ENT support when required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Foreign body removal & management (ear/nose/throat)",
+          "text": "Foreign bodies can cause pain, bleeding, infection or breathing difficulty depending on location. Safe removal is done using scope/device-guided techniques when needed.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Abdominal/ Stomach & Gastrointestinal Emergencies",
+      "slug": "abdominal-stomach-and-gastrointestinal-emergencies",
+      "image": "/emergency/condition-abdominal-stomach-and-gastrointestinal-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Acute abdominal / stomach pain",
+          "text": "Sudden abdominal pain can be due to infection, inflammation, stones or surgical conditions. We evaluate promptly with examination, tests and imaging to guide treatment.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Colic pain & griping",
+          "text": "Colicky pain often comes in waves and may be related to bowel spasm or stones. We provide pain relief and assess the underlying cause through clinical evaluation.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Bowel obstruction",
+          "text": "Bowel obstruction can cause severe pain, vomiting, bloating and inability to pass stool or gas. We stabilise with fluids, urgent imaging and surgical review as required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Gastrointestinal bleeding (vomiting blood / blood in stool / bloody diarrhoea)",
+          "text": "Bleeding may range from mild to significant and can cause weakness or dizziness. We stabilise first, assess severity through tests, and involve specialists as indicated.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Kidney and Urinary Emergencies",
+      "slug": "kidney-and-urinary-emergencies",
+      "image": "/emergency/condition-kidney-and-urinary-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Urine retention",
+          "text": "Urine retention can cause severe lower abdominal discomfort and pressure. We relieve obstruction promptly, including suprapubic catheterisation when indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Blocked urinary catheter",
+          "text": "A blocked catheter can lead to pain, leakage and urine backflow with infection risk. Emergency care restores drainage safely and assesses for infection or underlying cause.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Kidney stones",
+          "text": "Kidney stones commonly cause sudden severe flank pain with nausea or blood in urine. We provide pain relief and arrange imaging when needed to confirm size and location.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Kidney infection / pyelonephritis",
+          "text": "This infection can cause fever, flank pain, burning urination and weakness. We assess severity and start treatment promptly, with admission if clinically required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Haematuria (blood in urine)",
+          "text": "Blood in urine may occur due to infection, stones, injury or other urinary conditions. We evaluate the cause and manage clots, pain or blockage if present.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Kidney-related emergencies (fluid overload, emergency dialysis)",
+          "text": "Severe kidney problems can lead to breathlessness and dangerous fluid build-up. We stabilise first and coordinate emergency dialysis initiation when clinically required.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Diabetes and Electrolyte Emergencies",
+      "slug": "diabetes-and-electrolyte-emergencies",
+      "image": "/emergency/condition-diabetes-and-electrolyte-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Diabetic emergencies (low sugar / high sugar)",
+          "text": "Very low or very high sugar can cause sweating, confusion, dehydration or collapse. We correct glucose safely and evaluate triggers to reduce recurrence risk.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Diabetic Ketoacidosis (DKA)",
+          "text": "DKA is a serious complication that can cause vomiting, dehydration, rapid breathing and drowsiness. We initiate protocol-based management with fluids, insulin and monitoring.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Electrolyte imbalance (K/Na/Ca, Acidosis)",
+          "text": "Electrolyte disturbances can affect heart rhythm, muscles and brain function. We identify the cause and correct levels carefully with continuous monitoring.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Infection and Sepsis Care",
+      "slug": "infection-and-sepsis-care",
+      "image": "/emergency/condition-infection-and-sepsis-care-photo.webp",
+      "items": [
+        {
+          "title": "Sepsis",
+          "text": "Sepsis is a serious body-wide response to infection that can affect blood pressure and organ function. We prioritise early recognition, rapid stabilisation and timely antibiotics.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Febrile neutropenia (immunocompromised fever)",
+          "text": "In patients with low immunity, fever can be an emergency even when symptoms are mild. We start urgent evaluation and early treatment with close monitoring as indicated.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Pregnancy, Women’s Health, & Maternity Emergencies",
+      "slug": "pregnancy-womens-health-and-maternity-emergencies",
+      "image": "/emergency/condition-pregnancy-womens-health-and-maternity-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "All emergencies related to pregnancy",
+          "text": "Pregnancy emergencies may involve pain, bleeding, reduced foetal movements or sudden symptoms. We prioritise maternal and foetal assessment and coordinate urgent obstetric support.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Ectopic pregnancy or miscarriage",
+          "text": "These conditions can present with pain and bleeding and may require urgent intervention. We stabilise the patient and proceed with tests, scans and obstetric management.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Pre-eclampsia & eclampsia emergencies",
+          "text": "These are high blood pressure emergencies in pregnancy that can affect brain and organs. We initiate rapid stabilisation including seizure control and urgent obstetric escalation.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Paediatric Emergencies",
+      "slug": "paediatric-emergencies",
+      "image": "/emergency/condition-paediatric-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Poisoning, trauma, or falls",
+          "text": "Children may accidentally ingest substances or suffer injuries during play and falls. We provide rapid assessment, stabilisation and age-appropriate monitoring and treatment.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Breathing difficulty, choking, dehydration, severe illness",
+          "text": "Paediatric breathing and hydration issues can worsen quickly without timely support. We provide early respiratory support and fluids as needed, with paediatric input when required.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Seizures and febrile seizures",
+          "text": "Seizures in children may occur with fever or other triggers and need prompt assessment. We stabilise the child, manage fever, and evaluate for warning signs.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Poisoning, Bites, and Stings",
+      "slug": "poisoning-bites-and-stings",
+      "image": "/emergency/condition-poisoning-bites-and-stings-photo.webp",
+      "items": [
+        {
+          "title": "Poisoning / toxic exposure",
+          "text": "Poisoning may affect breathing, consciousness and heart rhythm depending on the substance. We stabilise first and may use gastric lavage and poison-specific antidotes when indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Snake bites",
+          "text": "Snake bites can cause swelling, bleeding tendency, weakness or breathing difficulty. We assess severity and initiate protocol-based care including antivenom where indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Dog bite / animal bite",
+          "text": "Animal bites carry infection risk and may require tetanus and rabies prevention measures. We provide wound cleaning, vaccination guidance and antibiotics when indicated.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Bee sting / scorpion sting",
+          "text": "Stings can cause pain and swelling, and in some cases severe allergic reactions. We treat symptoms promptly and monitor closely when allergy risk is present.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Oncology-Related Emergencies",
+      "slug": "oncology-related-emergencies",
+      "image": "/emergency/condition-oncology-related-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Tumour bleeding",
+          "text": "Tumour-related bleeding can present as visible bleeding or sudden weakness and anaemia. We stabilise, control bleeding, and coordinate urgent oncology support based on severity.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "Malignant spinal cord compression (MSCC)",
+          "text": "MSCC can cause back pain, weakness, numbness and bladder/bowel changes. We prioritise urgent assessment and imaging and initiate specialist management quickly.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "SVCS (Superior vena cava syndrome)",
+          "text": "SVCS may cause facial swelling, breathlessness and prominent chest veins due to vein compression. We stabilise the patient and start urgent specialist evaluation and treatment.\n\nCall 1800 309 0309"
+        },
+        {
+          "title": "DIC (Disseminated intravascular coagulation)",
+          "text": "DIC is a serious clotting and bleeding disorder seen in critical illness, infection or cancer. We initiate close monitoring and supportive care while treating the underlying cause.\n\nCall 1800 309 0309"
+        }
+      ]
+    },
+    {
+      "title": "Urology-Specific Emergencies",
+      "slug": "urology-specific-emergencies",
+      "image": "/emergency/condition-urology-specific-emergencies-photo.webp",
+      "items": [
+        {
+          "title": "Phimosis & paraphimosis",
+          "text": "In men, the foreskin-related conditions can cause pain, swelling and difficulty passing urine. We provide urgent relief and pain control, with urology support as required.\n\nCall 1800 309 0309"
+        }
+      ]
+    }
+  ],
+  "procedures": [
+    {
+      "title": "Emergency Medicine & Critical Care (Airway, Monitoring, Lines)",
+      "slug": "emergency-medicine-and-critical-care-airway-monitoring-lines",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Endotracheal Intubation",
+          "text": "A breathing tube is placed to keep the airway open and support breathing in critical situations."
+        },
+        {
+          "title": "Difficult Airway Management",
+          "text": "Advanced airway methods are used to secure breathing safely when intubation is challenging."
+        },
+        {
+          "title": "Central Venous Catheter (CVC) Insertion",
+          "text": "A central line is placed to give urgent medicines and fluids and support close monitoring."
+        },
+        {
+          "title": "Arterial Line Cannulation",
+          "text": "An arterial line enables continuous blood pressure monitoring and accurate blood sampling."
+        },
+        {
+          "title": "Suprapubic Catheterisation",
+          "text": "A small tube is placed directly into the bladder when urine drainage is urgently needed and routine catheterisation is not possible."
+        }
+      ]
+    },
+    {
+      "title": "Pulmonology (Lungs & Ventilator Support)",
+      "slug": "pulmonology-lungs-and-ventilator-support",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Invasive Ventilation (Ventilator) Initiation",
+          "text": "Ventilator support is started when breathing is not adequate or safe."
+        },
+        {
+          "title": "Non-Invasive Ventilation (NIV) Initiation",
+          "text": "Mask-based ventilation supports breathing and improves oxygen levels without a tube."
+        },
+        {
+          "title": "HFNO Initiation",
+          "text": "High-flow oxygen is given to improve oxygen levels and reduce breathing difficulty."
+        },
+        {
+          "title": "Oxygen Delivery Devices",
+          "text": "Oxygen support is started early using the most suitable device for the patient’s condition."
+        }
+      ]
+    },
+    {
+      "title": "Cardiology & Cardiac Surgery (Heart)",
+      "slug": "cardiology-and-cardiac-surgery-heart",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Cardiac Arrest Resuscitation",
+          "text": "Immediate resuscitation is provided to restore heartbeat and circulation."
+        },
+        {
+          "title": "Coronary Angiography",
+          "text": "Angiography is done to identify the blocked heart artery quickly."
+        },
+        {
+          "title": "Primary Angioplasty (PCI) / Stenting",
+          "text": "A blocked artery is opened using a balloon and stent to restore blood flow."
+        },
+        {
+          "title": "Thrombolysis",
+          "text": "Clot-dissolving treatment is given to restore blood flow in time-sensitive heart emergencies."
+        },
+        {
+          "title": "ECMO / IABP Initiation",
+          "text": "Advanced heart support is used to stabilise patients with severe cardiac failure or shock."
+        },
+        {
+          "title": "•\tPericardiocentesis",
+          "text": "Fluid around the heart is drained to relieve pressure and stabilise circulation."
+        },
+        {
+          "title": "Temporary Pacing (TPI)",
+          "text": "Temporary pacing is used to support dangerously slow heart rhythms."
+        }
+      ]
+    },
+    {
+      "title": "Neurology & Neurosurgery (Brain)",
+      "slug": "neurology-and-neurosurgery-brain",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Stroke Fibrinolysis",
+          "text": "Time-sensitive clot treatment is used after urgent brain imaging in selected stroke cases."
+        },
+        {
+          "title": "Seizure Stabilisation (Emergency Seizure Care)",
+          "text": "Seizures are controlled promptly to protect breathing and brain function, followed by evaluation of the cause."
+        },
+        {
+          "title": "External Ventricular Drain (EVD)",
+          "text": "A drain is placed to reduce pressure in the brain in critical neurological situations."
+        }
+      ]
+    },
+    {
+      "title": "General Surgery (Abdomen & Surgical Emergencies)",
+      "slug": "general-surgery-abdomen-and-surgical-emergencies",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Acute Abdomen Stabilisation",
+          "text": "Urgent assessment and stabilisation are provided for severe abdominal pain, with timely imaging and surgical escalation."
+        },
+        {
+          "title": "GI Bleeding Stabilisation",
+          "text": "Rapid stabilisation is provided for vomiting blood or blood in stool, with prompt coordination for definitive control of bleeding."
+        },
+        {
+          "title": "Bowel Obstruction Support",
+          "text": "Decompression and stabilisation are initiated to reduce vomiting and abdominal distension, followed by surgical evaluation."
+        },
+        {
+          "title": "Wound Suturing / Laceration Repair",
+          "text": "Wounds are cleaned and closed safely to control bleeding and reduce infection risk."
+        },
+        {
+          "title": "Abscess Drainage (I&D)",
+          "text": "Localised infections are drained to relieve pain and control infection, with antibiotics when needed."
+        }
+      ]
+    },
+    {
+      "title": "Obstetrics & Gynaecology (Women’s Care)",
+      "slug": "obstetrics-and-gynaecology-womens-care",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Pregnancy Emergency Stabilisation",
+          "text": "Urgent pregnancy concerns are assessed quickly, with timely obstetric support for stabilisation."
+        },
+        {
+          "title": "Acute Bleeding / Severe Pelvic Pain Care",
+          "text": "Immediate evaluation and stabilisation are provided, with escalation for urgent intervention when needed."
+        },
+        {
+          "title": "Emergency Vaginal Delivery Support",
+          "text": "Rapid delivery support is provided when labour is advanced or urgent delivery is needed for mother or baby."
+        },
+        {
+          "title": "Emergency C-Section (LSCS)",
+          "text": "An urgent C-section is performed when a safe delivery requires immediate surgical intervention."
+        },
+        {
+          "title": "Postpartum Haemorrhage Stabilisation",
+          "text": "Heavy bleeding after delivery is managed quickly to stabilise the mother and prevent complications."
+        }
+      ]
+    },
+    {
+      "title": "Trauma & Orthopaedics (Injuries)",
+      "slug": "trauma-orthopaedics-injuries",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Poly-Trauma Resuscitation",
+          "text": "Rapid stabilisation is provided for multiple injuries, focusing on airway, breathing and circulation."
+        },
+        {
+          "title": "Surgical Airway Insertion",
+          "text": "An emergency airway is created when the usual airway methods cannot secure breathing."
+        }
+      ]
+    },
+    {
+      "title": "Metabolic & Blood Pressure Emergencies (Sugar & BP)",
+      "slug": "metabolic-blood-pressure-emergencies-sugar-bp",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Low Sugar / High Sugar Stabilisation",
+          "text": "— Blood sugar is corrected safely with close monitoring to prevent complications."
+        },
+        {
+          "title": "High BP / Low BP Stabilisation",
+          "text": "Blood pressure is stabilised promptly to protect the heart, brain and kidneys."
+        }
+      ]
+    },
+    {
+      "title": "Nephrology (Kidney)",
+      "slug": "nephrology-kidney",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Emergency Dialysis Initiation",
+          "text": "Dialysis is initiated to manage fluid overload and serious kidney-related emergencies."
+        }
+      ]
+    },
+    {
+      "title": "Toxicology (Poisoning)",
+      "slug": "toxicology-poisoning",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Gastric Lavage",
+          "text": "Stomach decontamination may be performed to reduce toxin absorption in poisoning cases."
+        },
+        {
+          "title": "Poison-Specific Antidote Administration",
+          "text": "Specific antidotes are given to counter the effects of certain poisons."
+        }
+      ]
+    },
+    {
+      "title": "Paediatrics (Children)",
+      "slug": "paediatrics-children",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Paediatric Emergency Stabilisation",
+          "text": "Children receive quick assessment and stabilisation with age-appropriate monitoring and care."
+        },
+        {
+          "title": "Paediatric Breathing Support",
+          "text": "Breathing support is provided early, including oxygen and ventilation when required."
+        }
+      ]
+    },
+    {
+      "title": "ENT (Ear, Nose & Throat)",
+      "slug": "ent-ear-nose-throat",
+      "image": "/emergency/care-1.webp",
+      "items": [
+        {
+          "title": "Scope/Device-Guided Foreign Body Removal",
+          "text": "Foreign bodies are removed safely using the right instruments to protect delicate tissues."
+        }
+      ]
+    }
+  ],
+  "protocols": {
+    "title": "Protocol-based Response",
+    "subtitle": "We follow a well-defined protocol to ensure fast, organised care from the moment the patient arrives to the time they are stabilised or admitted for further treatment",
+    "items": [
+      {
+        "icon": "bone",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block-2/cJTumD5S1F1qCsdm2asABYLivV6sgHFIQd2PJgfR.webp",
+        "title": "Trauma Protocol",
+        "heading": "Coordinated Trauma Response",
+        "cta_link": "/",
+        "cta_name": "Know More",
+        "icon_path": null,
+        "description": "A structured, multi-disciplinary approach for multiple or severe injuries, focused on rapid stabilisation and timely definitive care."
+      },
+      {
+        "icon": "brain",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_ZSJLuDFfWAQ59RB2sMGq.webp",
+        "title": "Stroke Protocol",
+        "heading": "Rapid Stroke Activation",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "test",
+        "description": "Fast triage and urgent brain imaging to confirm stroke type, followed by timely treatment and specialist escalation as indicated."
+      },
+      {
+        "icon": "heart",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_uf2nJMBLFSXiuAnlW2tc.webp",
+        "title": "Heart Attack & Cardiac Arrest Protocol",
+        "heading": "Time-Critical Heart Response",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "Test",
+        "description": "Immediate ECG and resuscitation readiness with rapid cardiology activation to initiate treatment and stabilise the patient without delay."
+      },
+      {
+        "icon": "Spesis",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_KSLxCVOuuUy1KMs1sDXx.webp",
+        "title": "Sepsis Protocol",
+        "heading": "Early Sepsis Recognition & Treatment",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "neurology",
+        "description": "Quick identification of infection-related deterioration with prompt tests and treatment initiation, supported by critical care when required."
+      },
+      {
+        "icon": "lungs",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_dfLHkrAY78TqoiHPgnqj.webp",
+        "title": "Breathing Distress Protocol",
+        "heading": "Rapid Breathing Support",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "orthopaedics",
+        "description": "Structured management for severe breathlessness, with oxygen support and escalation to NIV/ventilation when clinically needed."
+      },
+      {
+        "icon": "allergy",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_HnMcs7pPykRsPuMHRbrR.webp",
+        "title": "Severe Allergy Protocol",
+        "heading": "Immediate Allergy Emergency Care",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "brain",
+        "description": "Protocol-led treatment for severe allergic reactions, with airway circulation support and observation based on clinical risk."
+      },
+      {
+        "icon": "care",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_xTRADb5n7WBmsVl7WAIj.webp",
+        "title": "Maternity Emergency Protocol",
+        "heading": "Urgent Pregnancy Support",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "care",
+        "description": "Rapid assessment and stabilisation of pregnancy-related emergencies, with timely obstetric support and safe escalation when required."
+      },
+      {
+        "icon": "Peadiatric",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/block_2_WlNsjDTvH98OYfFZ7asz.webp",
+        "title": "Paediatric Emergency Protocol",
+        "heading": "Child-Focused Emergency Care",
+        "cta_link": "",
+        "cta_name": "",
+        "icon_path": "Children",
+        "description": "Rapid assessment and stabilisation for common childhood emergencies, with age-appropriate monitoring and specialist support when needed."
+      }
+    ]
+  },
+  "performance": {
+    "title": "Delivering Timely Emergency Care",
+    "subtitle": "Our emergency team ensures immediate medical attention around the clock.",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_3/desktop/9AYI6OVWm4Bf5WH24V0eogg7jQoPqokpRvEoWwoI.webp",
+    "alt": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_3/mobile/2wayK0yIhDj7AdBXkm9ALhYktt0Bk9NJ97GIl1qf.webp",
+    "items": [
+      {
+        "head": "Benchmark1-240min",
+        "title": "154.9 mins",
+        "subtitle": "ER Length of Stay."
+      },
+      {
+        "head": "Benchmark1-<15mins",
+        "title": "7.5 mins",
+        "subtitle": "Time taken for initiation of initial assessment."
+      },
+      {
+        "head": "Benchmark1-<30mins",
+        "title": "42.5 mins",
+        "subtitle": "Time taken for second consult by a specialist."
+      },
+      {
+        "head": "Benchmark1-<100%",
+        "title": "88%",
+        "subtitle": "Pain relief within 1 hour  of ER arrival"
+      },
+      {
+        "head": "Benchmark1-<1%",
+        "title": "0.2%",
+        "subtitle": "Return to ER within72 hours"
+      }
+    ],
+    "note": "Benchmark Reference: 1NH Internal"
+  },
+  "cities": [
+    {
+      "label": "Bangalore",
+      "hospitals": [
+        {
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/d2aeRTNbfjA9MvW8MVpD.webp",
+          "slug": "hospitals-clinics/bangalore/mazumdar-shaw-medical-centre-bommasandra",
+          "code": "",
+          "address": "258/A, Bommasandra Industrial Area, Hosur Road , Anekal Taluk Bangalore, Karnataka - 560099",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 38
+        },
+        {
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/P2HETQpHIBQ7ZzvY4HWw.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-multispeciality-hospital-hsr-bangalore",
+          "code": "",
+          "address": "Basant Health Centre Building, No-1 , 18th main (Opp.HSR Club), Sector 3, HSR Layout Bangalore, Karnataka - 560102",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 32
+        },
+        {
+          "name": "Narayana Health City, International Wing",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/KnncT9tilEv27grMqQSm.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-health-city-international-wing",
+          "code": "",
+          "address": "",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 55
+        },
+        {
+          "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/PaJpvRnmfoAQz73Y5kgh.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-institute-cardiac-sciences-bommasandra",
+          "code": "",
+          "address": "258/A, Bommasandra Industrial Area , Anekal Taluk, Hosur Road Bangalore, Karnataka - 560099",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 121
+        },
+        {
+          "name": "Narayana Clinic, Chandapura",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/v89vXbNeEQtFDY3K2eaF.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinicchandapura",
+          "code": "",
+          "address": "1st Floor, 425/426, Chandapura- Anekal Rd, near Surya City, above Pizza hut, Iggalur, Suryanagar Phase I, Chandapura, Bengaluru, Andapura, Karnataka 560081",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1518
+        },
+        {
+          "name": "Narayana Clinic, Kanakapura Road",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/ezyYqBvJrQ1emJ8dSZ2r.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-kanakapura",
+          "code": "",
+          "address": "P.N.Towers , Site No.04, Narayana Nagar, Kanakapura Main Rd, Doddakallasandra, Uttarahalli Hobli, Bengaluru, Karnataka 560062",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1810
+        },
+        {
+          "name": "Narayana Hospital - Banashankari, Bangalore",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/October2026/osvvjD5c46INFxmCUb06.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-hospital-banashankari-bangalore",
+          "code": "",
+          "address": "634, Outer Ring Rd, 2nd Phase, TMC Layout, Banashankari 3rd Stage, Banashankari, Bengaluru, Karnataka 560085",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1974
+        },
+        {
+          "name": "Narayana Clinic, Nagarabhavi",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/0LMCUnGowcVLo8JVRtWS.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-nagarabhavi",
+          "code": "",
+          "address": "Raju Plaza, No.15/14, 1st Main, ORR, Nagarbhavi, Bengaluru - 560078, Bengaluru, Karnataka 560072",
+          "contact": "",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1999
+        },
+        {
+          "name": "Narayana Clinic, Electronic City",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/QqcDO8r6YQatM3fUyAof.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-multispeciality-clinic-electronic-city-niladri-road",
+          "code": "",
+          "address": "E-City 1 (Velankani): Shop No. 5,6,7 SJR Equinox Retail, Opp. Gate No. 3 Velankani Information Systems Pvt. Ltd Electronic City Phase – 1, Karnataka - 560100",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1134
+        },
+        {
+          "name": "Narayana Clinic, Sarjapur",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/D3UsoouPCABP1J36LyJV.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-multispeciality-clinic-sarjapura",
+          "code": "",
+          "address": "Above HDFC Bank, 83/3 Doddakannelli, Sarjapura Main Road Bangalore, Karnataka - 560035",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1137
+        },
+        {
+          "name": "Narayana Clinic, Jayanagar",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/MpC1THPljqQ2zRf4W2bz.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-multispeciality-clinic-jayanagar",
+          "code": "",
+          "address": "1st Floor, Uday House, Opposite Jain temple 4th Block, Jayanagar Bangalore, Karnataka - 560011",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1139
+        },
+        {
+          "name": "Narayana Clinic, Manipal County",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/5yb4B1xcjphouKY4bOU8.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-manipal-county",
+          "code": "",
+          "address": "2nd Floor, 36, 37, Manipal County Rd, above KFC, opp. Aratt Royal Citadel, SRK Paradise Layout, Wellington Paradise, Singasandra, Bengaluru, Karnataka 560114",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1272
+        },
+        {
+          "name": "Narayana Clinic, Harlur Road",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/Iv63iwleranYmkdQSZXN.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-harlur-road",
+          "code": "",
+          "address": "1st Floor, Haralur Main Rd, below Cult Fit, HSR Extension, Reliable Residency Layout Phase 3, Reliable Tranquil Layout, HSR Layout, Bengaluru, Karnataka 560102",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1350
+        },
+        {
+          "name": "Narayana Clinic, HSR Layout",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/jrPdhs9AEiOLQLlhxi3s.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-hsr-layout",
+          "code": "",
+          "address": "459, Sector 4, HSR Layout, Bengaluru, Karnataka 560102",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1413
+        },
+        {
+          "name": "Narayana Aarogyam, Prestige Tech Park",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/vzXFjZR5YTniXemjNbda.webp",
+          "slug": "hospitals-clinics/bangalore/narayana-wellness-hub-prestige-tech-park",
+          "code": "",
+          "address": "Ground floor, Cosmos Building, PRESTIGE TECH PARK, Narayana Arogyam, Outer Ring Rd, Kadubeesanahalli, Bengaluru, Karnataka 560103",
+          "contact": "090358 90182",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1537
+        },
+        {
+          "name": "Narayana Clinic, JP Nagar",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/wvThqDjNncHi9HjhVB5J.png",
+          "slug": "hospitals-clinics/bangalore/narayana-clinic-jp-nagar",
+          "code": "",
+          "address": "734, 5th Main Rd, Sarakki Industrial Layout, 3rd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
+          "contact": "08069266140",
+          "city": "Bangalore",
+          "city_search_tag": "bangalore",
+          "ctaName": "Find a Doctor",
+          "id": 1729
+        }
+      ]
+    },
+    {
+      "label": "Guwahati",
+      "hospitals": [
+        {
+          "name": "Narayana Superspeciality Hospital, Guwahati",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/JKqMOMmSflxVmAxCDAMf.webp",
+          "slug": "hospitals-clinics/guwahati/narayana-superspeciality-hospital-guwahati",
+          "code": "",
+          "address": "Tularam Bafna, Civil Hospital complex , Amingoan Guwahati, Assam - 781031",
+          "contact": "08069266140",
+          "city": "Guwahati",
+          "city_search_tag": "guwahati",
+          "ctaName": "Find a Doctor",
+          "id": 177
+        }
+      ]
+    },
+    {
+      "label": "Dharwad",
+      "hospitals": [
+        {
+          "name": "SDM Narayana Heart Centre, Dharwad",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/3umOwWcCvh2R3CgBmpIZ.webp",
+          "slug": "hospitals-clinics/dharwad/sdm-narayana-heart-centre-dharwad",
+          "code": "",
+          "address": "Sdm College Of Medical Science , Manjushree Nagar, Sattur Dharwad, Karnataka - 580009",
+          "contact": "08069266140",
+          "city": "Dharwad",
+          "city_search_tag": "dharwad",
+          "ctaName": "Find a Doctor",
+          "id": 132
+        }
+      ]
+    },
+    {
+      "label": "Shimoga",
+      "hospitals": [
+        {
+          "name": "Narayana Multispeciality Clinic, Shimoga",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/eNVFgiDvrHwjZyg7F0RV.jpeg",
+          "slug": "hospitals-clinics/shimoga/narayana-multispeciality-clinic-shimoga",
+          "code": "",
+          "address": "No 93, Ground Floor, Nambala Atriium, Kuvempu Rd, Tilak Nagar, Durgigudi, Shivamogga, Karnataka 577201",
+          "contact": "08069266140",
+          "city": "Shimoga",
+          "city_search_tag": "shimoga",
+          "ctaName": "Find a Doctor",
+          "id": 145
+        },
+        {
+          "name": "Sahyadri Narayana Multispeciality Hospital, Shimoga",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/W6fkO4Jhay6Rul43hoyY.webp",
+          "slug": "hospitals-clinics/shimoga/sahyadri-narayana-multispeciality-hospital",
+          "code": "",
+          "address": "NT Road, Harakere Shivamogga, Karnataka - 577202",
+          "contact": "08069266140",
+          "city": "Shimoga",
+          "city_search_tag": "shimoga",
+          "ctaName": "Find a Doctor",
+          "id": 402
+        },
+        {
+          "name": "Narayana Medical Center, Gopala",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/PRPz69xTvfPlRSUdT47C.jpeg",
+          "slug": "hospitals-clinics/shimoga/narayana-medical-center-gopala",
+          "code": "",
+          "address": "CS arcade, Gopala Gowda Road, opp. to Karnataka Gramina Bank, E Block, Gopala Gowda Extension, Shivamogga, Karnataka 577205",
+          "contact": "08069266140",
+          "city": "Shimoga",
+          "city_search_tag": "shimoga",
+          "ctaName": "Find a Doctor",
+          "id": 1807
+        }
+      ]
+    },
+    {
+      "label": "Ahmedabad",
+      "hospitals": [
+        {
+          "name": "Narayana Multispeciality Hospital, Ahmedabad",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/W8CYYxUG3tLDwL6164UY.webp",
+          "slug": "hospitals-clinics/ahmedabad/narayana-multispeciality-hospital-ahmedabad",
+          "code": "",
+          "address": "Nr. Chakudiya Mahadev, Rakhial Cross Road , Opp. Rakhial Police Station, Rakhial Ahmedabad, Gujarat - 380023",
+          "contact": "08069266140",
+          "city": "Ahmedabad",
+          "city_search_tag": "ahmedabad",
+          "ctaName": "Find a Doctor",
+          "id": 233
+        }
+      ]
+    },
+    {
+      "label": "Jaipur",
+      "hospitals": [
+        {
+          "name": "NH-Jaipur Health City",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/kEMPEMuRMsM0htUZi5LA.webp",
+          "slug": "hospitals-clinics/jaipur/narayana-multispeciality-hospital-jaipur",
+          "code": "",
+          "address": "Sector 28, Kumbha Marg , Pratap Nagar, Sanganer Jaipur, Rajasthan - 302033",
+          "contact": "08069266140",
+          "city": "Jaipur",
+          "city_search_tag": "jaipur",
+          "ctaName": "Find a Doctor",
+          "id": 378
+        }
+      ]
+    },
+    {
+      "label": "Kolar",
+      "hospitals": [
+        {
+          "name": "RL Jalappa Narayana Heart Centre, Kolar",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/qHRUmP1JWnc1DTchQjmw.webp",
+          "slug": "hospitals-clinics/kolar/rl-jalappa-narayana-heart-centre-kolar",
+          "code": "",
+          "address": "Tamaka, SDUMC Campus Road Kolar, Karnataka - 563101",
+          "contact": "08069266140",
+          "city": "Kolar",
+          "city_search_tag": "kolar",
+          "ctaName": "Find a Doctor",
+          "id": 617
+        }
+      ]
+    },
+    {
+      "label": "Mumbai",
+      "hospitals": [
+        {
+          "name": "SRCC Children's Hospital, Managed by Narayana Health",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/September2026/uX6lgjg78aTYD7ly3RYU.webp",
+          "slug": "hospitals-clinics/mumbai/srcc-childrens-hospital",
+          "code": "",
+          "address": "SRCC Children's Hospital, managed by Narayana Health, 1-1A, K. Khadye Marg, Haji Ali, Mahalaxmi, Mumbai 400034",
+          "contact": "08069266140",
+          "city": "Mumbai",
+          "city_search_tag": "mumbai",
+          "ctaName": "Find a Doctor",
+          "id": 223
+        }
+      ]
+    },
+    {
+      "label": "Raipur",
+      "hospitals": [
+        {
+          "name": "MMI Narayana Multispeciality Hospital, Raipur",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/S1SwZyo6TIG6K1kE2Rlz.webp",
+          "slug": "hospitals-clinics/raipur/mmi-narayana-multispeciality-hospital-raipur",
+          "code": "",
+          "address": "New Dhamtari Road, Lalpur Near Pachpedi Naka Raipur, Chhattisgarh - 492001",
+          "contact": "08069266140",
+          "city": "Raipur",
+          "city_search_tag": "raipur",
+          "ctaName": "Find a Doctor",
+          "id": 23
+        }
+      ]
+    },
+    {
+      "label": "Kolkata",
+      "hospitals": [
+        {
+          "name": "Rabindranath Tagore International Institute of Cardiac Sciences, Kolkata",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/HVZsP4jvMsbckBaLyALW.webp",
+          "slug": "hospitals-clinics/kolkata/rabindranath-tagore-international-institute-cardiac-sciences",
+          "code": "",
+          "address": "124, Eastern Metropolitan Bypass , Premises No: 1489, Mukundapur Kolkata, West Bengal - 700099",
+          "contact": "08069266140",
+          "city": "Kolkata",
+          "city_search_tag": "kolkata",
+          "ctaName": "Find a Doctor",
+          "id": 267
+        },
+        {
+          "name": "Narayana Kasba Clinic",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/May2026/0WuLNLadaQ5BUouXzFaU.webp",
+          "slug": "hospitals-clinics/kolkata/narayana-kasba-clinic",
+          "code": "",
+          "address": "1962, Rajdanga Main Road Kolkata, West Bengal - 700107",
+          "contact": "6292279992",
+          "city": "Kolkata",
+          "city_search_tag": "kolkata",
+          "ctaName": "Find a Doctor",
+          "id": 1048
+        }
+      ]
+    },
+    {
+      "label": "Davangere",
+      "hospitals": [
+        {
+          "name": "SS-NARAYANA HEALTH SUPER SPECIALTY CENTER",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/August2026/SGJzlAvfX0DC3d5IHp9e.png",
+          "slug": "hospitals-clinics/davangere/ss-narayana-health-super-specialty-center",
+          "code": "",
+          "address": "SSIMS Jnanashankara , NH-4, Bypass Road Davangere, Karnataka - 577005",
+          "contact": "08069266140",
+          "city": "Davangere",
+          "city_search_tag": "davangere",
+          "ctaName": "Find a Doctor",
+          "id": 147
+        }
+      ]
+    },
+    {
+      "label": "Barasat",
+      "hospitals": [
+        {
+          "name": "Narayana Multispeciality Hospital, Barasat",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/June2026/idglVfltZAPI6CM1BOxL.webp",
+          "slug": "hospitals-clinics/barasat/narayana-multispeciality-hospital-barasat",
+          "code": "",
+          "address": "78, Jessore Road ( South), Kolkata, West Bengal - 700127",
+          "contact": "08069266140",
+          "city": "Barasat",
+          "city_search_tag": "barasat",
+          "ctaName": "Find a Doctor",
+          "id": 246
+        }
+      ]
+    },
+    {
+      "label": "Jamshedpur",
+      "hospitals": [
+        {
+          "name": "Brahmananda Narayana Multispeciality Hospital, Jamshedpur",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/rprKhg8ROVU9y9XzF0dO.webp",
+          "slug": "hospitals-clinics/jamshedpur/brahmananda-narayana-multispeciality-hospital",
+          "code": "",
+          "address": "NH-33, Near Pardih Chowk, Tamolia , District Saraikela Kharsawan Jamshedpur, Jharkhand - 831012",
+          "contact": "08069266140",
+          "city": "Jamshedpur",
+          "city_search_tag": "jamshedpur",
+          "ctaName": "Find a Doctor",
+          "id": 181
+        }
+      ]
+    },
+    {
+      "label": "Gurugram",
+      "hospitals": [
+        {
+          "name": "Narayana Superspeciality Hospital, Gurugram",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/kso77Ezpg8LVQzeFJGaw.webp",
+          "slug": "hospitals-clinics/gurugram/narayana-superspeciality-hospital-gurugram",
+          "code": "",
+          "address": "Plot 3201, Block - V , DLF Phase - III, Nathupur, Sector 24 Gurugram, Haryana - 122002",
+          "contact": "08069266140",
+          "city": "Gurugram",
+          "city_search_tag": "gurugram",
+          "ctaName": "Find a Doctor",
+          "id": 436
+        }
+      ]
+    },
+    {
+      "label": "Howrah",
+      "hospitals": [
+        {
+          "name": "Narayana Superspeciality Hospital,  Howrah",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/eFHl91cXp7iF9LxurZpc.webp",
+          "slug": "hospitals-clinics/howrah/narayana-superspeciality-hospital-howrah",
+          "code": "",
+          "address": "120/1, Andul Rd , Near Nabanna Howrah, West Bengal - 711103",
+          "contact": "08069266140",
+          "city": "Howrah",
+          "city_search_tag": "howrah",
+          "ctaName": "Find a Doctor",
+          "id": 199
+        },
+        {
+          "name": "Narayana Multispeciality Hospital, Howrah",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/TLgrHyxyPylRG1SkyNtU.webp",
+          "slug": "hospitals-clinics/howrah/narayana-multispeciality-hospital-howrah",
+          "code": "",
+          "address": "Podrah , Near Chunabati, Andul Road Howrah, West Bengal - 711109",
+          "contact": "08069266140",
+          "city": "Howrah",
+          "city_search_tag": "howrah",
+          "ctaName": "Find a Doctor",
+          "id": 188
+        }
+      ]
+    },
+    {
+      "label": "Delhi",
+      "hospitals": [
+        {
+          "name": "Dharamshila Narayana Superspeciality Hospital",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/Qni04j9gD4Ti8yALVywF.webp",
+          "slug": "hospitals-clinics/delhi/dharamshila-narayana-superspeciality-hospital",
+          "code": "",
+          "address": "Vasundhara Enclave , Near New Ashok Nagar Metro Station Dallupura, New Delhi, Delhi - 110096",
+          "contact": "08069266140",
+          "city": "Delhi",
+          "city_search_tag": "delhi",
+          "ctaName": "Find a Doctor",
+          "id": 254
+        }
+      ]
+    },
+    {
+      "label": "Mysore",
+      "hospitals": [
+        {
+          "name": "Narayana Multispeciality Hospital, Mysore",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/January2026/K0d9wwwkXzLJwNDxkGs3.webp",
+          "slug": "hospitals-clinics/mysore/narayana-multispeciality-hospital-mysore",
+          "code": "",
+          "address": "CAH/1, 3rd Phase, Devanur 2nd Stage , R.S.Naidu Nagar Mysore, Karnataka - 570019",
+          "contact": "08069266140",
+          "city": "Mysore",
+          "city_search_tag": "mysore",
+          "ctaName": "Find a Doctor",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "label": "Hosur",
+      "hospitals": [
+        {
+          "name": "Narayana Multispeciality Clinic, Hosur",
+          "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/September2026/oDxLrYnfuvF0zbzqYoUN.png",
+          "slug": "hospitals-clinics/hosur/narayana-multispeciality-clinic-hosur",
+          "code": "",
+          "address": "",
+          "contact": "08069266140",
+          "city": "Hosur",
+          "city_search_tag": "hosur",
+          "ctaName": "Find a Doctor",
+          "id": 89
+        }
+      ]
+    }
+  ],
+  "certification": {
+    "title": "India’s First QIA-Certified  Stroke-Ready Centre",
+    "subtitle": "We are also recognized as the first healthcare facility in India to be certified as a Stroke-Ready Centre by the Quality Improvement in Acute Stroke (QIA) Programme. Our rapid imaging systems and established thrombolysis protocols enable timely and effective management of neurological emergencies, including acute strokes.",
+    "image_text": "Mazumdar Shaw Medical Centre, Bangalore",
+    "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_1/desktop/4sRVt8DP2QV8yx7vDcNINzYDWNRjTk5GuoCfbCOu.jpg",
+    "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_1/mobile/vloVsV5CmsSa1bAgUUgu0LB9SNcAGcXGYWHjGLO2.jpg",
+    "alt": "block-1-image"
+  },
+  "benefits": {
+    "title": "Why Choose Narayana Health  Emergency Services",
+    "subtitle": "24x7 Emergency care you can trust—with quick response, personalised attention, and transparent pricing.",
+    "items": [
+      {
+        "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_1/desktop/WW3EBK0J8upR4kAQPlvDLuV1WVAvzKD2zcGeMDoD.webp",
+        "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_1/mobile/8ES84XkrbJtu3ILfWWhMGZyDjy0sTFFTwiyNh7iW.webp",
+        "alt": "test",
+        "title": "Quick Ambulance Support",
+        "description": "Fast ambulance dispatch and timely response  during emergencies"
+      },
+      {
+        "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_2/desktop/VIOQJJvDy2hpzIdZEwxvzjFGJ8u5o5ftOBCLoEww.webp",
+        "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_2/mobile/V4gMZ3C6NlBeIcVVKbEJ27N8TykJ72jz0FMZWkyu.webp",
+        "alt": "test",
+        "title": "Well-Equipped Ambulances",
+        "description": "Modern ambulances with life-saving equipment for safe patient transfer"
+      },
+      {
+        "desktop_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_3/desktop/dPiZrV50NtpzbgRns57XLUDAmlN3L8awxvhicCZ5.webp",
+        "mobile_image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_2/set_3/mobile/NTYdWx9Qml8QgnHMSBeoFB1BvRcsoYZzSoijSOOX.webp",
+        "alt": "test",
+        "title": "Trained Emergency Team",
+        "description": "Skilled doctors, nurses, and paramedics available 24/7 to handle all emergencies"
+      }
+    ]
+  },
+  "video": {
+    "title": "Inside the Emergency Room",
+    "subtitle": "Watch how our emergency teams manage time-sensitive cases with clinical precision and human care.",
+    "video_link": "https://www.youtube.com/embed/PXX79R0w6Cc?si=-FK2B8oKXzqJERVQ"
+  },
+  "articles": {
+    "title": "Your Emergency Action Guide",
+    "subtitle": "Quick Guidance to Act Fast, stay safe, and save Lives",
+    "items": [
+      {
+        "title": "When should you go to the emergency room? Warning signs you should never ignore",
+        "link": "when-to-go-to-emergency-room-warning-signs",
+        "image": "/emergency/guide-0.webp",
+        "alt": "",
+        "author": "Dr. Sunil Kumar Kedia",
+        "category": "Emergency",
+        "date": "June 24, 2026",
+        "authorInitial": "SK",
+        "href": "https://www.narayanahealth.org/blog/when-to-go-to-emergency-room-warning-signs"
+      },
+      {
+        "title": "Cold vs Flu vs COVID-19: How Can You Tell the Difference?",
+        "link": "cold-vs-flu-vs-covid-19-how-can-you-tell-the-difference",
+        "image": "/emergency/guide-1.webp",
+        "alt": "",
+        "author": "Narayana Health",
+        "category": "Emergency",
+        "date": "September 18, 2026",
+        "authorInitial": "NH",
+        "href": "https://www.narayanahealth.org/blog/cold-vs-flu-vs-covid-19-how-can-you-tell-the-difference"
+      },
+      {
+        "title": "What are the Emergency Signs in Elderly People That Need Immediate Attention?",
+        "link": "emergency-signs-in-elderly-people-that-need-immediate-attention",
+        "image": "/emergency/guide-2.webp",
+        "alt": "",
+        "author": "Dr. Sudip Banerjee",
+        "category": "Emergency",
+        "date": "September 22, 2026",
+        "authorInitial": "SB",
+        "href": "https://www.narayanahealth.org/blog/emergency-signs-in-elderly-people-that-need-immediate-attention"
+      },
+      {
+        "title": "Polytrauma: Understanding the Care of Patients with Multiple Injuries",
+        "link": "polytrauma-causes-symptoms-treatment-and-recovery",
+        "image": "/emergency/guide-3.webp",
+        "alt": "",
+        "author": "Dr. Sudip Banerjee",
+        "category": "Emergency",
+        "date": "October 26, 2026",
+        "authorInitial": "SB",
+        "href": "https://www.narayanahealth.org/blog/polytrauma-causes-symptoms-treatment-and-recovery"
+      }
+    ]
+  },
+  "newsletters": {
+    "title": "Emergency Newsletter",
+    "subtitle": "Stay informed with our quarterly updates on emergency care at Narayana Health",
+    "items": [
+      {
+        "title": "October 2025 Edition",
+        "cta_link": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_4/edition_1/1783505705_1780897574_1767338273_frontlinER_5th_October_2025.pdf",
+        "image": "/emergency/newsletter-0.webp",
+        "alt": "",
+        "cta_name": "Download PDF"
+      },
+      {
+        "title": "January 2026 Edition",
+        "cta_link": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_4/edition_2/1783505705_1780897182_ER_Newsletter_V5_-_Jan_2026_frontlinER.pdf",
+        "image": "/emergency/newsletter-1.webp",
+        "alt": "test",
+        "cta_name": "Download PDF"
+      },
+      {
+        "title": "April 2026 Edition",
+        "cta_link": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_4/edition_3/1783505705_1780896585_frontlinER_7th_April_2026.pdf",
+        "image": "/emergency/newsletter-2.webp",
+        "alt": "test",
+        "cta_name": "Download PDF"
+      },
+      {
+        "title": "July 2026 Edition",
+        "cta_link": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/emergency/block_4/edition_4/1783505706_ER_Newsletter_V7_-_July_2026_frontlinER.pdf",
+        "image": "/emergency/newsletter-3.webp",
+        "alt": "test",
+        "cta_name": "Download PDF"
+      }
+    ]
+  },
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Quick Clarifications About Medical Emergencies",
+    "items": [
+      {
+        "question": "When should I go to an emergency hospital?",
+        "answer": "You should visit an emergency hospital if you have serious symptoms like chest pain, breathing trouble, stroke signs, high fever with confusion, heavy bleeding, or any major injury or sudden illness."
+      },
+      {
+        "question": "Are all emergency services available at Narayana Health hospitals?",
+        "answer": "Yes. Narayana Health provides emergency services in all hospital at all its locations. These services are available day and night to treat critical medical problems without delay."
+      },
+      {
+        "question": "What happens at a hospital emergency department?",
+        "answer": "When you arrive at a hospital emergency department, doctors and nurses check your condition quickly. You will be given treatment based on how serious your illness or injury is."
+      },
+      {
+        "question": "Does Narayana Health have trauma care hospital facilities?",
+        "answer": "Yes. Narayana Health is a trusted trauma care hospital for treating accident injuries, head injuries, fractures, falls, and other serious conditions. Our team is trained to act fast in emergencies."
+      },
+      {
+        "question": "Who will treat me at an emergency care hospital?",
+        "answer": "At an emergency care hospital, trained doctors, nurses, and support teams are available 24×7. They are supported by specialist experts across heart, brain, bone, and women’s health—such as cardiologists, neurologists, orthopaedic specialists, gynaecologists, urologists, gastroenterologists, nephrologists, and surgeons across specialties, to deliver the right care at the right time."
+      },
+      {
+        "question": "What is emergency medicine?",
+        "answer": "Emergency medicine is the area of healthcare that treats urgent health problems. Doctors in this field are trained to give fast treatment for heart attacks, strokes, accidents, and other emergencies."
+      },
+      {
+        "question": "Do I need an appointment to visit a 24x7 emergency hospital?",
+        "answer": "No, you do not need any appointment. A 24x7 emergency hospital is open all day and night. You can come anytime if you need quick medical help."
+      },
+      {
+        "question": "What type of support is given for accident care?",
+        "answer": "Narayana Health provides full accident care, including first aid, tests & scans, emergency surgery, and ICU support. Our teams act quickly to help patients with injuries from accidents or falls."
+      },
+      {
+        "question": "Are accident care specialists available at all times?",
+        "answer": "Yes. At our hospitals, experienced accident care specialists are available 24x7 to take care of patients who need urgent treatment after accidents or injuries."
+      },
+      {
+        "question": "Will I get ambulance help from the emergency hospital?",
+        "answer": "Yes. Each emergency hospital at Narayana Health has 24x7 ambulance support with trained staff and equipment to bring patients safely to the hospital in an emergency."
+      }
+    ]
+  }
+}

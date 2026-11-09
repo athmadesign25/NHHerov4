@@ -17,7 +17,7 @@ export default function DoctorAvailabilityMenu({ availability, onNavigate }: { a
 
   return (
     <div className={`${patterns.panel} ${styles.menu}`} data-doctor-availability-menu>
-      <MenuImageCard title={title} image={sunday ? "/assets/doctor_1.png" : "/assets/hero_doctor.png"} alt={sunday ? "Doctor in a white coat with a stethoscope" : "Doctor standing in a hospital corridor"} portrait alignRight={!sunday} className={styles.banner} />
+      <MenuImageCard title={title} image={sunday ? "/navigation/portraits/sunday-doctor-v2.webp" : "/navigation/portraits/today-doctor-v2.webp"} alt={sunday ? "Doctor in a white coat in an empty hospital consultation room" : "Indian woman doctor centered in an empty hospital corridor"} portrait className={`${styles.banner} ${sunday ? styles.sunday : styles.today}`} />
       <div className={styles.directory} aria-label={`${title} by city and locality`}>
         {HOSPITAL_LOCALITIES.map(city => <section className={styles.cityGroup} key={city.slug} aria-labelledby={`${availability}-city-${city.slug}`}>
             <h3 id={`${availability}-city-${city.slug}`}><Link href={href(city.city)} title={city.city} className={styles.cityButton} onClick={onNavigate}>{city.city}</Link></h3>

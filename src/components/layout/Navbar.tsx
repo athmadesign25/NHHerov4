@@ -324,9 +324,9 @@ export default function Navbar() {
               <motion.a href="tel:18003090309" className={`${styles.callUs} ${styles.mobileCallUs}`} initial="initial" whileHover="animate" whileFocus="animate">
                 <PhoneCall animateOnHover /><span>Call Us</span>
               </motion.a>
-              <a href="tel:18003090309" className={styles.mobileEmergency} aria-label="Emergency">
+              <Link href="/emergency" className={styles.mobileEmergency} aria-label="Emergency">
                 <TriangleAlert size={16} /><span>Emergency</span>
-              </a>
+              </Link>
             </>}
             {/* No search affordance in the mobile bar: the hero composer
                 docks into the bottom action bar on scroll and carries search

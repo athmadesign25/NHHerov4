@@ -10,6 +10,8 @@ import {
 } from "./editorial-menu-data";
 import styles from "./EditorialMegaMenu.module.css";
 import MenuImageCard from "./MenuImageCard";
+import mobilePatterns from "./MobileMenuPatterns.module.css";
+import { mobileMenuLabel } from "./mobile-menu-label";
 
 function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
   group: EditorialGroupData;
@@ -21,30 +23,34 @@ function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
   const [expanded, setExpanded] = useState(initiallyOpen);
   const headingId = `${id}-heading`;
   const linksId = `${id}-links`;
-  const tiles = group.id === "ecosystem";
+  const tiles = group.id === "ecosystem" && !mobile;
+
+  const links = <ul id={mobile ? undefined : linksId} className={`${styles.links} ${tiles ? styles.ecosystemLinks : ""}`}>
+    {group.links.map(({ icon: Icon, ...item }) => (
+      <li key={item.href}>
+        <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${mobile ? mobilePatterns.link : ""} ${tiles ? styles.ecosystemTile : ""}`}>
+          {tiles ? (
+            item.visual?.kind === "logo" ? <span className={styles.ecosystemVisual}>
+              <Image src={item.visual.src} alt={item.label} fill sizes="160px" className={styles.ecosystemLogo} />
+            </span> : <span className={styles.ecosystemAcademicMark}>
+              <Icon aria-hidden="true" /><span>Academics &amp;<br />Research</span>
+            </span>
+          ) : <span className={styles.itemCopy}><Icon className={styles.itemIcon} aria-hidden="true" /><span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
+        </Link>
+      </li>
+    ))}
+  </ul>;
 
   return (
     <section className={styles.group} aria-labelledby={headingId}>
-      <h3 id={headingId} className={`section-eyebrow ${styles.groupTitle}`}>
+      <h3 id={headingId} className={mobile ? mobilePatterns.heading : `section-eyebrow ${styles.groupTitle}`}>
         {mobile ? (
-          <button type="button" className={styles.toggle} aria-expanded={expanded} aria-controls={linksId} onClick={() => setExpanded(!expanded)}>
-            {group.label}<ChevronDown aria-hidden="true" />
+          <button type="button" className={mobilePatterns.toggle} aria-expanded={expanded} aria-controls={linksId} onClick={() => setExpanded(!expanded)}>
+            {mobileMenuLabel(group.label)}<ChevronDown aria-hidden="true" />
           </button>
         ) : group.label}
       </h3>
-      <ul id={linksId} className={`${styles.links} ${tiles ? styles.ecosystemLinks : ""}`} hidden={mobile && !expanded}>
-        {group.links.map(({ icon: Icon, ...item }) => (
-          <li key={item.href}>
-            <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${tiles ? styles.ecosystemTile : ""}`}>
-              {tiles && item.visual && <span className={styles.ecosystemVisual}>
-                <Image src={item.visual.src} alt="" fill sizes="(max-width: 1099px) 30vw, 160px" className={item.visual.kind === "logo" ? `${styles.ecosystemLogo} ${item.label === "Medha Analytics" ? styles.medhaLogo : styles.athmaLogo}` : styles.ecosystemPhoto} />
-                {item.visual.kind === "photo" && <span className={styles.ecosystemAcademicMark} aria-hidden="true"><Icon /></span>}
-              </span>}
-              {tiles ? <span className={styles.label}>{item.label}</span> : <span className={styles.itemCopy}><Icon className={styles.itemIcon} aria-hidden="true" /><span className={styles.label}>{item.label}</span></span>}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {mobile ? <div id={linksId} className={mobilePatterns.surface} hidden={!expanded}>{links}</div> : links}
     </section>
   );
 }
@@ -57,7 +63,7 @@ export default function EditorialMegaMenu({ kind, onNavigate, mobile = false }: 
   const id = useId();
   const feature = EDITORIAL_FEATURES[kind];
   const groups = EDITORIAL_MENU_GROUPS[kind].map((group, index) => (
-    <MenuGroup key={group.id} group={group} id={`${id}-${group.id}`} mobile={mobile} initiallyOpen={index === 0} onNavigate={onNavigate} />
+    <MenuGroup key={group.id} group={group} id={`${id}-${group.id}`} mobile={mobile} initiallyOpen={mobile || index === 0} onNavigate={onNavigate} />
   ));
   const featuredCard = kind === "health-library" ? (
     <MenuImageCard title="Health Library" image={feature.image} imageSizes="(min-width: 1100px) 1000px, 100vw" imageLoading="eager" alt={feature.alt} portrait className={`${styles.feature} ${styles.learningFeature}`} />
@@ -79,7 +85,6 @@ export default function EditorialMegaMenu({ kind, onNavigate, mobile = false }: 
             {groups}
           </div>
         )}
-        {mobile && featuredCard}
       </div>
 
     </div>

@@ -62,7 +62,7 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
         {isLocation ? <DoctorLocations onNavigate={onNavigate} /> : isAvailability ? (
           <DoctorAvailabilityMenu availability={section.id === "sunday" ? "sunday" : "today"} onNavigate={onNavigate} />
         ) : <>
-          <MenuImageCard title="Find a Doctor" description={isCondition ? "By disease or condition" : "By specialty"} image={isCondition ? "/bento-patient-first.jpg" : "/assets/doctor_2.png"} alt={isCondition ? "Patient-first support and compassionate care" : "Specialist doctor in a white coat"} portrait className={styles.imageCard} />
+          <MenuImageCard title="Find a Doctor" description={isCondition ? "By disease or condition" : "By specialty"} image={isCondition ? "/patient-first-support.png" : "/navigation/portraits/specialty-doctor-v4.webp"} imageSizes="(min-width: 1100px) 1000px, 100vw" alt={isCondition ? "A heart-care specialist explaining an anatomical heart to a patient" : "Woman specialist doctor in a naturally lit hospital consultation room"} portrait className={styles.imageCard} />
           <ul className={styles.columns}>
             {section.columns.flat().map(label => <li key={label}><Link href={itemHref(label)} title={label} className={styles.item} onClick={onNavigate}><span><strong>{label.charAt(0)}</strong>{label.slice(1)}</span></Link></li>)}
           </ul>
