@@ -5,7 +5,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import GermIcon from "./GermIcon";
-import healthLibraryImage from "../../../../public/book-pills-stethoscope-wooden-table-closeup.jpg";
+import healthLibraryImage from "../../../../public/navigation/portraits/health-library-v5.webp";
 
 export type EditorialMenuKind = "health-library" | "about-us";
 
@@ -62,14 +62,6 @@ export const EDITORIAL_MENU_GROUPS: Record<EditorialMenuKind, EditorialGroup[]> 
       ],
     },
     {
-      id: "ecosystem", label: "Our ecosystem",
-      links: [
-        { label: "Academics & Research", href: "https://www.narayanahealth.org/academics", description: "Training and research programmes", icon: GraduationCap, visual: { src: "/navigation/ecosystem/academics.webp", kind: "photo" } },
-        { label: "Medha Analytics", href: "https://www.medha-analytics.ai/", description: "Data and analytics in healthcare", icon: ChartNoAxesCombined, visual: { src: "/navigation/ecosystem/medha-logo.webp", kind: "logo" } },
-        { label: "Athma", href: "https://demo.athma.health/", description: "Connected systems for healthcare", icon: Waypoints, visual: { src: "/navigation/ecosystem/athma-logo.webp", kind: "logo" } },
-      ],
-    },
-    {
       id: "work-with-us", label: "Work with us",
       links: [
         { label: "Careers", href: "https://www.narayanahealth.org/careers", description: "Join our teams", icon: BriefcaseBusiness },
@@ -77,19 +69,27 @@ export const EDITORIAL_MENU_GROUPS: Record<EditorialMenuKind, EditorialGroup[]> 
         { label: "Stakeholder Relations", href: "https://www.narayanahealth.org/stakeholder-relations", description: "Reports and disclosures", icon: Handshake },
       ],
     },
+    {
+      id: "ecosystem", label: "Our ecosystem",
+      links: [
+        { label: "Academics & Research", href: "https://www.narayanahealth.org/academics", description: "Training and research programmes", icon: GraduationCap, visual: { src: "/navigation/ecosystem/academics.webp", kind: "photo" } },
+        { label: "Medha Analytics", href: "https://www.medha-analytics.ai/", description: "Data and analytics in healthcare", icon: ChartNoAxesCombined, visual: { src: "/navigation/ecosystem/medha-logo.webp", kind: "logo" } },
+        { label: "Athma", href: "https://demo.athma.health/", description: "Connected systems for healthcare", icon: Waypoints, visual: { src: "/navigation/ecosystem/athma-logo.webp", kind: "logo" } },
+      ],
+    },
   ],
 };
 
 export const EDITORIAL_FEATURES = {
   "health-library": {
-    image: healthLibraryImage, alt: "An open medical book, stethoscope and pills on a wooden table",
+    image: healthLibraryImage, alt: "Medical reference books, a blue stethoscope and a subtle video player on a wooden table",
     title: "Not sure what's wrong?", description: "Start with our Symptoms Guide.",
     cta: "Explore Symptoms Guide", href: "/health-library/symptoms",
     // TODO: replace this permitted fallback with the Pulse entry point once it
     // opens the workspace directly; openPulseAI currently only updates the hero.
   },
   "about-us": {
-    image: "/Dr.Devi Shetty.png", alt: "Dr. Devi Shetty, founder of Narayana Health",
+    image: "/navigation/portraits/devi-shetty-v2.webp", alt: "Dr. Devi Shetty, founder of Narayana Health",
     title: "Our Story", description: "",
     cta: "Read our story", href: "/about-us",
   },

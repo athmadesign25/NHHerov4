@@ -33,7 +33,7 @@
 .search:focus-within { border-color: var(--sky-400); }
 .scroll { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-20) max(var(--space-32), env(safe-area-inset-bottom)); }
 .list, .nested { list-style: none; margin: 0; padding: 0; }
-.list > li { border-bottom: var(--space-1) solid rgba(var(--white-rgb), 0.12); }
+.list > li { border: 0; }
 .mainRow, .row { width: 100%; min-height: var(--space-56); display: flex; align-items: center; justify-content: space-between; gap: var(--space-12); border: 0; background: transparent; color: var(--white); text-align: left; font-size: var(--font-size-sm); line-height: var(--leading-body); padding: var(--space-14) 0; }
 .mainRow { padding-block: var(--space-16); }
 .mainRow strong { display: block; font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 500; }

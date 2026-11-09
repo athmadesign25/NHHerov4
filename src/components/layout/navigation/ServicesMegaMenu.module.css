@@ -12,7 +12,8 @@
 .link:focus-visible, .toggle:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
 .footer { grid-column: 2; grid-row: 2; display: flex; justify-content: flex-end; }
 .notice { margin: var(--space-16) 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
-.mobileGroup { border-bottom: var(--space-1) solid rgba(var(--white-rgb), 0.12); }
+.mobileGroup { border: 0; }
+.mobile .notice { color: var(--slate-300); }
 .mobileGroup > h3 { margin: 0; }
 .toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: var(--space-56); padding: var(--space-12) 0; border: 0; background: transparent; color: var(--white); font-family: inherit; font-size: var(--font-size-sm); line-height: var(--leading-body); text-align: left; cursor: pointer; }
 .toggle svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }

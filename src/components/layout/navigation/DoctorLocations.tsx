@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorLocations.module.css";
 import MenuAction from "./MenuAction";
-import surfaces from "./DesktopMenuSurfaces.module.css";
 
 const cities = [
   { name: "Bangalore", slug: "bangalore" },
@@ -33,9 +32,11 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
           <li key={city.slug}>
             <Link href={doctorNavUrl("location", city.name)} onClick={onNavigate} className={styles.tile}>
               <Image src={`/navigation/cities/${city.slug}.webp`} alt="" fill sizes="(min-width: 1600px) 18vw, 16vw" className={styles.image} />
-              <span className={surfaces.linearWash} aria-hidden="true" />
+              <span className={styles.wash} aria-hidden="true" />
+              <span className={styles.caption}>
+                <span className={styles.name}>{city.name}</span>
+              </span>
               <span className={styles.pattern} aria-hidden="true" />
-              <span className={styles.name}>{city.name}</span>
             </Link>
           </li>
         ))}

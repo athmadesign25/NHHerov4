@@ -1,0 +1,10 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "assets": [
+    {
+      "file": "public/navigation/portraits/health-library-v5.webp",
+      "source": "public/navigation/portraits/health-library-v4.webp",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target. Change ONLY the floating glass video-player screen above the stack of books. Raise it into an UPRIGHT vertical screen facing the viewer, like a small translucent widescreen monitor hovering above the top book with a clear visible air gap. Its screen plane must be vertical, perpendicular to the tabletop, NOT laid flat and NOT reclining on the book cover. Show its full rectangular face, roughly 16:9. Keep its full width about equal to the book stack. Align the screen's long top and bottom edges with the sloping long front edges of the book spines: the horizontal direction recedes to the same vanishing point as the spines, a gentle matching perspective tilt, while its short side edges remain nearly vertical. This is an upright floating player, with subtle muted blue-grey glass, centered play triangle and restrained bottom progress line, no stand or base. Preserve all other pixels/content as closely as possible: same three books, exact spine titles Symptoms Guide / Understanding Your Health / Health Technology, open book with blank left page and right-page Understanding Your Heart heading and ordinary full-width printed paragraphs, blue stethoscope resting OVER and occluding the printed text, bottles, pills, plant, wooden table, lighting, shadows, framing, portrait 2:3 and calm wooden space at top. No extra text, no neon, no other objects or watermark."
+    }
+  ]
+}

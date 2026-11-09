@@ -1,6 +1,6 @@
 /* Keep the dark surface on the band; mobile corner backing is scoped below. */
 .band {
-  background: linear-gradient(100deg, var(--navy-900), var(--blue-900) 30%, var(--blue-brand) 50%, var(--blue-900) 75%, var(--navy-900));
+  background: linear-gradient(90deg, var(--blue-brand) 25.07%, #0BA5EC 67.16%, #FF0009 107.75%); /* token-ok: user-specified L2 campaign gradient; exact non-token accent shades, no new global tokens */
 }
 .band {
   position: fixed;
@@ -18,28 +18,26 @@
   font-family: var(--font-family);
   color: var(--white);
 }
-/* Entry light emerges from the two edges after the strip has arrived.
-   The base is already blue, including on scroll-back reveals. */
-.band::before, .band::after {
-  content: "";
+/* One pass after the band arrives; remounting the sweep replays it on hover. */
+.shimmer {
   position: absolute;
-  inset: 0 50% 0 0;
-  z-index: -1;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
-  background: radial-gradient(ellipse at left center, rgba(var(--blue-500-rgb), 0.35), transparent 70%);
-  transform-origin: left center;
-  animation: gradientEntry calc(var(--duration-slowest) * 2) var(--ease-out) both paused;
+  background: linear-gradient(110deg, transparent 35%, rgba(var(--white-rgb), 0.08) 43%, rgba(var(--white-rgb), 0.25) 50%, rgba(var(--white-rgb), 0.08) 57%, transparent 65%);
+  animation: bandShimmer calc(var(--duration-slowest) * 4) var(--ease-standard) both;
 }
-.band::after { inset: 0 0 0 50%; background: radial-gradient(ellipse at right center, rgba(var(--blue-500-rgb), 0.35), transparent 70%); transform-origin: right center; animation-name: gradientEntryRight; }
-.band[data-entered="true"]::before, .band[data-entered="true"]::after { animation-play-state: running; }
-@keyframes gradientEntry { from { opacity: 0; transform: translateX(calc(-1 * var(--space-48))) scaleX(0.85); } to { opacity: 1; transform: translateX(0) scaleX(1); } }
-@keyframes gradientEntryRight { from { opacity: 0; transform: translateX(var(--space-48)) scaleX(0.85); } to { opacity: 1; transform: translateX(0) scaleX(1); } }
+@keyframes bandShimmer {
+  from { opacity: 0; transform: translateX(-100%); }
+  15%, 85% { opacity: 1; }
+  to { opacity: 0; transform: translateX(100%); }
+}
 .innerEdge { position: absolute; inset: 0; z-index: 1; pointer-events: none; box-shadow: var(--shadow-inset-highlight); }
 .pattern { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.patternCentre { position: absolute; left: 50%; top: 50%; width: calc(var(--space-128) * 2 + var(--space-24)); height: var(--space-80); transform: translate(-50%, -50%); background: rgba(var(--white-rgb), 0.12); mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat; -webkit-mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat; }
-.pattern::before, .pattern::after { content: ""; position: absolute; top: 50%; width: var(--space-128); height: calc(var(--space-80) + var(--space-4)); transform: translateY(-50%); background: linear-gradient(90deg, rgba(var(--white-rgb), 0.25), rgba(var(--white-rgb), 0.12) 60%, transparent); mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; -webkit-mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat; }
+.patternCentre { position: absolute; left: 50%; top: 50%; width: calc(var(--space-128) * 2 + var(--space-24)); height: var(--space-80); transform: translate(-50%, -50%); background: #1698D5; /* token-ok: user-specified central pattern stroke */ mask: url("/band-pattern-mid-l2-web.svg") center / auto 100% no-repeat; -webkit-mask: url("/band-pattern-mid-l2-web.svg") center / auto 100% no-repeat; }
+.pattern::before, .pattern::after { content: ""; position: absolute; top: 50%; width: var(--space-128); height: calc(var(--space-80) + var(--space-4)); transform: translateY(-50%); background: linear-gradient(90deg, #0662C4, #0662C4 60%, transparent); /* token-ok: user-specified left pattern stroke */ mask: url("/band-pattern-edge-l2-web.svg") left center / auto var(--space-64) no-repeat; -webkit-mask: url("/band-pattern-edge-l2-web.svg") left center / auto var(--space-64) no-repeat; }
 .pattern::before { left: 0; }
-.pattern::after { right: 0; transform: translateY(-50%) scaleX(-1); }
+.pattern::after { display: none; right: 0; transform: translateY(-50%) scaleX(-1); }
 .message { position: relative; z-index: 2; min-width: 0; margin: 0; font-size: var(--font-size-base); font-weight: 500; line-height: var(--leading-snug); color: var(--white); }
 .actions { position: relative; z-index: 2; display: flex; align-items: center; gap: var(--space-8); flex-shrink: 0; }
 .link { position: relative; padding: var(--space-8) var(--space-4); font-size: var(--font-size-base); font-weight: 500; line-height: var(--leading-snug); color: var(--white); text-decoration: none; white-space: nowrap; transition: color var(--duration-fast) var(--ease-out); }
@@ -51,11 +49,13 @@
 @media (max-width: 1024px) { .band { gap: var(--space-16); } .message { font-size: var(--font-size-sm); } }
 @media (max-width: 768px) {
   .band { height: var(--space-48); padding: 0; }
-  .mobileBackdrop { background: linear-gradient(100deg, var(--navy-900), var(--blue-900) 30%, var(--blue-brand) 50%, var(--blue-900) 75%, var(--navy-900)); }
+  /* A light navy scrim keeps small moving white text legible over the cyan.
+     The same paint backs the rounded hero corners, including the red end. */
+  .band, .mobileBackdrop { background-image: linear-gradient(rgba(var(--navy-900-rgb), 0.25), rgba(var(--navy-900-rgb), 0.25)), linear-gradient(90deg, var(--blue-brand) 25.07%, #0BA5EC 67.16%, #FF0009 107.75%); } /* token-ok: same user-specified L2 campaign colors */
   .band, .mobileBackdrop { background-size: 100% calc(var(--space-48) + var(--radius-xl)); background-repeat: no-repeat; }
-  .band::before, .band::after { display: none; animation: none; }
   .patternCentre { display: none; }
-  .pattern::before, .pattern::after { width: var(--space-96); height: var(--space-48); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
+  .pattern::after { display: block; background: linear-gradient(90deg, rgba(var(--white-rgb), 0.2), transparent); }
+  .pattern::before, .pattern::after { width: var(--space-96); height: var(--space-48); filter: none; mask-image: url("/band-pattern-edge.svg"); -webkit-mask-image: url("/band-pattern-edge.svg"); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
   .marquee { position: relative; z-index: 2; flex: 1 1 auto; min-width: 0; height: 100%; overflow: hidden; width: 100%; mask-image: linear-gradient(to right, transparent, var(--black) var(--space-24), var(--black) calc(100% - var(--space-56)), transparent calc(100% - var(--space-8))); -webkit-mask-image: linear-gradient(to right, transparent, var(--black) var(--space-24), var(--black) calc(100% - var(--space-56)), transparent calc(100% - var(--space-8))); }
   .marqueeTrack { display: flex; align-items: center; width: max-content; height: 100%; animation: bandMarquee calc(var(--duration-slowest) * 30) linear infinite; }
   .band:hover .marqueeTrack, .band:focus-within .marqueeTrack { animation-play-state: paused; }
@@ -66,7 +66,7 @@
 }
 @keyframes bandMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) {
-  .band::before, .band::after { animation: none; }
+  .shimmer { display: none; animation: none; }
   .link::after { transition: none; }
   .marqueeTrack { animation: none; }
 }

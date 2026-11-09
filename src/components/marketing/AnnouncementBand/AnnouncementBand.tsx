@@ -9,7 +9,7 @@
  * publishes its own height as `--band-height` on <html>, which is the one
  * value the navbar reads to move down.
  *
- * The blue background grows and slides into its resting gradient on entry.
+ * A light shimmer sweeps across after entry and on each hover.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -40,7 +40,7 @@ const SCROLL_OUT = 24;
 export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: BandConfig }) {
   const [open, setOpen] = useState(true);
   const reduced = useReducedMotion();
-  const [gradientReady, setGradientReady] = useState(false);
+  const [shimmerRun, setShimmerRun] = useState(0);
   const [atTop, setAtTop] = useState(true);
   const bandRef = useRef<HTMLElement>(null);
   // The phone gets a marquee instead of a static line: 330px cannot hold
@@ -59,6 +59,7 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
   }, []);
 
   const shown = open && atTop;
+  const playShimmer = () => { if (!reduced) setShimmerRun(run => run + 1); };
   useEffect(() => announcementStore.register("l2", [
     { id: "top-announcement", title: config.message, image: "/doctor_patient.png", href: config.link.href },
     ...SUPPORTING_ANNOUNCEMENTS,
@@ -107,10 +108,13 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
         <motion.aside
           ref={bandRef}
           className={styles.band}
-          data-entered={gradientReady}
+          onHoverStart={playShimmer}
+          onAnimationStart={(target) => {
+            if (typeof target === "object" && "y" in target && target.y === 0) setShimmerRun(0);
+          }}
           onAnimationComplete={(target) => {
             if (typeof target === "object" && "y" in target && target.y === 0) {
-              setGradientReady(true);
+              playShimmer();
             }
           }}
           role="region"
@@ -125,6 +129,7 @@ export default function AnnouncementBand({ config = DEFAULT_BAND }: { config?: B
               click through. */}
           <span className={styles.pattern} aria-hidden><span className={styles.patternCentre} /></span>
           <span className={styles.innerEdge} aria-hidden />
+          {shimmerRun > 0 && <span key={shimmerRun} className={styles.shimmer} aria-hidden />}
 
 
           {isMobile ? (
