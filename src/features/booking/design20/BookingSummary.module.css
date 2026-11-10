@@ -32,7 +32,7 @@
 .edit { display: inline-flex; align-items: center; justify-content: flex-start; min-height: calc(var(--space-40) + var(--space-4)); min-width: calc(var(--space-40) + var(--space-4)); margin-block: calc(var(--space-8) * -1); padding: 0; border: 0; border-radius: var(--radius-md); background: none; color: var(--color-primary); font: inherit; font-weight: 500; font-size: var(--font-size-sm); line-height: var(--leading-body); cursor: pointer; transition: color var(--duration-fast); }
 .benefits { display: grid; gap: var(--space-8); }
 .benefit { display: flex; align-items: center; min-width: 0; width: 100%; border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); transition: background var(--duration-fast), border-color var(--duration-fast); }
-.benefitMain { display: flex; align-items: center; gap: var(--space-12); min-height: var(--space-48); min-width: 0; flex: 1; padding: var(--space-12); border: 0; border-radius: inherit; color: var(--color-primary); background: none; text-align: left; font: inherit; cursor: pointer; }
+.benefitMain { --disclosure-icon-hover: transparent; display: flex; align-items: center; gap: var(--space-12); min-height: var(--space-48); min-width: 0; flex: 1; padding: var(--space-12); border: 0; border-radius: inherit; color: var(--color-primary); background: none; text-align: left; font: inherit; cursor: pointer; }
 .benefitMain > svg { flex-shrink: 0; }
 .benefitMain > svg:last-child { width: var(--space-16); color: var(--color-primary); }
 .benefitMain > span { flex: 1; min-width: 0; }

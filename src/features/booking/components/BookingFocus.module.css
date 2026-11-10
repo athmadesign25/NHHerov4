@@ -1,0 +1,67 @@
+.backdrop {
+  /* Shared by the profile dock and the inline doctor-card booking step. */
+  --booking-scrim-opacity: .25;
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: rgba(var(--navy-900-rgb), var(--booking-scrim-opacity));
+}
+
+/* The site's footer-reveal wrapper otherwise traps overlays below the navbar.
+   Release that stacking context only while a booking backdrop is mounted. */
+:global(#main-content):has(.backdrop) { z-index: auto !important; }
+
+.scrollLocked { overflow: hidden; scrollbar-gutter: stable; }
+
+/* Inline booking remains below sticky search. Split the dimming at the
+   toolbar's measured edge so the navbar stays dimmed without covering the card.
+   FilterScrollArea updates this edge during scrolling, resizing and nav motion. */
+.inlineBackdrop {
+  top: calc(var(--d3-toolbar-bottom, var(--nav-height)) + var(--space-8));
+  z-index: 40;
+}
+.toolbarBackdrop {
+  bottom: auto;
+  height: calc(var(--d3-toolbar-bottom, var(--nav-height)) + var(--space-8));
+}
+
+.glow {
+  --booking-spectrum: conic-gradient(
+    var(--color-primary), var(--cyan-bright) 24%, var(--blue-600) 48%,
+    var(--violet-400) 68%, var(--pink-500) 82%, var(--red-400) 90%, var(--color-primary)
+  );
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: bookingFocusGlow calc(var(--duration-slower) * 6) linear both;
+}
+
+.halo, .stroke, .track {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.track {
+  padding: var(--space-1);
+  background: var(--booking-spectrum);
+  -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.halo { filter: blur(var(--space-8)); opacity: .5; }
+.halo .track { padding: var(--space-4); }
+
+@keyframes bookingFocusGlow {
+  0% { opacity: 0; }
+  15%, 40% { opacity: .7; }
+  70% { opacity: .3; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .glow { display: none; animation: none; }
+}
+@media (prefers-reduced-transparency: reduce) { .halo { display: none; } }

@@ -36,7 +36,7 @@
 .payment { min-width: 0; border-left: var(--space-1) solid color-mix(in srgb, var(--d7-text) 7%, transparent); padding-left: var(--space-32); }
 .benefits { display: grid; gap: var(--space-8); }
 .benefit { display: flex; align-items: center; min-width: 0; width: 100%; border: 0; border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-primary) 4%, transparent); transition: background var(--transition-fast); }
-.benefitMain { display: flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-8) * 5.5); min-width: 0; flex: 1; padding: var(--space-8) calc(var(--space-8) * 1.5); border: 0; border-radius: inherit; color: var(--color-primary); background: none; text-align: left; font: inherit; cursor: pointer; }
+.benefitMain { --disclosure-icon-hover: transparent; display: flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-8) * 5.5); min-width: 0; flex: 1; padding: var(--space-8) calc(var(--space-8) * 1.5); border: 0; border-radius: inherit; color: var(--color-primary); background: none; text-align: left; font: inherit; cursor: pointer; }
 .benefitMain > svg { flex-shrink: 0; }
 .benefitMain > svg:last-child { width: calc(var(--space-8) * 1.75); color: var(--d7-muted); }
 .benefitMain > span { flex: 1; min-width: 0; }
@@ -145,7 +145,6 @@
 .panel:is([data-summary-design="3"], [data-summary-design="4"]) .savingsShimmer { animation-delay: var(--duration-fast); }
 @media (hover: hover) {
   .panel:is([data-summary-design="3"], [data-summary-design="4"]) .benefit:has(.benefitMain:hover:not(:disabled)), .panel:is([data-summary-design="3"], [data-summary-design="4"]) .credits:hover:not(:disabled) { background: color-mix(in srgb, var(--benefit-accent) 12%, var(--color-bg-card)); }
-  .panel:is([data-summary-design="3"], [data-summary-design="4"]) .benefitMain:hover:not(:disabled) > svg:last-child { transform: translateX(var(--space-2)); }
 }
 @media (prefers-reduced-motion: reduce) { .panel:is([data-summary-design="3"], [data-summary-design="4"]) .benefit, .panel:is([data-summary-design="3"], [data-summary-design="4"]) .benefitMain > svg:last-child { transition: none; } .panel:is([data-summary-design="3"], [data-summary-design="4"]) .benefitMain:hover:not(:disabled) > svg:last-child { transform: none; } }
 @media (prefers-reduced-transparency: reduce) { .panel:is([data-summary-design="3"], [data-summary-design="4"]) { background: var(--color-bg-card); } }
@@ -164,5 +163,5 @@
 .titleBack { display: grid; place-items: center; width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-primary); cursor: pointer; transition: background-color var(--duration-fast), color var(--duration-fast); }
 .titleBack:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 .titleBack:disabled { opacity: .5; cursor: default; }
-@media (hover: hover) { .titleBack:hover:not(:disabled) { background: color-mix(in srgb, var(--color-primary) 5%, transparent); color: var(--color-primary-dark); } }
+@media (hover: hover) { .titleBack:hover:not(:disabled) { color: var(--color-primary-dark); } }
 @media (prefers-reduced-motion: reduce) { .titleBack { transition: none; } }

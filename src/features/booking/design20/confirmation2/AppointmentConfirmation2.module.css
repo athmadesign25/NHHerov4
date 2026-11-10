@@ -105,7 +105,6 @@
   .home:hover, .calendar:hover { color: var(--color-primary-dark); }
   .distance:hover { color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); }
   .paymentDetails summary:hover { color: var(--color-primary); }
-  .paymentDetails summary:hover > svg { background: color-mix(in srgb, currentColor 8%, transparent); }
 }
 @keyframes detailReveal { from { opacity: 0; transform: translateY(calc(var(--space-4) * -1)); } to { opacity: 1; transform: translateY(0); } }
 @keyframes savingsSwipe { from { transform: translateX(-100%); } to { transform: translateX(100%); } }

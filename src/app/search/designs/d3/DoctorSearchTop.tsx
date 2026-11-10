@@ -86,17 +86,15 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
     return () => { cancelled = true; window.clearTimeout(timer); };
   }, [location, locationFirst]);
   useEffect(() => {
-    let last = 0;
-    const onScroll = () => {
-      const current = window.scrollY;
-      if (current < 120) { setNavVisible(true); last = current; return; }
-      if (Math.abs(current - last) < 12) return;
-      setNavVisible(current < last);
-      last = current;
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Follow the navbar's actual state, including an open navigation menu.
+    // Independent direction/dead-zone tracking can disagree after restoration.
+    const nav = document.querySelector<HTMLElement>("[data-site-nav]");
+    if (!nav) return;
+    const sync = () => setNavVisible(nav.dataset.navHidden !== "true");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(nav, { attributes: true, attributeFilter: ["data-nav-hidden"] });
+    return () => observer.disconnect();
   }, []);
 
   const submit = (event: FormEvent) => {

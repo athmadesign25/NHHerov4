@@ -99,7 +99,6 @@
   .secondary:hover { color: var(--color-primary-dark); background: color-mix(in srgb, var(--color-primary) 5%, transparent); }
   .calendar:hover { color: var(--color-primary-dark); }
   .distance:hover { color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); }
-  .paymentDetails summary:hover .breakdownLink > svg { background: color-mix(in srgb, var(--color-primary) 8%, transparent); }
 }
 @keyframes successRipple { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(1.25); } }
 @keyframes detailReveal { from { opacity: 0; transform: translateY(calc(var(--space-4) * -1)); } to { opacity: 1; transform: translateY(0); } }

@@ -16,6 +16,8 @@ import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/s
 import type { ConsultationMode, DoctorListingItem } from "@/features/search/doctorListing";
 import { duration, ease } from "@/lib/motion";
 import styles from "./DoctorProfileBooking.module.css";
+import { BookingBackdrop, BookingFocusGlow } from "@/features/booking/components/BookingFocus";
+import useProfileBookingModal from "./useProfileBookingModal";
 
 export interface ProfileBookingRequest { id: number; mode: ConsultationMode; hospital: string }
 
@@ -26,30 +28,19 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
   const resume = params.get("booking") === doctor.id && params.get("bookingResume") === "1";
   const [started, setStarted] = useState(resume);
   const [expanded, setExpanded] = useState(resume);
+  const [authOpen, setAuthOpen] = useState(false);
   const action = useRef<HTMLButtonElement>(null);
   const dock = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const bookingDoctor = getDesign20BookingDoctor(doctor.id);
   const available = !!bookingDoctor && Object.values(doctor.modes).some(Boolean);
   const id = useId();
+  useProfileBookingModal(expanded, dock);
   useEffect(() => {
     if (!bookingRequest || !available) return;
     setStarted(true);
     setExpanded(true);
   }, [bookingRequest, available]);
-  useEffect(() => {
-    if (!expanded) return;
-    const dismissOutside = (event: PointerEvent) => {
-      if (event.button !== 0 || !(event.target instanceof Node)) return;
-      if (dock.current?.contains(event.target) || event.composedPath().includes(dock.current as EventTarget)) return;
-      // Portal-based login and modal interactions must not dismiss the booking panel.
-      if (document.querySelector('dialog[open], [role="dialog"][aria-modal="true"]')) return;
-      // Keep focus on the page control the user clicked, rather than stealing it.
-      setExpanded(false);
-    };
-    document.addEventListener("pointerdown", dismissOutside);
-    return () => document.removeEventListener("pointerdown", dismissOutside);
-  }, [expanded]);
   const toggle = () => {
     setStarted(true);
     setExpanded(value => !value);
@@ -58,23 +49,26 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     setExpanded(false);
     requestAnimationFrame(() => action.current?.focus({ preventScroll: true }));
   };
-  return <motion.aside ref={dock} className={styles.dock} layoutRoot data-profile-booking data-expanded={expanded} data-started={started} data-bookable={available} data-tone={tone}
+  return <>
+    <BookingBackdrop open={expanded} suspended={authOpen} onDismiss={close} />
+    <motion.aside ref={dock} className={styles.dock} layoutRoot data-booking-focus data-profile-booking data-expanded={expanded} data-started={started} data-bookable={available} data-tone={tone}
+    role={expanded ? "dialog" : undefined} aria-modal={expanded || undefined} tabIndex={-1}
     onKeyDown={event => {
-      if (event.key === "Escape" && expanded && !document.querySelector(':popover-open, dialog[open], [role="dialog"]')) {
+      if (event.key === "Escape" && !event.defaultPrevented && expanded && !document.querySelector(':popover-open, dialog[open], [role="dialog"][aria-modal="true"]:not([data-profile-booking])')) {
         event.preventDefault(); close();
       }
     }}
     aria-label={`Book an appointment with ${doctor.name}`}>
     <motion.div className={styles.animatedSurface} layout={!reduced} layoutAnchor={{ x: 0, y: 1 }} style={{ originY: 1 }}
       transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
-    <span className={styles.bookingAccent} aria-hidden="true">
+    {expanded ? <BookingFocusGlow /> : <span className={styles.bookingAccent} aria-hidden="true">
       <span className={styles.accentGlow}><span className={styles.accentTrack} /></span>
       <span className={styles.accentStroke}><span className={styles.accentTrack} /></span>
-    </span>
+    </span>}
     <div className={styles.surface}>
     {started && bookingDoctor ? <BookingControls doctor={bookingDoctor}
       initialSelection={design20RequestedSelection(bookingDoctor, new URLSearchParams({ mode: bookingRequest?.mode ?? initialMode, hospital: bookingRequest?.hospital ?? doctor.hospital, ...(date ? { date } : {}) }))}
-      returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} toggle={toggle} close={close} action={action} panelId={id} />
+      returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} toggle={toggle} close={close} action={action} panelId={id} onAuthChange={setAuthOpen} />
       : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary}>
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
@@ -83,7 +77,7 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
       </motion.div>}
     </div>
     </motion.div>
-  </motion.aside>;
+  </motion.aside></>;
 }
 
 function Price({ fee }: { fee: string }) {
@@ -91,14 +85,16 @@ function Price({ fee }: { fee: string }) {
   return <div className={styles.price}><strong>{priced ? appointmentPricing(fee).base : "Confirm fee"}</strong>{priced && <span>onwards</span>}</div>;
 }
 
-function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, resume, expanded, toggle, close, action, panelId }: {
+function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, resume, expanded, toggle, close, action, panelId, onAuthChange }: {
   doctor: BookingDoctorSummary; initialSelection: AppointmentSelection; returnTo: string; bookingRequest?: ProfileBookingRequest; resume: boolean;
   expanded: boolean; toggle: () => void; close: () => void; action: RefObject<HTMLButtonElement | null>; panelId: string;
+  onAuthChange: (open: boolean) => void;
 }) {
   const flow = useDesign20Booking(doctor, { initialSelection, returnTo, inline: true, preserveEntry: true, resume });
   const reduced = useReducedMotion();
   const heading = useRef<HTMLHeadingElement>(null);
   const signingIn = flow.phase === "auth" && !flow.isUserLoggedIn;
+  useEffect(() => { onAuthChange(signingIn); }, [signingIn, onAuthChange]);
   const { selection } = flow.draft;
   const appliedRequest = useRef<number | null>(null);
   useEffect(() => {

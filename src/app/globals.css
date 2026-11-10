@@ -20,6 +20,7 @@
   --color-primary-mid: #1565C0;
   --color-primary-tint: rgba(3, 78, 162, 0.08);
   --color-primary-tint-hover: rgba(3, 78, 162, 0.15);
+  --color-disclosure-hover: rgba(var(--black-rgb), 0.08);
   --color-warning: #F59E0B;
   --font-size-5xl: 48px;
   --font-size-6xl: 60px;

@@ -1,3 +1,4 @@
+.dock[data-expanded="true"] { z-index: 1002; }
 .dock {
   --target: calc(var(--sp-6) - var(--sp-1) / 2);
   --d7-surface: var(--journey-paper-surface);
@@ -69,10 +70,6 @@
 .dock[data-bookable="true"][data-started="false"] .accentTrack {
   animation: bookingAccentLap var(--profile-booking-lap) linear both;
 }
-.dock[data-bookable="true"][data-expanded="true"] .bookingAccent {
-  animation: bookingAccentOpen calc(var(--duration-slower) * 6) linear both;
-}
-.dock[data-expanded="true"] .accentTrack { background: var(--profile-booking-spectrum); }
 @keyframes bookingAccentLap {
   from { --profile-booking-angle: 0deg; }
   to { --profile-booking-angle: 360deg; }
@@ -80,12 +77,6 @@
 @keyframes bookingAccentIntro {
   0%, 100% { opacity: 0; }
   10%, 85% { opacity: .9; }
-}
-@keyframes bookingAccentOpen {
-  0% { opacity: 0; }
-  15%, 40% { opacity: .7; }
-  70% { opacity: .3; }
-  100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce), (forced-colors: active) {
   .dock .bookingAccent { display: none; animation: none; }
@@ -108,7 +99,8 @@
 .header > div { flex: 1; min-width: 0; }
 .header h2 { margin: 0; font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg)); font-weight: 600; line-height: 1.4; outline: none; }
 .header p { margin: calc(var(--sp-1) / 2) 0 0; font-size: var(--font-size-sm); line-height: 1.5; color: var(--d7-muted); overflow-wrap: anywhere; }
-.collapse { display: grid; place-items: center; flex: 0 0 var(--target); width: var(--target); height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-bg-card) 55%, transparent); color: var(--d7-muted); cursor: pointer; transition: background-color var(--transition-fast); }
+.collapse { --disclosure-icon-hover: transparent; display: grid; place-items: center; flex: 0 0 var(--target); width: var(--target); height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-bg-card) 55%, transparent); color: var(--d7-muted); cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .collapse:hover { background-color: color-mix(in srgb, var(--color-bg-card) 92%, var(--black)); } }
 .options { container: profile-slots / inline-size; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--d7-muted) 28%, transparent) transparent; padding: var(--sp-1) var(--sp-2) var(--sp-2); }
 .summary { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-1) var(--sp-3); align-items: center; padding: calc(var(--sp-1) * 1.5) var(--sp-2); }
 .dock[data-expanded="true"] .summary { border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent); }
@@ -129,7 +121,7 @@
 .dock :is(a, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 @container profile-slots (max-width: 320px) { .options fieldset label > span { white-space: normal; font-size: var(--font-size-xs); padding-inline: calc(var(--sp-1) / 2); gap: calc(var(--sp-1) / 2); text-align: center; } }
 @media (min-width: 640px) { .summary { grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--sp-12) * 2), auto); padding: var(--sp-2) var(--sp-3); gap: var(--sp-3); } .doctor { display: block; } .selected { grid-column: auto; } .header { padding: var(--sp-3) var(--sp-3) var(--sp-1); } .options { padding: var(--sp-1) var(--sp-3) var(--sp-3); } }
-@media (hover: hover) { .primary:not(:disabled):hover { background: var(--color-primary-dark); } .collapse:hover { background: var(--color-bg-card); } }
+@media (hover: hover) { .primary:not(:disabled):hover { background: var(--color-primary-dark); } }
 @media (prefers-reduced-motion: reduce) { .primary, .collapse { transition: none; } }
 @media (prefers-reduced-transparency: reduce) { .surface { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media (forced-colors: active) { .surface { background: Canvas; border-color: CanvasText; } .primary { border: 1px solid ButtonText; } }
