@@ -8,6 +8,9 @@ modules here. Keep this folder free of route and feature imports.
   responsive toolbar rules. Import the same module for the caller-provided
   location control so its descendant selectors remain scoped consistently.
 - `SearchTheme.module.css` supplies the existing scoped control palette.
+- `ControlChip.module.css` owns the doctor-listing control capsule, touch target,
+  focus and reduced-motion states. Doctor controls retain a compatibility export;
+  Health Checkups imports this shared module directly and supplies blue selection tokens.
 
 The location picker, query state, search results and navigation stay with each
 feature. Pass them through props; do not put booking or catalogue logic here.

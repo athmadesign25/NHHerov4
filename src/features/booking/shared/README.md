@@ -15,6 +15,9 @@ a second copy of state or change the booking flow.
 | `BookingMemberPicker.tsx` | Existing member selection | Client component |
 | `NewPatient.tsx` | New member form | Client component |
 | `RazorpayDemo.tsx` | Frontend demo payment gateway | Client component |
+| `BookingActionBar.tsx` | Existing booking FAB surface and animated amount with neutral action labels | Client component |
+| `BookingOutcomeActions.tsx` | Persistent confirmation/reservation FAB with contextual message or payable amount; reserves space below page content | Client component |
+| `SuccessMark.tsx` | Existing confirmation tick and success microinteraction | Client component |
 
 Import the specific entry needed. Keep pure utilities and types separate from
 client components; do not add a combined barrel that pulls browser code into
