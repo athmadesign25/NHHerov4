@@ -1,9 +1,10 @@
 /* ─── BLOG BENTO GRID SECTION (Exact Homepage WhyChooseNH Architecture) ─── */
 
 .bentoSection {
+  position: relative;
   width: 100%;
   padding-block: 84px 96px;
-  background-color: #060c18;
+  background-color: transparent;
   color: #ffffff;
   overflow: hidden;
   box-sizing: border-box;

@@ -2,16 +2,34 @@
 .heroSection {
   position: relative;
   width: 100%;
-  min-height: clamp(740px, 92vh, 920px);
+  min-height: clamp(560px, 90vh, 920px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: #060c18;
   overflow: hidden;
   /* Comfortably pushed down, balanced lower vertically as per NH syntax */
-  padding-top: calc(var(--nav-height, 72px) + clamp(80px, 12vh, 140px));
-  padding-bottom: 44px;
+  padding-top: calc(var(--nav-height, 72px) + clamp(32px, 9vh, 140px));
+  padding-bottom: clamp(24px, 4.5vh, 44px);
   box-sizing: border-box;
+}
+
+@media (min-width: 769px) and (max-height: 800px) {
+  .heroSection {
+    min-height: calc(100vh - 16px);
+    padding-top: calc(var(--nav-height, 72px) + clamp(18px, 4vh, 44px));
+    padding-bottom: 24px;
+  }
+  .container {
+    gap: 24px;
+  }
+  .contentBlock {
+    gap: 12px;
+    margin-top: clamp(8px, 2vh, 20px);
+  }
+  .statsDivider {
+    margin: 12px 0;
+  }
 }
 
 @media (max-width: 768px) {

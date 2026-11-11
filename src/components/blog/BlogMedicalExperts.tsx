@@ -5,10 +5,12 @@ import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion";
 import { ArrowRight, Award } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./BlogMedicalExperts.module.css";
+
+const MotionLink = motion.create(Link);
 
 interface ExpertDoctor {
   name: string;
@@ -17,6 +19,10 @@ interface ExpertDoctor {
   hospital: string;
   image: string;
   articlesCount: number;
+}
+
+interface BlogMedicalExpertsProps {
+  scrollYProgress?: MotionValue<number>;
 }
 
 const EXPERT_DOCTORS: ExpertDoctor[] = [
@@ -54,18 +60,60 @@ const EXPERT_DOCTORS: ExpertDoctor[] = [
   },
 ];
 
-export default function BlogMedicalExperts() {
+export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExpertsProps) {
+  const fallbackProgress = useMotionValue(0);
+  const activeProgress = scrollYProgress || fallbackProgress;
+
+  const titleColor = useTransform(
+    activeProgress,
+    [0, 0.5, 1],
+    ["#0f172a", "#ffffff", "#ffffff"]
+  );
+  const subtitleColor = useTransform(
+    activeProgress,
+    [0, 0.5, 1],
+    ["#64748b", "rgba(255, 255, 255, 0.75)", "rgba(255, 255, 255, 0.75)"]
+  );
+  const linkTextColor = useTransform(
+    activeProgress,
+    [0, 0.5, 1],
+    ["#034EA2", "#38bdf8", "#38bdf8"]
+  );
+  const linkBorderColor = useTransform(
+    activeProgress,
+    [0, 0.5, 1],
+    ["rgba(3, 78, 162, 0.16)", "rgba(56, 189, 248, 0.32)", "rgba(56, 189, 248, 0.32)"]
+  );
+  const linkBgColor = useTransform(
+    activeProgress,
+    [0, 0.5, 1],
+    ["rgba(3, 78, 162, 0.05)", "rgba(56, 189, 248, 0.10)", "rgba(56, 189, 248, 0.10)"]
+  );
+
   return (
     <section className={styles.expertsSection} data-nav-theme="light">
       <div className={styles.container}>
         {/* Section Header (Centered Consistency) */}
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>
-            <TextSweepEffect words={["Authored & Verified by Leading Medical Experts"]} sweepMs={1400} finalColor="#0f172a" />
-          </h2>
-          <p className={styles.sectionSubtitle}>
+          <motion.h2
+            className={styles.sectionTitle}
+            style={{
+              color: titleColor,
+              ["--sweep-final-color" as string]: titleColor,
+            }}
+          >
+            <TextSweepEffect
+              words={["Authored & Verified by Leading Medical Experts"]}
+              sweepMs={1400}
+              finalColor="var(--sweep-final-color, #0f172a)"
+            />
+          </motion.h2>
+          <motion.p
+            className={styles.sectionSubtitle}
+            style={{ color: subtitleColor }}
+          >
             Every health guide, symptom breakdown, and treatment explanation on Narayana Health is written or clinically reviewed by senior department heads, surgeons, and specialists.
-          </p>
+          </motion.p>
         </div>
 
         {/* Doctor Cards Grid (Exact refDoctorCard style) */}
@@ -115,10 +163,23 @@ export default function BlogMedicalExperts() {
 
         {/* Centered Clickable Text CTA (Clean Text Only, No Button Frame) */}
         <div className={styles.centerActionWrap}>
-          <Link href={defaultDoctorListingUrl(new URLSearchParams())} className={styles.viewAllTextLink}>
+          <MotionLink
+            href={defaultDoctorListingUrl(new URLSearchParams())}
+            className={styles.viewAllTextLink}
+            style={{
+              color: linkTextColor,
+              borderColor: linkBorderColor,
+              backgroundColor: linkBgColor,
+            }}
+          >
             <span>View all specialists</span>
-            <ArrowRight size={16} className={styles.textLinkArrow} />
-          </Link>
+            <motion.span
+              style={{ color: linkTextColor, display: "inline-flex" }}
+              aria-hidden="true"
+            >
+              <ArrowRight size={16} className={styles.textLinkArrow} />
+            </motion.span>
+          </MotionLink>
         </div>
       </div>
     </section>

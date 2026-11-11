@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import {
   TREATMENTS_PROCEDURES_DATA,
@@ -583,40 +584,23 @@ export default function TreatmentsV2Library({
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT (SECOND OPINION BOARD WITH INTEGRATED GRADIENT IMAGE) ─── */}
-      <section className={styles.trustBanner}>
-        <div className={styles.trustImageBg}>
-          <Image
-            src="/top-medical-experts.png"
-            alt="Narayana Health multidisciplinary surgical board"
-            fill
-            sizes="(max-width: 900px) 100vw, 640px"
-            className={styles.trustImage}
-          />
-          <div className={styles.trustGradientOverlay} />
-        </div>
-
-        <div className={styles.trustContent}>
-          <div className={styles.trustEyebrow}>MULTI-DISCIPLINARY SURGICAL BOARD</div>
-          <h3 className={styles.trustTitle}>
-            Looking for a surgical second opinion or cost estimate?
-          </h3>
-          <p className={styles.trustDesc}>
-            Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing.
-          </p>
-
-          <div className={styles.trustActions}>
-            <a href="tel:18003090309" className={styles.trustSecondaryBtn}>
-              <PhoneCall size={15} />
-              <span>1800 309 0309</span>
-            </a>
-            <Link href={buildSearchUrl()} className={styles.trustPrimaryBtn}>
-              <Calendar size={15} />
-              <span>Request Second Opinion</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        bg="dark"
+        eyebrow="MULTI-DISCIPLINARY SURGICAL BOARD"
+        title="Looking for a Surgical Second Opinion or Cost Estimate?"
+        subtitle="Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Book Surgical Consultation",
+        }}
+        secondaryBtn={{
+          href: "/health-packages",
+          text: "Explore Health Packages",
+        }}
+        phoneText="Surgical Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* ─── MOBILE FILTER BOTTOM SHEET DRAWER ─── */}
       <AnimatePresence>

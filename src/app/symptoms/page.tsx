@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { SYMPTOMS_DATA, SymptomItem } from "@/data/symptomsData";
 import styles from "./SymptomsLibrary.module.css";
@@ -504,40 +505,23 @@ export default function SymptomsLibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT ───────────────────────────────────────── */}
-      <section className={styles.trustBanner}>
-        <div className={styles.trustImageBg}>
-          <Image
-            src="/top-medical-experts.png"
-            alt="Narayana Health multidisciplinary emergency team"
-            fill
-            sizes="(max-width: 900px) 100vw, 640px"
-            className={styles.trustImage}
-          />
-          <div className={styles.trustGradientOverlay} />
-        </div>
-
-        <div className={styles.trustContent}>
-          <div className={styles.trustEyebrow}>24×7 EMERGENCY & TRIAGE NETWORK</div>
-          <h3 className={styles.trustTitle}>
-            Experiencing severe or sudden symptoms?
-          </h3>
-          <p className={styles.trustDesc}>
-            Don't ignore critical warning signs. Our emergency care units and rapid triage helpline are available 24×7 with state-of-the-art ambulances, cath labs, and trauma specialists.
-          </p>
-
-          <div className={styles.trustActions}>
-            <a href="tel:18003090309" className={styles.trustPrimaryBtn}>
-              <PhoneCall size={16} />
-              <span>Call Helpline: 1800 309 0309</span>
-            </a>
-            <Link href={defaultDoctorListingUrl(new URLSearchParams())} className={styles.trustSecondaryBtn}>
-              <span>Consult a Doctor Online</span>
-              <ArrowUpRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        bg="dark"
+        eyebrow="24×7 EMERGENCY & TRIAGE NETWORK"
+        title="Experiencing Severe or Sudden Symptoms?"
+        subtitle="Don't ignore critical warning signs. Our emergency care units and rapid triage helpline are available 24×7 with state-of-the-art ambulances, cath labs, and trauma specialists."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Consult a Specialist Now",
+        }}
+        secondaryBtn={{
+          href: "/treatments",
+          text: "Explore Treatments",
+        }}
+        phoneText="Emergency Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

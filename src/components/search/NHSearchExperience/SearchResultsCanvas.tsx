@@ -91,9 +91,14 @@ export default function SearchResultsCanvas({
   const chatStartRef = useRef<HTMLDivElement>(null);
   const chatAnchorRef = useRef<HTMLDivElement>(null);
 
+  // Follow-up intent belongs to the same result set as the current cards.
+  const [hasScrolledDoctors, setHasScrolledDoctors] = useState(false);
+  const [isPulseInputFocused, setIsPulseInputFocused] = useState(false);
+
   // Synchronize incoming props
   useEffect(() => {
     setCurrentResults(results);
+    setHasScrolledDoctors(false);
   }, [results]);
 
   useEffect(() => {
@@ -112,11 +117,45 @@ export default function SearchResultsCanvas({
       // Re-appear when user scrolls all the way up to semantic results (<= 35px from top)
       const atTop = container.scrollTop <= 35;
       setIsScrolledToTop(atTop);
+      if (container.scrollTop > 18) {
+        setHasScrolledDoctors(true);
+      } else if (container.scrollTop <= 8 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
+        setHasScrolledDoctors(false);
+      }
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Track scrolling inside the primary Doctor Cards column (leftColRef)
+  useEffect(() => {
+    const leftEl = leftColRef.current;
+    if (!leftEl) return;
+
+    const handleLeftScroll = () => {
+      if (leftEl.scrollTop > 18) {
+        setHasScrolledDoctors(true);
+      } else if (leftEl.scrollTop <= 8 && (!unifiedScrollRef.current || unifiedScrollRef.current.scrollTop <= 8)) {
+        setHasScrolledDoctors(false);
+      }
+    };
+
+    const handleLeftWheel = (e: WheelEvent) => {
+      if (e.deltaY > 15) {
+        setHasScrolledDoctors(true);
+      } else if (e.deltaY < -15 && leftEl.scrollTop <= 8) {
+        setHasScrolledDoctors(false);
+      }
+    };
+
+    leftEl.addEventListener("scroll", handleLeftScroll, { passive: true });
+    leftEl.addEventListener("wheel", handleLeftWheel, { passive: true });
+    return () => {
+      leftEl.removeEventListener("scroll", handleLeftScroll);
+      leftEl.removeEventListener("wheel", handleLeftWheel);
+    };
+  }, [currentResults, isRequerying, isPulseActive]);
 
   // Top search bar is visible if:
   // 1. In non-active mode (standard semantic search)
@@ -170,10 +209,14 @@ export default function SearchResultsCanvas({
         setCurrentResults(newResults);
         // Reset to initial semantic mode where left column scrolls independently
         setIsPulseActive(false);
+        setHasScrolledDoctors(false);
         setActiveTurn(null);
         setCompletedTurns([]);
         if (unifiedScrollRef.current) {
           unifiedScrollRef.current.scrollTop = 0;
+        }
+        if (leftColRef.current) {
+          leftColRef.current.scrollTop = 0;
         }
       }
     } catch (err) {
@@ -858,6 +901,10 @@ export default function SearchResultsCanvas({
       currentResults.doctors.length === 0 ||
       currentResults.status === "error");
 
+  const showPulseFollowupBar =
+    !isZeroResults &&
+    (isPulseActive || hasScrolledDoctors || isPulseInputFocused || pulseInput.trim().length > 0);
+
   return (
     <div className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
@@ -1015,7 +1062,17 @@ export default function SearchResultsCanvas({
             />
           </div>
         ) : (
-          <div className={styles.resultsSplitLayout} data-mobile-tab={mobileTab}>
+          <div
+            className={styles.resultsSplitLayout}
+            data-mobile-tab={mobileTab}
+            onWheel={(e) => {
+              if (e.deltaY > 15) {
+                setHasScrolledDoctors(true);
+              } else if (e.deltaY < -15 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
+                setHasScrolledDoctors(false);
+              }
+            }}
+          >
             {/* ── LEFT COLUMN: Recommended Doctors ── */}
             {/* Before Pulse is active: ONLY this left column scrolls vertically, with white gradient blur at bottom */}
             {/* When Pulse is active: overflow becomes visible so content flows up into the unified feed */}
@@ -1030,7 +1087,18 @@ export default function SearchResultsCanvas({
                 style={
                   isPulseActive
                     ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0, maskImage: "none", WebkitMaskImage: "none" }
-                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 90 }
+                    : {
+                        overflowY: "auto",
+                        height: "100%",
+                        maxHeight: "100%",
+                        paddingBottom: 84,
+                        maskImage: showPulseFollowupBar
+                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
+                          : "none",
+                        WebkitMaskImage: showPulseFollowupBar
+                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
+                          : "none",
+                      }
                 }
               >
                 <PrimaryResults
@@ -1316,85 +1384,86 @@ export default function SearchResultsCanvas({
         )}
       </div>
 
-      {/* ── Progressive Feathered Backdrop Gradient & Blur behind Floating Pulse Bar ── */}
+      {/* ── Clean Edge Backing & Follow-up "Ask Pulse ai" Input Bar ── */}
+      {/* Appears smoothly ONLY when user scrolls down primary doctor results (or activates Pulse AI) */}
       {!isZeroResults && (
-        <div
-          className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact}`}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
-      {/* Hidden when zero results (since empty state itself has the clean Pulse AI bridge and top input is present) */}
-      {!isZeroResults && (
-        <div
-          className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
-          style={{ zIndex: 25 }}
-        >
+        <>
           <div
-            className={styles.floatingPulseDockCol}
-            style={{ width: "100%", maxWidth: "100%" }}
+            className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
+            aria-hidden="true"
+          />
+
+          <div
+            className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
+            style={{ zIndex: 25 }}
           >
-            <form
-              className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+            <div
+              className={styles.floatingPulseDockCol}
               style={{ width: "100%", maxWidth: "100%" }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendPulsePrompt();
-              }}
             >
-              {/* Round Blue Plus Button */}
-              <button
-                type="button"
-                className={styles.floatingPulsePlusBtn}
-                onClick={() => pulseInputRef.current?.focus()}
-                aria-label="New Prompt"
-                title="Ask Pulse"
+              <form
+                className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+                style={{ width: "100%", maxWidth: "100%", pointerEvents: showPulseFollowupBar ? "auto" : "none" }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendPulsePrompt();
+                }}
               >
-                <Plus size={18} strokeWidth={2.0} />
-              </button>
-
-              {/* Input Field */}
-              <input
-                ref={pulseInputRef}
-                type="text"
-                className={styles.floatingPulseInput}
-                placeholder="Ask Pulse ai"
-                value={pulseInput}
-                onChange={(e) => setPulseInput(e.target.value)}
-                aria-label="Ask Pulse AI"
-              />
-
-              {/* Right Action: Send Button (if text entered) or Mic Icon */}
-              {pulseInput.trim().length > 0 ? (
-                <button
-                  type="submit"
-                  className={styles.floatingPulseSendBtn}
-                  aria-label="Send prompt"
-                  title="Send to Pulse AI"
-                >
-                  <Send size={15} />
-                </button>
-              ) : (
+                {/* Round Blue Plus Button */}
                 <button
                   type="button"
-                  className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-                  onClick={() => {
-                    setIsListening((prev) => !prev);
-                    if (!isListening) {
-                      setPulseInput("Tell me more about Dr Pradeep kumar");
-                      pulseInputRef.current?.focus();
-                    }
-                  }}
-                  aria-label="Voice input"
-                  title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                  className={styles.floatingPulsePlusBtn}
+                  onClick={() => pulseInputRef.current?.focus()}
+                  aria-label="New Prompt"
+                  title="Ask Pulse"
                 >
-                  <Mic size={19} />
+                  <Plus size={18} strokeWidth={2.0} />
                 </button>
-              )}
-            </form>
+
+                {/* Input Field */}
+                <input
+                  ref={pulseInputRef}
+                  type="text"
+                  className={styles.floatingPulseInput}
+                  placeholder="Ask Pulse ai"
+                  value={pulseInput}
+                  onChange={(e) => setPulseInput(e.target.value)}
+                  onFocus={() => setIsPulseInputFocused(true)}
+                  onBlur={() => setIsPulseInputFocused(false)}
+                  aria-label="Ask Pulse AI"
+                />
+
+                {/* Right Action: Send Button (if text entered) or Mic Icon */}
+                {pulseInput.trim().length > 0 ? (
+                  <button
+                    type="submit"
+                    className={styles.floatingPulseSendBtn}
+                    aria-label="Send prompt"
+                    title="Send to Pulse AI"
+                  >
+                    <Send size={15} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+                    onClick={() => {
+                      setIsListening((prev) => !prev);
+                      if (!isListening) {
+                        setPulseInput("Tell me more about Dr Pradeep kumar");
+                        pulseInputRef.current?.focus();
+                      }
+                    }}
+                    aria-label="Voice input"
+                    title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                  >
+                    <Mic size={19} />
+                  </button>
+                )}
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
 );

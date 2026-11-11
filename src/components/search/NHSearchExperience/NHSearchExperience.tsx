@@ -1022,20 +1022,31 @@ export default function NHSearchExperience({
         <AnimatePresence>
           {searchState !== "landing" && (() => {
             const isPhone = winSize.w <= 640;
+            const isShortViewport = !isPhone && winSize.h <= 820;
             const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
             const modalTargetTop = typeof window !== "undefined"
               ? (isPhone
                   ? (isCompactModal ? 10 : 16)
+                  : isShortViewport
+                  ? (isCompactModal ? 8 : Math.max(24, window.innerHeight * 0.06))
                   : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
               : 100;
             const modalTargetWidth = typeof window !== "undefined"
               ? (isPhone
                   ? Math.min(600, winSize.w - 16)
                   : Math.min(
-                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? 1120 : 880,
+                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? (isShortViewport ? 1140 : 1120) : 880,
                       winSize.w - 32
                     ))
               : 880;
+            const expandedModalHeight = isPhone
+              ? "calc(100dvh - 20px)"
+              : isShortViewport
+              ? "calc(100dvh - 16px)"
+              : "min(920px, 94vh)";
+            const expandedModalMaxHeight = isCompactModal
+              ? (isPhone || isShortViewport ? "calc(100dvh - 16px)" : "95vh")
+              : (isPhone ? "calc(100dvh - 24px)" : "90vh");
 
             const originDeltaY = originRect ? Math.round(originRect.top - modalTargetTop) : 0;
             const originScale = originRect && modalTargetWidth > 0
@@ -1056,8 +1067,10 @@ export default function NHSearchExperience({
                   justifyContent: "center",
                   paddingTop: isPhone
                     ? (isCompactModal ? "8px" : "16px")
+                    : isShortViewport
+                    ? (isCompactModal ? "8px" : "max(24px, 6vh)")
                     : (isCompactModal ? "max(14px, 2vh)" : "max(60px, 12vh)"),
-                  paddingBottom: isPhone ? "8px" : "18px",
+                  paddingBottom: isPhone || isShortViewport ? "8px" : "18px",
                   paddingLeft: isPhone ? "8px" : "16px",
                   paddingRight: isPhone ? "8px" : "16px",
                   boxSizing: "border-box",
@@ -1126,12 +1139,8 @@ export default function NHSearchExperience({
                     display: "flex",
                     justifyContent: "center",
                     width: modalTargetWidth,
-                    height: (searchState === "results" || searchState === "skeleton")
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                      : searchState === "pulse"
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                      : undefined,
-                    maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                    height: isCompactModal ? expandedModalHeight : undefined,
+                    maxHeight: expandedModalMaxHeight,
                     zIndex: 3,
                   }}
                 >
@@ -1175,13 +1184,9 @@ export default function NHSearchExperience({
                       position: "relative",
                       zIndex: 2,
                       width: "100%",
-                      height: (searchState === "results" || searchState === "skeleton")
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                        : searchState === "pulse"
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                        : undefined,
-                      maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
-                      display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,
+                      height: isCompactModal ? expandedModalHeight : undefined,
+                      maxHeight: expandedModalMaxHeight,
+                      display: isCompactModal ? "flex" : undefined,
                       flexDirection: "column",
                       overflow: "hidden",
                       overscrollBehavior: "contain",

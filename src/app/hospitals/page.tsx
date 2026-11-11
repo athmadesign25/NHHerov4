@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { HOSPITALS_DIRECTORY_DATA, HospitalDirectoryItem } from "@/data/hospitalsDirectoryData";
 import styles from "./HospitalsLibrary.module.css";
@@ -499,40 +500,23 @@ export default function HospitalsLibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT ───────────────────────────────────────── */}
-      <section className={styles.trustBanner}>
-        <div className={styles.trustImageBg}>
-          <Image
-            src="/assets/hospital_interior_3.jpg"
-            alt="Narayana Health hospital infrastructure"
-            fill
-            sizes="(max-width: 900px) 100vw, 640px"
-            className={styles.trustImage}
-          />
-          <div className={styles.trustGradientOverlay} />
-        </div>
-
-        <div className={styles.trustContent}>
-          <div className={styles.trustEyebrow}>24×7 APEX EMERGENCY RESPONSE</div>
-          <h3 className={styles.trustTitle}>
-            Emergency admission or ambulance dispatch?
-          </h3>
-          <p className={styles.trustDesc}>
-            Our central emergency control dispatch coordinates directly with the nearest Narayana Health hospital trauma team, stroke units, and cath labs.
-          </p>
-
-          <div className={styles.trustActions}>
-            <a href="tel:18003090309" className={styles.trustPrimaryBtn}>
-              <PhoneCall size={16} />
-              <span>Emergency Helpline: 1800 309 0309</span>
-            </a>
-            <Link href={defaultDoctorListingUrl(new URLSearchParams())} className={styles.trustSecondaryBtn}>
-              <span>Book Doctor Appointment</span>
-              <ArrowUpRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        bg="dark"
+        eyebrow="24×7 APEX EMERGENCY RESPONSE"
+        title="Emergency Admission or Ambulance Dispatch?"
+        subtitle="Our central emergency control dispatch coordinates directly with the nearest Narayana Health hospital trauma team, stroke units, and cath labs."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Book Doctor Appointment",
+        }}
+        secondaryBtn={{
+          href: "/health-packages",
+          text: "Explore Health Packages",
+        }}
+        phoneText="Emergency Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

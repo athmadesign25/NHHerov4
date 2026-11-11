@@ -142,6 +142,7 @@ export const CSR_EDITORIALS_DATA: CsrEditorialItem[] = [
 ];
 
 export const CSR_PROGRAMS_DATA: CsrProgramItem[] = [
+
   {
     id: "health-wellness",
     eyebrow: "PRIMARY HEALTHCARE & SCREENING",
@@ -319,3 +320,9 @@ export const CSR_PROGRAMS_DATA: CsrProgramItem[] = [
     },
   },
 ];
+
+export function getCsrProgramBySlug(slug: string): CsrProgramItem {
+  const found = CSR_PROGRAMS_DATA.find((p) => p.id === slug);
+  return found || CSR_PROGRAMS_DATA[0];
+}
+

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Check, ChevronUp } from "lucide-react";
 import { HEALTH_DESIGNS, type HealthDesign } from "./healthDesigns";
 import styles from "./HealthDesignPreview.module.css";
@@ -16,6 +16,22 @@ export default function HealthDesignPreview({ design, hasSelection, onChange }: 
   const root = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const id = useId();
+
+  useLayoutEffect(() => {
+    const preview = root.current;
+    if (!preview) return;
+    const dock = document.querySelector<HTMLElement>("[data-health-selection-dock]");
+    if (!hasSelection || !dock) {
+      preview.style.removeProperty("--health-preview-dock-offset");
+      return;
+    }
+    const measure = () => preview.style.setProperty("--health-preview-dock-offset", `${Math.max(0, innerHeight - dock.getBoundingClientRect().top)}px`);
+    const observer = new ResizeObserver(measure);
+    observer.observe(dock);
+    window.addEventListener("resize", measure);
+    measure();
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [hasSelection]);
 
   useEffect(() => {
     if (!open) return;
