@@ -134,3 +134,18 @@
 @media (forced-colors: active) { .dock[data-tone="dark"][data-expanded="false"] .surface { color: CanvasText; background: Canvas; } }
 
 .actionGroup { display: grid; min-width: 0; gap: var(--space-4); }
+.mobileCall { display: none; }
+@media (max-width: 639px) {
+  .dock[data-expanded="false"] .summary { padding: var(--space-12); }
+  .actionGroup:has(.mobileCall) { grid-template-columns: minmax(0, 1fr) var(--space-48); gap: var(--space-8); }
+  .mobileCall { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); color: var(--color-primary); background: var(--journey-paper-icon-bg); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
+  .mobileCall svg { width: var(--space-20); height: var(--space-20); }
+  .mobileCall:active { background: var(--color-disclosure-hover); }
+  .dock[data-tone="dark"] .mobileCall { color: var(--white); border-color: rgba(var(--white-rgb), .2); background: rgba(var(--white-rgb), .1); }
+}
+@media (max-width: 374px) {
+  .dock[data-expanded="false"][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+}
+@media (hover: hover) { .mobileCall:hover { background: var(--color-disclosure-hover); } }
+@media (prefers-reduced-motion: reduce) { .mobileCall { transition: none; } }
+@media (forced-colors: active) { .dock .mobileCall { color: LinkText; background: Canvas; border-color: ButtonText; } }

@@ -27,7 +27,10 @@
 @media (max-width: 767px) {
   .reserve { height: calc(var(--space-128) + var(--space-32)); }
   .bar { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); padding: calc(var(--space-8) * 1.5); inset-inline: var(--space-8); width: calc(100% - var(--space-16)); bottom: max(var(--space-8), env(safe-area-inset-bottom)); }
-  .amount { grid-row: 1; }
+  .amount { grid-row: 1; display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: baseline; column-gap: var(--space-12); }
+  .amount > span, .amount strong { white-space: nowrap; }
+  .amount strong { justify-self: end; text-align: right; }
+  .amount small { grid-column: 1 / -1; }
   .actions { grid-row: 2; grid-auto-columns: minmax(0, 1fr); gap: var(--space-8); }
   .submit { padding-inline: var(--space-8); font-size: var(--font-size-xs); }
   .feedback { grid-row: 2; text-align: left; margin: 0; }

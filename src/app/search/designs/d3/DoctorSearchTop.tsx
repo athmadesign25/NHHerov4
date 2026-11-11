@@ -11,6 +11,7 @@ import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import DoctorSearchHint from "./DoctorSearchHint";
 import styles from "@/components/ui/search-location/SearchToolbar.module.css";
+import listing from "./DoctorSearchTop.module.css";
 
 interface Props {
   allConsultationTypes?: boolean;
@@ -146,7 +147,7 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
 
   return <>
     <div className={styles.navGap} aria-hidden />
-    <header className={`${styles.container} ${styles.titleRow}`}>
+    <header className={`${styles.container} ${styles.titleRow} ${listing.header}`}>
       <div className={styles.title}>
         <h1 id="d3-results-title" tabIndex={-1}>{heading}</h1>
         {/* Keep the heading readable and focusable beneath the decorative brand wipe. */}

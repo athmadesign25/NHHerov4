@@ -1,6 +1,6 @@
-.refinements { position: relative; display: grid; gap: var(--sp-1); min-width: 0; }
-.quickRow { display: flex; align-items: flex-start; gap: var(--sp-1); min-width: 0; }
-.quickRow > :last-child { min-width: 0; flex: 1; }
+.refinements { position: relative; display: grid; gap: var(--space-8); min-width: 0; container: doctor-refinements / inline-size; }
+.quickRow { display: flex; align-items: center; gap: var(--space-8); min-width: 0; }
+.quickRow > [data-d3-refinement-row] { min-width: 0; flex: 1; }
 .mobileFilters { display: none !important; flex-shrink: 0; }
 .meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-2); }
 .count, .feedback, .recovery { color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; }

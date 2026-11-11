@@ -46,6 +46,12 @@
 .preview button:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 @media (hover: hover) { .preview button:hover { background-color: var(--slate-200); } }
 @media (max-width: 640px) { .preview { right: max(var(--space-8), env(safe-area-inset-right)); } }
+/* Keep the design-only switcher clear of the patient-facing mobile call action. */
+@media (max-width: 1023px) {
+  :global([data-design="d21"]:has([data-doctor-call="mobile"]:not([hidden]))) .preview {
+    bottom: calc(var(--space-16) + env(safe-area-inset-bottom) + var(--space-48) + var(--space-8));
+  }
+}
 @media (prefers-reduced-transparency: reduce) {
   .trigger, .options { background: var(--grey-100); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }

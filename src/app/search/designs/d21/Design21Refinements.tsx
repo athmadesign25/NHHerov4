@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, Filter, History, Video, X } from "lucide-react";
 import type Design16Refinements from "../d16/Design16Refinements";
 import DoctorRefinementRow from "../d3/DoctorRefinementRow";
+import DoctorCallToBook from "../../doctors/DoctorCallToBook";
 import ChooseDate from "../d16/ChooseDate";
 import NearMeLocation from "../d16/NearMeLocation";
 import chip from "../../doctors/DoctorControlChip.module.css";
@@ -46,6 +47,7 @@ export default function Design21Refinements(props: ComponentProps<typeof Design1
           <ArrowUpDown size={16} aria-hidden />Earliest slot
         </button>
       </DoctorRefinementRow>
+      <DoctorCallToBook placement="filters" />
     </div>
     <div className={feedback ? styles.locationNotice : styles.srOnly} role="status" aria-live="polite">
       {feedback && <><span>{feedback}</span><button type="button" aria-label="Dismiss location message" onClick={() => setFeedback("")}><X size={16} aria-hidden /></button></>}

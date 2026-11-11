@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, CalendarDays, Clock3, MapPin, Video } from "lucide-react";
+import { CalendarDays, Clock3, MapPin, Video } from "lucide-react";
 import { duration, ease } from "@/lib/motion";
 import { formatBookingDate } from "../format";
 import type { BookingDoctorSummary } from "../types";
@@ -11,6 +10,7 @@ import type { AppointmentSelection } from "../design7/model";
 import type { SavedPatient } from "../design14/patients";
 import MemberAvatar from "../design17/MemberAvatar";
 import { design17PatientAvatar } from "../design17/patients";
+import BookingOutcomeActions from "../shared/BookingOutcomeActions";
 import styles from "./PaymentReservation.module.css";
 
 type Props = {
@@ -40,7 +40,7 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
     return () => window.cancelAnimationFrame(frame);
   }, [expired, reduced]);
 
-  return <motion.section className={styles.reservation} aria-labelledby={titleId}
+  return <><motion.section className={styles.reservation} aria-labelledby={titleId}
     initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
     transition={{ duration: reduced ? 0 : duration.slow, ease: ease.out }}>
     <header className={styles.header}>
@@ -82,14 +82,15 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
           </div>
         </div>
       </section>
-      <div className={styles.amount}><span>Amount to pay</span><strong>{total}</strong></div>
     </div>
-
-    <div className={styles.actions}>
-      {expired
-        ? <button type="button" className={styles.primary} onClick={onChooseSlot}>Choose another slot</button>
-        : <a href="https://narayana.health/phrportal" target="_blank" rel="noopener noreferrer" className={styles.primary} aria-label="Open patient portal (opens in a new tab)">Open patient portal<ArrowUpRight size={17} aria-hidden /></a>}
-      <Link href="/" className={styles.secondary}>Back to home</Link>
-    </div>
-  </motion.section>;
+  </motion.section>
+    <BookingOutcomeActions
+      label={expired ? "Expired reservation actions" : "Reserved appointment actions"}
+      amount={expired ? undefined : { label: "Amount to pay", value: total }}
+      primary={expired
+        ? { label: "Choose another slot", onClick: onChooseSlot }
+        : { label: "Open patient portal", href: "https://narayana.health/phrportal", external: true }}
+      secondary={{ label: "Back to home", href: "/" }}
+    />
+  </>;
 }

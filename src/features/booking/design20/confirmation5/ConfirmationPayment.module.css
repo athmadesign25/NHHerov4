@@ -1,5 +1,5 @@
 .payment {
-  --payment-line: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --payment-line: var(--confirmation-line, color-mix(in srgb, var(--color-primary) 10%, transparent));
   min-width: 0;
   border-top: var(--space-1) solid var(--payment-line);
 }

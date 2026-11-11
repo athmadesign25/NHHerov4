@@ -23,6 +23,7 @@ import AppointmentConfirmation3 from "./confirmation3/AppointmentConfirmation3";
 import AppointmentConfirmation4 from "./confirmation4/AppointmentConfirmation4";
 import AppointmentConfirmation5 from "./confirmation5/AppointmentConfirmation5";
 import AppointmentConfirmation6 from "./confirmation6/AppointmentConfirmation6";
+import AppointmentConfirmation7 from "./confirmation7/AppointmentConfirmation7";
 import ConfirmationDesignSwitcher, { type ConfirmationDesign } from "./ConfirmationDesignSwitcher";
 import useDesign20Booking from "./useDesign20Booking";
 import { protectConfirmedBookingMember } from "./memberSelection";
@@ -47,7 +48,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
   const [editingSummary, setEditingSummary] = useState(false);
   const summaryDesign: BookingSummaryDesign = params.get("summaryDesign") === "1" ? 1 : params.get("summaryDesign") === "2" ? 2 : params.get("summaryDesign") === "3" ? 3 : 4;
   const pageSummaryStyles = summaryDesign === 2 ? summaryStyles : previousSummaryStyles;
-  const confirmationDesign: ConfirmationDesign = params.get("confirmationDesign") === "1" ? 1 : params.get("confirmationDesign") === "2" ? 2 : params.get("confirmationDesign") === "3" ? 3 : params.get("confirmationDesign") === "4" ? 4 : params.get("confirmationDesign") === "5" ? 5 : 6;
+  const confirmationDesign: ConfirmationDesign = params.get("confirmationDesign") === "1" ? 1 : params.get("confirmationDesign") === "2" ? 2 : params.get("confirmationDesign") === "3" ? 3 : params.get("confirmationDesign") === "4" ? 4 : params.get("confirmationDesign") === "5" ? 5 : params.get("confirmationDesign") === "6" ? 6 : 7;
   const confirmed = Boolean(draft.receipt);
   const showConfirmation = confirmed && flow.isUserLoggedIn;
   const reserved = Boolean(draft.reservationSkipped && !draft.receipt && flow.isUserLoggedIn);
@@ -72,6 +73,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
   const changeConfirmationDesign = (design: ConfirmationDesign) => {
     const url = new URL(window.location.href);
     url.searchParams.set("confirmationDesign", String(design));
+    window.scrollTo({ top: 0, behavior: "instant" });
     window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
   };
   return <div className={`${styles.page} ${summaryStyles.page} ${showConfirmation ? confirmationStyles.page : ""}`} data-design17-booking="d20" data-booking-confirmed={showConfirmation || undefined} data-confirmation-design={showConfirmation ? confirmationDesign : undefined}>
@@ -95,7 +97,7 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
           {reserved && <PaymentReservation seconds={flow.seconds} expired={flow.expired} doctor={activeDoctor} member={draft.patients.find(entry => entry.id === draft.selectedPatientId)} selection={draft.selection} total={pricing.total} onChooseSlot={() => { void flow.backToSlots(); }} />}
           {!draft.receipt && !reserved && (summaryDesign === 4 ? <BookingSummary4 doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : summaryDesign === 2 ? <BookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} /> : <PreviousBookingSummary doctor={activeDoctor} flow={flow} onEditingChange={setEditingSummary} doctorPlacement={summaryDesign === 3 ? "appointment" : "header"} />)}
           {draft.stage === "payment" && <RazorpayDemo fee={pricing.total} busy={flow.busy} expired={flow.expired} onPay={() => { void flow.pay(); }} onClose={flow.closePayment} />}
-          {draft.receipt && (confirmationDesign === 1 ? <AppointmentConfirmation doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 2 ? <AppointmentConfirmation2 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 3 ? <AppointmentConfirmation3 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 4 ? <AppointmentConfirmation4 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 5 ? <AppointmentConfirmation5 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : <AppointmentConfirmation6 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} />)}
+          {draft.receipt && (confirmationDesign === 1 ? <AppointmentConfirmation doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 2 ? <AppointmentConfirmation2 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 3 ? <AppointmentConfirmation3 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 4 ? <AppointmentConfirmation4 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 5 ? <AppointmentConfirmation5 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : confirmationDesign === 6 ? <AppointmentConfirmation6 doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} /> : <AppointmentConfirmation7 key={draft.receipt.ref} doctor={activeDoctor} draft={draft} pricing={pricing} headingRef={heading} />)}
         </div></div>}
       {process.env.NODE_ENV === "development" && flow.isUserLoggedIn && !draft.receipt && <details className={styles.developer}><summary>Development tools</summary><label>Next payment result<select value={flow.paymentOutcome} onChange={event => flow.setPaymentOutcome(event.target.value as "success" | "failure")}><option value="success">Successful</option><option value="failure">Failed</option></select></label>{draft.failureHold && <button type="button" className={styles.textButton} onClick={flow.expireFailureHold}>Expire failed-payment reservation</button>}</details>}
     </div>

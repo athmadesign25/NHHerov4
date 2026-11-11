@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type RefObject } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone } from "lucide-react";
 import AppointmentSelector from "@/app/search/designs/d20/AppointmentSelector";
 import LoginModal from "@/features/auth/LoginModal";
 import useDesign20Booking from "@/features/booking/design20/useDesign20Booking";
@@ -77,11 +77,15 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
         <div className={styles.actionGroup}>{available ? <button ref={action} type="button" className={styles.primary} onClick={toggle} aria-expanded={false} aria-controls={id}>Book appointment</button>
-          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}</div>
+          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}{available && <MobileCallAction />}</div>
       </motion.div>}
     </div>
     </motion.div>
   </motion.aside></>;
+}
+
+function MobileCallAction() {
+  return <a className={styles.mobileCall} href="tel:08067506836" aria-label="Call 08067506836 to book an appointment" title="Call to book an appointment"><Phone aria-hidden /></a>;
 }
 
 function Price({ fee }: { fee: string }) {
@@ -133,7 +137,7 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
       <Price fee={selectedDoctor?.fee ?? doctor.fee} />
       <div className={styles.actionGroup}><button ref={action} type="button" className={styles.primary} aria-expanded={expanded} aria-controls={panelId}
         disabled={expanded && (!flow.loaded || !selection.time || flow.busy || flow.expired)}
-        onClick={expanded ? flow.continueBooking : toggle}><span>{expanded ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{expanded && <ArrowRight className={styles.continueArrow} aria-hidden />}</button></div>
+        onClick={expanded ? flow.continueBooking : toggle}><span>{expanded ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{expanded && <ArrowRight className={styles.continueArrow} aria-hidden />}</button>{!expanded && <MobileCallAction />}</div>
     </motion.div>
     <LoginModal previewOtp isOpen={signingIn} onClose={() => flow.setLoginOpen(false)} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </>;

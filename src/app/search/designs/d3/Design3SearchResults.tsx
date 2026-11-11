@@ -25,6 +25,7 @@ import { ArrowRight,Filter,Info,PhoneCall,X } from "lucide-react";
 import { usePathname,useRouter,useSearchParams } from "next/navigation";
 import { useCallback,useEffect,useMemo,useRef,useState,type ComponentProps,type ComponentType,type MouseEvent } from "react";
 import DoctorFilters from "../../doctors/DoctorFilters";
+import DoctorCallToBook from "../../doctors/DoctorCallToBook";
 import LanguageShortcut from "../d16/LanguageShortcut";
 import Design17DoctorDetails from "../d17/DoctorDetails";
 import DoctorCard from "../d20/DoctorCard";
@@ -561,6 +562,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     </AnimatePresence>
     {pendingUrl && <LoginModal previewOtp={true} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }}/>}
     {historyLogin && <LoginModal previewOtp={true} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }}/>}
+    {doctorTab && <DoctorCallToBook placement="mobile" hidden={Boolean(activeBooking)} />}
     {doctorTab && <ListingBackdropPreview active={listingPreview} />}
   </div>;
 }
