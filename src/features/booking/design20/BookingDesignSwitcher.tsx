@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { Check, ChevronUp, Layers2 } from "lucide-react";
+import { Check, ChevronUp } from "lucide-react";
 import styles from "./BookingDesignSwitcher.module.css";
 
 export type BookingSummaryDesign = 1 | 2 | 3 | 4;
@@ -60,7 +60,7 @@ export default function BookingDesignSwitcher({ active, disabled, onChange }: {
       }}><span><strong>Design {design}</strong><small>{design === 1 ? "Original" : design === 2 ? "Member-first" : design === 3 ? "Refined original" : "Consistent journey"}</small></span>{active === design && <Check size={16} aria-hidden />}</button>)}
     </div>}
     <button ref={trigger} type="button" className={styles.trigger} aria-label={`Switch booking design. Design ${active} selected`} aria-expanded={open} aria-controls={open ? id : undefined} disabled={disabled} title={disabled ? "Finish editing to switch designs" : "Compare booking designs"} onClick={() => setOpen(value => !value)}>
-      <Layers2 size={16} aria-hidden /><span>Design {active}</span><ChevronUp size={14} aria-hidden className={open ? styles.expanded : undefined} />
+      <span>Design {active}</span><ChevronUp size={14} aria-hidden className={open ? styles.expanded : undefined} />
     </button>
   </div>;
 }

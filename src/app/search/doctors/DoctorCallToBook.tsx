@@ -15,11 +15,11 @@ export default function DoctorCallToBook({ placement, hidden = false }: { placem
   useEffect(() => {
     if (!mobile) return;
     // Reading time, rather than an animation delay; calling works throughout.
-    const timer = window.setTimeout(() => setIntroduced(true), 2400);
+    const timer = window.setTimeout(() => setIntroduced(true), 3000);
     return () => window.clearTimeout(timer);
   }, [mobile]);
 
-  if (!mobile) return hidden ? null : <BookingSupportContact />;
+  if (!mobile) return hidden ? null : <BookingSupportContact combined />;
 
   return (
     <a
@@ -27,12 +27,12 @@ export default function DoctorCallToBook({ placement, hidden = false }: { placem
       hidden={hidden}
       data-expanded={expanded}
       href="tel:08067506836"
-      aria-label="Call to book an appointment: 08067506836"
-      title="Call to book an appointment"
+      aria-label="Need help with booking? Call 08067506836"
+      title="Need help with booking?"
       data-doctor-call={placement}
     >
       <span className={styles.icon}><Phone aria-hidden="true" /></span>
-      <span className={styles.label}>Call to book</span>
+      <span className={styles.label}>Need help with booking?</span>
     </a>
   );
 }

@@ -4,8 +4,8 @@
 .viewport:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: -2px; border-radius: var(--radius-sm); }
 .content { display: flow-root; padding-block-start: var(--filter-header-height, 0px); }
 /* Keep the drag area in the right gutter, above the pinned heading's glass. */
-.rail { --thumb-min: var(--sp-4); position: absolute; z-index: 4; inset-block-start: calc(var(--filter-header-height, 0px) + var(--sp-1)); inset-block-end: var(--sp-1); inset-inline-end: 0; width: var(--sp-3); opacity: 0; pointer-events: none; touch-action: none; user-select: none; transition: opacity var(--d3-ui-base, var(--transition-base)); }
-.thumb { position: absolute; top: 0; inset-inline-end: calc(var(--sp-1) * .75); width: calc(var(--sp-1) / 2); border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-text-secondary) 38%, transparent); cursor: grab; transition: background-color var(--d3-ui-fast, var(--transition-fast)); }
+.rail { composes: rail from "../../../../components/ui/OverlayScrollbar.module.css"; inset-block-start: calc(var(--filter-header-height, 0px) + var(--sp-1)); }
+.thumb { composes: thumb from "../../../../components/ui/OverlayScrollbar.module.css"; }
 .area[data-overflow="true"]:is(:hover, [data-dragging="true"], :has(.viewport:focus-visible)) .rail { opacity: 1; pointer-events: auto; }
 .area[data-overflow="false"] .rail { transition: none; }
 .rail:hover .thumb, .area[data-dragging="true"] .thumb { background: color-mix(in srgb, var(--color-text-secondary) 65%, transparent); }

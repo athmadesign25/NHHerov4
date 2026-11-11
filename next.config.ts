@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Keep the framework badge clear of the bottom-left design preview controls.
+  devIndicators: false,
   images: {
     remotePatterns: [
       {

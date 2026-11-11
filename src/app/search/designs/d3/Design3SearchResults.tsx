@@ -167,6 +167,9 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const selectedSpeciality = filters.specialties.length === 1 ? filters.specialties[0] : undefined;
     const selectedCity = DOCTOR_LANDING_CITIES.find(item => item.value === location);
     const doctorCopy = getDoctorListingCopy({ specialties: filters.specialties, city: selectedCity });
+    if (location.includes(",")) {
+        doctorCopy.heading = `${filters.specialties.length ? doctorCopy.heading.replace(/^Our specialists$/, "Specialists") : "Doctors"} across selected cities`;
+    }
     const { isUserLoggedIn } = useAuthState();
     const sessionBookedDoctors = useDesign3BookedDoctors(doctorTab && true && isUserLoggedIn);
     const bookedDoctors = useMemo(() => design17ConsultationHistory(sessionBookedDoctors, {

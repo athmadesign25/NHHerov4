@@ -188,3 +188,9 @@ test('facets count other selected groups, OR within a group, and retain removabl
   assert.ok(listing.doctorFilterOptions(records,empty,'hospital','expertise').some(o=>o.value==='Unknown expertise'&&o.count===0));
   assert.equal(listing.filterDoctors(records,empty,'hospital',now).length,0);
 });
+
+
+test('multiple city selections survive URL state with duplicates and invalid values removed', () => {
+  assert.equal(readSearchLocation(new URLSearchParams({location:'Bangalore,Mumbai,Bangalore,invalid'})), 'Bangalore,Mumbai');
+  assert.equal(readSearchLocation(new URLSearchParams({location:'All'})), 'All');
+});

@@ -261,3 +261,13 @@ test("a valid remote position is accepted without city mapping while invalid pos
     });
   }
 });
+
+
+test("multiple cities retain matching practice units without duplicating a doctor", () => {
+  const result = design16DoctorsInLocation([arun], "Bangalore,Mumbai");
+  assert.equal(result.length, 1);
+  assert.deepEqual(new Set(result[0].hospitals), new Set([
+    "Narayana Health City, Bangalore", "SRCC Children's Hospital, Mumbai",
+  ]));
+  assert.deepEqual(design16DoctorsInLocation([arun], "Jaipur,Delhi"), []);
+});

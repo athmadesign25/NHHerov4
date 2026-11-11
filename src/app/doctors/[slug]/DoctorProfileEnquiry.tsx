@@ -55,14 +55,13 @@ export default function DoctorProfileEnquiry({ doctorName, embedded = false, pre
 
   return <section id="profile-enquiry" className={`${styles.section} ${embedded ? styles.embedded : ""} ${isBanner ? styles.bannerForm : ""}`} aria-labelledby={embedded ? undefined : fieldId("heading")} aria-label={embedded ? "Request a callback" : undefined}>
     {!embedded && <header className={styles.heading}>
-      <span>How can we help?</span>
-      <h2 id={fieldId("heading")}>Request a callback</h2>
-      <p>Get help planning your consultation.</p>
+      <h2 id={fieldId("heading")}>Need help with your appointment?</h2>
+      <p>Leave your number and our team will call you to help.</p>
     </header>}
     {complete ? <div ref={confirmation} className={styles.confirmation} tabIndex={-1} role="status">
       <SuccessMark />
-      <h3>Thank you for getting in touch</h3>
-      <p>For appointment assistance, call <a href="tel:08067506836">08067506836</a>.</p>
+      <h3>Callback requested</h3>
+      <p>Our team will contact you on the number provided.</p>
       <button type="button" className={styles.secondaryButton} onClick={() => {
         setComplete(false);
         requestAnimationFrame(() => {
