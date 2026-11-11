@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { motion, useIsPresent, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./SearchDialog.module.css";
-import ui from "./DoctorSearchTheme.module.css";
+import ui from "@/components/ui/search-location/SearchTheme.module.css";
 
 interface Props { title: string; children: ReactNode; footer?: ReactNode; headerAction?: ReactNode; headerContent?: ReactNode; onClose: () => void; mobileOnly?: boolean; doctorPreview?: boolean }
 

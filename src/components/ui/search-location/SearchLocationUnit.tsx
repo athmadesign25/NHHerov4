@@ -2,7 +2,7 @@
 
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import styles from "./DoctorSearchTop.module.css";
+import styles from "./SearchToolbar.module.css";
 
 interface Props {
   id: string;

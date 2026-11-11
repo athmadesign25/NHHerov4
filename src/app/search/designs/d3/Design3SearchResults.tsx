@@ -36,7 +36,7 @@ import ListingBackdropPreview from "../d21/ListingBackdropPreview";
 import CatalogFilters from "./CatalogFilters";
 import styles from "./Design3SearchResults.module.css";
 import DoctorListingFAQ from "./DoctorListingFAQ";
-import ui from "./DoctorSearchTheme.module.css";
+import ui from "@/components/ui/search-location/SearchTheme.module.css";
 import DoctorSearchTop from "./DoctorSearchTop";
 import FilterScrollArea from "./FilterScrollArea";
 import ResultCard from "./ResultCard";

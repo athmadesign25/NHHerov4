@@ -3,10 +3,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowLeft, CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, FlaskConical, MapPin, Navigation, ShieldCheck, Trash2 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import BookingMemberPicker from "@/features/booking/design20/BookingMemberPicker";
-import type { SavedPatient } from "@/features/booking/design14/patients";
-import { formatBookingDate } from "@/features/booking/format";
-import useMouseDragScroll from "@/app/search/designs/d20/useMouseDragScroll";
+import BookingMemberPicker from "@/features/booking/shared/BookingMemberPicker";
+import type { SavedPatient } from "@/features/booking/shared/types";
+import { formatBookingDate } from "@/features/booking/shared/dates";
+import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
 import { duration, ease } from "@/lib/motion";
 import { cartRequiresSlot, cartTotal, getHealthSlots, healthDateKey, healthDates, healthEligibilityMessage, money, type HealthFacility, type HealthItem } from "./catalog";
 import styles from "./HealthCheckout.module.css";

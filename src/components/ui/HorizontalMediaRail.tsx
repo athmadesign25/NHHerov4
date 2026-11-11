@@ -3,7 +3,7 @@
 import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 import { useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import useMouseDragScroll from "@/app/search/designs/d20/useMouseDragScroll";
+import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
 import styles from "./HorizontalMediaRail.module.css";
 
 interface HorizontalMediaRailProps {

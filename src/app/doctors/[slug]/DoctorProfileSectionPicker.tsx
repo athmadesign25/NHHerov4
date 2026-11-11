@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type Lenis from "lenis";
-import useMouseDragScroll from "@/app/search/designs/d20/useMouseDragScroll";
+import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
 import styles from "./DoctorProfileSectionPicker.module.css";
 
 export default function DoctorProfileSectionPicker({ sections, tone = "light" }: { sections: string[][]; tone?: "light" | "dark" }) {

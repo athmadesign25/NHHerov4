@@ -1,4 +1,4 @@
-import { appointmentDates, indiaAppointmentTimestamp, indiaDate } from "@/features/booking/appointmentTime";
+import { appointmentDates, indiaAppointmentTimestamp, indiaDate } from "@/features/booking/shared/dates";
 import sourceItems from "@/data/health-checkups/items.json";
 import sourceFacilities from "@/data/health-checkups/active-facilities.json";
 import type { HealthDetailSource } from "./healthDetailTypes";

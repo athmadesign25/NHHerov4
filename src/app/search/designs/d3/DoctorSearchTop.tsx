@@ -8,9 +8,9 @@ import { NH_CITIES } from "@/lib/searchService";
 import type { ConsultationMode } from "@/features/search/doctorListing";
 import { requestDoctorCity } from "@/features/search/doctorLocation";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
-import SearchLocationUnit from "./SearchLocationUnit";
+import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import DoctorSearchHint from "./DoctorSearchHint";
-import styles from "./DoctorSearchTop.module.css";
+import styles from "@/components/ui/search-location/SearchToolbar.module.css";
 
 interface Props {
   allConsultationTypes?: boolean;

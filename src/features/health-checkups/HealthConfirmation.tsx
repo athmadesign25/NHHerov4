@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { CalendarDays, Check, FlaskConical, MapPin, Navigation, ShieldCheck } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import type { SavedPatient } from "@/features/booking/design14/patients";
-import MemberAvatar from "@/features/booking/design17/MemberAvatar";
-import { design17PatientAvatar } from "@/features/booking/design17/patients";
-import { formatBookingDate } from "@/features/booking/format";
+import type { SavedPatient } from "@/features/booking/shared/types";
+import MemberAvatar from "@/features/booking/shared/MemberAvatar";
+import { patientAvatar } from "@/features/booking/shared/patients";
+import { formatBookingDate } from "@/features/booking/shared/dates";
 import { duration, ease } from "@/lib/motion";
 import { cartRequiresSlot, cartTotal, money, type HealthFacility, type HealthItem } from "./catalog";
 import styles from "./HealthConfirmation.module.css";
@@ -36,7 +36,7 @@ export default function HealthConfirmation({ items, facility, member, date, time
     </header>
     <div className={styles.sheet}>
       <section className={styles.member} aria-labelledby="health-booked-for">
-        <MemberAvatar className={styles.avatar} src={design17PatientAvatar(member)} name={member.patient.name} size={48} />
+        <MemberAvatar className={styles.avatar} src={patientAvatar(member)} name={member.patient.name} size={48} />
         <div><h2 id="health-booked-for">Booked for</h2><p>{member.patient.name}<span>{member.patient.age ? `${member.patient.age} years` : ""}</span></p></div>
       </section>
       <div className={styles.content}>

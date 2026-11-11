@@ -11,7 +11,7 @@ import type { BookingDoctorSummary } from "@/features/booking/types";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { DoctorConsultationToggle } from "../../doctors/DoctorListingControls";
 import HospitalPicker from "./HospitalPicker";
-import useMouseDragScroll from "./useMouseDragScroll";
+import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
 import chip from "../../doctors/DoctorControlChip.module.css";
 import styles from "./DoctorCard.module.css";
 import { cardLayoutTransition } from "./cardMotion";
