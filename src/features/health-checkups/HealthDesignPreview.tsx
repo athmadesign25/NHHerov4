@@ -18,6 +18,24 @@ export default function HealthDesignPreview({ design, hasSelection, onChange }: 
   const id = useId();
 
   useEffect(() => {
+    const preview = root.current;
+    const dock = preview?.closest("[data-health-design]")?.querySelector<HTMLElement>("[data-health-selection-dock]");
+    if (!hasSelection || !preview || !dock) return;
+    // The preview is a separate tool. Move it clear of the booking action bar;
+    // never shift or resize the actual page controls to accommodate previews.
+    const sync = () => preview.style.setProperty("--health-preview-clearance", `${Math.ceil(window.innerHeight - dock.getBoundingClientRect().top)}px`);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(dock);
+    window.addEventListener("resize", sync);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", sync);
+      preview.style.removeProperty("--health-preview-clearance");
+    };
+  }, [hasSelection]);
+
+  useEffect(() => {
     if (!open) return;
     const outside = (event: PointerEvent) => {
       if (event.target instanceof Node && !root.current?.contains(event.target)) setOpen(false);

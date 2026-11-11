@@ -16,12 +16,3 @@ export function matchesHealthQuery(item: HealthItem, query: string): boolean {
   const words = normalize([item.name, item.description, ...item.inclusions].join(" ")).split(/\s+/);
   return tokens.every(token => words.some(word => word.startsWith(token)));
 }
-
-export function healthComparisonFacts(item: HealthItem): Record<string, string> {
-  return {
-    "Package overview": item.audience?.description || item.description || "Not listed",
-    "Coverage highlights": item.inclusions.length ? item.inclusions.join(" · ") : "Not listed",
-    "Preparation": item.preparation || "Not listed",
-    "Report availability": item.reportTime || "Not listed",
-  };
-}

@@ -7,11 +7,12 @@ import { motion, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import { money, type HealthFacility, type HealthItem } from "./catalog";
 import type { HealthDetailSource } from "./healthDetailTypes";
+import { DEFAULT_HEALTH_DESIGN, type HealthDesign } from "./healthDesigns";
 import JourneyHeading from "@/components/ui/JourneyHeading";
 import HealthTestGroups from "./HealthTestGroups";
 import styles from "./HealthDetail.module.css";
 
-interface Props { item: HealthItem & HealthDetailSource; facility: HealthFacility; design?: "1" | "2" }
+interface Props { item: HealthItem & HealthDetailSource; facility: HealthFacility; design?: HealthDesign }
 
 function officialSourceLink(value?: string): string | undefined {
   if (!value) return undefined;
@@ -21,7 +22,7 @@ function officialSourceLink(value?: string): string | undefined {
   } catch { return undefined; }
 }
 
-export default function HealthDetail({ item, facility, design = "2" }: Props) {
+export default function HealthDetail({ item, facility, design = DEFAULT_HEALTH_DESIGN }: Props) {
   const reduced = useReducedMotion();
   const detail = item.details;
   const about = detail?.about.filter(text => text.trim()) ?? [];

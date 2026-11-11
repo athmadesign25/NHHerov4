@@ -1,3 +1,5 @@
+import type { HealthDesign } from "./healthDesigns";
+
 /** Source-authored content only. Empty sections are omitted by the master page. */
 export interface HealthTestGroup {
   name: string;
@@ -34,7 +36,7 @@ export interface HealthDetailSource {
   details?: HealthItemDetails;
 }
 
-export function healthItemDetailHref(item: HealthDetailSource, design?: "1" | "2"): string {
+export function healthItemDetailHref(item: HealthDetailSource, design?: HealthDesign): string {
   const query = new URLSearchParams();
   if (design) query.set("design", design);
   if (item.unitCode) query.set("unitCode", item.unitCode);
