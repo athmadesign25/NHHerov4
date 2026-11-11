@@ -81,3 +81,8 @@
 @media (forced-colors: active) {
   .trigger, .options { border-color: ButtonText; background: Canvas; }
 }
+
+/* The iteration control stays separate from the patient-facing call FAB. */
+@media (min-width: 1024px) {
+  :global(body:has([data-booking-support])) .switcher { right: calc(var(--space-128) * 2 + var(--space-48)); }
+}

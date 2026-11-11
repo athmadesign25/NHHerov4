@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { Phone } from "lucide-react";
+import BookingSupportContact from "@/features/booking/shared/BookingSupportContact";
 import styles from "./DoctorCallToBook.module.css";
 
 export default function DoctorCallToBook({ placement, hidden = false }: { placement: "mobile" | "filters"; hidden?: boolean }) {
@@ -17,6 +18,8 @@ export default function DoctorCallToBook({ placement, hidden = false }: { placem
     const timer = window.setTimeout(() => setIntroduced(true), 2400);
     return () => window.clearTimeout(timer);
   }, [mobile]);
+
+  if (!mobile) return hidden ? null : <BookingSupportContact />;
 
   return (
     <a

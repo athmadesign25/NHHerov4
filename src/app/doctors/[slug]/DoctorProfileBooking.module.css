@@ -138,14 +138,16 @@
 @media (max-width: 639px) {
   .dock[data-expanded="false"] .summary { padding: var(--space-12); }
   .actionGroup:has(.mobileCall) { grid-template-columns: minmax(0, 1fr) var(--space-48); gap: var(--space-8); }
-  .mobileCall { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); color: var(--color-primary); background: var(--journey-paper-icon-bg); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
-  .mobileCall svg { width: var(--space-20); height: var(--space-20); }
-  .mobileCall:active { background: var(--color-disclosure-hover); }
-  .dock[data-tone="dark"] .mobileCall { color: var(--white); border-color: rgba(var(--white-rgb), .2); background: rgba(var(--white-rgb), .1); }
+  .mobileCall { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid rgba(var(--white-rgb), 0.2); border-radius: var(--radius-full); color: var(--white); background: rgba(var(--black-rgb), 0.25); backdrop-filter: blur(var(--space-20)); -webkit-backdrop-filter: blur(var(--space-20)); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
+  .mobileCall svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
+  .mobileCall:active { background: rgba(var(--black-rgb), 0.35); }
 }
 @media (max-width: 374px) {
   .dock[data-expanded="false"][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 }
-@media (hover: hover) { .mobileCall:hover { background: var(--color-disclosure-hover); } }
+@media (hover: hover) { .mobileCall:hover { background: rgba(var(--black-rgb), 0.3); } }
 @media (prefers-reduced-motion: reduce) { .mobileCall { transition: none; } }
+@media (prefers-reduced-transparency: reduce) {
+  .dock .mobileCall { background: var(--slate-700); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
 @media (forced-colors: active) { .dock .mobileCall { color: LinkText; background: Canvas; border-color: ButtonText; } }

@@ -38,6 +38,7 @@
   z-index: 30;
   inset-inline-end: max(var(--space-16), env(safe-area-inset-right));
   bottom: calc(var(--space-16) + env(safe-area-inset-bottom));
+  color: var(--white);
   width: max-content;
   height: var(--space-48);
   padding: 0 calc((var(--space-48) - var(--space-20)) / 2) 0 var(--space-16);
@@ -51,33 +52,27 @@
   transition: clip-path var(--duration-slow) var(--ease-standard);
 }
 .mobile::before {
-  border: 0;
-  background: rgba(var(--slate-200-rgb), 0.85);
+  border: var(--space-1) solid rgba(var(--white-rgb), 0.2);
+  background: rgba(var(--black-rgb), 0.25);
 }
 .mobile[data-expanded="true"], .mobile:focus-visible { clip-path: inset(0 round var(--radius-full)); }
 .mobile .icon { width: var(--space-20); height: var(--space-48); }
 .mobile .label { opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
 .mobile[data-expanded="true"] .label, .mobile:focus-visible .label { opacity: 1; }
-.mobile svg { width: var(--space-20); height: var(--space-20); }
-.filters { display: none; }
+.mobile svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
 
 @media (min-width: 1024px) {
   .mobile { display: none; }
-  .filters { display: inline-flex; margin-inline-start: var(--space-16); color: var(--d3-ui-text, var(--color-text-secondary)); }
-  .filters::before { inset-block: var(--space-6); }
 }
 
-@media (min-width: 1024px) and (pointer: fine) {
-  .filters { min-height: calc(var(--space-48) - var(--space-4)); }
-}
 
 @media (hover: hover) {
   .call:hover::before { background: var(--color-disclosure-hover); }
-  .mobile:hover::before { background: rgba(var(--slate-200-rgb), 0.95); }
+  .mobile:hover::before { background: rgba(var(--black-rgb), 0.3); }
 }
 
 .call:active::before { background: rgba(var(--black-rgb), 0.12); }
-.mobile:active::before { background: var(--slate-200); }
+.mobile:active::before { background: rgba(var(--black-rgb), 0.35); }
 .call:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 .mobile:focus-visible { outline-offset: calc(var(--space-4) * -1); }
 
@@ -87,7 +82,7 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .mobile { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .mobile::before, .mobile:is(:hover, :active)::before { background: var(--slate-200); }
+  .mobile::before, .mobile:is(:hover, :active)::before { background: var(--slate-700); }
 }
 
 @media (forced-colors: active) {
