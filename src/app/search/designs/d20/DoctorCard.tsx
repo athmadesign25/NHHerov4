@@ -22,6 +22,7 @@ import { cardLayoutTransition } from "./cardMotion";
 import { getDesign20CardContent } from "@/features/search/design20CardContent";
 import { readListingParams } from "@/features/search/doctorListing";
 import useInlineBookingSpotlight from "./useInlineBookingSpotlight";
+import { duration } from "@/lib/motion";
 
 type Props = Omit<ComponentProps<typeof Design17DoctorCard>, "cardDesign"> & {
   cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20";
@@ -29,14 +30,17 @@ type Props = Omit<ComponentProps<typeof Design17DoctorCard>, "cardDesign"> & {
   onClose?: () => void;
   initialSelection?: AppointmentSelection;
   resume?: boolean;
+  browsingPreview?: boolean;
 };
 type BookingFlow = ReturnType<typeof useDesign20Booking>;
 
 /** The browsing card defines the responsive footprint for every booking state. */
-export default function DoctorCard({ active, onClose, initialSelection, resume, onBook, live, ...props }: Props) {
+export default function DoctorCard({ active, onClose, initialSelection, resume, onBook, live, browsingPreview = false, ...props }: Props) {
   const [authOpen, setAuthOpen] = useState(false);
   const [remembered, setRemembered] = useState<{ context: string; selection: AppointmentSelection } | null>(null);
-  const selectionContext = JSON.stringify([props.mode, props.doctor.hospital, props.bookingDate, props.listingReturnTo]);
+  const contextParams = new URLSearchParams(props.listingReturnTo?.split("?")[1] ?? "");
+  contextParams.delete("listingPreview");
+  const selectionContext = JSON.stringify([props.mode, props.doctor.hospital, props.bookingDate, props.listingReturnTo?.split("?")[0], contextParams.toString()]);
   const rememberSelection = useCallback((selection: AppointmentSelection) => {
     setRemembered({ context: selectionContext, selection });
   }, [selectionContext]);
@@ -47,7 +51,8 @@ export default function DoctorCard({ active, onClose, initialSelection, resume, 
   const query = new URLSearchParams({ mode: props.mode, hospital: props.doctor.hospital });
   if (props.bookingDate) query.set("date", props.bookingDate);
   const booking = Boolean(active && bookingDoctor);
-  const { active: spotlight, start: startSpotlight } = useInlineBookingSpotlight(booking, authOpen);
+  const { active: dimRequested, highlight, start: startSpotlight } = useInlineBookingSpotlight(booking, authOpen);
+  const spotlight = dimRequested && !browsingPreview;
   const openBooking: Props["onBook"] = useCallback((event, doctor, mode, includeSlot) => {
     if (!live) startSpotlight();
     onBook(event, doctor, mode, includeSlot);
@@ -62,14 +67,15 @@ export default function DoctorCard({ active, onClose, initialSelection, resume, 
     <div className={styles.baseline} data-concealed={booking || undefined} aria-hidden={booking || undefined} inert={booking}>
       <Design17DoctorCard {...props} live={live} cardDesign="d20" onBook={openBooking} />
     </div>
-    <AnimatePresence initial={false}>{bookingDoctor && <BookingCard key="booking" spotlight={spotlight} doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
+    <AnimatePresence initial={false}>{bookingDoctor && <BookingCard key="booking" spotlight={spotlight} highlight={highlight} doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
     initialSelection={restoredSelection ?? initialSelection ?? design20RequestedSelection(bookingDoctor, query)}
     returnTo={props.listingReturnTo ?? "/search/doctors?design=d21"} onClose={onClose ?? (() => undefined)} resume={Boolean(restoredSelection) || resume} onAuthChange={setAuthOpen} onSelectionChange={rememberSelection} />}</AnimatePresence>
   </div></LayoutGroup>;
 }
 
-function BookingCard({ doctor, initialSelection, returnTo, onClose, resume, onAuthChange, onSelectionChange, spotlight }: {
+function BookingCard({ doctor, initialSelection, returnTo, onClose, resume, onAuthChange, onSelectionChange, spotlight, highlight }: {
   spotlight: boolean;
+  highlight: boolean;
   doctor: BookingDoctorSummary; initialSelection: AppointmentSelection; returnTo: string; onClose: () => void; resume?: boolean;
   onAuthChange: (open: boolean) => void;
   onSelectionChange: (selection: AppointmentSelection) => void;
@@ -127,8 +133,8 @@ function BookingCard({ doctor, initialSelection, returnTo, onClose, resume, onAu
         event.preventDefault(); onClose();
       }
     }}
-    exit={{ opacity: 0 }} transition={{ opacity: { duration: reduced ? 0 : .16 } }}>
-    <BookingFocusGlow />
+    exit={{ opacity: 0 }} transition={{ opacity: { duration: reduced ? 0 : duration.base } }}>
+    {highlight && <BookingFocusGlow />}
     <header className={`${styles.header} ${styles.textHeader}`}>
       <button type="button" className={styles.back} onClick={onClose} aria-label="Back to details" title="Back to details"><ArrowLeft size={18} aria-hidden /></button>
       <div className={styles.identity}>
@@ -137,7 +143,7 @@ function BookingCard({ doctor, initialSelection, returnTo, onClose, resume, onAu
       </div>
     </header>
     <CardScrollArea viewportRef={content}>
-    <motion.div layoutScroll ref={content} className={styles.content} tabIndex={0} role="region" aria-label="Appointment options" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .16 }}>
+    <motion.div layoutScroll ref={content} className={styles.content} tabIndex={0} role="region" aria-label="Appointment options" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : duration.base }}>
       {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
       {/* Reserve the final selector geometry immediately while saved choices load.
           Swapping a one-line loader for these rows during projection caused a jump. */}

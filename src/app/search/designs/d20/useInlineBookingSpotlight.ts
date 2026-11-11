@@ -7,12 +7,13 @@ export default function useInlineBookingSpotlight(active: boolean, suspended: bo
   // Restoring an open card (Back, return links, refresh or deep links) is browsing,
   // not a new booking intent. Only the card's Book appointment action can arm dimming.
   const [requested, setRequested] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [previousActive, setPreviousActive] = useState(active);
   if (previousActive !== active) {
     setPreviousActive(active);
     if (!active) setRequested(false);
   }
-  const start = useCallback(() => setRequested(true), []);
+  const start = useCallback(() => { setRequested(true); setScrolled(false); }, []);
   const dismiss = useCallback(() => setRequested(false), []);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function useInlineBookingSpotlight(active: boolean, suspended: bo
       });
     });
     const onPageScroll = () => {
-      if (armed && Math.abs(window.scrollY - startY) >= 8) dismiss();
+      if (armed && Math.abs(window.scrollY - startY) >= 8) setScrolled(true);
     };
     // No capture: nested hospital menus and horizontal date/time rails do not
     // dismiss the spotlight. Only an actual vertical document scroll does.
@@ -51,5 +52,5 @@ export default function useInlineBookingSpotlight(active: boolean, suspended: bo
     };
   }, [active, requested, suspended, dismiss]);
 
-  return { active: active && requested, start, dismiss };
+  return { active: active && requested && !scrolled, highlight: active && requested, start, dismiss };
 }

@@ -10,12 +10,16 @@ export default function useBookingFocus(expanded: boolean, dock: RefObject<HTMLE
     const panel = dock.current;
     if (!expanded || !panel) return;
 
+    // This temporary listing view switcher must remain reachable for comparison.
+    // Real modal sheets (and login) still block it with the rest of the page.
+    const preview = lockScroll ? null : document.querySelector<HTMLElement>("[data-listing-preview]");
+
     // Inert siblings at each ancestor level, leaving the dock and its popovers live.
     const background = new Map<HTMLElement, boolean>();
     let branch: HTMLElement = panel;
     while (branch.parentElement) {
       for (const sibling of branch.parentElement.children) {
-        if (!(sibling instanceof HTMLElement) || sibling === branch || sibling.inert
+        if (!(sibling instanceof HTMLElement) || sibling === branch || sibling === preview || sibling.inert
           || sibling.matches("script, style, link, [data-booking-backdrop]")) continue;
         background.set(sibling, sibling.inert);
         sibling.setAttribute("inert", "");
@@ -32,10 +36,13 @@ export default function useBookingFocus(expanded: boolean, dock: RefObject<HTMLE
       if (!wasStopped) lenis?.stop();
     }
 
-    const focusable = () => Array.from(panel.querySelectorAll<HTMLElement>(
-      'button, input, select, textarea, a[href], [tabindex]',
-    )).filter(element => element.tabIndex >= 0 && !element.matches(":disabled")
-      && !element.closest("[inert]") && element.getClientRects().length > 0);
+    const focusable = () => [panel, ...(preview ? [preview] : [])]
+      .flatMap(surface => Array.from(surface.querySelectorAll<HTMLElement>(
+        'button, input, select, textarea, a[href], [tabindex]',
+      )))
+      .filter(element => element.tabIndex >= 0 && !element.matches(":disabled")
+        && !element.closest("[inert]") && element.getClientRects().length > 0)
+      .sort((left, right) => left.compareDocumentPosition(right) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
     const isCovered = () => panel.closest("[inert]") || document.querySelector(
       'dialog[open], [role="dialog"][aria-modal="true"]:not([data-booking-focus])',
     );
@@ -52,7 +59,7 @@ export default function useBookingFocus(expanded: boolean, dock: RefObject<HTMLE
       }
     };
     const containFocus = (event: FocusEvent) => {
-      if (isCovered() || !(event.target instanceof Node) || panel.contains(event.target)) return;
+      if (isCovered() || !(event.target instanceof Node) || panel.contains(event.target) || preview?.contains(event.target)) return;
       (focusable()[0] ?? panel).focus({ preventScroll: true });
     };
     document.addEventListener("keydown", trapTab);

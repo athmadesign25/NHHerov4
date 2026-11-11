@@ -10,10 +10,10 @@ export function BookingBackdrop({ open, suspended = false, inline = false, onDis
 }) {
   const reduced = useReducedMotion();
   return <AnimatePresence>{open && <motion.div key="page" className={`${styles.backdrop} ${inline ? styles.inlineBackdrop : ""}`} data-booking-backdrop data-lenis-prevent={inline ? undefined : true} aria-hidden="true"
-    initial={{ opacity: 0 }} animate={{ opacity: suspended ? 0 : 1 }} exit={{ opacity: 0 }}
+    initial={{ opacity: 0 }} animate={{ opacity: suspended ? 0 : 1 }} exit={{ opacity: 0, transition: { duration: reduced ? 0 : duration.base, ease: ease.out } }}
     transition={{ duration: reduced ? 0 : duration.moderate, ease: ease.out }}
     onClick={onDismiss} />}{open && inline && <motion.div key="toolbar" className={`${styles.backdrop} ${styles.toolbarBackdrop}`} data-booking-backdrop aria-hidden="true"
-    initial={{ opacity: 0 }} animate={{ opacity: suspended ? 0 : 1 }} exit={{ opacity: 0 }}
+    initial={{ opacity: 0 }} animate={{ opacity: suspended ? 0 : 1 }} exit={{ opacity: 0, transition: { duration: reduced ? 0 : duration.base, ease: ease.out } }}
     transition={{ duration: reduced ? 0 : duration.moderate, ease: ease.out }}
     onClick={onDismiss} />}</AnimatePresence>;
 }

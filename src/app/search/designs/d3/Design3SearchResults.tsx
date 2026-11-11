@@ -32,6 +32,7 @@ import AppliedFilterSummary from "../d21/AppliedFilterSummary";
 import d21 from "../d21/Design21Filters.module.css";
 import Design21Refinements from "../d21/Design21Refinements";
 import FilterSearch from "../d21/FilterSearch";
+import ListingBackdropPreview from "../d21/ListingBackdropPreview";
 import CatalogFilters from "./CatalogFilters";
 import styles from "./Design3SearchResults.module.css";
 import DoctorListingFAQ from "./DoctorListingFAQ";
@@ -69,6 +70,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const directory = design20Directory;
     const scheduleContext = "d20";
     const searchParams = useSearchParams();
+    const listingPreview = searchParams.get("listingPreview") === "1" ? "1" : "2";
     const pathname = usePathname();
     const router = useRouter();
     const landing = getDoctorLandingContext(pathname);
@@ -87,11 +89,31 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const activeBooking = bookingSource ? { ...bookingSource, name: presentationDoctorName(bookingSource.name) } : null;
     const previousBooking = useRef<string | null>(null);
     const openedHere = useRef(false);
+    const closingPreview = useRef<"1" | "2" | null>(null);
     const visitedCards = useRef(new Set<string>());
     const [resumeCard, setResumeCard] = useState(false);
+    useEffect(() => {
+        const preservePreviewOnClose = () => {
+            const preview = closingPreview.current;
+            closingPreview.current = null;
+            if (!preview || window.location.pathname !== pathname) return;
+            const url = new URL(window.location.href);
+            if ((url.searchParams.get("listingPreview") === "1" ? "1" : "2") === preview) return;
+            url.searchParams.set("listingPreview", preview);
+            window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+        };
+        window.addEventListener("popstate", preservePreviewOnClose);
+        return () => {
+            window.removeEventListener("popstate", preservePreviewOnClose);
+            closingPreview.current = null;
+        };
+    }, [pathname]);
     const closeBookingCard = () => {
         if (openedHere.current) {
             openedHere.current = false;
+            // Collapse the booking history entry without reverting a presentation
+            // choice made while its slot picker was open.
+            closingPreview.current = listingPreview;
             window.history.back();
         }
         else
@@ -471,7 +493,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
                 message: bookedDoctors.size ? `Try another location or remove a filter to find a doctor you’ve ${"booked"} before.` : "Doctors you book will appear here, making your next visit easier.",
                 action: "Browse doctors",
             } : undefined} error={error} filtered={filterCount > 0} onRetry={request.retry} onReset={previouslyBooked ? () => setHistory(false) : filterCount ? clearFilters : () => update((next) => { next.delete("q"); next.delete("location"); })}/>
-            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
+            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} browsingPreview={listingPreview === "2"} doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
                 : items.slice(0, visible).map((item) => <ResultCard key={item.id} item={item} onDetails={() => setItemDetails(item)}/>)}
           </div>
           {doctorTab && <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{!loading && !error && visible > 16 ? "More doctors loaded" : ""}</p>}
@@ -539,5 +561,6 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     </AnimatePresence>
     {pendingUrl && <LoginModal previewOtp={true} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }}/>}
     {historyLogin && <LoginModal previewOtp={true} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }}/>}
+    {doctorTab && <ListingBackdropPreview active={listingPreview} />}
   </div>;
 }

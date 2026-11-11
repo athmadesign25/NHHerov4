@@ -28,6 +28,7 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
   const resume = params.get("booking") === doctor.id && params.get("bookingResume") === "1";
   const [started, setStarted] = useState(resume);
   const [expanded, setExpanded] = useState(resume);
+  const [highlightOpening, setHighlightOpening] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const action = useRef<HTMLButtonElement>(null);
   const dock = useRef<HTMLElement>(null);
@@ -39,13 +40,16 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
   useEffect(() => {
     if (!bookingRequest || !available) return;
     setStarted(true);
+    setHighlightOpening(true);
     setExpanded(true);
   }, [bookingRequest, available]);
   const toggle = () => {
     setStarted(true);
+    setHighlightOpening(!expanded);
     setExpanded(value => !value);
   };
   const close = () => {
+    setHighlightOpening(false);
     setExpanded(false);
     requestAnimationFrame(() => action.current?.focus({ preventScroll: true }));
   };
@@ -60,8 +64,8 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     }}
     aria-label={`Book an appointment with ${doctor.name}`}>
     <motion.div className={styles.animatedSurface} layout={!reduced} layoutAnchor={{ x: 0, y: 1 }} style={{ originY: 1 }}
-      transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
-    {expanded ? <BookingFocusGlow /> : <span className={styles.bookingAccent} aria-hidden="true">
+      transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
+    {expanded ? highlightOpening && <BookingFocusGlow /> : <span className={styles.bookingAccent} aria-hidden="true">
       <span className={styles.accentGlow}><span className={styles.accentTrack} /></span>
       <span className={styles.accentStroke}><span className={styles.accentTrack} /></span>
     </span>}
@@ -113,7 +117,7 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
   return <>
     <AnimatePresence initial={false} mode="popLayout">{expanded && <motion.div key="options" id={panelId} className={styles.panel} layout={reduced ? false : "position"}
       initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      transition={{ duration: reduced ? 0 : duration.base, layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
+      transition={{ duration: reduced ? 0 : duration.base, ease: ease.out, layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
       <header className={styles.header}><div><h2 ref={heading} tabIndex={-1}>Choose your appointment</h2><p>{doctor.name}</p></div>
         <button type="button" className={styles.collapse} onClick={close} aria-label="Minimise appointment options"><ChevronDown size={20} aria-hidden /></button></header>
       <div className={styles.options} data-lenis-prevent>
@@ -123,7 +127,7 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
       </div>
     </motion.div>}</AnimatePresence>
     <motion.div layout={reduced ? false : "position"} layoutId={`${panelId}-summary`} className={styles.summary}
-      transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.out } }}>
+      transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
       {expanded || selection.time ? <div className={styles.selected} aria-live="polite" aria-atomic="true"><span>Your appointment</span><strong>{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong>{!expanded && <span>{selection.mode === "hospital" ? selection.hospital : "Video consultation"}</span>}</div>
         : <div className={styles.doctor}><strong>{doctor.name}</strong><span>{selection.mode === "hospital" ? "Hospital visit" : "Video consultation"}</span></div>}
       <Price fee={selectedDoctor?.fee ?? doctor.fee} />
