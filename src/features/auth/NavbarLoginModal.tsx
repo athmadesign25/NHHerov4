@@ -138,6 +138,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 <input id={`${id}-phone`} type="tel" autoComplete="tel-national" inputMode="numeric" maxLength={10} placeholder="Mobile number" value={phone} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={event => { setPhone(event.target.value.replace(/\D/g, "").slice(0, 10)); setError(""); }} />
               </div></div> : <div className={styles.field}><label htmlFor={`${id}-email`}>Email ID</label><input id={`${id}-email`} type="email" autoComplete="email" placeholder="Enter your email address" value={email} aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={event => { setEmail(event.target.value); setError(""); }} /></div>}
             {error && <p id={`${id}-error`} className={styles.error} role="alert">{error}</p>}
+            {tab === "mobile" && <p className={styles.note}>Demo preview: use any 10-digit mobile number. No OTP is sent.</p>}
             <button type="submit" className={styles.primary}>Get OTP</button>
             <div className={styles.divider}><span>OR</span></div>
             <button type="button" className={styles.secondary} onClick={() => setNotice("Google sign-in isn’t connected in this preview. Continue with mobile or email.")}><span aria-hidden="true" className={styles.google}>G</span>Sign in with Google</button>

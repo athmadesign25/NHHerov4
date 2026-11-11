@@ -29,17 +29,20 @@ interface AccountMenuProps {
 
 export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavigate, tone, mobile = false, onOpen, members = DEMO_ACCOUNT_MEMBERS, memberLocked = false }: AccountMenuProps) {
   const [open, setOpen] = useState(false);
+  const [showOthers, setShowOthers] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const focusRequested = useRef(false);
   const id = useId();
   const member = members.find(entry => entry.id === memberId) ?? members[0] ?? DEMO_ACCOUNT_MEMBERS[0];
+  const otherMembers = members.filter(entry => entry.id !== member.id);
   const close = (restore = false) => {
     setOpen(false);
+    setShowOthers(false);
     if (restore) trigger.current?.focus({ preventScroll: true });
   };
-  const show = (focus = false) => { focusRequested.current = focus; onOpen?.(); setOpen(true); };
+  const show = (focus = false) => { focusRequested.current = focus; onOpen?.(); setShowOthers(false); setOpen(true); };
 
   useLayoutEffect(() => {
     if (!open || !popup.current) return;
@@ -56,7 +59,7 @@ export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavi
       panel.style.top = `${above ? Math.max(gap, rect.top - height - gap) : rect.bottom + gap}px`;
     };
     position();
-    if (focusRequested.current) panel.querySelector<HTMLElement>('[aria-checked="true"]')?.focus();
+    if (focusRequested.current) panel.querySelector<HTMLElement>('[aria-checked="true"]:not(:disabled), [role="menuitem"]:not(:disabled)')?.focus();
     const observer = new ResizeObserver(position);
     observer.observe(panel);
     window.addEventListener("resize", position);
@@ -109,12 +112,13 @@ export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavi
     {open && <div ref={popup} popover="manual" id={id} role="menu" aria-label="Family members and account" className={styles.popup} data-lenis-prevent>
       <div role="group" aria-labelledby={`${id}-members`} className={styles.members}>
         <p id={`${id}-members`} className={styles.heading}>Switch member</p>
-        {members.map(entry => <button type="button" role="menuitemradio" aria-checked={entry.id === member.id} disabled={memberLocked} className={styles.row} key={entry.id}
-          onClick={() => { onMemberChange(entry.id); close(true); }}>
-          <span className={styles.avatar} aria-hidden="true">{entry.name[0]}</span>
-          <span className={styles.memberCopy}><strong>{entry.name}</strong><small>{entry.relation}</small></span>
-          {entry.id === member.id && <Check aria-hidden="true" />}
-        </button>)}
+        <button type="button" role="menuitemradio" aria-checked="true" disabled={memberLocked} className={styles.row} onClick={() => close(true)}>
+          <span className={styles.avatar} aria-hidden="true">{member.name[0]}</span><span className={styles.memberCopy}><strong>{member.name}</strong><small>{member.relation}</small></span><Check aria-hidden="true" />
+        </button>
+        {otherMembers.length > 0 && <button type="button" role="menuitem" className={`${styles.row} ${styles.otherMembers}`} aria-expanded={showOthers} aria-controls={`${id}-other-members`} onClick={() => setShowOthers(value => !value)}><span>View other {otherMembers.length} {otherMembers.length === 1 ? "member" : "members"}</span><ChevronDown aria-hidden="true" /></button>}
+        {showOthers && <div role="group" id={`${id}-other-members`} aria-label="Other members">{otherMembers.map(entry => <button type="button" role="menuitemradio" aria-checked="false" disabled={memberLocked} className={styles.row} key={entry.id} onClick={() => { onMemberChange(entry.id); close(true); }}>
+          <span className={styles.avatar} aria-hidden="true">{entry.name[0]}</span><span className={styles.memberCopy}><strong>{entry.name}</strong><small>{entry.relation}</small></span>
+        </button>)}</div>}
       </div>
       <div role="group" aria-label="Your account" className={styles.actions}>
         <Link href="/profile" role="menuitem" className={styles.row} onClick={() => { close(); onNavigate?.(); }}><User aria-hidden="true" />My account</Link>
