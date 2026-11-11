@@ -28,9 +28,9 @@ export default function HealthItemCard({ item, selected, included, comparing, on
         <h3>{item.name}</h3>
       </div>
       {item.description?.trim() && <p className={styles.description}>{item.audience?.description || item.description}</p>}
-      {isPackage && <div className={styles.coverage}>
+      {isPackage && highlights.length > 0 && <div className={styles.coverage}>
         <span className={styles.label}>Coverage highlights</span>
-        {highlights.length ? <ul>{highlights.map((highlight, index) => <li key={`${highlight}-${index}`}><Check size={14} aria-hidden /><span>{highlight}</span></li>)}</ul> : <p className={styles.unlisted}>Coverage details not listed</p>}
+        <ul>{highlights.map((highlight, index) => <li key={`${highlight}-${index}`}><Check size={14} aria-hidden /><span>{highlight}</span></li>)}</ul>
       </div>}
       {(hasTestCount || item.reportTime || item.preparation) && <div className={styles.meta}>
         {hasTestCount && <span><FlaskConical size={15} aria-hidden />{item.testCount} {item.testCount === 1 ? "test" : "tests"} included</span>}

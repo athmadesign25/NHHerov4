@@ -5,9 +5,17 @@ import ts from "typescript";
 
 const source = readFileSync(new URL("../src/features/health-checkups/healthDiscovery.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-const { matchesHealthQuery, healthComparisonFacts } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
+const { matchesHealthQuery, healthComparisonFacts, healthListingHeading } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
 const packageItem = { name: "Male Health Check-Up", description: "Annual screening", inclusions: ["Complete Blood Count (CBC)", "Liver function"], preparation: "", reportTime: "", kind: "package" };
 const labTest = { name: "Complete Blood Count", description: "CBC", inclusions: [], preparation: "", reportTime: "", kind: "test" };
+
+test("discovery heading reflects only the confirmed centre and current service scope", () => {
+  assert.equal(healthListingHeading(undefined, "package"), "Health checkups & tests");
+  assert.equal(healthListingHeading("  ", "test"), "Health checkups & tests");
+  assert.equal(healthListingHeading("Bangalore", "package"), "Health packages in Bangalore");
+  assert.equal(healthListingHeading("Bangalore", "test"), "Lab tests in Bangalore");
+  assert.equal(healthListingHeading("  New   Delhi  "), "Checkups & tests in New Delhi");
+});
 
 test("one query finds published coverage and individual tests across both types", () => {
   const matches = [packageItem, labTest].filter(item => matchesHealthQuery(item, " cBc "));

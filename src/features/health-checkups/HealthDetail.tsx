@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import { money, type HealthFacility, type HealthItem } from "./catalog";
 import type { HealthDetailSource } from "./healthDetailTypes";
+import JourneyHeading from "@/components/ui/JourneyHeading";
 import HealthTestGroups from "./HealthTestGroups";
 import styles from "./HealthDetail.module.css";
 
@@ -54,7 +55,7 @@ export default function HealthDetail({ item, facility, design = "2" }: Props) {
       <motion.header className={styles.hero} data-image={Boolean(item.image) || undefined} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: duration.slow, ease: ease.out }}>
         <div className={styles.identity}>
           <p className={styles.type}>{item.kind === "package" ? "Health package" : "Lab test"}</p>
-          <h1>{item.name}</h1>
+          {design === "1" ? <h1>{item.name}</h1> : <JourneyHeading>{item.name}</JourneyHeading>}
           {detail?.subtitle && <p className={styles.subtitle}>{detail.subtitle}</p>}
           {!about.length && item.description?.trim() && <p className={styles.subtitle}>{item.description}</p>}
           <div className={styles.facility}><Building2 aria-hidden /><div><p>{facility.name}</p><span><MapPin aria-hidden />{facility.city}</span></div></div>

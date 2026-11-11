@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { ArrowLeft, CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, FlaskConical, MapPin, Navigation, ShieldCheck, Trash2 } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, FlaskConical, MapPin, ShieldCheck, Trash2 } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
+import JourneyHeading from "@/components/ui/JourneyHeading";
+import BookingActionBar from "@/features/booking/shared/BookingActionBar";
 import BookingMemberPicker from "@/features/booking/shared/BookingMemberPicker";
 import type { SavedPatient } from "@/features/booking/shared/types";
 import { formatBookingDate } from "@/features/booking/shared/dates";
 import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
-import { duration, ease } from "@/lib/motion";
 import { cartRequiresSlot, cartTotal, getHealthSlots, healthDateKey, healthDates, healthEligibilityMessage, money, type HealthFacility, type HealthItem } from "./catalog";
 import styles from "./HealthCheckout.module.css";
 
@@ -89,24 +90,24 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
   return <div className={styles.checkout}>
     <header className={styles.header}>
       <button type="button" className={styles.back} onClick={onBack}><ArrowLeft size={18} aria-hidden />Back to packages &amp; tests</button>
-      <h1 ref={heading} tabIndex={-1}>Complete your booking</h1>
+      <JourneyHeading ref={heading} tabIndex={-1}>Complete your booking</JourneyHeading>
       <p>Choose a member and review your checkup.</p>
     </header>
     <div className={styles.layout}>
       <div className={styles.details}>
         <section className={styles.section} aria-labelledby={`${id}-member`}>
-          <div className={styles.sectionHeading}><span className={styles.stepNumber}>1</span><h2 id={`${id}-member`}>Who is this booking for?</h2></div>
+          <div className={styles.sectionHeading}><h2 id={`${id}-member`}>Booking for</h2></div>
           <BookingMemberPicker patients={members} selectedId={memberId} busy={false} onSelect={onMemberChange} onAdd={onAddMember} />
           {eligibilityError && <div id={`${id}-eligibility`} className={styles.memberError} role="alert"><CircleAlert size={18} aria-hidden /><div><p>{eligibilityError}</p><button type="button" className={styles.textButton} onClick={onBack}>Change package</button></div></div>}
         </section>
         <section className={styles.section} aria-labelledby={`${id}-visit`}>
-          <div className={styles.sectionHeading}><span className={styles.stepNumber}>2</span><h2 id={`${id}-visit`}>Your visit</h2></div>
+          <div className={styles.sectionHeading}><h2 id={`${id}-visit`}>Your visit</h2></div>
           <div className={styles.location}>
             <span className={styles.iconCircle}><MapPin size={20} aria-hidden /></span>
-            <div><span className={styles.label}>Hospital / clinic</span><p className={styles.facilityName}>{facility.name}{" "}<a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(directionDestination)}`} target="_blank" rel="noopener noreferrer" className={styles.distance} aria-label={`Get directions to ${facility.name}${hasDistance ? `, ${facility.distanceKm} kilometres away` : ""}`}>{hasDistance ? `${facility.distanceKm} km` : "Get directions"}<Navigation size={12} aria-hidden /></a></p><span className={styles.locationCity}>{facility.city}</span></div>
+            <div><span className={styles.label}>Hospital / clinic</span><p className={styles.facilityName}>{facility.name}{" "}<a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(directionDestination)}`} target="_blank" rel="noopener noreferrer" className={styles.distance} aria-label={`Get directions to ${facility.name}${hasDistance ? `, ${facility.distanceKm} kilometres away` : ""}`}>{hasDistance ? `${facility.distanceKm} km` : "Get directions"}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m10.6 2.6-8 8a2 2 0 0 0 0 2.8l8 8a2 2 0 0 0 2.8 0l8-8a2 2 0 0 0 0-2.8l-8-8a2 2 0 0 0-2.8 0Z" /><path d="M8.5 15v-4h7m-3-3 3 3-3 3" /></svg></a></p><span className={styles.locationCity}>{facility.city}</span></div>
           </div>
           {needsSlot ? <div className={styles.slotFields}>
-            <div className={styles.fieldHeading}><CalendarDays size={18} aria-hidden /><h3 id={`${id}-dates-heading`}>Select date</h3></div>
+            <div className={styles.fieldHeading}><h3 id={`${id}-dates-heading`}>Select date</h3></div>
             <div className={styles.dateWrap} data-start={edges.start} data-end={edges.end}>
               <div ref={dateStrip} id={`${id}-dates`} className={styles.dates} data-lenis-prevent-horizontal role="group" aria-labelledby={`${id}-dates-heading`}>
                 {months.map(month => <div className={styles.monthGroup} data-month={month} key={month}>
@@ -122,7 +123,7 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
               <button type="button" className={`${styles.dateArrow} ${styles.datePrevious}`} disabled={!edges.start} aria-label="Earlier dates" aria-controls={`${id}-dates`} onClick={() => scrollDates(-1)}><ChevronLeft size={18} aria-hidden /></button>
               <button type="button" className={`${styles.dateArrow} ${styles.dateNext}`} disabled={!edges.end} aria-label="More dates" aria-controls={`${id}-dates`} onClick={() => scrollDates(1)}><ChevronRight size={18} aria-hidden /></button>
             </div>
-            <div className={styles.fieldHeading}><Clock3 size={18} aria-hidden /><h3 id={`${id}-times-heading`}>Select time</h3></div>
+            <div className={styles.fieldHeading}><h3 id={`${id}-times-heading`}>Select time</h3></div>
             <div className={styles.times} role="group" aria-labelledby={`${id}-times-heading`}>
               {slots.map(slot => <button type="button" key={slot} aria-pressed={time === slot} onClick={() => onTimeChange(slot)}>{slot}</button>)}
             </div>
@@ -138,13 +139,12 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
           <div className={styles.itemCopy}><strong>{item.name}</strong><span>{item.kind === "package" ? (Number.isFinite(item.testCount) && item.testCount > 0 ? `${item.testCount} ${item.testCount === 1 ? "test" : "tests"} & checks` : "Health package") : "Lab test"}</span><button type="button" className={styles.remove} aria-label={`Remove ${item.name}`} onClick={() => onRemove(item.id)}><Trash2 size={12} aria-hidden />Remove</button></div>
           <span className={styles.itemPrice}>{money(item.price)}</span>
         </li>)}</ul>
-        {needsSlot && date && time && <div className={styles.selectedTime}><Check size={16} aria-hidden /><span>{formatBookingDate(date, "short")}<span aria-hidden> · </span>{time}</span></div>}
-        <dl className={styles.paymentDetails}><div><dt>Subtotal</dt><dd>{money(total)}</dd></div><div className={styles.total}><dt>Total payable</dt><dd>{money(total)}</dd></div></dl>
+        {needsSlot && (date && time && slots.includes(time) ? <div className={styles.selectedTime}><Check size={16} aria-hidden /><span>{formatBookingDate(date, "short")}<span aria-hidden> · </span>{time}</span></div> : <p className={styles.helper} role="status">Choose an available time.</p>)}
+        <section className={styles.paymentSection} aria-labelledby={`${id}-payment`}><h2 id={`${id}-payment`}>Payment details</h2><dl className={styles.paymentDetails}><div><dt>Packages &amp; tests</dt><dd>{money(total)}</dd></div><div className={styles.total}><dt>Total payable</dt><dd>{money(total)}</dd></div></dl></section>
         {paymentError && <p className={styles.paymentError} role="alert">{paymentError}</p>}
-        <motion.button type="button" className={styles.pay} disabled={!canPay} aria-describedby={eligibilityError ? `${id}-eligibility` : undefined} onClick={onPay} whileTap={reduced ? undefined : { scale: .98 }} transition={{ duration: duration.fast, ease: ease.out }}>Pay online <span>{money(total)}</span></motion.button>
-        {!validMember && <p className={styles.helper}>Choose a member to continue.</p>}
         <p className={styles.secure}><ShieldCheck size={14} aria-hidden />Secure payment</p>
       </aside>
     </div>
+    <BookingActionBar amount={money(total)} actionLabel={total === 0 ? "Confirm booking" : "Pay online"} disabled={!canPay} feedback={!validMember ? "Choose a member to continue." : eligibilityError ? "Choose an eligible member or change your selection." : needsSlot && !slots.includes(time) ? "Choose a date and time to continue." : undefined} onContinue={onPay} />
   </div>;
 }

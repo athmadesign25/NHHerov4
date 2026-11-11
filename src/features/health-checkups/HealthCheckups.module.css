@@ -9,16 +9,26 @@
 .facilityTrigger > span { min-width: 0; overflow-wrap: anywhere; }
 .facilityTrigger > svg { flex-shrink: 0; }
 .facilityTrigger > svg:last-child { border-radius: var(--radius-full); box-sizing: content-box; padding: var(--space-8); transition: background var(--duration-fast); }
-.facilityTrigger:hover > svg:last-child { background: var(--color-primary-light); }
+.facilityTrigger:hover > svg:last-child { background: var(--color-disclosure-hover); }
 .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-16); margin-top: var(--space-16); }
 .toolbar > p { color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
-.tabs { display: flex; gap: var(--space-4); padding: var(--space-4); background: var(--journey-paper-icon-bg); border-radius: var(--radius-full); }
-.tabs button { min-height: calc(var(--space-40) + var(--space-4)); padding: var(--space-8) var(--space-24); border: none; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; transition: background var(--duration-base), color var(--duration-base), box-shadow var(--duration-base); }
-.tabs button[aria-pressed="true"] { background: var(--color-surface); color: var(--color-primary); box-shadow: var(--elevation-1); }
-.categories { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-block: var(--space-16); }
-.categories button { min-height: calc(var(--space-32) + var(--space-4)); padding: var(--space-6) var(--space-16); background: rgba(var(--white-rgb), .7); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-full); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); cursor: pointer; transition: background var(--duration-fast); }
-.categories button:hover { background: var(--color-primary-light); }
-.categories button[aria-pressed="true"] { color: var(--color-text-inverse); border-color: var(--color-primary); background: var(--color-primary); }
+/* Shared doctor-listing capsules; only the services and filter data differ. */
+.typeFilters {
+  --d3-ui-selection: var(--color-primary);
+  --d3-ui-selection-label: var(--color-text-inverse);
+  --d3-ui-selection-hover: var(--color-text-inverse);
+  --d3-ui-selection-pressed: var(--color-text-inverse);
+  --d3-ui-selection-surface: var(--color-primary);
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8);
+}
+.typeFilters button { cursor: pointer; }
+.categories { margin-top: var(--space-8); }
+@media (hover: hover) {
+  .typeFilters button[aria-pressed="true"]:hover::before { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+}
+@media (forced-colors: active) {
+  .typeFilters button[aria-pressed="true"]:hover::before { background: Highlight; border-color: Highlight; }
+}
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-24); }
 .empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-16); padding: var(--space-48) var(--space-16); color: var(--color-text-secondary); }
 .empty h2, .empty h3 { color: var(--color-text); font-size: var(--font-size-xl); line-height: var(--leading-snug); font-weight: 600; }
@@ -74,7 +84,7 @@
 .page :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
 @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 768px) { .page { padding-inline: var(--space-16); } .intro { align-items: flex-start; flex-direction: column; gap: var(--space-12); } .toolbar > p { display: none; } .dockInner { padding: var(--space-12) var(--space-16); gap: var(--space-16); } .cartDock { padding-inline: var(--space-16); } .bag { display: none; } .dockAction { gap: var(--space-16); } }
-@media (max-width: 640px) { .page { padding-top: calc(var(--nav-height) + var(--space-24)); } .grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-16); } .intro p { font-size: var(--font-size-sm); } .tabs { width: 100%; } .tabs button { flex: 1; padding-inline: var(--space-12); } .categories { gap: var(--space-6); } .categories button { min-height: calc(var(--space-40) + var(--space-4)); } .dockInner { flex-wrap: wrap; gap: var(--space-8); } .selection { width: 100%; } .selection strong, .selection small { display: inline; } .selection small { margin-left: var(--space-8); } .selection > svg { margin-left: auto; } .dockAction { width: 100%; justify-content: space-between; } .dockAction .primary { padding-inline: var(--space-16); } .notice { bottom: calc(var(--space-128) + var(--space-24)); } .modalActions { flex-wrap: wrap; } .modalActions > .primary { flex: 1; } .cartList button { width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); } }
+@media (max-width: 640px) { .page { padding-top: calc(var(--nav-height) + var(--space-24)); } .grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-16); } .intro p { font-size: var(--font-size-sm); } .categories { gap: var(--space-6); } .dockInner { flex-wrap: wrap; gap: var(--space-8); } .selection { width: 100%; } .selection strong, .selection small { display: inline; } .selection small { margin-left: var(--space-8); } .selection > svg { margin-left: auto; } .dockAction { width: 100%; justify-content: space-between; } .dockAction .primary { padding-inline: var(--space-16); } .notice { bottom: calc(var(--space-128) + var(--space-24)); } .modalActions { flex-wrap: wrap; } .modalActions > .primary { flex: 1; } .cartList button { width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); } }
 /* Keep the selection action readable beside the total on compact phones. */
 @media (max-width: 374px) {
   .dockAction { gap: var(--space-8); }
@@ -120,3 +130,7 @@
 .page[data-health-design="1"] .intro p { margin-top: var(--space-12); }
 @media (max-width: 640px) { .page[data-health-design="1"] { padding-top: calc(var(--nav-height) + var(--space-24)); } }
 
+
+/* Same restrained heading hierarchy as doctor discovery, without changing Design 1. */
+.page[data-health-design="2"] .intro h1 { font-size: clamp(var(--font-size-xl), 2.2vw, var(--font-size-3xl)); font-weight: 700; }
+.page[data-health-design="2"] .intro p { font-size: var(--font-size-sm); }

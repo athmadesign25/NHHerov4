@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Building2, Check, ChevronDown, Info, MapPin, Minus, Search, ShoppingBag, X } from "lucide-react";
+import { ArrowRight, Building2, Check, ChevronDown, Info, MapPin, Minus, Search, ShoppingBag, X, HeartPulse, FlaskConical } from "lucide-react";
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import NewPatient from "@/features/booking/shared/NewPatient";
@@ -12,6 +12,8 @@ import { chooseBookingMember, getBookingMemberSelection, getServerBookingMemberS
 import type { SavedPatient, AuthIdentity } from "@/features/booking/shared/types";
 import { duration, ease } from "@/lib/motion";
 import { FACILITIES, ITEMS, addCartItem, getCartItems, cartTotal, cartRequiresSlot, getHealthSlots, healthDates, healthEligibilityMessage, money, type FacilityId, type HealthItem } from "./catalog";
+import JourneyHeading from "@/components/ui/JourneyHeading";
+import chip from "@/components/ui/search-location/ControlChip.module.css";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import searchStyles from "@/components/ui/search-location/SearchToolbar.module.css";
 import searchTheme from "@/components/ui/search-location/SearchTheme.module.css";
@@ -19,7 +21,7 @@ import HealthItemCard from "./HealthItemCard";
 import HealthListing1 from "./design1/HealthListing1";
 import HealthDesignPreview, { type HealthDesign } from "./HealthDesignPreview";
 import HealthComparison from "./HealthComparison";
-import { matchesHealthQuery } from "./healthDiscovery";
+import { healthListingHeading, matchesHealthQuery } from "./healthDiscovery";
 import HealthDialog from "./HealthDialog";
 import HealthCheckout from "./HealthCheckout";
 import HealthConfirmation from "./HealthConfirmation";
@@ -74,6 +76,7 @@ export default function HealthCheckups() {
   const [receipt, setReceipt] = useState<{ items: HealthItem[]; facilityId: FacilityId; member: SavedPatient; date: string; time: string } | null>(null);
   const paymentTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const cityPicker = useRef<HTMLSelectElement>(null);
   const facility = resolveHealthFacility(FACILITIES, facilityId) ?? DEFAULT_FACILITY;
   const cityKey = healthCityKey(facility.city);
   const centreVisible = legacy || centreChosen;
@@ -86,6 +89,7 @@ export default function HealthCheckups() {
   const catalog = facilityCatalog.filter(item => item.kind === tab);
   const categories = ["All", ...new Set(catalog.map(item => item.category).filter(Boolean))];
   const searching = Boolean(query.trim());
+  const listingHeading = healthListingHeading(centreChosen ? facility.city : undefined, searching ? undefined : tab);
   const visible = searching
     ? facilityCatalog.filter(item => matchesHealthQuery(item, query))
     : catalog.filter(item => category === "All" || item.category === category);
@@ -259,7 +263,7 @@ export default function HealthCheckups() {
   return <div className={styles.page} data-health-design={design}>
     <div className={styles.container}>
       {stage === "browse" && <>
-        <header className={styles.intro}><div><h1 ref={heading} tabIndex={-1}>Health checkups &amp; tests</h1><p>Find the right checkup, at a centre near you.</p></div></header>
+        <header className={styles.intro}><div>{legacy ? <h1 ref={heading} tabIndex={-1}>Health checkups &amp; tests</h1> : <JourneyHeading ref={heading} tabIndex={-1}>{listingHeading}</JourneyHeading>}<p>Find the right checkup, at a centre near you.</p></div></header>
         <section className={`${styles.controls} ${searchTheme.theme}`} aria-label="Find health packages and tests">
           <div className={`${searchStyles.searchRow} ${searchStyles.locationFirst} ${searchStyles.compactMobile}`}>
             <SearchLocationUnit id="health-checkup-search" query={query} onQuery={value => { setQuery(value); setCategory("All"); }} maxLength={120}
@@ -275,10 +279,10 @@ export default function HealthCheckups() {
         {legacy ? <HealthListing1 catalog={facilityCatalog} tab={tab} query={query} category={category} ids={ids} includedIds={selectedPackage?.includedTestIds ?? []}
           onTab={value => { setTab(value); setCategory("All"); }} onCategory={setCategory} onClear={() => { setQuery(""); setCategory("All"); }} onCentre={() => openFacilityPicker()} onAdd={add} onDetails={openDetails} /> : centreChosen ? <>
           <div className={styles.toolbar}>
-            {searching ? <div className={styles.searchSummary}><h2>Search results</h2><button type="button" className={styles.textButton} onClick={() => setQuery("")}>Clear search<X size={14} aria-hidden /></button></div> : <div className={styles.tabs} aria-label="Browse by type">{(["package", "test"] as const).map(value => <button type="button" key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setCategory("All"); }}>{value === "package" ? "Health packages" : "Lab tests"}</button>)}</div>}
+            {searching ? <div className={styles.searchSummary}><h2>Search results</h2><button type="button" className={styles.textButton} onClick={() => setQuery("")}>Clear search<X size={14} aria-hidden /></button></div> : <div className={styles.typeFilters} role="group" aria-label="Browse by type">{(["package", "test"] as const).map(value => <button type="button" className={chip.chip} key={value} aria-pressed={tab === value} onClick={() => { setTab(value); setCategory("All"); }}>{value === "package" ? <HeartPulse size={16} aria-hidden /> : <FlaskConical size={16} aria-hidden />}{value === "package" ? "Health packages" : "Lab tests"}</button>)}</div>}
             {!searching && tab === "package" && <p>Select up to 3 packages to compare</p>}
           </div>
-          {!searching && categories.length > 2 && <div className={styles.categories} aria-label="Filter by focus">{categories.map(value => <button type="button" key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value}</button>)}</div>}
+          {!searching && categories.length > 2 && <div className={`${styles.categories} ${styles.typeFilters}`} role="group" aria-label="Filter by focus">{categories.map(value => <button type="button" className={chip.chip} key={value} aria-pressed={category === value} onClick={() => setCategory(category === value ? "All" : value)}>{value}{value !== "All" && category === value && <X size={14} aria-hidden />}</button>)}</div>}
           {comparisonItems.length > 0 && <div className={styles.compareBar} aria-label="Packages selected for comparison"><div className={styles.compareNames}>{comparisonItems.map(item => <button type="button" key={item.id} onClick={() => removeComparison(item.id)} aria-label={`Remove ${item.name} from comparison`}><span>{item.name}</span><X size={14} aria-hidden /></button>)}</div><button type="button" className={styles.primary} disabled={comparisonItems.length < 2} onClick={() => setComparisonOpen(true)}>{comparisonItems.length < 2 ? "Choose one more" : `Compare (${comparisonItems.length})`}</button></div>}
           <div className={styles.results} aria-live="polite" aria-atomic="false">
             {visible.length ? <>
@@ -290,13 +294,13 @@ export default function HealthCheckups() {
         </> : <section className={styles.chooseCentre}><span className={styles.centreIcon}><Building2 size={28} aria-hidden /></span><h2>Where would you like to visit?</h2><p>Choose a centre to see its packages, tests and prices.</p><button type="button" className={styles.primary} onClick={() => openFacilityPicker()}>Choose centre<ArrowRight size={18} aria-hidden /></button></section>}
 
       </>}
-      {stage === "review" && (isUserLoggedIn ? <HealthCheckout items={cart} facility={facility} members={members} memberId={memberId} onMemberChange={chooseBookingMember} onAddMember={() => setNewMember(true)} date={date} time={time} onDateChange={changeDate} onTimeChange={value => { setTime(value); setPaymentError(""); }} onBack={() => go("browse")} onRemove={remove} onPay={() => { if (canPay()) { setPaymentError(""); setPaymentOpen(true); } }} paymentError={paymentError} /> : <section className={styles.empty}><h1>Continue your booking</h1><p>Your selection is ready. Sign in to choose a member.</p><button type="button" className={styles.primary} onClick={() => setLoginOpen(true)}>Sign in to continue</button><button type="button" className={styles.textButton} onClick={() => go("browse")}>Back to packages</button></section>)}
+      {stage === "review" && (isUserLoggedIn ? <HealthCheckout items={cart} facility={facility} members={members} memberId={memberId} onMemberChange={chooseBookingMember} onAddMember={() => setNewMember(true)} date={date} time={time} onDateChange={changeDate} onTimeChange={value => { setTime(value); setPaymentError(""); }} onBack={() => go("browse")} onRemove={remove} onPay={() => { if (canPay()) { setPaymentError(""); if (total === 0) finishPayment(); else setPaymentOpen(true); } }} paymentError={paymentError} /> : <section className={styles.empty}><h1>Continue your booking</h1><p>Your selection is ready. Sign in to choose a member.</p><button type="button" className={styles.primary} onClick={() => setLoginOpen(true)}>Sign in to continue</button><button type="button" className={styles.textButton} onClick={() => go("browse")}>Back to packages</button></section>)}
       {stage === "confirmed" && receipt && (isUserLoggedIn ? <HealthConfirmation items={receipt.items} facility={FACILITIES.find(entry => entry.id === receipt.facilityId)!} member={receipt.member} date={receipt.date} time={receipt.time} onRestart={() => { setReceipt(null); setIds([]); go("browse"); }} /> : <section className={styles.empty}><h1>Sign in to view your booking</h1><button type="button" className={styles.primary} onClick={() => setLoginOpen(true)}>Sign in</button></section>)}
     </div>
     {stage === "browse" && <HealthDesignPreview design={design} hasSelection={cart.length > 0} onChange={changeDesign} />}
     <AnimatePresence>{notice && <motion.div role="status" className={styles.notice} initial={reduceMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: duration.base, ease: ease.out }}><Info size={17} aria-hidden /><span>{notice}</span><button type="button" onClick={() => setNotice("")} aria-label="Dismiss message"><X size={16} /></button></motion.div>}</AnimatePresence>
     {stage === "browse" && cart.length > 0 && <div className={styles.cartDock} data-health-selection-dock><div className={styles.dockInner}><button type="button" className={styles.selection} onClick={() => setCartOpen(true)}><span className={styles.bag}><ShoppingBag size={21} aria-hidden /></span><span><strong>{cart.length} {cart.length === 1 ? "item" : "items"} selected</strong><small>View selection</small></span><ChevronDown size={16} aria-hidden /></button><div className={styles.dockAction}><span><small>Total</small><strong>{money(total)}</strong></span><button type="button" className={styles.primary} onClick={legacy ? () => setCartOpen(true) : review}>{legacy ? "Review selection" : "Continue"}<ArrowRight size={18} aria-hidden /></button></div></div></div>}
-    {facilityOpen && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={closeFacilityPicker}>Choose another city</button></div>}</HealthDialog>}
+    {facilityOpen && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select ref={cityPicker} value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={() => cityPicker.current?.focus()}>Choose another city</button></div>}</HealthDialog>}
     {comparisonOpen && comparisonItems.length > 1 && <HealthComparison items={comparisonItems} selectedIds={ids} onClose={() => setComparisonOpen(false)} onRemove={removeComparison} onSelect={item => { setComparisonOpen(false); add(item); }} onDetails={item => { setComparisonOpen(false); openDetails(item); }} />}
     {pendingPackage && <HealthDialog title="Replace your package?" onClose={() => setPendingPackage(null)}><p className={styles.dialogSub}>Replace {selectedPackage?.name} with {pendingPackage.name}? Your additional tests stay selected unless they’re already included in the new package.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={() => setPendingPackage(null)}>Keep current package</button><button type="button" className={styles.primary} onClick={replacePackage}>Replace package</button></div></HealthDialog>}
     {pendingFacility && <HealthDialog title="Change your centre?" onClose={keepFacility}><p className={styles.dialogSub}>Packages and prices vary by centre. Your current selection will be cleared.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={keepFacility}>Keep selection</button><button type="button" className={styles.primary} onClick={() => applyFacility(pendingFacility)}>Change centre</button></div></HealthDialog>}
