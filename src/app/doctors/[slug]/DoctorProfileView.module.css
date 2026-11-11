@@ -1,0 +1,53 @@
+.page {
+  --d7-text: var(--d17-lite-ink);
+  --d7-muted: var(--color-text-secondary);
+  --profile-gutter: var(--sp-2);
+  --profile-nav-height: var(--nav-height);
+  --profile-section-gap: var(--sp-5);
+  --profile-picker-height: var(--sp-8);
+  --profile-anchor-gap: var(--sp-2);
+  --profile-hero-surface: var(--navy-800);
+  --target: calc(var(--sp-6) - var(--sp-1) / 2);
+  min-height: 100dvh;
+  padding: calc(var(--nav-height) + var(--sp-2)) var(--sp-2) calc(var(--sp-16) + var(--sp-4));
+  color: var(--d7-text);
+  background: radial-gradient(ellipse at 15% 0%, color-mix(in srgb, var(--color-primary) 5%, transparent), transparent 35%), var(--color-bg);
+}
+.container { max-width: var(--max-width); margin-inline: auto; }
+.pageTools { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-2); }
+.back { display: inline-flex; align-items: center; gap: var(--sp-1); min-height: var(--target); font-size: var(--font-size-sm); font-weight: 500; color: var(--color-primary); text-decoration: none; }
+.profileSurface { --profile-nav-offset: var(--profile-nav-height); --profile-scroll-offset: calc(var(--profile-nav-offset) + var(--profile-picker-height) + var(--profile-anchor-gap)); min-width: 0; }
+.hero { min-width: 0; border-radius: var(--radius-xl); overflow: hidden; background: var(--profile-hero-surface); }
+.portrait { position: relative; display: flex; align-items: flex-end; min-width: 0; isolation: isolate; }
+.photoFrame { position: absolute; inset: 0 0 auto; height: calc(var(--sp-16) * 3); }
+.photoAmbient { object-fit: cover; filter: blur(var(--sp-3)); opacity: .32; }
+.photo { object-fit: cover; object-position: center 16%; }
+.portrait::after { content: ""; position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, transparent var(--sp-16), color-mix(in srgb, var(--profile-hero-surface) 12%, transparent) calc(var(--sp-16) * 1.5), var(--profile-hero-surface) calc(var(--sp-16) * 3)); pointer-events: none; }
+.photoFallback { position: absolute; inset: 0 0 auto; height: calc(var(--sp-16) * 2); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: var(--sp-2); color: var(--color-text-inverse); font-size: var(--font-size-sm); }
+.identity { position: relative; z-index: 2; width: 100%; min-width: 0; padding: calc(var(--sp-16) * 2.25) var(--profile-gutter) var(--sp-3); color: var(--color-text-inverse); }
+.identity h1 { margin: 0; max-width: 24ch; font-size: clamp(var(--font-size-2xl), 2.6vw, calc(var(--font-size-3xl) + var(--sp-1) / 2)); font-weight: 600; line-height: 1.18; letter-spacing: -.025em; overflow-wrap: anywhere; text-wrap: balance; color: inherit; }
+.specialityMeta { margin-top: var(--sp-2); }
+.specialityMeta > p { margin: 0; font-size: var(--font-size-lg); line-height: 1.5; color: inherit; overflow-wrap: anywhere; }
+.role { margin: var(--sp-1) 0 0; color: color-mix(in srgb, var(--color-text-inverse) 85%, transparent); font-size: var(--font-size-sm); line-height: 1.5; }
+.overview { margin-top: var(--sp-3); padding-top: var(--sp-3); min-width: 0; border-top: 1px solid color-mix(in srgb, var(--color-text-inverse) 22%, transparent); }
+.facts { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); margin: 0; }
+.overview:has(.facts:empty) { display: none; }
+.facts > div { display: grid; gap: var(--sp-1); min-width: 0; }
+.facts dt { display: flex; align-items: center; gap: var(--sp-1); color: color-mix(in srgb, var(--color-text-inverse) 82%, transparent); font-size: var(--font-size-xs); line-height: 1.5; }
+.facts dt svg { width: var(--sp-2); height: var(--sp-2); }
+.facts dd { margin: 0; font-size: var(--font-size-sm); line-height: 1.5; color: inherit; overflow-wrap: anywhere; }
+.page :is(a, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+@media (hover: hover) { .back:hover { color: var(--color-primary-dark); } }
+@media (min-width: 640px) { .page { --profile-gutter: var(--sp-4); padding-inline: var(--sp-3); } }
+@media (min-width: 768px) {
+  .page { --profile-section-gap: var(--sp-8); --profile-gutter: var(--sp-5); }
+  .portrait { min-height: calc(var(--sp-16) * 3.5); }
+  .photoFrame { inset: 0 0 0 auto; width: 65%; height: 100%; mask-image: linear-gradient(90deg, transparent, black 22%); }
+  .photo { object-position: center 18%; }
+  .portrait::after { background: linear-gradient(90deg, color-mix(in srgb, var(--profile-hero-surface) 98%, transparent), color-mix(in srgb, var(--profile-hero-surface) 88%, transparent) 26%, color-mix(in srgb, var(--profile-hero-surface) 45%, transparent) 49%, transparent 70%), linear-gradient(0deg, color-mix(in srgb, var(--profile-hero-surface) 78%, transparent), transparent 55%); }
+  .identity { width: 60%; padding: var(--sp-5) var(--profile-gutter); }
+  .photoFallback { inset: 0 0 0 auto; width: 40%; height: 100%; }
+}
+@media (min-width: 1024px) { .page { --profile-gutter: var(--sp-6); } .portrait { min-height: calc(var(--sp-16) * 3.75); } .identity { padding-block: var(--sp-6); } }
+@media (prefers-reduced-transparency: reduce) { .portrait::after { background: linear-gradient(180deg, transparent var(--sp-16), var(--profile-hero-surface) calc(var(--sp-16) * 2.5)); } }
+@media (min-width: 768px) and (prefers-reduced-transparency: reduce) { .portrait::after { background: linear-gradient(90deg, var(--profile-hero-surface) 35%, transparent 80%); } }

@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:57:25+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Jamshedpur",
+  "facility": "Brahmananda Narayana Multispeciality Hospital, Jamshedpur",
+  "facilityId": "1753",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1753",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1753-packages.mhtml",
+      "sha256": "9f60808d8c0ae12ce97ea76aa00e79ab106604fe4c2d457138403b5c86d267f6",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

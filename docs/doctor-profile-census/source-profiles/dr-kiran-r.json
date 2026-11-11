@@ -1,0 +1,104 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/May2024/uP7pATWJagI1Q2uoM6Nc.webp",
+    "name": "Dr. Kiran R",
+    "id": 671,
+    "doctorCode": "106576",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Gastroenterology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Medical Gastroenterology"
+      ],
+      "subSpecialties": [
+        "Advanced Diagnostic Endoscopy",
+        "Advanced Therapeutic Endoscopy",
+        "Gastrointestinal Malignancy"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "6th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. R. KIRAN is currently working as a Consultant at Mazumdar Shaw Medical Center, Bommasandra. His expertise includes UGI Endoscopy, Colonoscopy, PEG Placement, Endoscopic dilatations, Endoscopic banding, Esophageal SEMS placement, Polypectomy,Chromoendoscopy.Sclerotherapy, NBI, ERCP.",
+    "full_description": "Dr. R. KIRAN is currently working as a Consultant at Mazumdar Shaw Medical Center, Bommasandra. His expertise includes UGI Endoscopy, Colonoscopy, PEG Placement, Endoscopic dilatations, Endoscopic banding, Esophageal SEMS placement, Polypectomy,Chromoendoscopy.Sclerotherapy, NBI, ERCP."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Intragastric balloon placement Biliary stent placement Esophageal manometry Rectal manometry Hemochorial banding UGI Endoscopy Colonoscopy PEG Placement Endoscopic dilatations Endoscopic banding Esophageal SEMS placement Polypectomy",
+      "Chromoendoscopy",
+      "Sclerotherapy NBI ERCP",
+      "Gastro Sciences",
+      "Medical Gastroenterology",
+      "Gastroenterology",
+      "Gastro",
+      "Advanced & Interventional Endocscopy",
+      "Interventional Endocscopy",
+      "Endocscopy",
+      "MEDICAL GASTROENTEROLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Professional Membership",
+        "items": [
+          {
+            "text": "INASL: Indian National Association for the Study of the Liver",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "GERD - Pathophysiology, Clinical Manifestations, and Innovative Management Approaches",
+        "date": "April 13, 2023",
+        "slug": "gerd-signs-causes-symptoms-and-treatment-options",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/october2023/main-listing-gerd.jpeg",
+        "imgAlt": "GERD - Pathophysiology, Clinical Manifestations, and Innovative Management Approaches",
+        "authorInitial": "KR",
+        "author": "Dr. Kiran R",
+        "category": "Gastroenterology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

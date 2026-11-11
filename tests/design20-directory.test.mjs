@@ -63,12 +63,12 @@ test('public search doctor IDs enter D20 without changing clinician identity', (
   for (const unknown of ['unknown-doctor', 'dr-1-extra', 'devi']) assert.equal(getDesign20BookingDoctor(unknown), null);
 });
 
-test('public booking handoffs open D20 slots with the selected doctor and retain discovery context', () => {
+test('public booking handoffs open D21 slots with the selected doctor and retain discovery context', () => {
   const doctor = getDesign20ProfileDoctor('doc-devi-shetty', new URLSearchParams());
   const returnTo = '/search/doctors?design=d17-lite&location=Bangalore&languages=Kannada&mode=hospital';
   const target = new URL(design20BookingEntryUrl(doctor, 'video', '2026-10-29', returnTo), 'https://nh.local');
   assert.equal(target.pathname, '/search/doctors');
-  assert.equal(target.searchParams.get('design'), 'd20');
+  assert.equal(target.searchParams.get('design'), 'd21');
   assert.equal(target.searchParams.get('booking'), 'dr-1');
   assert.equal(target.searchParams.get('bookingMode'), 'video');
   assert.equal(target.searchParams.get('mode'), 'hospital');
@@ -80,12 +80,12 @@ test('public booking handoffs open D20 slots with the selected doctor and retain
   assert.equal(new URL(design20BookingEntryUrl(doctor, 'hospital', '', '//external.test'), 'https://nh.local').origin, 'https://nh.local');
 });
 
-test('unresolved doctor URLs recover through D20 discovery using supplied public context only', () => {
+test('unresolved doctor URLs recover through D21 discovery using supplied public context only', () => {
   const target = new URL(design20DoctorRecoveryUrl(new URLSearchParams({ name: 'Dr. Example & Partner', city: 'Bangalore',
     mode: 'video', returnTo: '//external.test', patient: 'Private detail', time: '10:00 AM', design: 'd3' })), 'https://nh.local');
   assert.equal(target.pathname, '/search/doctors');
-  assert.deepEqual(Object.fromEntries(target.searchParams), { q: 'Dr. Example & Partner', location: 'Bangalore', mode: 'video', design: 'd20' });
-  assert.equal(design20DoctorRecoveryUrl(new URLSearchParams()), '/search/doctors?design=d20');
+  assert.deepEqual(Object.fromEntries(target.searchParams), { q: 'Dr. Example & Partner', location: 'Bangalore', mode: 'video', design: 'd21' });
+  assert.equal(design20DoctorRecoveryUrl(new URLSearchParams()), '/search/doctors?design=d21');
 });
 
 test('every official Bangalore unit has six distinct verified sampled doctors and a matching filter', () => {
@@ -185,12 +185,15 @@ test('featured surgeons use surgical labels and aliases while older design fixtu
   const swapped = design20Directory.find(doctor => doctor.id === 'dr-3');
   const abhinandan = design20BangaloreDoctors.find(doctor => doctor.id === 'd20-dr-abhinandan-s-punit');
   assert.deepEqual(swapped, { ...untouched, hospital: abhinandan.hospital,
-    hospitals: abhinandan.hospitals, hospitalCount: '+3' });
+    hospitals: abhinandan.hospitals, hospitalCount: '+3', profileSlug: 'dr-arun-krishnan' });
   const swappedAbhinandan = design20Directory.find(doctor => doctor.id === abhinandan.id);
   assert.equal(swappedAbhinandan.hospital, untouched.hospital);
   assert.deepEqual(swappedAbhinandan.hospitals, untouched.hospitals);
   assert.deepEqual(getDesign20BookingDoctor(swapped.id).locations.map(location => location.name), abhinandan.hospitals);
-  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name), untouched.hospitals);
+  // Keep the requested preview units first while allowing the complete published
+  // profile affiliations to survive the profile -> booking handoff.
+  assert.deepEqual(getDesign20BookingDoctor(abhinandan.id).locations.map(location => location.name),
+    [...new Set([...untouched.hospitals, ...abhinandan.hospitals])]);
 });
 
 test('D20 featured profile selection and draft recovery accept only their corrected official affiliations', () => {

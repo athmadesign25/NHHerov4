@@ -1,0 +1,98 @@
+.call {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  gap: var(--space-8);
+  min-height: var(--space-48);
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-full);
+  color: var(--d3-ui-text, var(--color-text-secondary));
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.call::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: var(--space-1) solid var(--color-border);
+  border-radius: inherit;
+  background: var(--journey-paper-icon-bg);
+  pointer-events: none;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.call svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.icon { display: grid; place-items: center; flex-shrink: 0; }
+.call[hidden] { display: none; }
+.mobile {
+  position: fixed;
+  z-index: 30;
+  inset-inline-end: max(var(--space-16), env(safe-area-inset-right));
+  bottom: calc(var(--space-16) + env(safe-area-inset-bottom));
+  width: max-content;
+  height: var(--space-48);
+  padding: 0 calc((var(--space-48) - var(--space-20)) / 2) 0 var(--space-16);
+  border-radius: var(--radius-full);
+  flex-direction: row-reverse;
+  gap: var(--space-8);
+  /* Reveal a true capsule without scaling its glass, corners, or icon. */
+  clip-path: inset(0 0 0 calc(100% - var(--space-48)) round var(--radius-full));
+  backdrop-filter: blur(var(--space-20));
+  -webkit-backdrop-filter: blur(var(--space-20));
+  transition: clip-path var(--duration-slow) var(--ease-standard);
+}
+.mobile::before {
+  border: 0;
+  background: rgba(var(--slate-200-rgb), 0.85);
+}
+.mobile[data-expanded="true"], .mobile:focus-visible { clip-path: inset(0 round var(--radius-full)); }
+.mobile .icon { width: var(--space-20); height: var(--space-48); }
+.mobile .label { opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.mobile[data-expanded="true"] .label, .mobile:focus-visible .label { opacity: 1; }
+.mobile svg { width: var(--space-20); height: var(--space-20); }
+.filters { display: none; }
+
+@media (min-width: 1024px) {
+  .mobile { display: none; }
+  .filters { display: inline-flex; margin-inline-start: var(--space-16); color: var(--d3-ui-text, var(--color-text-secondary)); }
+  .filters::before { inset-block: var(--space-6); }
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .filters { min-height: calc(var(--space-48) - var(--space-4)); }
+}
+
+@media (hover: hover) {
+  .call:hover::before { background: var(--color-disclosure-hover); }
+  .mobile:hover::before { background: rgba(var(--slate-200-rgb), 0.95); }
+}
+
+.call:active::before { background: rgba(var(--black-rgb), 0.12); }
+.mobile:active::before { background: var(--slate-200); }
+.call:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.mobile:focus-visible { outline-offset: calc(var(--space-4) * -1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .call::before, .mobile, .mobile .label { transition: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mobile { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .mobile::before, .mobile:is(:hover, :active)::before { background: var(--slate-200); }
+}
+
+@media (forced-colors: active) {
+  .call { color: LinkText; }
+  .call::before { border-color: ButtonText; background: Canvas; }
+  .call:is(:hover, :active)::before { background: Canvas; border-color: Highlight; }
+  .call:focus-visible { outline-color: Highlight; }
+}

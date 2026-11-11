@@ -1,0 +1,23 @@
+.availability {
+  --card-ink: var(--d17-lite-ink);
+  --card-muted: var(--color-text-secondary);
+  --card-slot-size: calc((var(--font-size-xs) + var(--font-size-sm)) / 2);
+  min-width: 0;
+}
+.options { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); padding-left: var(--sp-3); }
+@media (min-width: 640px) { .options { column-gap: var(--sp-4); } }
+.availability[data-tone="dark"] { --card-ink: var(--white); --card-muted: var(--slate-300); --card-slot-size: var(--font-size-sm); }
+.availability[data-tone="dark"] > p > img { filter: invert(1); opacity: .7; }
+.optionCopy { display: block; min-width: 0; }
+.labelled .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-16); padding-left: 0; }
+.labelled .options:has(> :only-child) { grid-template-columns: minmax(0, 1fr); }
+.labelled .options > div { gap: var(--space-8); }
+.labelled .options > div > img { margin-top: var(--space-2); }
+.labelled .optionCopy { display: grid; gap: var(--space-4); }
+.modeLabel { display: block; color: var(--card-muted); font-size: var(--font-size-xs); line-height: var(--leading-body); font-weight: 400; }
+
+/* A single consultation mode is already identified by the location tile title. */
+.availability.compact { display: grid; gap: var(--space-4); --card-slot-size: var(--font-size-sm); }
+.compact .options { padding-left: 0; }
+.compact .options > div { padding: 0; }
+.compact .optionCopy > span { white-space: normal; line-height: var(--leading-body); }

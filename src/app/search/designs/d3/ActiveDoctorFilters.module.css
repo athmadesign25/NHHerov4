@@ -1,6 +1,6 @@
 .list { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: calc(var(--sp-1) * .75); min-width: max-content; padding-inline-start: calc(var(--sp-2) + 1px); overflow-anchor: none; }
 .list::before { content: ""; position: absolute; inset-inline-start: 0; top: 50%; height: var(--sp-3); border-inline-start: 1px solid var(--color-border); transform: translateY(-50%); pointer-events: none; }
-.list > button { flex: 0 0 auto; min-width: 0; max-width: min(calc(var(--sp-16) * 2), calc(100vw - var(--d3-gutter-start) - var(--d3-gutter-end) - var(--space-96))); }
+.list > button { flex: 0 0 auto; min-width: 0; max-width: min(calc(var(--sp-16) * 2), calc(100vw - var(--d3-gutter-start) - var(--d3-gutter-end) - var(--sp-12))); }
 .list > button span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
 .wrap { flex-wrap: wrap; min-width: 0; padding: 0 0 var(--sp-2); margin-bottom: var(--sp-2); border-bottom: 1px solid var(--d3-ui-border, var(--color-border)); gap: 0 calc(var(--sp-1) * .75); }

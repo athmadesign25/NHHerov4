@@ -5,11 +5,11 @@ import { createPortal } from "react-dom";
 import { motion, useIsPresent, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./SearchDialog.module.css";
-import ui from "./DoctorSearchTheme.module.css";
+import ui from "@/components/ui/search-location/SearchTheme.module.css";
 
-interface Props { title: string; children: ReactNode; footer?: ReactNode; onClose: () => void; mobileOnly?: boolean; doctorPreview?: boolean }
+interface Props { title: string; children: ReactNode; footer?: ReactNode; headerAction?: ReactNode; headerContent?: ReactNode; onClose: () => void; mobileOnly?: boolean; doctorPreview?: boolean }
 
-export default function SearchDialog({ title, children, footer, onClose, mobileOnly = false, doctorPreview = false }: Props) {
+export default function SearchDialog({ title, children, footer, headerAction, headerContent, onClose, mobileOnly = false, doctorPreview = false }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   const titleId = useId();
@@ -46,7 +46,7 @@ export default function SearchDialog({ title, children, footer, onClose, mobileO
       const box = event.currentTarget.getBoundingClientRect();
       if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) onClose();
     }}>
-    <header className={styles.header}><h2 id={titleId}>{title}</h2><button type="button" onClick={onClose} aria-label="Close dialog"><X size={20} aria-hidden /></button></header>
+    <header className={styles.header}><h2 id={titleId}>{title}</h2>{headerAction && <div className={styles.headerAction}>{headerAction}</div>}<button type="button" onClick={onClose} aria-label="Close dialog"><X size={20} aria-hidden /></button>{headerContent && <div className={styles.headerContent}>{headerContent}</div>}</header>
     <motion.div layoutScroll className={styles.content} data-filter-scroll-viewport={mobileOnly || undefined}>{children}</motion.div>
     {footer && <footer className={styles.footer}>{footer}</footer>}
   </motion.dialog>, document.body);

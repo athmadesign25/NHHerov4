@@ -1,0 +1,10 @@
+.icon {
+  display: grid;
+  place-items: center;
+  width: var(--space-40);
+  height: var(--space-40);
+  margin-top: var(--space-4);
+  border-radius: var(--radius-full);
+  background: var(--journey-paper-icon-bg);
+  color: var(--color-text-secondary);
+}

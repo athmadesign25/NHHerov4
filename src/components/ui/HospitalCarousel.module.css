@@ -482,3 +482,21 @@
 }
 
 
+
+/* Embedded hospital previews in the clinical libraries. */
+.card.cardCompact,
+.card.cardGrid {
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+}
+.card.cardGrid { height: calc(var(--space-48) * 10); }
+.card.cardCompact { height: calc(var(--space-64) * 5 + var(--space-12)); }
+.cardCompact .hospitalTitle { font-size: var(--font-size-base); line-height: var(--leading-snug); }
+.cardCompact .hospitalAddress { font-size: var(--font-size-xs); line-height: var(--leading-body); }
+.cardCompact .cardBody { padding: var(--space-16); }
+.cardCompact .bookBtn { padding-inline: var(--space-12); font-size: var(--font-size-xs); min-width: 0; }
+.cardCompact .callBtn { width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); }
+@media (max-width: 768px) {
+  .card.cardGrid { height: calc(calc(var(--space-40) + var(--space-4)) * 10); }
+}

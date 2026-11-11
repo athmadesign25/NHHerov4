@@ -267,12 +267,12 @@
   .cardTop {
     flex-direction: column;
   }
-
+  
   .docImageWrap {
     width: 72px;
     height: 72px;
   }
-
+  
   .docPricing {
     align-items: flex-start;
     margin-top: 8px;

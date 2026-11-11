@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, ChevronDown, History, UserRound, Zap } from "lucide-react";
 import { indiaDate } from "@/features/booking/appointmentTime";
 import { doctorHospitals, readListingParams, withSelectedDoctorHospital, type ConsultationMode, type DoctorListingItem } from "@/features/search/doctorListing";
@@ -12,6 +12,7 @@ import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPr
 import { design17BookingUrl } from "@/features/search/design17Booking";
 import { design17ProfileUrl } from "@/features/search/design17Profile";
 import ProfileShare from "./ProfileShare";
+import HospitalLocationMenu from "./HospitalLocationMenu";
 import ExpertiseSummary from "./ExpertiseSummary";
 import SpecialitySummary from "./SpecialitySummary";
 import { getDesign20Availability } from "@/features/search/design20Availability";
@@ -46,19 +47,16 @@ function formatAppointment(slot: Date) {
 /** Essential booking information first; clinical details stay available on demand. */
 export default function DoctorCard({ doctor, mode, live, priority = false, cardDesign = "d17", listingReturnTo, bookingDate = "", bookedEarlier = false, focusTerms = [], onBook, onHospitalChange }: Props) {
   const doc = { ...doctor, name: presentationDoctorName(doctor.name) };
+  const isDesign21 = new URLSearchParams(listingReturnTo?.split("?")[1] ?? "").get("design") === "d21";
   const reduced = useReducedMotion();
   const officialPortrait = doc.img.startsWith("/images/doctors/d20-real/");
   const thumbnailPortrait = officialPortrait && !doc.img.includes("-profile.");
   const locations = doc.practiceLocations?.length ? doc.practiceLocations.map(location => location.hospital) : doctorHospitals(doc);
   const [selectedHospital, setSelectedHospital] = useState(doc.hospital);
   const [locOpen, setLocOpen] = useState(false);
-  const [locationsAbove, setLocationsAbove] = useState(false);
   const [failedImage, setFailedImage] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const locationRef = useRef<HTMLDivElement>(null);
-  const metaRef = useRef<HTMLDivElement>(null);
-  const experienceMeasure = useRef<HTMLSpanElement>(null);
-  const [compactExperience, setCompactExperience] = useState(false);
   const locationButtonRef = useRef<HTMLButtonElement>(null);
   const popId = useId();
   const nameId = useId();
@@ -86,23 +84,7 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
   const profileDate = new URLSearchParams(url.split("?")[1]).get("date") ?? "";
   const profileUrl = design17ProfileUrl(bookingDoctor, mode, profileDate, live, cardDesign, listingReturnTo);
   const content = getDesign20CardContent(doc, { specialties: listingFilters.specialties, focusTerms, languages: listingFilters.languages });
-  useEffect(() => {
-    const row = metaRef.current;
-    const measureLabel = experienceMeasure.current;
-    if (!row || !measureLabel) return;
-    let alive = true;
-    const measure = () => {
-      const speciality = row.querySelector<HTMLElement>(`.${styles.speciality}`);
-      const gap = speciality ? parseFloat(getComputedStyle(row).columnGap) || 0 : 0;
-      const required = (speciality?.scrollWidth ?? 0) + measureLabel.getBoundingClientRect().width + gap;
-      if (alive) setCompactExperience(required > row.clientWidth + 1);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(row); observer.observe(measureLabel);
-    void document.fonts.ready.then(measure);
-    return () => { alive = false; observer.disconnect(); };
-  }, [content.speciality, content.experienceValue, content.experienceLabel]);
+  const experienceYears = content.experienceValue?.match(/\d+(?:\.\d+)?/)?.[0];
   const hasFee = /\d/.test(bookingDoctor.fee);
   const fee = hasFee ? appointmentPricing(bookingDoctor.fee).base : "Confirm fee";
 
@@ -121,33 +103,7 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
     locationButtonRef.current?.focus({ preventScroll: true });
   };
 
-  const toggleLocations = () => {
-    if (!locOpen && locationRef.current) {
-      const rect = locationRef.current.getBoundingClientRect();
-      const panelHeight = Math.min(parseFloat(getComputedStyle(locationRef.current).getPropertyValue("--sp-16")) * 2, window.innerHeight / 2);
-      const toolbarBottom = document.querySelector("[data-d3-search-bar]")?.getBoundingClientRect().bottom ?? 0;
-      const spaceBelow = window.innerHeight - rect.bottom;
-      setLocationsAbove(spaceBelow < panelHeight && rect.top - toolbarBottom > spaceBelow);
-    }
-    setLocOpen(!locOpen);
-  };
-
-  useEffect(() => {
-    if (!locOpen) return;
-    document.getElementById(popId)?.querySelector<HTMLButtonElement>('button[aria-pressed="true"]')?.focus({ preventScroll: true });
-    const pointer = (event: PointerEvent) => {
-      if (!locationRef.current?.contains(event.target as Node)) setLocOpen(false);
-    };
-    const keyboard = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setLocOpen(false);
-        locationButtonRef.current?.focus({ preventScroll: true });
-      }
-    };
-    document.addEventListener("pointerdown", pointer);
-    document.addEventListener("keydown", keyboard);
-    return () => { document.removeEventListener("pointerdown", pointer); document.removeEventListener("keydown", keyboard); };
-  }, [locOpen, popId]);
+  const closeLocations = useCallback(() => setLocOpen(false), []);
 
   return <motion.article aria-labelledby={nameId} className={styles.card} data-doctor-card data-locations-open={locOpen || undefined}
     layoutId={cardDesign === "d20" && !reduced ? `d20-card-${doc.id}` : undefined}
@@ -163,22 +119,18 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
     <header className={styles.identity}>
       {(doc.isExecutive || bookedEarlier) && <div className={styles.tags}>
         {doc.isExecutive && <span className={`${styles.tag} ${styles.tagExecutive}`}><Zap size={13} aria-hidden />Executive</span>}
-        {bookedEarlier && <span className={`${styles.tag} ${styles.tagBooked}`}><History size={13} aria-hidden />Previously consulted</span>}
+        {bookedEarlier && <span className={`${styles.tag} ${styles.tagBooked}`}><History size={13} aria-hidden />{isDesign21 ? "Previously booked" : "Previously consulted"}</span>}
       </div>}
       <div className={styles.identityText}>
         <h2 id={nameId} className={styles.name} aria-label={doc.name}>
           <motion.span layout={reduced ? false : "position"} layoutId={cardDesign === "d20" && !reduced ? `d20-name-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }}>{doc.name}</motion.span>
         </h2>
-        {(content.speciality || content.experienceValue) && <div ref={metaRef} className={styles.identityMeta}>
+        {(content.speciality || content.experienceValue) && <div className={styles.identityMeta}>
           {content.speciality && <SpecialitySummary text={content.speciality}
             layoutId={cardDesign === "d20" && !reduced ? `d20-speciality-${doc.id}` : undefined} />}
-          {content.experienceValue && <span className={styles.experience} aria-label={`${content.experienceValue} ${content.experienceLabel}`}>
+          {experienceYears && <span className={styles.experience} aria-label={`${experienceYears}+ years ${content.experienceLabel}`}>
             {content.speciality && <span className={styles.metaSeparator} aria-hidden>·</span>}
-            <strong>{content.experienceValue.replace(/\byears\b/, "yrs").replace(/\byear\b/, "yr")}</strong><span>{compactExperience ? "exp" : "experience"}</span>
-          </span>}
-          {content.experienceValue && <span ref={experienceMeasure} className={`${styles.experience} ${styles.experienceMeasure}`} aria-hidden="true">
-            {content.speciality && <span className={styles.metaSeparator}>·</span>}
-            <strong>{content.experienceValue.replace(/\byears\b/, "yrs").replace(/\byear\b/, "yr")}</strong><span>experience</span>
+            <strong>{experienceYears}+ yrs</strong>
           </span>}
         </div>}
         <ExpertiseSummary terms={content.fullExpertise} />
@@ -191,7 +143,7 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
         <div className={styles.hospitalRow}>
           {locations.length > 1 ? <button ref={locationButtonRef} type="button" className={`${styles.hospital} ${styles.hospitalSelector}`}
             aria-expanded={locOpen} aria-controls={popId}
-            aria-label={`${activeHospital}. Change hospital for ${doc.name}, ${locations.length} locations`} onClick={toggleLocations}>
+            aria-label={`${activeHospital}. Change hospital for ${doc.name}, ${locations.length} locations`} onClick={() => setLocOpen(previous => !previous)}>
             <Image src="/icons/doctor-card/location.svg" alt="" width={16} height={16} className={styles.locationIcon} /><span>{activeHospital.slice(0, hospitalNameSplit + 1)}<span className={styles.hospitalNameEnd}>{activeHospital.slice(hospitalNameSplit + 1)}{" "}<span className={styles.moreLocations} aria-hidden>· +{locations.length - 1} more<ChevronDown className={styles.hospitalChevron} size={14} aria-hidden /></span></span></span>
           </button> : <p className={styles.hospital}><Image src="/icons/doctor-card/location.svg" alt="" width={16} height={16} className={styles.locationIcon} /><span>{activeHospital || "Contact NH for hospital details"}</span></p>}
           {travelInfo?.directionsUrl ? <a className={styles.directions} href={travelInfo.directionsUrl} target="_blank" rel="noopener noreferrer" title="Get directions" aria-label={`${distanceLabel ? `${distanceLabel}. ` : ""}${directionsLabel}`}>
@@ -201,18 +153,17 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
             </svg>
           </a> : distanceLabel && <span className={styles.distance}>{distanceLabel}</span>}
         </div>
-        <AnimatePresence>{locOpen && <motion.div id={popId} className={`${styles.locationsPopover} ${locationsAbove ? styles.locationsAbove : ""}`} role="region" aria-label={`Practice locations for ${doc.name}`} data-lenis-prevent
-          initial={reduced ? false : { opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .15 }}>
-          <p>Choose hospital</p>
-          <ul>{locations.map(hospital => {
+        {locOpen && <HospitalLocationMenu id={popId} label={`Practice locations for ${doc.name}`}
+          anchorRef={locationRef} triggerRef={locationButtonRef} onClose={closeLocations}>
+          {locations.map(hospital => {
             const practice = doc.practiceLocations?.find(location => location.hospital === hospital);
             const distance = mode === "hospital" ? practice?.distanceKm ?? (!live ? getDesign16HospitalPreview(hospital)?.distanceKm : undefined) : undefined;
             return <li key={hospital}><button type="button" className={styles.locationOption} aria-pressed={hospital === activeHospital} onClick={() => chooseLocation(hospital)}>
               <Image src="/icons/doctor-card/location.svg" alt="" width={16} height={16} className={styles.locationIcon} /><span>{hospital}{distance !== undefined && <span className={styles.locationHint}>{distance.toLocaleString("en-IN", { maximumFractionDigits: 1 })} km</span>}</span>
               <span className={styles.locationCheck} aria-hidden>{hospital === activeHospital && <Check size={12} strokeWidth={3} />}</span>
             </button></li>;
-          })}</ul>
-        </motion.div>}</AnimatePresence>
+          })}
+        </HospitalLocationMenu>}
       </div>
       <div className={styles.bookingGroup}>
         <div className={styles.availability} id={slotId}>
@@ -231,7 +182,7 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
         <footer className={styles.footer}>
           <motion.div layout={reduced ? false : "position"} layoutId={cardDesign === "d20" && !reduced ? `d20-fee-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }} className={styles.fee} aria-label={`${fee}${hasFee ? " onwards" : ""}`}><span className={styles.feeAmount}>{fee}</span>{hasFee && <span className={styles.label}>onwards</span>}</motion.div>
           <motion.div className={styles.bookSlot} layout={reduced ? false : "position"} layoutId={cardDesign === "d20" && !reduced ? `d20-action-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }}>
-            {canBook ? <Link href={url} data-book-doctor={doc.id} onClick={event => onBook(event, bookingDoctor, mode, false)} className={styles.book} aria-label={`Book appointment with ${doc.name}`} aria-describedby={slotId}><span className={styles.bookContent}>Book appointment<span className={styles.bookArrow} aria-hidden><ArrowRight /><ArrowRight /></span></span></Link>
+            {canBook ? <Link href={url} data-book-doctor={doc.id} onClick={event => onBook(event, bookingDoctor, mode, false)} className={styles.book} aria-label={`Book appointment with ${doc.name}`} aria-describedby={slotId}><span className={styles.bookContent}>Book appointment{!isDesign21 && <span className={styles.bookArrow} aria-hidden><ArrowRight /><ArrowRight /></span>}</span></Link>
             : <a href="tel:18602080208" className={styles.book} aria-label={`Contact hospital about ${doc.name}`}><span className={styles.bookContent}>Contact hospital<ArrowRight size={17} aria-hidden /></span></a>}
           </motion.div>
         </footer>

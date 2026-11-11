@@ -1,5 +1,7 @@
+import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
 import { TREATMENTS_PROCEDURES_DATA, TreatmentProcedureItem } from "./treatmentsProceduresData";
 import { HEART_TRANSPLANT_TOC, HEART_TRANSPLANT_DETAIL } from "./heartTransplantDetailData";
+import { HospitalItem, HOSPITALS_DATA } from "./hospitalsData";
 
 export interface SymptomItem {
   name: string;
@@ -103,10 +105,13 @@ export interface ProcedureDetailData {
     insuranceNote: string;
   };
   doctors: DoctorItem[];
-  hospitals: HospitalDetailItem[];
+  hospitals: HospitalItem[];
   faqs: FAQItem[];
   toc: TOCItem[];
 }
+
+// Reuse the established preview portrait instead of referencing an absent asset.
+const ashleyPortrait = getDesign20DirectoryDoctor("dr-ashley")?.img ?? "/assets/doctor_1.png";
 
 // Curated specialist doctors by medical discipline
 const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
@@ -142,7 +147,7 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Senior Consultant Urologist & Renal Transplant Surgeon",
       experience: "32+ Years Experience",
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-      image: "/doctor_avatar_male.png",
+      image: ashleyPortrait,
       speciality: "Urology & Renal Transplant",
     },
     {
@@ -186,7 +191,7 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Director - Paediatric Surgery & Organ Transplant",
       experience: "34+ Years Experience",
       hospital: "Narayana Health City, Bangalore",
-      image: "/doctor_avatar_male.png",
+      image: ashleyPortrait,
       speciality: "Paediatric Surgery",
     },
     {
@@ -420,7 +425,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
         insuranceNote: HEART_TRANSPLANT_DETAIL.costs.insuranceNote,
       },
       doctors: SPECIALTY_DOCTORS_MAP.cardiology,
-      hospitals: ACCREDITED_HOSPITALS,
+      hospitals: HOSPITALS_DATA.slice(0, 3),
       faqs: HEART_TRANSPLANT_DETAIL.faqs,
       toc,
     };
@@ -546,7 +551,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       insuranceNote: "All major health insurance policies and TPAs in India cover this surgical procedure. Narayana Health provides dedicated on-site insurance desk assistance for quick cashless authorization and paperless claims.",
     },
     doctors: docsList,
-    hospitals: ACCREDITED_HOSPITALS,
+    hospitals: HOSPITALS_DATA.slice(0, 3),
     faqs: [
       {
         q: `What is the expected hospital stay for ${proc.shortTitle}?`,

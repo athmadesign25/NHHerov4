@@ -19,7 +19,7 @@ interface Props {
 export default function DoctorFilterDialog({ doctors, filters, count, onChange, onApply, onClose }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
-  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  closeRef.current = onClose;
   useEffect(() => {
     const dialog = dialogRef.current;
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;

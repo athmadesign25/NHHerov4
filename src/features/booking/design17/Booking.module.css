@@ -1,21 +1,21 @@
 .page {
-  --d7-bg: var(--navy-ink); --d7-surface: color-mix(in srgb, var(--navy-ink) 94%, var(--color-primary));
+  --d7-bg: var(--d17-card-surface); --d7-surface: color-mix(in srgb, var(--d17-card-surface) 94%, var(--color-primary));
   --d7-surface-raised: color-mix(in srgb, var(--d7-surface) 90%, var(--color-text-inverse));
   --d7-glass: color-mix(in srgb, var(--d7-surface) 76%, transparent); --d7-border: color-mix(in srgb, var(--color-text-inverse) 16%, transparent);
-  --d7-text: var(--color-text-inverse); --d7-muted: var(--slate-300); --d7-subtle: var(--slate-400);
-  --d7-accent: var(--blue-tint-100); --d7-accent-soft: rgba(var(--blue-brand-rgb), 0.16); --d7-danger: var(--red-400);
-  --d7-success: var(--emerald-500); --d7-gold: var(--amber-500); --d7-shadow: var(--elevation-3);
-  --d15-button-bg: var(--color-text-inverse); --d15-button-text: var(--navy-ink);
+  --d7-text: var(--journey-ink-text); --d7-muted: var(--journey-ink-muted); --d7-subtle: var(--journey-ink-subtle);
+  --d7-accent: var(--journey-ink-accent); --d7-accent-soft: var(--journey-ink-accent-soft); --d7-danger: var(--journey-ink-danger);
+  --d7-success: var(--journey-ink-success); --d7-gold: var(--journey-ink-gold); --d7-shadow: var(--journey-ink-shadow);
+  --d15-button-bg: var(--color-text-inverse); --d15-button-text: var(--d17-card-surface);
   min-height: 100dvh; padding: calc(var(--nav-height) + var(--sp-3)) clamp(var(--sp-2), 3vw, var(--sp-6)) var(--sp-8);
   background: radial-gradient(ellipse at 15% 0, color-mix(in srgb, var(--color-primary) 15%, transparent), transparent 60%), var(--d7-bg);
   color: var(--d7-text); color-scheme: dark;
 }
 .page:is([data-design17-booking="d17-lite"], [data-design17-booking="d18"], :is([data-design17-booking="d19"], [data-design17-booking="d20"])) {
-  --d7-bg: var(--color-bg); --d7-surface: var(--color-surface); --d7-surface-raised: var(--color-bg-alt);
-  --d7-glass: rgba(var(--white-rgb), 0.8); --d7-border: color-mix(in srgb, var(--color-text) 15%, transparent);
-  --d7-text: var(--color-text); --d7-muted: var(--color-text-secondary); --d7-subtle: var(--slate-500);
-  --d7-accent: var(--color-primary); --d7-accent-soft: rgba(var(--blue-brand-rgb), 0.08); --d7-danger: var(--red-600);
-  --d7-success: var(--teal-600); --d7-shadow: var(--elevation-2);
+  --d7-bg: var(--d17-lite-surface); --d7-surface: var(--journey-paper-surface); --d7-surface-raised: var(--journey-paper-raised);
+  --d7-glass: var(--journey-paper-glass); --d7-border: color-mix(in srgb, var(--d17-lite-ink) 15%, transparent);
+  --d7-text: var(--d17-lite-ink); --d7-muted: var(--journey-paper-muted); --d7-subtle: var(--journey-paper-subtle);
+  --d7-accent: var(--color-primary); --d7-accent-soft: var(--journey-paper-accent-soft); --d7-danger: var(--journey-paper-danger);
+  --d7-success: var(--journey-paper-success); --d7-shadow: var(--journey-paper-shadow);
   --d15-button-bg: var(--color-primary); --d15-button-text: var(--color-text-inverse); color-scheme: light;
 }
 .container { width: min(100%, var(--max-width)); margin-inline: auto; }
@@ -64,7 +64,7 @@
 .appointmentActions { display: grid; justify-items: end; gap: var(--sp-1); }
 .srOnly { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
 .paymentDialog { position: fixed; inset: 0; margin: auto; padding: 0; width: min(calc(100% - var(--sp-4)), calc(var(--sp-16) * 4)); max-height: calc(100dvh - var(--sp-4)); overflow-y: auto; border: 1px solid var(--d7-border); border-radius: var(--radius-xl); background: var(--d7-surface); color: var(--d7-text); box-shadow: var(--d7-shadow); }
-.paymentDialog::backdrop { background: color-mix(in srgb, var(--navy-900) 62%, transparent); backdrop-filter: blur(var(--sp-1)); }
+.paymentDialog::backdrop { background: color-mix(in srgb, var(--journey-ink-bg) 62%, transparent); backdrop-filter: blur(var(--sp-1)); }
 .dialogClose { display: grid; place-items: center; width: var(--sp-6); height: var(--sp-6); margin: var(--sp-1) var(--sp-1) 0 auto; border-radius: var(--radius-full); color: var(--d7-text); background: var(--d7-glass); }
 .mode { display: flex; gap: var(--sp-1); flex-wrap: wrap; }
 .mode button { display: flex; align-items: center; justify-content: center; flex: 1; gap: var(--sp-1); min-height: var(--sp-6); padding: var(--sp-1); border: 1px solid var(--d7-border); border-radius: var(--radius-full); font-size: var(--font-size-sm); }
@@ -82,7 +82,7 @@
 .dates button[aria-pressed="true"]:not([aria-current]) strong { background: color-mix(in srgb, var(--color-emergency) 13%, var(--d7-surface)); color: var(--d7-danger); }
 .periods { display: grid; gap: var(--sp-3); }
 .periods p { color: var(--d7-muted); font-size: var(--font-size-xs); text-transform: capitalize; margin-bottom: var(--sp-1); }
-.times { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--space-96), 1fr)); gap: var(--sp-1); }
+.times { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--sp-12), 1fr)); gap: var(--sp-1); }
 .times button { min-height: var(--sp-6); border: 1px solid var(--d7-border); border-radius: var(--radius-md); color: var(--d7-text); background: var(--d7-surface); font-size: var(--font-size-sm); }
 .confirmed { display: grid; place-items: center; width: var(--sp-8); height: var(--sp-8); background: color-mix(in srgb, var(--d7-success) 12%, transparent); color: var(--d7-success); border-radius: var(--radius-full); }
 .reference { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-1); padding: var(--sp-2); border: 1px solid var(--d7-border); border-radius: var(--radius-md); font-size: var(--font-size-sm); }

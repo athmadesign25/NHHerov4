@@ -1,0 +1,12 @@
+.section.section {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.section.embedded { padding: 0; border: 0; }
+.embedded .header h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-body);
+  font-weight: 500;
+}

@@ -1,0 +1,482 @@
+"use client";
+
+import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  BookOpen,
+  CheckCircle2,
+  Link as LinkIcon,
+  ArrowUpRight,
+  Calendar,
+  Check,
+  UserCheck,
+  Share2,
+  Video,
+  HeartPulse
+} from "lucide-react";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import { getArticleDetailData, ArticleDetailData, ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
+import BlogLanguageChanger from "@/components/blog/BlogLanguageChanger";
+import styles from "./ArticleDetail.module.css";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default function ArticleDetailPage({ params }: PageProps) {
+  const { slug } = React.use(params);
+  const detail: ArticleDetailData = getArticleDetailData(slug);
+
+  const [activeSection, setActiveSection] = useState<string>("overview");
+  const [copyToast, setCopyToast] = useState(false);
+
+  // Exact 3 in-article cards matching Screenshot 3
+  const inArticleMorePosts = React.useMemo(() => {
+    const preferredSlugs = [
+      "cough-syrup-for-kids-parents-guide",
+      "what-indias-nfhs-6-survey-reveals",
+      "sugar-free-sweets-for-diabetics",
+    ];
+
+    const matched = preferredSlugs
+      .filter((s) => s !== detail.slug)
+      .map((s) => ARTICLES_DIRECTORY_DATA.find((a) => a.slug === s))
+      .filter(Boolean) as ArticleItem[];
+
+    if (matched.length < 3) {
+      const remaining = ARTICLES_DIRECTORY_DATA.filter(
+        (a) => a.slug !== detail.slug && !matched.some((m) => m.slug === a.slug)
+      );
+      return [...matched, ...remaining].slice(0, 3);
+    }
+
+    return matched.slice(0, 3);
+  }, [detail.slug]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+
+      const sections = detail.toc.map((item) => document.getElementById(item.id)).filter(Boolean);
+      const scrollPosition = scrollPos + 220;
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const sec = sections[i];
+        if (sec && sec.offsetTop <= scrollPosition) {
+          setActiveSection(sec.id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [detail.toc]);
+
+  const handleCopyLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopyToast(true);
+      setTimeout(() => setCopyToast(false), 2500);
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: detail.title,
+          text: detail.summary,
+          url: window.location.href,
+        });
+      } catch {
+        // User dismissed
+      }
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyToast(true);
+      setTimeout(() => setCopyToast(false), 2400);
+    }
+  };
+
+  return (
+    <div className={styles.detailPageContainer}>
+      {/* ─── STATIONARY ATMOSPHERIC CANVAS ─────────────────────────────────── */}
+      <div className={styles.stationaryCanvas} aria-hidden="true">
+        <motion.div
+          className={styles.stationaryMotionWrapper}
+          initial={{ scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            src={detail.heroImage}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className={styles.stationaryImage}
+          />
+        </motion.div>
+        <div className={styles.stationaryCanvasOverlay} />
+      </div>
+
+      {/* ─── DETAIL HERO ──────────────────────────────────────────────────── */}
+      <section className={styles.detailHero} data-nav-theme="dark">
+        <div className={styles.heroBgOverlay} />
+
+        <div className={styles.heroInner}>
+          {/* Top Utility Bar: Breadcrumbs on Left, Language Changer on Right (Matching OG Blog) */}
+          <div className={styles.topUtilityRow}>
+            <div className={styles.breadcrumbsWrapper}>
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Blog", href: "/blog" },
+                  { label: detail.title },
+                ]}
+                theme="dark"
+              />
+            </div>
+
+            <BlogLanguageChanger theme="dark" />
+          </div>
+
+          <div className={styles.heroLeftCol}>
+            <div className={styles.heroEyebrow}>
+              {detail.category}
+            </div>
+
+            <h1 className={styles.heroMainTitle}>
+              {detail.title}
+            </h1>
+
+            <p className={styles.heroSubTitle}>
+              {detail.summary}
+            </p>
+
+            {/* Author Attribution */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px", marginBottom: "20px" }}>
+              <div style={{ position: "relative", width: "42px", height: "42px", borderRadius: "50%", overflow: "hidden", border: "2px solid rgba(255,255,255,0.4)" }}>
+                <Image
+                  src={detail.authorAvatar}
+                  alt={detail.author}
+                  fill
+                  sizes="42px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "14px", fontWeight: 700, color: "#FFFFFF" }}>{detail.author}</span>
+                <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.7)" }}>{detail.authorRole}</span>
+              </div>
+            </div>
+
+            <div className={styles.heroActionsRow}>
+              <Link
+                href={specialityBookingEntry(detail.categorySlug)}
+                className={styles.heroPrimaryBtn}
+              >
+                <Calendar size={15} />
+                <span>Consult Specialist</span>
+                <ArrowUpRight size={14} className={styles.btnArrow} />
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleShare}
+                className={styles.heroPhoneText}
+                style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left" }}
+              >
+                <Share2 size={14} className={styles.phoneIcon} />
+                <span>{copyToast ? "Link Copied!" : "Share Article"}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Hero Analytics */}
+          <div className={styles.heroRightCol}>
+            <div className={styles.statBlock}>
+              <span className={styles.statNumber}>100%</span>
+              <span className={styles.statLabel}>Doctor Authored</span>
+            </div>
+            <div className={styles.statBlock}>
+              <span className={styles.statNumber}>Peer Reviewed</span>
+              <span className={styles.statLabel}>Medical Advisory</span>
+            </div>
+            <div className={styles.statBlock}>
+              <span className={styles.statNumber}>{detail.readTime}</span>
+              <span className={styles.statLabel}>Estimated Reading</span>
+            </div>
+            <div className={styles.statBlock}>
+              <span className={styles.statNumber}>{detail.publishedDate}</span>
+              <span className={styles.statLabel}>Last Medical Review</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── MAIN CONTENT BODY (SOLID WHITE READING SHEET) ──────────────────── */}
+      <div className={styles.readingExperienceWrapper}>
+        <main className={styles.mainLayoutContainer}>
+          <div className={styles.twoColumnGrid}>
+            {/* Sticky Table of Contents Sidebar */}
+            <aside className={styles.stickySidebar}>
+              <div className={styles.tocSectionSelector}>
+                <div className={styles.tocEyebrow}>
+                  <BookOpen size={13} className={styles.tocEyebrowIcon} />
+                  <span>Article Contents</span>
+                </div>
+                <nav className={styles.tocNavRail} aria-label="Table of contents">
+                  <ul className={styles.tocList}>
+                    {detail.toc.map((item) => {
+                      const isActive = activeSection === item.id;
+                      return (
+                        <li key={item.id} className={styles.tocListItem}>
+                          <a
+                            href={`#${item.id}`}
+                            className={`${styles.tocLink} ${isActive ? styles.tocLinkActive : ""}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const el = document.getElementById(item.id);
+                              if (el) {
+                                const isMobileView = typeof window !== "undefined" && window.innerWidth <= 960;
+                                const yOffset = isMobileView ? -112 : -88;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
+                                setActiveSection(item.id);
+                              }
+                            }}
+                          >
+                            <span className={styles.tocIndicatorMarker} aria-hidden="true" />
+                            <span className={styles.tocLinkLabel}>{item.label}</span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+              </div>
+
+              {/* Mobile Persistent Share Pill inside sticky header */}
+              <button
+                type="button"
+                className={styles.mobileStickyShareBtn}
+                onClick={handleShare}
+                aria-label="Share this article"
+              >
+                <Share2 size={13} />
+                <span>Share</span>
+              </button>
+
+              {/* Share widget */}
+              <div className={styles.shareWidgetBorderless}>
+                <span className={styles.shareTitle}>Share this Article</span>
+                <div className={styles.shareRow}>
+                  <button
+                    type="button"
+                    onClick={handleCopyLink}
+                    className={styles.shareBtn}
+                    aria-label="Copy article link"
+                    title="Copy Link"
+                  >
+                    {copyToast ? <Check size={14} className={styles.copySuccessIcon} /> : <LinkIcon size={14} />}
+                  </button>
+                </div>
+                {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
+              </div>
+
+              {/* Help & Support Callout */}
+              <div className={styles.sidebarHelpCallout}>
+                <span className={styles.helpCardTitle}>Need Medical Guidance?</span>
+                <p className={styles.helpCardDesc}>
+                  Connect directly with our senior clinical specialists for a dedicated consultation.
+                </p>
+                <Link
+                  href={specialityBookingEntry(detail.categorySlug)}
+                  className={styles.helpCardPhoneBtn}
+                >
+                  <span>Book Consultation &rarr;</span>
+                </Link>
+              </div>
+            </aside>
+
+            {/* Reading Content Focus Canvas */}
+            <div className={styles.contentFocusCanvas}>
+              {/* SECTION: Overview (Clean, unrepetitive text) */}
+              <section id="overview" className={styles.contentSection}>
+                <h2 className={styles.sectionHeading}>Overview &amp; Clinical Background</h2>
+                <p className={styles.editorialLeadParagraph}>{detail.overview}</p>
+              </section>
+
+              {/* SECTION: Key Takeaways (Clean cohesive checklist box) */}
+              <section id="key-takeaways" className={styles.contentSection}>
+                <h2 className={styles.sectionHeading}>Doctor&apos;s Key Takeaways</h2>
+                <p className={styles.sectionLeadText}>
+                  Essential medical advice summarized by our clinical panel for everyday health management:
+                </p>
+                <div className={styles.takeawaysBox}>
+                  {detail.keyTakeaways.map((point, idx) => (
+                    <div key={idx} className={styles.takeawayItem}>
+                      <CheckCircle2 size={18} className={styles.takeawayIcon} />
+                      <span className={styles.takeawayText}>{point}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* SECTION: In-Depth Sections (Natural reading typography - NO boxed card borders or shadows) */}
+              {detail.sections.map((sec, idx) => (
+                <section key={idx} id={`section-${idx + 1}`} className={styles.contentSection}>
+                  <h2 className={styles.sectionHeading}>{sec.heading}</h2>
+                  <p className={styles.editorialBodyParagraph}>
+                    {sec.body}
+                  </p>
+                </section>
+              ))}
+
+              {/* SECTION: Author Review Board Callout */}
+              <section className={styles.contentSection}>
+                <div className={styles.authorEditorialCard}>
+                  <div className={styles.authorAvatarWrap}>
+                    <Image
+                      src={detail.authorAvatar}
+                      alt={detail.author}
+                      fill
+                      sizes="58px"
+                      className={styles.authorAvatarImg}
+                    />
+                  </div>
+                  <div className={styles.authorInfoCol}>
+                    <div className={styles.authorBadgeRow}>
+                      <UserCheck size={14} className={styles.authorCheckIcon} />
+                      <span className={styles.authorBadgeText}>
+                        Reviewed by Narayana Medical Board
+                      </span>
+                    </div>
+                    <h3 className={styles.authorName}>{detail.author}</h3>
+                    <p className={styles.authorRoleText}>
+                      {detail.authorRole} &bull; Narayana Health
+                    </p>
+                    <p className={styles.authorEditorialNote}>
+                      This content is reviewed periodically by certified physicians to reflect recent clinical trial data, ICMR protocols, and WHO healthcare benchmarks.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* SECTION: Consult Specialists (Standard site refDoctorCard format) */}
+              <section id="specialists" className={styles.contentSection}>
+                <h2 className={styles.sectionHeading}>Consult Leading {detail.category} Specialists</h2>
+                <p className={styles.sectionLeadText}>
+                  Connect in-person or via video consultation with Narayana Health senior consultants:
+                </p>
+                <div className={styles.doctorsGrid}>
+                  {detail.doctors.map((doc, idx) => (
+                    <div key={idx} className={styles.refDoctorCard}>
+                      <Image
+                        src={doc.image}
+                        alt={doc.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        className={styles.refDocFullImage}
+                      />
+                      <div className={styles.refDocFullGradient} />
+                      <div className={styles.refDocOverlayContent}>
+                        <div className={styles.refDocBottomFlex}>
+                          <div className={styles.refDocTextCol}>
+                            <h3 className={styles.refDocName} title={doc.name}>
+                              {doc.name}
+                            </h3>
+                            <div className={styles.refDocSpecialty}>
+                              {doc.speciality}
+                            </div>
+                            <div className={styles.refDocExpRow}>
+                              <span>{doc.experience}</span>
+                            </div>
+                            <div className={styles.refDocHospital} title={doc.hospital}>
+                              {doc.hospital}
+                            </div>
+                          </div>
+
+                          <Link
+                            href={procedureDoctorBookingHref(doc.name)}
+                            className={styles.refBookBtnWhite}
+                          >
+                            Book
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* SECTION: More from Narayana Health (Signature NH Cards: Full Image + Scrim + Text Overlay) */}
+              <section id="more-from-nh" className={styles.moreFromNhSection}>
+                <h2 className={styles.moreFromNhTitle}>More from Narayana Health</h2>
+                <div className={styles.moreFromNhGrid}>
+                  {inArticleMorePosts.map((art) => (
+                    <Link
+                      key={art.id}
+                      href={`/blog/${art.slug}`}
+                      className={styles.moreFromNhCard}
+                    >
+                      <Image
+                        src={art.image || "/images/articles/sugar_free_sweets_diwali.jpg"}
+                        alt={art.title}
+                        fill
+                        sizes="(max-width: 640px) 80vw, (max-width: 960px) 45vw, 300px"
+                        className={styles.moreFromNhBgImage}
+                      />
+                      <div className={styles.moreFromNhScrim} />
+                      <div className={styles.moreFromNhTextWrap}>
+                        <span className={styles.moreFromNhCategory}>{art.category}</span>
+                        <div className={styles.moreFromNhTitleRow}>
+                          <h3 className={styles.moreFromNhItemTitle}>{art.title}</h3>
+                          <ArrowUpRight size={17} className={styles.moreFromNhArrow} />
+                        </div>
+                        <div className={styles.moreFromNhMetaRow}>
+                          <div className={styles.moreFromNhAuthorRow}>
+                            <span className={styles.moreFromNhAuthorBadge}>NH</span>
+                            <span className={styles.moreFromNhAuthorName}>{art.author || "Narayana Health"}</span>
+                          </div>
+                          <span className={styles.moreFromNhDate}>{art.publishedDate}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+
+              {/* SECTION: Related Articles Anchor */}
+              <div id="related" />
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* FULL-WIDTH SECTION: More from Our Blog (Cards in Our Procedure Style + Controls) */}
+      <MoreFromOurBlogCarousel
+        articles={detail.relatedArticles}
+        title="More from Our Blog"
+        subtitle="Explore more doctor-curated guides, symptom breakthroughs, and evidence-based clinical insights"
+      />
+
+      {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
+      <ClinicalFloatingSideActions
+        consultHref={specialityBookingEntry(detail.categorySlug)}
+        consultLabel={"Book\nOPD"}
+        conditionTitle={detail.title}
+        pulseQuery={`I want to learn more about "${detail.title}": clinical advice, diagnosis, and treatment options.`}
+      />
+    </div>
+  );
+}

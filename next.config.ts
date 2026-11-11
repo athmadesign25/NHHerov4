@@ -7,8 +7,26 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "stgaccinwbsprdlrs02.blob.core.windows.net",
+      },
     ],
     // Allow local assets served from /public
+  },
+  async redirects() {
+    return [
+      {
+        source: '/find-a-doctor',
+        destination: '/search/doctors',
+        permanent: false,
+      },
+      {
+        source: '/book',
+        destination: '/search/doctors',
+        permanent: false,
+      },
+    ];
   },
 };
 

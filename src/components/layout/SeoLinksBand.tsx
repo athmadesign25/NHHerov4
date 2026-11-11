@@ -5,8 +5,8 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import styles from "./SeoLinksBand.module.css";
-import { seoDoctorHref } from "./seoDoctorHref";
 import { SEO_LINK_SECTIONS } from "@/data/seo-links";
+import { seoDoctorHref } from "./seoDoctorHref";
 
 const FIRST_SECTION = SEO_LINK_SECTIONS[0]?.id ?? null;
 

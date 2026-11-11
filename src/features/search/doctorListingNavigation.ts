@@ -20,7 +20,7 @@ export function doctorListingParams(pathname: string, query: string): URLSearchP
 export function doctorListingUrl(pathname: string, values: URLSearchParams): string {
   const params = new URLSearchParams(values);
   const requestedDesign = params.get("design") ?? "";
-  const design = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20"].includes(requestedDesign) || isJourneyDesign(requestedDesign) ? requestedDesign : DEFAULT_DOCTOR_DESIGN;
+  const design = ["d3", "d4", "d5", "d6", "d16", "d17", "d17-lite", "d18", "d19", "d20", "d21"].includes(requestedDesign) || isJourneyDesign(requestedDesign) ? requestedDesign : DEFAULT_DOCTOR_DESIGN;
   const context = getDoctorLandingContext(pathname);
   const specialties = params.getAll("specialties").filter(Boolean);
   const keepsSpeciality = !context?.speciality || (specialties.length === 1 && specialties[0] === context.speciality.label);

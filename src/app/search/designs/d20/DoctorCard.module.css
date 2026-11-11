@@ -1,23 +1,24 @@
-.frame { --d20-summary-glass: radial-gradient(ellipse at 25% 100%, color-mix(in srgb, var(--color-primary) 10%, transparent), color-mix(in srgb, var(--color-primary) 4%, transparent) 42%, transparent 78%), color-mix(in srgb, var(--color-bg) 48%, transparent); --d20-summary-blur: calc(var(--sp-1) * 1.5); position: relative; min-width: 0; display: grid; }
+.frame { --d20-summary-glass: radial-gradient(ellipse at 25% 100%, color-mix(in srgb, var(--color-primary) 10%, transparent), color-mix(in srgb, var(--color-primary) 4%, transparent) 42%, transparent 78%), color-mix(in srgb, var(--d17-lite-surface) 48%, transparent); --d20-summary-blur: calc(var(--sp-1) * 1.5); position: relative; min-width: 0; display: grid; }
 .frame { align-self: stretch; }
 .baseline { display: grid; min-width: 0; }
+.frame[data-booking-active] { z-index: 41; }
 .baseline[data-concealed] { visibility: hidden; pointer-events: none; }
 .card {
-  --d7-bg: var(--color-bg);
-  --d7-surface: var(--color-surface);
-  --d7-surface-raised: var(--color-bg-alt);
-  --d7-text: var(--color-text);
+  --d7-bg: var(--d17-lite-surface);
+  --d7-surface: var(--journey-paper-surface);
+  --d7-surface-raised: var(--journey-paper-raised);
+  --d7-text: var(--d17-lite-ink);
   --d7-muted: var(--color-text-secondary);
-  --d7-subtle: var(--slate-500);
-  --d7-border: color-mix(in srgb, var(--color-text) 15%, transparent);
+  --d7-subtle: var(--journey-paper-subtle);
+  --d7-border: color-mix(in srgb, var(--d17-lite-ink) 15%, transparent);
   --d7-accent: var(--color-primary);
-  --d7-accent-soft: rgba(var(--blue-brand-rgb), 0.08);
-  --d7-danger: var(--red-600);
+  --d7-accent-soft: var(--journey-paper-accent-soft);
+  --d7-danger: var(--journey-paper-danger);
   --d15-button-bg: var(--color-primary);
   --d15-button-text: var(--color-text-inverse);
   --target: calc(var(--sp-5) + var(--sp-1) / 2);
-  --scroll-chevron: color-mix(in srgb, var(--navy-ink) 60%, var(--color-text-inverse));
-  --scroll-chevron-hover: color-mix(in srgb, var(--navy-ink) 80%, var(--color-text-inverse));
+  --scroll-chevron: color-mix(in srgb, var(--d17-card-surface) 60%, var(--color-text-inverse));
+  --scroll-chevron-hover: color-mix(in srgb, var(--d17-card-surface) 80%, var(--color-text-inverse));
   position: absolute;
   inset: 0;
   isolation: isolate;
@@ -56,9 +57,10 @@
 .portrait { position: absolute; inset: 0 auto 0 0; width: 48%; display: grid; place-items: center; overflow: hidden; background: var(--d7-surface-raised); color: var(--d7-muted); }
 .photo { object-fit: cover; object-position: center 20%; }
 .headerScrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, transparent 15%, color-mix(in srgb, var(--d7-bg) 20%, transparent) 28%, color-mix(in srgb, var(--d7-bg) 80%, transparent) 42%, var(--d7-bg) 50%), linear-gradient(180deg, transparent 55%, var(--d7-bg) 100%); }
-.back { position: absolute; z-index: 2; top: var(--sp-1); left: var(--sp-2); display: inline-grid; place-items: center; width: var(--target); min-height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--d7-text); }
-.back::before { content: ""; position: absolute; inset: calc((var(--target) - var(--sp-4)) / 2); border-radius: inherit; background: color-mix(in srgb, var(--d7-surface) 24%, transparent); backdrop-filter: blur(var(--sp-1)) saturate(1.15); -webkit-backdrop-filter: blur(var(--sp-1)) saturate(1.15); transition: background-color var(--transition-fast); }
+.back { --disclosure-icon-hover: transparent; position: absolute; z-index: 2; top: var(--sp-1); left: var(--sp-2); display: inline-grid; place-items: center; width: var(--target); min-height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--d7-text); }
+.back::before { content: ""; position: absolute; inset: calc((var(--target) - var(--sp-4)) / 2); border-radius: inherit; background: color-mix(in srgb, var(--d7-surface) 24%, transparent); backdrop-filter: blur(var(--sp-1)) saturate(1.15); -webkit-backdrop-filter: blur(var(--sp-1)) saturate(1.15); transition: background-color var(--duration-fast) var(--ease-out); }
 .back > svg { position: relative; }
+@media (hover: hover) { .back:hover::before { background-color: var(--color-disclosure-hover); } }
 
 .identity { position: relative; z-index: 1; min-width: 0; margin-left: 38%; }
 .identity h2 { margin: 0; font-size: var(--font-size-lg); line-height: 1.333333; font-weight: 600; letter-spacing: -.015em; overflow-wrap: anywhere; outline: none; }
@@ -85,18 +87,35 @@
 .dates button[aria-pressed="true"] { background: transparent; color: var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text))); font-weight: 500; }
 .dates button[aria-pressed="true"] strong { color: inherit; background: var(--d3-ui-selection-surface, var(--color-emergency-light)); font-weight: 500; box-shadow: inset 0 0 0 1px var(--d3-ui-selection, var(--color-emergency)); }
 .monthGroup { display: flex; flex: 0 0 auto; gap: calc(var(--sp-1) / 2); }
-.monthPill, .stickyMonth { display: grid; place-items: center; width: var(--sp-4); border-radius: var(--radius-full); color: var(--d7-text); background: var(--color-bg-alt); }
+.monthPill, .stickyMonth { display: grid; place-items: center; width: var(--sp-4); border-radius: var(--radius-full); color: var(--d7-text); background: var(--journey-paper-raised); }
 .monthPill { position: relative; flex: 0 0 var(--sp-4); align-self: stretch; }
 .stickyMonth { position: absolute; z-index: 2; left: 0; inset-block: calc(var(--sp-1) / 2); pointer-events: none; }
 .monthPill > span, .stickyMonth > span { transform: rotate(-90deg); white-space: nowrap; text-transform: uppercase; font-size: var(--font-size-xs); font-weight: 500; }
 
-.times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--sp-6); position: relative; display: grid; grid-template-rows: repeat(2, var(--slot-target)); grid-auto-flow: column; grid-auto-columns: minmax(calc(var(--space-96) + var(--sp-1)), max-content); gap: 0 var(--sp-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: calc(var(--sp-1) / 2); margin-inline: calc(var(--sp-1) / -2); scroll-padding-inline: var(--sp-3); --fade-start: 0px; --fade-end: 0px; --fade-clear-start: 0px; --fade-clear-end: 0px; mask-image: linear-gradient(to right, transparent var(--fade-clear-start), black var(--fade-start), black calc(100% - var(--fade-end)), transparent calc(100% - var(--fade-clear-end))); }
+.times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--sp-6); position: relative; display: grid; grid-template-rows: repeat(2, var(--slot-target)); grid-auto-flow: column; grid-auto-columns: minmax(calc(var(--sp-12) + var(--sp-1)), max-content); gap: 0 var(--sp-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: calc(var(--sp-1) / 2); margin-inline: calc(var(--sp-1) / -2); scroll-padding-inline: var(--sp-3); --fade-start: 0px; --fade-end: 0px; --fade-clear-start: 0px; --fade-clear-end: 0px; mask-image: linear-gradient(to right, transparent var(--fade-clear-start), black var(--fade-start), black calc(100% - var(--fade-end)), transparent calc(100% - var(--fade-clear-end))); }
 .times::-webkit-scrollbar { display: none; }
+/* In-card booking uses one horizontal rail; the full-page editor can use two rows. */
+.card .times { grid-template-rows: var(--slot-target); }
 .times[data-rows="1"] { grid-template-rows: var(--slot-target); }
 /* Use the existing horizontal rail when a second row would crowd the footer. */
 @container booking-content (max-height: 22rem) {
   .times { grid-template-rows: var(--slot-target); }
 }
+/* Design 21 reserves the extra height in its browsing card. Keep the second
+   row even in a shorter content container; discovery remains horizontal. */
+:global([data-design="d21"]) .card .times[data-rows="2"] {
+  grid-template-rows: repeat(2, var(--slot-target));
+}
+/* The footer already overlaps the viewport: retain clearance without an
+   extra invisible padding strip creating vertical overflow in tighter cards. */
+:global([data-design="d21"]) .card .content {
+  padding-block-end: var(--sp-3);
+  scroll-padding-block-end: var(--sp-3);
+}
+/* Appointment, price and action form one summary group. Tighten inside that
+   group while preserving the separation from the date and time controls. */
+:global([data-design="d21"]) .card .footer { gap: var(--sp-1); }
+:global([data-design="d21"]) .card .reassurance { padding-block: 0; }
 .times[data-fade-start="true"] { --fade-start: var(--sp-4); --fade-clear-start: var(--sp-1); }
 .times[data-fade-end="true"] { --fade-end: var(--sp-4); --fade-clear-end: var(--sp-1); }
 .times button { min-width: 0; padding-inline: var(--sp-2); font-variant-numeric: tabular-nums; }
@@ -151,7 +170,6 @@
 @media (min-width: 1024px) and (pointer: fine) { .times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--target); } }
 @media (hover: hover) {
   .dates button[aria-pressed="true"]:hover { color: var(--d3-ui-selection-hover, var(--d3-ui-selection-label, var(--color-emergency))); }
-  .back:hover::before { background: color-mix(in srgb, var(--d7-surface) 36%, transparent); }
   .sectionHeading button:hover, .addMember:hover { color: var(--color-primary); text-decoration: underline; text-underline-offset: calc(var(--sp-1) / 2); }
   .member:not([aria-pressed="true"]):hover { background: color-mix(in srgb, var(--d7-text) 4%, transparent); }
   .member[aria-pressed="true"]:hover { background: var(--d3-ui-selection-surface-hover, var(--color-emergency-light)); }
@@ -215,4 +233,4 @@
 /* Restore state 2's original lighter scrollbar tone. */
 .textHeader + .scrollArea > [data-card-scrollbar] > div { background: var(--d7-border); }
 .textHeader + .scrollArea > [data-card-scrollbar]:hover > div,
-.textHeader + .scrollArea[data-dragging="true"] > [data-card-scrollbar] > div { background: color-mix(in srgb, var(--color-text) 25%, transparent); }
+.textHeader + .scrollArea[data-dragging="true"] > [data-card-scrollbar] > div { background: color-mix(in srgb, var(--d17-lite-ink) 25%, transparent); }

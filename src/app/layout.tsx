@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import dropdownAffordance from "./DropdownAffordance.module.css";
 import Navbar from "@/components/layout/Navbar";
 import FooterRevealWrapper from "@/components/layout/FooterRevealWrapper";
 import SmoothScroll from "@/components/ui/SmoothScroll";
@@ -31,14 +32,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className={dropdownAffordance.root} suppressHydrationWarning>
         {/* Global UI interactions */}
         <SmoothScroll />
         <ScrollProgress />
 
         {/* Layout */}
-        <Navbar />
+        <div data-site-header><Navbar /></div>
         <FooterRevealWrapper>{children}</FooterRevealWrapper>
       </body>
     </html>

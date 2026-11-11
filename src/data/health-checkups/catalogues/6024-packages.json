@@ -1,0 +1,109 @@
+{
+  "capturedAt": "2026-11-06T16:03:41+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Aarogyam, Prestige Tech Park",
+  "facilityId": "6024",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 4,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 4,
+    "paginationControls": [],
+    "completeCatalogue": false,
+    "scope": "Rendered catalogue cards present in the supplied snapshot; not proof of complete facility inventory"
+  },
+  "items": [
+    {
+      "name": "Enhanced Health",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Aarogyam, Prestige Tech Park",
+      "facilityId": "6024",
+      "amount": 15000.0,
+      "localId": "snapshot-14cef700fb6bb58c",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men aged between 35-45 years",
+      "listPrice": 38000.0,
+      "sourceDisplayName": "Male Enhanced Health (m >45)",
+      "imageUrl": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/health-packages/December2025/DEhda1ceQrrenTg0pEZV.webp",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-enhanced-health-m-45?unitCode=6024&code=PKG037822",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/male-enhanced-health-m-45?unitCode=6024&code=PKG037822"
+      ],
+      "code": "PKG037822",
+      "localImage": "/health-checkups/source/a5580dbe70e15b3f4b36f493.webp",
+      "imageStatus": null
+    },
+    {
+      "name": "Comprehensive Health",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Aarogyam, Prestige Tech Park",
+      "facilityId": "6024",
+      "amount": 20000.0,
+      "localId": "snapshot-17f613eeedb4ca1a",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men above 45 years",
+      "listPrice": 50000.0,
+      "sourceDisplayName": "Male Comprehesive Wellness (m >45)",
+      "imageUrl": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/health-packages/December2025/oYVDTsRJ1CmKuoMzmFbA.webp",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-comprehesive-wellness-m-45?unitCode=6024&code=PKG037823",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/male-comprehesive-wellness-m-45?unitCode=6024&code=PKG037823"
+      ],
+      "code": "PKG037823",
+      "localImage": "/health-checkups/source/f12e8a9305afbe21952a57ed.webp",
+      "imageStatus": null
+    },
+    {
+      "name": "Prime Health",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Aarogyam, Prestige Tech Park",
+      "facilityId": "6024",
+      "amount": 10000.0,
+      "localId": "snapshot-e3a715be25c750f7",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men aged between 35 to 45 years",
+      "listPrice": 29000.0,
+      "sourceDisplayName": "Male Prime Health (m >35)",
+      "imageUrl": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/health-packages/December2025/Tqrc8S6Do1asRvAKWwSJ.webp",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-prime-health-m-35?unitCode=6024&code=PKG037821",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/male-prime-health-m-35?unitCode=6024&code=PKG037821"
+      ],
+      "code": "PKG037821",
+      "localImage": "/health-checkups/source/645dcfb312b746759d699e1a.webp",
+      "imageStatus": null
+    },
+    {
+      "name": "Vital Care",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Aarogyam, Prestige Tech Park",
+      "facilityId": "6024",
+      "amount": 4999.0,
+      "localId": "snapshot-6bd4fb180e3103dd",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men below 35 years",
+      "listPrice": 20000.0,
+      "sourceDisplayName": "Male Vital Care (m <35)",
+      "imageUrl": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/health-packages/January2026/kTxGxHcreRtQkmEspAyE.webp",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-vital-care-m-35?unitCode=6024&code=PKG037820",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/male-vital-care-m-35?unitCode=6024&code=PKG037820"
+      ],
+      "code": "PKG037820",
+      "localImage": "/health-checkups/source/7b76365e07eb56cd7314199c.webp",
+      "imageStatus": null
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/male-enhanced-health-m-45?unitCode=6024&code=PKG037822",
+    "https://www.narayanahealth.org/health-checkups/male-comprehesive-wellness-m-45?unitCode=6024&code=PKG037823",
+    "https://www.narayanahealth.org/health-checkups/male-prime-health-m-35?unitCode=6024&code=PKG037821",
+    "https://www.narayanahealth.org/health-checkups/male-vital-care-m-35?unitCode=6024&code=PKG037820"
+  ],
+  "snapshotFormat": "mhtml"
+}

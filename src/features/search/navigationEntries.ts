@@ -1,3 +1,4 @@
+import { DEFAULT_DOCTOR_DESIGN } from "@/features/design-preview/doctorJourney";
 import { indiaDate } from "@/features/booking/appointmentTime";
 
 export type DoctorNavEntry = "specialty" | "location" | "condition" | "sunday" | "today";
@@ -16,7 +17,7 @@ const specialtyFacets: Record<string, string> = {
 };
 
 export function doctorNavUrl(entry?: DoctorNavEntry, value?: string, now = new Date()): string {
-  const params = new URLSearchParams({ design: "d20" });
+  const params = new URLSearchParams({ design: DEFAULT_DOCTOR_DESIGN });
   if (entry === "specialty" && value) params.set("specialties", specialtyFacets[value] ?? value);
   if (entry === "location" && value) params.set("location", value);
   if (entry === "today") params.set("availability", "today");

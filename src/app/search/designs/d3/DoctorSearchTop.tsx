@@ -2,16 +2,19 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Filter, Loader2, MapPin, Search, X } from "lucide-react";
+import { Filter, Loader2, MapPin } from "lucide-react";
 import type Lenis from "lenis";
 import { NH_CITIES } from "@/lib/searchService";
 import type { ConsultationMode } from "@/features/search/doctorListing";
 import { requestDoctorCity } from "@/features/search/doctorLocation";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import DoctorSearchHint from "./DoctorSearchHint";
-import styles from "./DoctorSearchTop.module.css";
+import styles from "@/components/ui/search-location/SearchToolbar.module.css";
+import listing from "./DoctorSearchTop.module.css";
 
 interface Props {
+  allConsultationTypes?: boolean;
   query: string; location: string; total: number; mode: ConsultationMode;
   heading: string; summary: string; locationFirst?: boolean;
   compactMobile?: boolean; hideTotal?: boolean;
@@ -20,10 +23,9 @@ interface Props {
   onOpenFilters: () => void;
 }
 
-export default function DoctorSearchTop({ query, location, total, mode, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
+export default function DoctorSearchTop({ query, location, total, mode, allConsultationTypes = false, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
   const reducedMotion = Boolean(useReducedMotion());
   const [navVisible, setNavVisible] = useState(true);
-  const [hintsPaused, setHintsPaused] = useState(false);
   const [detectingLocation, setDetectingLocation] = useState<string | null>(null);
   const [locationFeedback, setLocationFeedback] = useState(false);
   const [locationStatus, setLocationStatus] = useState("");
@@ -85,17 +87,15 @@ export default function DoctorSearchTop({ query, location, total, mode, heading,
     return () => { cancelled = true; window.clearTimeout(timer); };
   }, [location, locationFirst]);
   useEffect(() => {
-    let last = 0;
-    const onScroll = () => {
-      const current = window.scrollY;
-      if (current < 120) { setNavVisible(true); last = current; return; }
-      if (Math.abs(current - last) < 12) return;
-      setNavVisible(current < last);
-      last = current;
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Follow the navbar's actual state, including an open navigation menu.
+    // Independent direction/dead-zone tracking can disagree after restoration.
+    const nav = document.querySelector<HTMLElement>("[data-site-nav]");
+    if (!nav) return;
+    const sync = () => setNavVisible(nav.dataset.navHidden !== "true");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(nav, { attributes: true, attributeFilter: ["data-nav-hidden"] });
+    return () => observer.disconnect();
   }, []);
 
   const submit = (event: FormEvent) => {
@@ -147,7 +147,7 @@ export default function DoctorSearchTop({ query, location, total, mode, heading,
 
   return <>
     <div className={styles.navGap} aria-hidden />
-    <header className={`${styles.container} ${styles.titleRow}`}>
+    <header className={`${styles.container} ${styles.titleRow} ${listing.header}`}>
       <div className={styles.title}>
         <h1 id="d3-results-title" tabIndex={-1}>{heading}</h1>
         {/* Keep the heading readable and focusable beneath the decorative brand wipe. */}
@@ -156,13 +156,13 @@ export default function DoctorSearchTop({ query, location, total, mode, heading,
           <TextSweepEffect key={heading} words={[heading]} sweepMs={1200}
             // Design 16 replays on each heading change, independently of viewport entry.
             active={locationFirst ? !reducedMotion : undefined}
-            finalColor="var(--color-text)" />
+            sweepColor="var(--d3-ui-accent, var(--color-primary))" finalColor="var(--color-text)" />
         </div>
       </div>
       <div className={`${styles.summary} ${hideTotal && !loading && !error ? styles.srOnly : ""}`}>
         <p role="status" aria-live="polite" aria-atomic="true">
           {loading ? "Searching…" : error ? "Results unavailable" : hideTotal ? "Doctor results updated" : <><strong>{total}</strong> {total === 1 ? "doctor" : "doctors"}</>}
-          <span className={styles.srOnly}>{query.trim() ? ` matching ${query.trim()}` : ""}, {location === "All" ? "all locations" : location}, {mode === "hospital" ? "hospital visits" : "video consultations"}</span>
+          <span className={styles.srOnly}>{query.trim() ? ` matching ${query.trim()}` : ""}, {location === "All" ? "all locations" : location}, {allConsultationTypes ? "all consultation types" : mode === "hospital" ? "hospital visits" : "video consultations"}</span>
         </p>
       </div>
       <p className={styles.pageSummary}>{summary}</p>
@@ -171,22 +171,10 @@ export default function DoctorSearchTop({ query, location, total, mode, heading,
     <div className={`${styles.searchBar} ${!navVisible ? styles.navHidden : ""}`} data-d3-search-bar data-d3-ui>
       <div className={`${styles.container} ${styles.toolbarContent}`}>
         <div className={`${styles.searchRow} ${locationFirst ? styles.locationFirst : ""} ${compactMobile ? styles.compactMobile : ""}`}>
-          <div className={locationFirst ? styles.combinedSearch : styles.searchContents}>
-          {locationFirst && locationSelect(styles.leadingLocation)}
-          <form role="search" aria-label="Find a doctor" className={styles.form} onSubmit={submit}>
-            <div className={styles.searchField}>
-              <label className={styles.srOnly} htmlFor="d3-search">Search doctors by name, speciality or hospital</label>
-              <input id="d3-search" type="search" value={query} autoComplete="off" enterKeyHint="search"
-                placeholder=" " onFocus={() => setHintsPaused(true)} onBlur={() => setHintsPaused(false)} onChange={(event) => onQuery(event.target.value)} />
-              <DoctorSearchHint active={!query} paused={hintsPaused} />
-              <button type="button" className={styles.clear} aria-label="Clear search" disabled={!query} aria-hidden={!query}
-                onClick={() => { onQuery(""); document.getElementById("d3-search")?.focus({ preventScroll: true }); }}><X size={16} aria-hidden /></button>
-            </div>
-            <button type="submit" className={styles.submit} aria-label="Search and show doctor results" title="Search">
-              <Search size={20} aria-hidden />
-            </button>
-          </form>
-          </div>
+          <SearchLocationUnit id="d3-search" query={query} onQuery={onQuery} onSubmit={submit}
+            searchLabel="Find a doctor" inputLabel="Search doctors by name, speciality or hospital"
+            locationControl={locationFirst ? locationSelect(styles.leadingLocation) : undefined}
+            hint={paused => <DoctorSearchHint active={!query} paused={paused} />} />
           {!locationFirst && locationSelect(styles.desktopLocation)}
           {!compactMobile && filterButton}
         </div>

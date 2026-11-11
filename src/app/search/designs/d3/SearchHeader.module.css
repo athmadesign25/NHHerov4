@@ -4,7 +4,7 @@
 .navHidden { top: 0; }
 .form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-1); }
 .searchField { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--sp-1); padding-inline: var(--sp-2); min-height: var(--sp-6); border: 1px solid var(--color-border); border-radius: var(--radius-full); color: var(--color-primary); background: var(--color-bg-card); }
-.searchField:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.08); }
+.searchField:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-tint); }
 .searchField > svg { flex-shrink: 0; }
 .searchField input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; font: inherit; font-size: var(--font-size-base); color: var(--color-text); }
 .searchField input::placeholder { color: var(--color-text-secondary); }

@@ -1,0 +1,44 @@
+.payment {
+  --payment-line: var(--confirmation-line, color-mix(in srgb, var(--color-primary) 10%, transparent));
+  min-width: 0;
+  border-top: var(--space-1) solid var(--payment-line);
+}
+
+.details { padding-block: var(--space-16); }
+.summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-16); min-height: var(--space-48); list-style: none; cursor: pointer; border-radius: var(--radius-md); }
+.summary::-webkit-details-marker { display: none; }
+.summary:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.state { display: grid; gap: var(--space-4); min-width: 0; }
+.label { composes: supporting from "../BookingTypography.module.css"; }
+.label[data-settled="true"] { color: var(--journey-paper-success); }
+.coverage { composes: supporting from "../BookingTypography.module.css"; overflow-wrap: anywhere; }
+.amount { composes: emphasis from "../BookingTypography.module.css"; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.disclosure { composes: action from "../BookingTypography.module.css"; display: inline-flex; align-items: center; gap: var(--space-4); white-space: nowrap; }
+.chevron { display: grid; place-items: center; width: var(--space-24); height: var(--space-24); flex-shrink: 0; border-radius: var(--radius-full); background: transparent; transition: background-color var(--duration-base) var(--ease-out); }
+.chevron > svg { transition: transform var(--duration-base) var(--ease-out); }
+.details[open] .chevron > svg { transform: rotate(180deg); }
+.breakdown { display: grid; gap: var(--space-8); margin: var(--space-16) 0 0; padding-top: var(--space-16); border-top: var(--space-1) solid var(--payment-line); animation: reveal var(--duration-base) var(--ease-out) both; }
+.breakdownRow { composes: supporting from "../BookingTypography.module.css"; display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-16); }
+.breakdown dt { min-width: 0; overflow-wrap: anywhere; }
+.breakdown dd { margin: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.discount { color: var(--journey-paper-success); }
+.savings { composes: savings from "../BookingTypography.module.css"; position: relative; isolation: isolate; overflow: hidden; margin: 0 0 var(--space-20); padding: var(--space-10) var(--space-12); border-radius: var(--radius-sm) 0 0 var(--radius-sm); background: linear-gradient(100deg, color-mix(in srgb, var(--journey-paper-success) 10%, var(--color-surface)), color-mix(in srgb, var(--journey-paper-success) 3%, transparent)); }
+.savings strong { font-weight: 600; white-space: nowrap; }
+.swipe { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(110deg, transparent 36%, color-mix(in srgb, var(--color-surface) 60%, transparent) 37% 41%, transparent 42% 44%, color-mix(in srgb, var(--color-surface) 40%, transparent) 45% 47%, transparent 48%); transform: translateX(-100%); animation: swipe calc(var(--duration-slowest) * 2) var(--ease-out) var(--duration-slow) both; }
+
+@media (max-width: 639px) {
+  .summary { gap: var(--space-12); }
+}
+@keyframes reveal { from { opacity: 0; transform: translateY(calc(var(--space-4) * -1)); } to { opacity: 1; transform: translateY(0); } }
+@keyframes swipe { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .breakdown { animation: none; }
+  .chevron, .chevron > svg { transition: none; }
+  .swipe { display: none; }
+}
+@media (forced-colors: active) {
+  .payment, .breakdown { border-color: CanvasText; }
+  .label[data-settled="true"], .coverage, .discount { color: CanvasText; }
+  .savings { color: CanvasText; background: Canvas; border: var(--space-1) solid CanvasText; }
+  .swipe { display: none; }
+}

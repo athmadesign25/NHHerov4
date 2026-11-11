@@ -1,0 +1,171 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/February2024/XqpUQk7BJUrHzNKV2FhN.webp",
+    "name": "Dr. Kuldeep Shetty",
+    "id": 67,
+    "doctorCode": "106196",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Neurology)",
+        "Fellowship (Movement Disorders)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Neurology"
+      ],
+      "subSpecialties": [
+        "Movement Disorders & Parkinson's"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "24th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Kuldeep Shetty is the Consultant Neurologist, Parkinson s disease and other Movement Disorders Specialist, Department of Neurosciences at Narayana Health City, Bangalore.He completed both MBBS and MD (Internal Medicine) at MMCRI (Mysore Medical College and Research Institute, Mysore) and he completed his DM (Neurology) in 2016 at Sree Chitra Tirunal Institute for Medical Science and Technology (SCTIMST, an Institute of National Importance under the Govt. of India, Trivandrum, Kerala). He further pursued a post...",
+    "full_description": "Dr. Kuldeep Shetty is the Consultant Neurologist, Parkinson s disease and other Movement Disorders Specialist, Department of Neurosciences at Narayana Health City, Bangalore.He completed both MBBS and MD (Internal Medicine) at MMCRI (Mysore Medical College and Research Institute, Mysore) and he completed his DM (Neurology) in 2016 at Sree Chitra Tirunal Institute for Medical Science and Technology (SCTIMST, an Institute of National Importance under the Govt. of India, Trivandrum, Kerala). He further pursued a post doctoral fellowship in Movement Disorders at SCTIMST which is one of the earliest comprehensive care centre for Movement Disorders in India and has been one of the pioneers of Deep Brain Stimulation in India. He has been serving as consultant neurologist at NH since Jan 2018.He has expertise in comprehensive care for Parkinson s disease and other movement disorders including Deep Brain Stimulation, Botulinum (botox) therapy for various disorders."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Movement Disorder including: Parkinson s Syndrome, Dystonia, Ataxia Syndrome and others",
+      "Experienced in Deep Brain Stimulation for Movement Disorders",
+      "Expertise in Botulinum Toxin Therapy for Movement Disorders",
+      "General Neurology",
+      "Neuro Sciences",
+      "Neurology",
+      "Neuro",
+      "Movement Disorders & Parkinson's",
+      "Movement Disorders",
+      "Movement",
+      "Parkinson's",
+      "NEUROLOGY"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Awards: Best Paper Award APICON 2013",
+            "link": ""
+          },
+          {
+            "text": "Best Scientific Paper Award in  Neurosciences Science Fete 2017 , Trivandrum.",
+            "link": ""
+          },
+          {
+            "text": "Mebership: Member of Movement disorders Society of India",
+            "link": ""
+          },
+          {
+            "text": "Member of International Parkinson and Movement Disorders Society",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "What is Deep Brain Stimulation procedure? | Dr. Kuldeep Shetty",
+        "name": "Dr. Kuldeep Shetty",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/hcTzCpA8pfs"
+      },
+      {
+        "subtitle": "Deep Brain Stimulation (DBS) | Dr. Kuldeep Shetty",
+        "name": "Dr. Kuldeep Shetty",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/jMoc_-RdAIM"
+      },
+      {
+        "subtitle": "Patient Success Story | Treating Tremor through DBS surgery | Dr. Kuldeep Shetty",
+        "name": "Dr. Kuldeep Shetty",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/Le3MN7StVG8"
+      },
+      {
+        "subtitle": "What is Deep Brain Stimulation (DBS)? | Dr. Kuldeep and Dr. Sumana",
+        "name": "Dr. Kuldeep Shetty",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/T9JdSCrVNTI"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "What is Dementia?",
+        "date": "November 07, 2024",
+        "slug": "what-is-dementia",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/November2024/ZCPvhk2ZpVfEoCFn7PGE.webp",
+        "imgAlt": "What is Dementia?",
+        "authorInitial": "KS",
+        "author": "Dr. Kuldeep Shetty",
+        "category": "Neurology"
+      },
+      {
+        "title": "Debunking Common Myths About Brain Health",
+        "date": "October 28, 2024",
+        "slug": "debunking-common-myths-about-brain-health",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/November2024/j8NGfKuCBaKwjVrBkvJk.webp",
+        "imgAlt": "Debunking Common Myths About Brain Health",
+        "authorInitial": "KS",
+        "author": "Dr. Kuldeep Shetty",
+        "category": "Neurology"
+      },
+      {
+        "title": "Myths & Facts About Epilepsy: Debunking Misconceptions",
+        "date": "October 22, 2024",
+        "slug": "myths-and-facts-about-epilepsy",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/October2024/NkR8jD5aB3rhnqU34owb.webp",
+        "imgAlt": "Myths & Facts About Epilepsy: Debunking Misconceptions",
+        "authorInitial": "KS",
+        "author": "Dr. Kuldeep Shetty",
+        "category": "Neurology"
+      },
+      {
+        "title": "Did You Know? Uncommon and Fascinating Facts About Brain Health and Function",
+        "date": "October 22, 2024",
+        "slug": "did-you-know-uncommon-and-fascinating-facts-about-brain-health-and-function",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/October2024/bwe7H69yJsxIn3KrEYBY.webp",
+        "imgAlt": "Did You Know? Uncommon and Fascinating Facts About Brain Health and Function",
+        "authorInitial": "KS",
+        "author": "Dr. Kuldeep Shetty",
+        "category": "Neurology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

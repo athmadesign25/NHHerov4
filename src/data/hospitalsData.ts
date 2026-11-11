@@ -1,3 +1,6 @@
+import { HOSPITALS_DIRECTORY_DATA } from "./hospitalsDirectoryData";
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
+
 export interface HospitalItem {
   id: string;
   name: string;
@@ -9,7 +12,7 @@ export interface HospitalItem {
   phone: string;
 }
 
-export const HOSPITALS_DATA: HospitalItem[] = [
+const bangaloreHospitals: HospitalItem[] = [
   {
     id: "hosp-1",
     name: "Mazumdar Shaw Medical Centre, Bangalore",
@@ -179,3 +182,19 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     phone: "08069266140",
   },
 ];
+
+/** Keep the curated media while linking only to profiles available in this build. */
+export const HOSPITALS_DATA: HospitalItem[] = bangaloreHospitals.map((hospital) => {
+  const directoryHospital = HOSPITALS_DIRECTORY_DATA.find((entry) => entry.name === hospital.name);
+  const city = directoryHospital?.city ?? "Bangalore";
+  return {
+    ...hospital,
+    href: directoryHospital
+      ? `/hospitals/${encodeURIComponent(directoryHospital.slug)}`
+      : `/hospitals?${new URLSearchParams({ city })}`,
+    appointmentHref: defaultDoctorListingUrl(new URLSearchParams({
+      hospitals: hospital.name,
+      location: city,
+    })),
+  };
+});

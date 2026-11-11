@@ -1,0 +1,53 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-inverse);
+  background: var(--navy-900);
+}
+.portrait { position: absolute; inset: 0; z-index: -2; }
+.photo { object-fit: cover; object-position: center 20%; }
+.photoFallback { display: grid; place-content: start center; padding-top: calc(var(--nav-height) + var(--space-64)); height: 100%; color: rgba(var(--white-rgb), .35); background: radial-gradient(ellipse at 80% 20%, var(--navy-800), var(--navy-900)); font-size: var(--font-size-7xl); line-height: var(--leading-tight); font-weight: 500; }
+.scrim { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, rgba(var(--navy-900-rgb), .8), rgba(var(--navy-900-rgb), .1) 20%, rgba(var(--navy-900-rgb), .2) 35%, rgba(var(--navy-900-rgb), .95) 57%, var(--navy-900) 80%); }
+.inner { width: calc(100% - var(--profile-page-gutter) * 2); max-width: var(--max-width); margin-inline: auto; padding-top: var(--nav-height); }
+.tools { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); min-height: var(--space-56); }
+.content { display: grid; gap: var(--space-24); min-width: 0; padding-block: calc(var(--space-128) + var(--space-32)) var(--space-32); }
+.identity { min-width: 0; }
+.name { position: relative; color: var(--color-text-inverse); font-size: clamp(var(--font-size-3xl), 3.5vw, var(--font-size-5xl)); line-height: var(--leading-tight); font-weight: 600; letter-spacing: -.025em; overflow-wrap: anywhere; text-wrap: balance; }
+.identity h1 { margin: 0; color: inherit; font: inherit; letter-spacing: inherit; }
+/* Reuse the listing's decorative wipe without hiding the readable heading. */
+.nameSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; pointer-events: none; }
+.identityMeta { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-4) var(--space-12); margin-top: var(--space-12); }
+.speciality { min-width: 0; margin: 0; color: var(--slate-100); font-size: var(--font-size-lg); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.experience { display: inline-flex; align-items: baseline; gap: var(--space-12); color: var(--slate-100); font-size: var(--font-size-sm); line-height: var(--leading-body); white-space: nowrap; }
+.experience strong { color: var(--color-text-inverse); font-weight: 600; }
+.expertise { --card-muted: var(--slate-100); --card-ink: var(--color-text-inverse); --card-target: var(--space-48); margin-top: var(--space-12); min-width: 0; }
+.language { margin: var(--space-8) 0 0; color: var(--slate-200); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.hero a:focus-visible, .hero button:focus-visible { outline-color: var(--white); }
+.srOnly { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.hero[data-portrait="false"] .content { padding-top: var(--space-48); }
+@media (min-width: 768px) {
+  .hero { min-height: calc(var(--space-128) * 4); }
+  .portrait { left: 40%; }
+  .photo { object-position: center 25%; }
+  .photoFallback { place-content: center; padding: 0; }
+  .scrim { background: linear-gradient(90deg, var(--navy-900) 40%, rgba(var(--navy-900-rgb), .7) 50%, rgba(var(--navy-900-rgb), .2) 65%, transparent 80%), linear-gradient(180deg, rgba(var(--navy-900-rgb), .6), transparent 30%, transparent 65%, rgba(var(--navy-900-rgb), .5)); }
+  .content { width: 54%; min-height: calc(var(--space-128) * 3); align-content: center; padding-block: var(--space-32) var(--space-48); }
+  .hero[data-portrait="false"] .content { padding-top: var(--space-32); }
+}
+@media (min-width: 1024px) { .content { padding-block: var(--space-40) var(--space-56); } }
+@media (max-width: 767px) {
+  .portrait { bottom: 30%; }
+  .hero[data-portrait="false"] .photoFallback { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .nameSweep { display: none; } }
+@media (forced-colors: active) {
+  .nameSweep { display: none; }
+  .scrim, .portrait { display: none; }
+  .hero { background: Canvas; color: CanvasText; }
+  .hero :is(h1,p,dd,strong,a) { color: CanvasText; }
+  .content { width: 100%; padding-top: var(--space-24); }
+}
+
+.education { margin: var(--space-16) 0 0; color: var(--slate-100); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }

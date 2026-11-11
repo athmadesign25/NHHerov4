@@ -1,6 +1,6 @@
 .dialog {
-  --benefit-ink: var(--color-text);
-  --benefit-success: var(--teal-600);
+  --benefit-ink: var(--d17-lite-ink);
+  --benefit-success: var(--journey-paper-success);
   width: min(calc(100% - var(--sp-4)), calc(var(--sp-16) * 4));
   max-width: none;
   max-height: calc(100dvh - var(--sp-4));
@@ -11,15 +11,15 @@
   border: 1px solid color-mix(in srgb, var(--benefit-ink) 12%, transparent);
   border-radius: var(--radius-xl);
   color: var(--benefit-ink);
-  background: var(--color-bg);
+  background: var(--d17-lite-surface);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-bg-card) 72%, transparent), var(--shadow-xl);
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
 }
-.dialog::backdrop { background: color-mix(in srgb, var(--color-text) 26%, transparent); }
+.dialog::backdrop { background: color-mix(in srgb, var(--d17-lite-ink) 26%, transparent); }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .dialog {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--benefit-ink) 6%, transparent), transparent 65%), color-mix(in srgb, var(--color-bg) 64%, transparent);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--benefit-ink) 6%, transparent), transparent 65%), color-mix(in srgb, var(--d17-lite-surface) 64%, transparent);
     backdrop-filter: blur(var(--sp-2)) saturate(130%);
     -webkit-backdrop-filter: blur(var(--sp-2)) saturate(130%);
   }
@@ -48,11 +48,11 @@
 .offer p, .offer small { margin-top: calc(var(--sp-1) / 2); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: 1.5; }
 .offer small { display: block; }
 .offerAction { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-.applied { display: inline-flex; align-items: center; gap: calc(var(--sp-1) / 2); color: var(--benefit-success); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
+.applied { display: inline-flex; align-items: center; min-height: calc(var(--sp-1) * 5.5); padding-inline: calc(var(--sp-1) * 1.5); gap: calc(var(--sp-1) / 2); color: var(--benefit-success); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
 .check { flex-shrink: 0; color: var(--benefit-success); }
 .offer.selected { background: color-mix(in srgb, var(--color-success) 7%, transparent); }
 .footer { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
-.remove { min-height: calc(var(--sp-1) * 5.5); padding: var(--sp-1); border: 0; border-radius: var(--radius-full); color: var(--color-emergency); background: transparent; font: inherit; font-size: var(--font-size-sm); font-weight: 400; cursor: pointer; transition: color var(--transition-fast); }
+.dialog .remove { min-height: calc(var(--sp-1) * 5.5); padding: var(--sp-1); border: 0; border-radius: var(--radius-full); color: var(--color-emergency); background: transparent; font: inherit; font-size: var(--font-size-sm); font-weight: 400; cursor: pointer; transition: color var(--transition-fast); }
 .planOffer { display: grid; grid-template-columns: var(--sp-4) minmax(0, 1fr) auto; gap: var(--sp-1); }
 .planIcon { color: var(--benefit-success); }
 .planIcon { align-self: start; margin-top: calc(var(--sp-1) / 4); }
@@ -61,7 +61,7 @@
 .dialog button:disabled { opacity: .45; cursor: not-allowed; }
 .dialog :is(button, input):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 @media (hover: hover) {
-  .remove:hover:not(:disabled) { color: color-mix(in srgb, var(--color-emergency) 78%, var(--benefit-ink)); }
+  .dialog .remove:hover:not(:disabled) { color: color-mix(in srgb, var(--color-emergency) 78%, var(--benefit-ink)); }
   .close:hover:not(:disabled) { background: color-mix(in srgb, var(--color-primary) 8%, transparent); }
   .apply:hover:not(:disabled) { color: var(--color-primary-dark); }
 }
@@ -75,6 +75,6 @@
   .offer { gap: var(--sp-1); }
 }
 @media (prefers-reduced-motion: reduce) { .dialog * { transition: none; } }
-@media (prefers-reduced-transparency: reduce) { .dialog { background: var(--color-bg); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+@media (prefers-reduced-transparency: reduce) { .dialog { background: var(--d17-lite-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 
 .dialog[data-benefit="sponsorship"] .headingIcon { color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, transparent); }

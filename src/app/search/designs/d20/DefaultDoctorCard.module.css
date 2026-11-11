@@ -1,5 +1,6 @@
 .card {
-  --card-night: color-mix(in srgb, var(--navy-ink) 85%, var(--color-primary-dark));
+  --card-image-extension: var(--sp-5);
+  --card-night: color-mix(in srgb, var(--d17-card-surface) 85%, var(--color-primary-dark));
   --card-ink: var(--color-text-inverse);
   --card-muted: color-mix(in srgb, var(--card-ink) 78%, var(--card-night));
   --card-line: color-mix(in srgb, var(--card-ink) 17%, transparent);
@@ -16,7 +17,7 @@
   flex-direction: column;
   min-width: 0;
   height: 100%;
-  border: 1px solid color-mix(in srgb, var(--card-ink) 22%, var(--navy-ink));
+  border: 1px solid color-mix(in srgb, var(--card-ink) 22%, var(--d17-card-surface));
   border-radius: var(--radius-xl);
   color: var(--card-ink);
   background: var(--card-night);
@@ -24,16 +25,19 @@
   transition: box-shadow var(--transition-base), border-color var(--transition-base);
 }
 .card[data-locations-open] { z-index: 5; }
+/* Keep room for both slot rows while trimming surplus portrait space.
+   The concealed browsing card shares this footprint with the booking state. */
+:global([data-design="d21"]) .card { --card-image-extension: calc(var(--sp-5) + var(--sp-2)); }
 /* Only the exiting hospital menu is inert; sharing reuses its glass styling. */
 .card:not([data-locations-open]) .locationsPopover:not([popover]) { pointer-events: none; }
 .card :is(a, button) { -webkit-tap-highlight-color: transparent; }
 .card :is(a, button):focus-visible { outline: 2px solid var(--card-ink); outline-offset: 3px; }
 .card svg { flex-shrink: 0; }
 .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.portrait { position: absolute; inset: 0 0 auto; height: min(100%, calc(var(--sp-16) * 2 + var(--sp-8) + var(--sp-3))); z-index: 0; overflow: hidden; border-radius: inherit; background: var(--card-night); }
+.portrait { position: absolute; inset: 0 0 auto; height: min(100%, calc(var(--sp-16) * 2 + var(--sp-8) + var(--sp-3) + var(--card-image-extension))); z-index: 0; overflow: hidden; border-radius: inherit; background: var(--card-night); }
 .photoFrame { position: absolute; inset: 0; z-index: 1; }
 .officialPortrait .photo { object-position: center 45%; }
-.thumbnailPortrait .photoFrame { height: calc(var(--sp-16) + var(--sp-8)); mask-image: linear-gradient(90deg, transparent 15%, black 35%, black 65%, transparent 85%); }
+.thumbnailPortrait .photoFrame { height: calc(var(--sp-16) + var(--sp-8) + var(--card-image-extension)); mask-image: linear-gradient(90deg, transparent 15%, black 35%, black 65%, transparent 85%); }
 .thumbnailPortrait .photo { object-fit: contain; object-position: center top; }
 .photoAmbient { object-fit: cover; filter: blur(var(--sp-2)); opacity: .12; transform: scale(1.08); }
 .photo { object-fit: cover; object-position: center 20%; transition: transform var(--transition-slow); }
@@ -46,15 +50,15 @@
   pointer-events: none;
   /* Ease the portrait into the surface before the image ends, without a dark band. */
   background: linear-gradient(180deg,
-    transparent calc(var(--sp-8) + var(--sp-3)),
-    transparent calc(var(--space-96) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 8%, transparent) calc(var(--sp-16) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 50%, transparent) calc(var(--sp-16) + var(--sp-4) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 88%, transparent) calc(var(--sp-16) + var(--sp-8) + var(--sp-3)),
-    color-mix(in srgb, var(--card-night) 98%, transparent) calc(var(--sp-16) + var(--space-96) + var(--sp-3)),
-    var(--card-night) calc(var(--sp-16) * 2 + var(--sp-3)));
+    transparent calc(var(--card-image-extension) + var(--sp-8) + var(--sp-3)),
+    transparent calc(var(--card-image-extension) + var(--sp-12) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 8%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 50%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-4) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 88%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-8) + var(--sp-3)),
+    color-mix(in srgb, var(--card-night) 98%, transparent) calc(var(--card-image-extension) + var(--sp-16) + var(--sp-12) + var(--sp-3)),
+    var(--card-night) calc(var(--card-image-extension) + var(--sp-16) * 2 + var(--sp-3)));
 }
-.identity { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--sp-16) + var(--space-96)); padding: calc(var(--sp-16) + var(--sp-6)) var(--card-content-inset) var(--sp-3); }
+.identity { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(var(--sp-16) + var(--sp-12)); padding: calc(var(--sp-16) + var(--sp-6) + var(--card-image-extension)) var(--card-content-inset) var(--sp-3); }
 .identity { container-type: inline-size; }
 .identityText { min-width: 0; }
 .designation { margin: calc(var(--sp-1) / 2) 0 0; color: var(--card-muted); font-size: var(--font-size-sm); line-height: 1.5; overflow-wrap: anywhere; }
@@ -76,8 +80,8 @@
 }
 .tags { position: absolute; top: var(--card-inset); left: var(--card-inset); display: flex; flex-wrap: wrap; gap: calc(var(--sp-1) / 2); max-width: calc(100% - var(--card-inset) * 2 - var(--card-target) - var(--sp-1)); }
 .tag { display: inline-flex; align-items: center; gap: calc(var(--sp-1) / 2); min-height: calc(var(--sp-3) + var(--sp-1) / 2); padding: calc(var(--sp-1) / 2) var(--sp-1); border: 1px solid color-mix(in srgb, var(--tag-tint) 38%, transparent); border-radius: var(--radius-full); color: var(--tag-ink); background: color-mix(in srgb, var(--tag-surface) 82%, transparent); backdrop-filter: blur(var(--sp-2)) saturate(120%); -webkit-backdrop-filter: blur(var(--sp-2)) saturate(120%); font-size: var(--font-size-xs); font-weight: 500; line-height: 1.5; }
-.tagExecutive { --tag-tint: color-mix(in srgb, var(--amber-500) 45%, var(--card-ink)); --tag-surface: color-mix(in srgb, var(--card-night) 88%, var(--amber-500)); --tag-ink: var(--tag-tint); }
-.tagBooked { --tag-tint: color-mix(in srgb, var(--blue-700) 25%, var(--card-ink)); --tag-surface: color-mix(in srgb, var(--card-night) 82%, var(--color-primary)); --tag-ink: var(--tag-tint); }
+.tagExecutive { --tag-tint: color-mix(in srgb, var(--color-warning) 45%, var(--card-ink)); --tag-surface: color-mix(in srgb, var(--card-night) 88%, var(--color-warning)); --tag-ink: var(--tag-tint); }
+.tagBooked { --tag-tint: color-mix(in srgb, var(--color-primary-mid) 25%, var(--card-ink)); --tag-surface: color-mix(in srgb, var(--card-night) 82%, var(--color-primary)); --tag-ink: var(--tag-tint); }
 .body {
   --panel-glow-tint: color-mix(in srgb, var(--card-ink) 70%, var(--card-night));
   --panel-glow: radial-gradient(ellipse 65% var(--sp-8) at calc(50% - (var(--card-target) + var(--sp-1)) / 2) calc(100% - var(--sp-2)), color-mix(in srgb, var(--panel-glow-tint) 36%, transparent), color-mix(in srgb, var(--panel-glow-tint) 18%, transparent) 38%, color-mix(in srgb, var(--panel-glow-tint) 6%, transparent) 65%, transparent 90%);
@@ -115,28 +119,47 @@
 .hospitalRow > .distance { padding-top: var(--hospital-text-inset); line-height: 1.5; }
 .directions svg { width: calc(var(--sp-2) - var(--sp-1) / 4); height: calc(var(--sp-2) - var(--sp-1) / 4); }
 .distance { color: var(--card-muted); font-size: var(--font-size-sm); }
-.locationsPopover { position: absolute; z-index: 5; top: calc(100% + var(--sp-1)); inset-inline: 0; max-height: min(calc(var(--sp-16) * 2), 50dvh); overflow-y: auto; overscroll-behavior: contain; padding: var(--sp-2) 0 0; border: 1px solid color-mix(in srgb, var(--card-ink) 26%, transparent); border-radius: var(--radius-md); background: var(--card-night); box-shadow: 0 var(--sp-2) var(--sp-4) color-mix(in srgb, var(--card-night) 32%, transparent); }
+/* One readable surface for share, hospital and expertise menus throughout
+   the booking journey, independent of the card or hero behind it. */
+.locationsPopover {
+  --card-night: var(--color-bg-card);
+  --card-ink: var(--d17-lite-ink);
+  --card-muted: var(--color-text-secondary);
+  --card-line: var(--color-border);
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + var(--space-8));
+  inset-inline: 0;
+  max-height: min(calc(var(--space-128) * 2), 50dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-16) 0 0;
+  border: var(--space-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--card-ink);
+  background: var(--color-bg-card);
+  box-shadow: var(--elevation-3);
+}
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   /* Use one glass layer while a menu is open, rather than frosting the
      booking summary again beneath the menu's own translucent surface. */
   .card:is([data-locations-open], :has(.expertiseToggle[aria-expanded="true"]), :has([data-share-open])) .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  /* Shared by hospital, share and expertise menus: a translucent surface,
-     with enough backdrop detail retained to read as glass on pale cards. */
-  .locationsPopover { background: linear-gradient(135deg, color-mix(in srgb, var(--card-ink) 6%, transparent), transparent 65%), color-mix(in srgb, var(--card-night) 64%, transparent); backdrop-filter: blur(var(--sp-2)) saturate(130%); -webkit-backdrop-filter: blur(var(--sp-2)) saturate(130%); }
+  .locationsPopover { background: rgba(var(--white-rgb), .95); backdrop-filter: blur(var(--space-16)); -webkit-backdrop-filter: blur(var(--space-16)); }
 }
 .locationsAbove { top: auto; bottom: calc(100% + var(--sp-1)); }
 .locationsPopover > p { margin: 0 0 var(--sp-1); padding-inline: var(--sp-2); font-size: var(--font-size-sm); font-weight: 600; }
 .locationsPopover ul { list-style: none; margin: 0; padding: 0; }
 .locationsPopover li + li { border-top: 1px solid color-mix(in srgb, var(--card-ink) 5%, transparent); }
-.locationOption { display: grid; grid-template-columns: var(--sp-2) minmax(0, 1fr) var(--sp-2); align-items: start; gap: var(--sp-1); width: 100%; min-height: var(--card-target); padding: calc(var(--sp-1) * 1.5) var(--sp-2); border-radius: 0; color: var(--card-muted); background: transparent; font-size: var(--font-size-sm); line-height: 1.5; text-align: left; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.locationOption { display: grid; grid-template-columns: var(--sp-2) minmax(0, 1fr) var(--sp-2); align-items: start; gap: var(--sp-1); width: 100%; min-height: var(--card-target); padding: calc(var(--sp-1) * 1.5) var(--sp-2); border-radius: 0; color: var(--card-ink); background: transparent; font-size: var(--font-size-sm); line-height: 1.5; text-align: left; transition: background-color var(--transition-fast), color var(--transition-fast); }
 .locationOption > span:first-of-type { min-width: 0; overflow-wrap: anywhere; }
 .locationOption > svg, .locationOption > .locationIcon, .locationOption > .locationCheck { margin-top: calc((1.5em - var(--sp-2)) / 2); }
 .locationOption[aria-pressed="true"] { color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 6%, transparent); }
 .card .locationOption:focus-visible { outline-offset: -3px; color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
 .locationOption:active { background: color-mix(in srgb, var(--card-ink) 16%, transparent); }
+.locationsPopover.locationsPopover :is(a, button, input):focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(var(--space-2) * -1); }
 .locationHint { display: block; margin-top: calc(var(--sp-1) / 2); color: var(--card-muted); font-size: var(--font-size-xs); }
 .locationCheck { display: grid; place-items: center; width: var(--sp-2); height: var(--sp-2); flex-shrink: 0; border: 1px solid var(--card-line); border-radius: var(--radius-full); }
-.locationOption[aria-pressed="true"] .locationCheck { background: var(--color-emergency); color: var(--card-ink); border-color: var(--color-emergency); }
+.locationOption[aria-pressed="true"] .locationCheck { background: var(--color-emergency); color: var(--color-text-inverse); border-color: var(--color-emergency); }
 .bookingGroup { display: grid; gap: var(--sp-2); margin-top: auto; padding-top: var(--sp-2); border-top: 1px solid var(--card-line); }
 .bookingFacts { display: grid; grid-template-columns: minmax(0, 1fr) max-content; align-items: start; gap: var(--sp-2); }
 .availability { display: grid; gap: calc(var(--sp-1) / 2); min-width: 0; }
@@ -167,7 +190,7 @@
 }
 @media (max-width: 639px) { .bookingFacts { column-gap: var(--sp-1); } }
 @media (hover: hover) and (pointer: fine) {
-  .card:hover { box-shadow: 0 calc(var(--sp-1) / 2) var(--sp-2) color-mix(in srgb, var(--navy-ink) 12%, transparent), 0 calc(var(--sp-1) / 4) calc(var(--sp-1) * .75) color-mix(in srgb, var(--navy-ink) 6%, transparent); }
+  .card:hover { box-shadow: 0 calc(var(--sp-1) / 2) var(--sp-2) color-mix(in srgb, var(--d17-card-surface) 12%, transparent), 0 calc(var(--sp-1) / 4) calc(var(--sp-1) * .75) color-mix(in srgb, var(--d17-card-surface) 6%, transparent); }
   .book:hover { background: var(--color-primary-light); border-color: var(--color-primary-light); }
   .profileCue:hover, .call:hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
   .profileAction:hover { color: var(--color-primary); }
@@ -176,9 +199,9 @@
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) { .card:hover .photo { transform: scale(1.02); } }
 /* Lite changes only the palette; both previews share the same card structure. */
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .card {
-  --card-night: var(--color-bg);
-  --card-ink: var(--color-text);
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card {
+  --card-night: var(--d17-lite-surface);
+  --card-ink: var(--d17-lite-ink);
   --card-muted: var(--color-text-secondary);
   --card-line: color-mix(in srgb, var(--card-ink) 14%, transparent);
   --icon-glass-active-fill: color-mix(in srgb, var(--color-bg-card) 94%, transparent);
@@ -187,7 +210,7 @@
   border-color: color-mix(in srgb, var(--card-ink) 18%, var(--card-night));
 }
 
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .body {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .body {
   --panel-frost: color-mix(in srgb, var(--color-bg-card) 70%, var(--color-border));
   --panel-glow-tint: color-mix(in srgb, var(--color-text-secondary) 75%, var(--color-bg-card));
   --panel-glow: radial-gradient(ellipse 70% var(--sp-6) at calc(50% - (var(--card-target) + var(--sp-1)) / 2) calc(100% - var(--sp-2)), color-mix(in srgb, var(--panel-glow-tint) 16%, transparent), color-mix(in srgb, var(--panel-glow-tint) 7%, transparent) 40%, color-mix(in srgb, var(--panel-glow-tint) 2%, transparent) 68%, transparent 100%);
@@ -197,21 +220,21 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 12%, transparent), inset 0 1px 0 var(--color-bg-card), inset 0 -1px 0 color-mix(in srgb, var(--color-bg-card) 70%, transparent), 0 var(--sp-1) var(--sp-3) color-mix(in srgb, var(--card-ink) 7%, transparent);
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .body {
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .body {
     background: var(--panel-glow), var(--panel-sheen), var(--panel-tint), color-mix(in srgb, var(--panel-frost) 64%, transparent);
     backdrop-filter: blur(var(--sp-4)) saturate(105%);
     -webkit-backdrop-filter: blur(var(--sp-4)) saturate(105%);
   }
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .tagExecutive {
-  --tag-tint: color-mix(in srgb, var(--amber-500) 18%, var(--card-ink));
-  --tag-surface: color-mix(in srgb, var(--color-bg-card) 92%, var(--amber-500));
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .tagExecutive {
+  --tag-tint: color-mix(in srgb, var(--color-warning) 18%, var(--card-ink));
+  --tag-surface: color-mix(in srgb, var(--color-bg-card) 92%, var(--color-warning));
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .tagBooked {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .tagBooked {
   --tag-tint: color-mix(in srgb, var(--color-primary-dark) 80%, var(--card-ink));
   --tag-surface: var(--color-primary-light);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .tag {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .tag {
   color: var(--tag-tint);
   border-color: color-mix(in srgb, var(--tag-tint) 10%, transparent);
   background: linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 16%, transparent), transparent 70%), color-mix(in srgb, var(--tag-surface) 64%, transparent);
@@ -219,7 +242,7 @@
   backdrop-filter: blur(var(--sp-1)) saturate(115%);
   -webkit-backdrop-filter: blur(var(--sp-1)) saturate(115%);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) :is(.directions, .call, .profileCue) {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) :is(.directions, .call, .profileCue) {
   color: var(--color-primary-dark);
   border-color: var(--card-line);
   background: color-mix(in srgb, var(--color-bg-card) 78%, transparent);
@@ -227,37 +250,36 @@
   backdrop-filter: blur(var(--sp-2)) saturate(105%);
   -webkit-backdrop-filter: blur(var(--sp-2)) saturate(105%);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .directions { transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .profileCueLabel {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .directions { transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .profileCueLabel {
   color: var(--color-primary-dark);
   background: color-mix(in srgb, var(--color-bg-card) 96%, transparent);
   border-color: var(--color-border);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .card :is(a, button):focus-visible { outline-color: var(--color-primary); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .profileAction:focus-visible .profileCue,
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) :is(.directions, .call):is(:focus-visible, :active),
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .profileCue:active {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card :is(a, button):focus-visible { outline-color: var(--color-primary); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .profileAction:focus-visible .profileCue,
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) :is(.directions, .call):is(:focus-visible, :active),
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .profileCue:active {
   background: var(--icon-glass-active-fill);
   border-color: var(--icon-glass-active-line);
   box-shadow: var(--icon-glass-active-shadow);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .book {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .book {
   color: var(--color-text-inverse);
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--d17-lite-accent);
+  border-color: var(--d17-lite-accent);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .book:active {
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .book:active {
   background: var(--color-primary-dark);
   border-color: var(--color-primary-dark);
 }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .locationOption[aria-pressed="true"] .locationCheck { color: var(--color-text-inverse); }
-:global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .locationsPopover { box-shadow: 0 var(--sp-2) var(--sp-4) color-mix(in srgb, var(--card-ink) 16%, transparent); }
+:global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .locationOption[aria-pressed="true"] .locationCheck { color: var(--color-text-inverse); }
 @media (hover: hover) and (pointer: fine) {
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .book:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) :is(.directions, .call, .profileCue):hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .book:hover { background: var(--color-primary-dark); border-color: var(--color-primary-dark); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) :is(.directions, .call, .profileCue):hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
 }
 /* Distance is supporting information; keep its action quieter than booking. */
-:global([data-design="d20"]) .directions {
+:global(:is([data-design="d20"], [data-design="d21"])) .directions {
   --distance-tint: color-mix(in srgb, var(--card-muted) 25%, var(--color-primary));
   color: var(--card-muted);
   font-size: var(--font-size-xs);
@@ -269,14 +291,14 @@
   -webkit-backdrop-filter: blur(var(--sp-1));
   transition: background-color var(--transition-fast);
 }
-:global([data-design="d20"]) .directions:is(:focus-visible, :active) {
+:global(:is([data-design="d20"], [data-design="d21"])) .directions:is(:focus-visible, :active) {
   color: var(--card-muted);
   border-color: transparent;
   background: color-mix(in srgb, var(--distance-tint) 11%, transparent);
   box-shadow: none;
 }
 @media (hover: hover) and (pointer: fine) {
-  :global([data-design="d20"]) .directions:hover {
+  :global(:is([data-design="d20"], [data-design="d21"])) .directions:hover {
     color: var(--card-muted);
     border-color: transparent;
     background: color-mix(in srgb, var(--distance-tint) 11%, transparent);
@@ -285,13 +307,13 @@
 }
 @media (prefers-reduced-motion: reduce) { .card, .card * { transition: none; } }
 /* Design 19 shares the same quiet glass across browsing and booking states. */
-:global([data-design="d20"]) .body {
+:global(:is([data-design="d20"], [data-design="d21"])) .body {
   background: var(--d20-summary-glass);
   backdrop-filter: blur(var(--d20-summary-blur)) saturate(108%);
   -webkit-backdrop-filter: blur(var(--d20-summary-blur)) saturate(108%);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 15%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-text-inverse) 65%, transparent);
 }
-:global([data-design="d20"]) .body::before {
+:global(:is([data-design="d20"], [data-design="d21"])) .body::before {
   content: "";
   position: absolute;
   inset-inline: 0;
@@ -300,24 +322,26 @@
   background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--card-night) 10%, transparent));
   pointer-events: none;
 }
-:global([data-design="d20"]) .card[data-locations-open] .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
+:global(:is([data-design="d20"], [data-design="d21"])) .card[data-locations-open] .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-  :global([data-design="d20"]) .body::before { display: none; }
+  :global(:is([data-design="d20"], [data-design="d21"])) .body::before { display: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .card { --icon-glass-active-fill: color-mix(in srgb, var(--card-ink) 20%, var(--card-night)); }
   .body, .profileCue, .profileCueLabel, .locationsPopover, .call { background: var(--card-night); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .body { background: var(--panel-frost); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .card { --icon-glass-active-fill: var(--color-bg-card); }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) :is(.directions, .call, .profileCue, .profileCueLabel) { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .body { background: var(--panel-frost); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card { --icon-glass-active-fill: var(--color-bg-card); }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) :is(.directions, .call, .profileCue, .profileCueLabel) { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .tag { background: var(--tag-surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 @media (forced-colors: active) {
-  .card, :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .card { --icon-glass-active-fill: Canvas; --icon-glass-active-line: Highlight; --icon-glass-active-shadow: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) :is(.body, .book, .tag, .locationsPopover, .directions, .call, .profileCue, .profileCueLabel) { color: CanvasText; background: Canvas; border-color: ButtonText; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .card :is(a, button):focus-visible { outline-color: Highlight; }
-  :global(:is([data-design="d17-lite"], [data-design="d18"], [data-design="d20"])) .book:is(:hover, :active) { background: Canvas; border-color: ButtonText; }
+  .locationsPopover { --card-ink: CanvasText; --card-muted: CanvasText; --card-line: ButtonText; }
+  .locationsPopover.locationsPopover :is(a, button, input):focus-visible { outline-color: Highlight; }
+  .card, :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card { --icon-glass-active-fill: Canvas; --icon-glass-active-line: Highlight; --icon-glass-active-shadow: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) :is(.body, .book, .tag, .locationsPopover, .directions, .call, .profileCue, .profileCueLabel) { color: CanvasText; background: Canvas; border-color: ButtonText; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card :is(a, button):focus-visible { outline-color: Highlight; }
+  :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .book:is(:hover, :active) { background: Canvas; border-color: ButtonText; }
   .portrait, .scrim { visibility: hidden; }
   .card, .body, .profileCue, .profileCueLabel, .tag, .locationsPopover, .book, .call { color: CanvasText; background: Canvas; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: ButtonText; }
   .card :is(a, button):focus-visible { outline-color: Highlight; }
@@ -333,7 +357,7 @@
 }
 
 /* Design 20: compact read-only availability and clinical detail on demand. */
-:global([data-design="d20"]) .card { --card-night: var(--color-bg); }
+:global(:is([data-design="d20"], [data-design="d21"])) .card { --card-night: var(--d17-lite-surface); }
 /* Align the visible 28px share glass with the 28px Executive / Previously
    consulted badges while retaining its 44px accessible hit area. */
 .share.share {
@@ -342,7 +366,7 @@
   inset-block-start: calc(var(--card-inset) - (var(--share-target) - (var(--sp-3) + var(--sp-1) / 2)) / 2);
   inset-inline-end: calc(var(--card-inset) - (var(--share-target) - (var(--sp-3) + var(--sp-1) / 2)) / 2);
 }
-.identity { padding-top: calc(var(--sp-16) + var(--sp-6)); padding-bottom: var(--sp-2); }
+.identity { padding-top: calc(var(--sp-16) + var(--sp-6) + var(--card-image-extension)); padding-bottom: var(--sp-2); }
 .identityText { display: grid; align-content: start; gap: var(--sp-1); }
 .profileAction { display: block; }
 .identityMeta { position: relative; min-width: 0; flex-direction: row; align-items: baseline; flex-wrap: nowrap; gap: calc(var(--sp-1) / 2) var(--sp-1); margin-top: 0; }
@@ -364,7 +388,7 @@
 .focusMatch > span { font-weight: inherit; }
 .languageMatch { color: var(--color-primary-dark); }
 .moreLocations { display: inline-block; white-space: nowrap; color: var(--card-muted); font-size: var(--font-size-xs); font-weight: 400; }
-:global([data-design="d20"]) .body { background: var(--d20-summary-glass); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 9%, transparent), inset 0 1px 0 var(--color-bg-card); flex: 0 0 auto; margin-block-start: auto; gap: var(--sp-2); padding-block: var(--sp-2); }
+:global(:is([data-design="d20"], [data-design="d21"])) .body { background: var(--d20-summary-glass); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-ink) 9%, transparent), inset 0 1px 0 var(--color-bg-card); flex: 0 0 auto; margin-block-start: auto; gap: var(--sp-2); padding-block: var(--sp-2); }
 .bookingGroup { display: grid; gap: var(--sp-3); margin-top: 0; padding-top: 0; border-top: 0; }
 .availability { display: grid; gap: var(--sp-1); }
 .availabilityLabel { display: flex; align-items: center; gap: var(--sp-1); margin: 0; color: var(--card-muted); font-size: var(--font-size-xs); font-weight: 400; line-height: 1.5; }
@@ -397,10 +421,10 @@
 }
 @media (prefers-reduced-motion: reduce) { .share { transition: none; } }
 @media (prefers-reduced-transparency: reduce) {
-  :global([data-design="d20"]) .body { background: color-mix(in srgb, var(--color-bg) 60%, var(--color-bg-card)); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  :global(:is([data-design="d20"], [data-design="d21"])) .body { background: color-mix(in srgb, var(--d17-lite-surface) 60%, var(--color-bg-card)); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 @media (forced-colors: active) {
-  :global([data-design="d20"]) .card, :global([data-design="d20"]) .body { color: CanvasText; background: Canvas; }
+  :global(:is([data-design="d20"], [data-design="d21"])) .card, :global(:is([data-design="d20"], [data-design="d21"])) .body { color: CanvasText; background: Canvas; }
   .profileLink { color: LinkText; }
   .availabilityLabel, .consultationOption > svg, .appointmentTime, .feeAmount { color: CanvasText; }
 }
@@ -436,5 +460,3 @@
 
 .bookSlot { min-width: 0; }
 .bookSlot > .book { width: 100%; }
-
-.identityMeta .experienceMeasure { position: absolute; visibility: hidden; pointer-events: none; width: max-content; inset: 0 auto auto 0; }

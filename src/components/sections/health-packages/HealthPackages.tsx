@@ -813,7 +813,7 @@ export default function HealthPackages() {
                         // edge up instead of the slot's bottom edge down.
                         <div key={pkg.id} className={`${styles.packageCardSlot} ${styles.packageCardSlotCompact}`}>
                           <Link
-                            href={`/health-packages/${pkg.id}`}
+                            href={`/health-checkups?item=${encodeURIComponent(pkg.id)}`}
                             ref={(el) => { railItemRefs.current[railSlots.indexOf(pkg.id)] = el; }}
                             className={`${styles.packageCard} ${styles[`packageCardV${pkg.variant}`]} ${styles.packageCardCompact}`}
                             onMouseMove={handleCardMouseMove}
@@ -869,7 +869,7 @@ export default function HealthPackages() {
                   </div>
 
                   <Link
-                    href="/health-packages"
+                    href="/health-checkups"
                     ref={(el) => { railItemRefs.current[railSlots.indexOf("explore")] = el; }}
                     className={styles.exploreRow}
                   >

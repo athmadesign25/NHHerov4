@@ -25,7 +25,7 @@ registerHooks({
   },
 });
 
-const { confirmDesign20, design20RequestedSelection, design20CanRestoreSelection, design20ContinuePhase, design20DefaultMember, design20SignedInDraft, design20SafeStep, design20ChangedSelection, design20FlowUrl, design20InlineUrl, design20ListingReturnTo, design20PaymentDraft, design20PaymentIntent, design20SavedAppointment, design20SummaryDraft, parseDesign20Draft } = await import("../src/features/booking/design20/model.ts");
+const { confirmDesign20, design20RequestedSelection, design20CanRestoreSelection, design20ContinuePhase, design20DefaultMember, design20SignedInDraft, design20SafeStep, design20ChangedSelection, design20FlowUrl, design20BackUrl, design20ProfileEntryUrl, design20InlineUrl, design20ListingReturnTo, design20PaymentDraft, design20PaymentIntent, design20SavedAppointment, design20SummaryDraft, parseDesign20Draft } = await import("../src/features/booking/design20/model.ts");
 const { patientsForIdentity, holdAfterPaymentFailure } = await import("../src/features/booking/design15/model.ts");
 const { getDesign20BookingDoctor } = await import("../src/features/search/design20Directory.ts");
 const { getDesign3BookingSlots } = await import("../src/features/booking/design3Availability.ts");
@@ -156,6 +156,46 @@ test("Back from the summary restores hospital, mode and date edits without overr
   assert.equal(new URL(nextPage.searchParams.get("returnTo"), "https://nh.local").searchParams.has("bookingResume"), false);
 });
 
+test("visible Back retains the profile entry after refresh and summary edits", () => {
+  const returnTo = "/search/doctors?design=d21&location=Bangalore&languages=Kannada&mode=hospital";
+  const entry = "/doctors/dr-1?profileDesign=2&mode=hospital&hospital=Original&email=private%40example.com#profile-videos";
+  const edited = { ...member, selection: { ...selection, mode: "video", hospital: "Edited hospital", date: "2026-10-28" }, discountCode: "NHCARE10", useHealthCredits: true };
+  const summary = new URL(design20FlowUrl(edited, returnTo, entry), "https://nh.local");
+  assert.equal(summary.searchParams.get("bookingEntry"), "/doctors/dr-devi-prasad-shetty?profileDesign=2");
+  // A refreshed summary and its payment state carry the same safe source context.
+  const payment = new URL(design20FlowUrl({ ...edited, stage: "payment" }, summary.searchParams.get("returnTo"), summary.searchParams.get("bookingEntry")), "https://nh.local");
+  const back = new URL(design20BackUrl(edited, payment.searchParams.get("returnTo"), payment.searchParams.get("bookingEntry")), "https://nh.local");
+  assert.equal(back.pathname, "/doctors/dr-devi-prasad-shetty");
+  assert.equal(back.searchParams.get("profileDesign"), "2");
+  assert.equal(back.searchParams.get("booking"), doctor.id);
+  assert.equal(back.searchParams.get("bookingResume"), "1");
+  assert.equal(back.searchParams.get("mode"), "video");
+  assert.equal(back.searchParams.get("hospital"), "Edited hospital");
+  assert.equal(back.searchParams.get("date"), "2026-10-28");
+  assert.equal(new URL(back.searchParams.get("returnTo"), "https://nh.local").searchParams.get("languages"), "Kannada");
+  assert.equal(design20CanRestoreSelection(edited, selection, true, false, back.searchParams.get("bookingResume") === "1"), true);
+  for (const key of ["email", "time", "discountCode", "useHealthCredits", "selectedPatientId", "bookingEntry"]) assert.equal(back.searchParams.has(key), false);
+  assert.equal(summary.href.includes("private"), false);
+  assert.equal(edited.discountCode, "NHCARE10");
+  assert.equal(edited.useHealthCredits, true);
+});
+
+test("Back rejects external, nested and different-doctor entries and falls back to the filtered listing", () => {
+  const returnTo = "/search/doctors?design=d21&location=Mumbai&languages=Hindi&mode=video";
+  for (const entry of [undefined, null, "https://evil.test/doctors/dr-1", "//evil.test/doctors/dr-1", "/\\evil.test/doctors/dr-1", "javascript:alert(1)", "/doctors/dr-1/book", "/doctors/dr-ashley", "/doctors/unknown", "/doctors/%E0%A4%A", "/doctors/dr-1\n"]) {
+    assert.equal(design20ProfileEntryUrl(entry, doctor.id), undefined);
+    const summary = new URL(design20FlowUrl(member, returnTo, entry), "https://nh.local");
+    assert.equal(summary.searchParams.has("bookingEntry"), false);
+    const back = new URL(design20BackUrl(member, returnTo, entry), "https://nh.local");
+    assert.equal(back.pathname, "/search/doctors");
+    assert.equal(back.searchParams.get("languages"), "Hindi");
+    assert.equal(back.searchParams.get("mode"), "video");
+    assert.equal(back.searchParams.get("bookingMode"), selection.mode);
+    assert.equal(back.searchParams.get("booking"), doctor.id);
+    assert.equal(back.searchParams.get("bookingResume"), "1");
+  }
+});
+
 test("expired or unavailable times cannot progress into authentication or payment", () => {
   const hold = holdAfterPaymentFailure(null, selection, now);
   const failed = { ...member, failureHold: hold, stage: "review" };
@@ -177,7 +217,7 @@ test("review and return links retain D20, filters and appointment context withou
   assert.equal(inline.pathname, "/search/doctors");
   assert.equal(inline.searchParams.get("booking"), doctor.id);
   assert.equal(inline.searchParams.get("languages"), "Kannada");
-  assert.equal(inline.searchParams.get("design"), "d20");
+  assert.equal(inline.searchParams.get("design"), "d21");
   assert.equal(inline.searchParams.get("mode"), "video");
   assert.equal(inline.searchParams.get("bookingMode"), "hospital");
   const cleanReturn = new URL(review.searchParams.get("returnTo"), "https://nh.local");
@@ -189,7 +229,7 @@ test("review and return links retain D20, filters and appointment context withou
     assert.equal(url.href.includes(encodeURIComponent(patients[0].patient.name)), false);
   }
   for (const unsafe of ["https://evil.test", "//evil.test", "/\\evil.test", "javascript:alert(1)"]) {
-    assert.equal(design20ListingReturnTo(unsafe), "/search/doctors?design=d20&location=All");
+    assert.equal(design20ListingReturnTo(unsafe), "/search/doctors?design=d21&location=All");
   }
 });
 

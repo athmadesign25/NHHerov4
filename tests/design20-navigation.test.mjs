@@ -50,7 +50,7 @@ test("D20 keeps cross-city hospital, date, mode and listing refinements through 
     assert.equal(url.searchParams.get("mode"), "hospital");
     assert.equal(url.searchParams.get("hospital"), hospital);
     assert.equal(url.searchParams.get("date"), "2026-10-28");
-    assert.equal(url.searchParams.get("returnTo"), returnTo);
+    assert.equal(url.searchParams.get("returnTo"), returnTo.replace("design=d20", "design=d21"));
     assert.equal(url.searchParams.has("time"), false);
   }
   assert.equal(booking.searchParams.get("city"), "Mumbai");
@@ -76,20 +76,20 @@ test("D20 global directory links restore current filters and maintain mode and c
   const params = new URLSearchParams({ design: "d20", location: "Mumbai", mode: "video", q: "heart", languages: "Hindi" });
   const current = "/search/doctors";
   const back = asUrl(design17DoctorNavigationHref("/book-an-appointment", current, params));
-  assert.equal(back.searchParams.get("design"), "d20");
+  assert.equal(back.searchParams.get("design"), "d21");
   assert.equal(back.searchParams.get("q"), "heart");
   assert.equal(back.searchParams.get("languages"), "Hindi");
   const speciality = asUrl(design17DoctorNavigationHref("/book-an-appointment/cardiologist", current, params));
-  assert.equal(speciality.searchParams.get("design"), "d20");
+  assert.equal(speciality.searchParams.get("design"), "d21");
   assert.equal(speciality.searchParams.get("location"), "Mumbai");
   assert.equal(speciality.searchParams.get("mode"), "video");
   assert.equal(design17DoctorNavigationHref("https://external.test/doctors", current, params), "https://external.test/doctors");
 });
 
-test("homepage doctor entry always uses D20 even after an older preview", () => {
+test("homepage doctor entry always uses D21 even after an older preview", () => {
   for (const params of [new URLSearchParams(), new URLSearchParams({ design: "d17-lite", mode: "video" })]) {
     const target = asUrl(design17DoctorNavigationHref("/book-an-appointment", "/", params));
-    assert.equal(target.searchParams.get("design"), "d20");
+    assert.equal(target.searchParams.get("design"), "d21");
   }
 });
 
@@ -100,7 +100,7 @@ test("D20 Find a doctor closes the inline workspace and retains discovery refine
   const target = asUrl(design17DoctorNavigationHref("/book-an-appointment", "/search/doctors", params));
   assert.equal(target.pathname, "/search/doctors");
   for (const key of ["design", "location", "mode", "q", "languages", "appointmentDate"]) {
-    assert.equal(target.searchParams.get(key), params.get(key));
+    assert.equal(target.searchParams.get(key), key === "design" ? "d21" : params.get(key));
   }
   for (const key of ["booking", "bookingMode", "hospital", "date", "time", "step", "ref"]) assert.equal(target.searchParams.has(key), false);
   const legacy = asUrl(design17ListingReturnTo("/search/doctors?design=d17-lite&date=2026-10-28", "d17-lite"));
@@ -108,24 +108,26 @@ test("D20 Find a doctor closes the inline workspace and retains discovery refine
 });
 
 test("D20 return destinations reject external routes and overwrite stale preview context", () => {
-  const fallback = "/search/doctors?design=d20&location=All";
+  const fallback = "/search/doctors?design=d21&location=All";
   for (const unsafe of ["//external.test/search", "/\\external.test/search", "/doctors/dr-3/book", "javascript:alert(1)", null]) {
     assert.equal(design17ListingReturnTo(unsafe, "d20"), fallback);
   }
   const restored = asUrl(design17ListingReturnTo("/search/doctors?design=d17-lite&location=Mumbai&returnTo=%2Fsearch#old", "d20"));
-  assert.equal(restored.searchParams.get("design"), "d20");
+  assert.equal(restored.searchParams.get("design"), "d21");
   assert.equal(restored.searchParams.get("location"), "Mumbai");
   assert.equal(restored.searchParams.has("returnTo"), false);
   assert.equal(restored.hash, "");
 });
 
-test("D20 supports nearest sorting for hospital visits only", () => {
+test("D20 and D21 support nearest sorting for hospital visits only", () => {
+  assert.equal(readListingParams(new URLSearchParams("design=d21&mode=hospital&sort=nearest")).sort, "nearest");
+  assert.equal(readListingParams(new URLSearchParams("design=d21&mode=video&sort=nearest")).sort, "relevance");
   assert.equal(readListingParams(new URLSearchParams("design=d20&mode=hospital&sort=nearest")).sort, "nearest");
   assert.equal(readListingParams(new URLSearchParams("design=d20&mode=video&sort=nearest")).sort, "relevance");
   assert.equal(readListingParams(new URLSearchParams("design=d3&mode=hospital&sort=nearest")).sort, "relevance");
 });
 
-test("D20 is the only selectable flow, including stale preview URLs and preferences", t => {
+test("D21 is the only selectable flow, including stale preview URLs and preferences", t => {
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");
   const previousStorage = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
   const values = new Map([["nh_design_preview:search-top", "d17-lite"]]);
@@ -141,45 +143,45 @@ test("D20 is the only selectable flow, including stale preview URLs and preferen
     if (previousStorage) Object.defineProperty(globalThis, "localStorage", previousStorage);
     else delete globalThis.localStorage;
   });
-  assert.equal(readDesignVariant("search-top"), "d20");
+  assert.equal(readDesignVariant("search-top"), "d21");
   setDesignVariant("search-top", "d17-lite");
   window.location.search = "?design=d17-lite";
-  assert.equal(readDesignVariant("search-top"), "d20");
+  assert.equal(readDesignVariant("search-top"), "d21");
   setDesignVariant("search-top", "d20");
-  assert.equal(readDesignVariant("search-top"), "d20");
+  assert.equal(readDesignVariant("search-top"), "d21");
   window.location.pathname = "/search/doctors";
   window.location.search = "";
   values.set("nh_design_preview:search-top", "d17-lite");
-  assert.equal(readDesignVariant("search-top"), "d20", "saved previews must not override normal entries");
+  assert.equal(readDesignVariant("search-top"), "d21", "saved previews must not override normal entries");
 });
 
 test("the latest design is the default for direct and production routes", () => {
-  for (const value of [null, undefined, "", "unknown"]) assert.equal(resolveDoctorDesign(value, true), "d20");
-  for (const value of [null, "d3", "d17-lite", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, false), "d20");
-  for (const value of ["original", "d1", "d7", "d15-light", "d17-lite", "d18", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, true), "d20");
+  for (const value of [null, undefined, "", "unknown"]) assert.equal(resolveDoctorDesign(value, true), "d21");
+  for (const value of [null, "d3", "d17-lite", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, false), "d21");
+  for (const value of ["original", "d1", "d7", "d15-light", "d17-lite", "d18", "d19", "d20"]) assert.equal(resolveDoctorDesign(value, true), "d21");
 });
 
-test("normal public listing links use D20 without changing other search categories", () => {
+test("normal public listing links use D21 without changing other search categories", () => {
   const listing = asUrl(buildSearchUrl({ q: "doctor & name", location: "Bangalore" }));
-  assert.equal(listing.searchParams.get("design"), "d20");
+  assert.equal(listing.searchParams.get("design"), "d21");
   assert.equal(listing.searchParams.get("q"), "doctor & name");
   assert.equal(listing.searchParams.get("location"), "Bangalore");
   assert.equal(asUrl(buildSearchUrl({ tab: "hospitals" })).searchParams.has("design"), false);
   const legacy = asUrl(defaultDoctorListingUrl(new URLSearchParams("city=Mumbai&speciality=Cardiologist&languages=Hindi&languages=English&design=d3")));
   assert.equal(legacy.pathname, "/search/doctors");
-  assert.equal(legacy.searchParams.get("design"), "d20");
+  assert.equal(legacy.searchParams.get("design"), "d21");
   assert.equal(legacy.searchParams.get("location"), "Mumbai");
   assert.equal(legacy.searchParams.get("specialties"), "Cardiologist");
   assert.deepEqual(legacy.searchParams.getAll("languages"), ["Hindi", "English"]);
   assert.equal(legacy.searchParams.has("city"), false);
 });
 
-test("global navigation uses D20 from any page, preserving a deliberate destination city", () => {
+test("global navigation uses D21 from any page, preserving a deliberate destination city", () => {
   for (const current of ["/", "/specialities/cardiology", "/hospitals/bangalore", "/doctors/dr-1/book", "/search/doctors"]) {
     const params = new URLSearchParams("design=d17-lite&location=Mumbai");
-    assert.equal(asUrl(design17DoctorNavigationHref("/book-an-appointment", current, params)).searchParams.get("design"), "d20");
+    assert.equal(asUrl(design17DoctorNavigationHref("/book-an-appointment", current, params)).searchParams.get("design"), "d21");
     const target = asUrl(design17DoctorNavigationHref("/search/doctors?design=d3&location=Bangalore&specialties=Dentist", current, params));
-    assert.equal(target.searchParams.get("design"), "d20");
+    assert.equal(target.searchParams.get("design"), "d21");
     assert.equal(target.searchParams.get("location"), "Bangalore");
     assert.equal(target.searchParams.get("specialties"), "Dentist");
   }
@@ -193,7 +195,7 @@ test("D20 internal doctor navigation uses listing mode instead of an independent
   assert.equal(directory.searchParams.get("mode"), "hospital");
   assert.equal(directory.searchParams.get("languages"), "Kannada");
   const speciality = asUrl(design17DoctorNavigationHref("/book-an-appointment/cardiologist", "/doctors/dr-1/book", params));
-  assert.equal(speciality.searchParams.get("design"), "d20");
+  assert.equal(speciality.searchParams.get("design"), "d21");
   assert.equal(speciality.searchParams.get("mode"), "hospital");
   assert.equal(speciality.searchParams.get("location"), "Bangalore");
 });

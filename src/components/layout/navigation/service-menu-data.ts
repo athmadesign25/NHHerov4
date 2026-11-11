@@ -13,9 +13,9 @@ export const SERVICE_CENTRES = [
 ];
 export const SERVICE_TILES = [
   { label: "Ambulance Service Emergency", lines: ["Ambulance", "Service", "Emergency"], href: "/emergency", image: "/navigation/services-ambulance.webp", tone: "emergency" },
-  { label: "Book Health Checkup", lines: ["Book Health", "Checkup"], href: "/#health-packages", image: "/health-packages/diabetes.png", tone: "checkup" },
-  { label: "Diagnostics and tests", lines: ["Diagnostics", "and tests"], href: "/search?q=Diagnostics%20and%20tests", image: "/images/procedures/procedure_mri.png", tone: "diagnostics" },
-  { label: "Aarogyam", lines: ["Aarogyam"], href: "/search?q=Aarogyam", image: "/health-checkup-consultation.jpg", tone: "wellness" },
+  { label: "Book Health Checkup", lines: ["Book Health", "Checkup"], href: "/health-checkups", image: "/health-packages/diabetes.png", tone: "checkup" },
+  { label: "Diagnostics and tests", lines: ["Diagnostics", "and tests"], href: "/diagnostics", image: "/images/procedures/procedure_mri.png", tone: "diagnostics" },
+  { label: "Aarogyam", lines: ["Aarogyam"], href: "/health-checkups?hospital=prestige", image: "/health-checkup-consultation.jpg", tone: "wellness" },
   { label: "Clinical Specialties", lines: ["Clinical", "Specialties"], href: "/specialities", image: "/pulse_find_doctor_banner.png", tone: "clinical" },
   { label: "Health Insurance", lines: ["Health", "Insurance"], href: "https://www.narayanahealth.insurance/", image: "/doctor_patient.png", tone: "insurance" },
 ];

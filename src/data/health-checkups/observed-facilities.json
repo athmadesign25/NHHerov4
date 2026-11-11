@@ -1,0 +1,1929 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-06T17:03:29+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "completeEnumeration": false,
+  "scope": "Only selector contexts accompanying saved rendered catalogue captures; public directory membership does not imply availability",
+  "facilities": [
+    {
+      "facilityKey": "1001",
+      "unitCode": "1001",
+      "city": "Bangalore",
+      "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1001-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1001-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1001-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1001-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1002",
+      "unitCode": "1002",
+      "city": "Bangalore",
+      "name": "Mazumdar Shaw Medical Centre, Bangalore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1002-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:23:50+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1002-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:23:51+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1002-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:23:50+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1002-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:23:51+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1006",
+      "unitCode": "1006",
+      "city": "Dharwad",
+      "name": "SDM Narayana Heart Centre, Dharwad",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Dharwad"
+      ],
+      "selectorContexts": {
+        "Dharwad": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1006-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:43:41+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1006-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:43:41+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1006-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:43:41+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1006-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:43:41+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1009",
+      "unitCode": "1009",
+      "city": "Shimoga",
+      "name": "Sahyadri Narayana Multispeciality Hospital, Shimoga",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Shimoga"
+      ],
+      "selectorContexts": {
+        "Shimoga": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1009-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1009-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1009-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1009-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1011",
+      "unitCode": "1011",
+      "city": "Bangalore",
+      "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1011-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1011-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1011-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1011-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1014",
+      "unitCode": "1014",
+      "city": "Mysore",
+      "name": "Narayana Multispeciality Hospital, Mysore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Mysore"
+      ],
+      "selectorContexts": {
+        "Mysore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1014-packages.json",
+              "status": "captured",
+              "renderedItems": 3,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1014-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1014-packages.json",
+          "status": "captured",
+          "renderedItems": 3,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1014-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1020",
+      "unitCode": "1020",
+      "city": "Bangalore",
+      "name": "Narayana Health City, International Wing",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1020-packages.json",
+              "status": "captured",
+              "renderedItems": 3,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:03+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1020-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1020-packages.json",
+          "status": "captured",
+          "renderedItems": 3,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:03+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1020-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1029",
+      "unitCode": "1029",
+      "city": "Bangalore",
+      "name": "Narayana Hospital - Banashankari, Bangalore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1029-packages.json",
+              "status": "captured",
+              "renderedItems": 1,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1029-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:04+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1029-packages.json",
+          "status": "captured",
+          "renderedItems": 1,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1029-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:04+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1251",
+      "unitCode": "1251",
+      "city": "Ahmedabad",
+      "name": "Narayana Multispeciality Hospital, Ahmedabad",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Ahmedabad"
+      ],
+      "selectorContexts": {
+        "Ahmedabad": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1251-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1251-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1251-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1251-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1501",
+      "unitCode": "1501",
+      "city": "Jaipur",
+      "name": "NH-Jaipur Health City",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Jaipur"
+      ],
+      "selectorContexts": {
+        "Jaipur": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1501-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1501-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1501-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1501-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1505",
+      "unitCode": "1505",
+      "city": "Delhi",
+      "name": "Dharamshila Narayana Superspeciality Hospital",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Delhi"
+      ],
+      "selectorContexts": {
+        "Delhi": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1505-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1505-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1505-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:00:56+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1505-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:00:56+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1506",
+      "unitCode": "1506",
+      "city": "Gurugram",
+      "name": "Narayana Superspeciality Hospital, Gurugram",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Gurugram"
+      ],
+      "selectorContexts": {
+        "Gurugram": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1506-packages.json",
+              "status": "captured",
+              "renderedItems": 1,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1506-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1506-packages.json",
+          "status": "captured",
+          "renderedItems": 1,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:57:25+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1506-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:57:25+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1753",
+      "unitCode": "1753",
+      "city": "Jamshedpur",
+      "name": "Brahmananda Narayana Multispeciality Hospital, Jamshedpur",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Jamshedpur"
+      ],
+      "selectorContexts": {
+        "Jamshedpur": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1753-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1753-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1753-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:57:25+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1753-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:57:25+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1754",
+      "unitCode": "1754",
+      "city": "Raipur",
+      "name": "MMI Narayana Multispeciality Hospital, Raipur",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Raipur"
+      ],
+      "selectorContexts": {
+        "Raipur": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1754-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:51:17+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1754-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:51:17+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1754-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:51:17+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1754-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:51:17+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1755",
+      "unitCode": "1755",
+      "city": "Guwahati",
+      "name": "Narayana Superspeciality Hospital, Guwahati",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Guwahati"
+      ],
+      "selectorContexts": {
+        "Guwahati": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1755-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:43:41+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1755-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:43:41+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1755-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:43:41+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1755-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:43:41+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1760",
+      "unitCode": "1760",
+      "city": "Barasat",
+      "name": "Narayana Multispeciality Hospital, Barasat",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Barasat",
+        "Kolkata"
+      ],
+      "selectorContexts": {
+        "Barasat": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1760-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1760-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:57:25+00:00"
+            }
+          }
+        },
+        "Kolkata": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1760-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:51:17+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1760-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:51:17+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1760-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:51:17+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1760-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:51:17+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1764",
+      "unitCode": "1764",
+      "city": "Howrah",
+      "name": "Narayana Multispeciality Hospital, Howrah",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Howrah",
+        "Kolkata"
+      ],
+      "selectorContexts": {
+        "Howrah": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1764-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1764-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            }
+          }
+        },
+        "Kolkata": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1764-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1764-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1764-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1764-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1765",
+      "unitCode": "1765",
+      "city": "Howrah",
+      "name": "Narayana Superspeciality Hospital, Howrah",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Howrah",
+        "Kolkata"
+      ],
+      "selectorContexts": {
+        "Howrah": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1765-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1765-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            }
+          }
+        },
+        "Kolkata": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1765-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1765-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1765-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1765-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1771",
+      "unitCode": "1771",
+      "city": "Shimoga",
+      "name": "Narayana Medical Center, Gopala",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Shimoga"
+      ],
+      "selectorContexts": {
+        "Shimoga": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/1771-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/1771-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:46:32+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/1771-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/1771-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:46:32+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "2012",
+      "unitCode": "2012",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Harlur Road",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/2012-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:32:49+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/2012-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:32:50+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/2012-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:32:49+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/2012-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:32:50+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "2013",
+      "unitCode": "2013",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Hosur",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore",
+        "Hosur"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/2013-packages.json",
+              "status": "captured",
+              "renderedItems": 3,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:33:31+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/2013-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:33:31+00:00"
+            }
+          }
+        },
+        "Hosur": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/hosur-2013-packages.json",
+              "status": "captured",
+              "renderedItems": 3,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/hosur-2013-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/hosur-2013-packages.json",
+          "status": "captured",
+          "renderedItems": 3,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/hosur-2013-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "2014",
+      "unitCode": "2014",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Sarjapur",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/2014-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:03+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/2014-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:40:03+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/2014-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:03+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/2014-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:40:03+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "2015",
+      "unitCode": "2015",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Jayanagar",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/2015-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/2015-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/2015-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/2015-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "3010",
+      "unitCode": "3010",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Electronic City",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/3010-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:18:15+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/3010-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:18:15+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/3010-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:18:15+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/3010-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:18:15+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "3011",
+      "unitCode": "3011",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Manipal County",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/3011-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/3011-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/3011-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/3011-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "3012",
+      "unitCode": "3012",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, HSR Layout",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/3012-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:32:49+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/3012-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:32:49+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/3012-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:32:49+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/3012-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:32:49+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "6024",
+      "unitCode": "6024",
+      "city": "Bangalore",
+      "name": "Narayana Aarogyam, Prestige Tech Park",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/6024-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:03:41+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/6024-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:00:41+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/6024-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:03:41+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/6024-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:00:41+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "6028",
+      "unitCode": "6028",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, JP Nagar",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/6028-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/6028-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/6028-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/6028-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "6030",
+      "unitCode": "6030",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Kanakapura Road",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/6030-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/6030-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/6030-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/6030-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "6530",
+      "unitCode": "6530",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Chandapura",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/6530-packages.json",
+              "status": "captured",
+              "renderedItems": 4,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:32:49+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/6530-tests.json",
+              "status": "captured",
+              "renderedItems": 30,
+              "emptyStateMessage": null,
+              "completeRenderedTraversal": true,
+              "capturedAt": "2026-11-06T16:32:49+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/6530-packages.json",
+          "status": "captured",
+          "renderedItems": 4,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:32:49+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/6530-tests.json",
+          "status": "captured",
+          "renderedItems": 30,
+          "emptyStateMessage": null,
+          "completeRenderedTraversal": true,
+          "capturedAt": "2026-11-06T16:32:49+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "6538",
+      "unitCode": "6538",
+      "city": "Bangalore",
+      "name": "Narayana Clinic, Nagarabhavi",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/6538-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/6538-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:36:48+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/6538-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/6538-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:36:48+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "centre-bangalore-narayana-clinic-banashankari-bangalore",
+      "unitCode": null,
+      "city": "Bangalore",
+      "name": "Narayana Clinic - Banashankari, Bangalore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Bangalore"
+      ],
+      "selectorContexts": {
+        "Bangalore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/bangalore-banashankari-clinic-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:24:31+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/bangalore-banashankari-clinic-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:24:31+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/bangalore-banashankari-clinic-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:24:31+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/bangalore-banashankari-clinic-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:24:31+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "1751",
+      "unitCode": "1751",
+      "city": "Kolkata",
+      "name": "Rabindranath Tagore International Institute of Cardiac Sciences, Kolkata",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Kolkata"
+      ],
+      "selectorContexts": {
+        "Kolkata": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1751-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/kolkata-1751-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:54:23+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1751-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/kolkata-1751-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:54:23+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "centre-mumbai-nh-children-s-hospital-mumbai",
+      "unitCode": null,
+      "city": "Mumbai",
+      "name": "NH Children's Hospital, Mumbai",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Mumbai"
+      ],
+      "selectorContexts": {
+        "Mumbai": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/mumbai-childrens-hospital-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:48:55+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/mumbai-childrens-hospital-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T16:48:55+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/mumbai-childrens-hospital-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:48:55+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/mumbai-childrens-hospital-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T16:48:55+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "centre-mysore-narayana-multispeciality-clinic-mysore",
+      "unitCode": null,
+      "city": "Mysore",
+      "name": "Narayana Multispeciality Clinic, Mysore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Mysore"
+      ],
+      "selectorContexts": {
+        "Mysore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/mysore-clinic-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/mysore-clinic-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:00:56+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/mysore-clinic-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:00:56+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/mysore-clinic-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:00:56+00:00"
+        }
+      }
+    },
+    {
+      "facilityKey": "centre-mysore-narayana-multispeciality-clinic-vijayanagar-mysore",
+      "unitCode": null,
+      "city": "Mysore",
+      "name": "Narayana Multispeciality Clinic- Vijayanagar -Mysore",
+      "observedInHealthCheckupsSelector": true,
+      "evidence": "Verified selector context supplied with rendered Chrome catalogue captures",
+      "serviceCities": [
+        "Mysore"
+      ],
+      "selectorContexts": {
+        "Mysore": {
+          "catalogueTabs": {
+            "package": {
+              "file": "src/data/health-checkups/catalogues/mysore-vijayanagar-packages.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No health packages found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            },
+            "test": {
+              "file": "src/data/health-checkups/catalogues/mysore-vijayanagar-tests.json",
+              "status": "observed-empty",
+              "renderedItems": 0,
+              "emptyStateMessage": "No lab tests found",
+              "completeRenderedTraversal": false,
+              "capturedAt": "2026-11-06T17:03:29+00:00"
+            }
+          }
+        }
+      },
+      "catalogueTabs": {
+        "package": {
+          "file": "src/data/health-checkups/catalogues/mysore-vijayanagar-packages.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No health packages found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        },
+        "test": {
+          "file": "src/data/health-checkups/catalogues/mysore-vijayanagar-tests.json",
+          "status": "observed-empty",
+          "renderedItems": 0,
+          "emptyStateMessage": "No lab tests found",
+          "completeRenderedTraversal": false,
+          "capturedAt": "2026-11-06T17:03:29+00:00"
+        }
+      }
+    }
+  ]
+}

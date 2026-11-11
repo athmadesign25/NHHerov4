@@ -1,0 +1,29 @@
+/* Standalone arrows share a neutral hover-only surface.
+   Controls with their own surface set --disclosure-icon-hover: transparent;
+   dark surfaces can override it with a translucent inverse colour.
+   Paint outside the icon box so the hit area, alignment and open rotation stay put.
+   Keyboard focus remains on the control; expanded alone never paints a circle. */
+.root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]) :global(.lucide-chevron-down),
+.root :where(button[aria-haspopup]) :global(.lucide-chevron-up),
+.root :where(select) ~ :global(.lucide-chevron-down),
+.root :where([data-design="d21"], [data-design17-booking="d20"], [data-doctor-profile]) :where(button, a, summary) :is(:global(.lucide-chevron-down), :global(.lucide-chevron-up), :global(.lucide-chevron-left), :global(.lucide-chevron-right), :global(.lucide-arrow-left)) {
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  box-shadow: 0 0 0 var(--space-4) transparent;
+  transition: background-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+@media (hover: hover) {
+  .root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]):hover:not(:disabled) :global(.lucide-chevron-down),
+  .root :where(button[aria-haspopup]):hover:not(:disabled) :global(.lucide-chevron-up),
+  .root :where(select:hover:not(:disabled)) ~ :global(.lucide-chevron-down),
+  .root :where([data-design="d21"], [data-design17-booking="d20"], [data-doctor-profile]) :where(button, a, summary):hover:not(:disabled) :is(:global(.lucide-chevron-down), :global(.lucide-chevron-up), :global(.lucide-chevron-left), :global(.lucide-chevron-right), :global(.lucide-arrow-left)) {
+    background-color: var(--disclosure-icon-hover, var(--color-disclosure-hover));
+    box-shadow: 0 0 0 var(--space-4) var(--disclosure-icon-hover, var(--color-disclosure-hover));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root :where(button[aria-expanded], button[aria-haspopup], a[aria-expanded], a[aria-haspopup]) :global(.lucide-chevron-down),
+  .root :where(button[aria-haspopup]) :global(.lucide-chevron-up),
+  .root :where(select) ~ :global(.lucide-chevron-down),
+  .root :where([data-design="d21"], [data-design17-booking="d20"], [data-doctor-profile]) :where(button, a, summary) :is(:global(.lucide-chevron-down), :global(.lucide-chevron-up), :global(.lucide-chevron-left), :global(.lucide-chevron-right), :global(.lucide-arrow-left)) { transition: none; }
+}

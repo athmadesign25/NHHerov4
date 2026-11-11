@@ -42,7 +42,7 @@ test("city menu entry is understood by the directory location selector", () => {
  assert.equal(readSearchLocation(asUrl(doctorNavUrl("location", "Bangalore")).searchParams), "Bangalore");
 });
 test("condition entry deliberately opens unfiltered discovery", () => {
- assert.equal(asUrl(doctorNavUrl("condition", "Diabetes")).searchParams.toString(), "design=d20");
+ assert.equal(asUrl(doctorNavUrl("condition", "Diabetes")).searchParams.toString(), "design=d21");
 });
 test("Sunday entry selects the nearest Sunday within the booking calendar, including today", () => {
  for (const [now, expected] of [["2026-10-29T09:00:00Z", "2026-11-01"], ["2026-11-01T09:00:00Z", "2026-11-01"], ["2026-11-01T20:00:00Z", "2026-11-08"]]) {
@@ -62,7 +62,7 @@ const { specialityBookingEntry } = await import("../src/features/search/speciali
 test("speciality detail appointment links keep the existing directory filters and location", () => {
  const url = asUrl(specialityBookingEntry("oncology", "Bangalore"));
  assert.equal(url.pathname, "/search/doctors");
- assert.equal(url.searchParams.get("design"), "d20");
+ assert.equal(url.searchParams.get("design"), "d21");
  assert.deepEqual(readListingParams(url.searchParams).filters.specialties, ["Oncologist"]);
  assert.equal(readSearchLocation(url.searchParams), "Bangalore");
 });

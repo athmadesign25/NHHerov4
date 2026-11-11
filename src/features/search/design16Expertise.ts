@@ -36,7 +36,7 @@ function queryHasFocus(query: string, specialty: string, values: readonly string
 export function getDesign16ExpertiseShortcuts(
   doctors: readonly DoctorListingItem[],
   filters: DoctorFilters,
-  mode: ConsultationMode,
+  mode: ConsultationMode | "all",
   query: string,
   now = new Date(),
   matchingDoctors: readonly DoctorListingItem[] = doctors,

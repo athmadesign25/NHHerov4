@@ -1,0 +1,210 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/August2024/zifj4j8y5wf5qVzl53gl.webp",
+    "name": "Dr. Abhinandan S Punit",
+    "id": 2164,
+    "doctorCode": "109969",
+    "designation": "Senior Consultant & Clinical Lead",
+    "rating": "4.0",
+    "experience": "17",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "DNB (Orthopaedics)",
+        "D-ortho (Exercise & Sport Sciences)",
+        "MS (Orthopaedics)",
+        "MCh (Orthopaedics)",
+        "Fellowship (Robotic Joint Replacement and Sports Medicine)",
+        "Fellowship (Orthopaedics)",
+        "Fellowship (Orthopaedics)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Orthopaedic Surgery"
+      ],
+      "subSpecialties": [
+        "Robotic Orthopaedic Surgery",
+        "Joint Replacement"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 1810,
+          "name": "Narayana Clinic, Kanakapura Road",
+          "code": "6030",
+          "checked": false
+        },
+        {
+          "id": 1134,
+          "name": "Narayana Clinic, Electronic City",
+          "code": "3010",
+          "checked": false
+        },
+        {
+          "id": 1413,
+          "name": "Narayana Clinic, HSR Layout",
+          "code": "3012",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "7th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Abhinandan S Punit has undergone extensive training in Traumatology and Orthopedics with esteemed national and international institutions. He completed his Master of Surgery in Orthopedics from Kasturba Medical College in 2011 and was awarded DNB Orthopedics in 2012 from the National Board of Examinations. Dr. Punit has received advanced surgical training in hip, knee, and shoulder surgeries from prestigious hospitals in the United Kingdom, Europe, and Australia for nearly five years. He holds several notable i...",
+    "full_description": "Dr. Abhinandan S Punit has undergone extensive training in Traumatology and Orthopedics with esteemed national and international institutions. He completed his Master of Surgery in Orthopedics from Kasturba Medical College in 2011 and was awarded DNB Orthopedics in 2012 from the National Board of Examinations. Dr. Punit has received advanced surgical training in hip, knee, and shoulder surgeries from prestigious hospitals in the United Kingdom, Europe, and Australia for nearly five years. He holds several notable international degrees. With a distinguished academic background, Dr. Punit has numerous national and international papers, research, and conference presentations to his credit. His areas of special interest include navigated and robotic hip and knee replacement, minimally invasive hip replacement (anterior approach), shoulder surgeries, and sports medicine, including hip arthroscopy. He has performed over 6000 surgeries and has worked with both amateur and elite athletes, including those from the Sports Authority of India, Bangalore. Currently he is working at Narayana Health City, Bengaluru, as a Clinical Lead for robotic joint replacement and arthroplasty."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Robotic Joint replacement",
+      "Direct anterior Hip replacement",
+      "Hip Arthroscopy",
+      "Sports medicine",
+      "Orthopaedics & Joint Replacement",
+      "Joint Replacement",
+      "Orthopaedic Surgery",
+      "Orthopaedic",
+      "Joint",
+      "Surgery",
+      "Robotic Surgery",
+      "Robotic",
+      "Sports medicine (ACL Reconstruction, Miniscule Repair, Shoulder Stabilization, Rotator Cuff Repair)",
+      "ORTHOPAEDICS & JOINT REPLACEMENT"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards &amp; Recognition",
+        "items": [
+          {
+            "text": "Indian Orthopedic Association",
+            "link": ""
+          },
+          {
+            "text": "Indian Arthroscopy Association",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "Dr Abhinandan S Punit | Orthopedic Surgeon |Review | Md Maksud Alli khan",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/gVdT54jU1jQ"
+      },
+      {
+        "subtitle": "Successful Hip Replacement by Dr Abhinandan S Punit | Patient Success Story",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/hPTVUtx7PjM"
+      },
+      {
+        "subtitle": "Robotic Knee Replacement: Transforming Orthopaedics with Dr Abhinandan S Punit",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/b554qQdqH10"
+      },
+      {
+        "subtitle": "Patient Success Story | Direct Anterior Hip Replacement",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/02MA_32TQuU"
+      },
+      {
+        "subtitle": "Direct Anterior Hip Replacement by Dr. Abhinandan S Punit",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/pgqTchwyNfY"
+      },
+      {
+        "subtitle": "What is Arthritis? | Dr. Abhinandan S Punit",
+        "name": "Dr. Abhinandan S Punit",
+        "location": "Narayana Clinic, Electronic City",
+        "vdo_link": "https://www.youtube.com/embed/sw2Y3p19gMA"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Oedema: Types, Causes, Symptoms, and Treatment",
+        "date": "February 20, 2025",
+        "slug": "oedema-types-causes-symptoms-and-treatment",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/February2025/7pzCBrKll0emeMYw5vf6.webp",
+        "imgAlt": "Oedema: Types, Causes, Symptoms, and Treatment",
+        "authorInitial": "AP",
+        "author": "Dr. Abhinandan S Punit",
+        "category": "Cardiology"
+      },
+      {
+        "title": "Posterior Hip Replacement vs. Direct Anterior Hip Replacement",
+        "date": "February 04, 2025",
+        "slug": "posterior-hip-replacement-vs-direct-anterior-hip-replacement",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/February2025/q9DSAhVf4CJSqne545YW.webp",
+        "imgAlt": "Posterior Hip Replacement vs. Direct Anterior Hip Replacement",
+        "authorInitial": "AP",
+        "author": "Dr. Abhinandan S Punit",
+        "category": "Orthopedics and Joint Replacement"
+      },
+      {
+        "title": "Direct Anterior Hip Replacement: A Comprehensive Guide",
+        "date": "February 04, 2025",
+        "slug": "direct-anterior-hip-replacement-a-comprehensive-guide",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/February2025/JdJAj45ittptbPWc6UTD.webp",
+        "imgAlt": "Direct Anterior Hip Replacement: A Comprehensive Guide",
+        "authorInitial": "AP",
+        "author": "Dr. Abhinandan S Punit",
+        "category": "Orthopaedics"
+      },
+      {
+        "title": "ACL Injury Rehabilitation: New Advances in Recovery Techniques",
+        "date": "January 27, 2025",
+        "slug": "acl-injury-rehabilitation-new-advances-in-recovery-techniques",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/January2025/oO4z49AAfQpNss30rW2Q.webp",
+        "imgAlt": "ACL Injury Rehabilitation: New Advances in Recovery Techniques",
+        "authorInitial": "AP",
+        "author": "Dr. Abhinandan S Punit",
+        "category": "Orthopaedics"
+      },
+      {
+        "title": "AI in Orthopaedics: Transforming Diagnosis and Surgery",
+        "date": "December 06, 2024",
+        "slug": "ai-in-orthopaedics-transforming-diagnosis-and-surgery",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/December2024/VaE7xGjdfW7R5WL0wOeg.webp",
+        "imgAlt": "AI in Orthopaedics: Transforming Diagnosis and Surgery",
+        "authorInitial": "AP",
+        "author": "Dr. Abhinandan S Punit",
+        "category": "Orthopaedics"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

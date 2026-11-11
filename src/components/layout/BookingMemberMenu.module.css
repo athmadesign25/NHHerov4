@@ -1,0 +1,30 @@
+.root { position: relative; min-width: 0; }
+.trigger { --member-pill-height: calc(var(--sp-6) - var(--sp-1) / 2); --member-avatar-size: var(--sp-4); --member-pill-inset: calc((var(--member-pill-height) - var(--member-avatar-size)) / 2 - 1px); display: flex; align-items: center; gap: var(--sp-1); min-height: var(--member-pill-height); max-width: calc(var(--sp-12) * 2); padding: var(--member-pill-inset) calc(var(--sp-1) * 1.5) var(--member-pill-inset) var(--member-pill-inset); border: 1px solid var(--color-border); border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-bg-card) 65%, transparent); color: var(--color-text); cursor: pointer; transition: background-color var(--transition-fast), border-color var(--transition-fast); }
+.triggerCopy, .memberCopy { display: flex; flex: 1; flex-direction: column; min-width: 0; text-align: left; }
+.memberCopy small { font-size: var(--font-size-xs); font-weight: 400; line-height: 1.4; color: var(--color-text-secondary); }
+.triggerCopy strong, .memberCopy strong { font-size: var(--font-size-sm); font-weight: 600; line-height: 1.4; }
+.triggerCopy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.triggerAvatar, .avatar { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-4); height: var(--sp-4); object-fit: cover; border-radius: var(--radius-full); background: var(--color-primary-light); color: var(--color-primary); }
+.triggerAvatar { width: var(--member-avatar-size); height: var(--member-avatar-size); }
+.chevron { flex-shrink: 0; color: var(--color-text-secondary); transition: transform var(--transition-fast); }
+.trigger[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+.popup { position: fixed; inset: auto; margin: 0; padding: var(--sp-1); border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-bg-card); color: var(--color-text); box-shadow: var(--shadow-lg); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; animation: appear var(--transition-fast) ease-out; }
+.popup::backdrop { background: transparent; }
+.heading { margin: 0; padding: var(--sp-1) var(--sp-1) calc(var(--sp-1) / 2); color: var(--color-text-secondary); font-size: var(--font-size-xs); font-weight: 500; }
+.member { width: 100%; display: flex; align-items: center; gap: var(--sp-1); min-height: var(--sp-8); padding: var(--sp-1); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-text); cursor: pointer; transition: background-color var(--transition-fast); }
+.memberCopy strong { overflow-wrap: anywhere; }
+.member:disabled { opacity: 1; cursor: default; }
+.member[aria-checked="true"] { background: var(--color-primary-light); }
+.check { flex-shrink: 0; color: var(--color-primary); }
+.account { display: grid; margin-top: var(--sp-1); padding-top: var(--sp-1); border-top: 1px solid var(--color-border-light); }
+.account a, .account button { display: flex; align-items: center; min-height: calc(var(--sp-6) - var(--sp-1) / 2); padding: var(--sp-1); border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-text-secondary); text-decoration: none; font-size: var(--font-size-sm); font-weight: 500; cursor: pointer; }
+.account .logout { color: var(--color-emergency); }
+.root :is(button, a):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.popup :is(button, a):focus-visible { outline-offset: -2px; }
+.srOnly { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+@supports (backdrop-filter: blur(1px)) { .popup { background: color-mix(in srgb, var(--color-bg-card) 92%, transparent); backdrop-filter: blur(var(--sp-2)); -webkit-backdrop-filter: blur(var(--sp-2)); } }
+@media (hover: hover) { .trigger:hover, .trigger[aria-expanded="true"] { background: var(--color-bg-card); border-color: color-mix(in srgb, var(--color-text-secondary) 20%, var(--color-border)); } .member:hover { background: var(--color-bg-alt); } .member[aria-checked="true"]:hover { background: var(--color-primary-light); } .account :is(a, button):hover { color: var(--color-primary); } .account .logout:hover { color: color-mix(in srgb, var(--color-emergency) 80%, var(--color-text)); } }
+@media (max-width: 640px) { .trigger { --member-avatar-size: calc(var(--sp-4) - var(--sp-1) / 2); max-width: calc(var(--sp-16) + var(--sp-4)); padding-inline-end: var(--sp-1); } }
+@keyframes appear { from { opacity: 0; transform: translateY(calc(var(--sp-1) / -2)); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .trigger, .chevron, .member { transition: none; } .popup { animation: none; } }
+@media (forced-colors: active) { .popup, .trigger { background: Canvas; color: CanvasText; border-color: ButtonText; } .member[aria-checked="true"] { outline: 1px solid Highlight; } .check { color: Highlight; } }

@@ -13,6 +13,8 @@ export const DEMO_ACCOUNT_MEMBERS = [
   { id: "parent", name: "Rahul", relation: "Parent" },
 ];
 
+export interface AccountMember { id: string; name: string; relation: string }
+
 interface AccountMenuProps {
   memberId: string;
   onMemberChange: (id: string) => void;
@@ -21,16 +23,18 @@ interface AccountMenuProps {
   tone: "light" | "dark";
   mobile?: boolean;
   onOpen?: () => void;
+  members?: AccountMember[];
+  memberLocked?: boolean;
 }
 
-export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavigate, tone, mobile = false, onOpen }: AccountMenuProps) {
+export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavigate, tone, mobile = false, onOpen, members = DEMO_ACCOUNT_MEMBERS, memberLocked = false }: AccountMenuProps) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const focusRequested = useRef(false);
   const id = useId();
-  const member = DEMO_ACCOUNT_MEMBERS.find(entry => entry.id === memberId) ?? DEMO_ACCOUNT_MEMBERS[0];
+  const member = members.find(entry => entry.id === memberId) ?? members[0] ?? DEMO_ACCOUNT_MEMBERS[0];
   const close = (restore = false) => {
     setOpen(false);
     if (restore) trigger.current?.focus({ preventScroll: true });
@@ -105,7 +109,7 @@ export default function AccountMenu({ memberId, onMemberChange, onLogout, onNavi
     {open && <div ref={popup} popover="manual" id={id} role="menu" aria-label="Family members and account" className={styles.popup} data-lenis-prevent>
       <div role="group" aria-labelledby={`${id}-members`} className={styles.members}>
         <p id={`${id}-members`} className={styles.heading}>Switch member</p>
-        {DEMO_ACCOUNT_MEMBERS.map(entry => <button type="button" role="menuitemradio" aria-checked={entry.id === member.id} className={styles.row} key={entry.id}
+        {members.map(entry => <button type="button" role="menuitemradio" aria-checked={entry.id === member.id} disabled={memberLocked} className={styles.row} key={entry.id}
           onClick={() => { onMemberChange(entry.id); close(true); }}>
           <span className={styles.avatar} aria-hidden="true">{entry.name[0]}</span>
           <span className={styles.memberCopy}><strong>{entry.name}</strong><small>{entry.relation}</small></span>

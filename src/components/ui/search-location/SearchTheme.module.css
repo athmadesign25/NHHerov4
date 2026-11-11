@@ -1,6 +1,6 @@
 /* Scoped to this preview and its portalled dialogs; no global palette overrides. */
 .theme {
-  --d3-ui-accent: #034EA1;
+  --d3-ui-accent: var(--color-heading-wipe);
   --d3-ui-accent-hover: var(--color-primary-dark);
   --d3-ui-brand-accent: var(--color-emergency);
   --d3-ui-action: var(--d3-ui-accent);

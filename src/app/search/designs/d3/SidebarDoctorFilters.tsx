@@ -16,7 +16,7 @@ export default function SidebarDoctorFilters({ value, onChange, onClearAll, extr
       remove: () => onChange({ ...value, [key]: value[key].filter(item => item !== label) }) })));
   if (value.availability !== "any") chips.push({ key: "availability", label: availabilityLabels[value.availability], remove: () => onChange({ ...value, availability: "any" }) });
   chips.push(...extraChips);
-  const focusCategory = () => root.current?.parentElement?.querySelector<HTMLButtonElement>("button[aria-expanded]")?.focus({ preventScroll: true });
+  const focusCategory = () => (root.current?.parentElement?.querySelector<HTMLButtonElement>("button[aria-expanded]") ?? document.getElementById("d21-result-count"))?.focus({ preventScroll: true });
   return <div ref={root}>{chips.length > 0 && <>
     <div className={styles.heading}>
       <h3 className={styles.label}>Applied filters</h3>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
 import LoginModal from "@/features/auth/NavbarLoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
-import AccountMenu, { DEMO_ACCOUNT_MEMBERS } from "./AccountMenu";
+import AccountMenu from "./AccountMenu";
+import { chooseBookingMember, getBookingMemberSelection, getServerBookingMemberSelection, resetBookingMemberSelection, subscribeBookingMembers } from "@/features/booking/shared/memberSelection";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, Menu, X } from "lucide-react";
@@ -82,10 +83,11 @@ export default function Navbar() {
 
 
   const { isUserLoggedIn: isLoggedIn, setIsUserLoggedIn: setIsLoggedIn } = useAuthState();
-  const [activeUserId, setActiveUserId] = useState(DEMO_ACCOUNT_MEMBERS[0].id);
+  const bookingMembers = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
+  const activeUserId = bookingMembers.selectedId ?? bookingMembers.members[0]?.id ?? "existing-self";
   const signOut = () => {
     setIsLoggedIn(false);
-    setActiveUserId(DEMO_ACCOUNT_MEMBERS[0].id);
+    resetBookingMemberSelection();
   };
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -279,7 +281,7 @@ export default function Navbar() {
           </MotionLink>
 
           {isLoggedIn ? (
-            <AccountMenu memberId={activeUserId} onMemberChange={setActiveUserId} onLogout={signOut}
+            <AccountMenu memberId={activeUserId} onMemberChange={chooseBookingMember} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onLogout={signOut}
               tone={isNavbarLight ? "light" : "dark"} onOpen={() => setActiveDropdown(null)} />
           ) : (
             <button type="button" className={`${styles.loginBtnResponsive} ${styles.desktopLogin}`}
@@ -354,7 +356,7 @@ export default function Navbar() {
       <AnimatePresence onExitComplete={() => {
         if (loginAfterMobileClose) { setLoginAfterMobileClose(false); setIsLoginModalOpen(true); }
       }}>
-        {isMobileMenuOpen && <MobileMegaMenu isLoggedIn={isLoggedIn} memberId={activeUserId} onMemberChange={setActiveUserId} onLogout={signOut} onClose={closeMobileMenu} onLogin={() => { setLoginAfterMobileClose(true); closeMobileMenu(); }} />}
+        {isMobileMenuOpen && <MobileMegaMenu isLoggedIn={isLoggedIn} memberId={activeUserId} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onMemberChange={chooseBookingMember} onLogout={signOut} onClose={closeMobileMenu} onLogin={() => { setLoginAfterMobileClose(true); closeMobileMenu(); }} />}
       </AnimatePresence>
 
       {isSearchOpen && (

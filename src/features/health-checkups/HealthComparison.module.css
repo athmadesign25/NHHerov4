@@ -1,0 +1,23 @@
+.tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-16); margin-bottom: var(--space-20); font-size: var(--font-size-sm); color: var(--color-text-secondary); line-height: var(--leading-body); }
+.tools label { display: flex; align-items: center; gap: var(--space-8); min-height: var(--space-48); cursor: pointer; }
+.tools input { accent-color: var(--color-primary); }
+.scroll { overflow-x: auto; overscroll-behavior-inline: contain; }
+.table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.table th, .table td { padding: var(--space-16); text-align: left; vertical-align: top; border-bottom: var(--space-1) solid var(--color-border); overflow-wrap: anywhere; }
+.table th { font-weight: 500; }
+.table thead th { background: var(--journey-paper-icon-bg); }
+.table th:first-child { width: 20%; color: var(--color-text-secondary); }
+.table td[data-missing] { color: var(--color-text-secondary); }
+.name { display: flex; justify-content: space-between; gap: var(--space-8); min-height: var(--space-48); color: var(--color-text); font-weight: 600; }
+.name button { flex-shrink: 0; display: grid; place-items: center; width: var(--space-32); height: var(--space-32); background: none; border: 0; border-radius: var(--radius-full); color: var(--color-text-secondary); cursor: pointer; }
+.name button:hover { background: var(--color-surface); }
+.price { display: block; color: var(--color-text); margin-block: var(--space-8); font-size: var(--font-size-lg); }
+.select { border: 0; border-radius: var(--radius-md); min-height: var(--space-48); padding: var(--space-8) var(--space-16); background: var(--color-primary); color: var(--color-text-inverse); font: inherit; cursor: pointer; }
+.select:hover { background: var(--color-primary-dark); }
+.select:disabled { background: var(--color-primary-light); color: var(--color-primary); cursor: default; }
+.link { font: inherit; min-height: var(--space-48); padding: 0; border: 0; background: none; color: var(--color-primary); cursor: pointer; }
+.link:hover { color: var(--color-primary-dark); }
+.caption { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 768px) { .table { min-width: calc(var(--space-128) * 5); } .table th, .table td { padding: var(--space-12); } }
+
+@media (max-width: 640px) { .name button { width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); } }

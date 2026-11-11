@@ -1,0 +1,481 @@
+/* ─── BLOG BENTO GRID SECTION (Exact Homepage WhyChooseNH Architecture) ─── */
+
+.bentoSection {
+  width: 100%;
+  padding-block: 84px 96px;
+  background-color: #060c18;
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .bentoSection {
+    padding-block: 56px 64px;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+/* ── Section Header (Centered with TextSweepEffect & Clean Eyebrow) ── */
+.sectionHeader {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.cleanEyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 2px;
+}
+
+.sectionTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.18;
+}
+
+.sectionSubtitle {
+  font-size: clamp(14px, 1.4vw, 16px);
+  color: rgba(226, 232, 240, 0.85);
+  margin: 0;
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* ── Scroll-Linked Expansion Wrapper ── */
+.bentoExpandWrapper {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  transform-origin: center center;
+}
+
+/* ── 12-Column Bento Grid ── */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 390px 390px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Right to Left Fleeting Red Shimmer Sweep Keyframes */
+@keyframes redFleetingShimmerRightToLeft {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* ── CARD 1: Hero Column 1 (Clinical Rigour - Spans 4 cols, 2 rows) ── */
+.heroCard {
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 2;
+  position: relative;
+  height: 100%;
+  min-height: 788px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  background: #19100E;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.heroBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heroCard:hover .heroBgImage {
+  transform: scale(1.04);
+}
+
+.heroTopOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: linear-gradient(180deg, rgba(26, 17, 11, 0.92) 0%, rgba(26, 17, 11, 0.50) 45%, rgba(19, 16, 14, 0.00) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.heroBottomOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 260px;
+  background: linear-gradient(0deg, rgba(19, 16, 14, 0.95) 0%, rgba(19, 16, 14, 0.55) 45%, rgba(19, 16, 14, 0.00) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.heroHeaderUnit {
+  position: relative;
+  z-index: 10;
+  padding: 32px 32px 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.heroTitle {
+  color: #F7F7F7;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    #F7F7F7 0%,
+    #F7F7F7 35%,
+    #ED1C24 50%,
+    #FFA8AB 55%,
+    #F7F7F7 65%,
+    #F7F7F7 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroCard:hover .heroTitle {
+  animation: redFleetingShimmerRightToLeft 0.75s ease-in-out 1 forwards;
+}
+
+.heroSubtitle {
+  color: #D1D1D1;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.heroStatUnit {
+  position: relative;
+  z-index: 10;
+  padding: 0 32px 40px 32px;
+}
+
+.heroStatInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-left: 2px solid rgba(255, 255, 255, 0.45);
+  padding: 0 0 0 16px;
+  height: 64px;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+.heroStatValue {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.heroStatLabel {
+  color: #E1E1E1;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* ── STANDARD BENTO CARDS (Height: 390px) ── */
+.cardRow1Equal {
+  position: relative;
+  height: 390px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  background: #0f172a;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cardRow1Col2 {
+  grid-column: 5 / span 4;
+  grid-row: 1;
+}
+
+.cardRow1Col3 {
+  grid-column: 9 / span 4;
+  grid-row: 1;
+}
+
+.cardRow2Wider {
+  grid-column: 5 / span 3;
+  grid-row: 2;
+  position: relative;
+  height: 390px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  background: #0f172a;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.cardBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cardRow1Equal:hover .cardBgImage,
+.cardRow2Wider:hover .cardBgImage {
+  transform: scale(1.05);
+}
+
+.topBlurOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.42) 48%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cardHeaderUnit {
+  position: relative;
+  z-index: 10;
+  padding: 28px 28px 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.cardTitle {
+  color: #F7F7F7;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    #F7F7F7 0%,
+    #F7F7F7 35%,
+    #ED1C24 50%,
+    #FFA8AB 55%,
+    #F7F7F7 65%,
+    #F7F7F7 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cardRow1Equal:hover .cardTitle,
+.cardRow2Wider:hover .cardTitle,
+.accreditationsCard:hover .cardTitle {
+  animation: redFleetingShimmerRightToLeft 0.75s ease-in-out 1 forwards;
+}
+
+.cardSubtitle {
+  color: #D1D1D1;
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ── CARD 5: Comprehensive Care (Wider 5 cols in row 2) ── */
+.accreditationsCard {
+  grid-column: 8 / span 5;
+  grid-row: 2;
+  position: relative;
+  height: 390px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  background: #0f172a;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.accreditationsCard:hover .cardBgImage {
+  transform: scale(1.05);
+}
+
+.accreditationsDarkOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.45) 48%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── True Mobile Bento Grid (Exact Landing Page WhyChooseNH Technique) ─── */
+@media (max-width: 992px) {
+  .container {
+    padding: 0 !important;
+  }
+
+  .bentoGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: 400px 170px 170px !important;
+    gap: 8px !important;
+    padding: 0 16px !important;
+  }
+
+  .heroCard {
+    grid-column: 1 / span 2 !important;
+    grid-row: 1 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  .cardRow1Equal,
+  .cardRow2Wider,
+  .accreditationsCard {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+    height: 100% !important;
+  }
+
+  .heroCard,
+  .cardRow1Equal,
+  .cardRow2Wider,
+  .accreditationsCard {
+    border-radius: 10px !important;
+  }
+
+  .heroHeaderUnit {
+    padding: 24px 24px 0 24px !important;
+    gap: 6px !important;
+  }
+
+  .heroTitle {
+    font-size: 24px !important;
+  }
+
+  .heroSubtitle {
+    font-size: 13.5px !important;
+    line-height: 1.4 !important;
+  }
+
+  .heroStatUnit {
+    padding: 0 24px 24px 24px !important;
+  }
+
+  .heroStatInner {
+    height: auto !important;
+    min-height: 54px !important;
+  }
+
+  .heroStatValue {
+    font-size: 28px !important;
+  }
+
+  .cardHeaderUnit {
+    padding: 16px 16px 0 16px !important;
+    gap: 4px !important;
+  }
+
+  .cardTitle {
+    font-size: 17px !important;
+    line-height: 1.25 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .cardSubtitle {
+    display: none !important;
+  }
+
+  .topBlurOverlay {
+    height: 80px !important;
+  }
+
+  .accreditationsDarkOverlay {
+    height: 100px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .bentoGrid {
+    grid-template-rows: 360px 160px 160px !important;
+    gap: 6px !important;
+    padding: 0 12px !important;
+  }
+
+  .heroTitle {
+    font-size: 21px !important;
+  }
+
+  .cardTitle {
+    font-size: 15px !important;
+  }
+
+  .heroStatValue {
+    font-size: 24px !important;
+  }
+}
