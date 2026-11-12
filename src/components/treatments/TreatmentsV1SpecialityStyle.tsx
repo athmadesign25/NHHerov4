@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,18 +9,10 @@ import {
   X,
   Star,
   SlidersHorizontal,
-  ChevronRight,
-  ChevronLeft,
   ChevronDown,
   RotateCcw,
   ArrowRight,
   Filter,
-  MapPin,
-  Clock,
-  Sparkles,
-  Award,
-  Activity,
-  Check,
 } from "lucide-react";
 import {
   TREATMENTS_PROCEDURES_DATA,
@@ -30,22 +21,15 @@ import {
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { NH_CITIES } from "@/lib/searchService";
 import styles from "./TreatmentsV1SpecialityStyle.module.css";
-
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-// Common refinement categories for horizontal toolbar
-const TOP_REFINEMENT_TAGS = [
-  { id: "all", label: "All Procedures" },
-  { id: "minimally-invasive", label: "Minimally Invasive", icon: Sparkles },
-  { id: "day-care", label: "Day Care / Outpatient", icon: Clock },
-  { id: "cardiology", label: "Cardiac Surgery" },
-  { id: "oncology", label: "Cancer Care (Oncology)" },
-  { id: "orthopaedics", label: "Orthopaedics & Joint" },
-  { id: "neurology", label: "Neuro & Spine" },
-  { id: "gastroenterology", label: "GI & Laparoscopy" },
-  { id: "nephrology", label: "Nephrology & Urology" },
-  { id: "paediatrics", label: "Paediatric Surgery" },
-];
+import TreatmentFilterPanel from "./TreatmentFilterPanel";
+import { filterTreatments, parseTreatmentSelection, toggleTreatmentSelection, type TreatmentFilters } from "./treatmentFilters";
+import AppliedFilterList from "@/app/search/designs/d21/AppliedFilterList";
+import FilterScrollArea from "@/app/search/designs/d3/FilterScrollArea";
+import SearchDialog from "@/app/search/designs/d3/SearchDialog";
+import SearchCityPicker from "@/components/ui/search-location/SearchCityPicker";
+import bookingStyles from "@/app/search/designs/d3/Design3SearchResults.module.css";
+import bookingFilterStyles from "@/app/search/designs/d21/Design21Filters.module.css";
+import searchTheme from "@/components/ui/search-location/SearchTheme.module.css";
 
 export interface TreatmentsV1Props {
   activeVersion?: 1 | 2;
@@ -60,24 +44,16 @@ export default function TreatmentsV1SpecialityStyle({
 
   // Search & filter states
   const [search, setSearch] = useState(() => searchParams?.get("search") || searchParams?.get("q") || "");
-  const [selectedSpeciality, setSelectedSpeciality] = useState(() => searchParams?.get("speciality") || "All");
-  const [specialitySearch, setSpecialitySearch] = useState("");
-  const [selectedClassification, setSelectedClassification] = useState(() => searchParams?.get("type") || "All");
-  const [selectedLetter, setSelectedLetter] = useState("All");
-  const [selectedCity, setSelectedCity] = useState(() => searchParams?.get("city") || "All");
+  const [filters, setFilters] = useState<TreatmentFilters>(() => ({
+    specialties: parseTreatmentSelection(searchParams?.get("speciality")),
+    classifications: parseTreatmentSelection(searchParams?.get("type")),
+    letters: [],
+  }));
+  // The source catalogue has no per-city availability; retain location as browsing context.
+  const [cities, setCities] = useState(() => parseTreatmentSelection(searchParams?.get("city")));
   const [sortBy, setSortBy] = useState("relevance");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
-  // Accordion states for left sidebar
-  const [openSpecialityAccordion, setOpenSpecialityAccordion] = useState(true);
-  const [openClassAccordion, setOpenClassAccordion] = useState(true);
-  const [openLetterAccordion, setOpenLetterAccordion] = useState(false);
-  const [openCityAccordion, setOpenCityAccordion] = useState(false);
-
-  // Scroll refinement chips bar
-  const refinementChipsRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const searchInput = useRef<HTMLInputElement>(null);
 
   // Navbar visibility synchronized with Navbar's scroll state & data-nav-visible on <html>
   const [navVisible, setNavVisible] = useState(true);
@@ -118,125 +94,8 @@ export default function TreatmentsV1SpecialityStyle({
     return () => observer.disconnect();
   }, []);
 
-  const checkScrollEdges = () => {
-    const el = refinementChipsRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 6);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 6);
-  };
-
-  useEffect(() => {
-    checkScrollEdges();
-    const el = refinementChipsRef.current;
-    if (el) {
-      el.addEventListener("scroll", checkScrollEdges, { passive: true });
-      return () => el.removeEventListener("scroll", checkScrollEdges);
-    }
-  }, []);
-
-  const scrollRefinements = (direction: "left" | "right") => {
-    if (!refinementChipsRef.current) return;
-    const offset = direction === "left" ? -240 : 240;
-    refinementChipsRef.current.scrollBy({ left: offset, behavior: "smooth" });
-  };
-
-  // Extract all unique specialities & procedure counts
-  const { uniqueSpecialities, specialityCounts, classificationCounts, availableLetters } = useMemo(() => {
-    const specMap: Record<string, number> = {};
-    const classMap: Record<string, number> = {
-      "All Types": TREATMENTS_PROCEDURES_DATA.length,
-      "Minimally Invasive": 0,
-      "Day Care": 0,
-      "Complex Surgical": 0,
-    };
-    const letters = new Set<string>();
-
-    TREATMENTS_PROCEDURES_DATA.forEach((item) => {
-      // Speciality
-      const spec = item.speciality || "General Surgery";
-      specMap[spec] = (specMap[spec] || 0) + 1;
-
-      // Classification detection
-      const text = `${item.title} ${item.summary} ${item.overview} ${item.hospitalStay || ""}`.toLowerCase();
-      if (text.includes("minimally") || text.includes("endovascular") || text.includes("laparoscopic") || text.includes("catheter")) {
-        classMap["Minimally Invasive"]++;
-      }
-      if (text.includes("day care") || text.includes("same-day") || text.includes("same day") || (item.hospitalStay && item.hospitalStay.toLowerCase().includes("day care"))) {
-        classMap["Day Care"]++;
-      }
-      if (text.includes("transplant") || text.includes("open") || text.includes("reconstruction") || text.includes("replacement")) {
-        classMap["Complex Surgical"]++;
-      }
-
-      // First letter
-      const l = (item.shortTitle || item.title).charAt(0).toUpperCase();
-      if (l) letters.add(l);
-    });
-
-    const sortedSpecs = Object.keys(specMap).sort((a, b) => a.localeCompare(b));
-
-    return {
-      uniqueSpecialities: sortedSpecs,
-      specialityCounts: specMap,
-      classificationCounts: classMap,
-      availableLetters: letters,
-    };
-  }, []);
-
-  const filteredUniqueSpecialities = useMemo(() => {
-    if (!specialitySearch.trim()) return uniqueSpecialities;
-    const q = specialitySearch.toLowerCase().trim();
-    return uniqueSpecialities.filter((s) => s.toLowerCase().includes(q));
-  }, [uniqueSpecialities, specialitySearch]);
-
-  // Filtered and sorted procedures
   const filtered = useMemo(() => {
-    let result = [...TREATMENTS_PROCEDURES_DATA];
-
-    // Search query
-    if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      result = result.filter((item) => {
-        return (
-          item.title.toLowerCase().includes(q) ||
-          item.shortTitle.toLowerCase().includes(q) ||
-          item.summary.toLowerCase().includes(q) ||
-          item.overview.toLowerCase().includes(q) ||
-          item.speciality.toLowerCase().includes(q)
-        );
-      });
-    }
-
-    // Speciality filter
-    if (selectedSpeciality !== "All") {
-      result = result.filter((item) => item.speciality.toLowerCase() === selectedSpeciality.toLowerCase());
-    }
-
-    // Classification filter
-    if (selectedClassification !== "All" && selectedClassification !== "All Types") {
-      const c = selectedClassification.toLowerCase();
-      result = result.filter((item) => {
-        const text = `${item.title} ${item.summary} ${item.overview} ${item.hospitalStay || ""}`.toLowerCase();
-        if (c.includes("minimally")) {
-          return text.includes("minimally") || text.includes("endovascular") || text.includes("laparoscopic") || text.includes("catheter");
-        }
-        if (c.includes("day care")) {
-          return text.includes("day care") || text.includes("same-day") || text.includes("same day") || (item.hospitalStay && item.hospitalStay.toLowerCase().includes("day care"));
-        }
-        if (c.includes("complex") || c.includes("surgical")) {
-          return text.includes("transplant") || text.includes("open") || text.includes("reconstruction") || text.includes("replacement");
-        }
-        return true;
-      });
-    }
-
-    // Letter filter
-    if (selectedLetter !== "All") {
-      result = result.filter((item) => {
-        const l = (item.shortTitle || item.title).charAt(0).toUpperCase();
-        return l === selectedLetter;
-      });
-    }
+    const result = filterTreatments(TREATMENTS_PROCEDURES_DATA, search, filters);
 
     // Sort
     if (sortBy === "success") {
@@ -251,62 +110,32 @@ export default function TreatmentsV1SpecialityStyle({
     }
 
     return result;
-  }, [search, selectedSpeciality, selectedClassification, selectedLetter, selectedCity, sortBy]);
+  }, [search, filters, sortBy]);
 
-  // Applied chips list
-  const appliedChips = useMemo(() => {
-    const list: { key: string; label: string; remove: () => void }[] = [];
-    if (search.trim()) {
-      list.push({ key: "search", label: `"${search.trim()}"`, remove: () => setSearch("") });
-    }
-    if (selectedSpeciality !== "All") {
-      list.push({ key: "speciality", label: selectedSpeciality, remove: () => setSelectedSpeciality("All") });
-    }
-    if (selectedClassification !== "All" && selectedClassification !== "All Types") {
-      list.push({ key: "class", label: selectedClassification, remove: () => setSelectedClassification("All") });
-    }
-    if (selectedLetter !== "All") {
-      list.push({ key: "letter", label: `Letter: ${selectedLetter}`, remove: () => setSelectedLetter("All") });
-    }
-    if (selectedCity !== "All") {
-      list.push({ key: "city", label: selectedCity, remove: () => setSelectedCity("All") });
-    }
-    return list;
-  }, [search, selectedSpeciality, selectedClassification, selectedLetter, selectedCity]);
-
+  const appliedChips = [
+    ...(search.trim() ? [{ key: "search", label: `“${search.trim()}”`, remove: () => setSearch("") }] : []),
+    ...(["specialties", "classifications", "letters"] as const).flatMap(group => filters[group].map(label => ({
+      key: `${group}-${label}`,
+      label: group === "letters" ? `Letter: ${label}` : label,
+      remove: () => setFilters(previous => ({ ...previous, [group]: previous[group].filter(item => item !== label) })),
+    }))),
+    ...cities.map(city => ({ key: `city-${city}`, label: NH_CITIES.find(item => item.value === city)?.label ?? city,
+      remove: () => setCities(previous => previous.filter(item => item !== city)) })),
+  ];
   const handleResetFilters = () => {
     setSearch("");
-    setSelectedSpeciality("All");
-    setSelectedClassification("All");
-    setSelectedLetter("All");
-    setSelectedCity("All");
+    setFilters({ specialties: [], classifications: [], letters: [] });
+    setCities([]);
     setSortBy("relevance");
   };
-
-  const handleChipToolbarClick = (tagId: string, label: string) => {
-    if (tagId === "all") {
-      handleResetFilters();
-      return;
-    }
-    if (tagId === "minimally-invasive") {
-      setSelectedClassification("Minimally Invasive");
-      return;
-    }
-    if (tagId === "day-care") {
-      setSelectedClassification("Day Care");
-      return;
-    }
-    // Match speciality substring
-    const matched = uniqueSpecialities.find((s) => s.toLowerCase().includes(tagId));
-    if (matched) {
-      setSelectedSpeciality(matched);
-    } else {
-      setSearch(label);
-    }
+  const toggleFilter = (group: keyof TreatmentFilters | "cities", option: string) => {
+    if (group === "cities") setCities(previous => toggleTreatmentSelection(previous, option));
+    else setFilters(previous => ({ ...previous, [group]: toggleTreatmentSelection(previous[group], option) }));
   };
+  const renderFilters = () => <TreatmentFilterPanel value={filters} cities={cities} onToggle={toggleFilter} />;
 
   return (
-    <div className={styles.page} data-nav-theme="light">
+    <div className={`${styles.page} ${searchTheme.theme}`} data-design="treatments" data-nav-theme="light">
       {/* ── 1. TITLE & HERO ── */}
       <header className={`${styles.container} ${styles.titleRow}`}>
         <div className={styles.titleTopRow}>
@@ -348,22 +177,8 @@ export default function TreatmentsV1SpecialityStyle({
             {/* Unified Search Input */}
             <div className={styles.combinedSearch}>
               {/* City Location Select */}
-              <label className={styles.leadingLocation}>
-                <MapPin size={16} aria-hidden="true" />
-                <span className={styles.srOnly}>Select city location</span>
-                <select
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  aria-label="Filter procedures by location"
-                >
-                  <option value="All">All Locations</option>
-                  {NH_CITIES.map((c) => (
-                    <option key={c.id} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SearchCityPicker cities={NH_CITIES} value={cities.join(",") || "All"}
+                onChange={value => setCities(parseTreatmentSelection(value))} showDeviceLocation={false} className={styles.locationPicker} />
 
               {/* Search Form */}
               <form
@@ -373,6 +188,7 @@ export default function TreatmentsV1SpecialityStyle({
               >
                 <div className={styles.searchField}>
                   <input
+                    ref={searchInput}
                     type="search"
                     className={styles.searchFieldInput}
                     placeholder="Search procedure, surgery or clinical condition (e.g. Angioplasty, TKR, Kidney)..."
@@ -417,279 +233,28 @@ export default function TreatmentsV1SpecialityStyle({
             </button>
           </div>
 
-          {/* Refinement Chips Row */}
-          <div className={styles.refinementBar}>
-            {canScrollLeft && (
-              <button
-                type="button"
-                className={`${styles.refinementArrow} ${styles.refinementArrowLeft}`}
-                onClick={() => scrollRefinements("left")}
-                aria-label="Scroll tags left"
-              >
-                <ChevronLeft size={16} />
-              </button>
-            )}
-
-            <div className={styles.refinementChips} ref={refinementChipsRef}>
-              {TOP_REFINEMENT_TAGS.map((tag) => {
-                const Icon = tag.icon;
-                const isSelected =
-                  tag.id === "all"
-                    ? appliedChips.length === 0
-                    : tag.id === "minimally-invasive"
-                    ? selectedClassification === "Minimally Invasive"
-                    : tag.id === "day-care"
-                    ? selectedClassification === "Day Care"
-                    : selectedSpeciality.toLowerCase().includes(tag.id);
-
-                return (
-                  <button
-                    key={tag.id}
-                    type="button"
-                    className={`${styles.refinementChip} ${isSelected ? styles.refinementChipActive : ""}`}
-                    onClick={() => handleChipToolbarClick(tag.id, tag.label)}
-                  >
-                    {Icon && <Icon size={13} fill={isSelected ? "#034EA2" : "none"} />}
-                    {tag.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {canScrollRight && (
-              <button
-                type="button"
-                className={`${styles.refinementArrow} ${styles.refinementArrowRight}`}
-                onClick={() => scrollRefinements("right")}
-                aria-label="Scroll tags right"
-              >
-                <ChevronRight size={16} />
-              </button>
-            )}
-          </div>
+          <AppliedFilterList chips={appliedChips} focusFallback={() => searchInput.current?.focus({ preventScroll: true })} />
         </div>
       </div>
 
       {/* ── 3. MAIN TWO-COLUMN LAYOUT ── */}
       <div className={styles.layout}>
-        {/* Left Sticky Sidebar Filters */}
-        <aside
-          className={`${styles.sidebar} ${!navVisible ? styles.navHidden : ""}`}
-          aria-label="Procedure filters"
-          data-lenis-prevent="true"
-        >
-          <div className={styles.filterHeading}>
-            <h2>
-              <Filter size={16} />
-              Filters
-            </h2>
-            {appliedChips.length > 0 && (
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className={styles.clearAllBtn}
-              >
-                Clear all
-              </button>
-            )}
+        <aside className={`${bookingStyles.sidebar} ${styles.sidebar}`} aria-label="Procedure filters" data-lenis-prevent data-d3-ui>
+          <div className={bookingFilterStyles.filterTools} data-filter-tools>
+            <div className={bookingStyles.filterHeading}>
+              <h2><Filter size={16} aria-hidden />Filters</h2>
+              {appliedChips.length > 0 && <button type="button" aria-label="Clear all filters" onClick={handleResetFilters}>Clear all</button>}
+            </div>
           </div>
-
-          {/* Group 1: Speciality / Department */}
-          <div className={styles.filterGroup}>
-            <button
-              type="button"
-              className={styles.filterGroupHeader}
-              onClick={() => setOpenSpecialityAccordion(!openSpecialityAccordion)}
-            >
-              <span>Clinical Speciality</span>
-              <ChevronDown
-                size={16}
-                className={`${styles.filterGroupChevron} ${openSpecialityAccordion ? styles.filterGroupChevronOpen : ""}`}
-              />
-            </button>
-            {openSpecialityAccordion && (
-              <div className={styles.filterGroupOptions} data-lenis-prevent="true">
-                <div className={styles.filterSearchBox}>
-                  <Search size={13} />
-                  <input
-                    type="text"
-                    placeholder="Search specialities..."
-                    value={specialitySearch}
-                    onChange={(e) => setSpecialitySearch(e.target.value)}
-                  />
-                  {specialitySearch && (
-                    <button
-                      type="button"
-                      onClick={() => setSpecialitySearch("")}
-                      style={{ border: "none", background: "none", cursor: "pointer", padding: 0 }}
-                    >
-                      <X size={12} />
-                    </button>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  className={`${styles.filterOption} ${selectedSpeciality === "All" ? styles.filterOptionActive : ""}`}
-                  onClick={() => setSelectedSpeciality("All")}
-                >
-                  <span>All Specialities</span>
-                  <span className={styles.filterOptionCount}>{TREATMENTS_PROCEDURES_DATA.length}</span>
-                </button>
-                {filteredUniqueSpecialities.map((spec) => (
-                  <button
-                    key={spec}
-                    type="button"
-                    className={`${styles.filterOption} ${selectedSpeciality === spec ? styles.filterOptionActive : ""}`}
-                    onClick={() => setSelectedSpeciality(spec)}
-                  >
-                    <span>{spec}</span>
-                    <span className={styles.filterOptionCount}>{specialityCounts[spec]}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Group 2: Procedure Classification */}
-          <div className={styles.filterGroup}>
-            <button
-              type="button"
-              className={styles.filterGroupHeader}
-              onClick={() => setOpenClassAccordion(!openClassAccordion)}
-            >
-              <span>Procedure Type</span>
-              <ChevronDown
-                size={16}
-                className={`${styles.filterGroupChevron} ${openClassAccordion ? styles.filterGroupChevronOpen : ""}`}
-              />
-            </button>
-            {openClassAccordion && (
-              <div className={styles.filterGroupOptions} data-lenis-prevent="true">
-                {Object.entries(classificationCounts).map(([typeName, count]) => (
-                  <button
-                    key={typeName}
-                    type="button"
-                    className={`${styles.filterOption} ${selectedClassification === typeName ? styles.filterOptionActive : ""}`}
-                    onClick={() => setSelectedClassification(typeName)}
-                  >
-                    <span>{typeName}</span>
-                    <span className={styles.filterOptionCount}>{count}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Group 3: Alphabet Filter */}
-          <div className={styles.filterGroup}>
-            <button
-              type="button"
-              className={styles.filterGroupHeader}
-              onClick={() => setOpenLetterAccordion(!openLetterAccordion)}
-            >
-              <span>Alphabetical (A - Z)</span>
-              <ChevronDown
-                size={16}
-                className={`${styles.filterGroupChevron} ${openLetterAccordion ? styles.filterGroupChevronOpen : ""}`}
-              />
-            </button>
-            {openLetterAccordion && (
-              <div className={styles.lettersGrid}>
-                <button
-                  type="button"
-                  className={`${styles.letterBtn} ${selectedLetter === "All" ? styles.letterBtnActive : ""}`}
-                  onClick={() => setSelectedLetter("All")}
-                >
-                  All
-                </button>
-                {ALPHABET.map((ltr) => {
-                  const hasItems = availableLetters.has(ltr);
-                  const isActive = selectedLetter === ltr;
-                  return (
-                    <button
-                      key={ltr}
-                      type="button"
-                      disabled={!hasItems}
-                      className={`${styles.letterBtn} ${isActive ? styles.letterBtnActive : ""} ${!hasItems ? styles.letterBtnDisabled : ""}`}
-                      onClick={() => setSelectedLetter(ltr)}
-                    >
-                      {ltr}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Group 4: Hospital Location */}
-          <div className={styles.filterGroup}>
-            <button
-              type="button"
-              className={styles.filterGroupHeader}
-              onClick={() => setOpenCityAccordion(!openCityAccordion)}
-            >
-              <span>Hospital Location</span>
-              <ChevronDown
-                size={16}
-                className={`${styles.filterGroupChevron} ${openCityAccordion ? styles.filterGroupChevronOpen : ""}`}
-              />
-            </button>
-            {openCityAccordion && (
-              <div className={styles.filterGroupOptions} data-lenis-prevent="true">
-                <button
-                  type="button"
-                  className={`${styles.filterOption} ${selectedCity === "All" ? styles.filterOptionActive : ""}`}
-                  onClick={() => setSelectedCity("All")}
-                >
-                  <span>All Locations</span>
-                </button>
-                {NH_CITIES.map((c) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className={`${styles.filterOption} ${selectedCity === c.value ? styles.filterOptionActive : ""}`}
-                    onClick={() => setSelectedCity(c.value)}
-                  >
-                    <span>{c.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <FilterScrollArea>{renderFilters()}</FilterScrollArea>
         </aside>
 
         {/* Right Main Results Area */}
         <section className={styles.resultsArea} aria-label="Procedure results">
-          {/* Applied Filter Chips */}
-          {appliedChips.length > 0 && (
-            <div className={styles.appliedChips}>
-              {appliedChips.map((chip) => (
-                <button
-                  key={chip.key}
-                  type="button"
-                  className={styles.chipItem}
-                  onClick={chip.remove}
-                  title={`Remove ${chip.label}`}
-                >
-                  <span>{chip.label}</span>
-                  <X size={14} />
-                </button>
-              ))}
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className={styles.clearAllBtn}
-              >
-                Clear all
-              </button>
-            </div>
-          )}
-
           {/* Results Header: Count & Sort */}
           <div className={styles.resultsHeader}>
-            <div className={styles.resultsCount}>
+            <div className={styles.resultsCount} role="status" aria-live="polite">
               Showing <strong>{filtered.length}</strong> {filtered.length === 1 ? "clinical procedure" : "clinical procedures"}
-              {selectedCity !== "All" ? ` in ${selectedCity}` : ""}
             </div>
 
             <div className={styles.sortSelectWrapper}>
@@ -764,120 +329,17 @@ export default function TreatmentsV1SpecialityStyle({
       />
 
       {/* ── 4. MOBILE FILTER DRAWER MODAL ── */}
-      {mobileFilterOpen && (
-        <div
-          className={styles.mobileDrawerOverlay}
-          onClick={() => setMobileFilterOpen(false)}
-        >
-          <div
-            className={styles.mobileDrawer}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={styles.drawerHeader}>
-              <h3>Filters ({filtered.length})</h3>
-              <button
-                type="button"
-                className={styles.drawerCloseBtn}
-                onClick={() => setMobileFilterOpen(false)}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className={styles.drawerBody}>
-              {/* Speciality */}
-              <div style={{ marginBottom: 20 }}>
-                <h4 style={{ margin: "0 0 10px 0", fontSize: 14, fontWeight: 700 }}>Speciality</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  <button
-                    type="button"
-                    className={`${styles.filterOption} ${selectedSpeciality === "All" ? styles.filterOptionActive : ""}`}
-                    onClick={() => setSelectedSpeciality("All")}
-                  >
-                    All Specialities
-                  </button>
-                  {uniqueSpecialities.map((spec) => (
-                    <button
-                      key={spec}
-                      type="button"
-                      className={`${styles.filterOption} ${selectedSpeciality === spec ? styles.filterOptionActive : ""}`}
-                      onClick={() => setSelectedSpeciality(spec)}
-                    >
-                      {spec} ({specialityCounts[spec]})
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Classification */}
-              <div style={{ marginBottom: 20 }}>
-                <h4 style={{ margin: "0 0 10px 0", fontSize: 14, fontWeight: 700 }}>Procedure Type</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  {Object.entries(classificationCounts).map(([t, count]) => (
-                    <button
-                      key={t}
-                      type="button"
-                      className={`${styles.filterOption} ${selectedClassification === t ? styles.filterOptionActive : ""}`}
-                      onClick={() => setSelectedClassification(t)}
-                    >
-                      {t} ({count})
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Location */}
-              <div style={{ marginBottom: 20 }}>
-                <h4 style={{ margin: "0 0 10px 0", fontSize: 14, fontWeight: 700 }}>City Location</h4>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  <button
-                    type="button"
-                    className={`${styles.filterOption} ${selectedCity === "All" ? styles.filterOptionActive : ""}`}
-                    onClick={() => setSelectedCity("All")}
-                  >
-                    All Locations
-                  </button>
-                  {NH_CITIES.map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      className={`${styles.filterOption} ${selectedCity === c.value ? styles.filterOptionActive : ""}`}
-                      onClick={() => setSelectedCity(c.value)}
-                    >
-                      {c.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.drawerFooter}>
-              <button
-                type="button"
-                className={styles.drawerResetBtn}
-                onClick={handleResetFilters}
-              >
-                Reset
-              </button>
-              <button
-                type="button"
-                className={styles.drawerApplyBtn}
-                onClick={() => setMobileFilterOpen(false)}
-              >
-                Show {filtered.length} Procedures
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {mobileFilterOpen && <SearchDialog title="Procedure filters" mobileOnly onClose={() => setMobileFilterOpen(false)}
+        headerAction={<button type="button" className={bookingFilterStyles.drawerClear} disabled={!appliedChips.length} onClick={handleResetFilters}>Clear all</button>}
+        footer={<button type="button" className={bookingStyles.primaryButton} onClick={() => setMobileFilterOpen(false)}>Show {filtered.length} procedures</button>}>
+        {renderFilters()}
+      </SearchDialog>}
     </div>
   );
 }
 
 // ── Speciality-Anatomy Procedure Card ──
 function SpecialityProcedureCard({ item }: { item: TreatmentProcedureItem }) {
-  const [isHovered, setIsHovered] = useState(false);
-
   // Derive metric value and label
   const statValue = item.successRate || item.duration || "98.5%+";
   const statLabel = item.successRate ? "Clinical Success" : "Procedure Duration";
@@ -888,8 +350,6 @@ function SpecialityProcedureCard({ item }: { item: TreatmentProcedureItem }) {
       aria-label={item.shortTitle || item.title}
       className={styles.procedureCard}
       href={`/procedures/${item.slug}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <img
         alt={item.shortTitle || item.title}

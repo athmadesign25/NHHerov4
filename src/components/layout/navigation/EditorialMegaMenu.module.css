@@ -29,10 +29,11 @@
 .aboutColumns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(max-content, 1.1fr); gap: var(--space-24); align-content: stretch; }
 .ecosystemLinks { grid-template-columns: minmax(0, 1fr); gap: var(--space-24); padding-top: var(--space-8); }
 .ecosystemTile { display: flex; align-items: center; justify-content: flex-start; min-width: 0; padding: 0; border: 0; background: transparent; }
-.ecosystemVisual { position: relative; display: block; width: min(100%, calc(var(--space-128) + var(--space-32))); height: var(--space-56); }
+.ecosystemVisual { position: relative; display: block; width: min(100%, calc((var(--space-128) + var(--space-32)) * var(--ecosystem-logo-scale))); height: calc(var(--space-56) * var(--ecosystem-logo-scale)); }
+.ecosystemMedha { --ecosystem-logo-scale: 0.9; }
+.ecosystemAthma { --ecosystem-logo-scale: 0.7; }
 .ecosystemLogo { object-fit: contain; object-position: left center; }
-.ecosystemAcademicMark { display: flex; align-items: center; gap: var(--space-12); min-height: var(--space-56); color: var(--color-primary); font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 600; }
-.ecosystemAcademicMark svg { flex-shrink: 0; width: var(--space-32); height: var(--space-32); }
+.ecosystemAcademicMark { display: flex; align-items: center; min-height: var(--space-56); color: var(--color-text); font-size: var(--font-size-lg); line-height: var(--leading-snug); font-weight: 600; }
 .menu .link:hover .ecosystemAcademicMark, .menu .link:focus-visible .ecosystemAcademicMark { color: var(--color-primary); }
 .menu .feature.storyFeature img { object-position: center 35%; transform: none; }
 .menu .storyVisual { top: calc(-1 * var(--space-24)); }

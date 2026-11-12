@@ -1,0 +1,3 @@
+.search { margin-bottom: var(--space-8); }
+.letters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .letters { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

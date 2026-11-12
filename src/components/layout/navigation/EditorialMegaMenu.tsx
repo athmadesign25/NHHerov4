@@ -30,12 +30,12 @@ function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
       <li key={item.href}>
         <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${mobile ? mobilePatterns.link : ""} ${tiles ? styles.ecosystemTile : ""}`}>
           {tiles ? (
-            item.visual?.kind === "logo" ? <span className={styles.ecosystemVisual}>
+            item.visual?.kind === "logo" ? <span className={`${styles.ecosystemVisual} ${item.label === "Athma" ? styles.ecosystemAthma : styles.ecosystemMedha}`}>
               <Image src={item.visual.src} alt={item.label} fill sizes="160px" className={styles.ecosystemLogo} />
             </span> : <span className={styles.ecosystemAcademicMark}>
-              <Icon aria-hidden="true" /><span>Academics &amp;<br />Research</span>
+              <span>Academics &amp;<br />Research</span>
             </span>
-          ) : <span className={styles.itemCopy}><Icon className={styles.itemIcon} aria-hidden="true" /><span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
+          ) : <span className={styles.itemCopy}>{item.label !== "Academics & Research" && <Icon className={styles.itemIcon} aria-hidden="true" />}<span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
         </Link>
       </li>
     ))}
