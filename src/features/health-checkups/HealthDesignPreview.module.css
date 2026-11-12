@@ -1,13 +1,5 @@
-.preview { position: fixed; z-index: 85; right: max(var(--space-16), env(safe-area-inset-right)); bottom: max(var(--space-16), env(safe-area-inset-bottom)); display: grid; justify-items: end; gap: var(--space-8); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); }
-.preview[data-docked="true"] { bottom: calc(var(--health-preview-dock-offset, var(--space-128)) + var(--space-12)); }
-.trigger { display: inline-flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); padding: var(--space-8) var(--space-16); border: var(--space-1) solid color-mix(in srgb, var(--grey-500) 20%, transparent); border-radius: var(--radius-full); box-shadow: none; background: color-mix(in srgb, var(--slate-200) 82%, transparent); backdrop-filter: blur(var(--space-8)); -webkit-backdrop-filter: blur(var(--space-8)); color: inherit; font: inherit; font-weight: 500; cursor: pointer; transition: background-color var(--duration-fast); }
-.expanded { transform: rotate(180deg); }
-.options { width: var(--space-128); max-width: calc(100vw - var(--space-32)); max-height: min(calc(var(--space-96) * 4), calc(100dvh - var(--space-96))); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: var(--space-4); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--grey-100) 92%, transparent); backdrop-filter: blur(var(--space-12)); -webkit-backdrop-filter: blur(var(--space-12)); }
-.options button { display: flex; justify-content: space-between; align-items: center; gap: var(--space-8); width: 100%; min-height: var(--space-32); padding: var(--space-8); border: 0; border-radius: var(--radius-sm); background: transparent; color: inherit; text-align: left; font: inherit; cursor: pointer; }
-.options button[aria-pressed="true"] { color: var(--color-text); font-weight: 500; }
-.preview button:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
-@media (hover: hover) { .trigger:hover, .options button:hover { background: color-mix(in srgb, var(--slate-200) 92%, transparent); } }
-@media (max-width: 768px) { .preview { right: max(var(--space-8), env(safe-area-inset-right)); } }
-@media (pointer: coarse) { .trigger, .options button { min-height: calc(var(--space-40) + var(--space-4)); } }
-@media (prefers-reduced-motion: reduce) { .trigger { transition: none; } }
-@media (prefers-reduced-transparency: reduce) { .trigger, .options { background: var(--grey-100); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+.preview { composes: root from "../design-preview/DesignPreview.module.css"; z-index: 85; }
+.preview[data-docked] { --preview-bottom: calc(var(--health-preview-clearance, var(--space-128)) + var(--space-12)); }
+.trigger { composes: trigger from "../design-preview/DesignPreview.module.css"; }
+.expanded { composes: expanded from "../design-preview/DesignPreview.module.css"; }
+.options { composes: options from "../design-preview/DesignPreview.module.css"; }

@@ -10,13 +10,11 @@ interface Props {
   eager?: boolean;
   selected: boolean;
   included: boolean;
-  comparing?: boolean;
-  onCompare?: () => void;
   onAdd: () => void;
   onDetails: () => void;
 }
 
-export default function HealthItemCard({ item, selected, included, comparing, onCompare, eager = false, onAdd, onDetails }: Props) {
+export default function HealthItemCard({ item, selected, included, eager = false, onAdd, onDetails }: Props) {
   const isPackage = item.kind === "package";
   const hasTestCount = Number.isInteger(item.testCount) && item.testCount > 0;
   const hasPrice = Number.isFinite(item.price) && item.price >= 0;
@@ -39,7 +37,6 @@ export default function HealthItemCard({ item, selected, included, comparing, on
       </div>}
       <div className={styles.links}>
         <button className={styles.details} onClick={onDetails} type="button" aria-label={`View details for ${item.name}`}>View details</button>
-        {isPackage && onCompare && <label className={styles.compare}><input type="checkbox" checked={Boolean(comparing)} onChange={onCompare} aria-label={`Compare ${item.name}`} />Compare</label>}
       </div>
     </div>
     <footer className={styles.footer}>

@@ -105,11 +105,18 @@
 .summary { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-1) var(--sp-3); align-items: center; padding: calc(var(--sp-1) * 1.5) var(--sp-2); }
 .dock[data-expanded="true"] .summary { border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent); }
 .doctor { display: none; min-width: 0; }
-.doctor strong { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
-.doctor > span, .selected > span { display: block; font-size: var(--font-size-xs); line-height: 1.5; color: var(--d7-muted); }
-.selected { grid-column: 1 / -1; min-width: 0; }
-.selected strong { display: block; font-size: var(--font-size-sm); font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
-.selected strong > span { margin-inline: calc(var(--sp-1) / 2); color: var(--d7-muted); }
+.doctor strong, .selectionDetails strong { display: block; font-size: var(--font-size-sm); font-weight: 600; line-height: var(--leading-body); }
+.doctor strong { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.doctor > span, .selectionDetails > span { display: block; font-size: var(--font-size-xs); line-height: var(--leading-body); color: var(--d7-muted); }
+.selected { display: flex; align-items: flex-start; gap: var(--space-12); grid-column: 1 / -1; min-width: 0; }
+.selectionDetails { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.slotLine { display: flex; align-items: flex-start; gap: var(--space-8); }
+.slotLine strong { min-width: 0; }
+.selectionDetails strong > span { margin-inline: var(--space-4); color: var(--d7-muted); }
+.editSelection { display: grid; place-items: center; flex-shrink: 0; min-height: var(--target); min-width: var(--target); margin-block: calc((var(--font-size-sm) * var(--leading-body) - var(--target)) / 2); padding: 0; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-primary); font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-body); cursor: pointer; transition: color var(--duration-fast) var(--ease-out); }
+.editSelection:disabled { opacity: .5; cursor: not-allowed; }
+@media (hover: hover) { .editSelection:not(:disabled):hover { color: var(--color-primary-dark); } }
+@media (prefers-reduced-motion: reduce) { .editSelection { transition: none; } }
 .price { display: flex; flex-direction: column; }
 .price strong { font-size: var(--font-size-base); font-weight: 600; line-height: 1.25; white-space: nowrap; }
 .price > span { color: var(--d7-muted); font-size: var(--font-size-xs); line-height: 1.5; }
@@ -129,23 +136,31 @@
 .dock[data-tone="dark"][data-expanded="false"] { --d7-text: var(--white); --d7-muted: var(--slate-300); }
 .dock[data-tone="dark"][data-expanded="false"] .surface { background: rgba(var(--navy-900-rgb), .9); border-color: rgba(var(--white-rgb), .2); box-shadow: var(--elevation-4); }
 .dock[data-tone="dark"][data-expanded="false"] .primary { border: var(--space-1) solid rgba(var(--white-rgb), .16); }
+.dock[data-tone="dark"][data-expanded="false"] .editSelection { color: var(--sky-400); }
+@media (hover: hover) { .dock[data-tone="dark"][data-expanded="false"] .editSelection:not(:disabled):hover { color: var(--white); } }
 .dock[data-tone="dark"][data-expanded="false"] :is(a, button):focus-visible { outline-color: var(--sky-400); }
 @media (prefers-reduced-transparency: reduce) { .dock[data-tone="dark"][data-expanded="false"] .surface { background: var(--navy-900); } }
 @media (forced-colors: active) { .dock[data-tone="dark"][data-expanded="false"] .surface { color: CanvasText; background: Canvas; } }
 
 .actionGroup { display: grid; min-width: 0; gap: var(--space-4); }
-.mobileCall { display: none; }
+.actionGroup:has(.callAction) { grid-template-columns: minmax(0, 1fr) var(--space-48); gap: var(--space-8); }
+.callAction { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid rgba(var(--slate-800-rgb), 0.12); border-radius: var(--radius-md); color: var(--color-primary); background: rgba(var(--white-rgb), 0.8); backdrop-filter: blur(var(--space-20)); -webkit-backdrop-filter: blur(var(--space-20)); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
+.callAction svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
+.callAction:active { background: rgba(var(--white-rgb), 0.95); }
 @media (max-width: 639px) {
   .dock[data-expanded="false"] .summary { padding: var(--space-12); }
-  .actionGroup:has(.mobileCall) { grid-template-columns: minmax(0, 1fr) var(--space-48); gap: var(--space-8); }
-  .mobileCall { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); color: var(--color-primary); background: var(--journey-paper-icon-bg); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
-  .mobileCall svg { width: var(--space-20); height: var(--space-20); }
-  .mobileCall:active { background: var(--color-disclosure-hover); }
-  .dock[data-tone="dark"] .mobileCall { color: var(--white); border-color: rgba(var(--white-rgb), .2); background: rgba(var(--white-rgb), .1); }
+}
+@media (min-width: 640px) {
+  .summary:has(.callAction) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--space-96) * 2 + var(--space-48) + var(--space-8)), auto);
+  }
 }
 @media (max-width: 374px) {
   .dock[data-expanded="false"][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 }
-@media (hover: hover) { .mobileCall:hover { background: var(--color-disclosure-hover); } }
-@media (prefers-reduced-motion: reduce) { .mobileCall { transition: none; } }
-@media (forced-colors: active) { .dock .mobileCall { color: LinkText; background: Canvas; border-color: ButtonText; } }
+@media (hover: hover) { .callAction:hover { background: rgba(var(--white-rgb), 0.9); } }
+@media (prefers-reduced-motion: reduce) { .callAction { transition: none; } }
+@media (prefers-reduced-transparency: reduce) {
+  .dock .callAction { background: var(--white); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) { .dock .callAction { color: LinkText; background: Canvas; border-color: ButtonText; } }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type RefObject } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronDown, Phone } from "lucide-react";
@@ -31,6 +31,7 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
   const [highlightOpening, setHighlightOpening] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const action = useRef<HTMLButtonElement>(null);
+  const editAction = useRef<HTMLButtonElement>(null);
   const dock = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const bookingDoctor = getDesign20BookingDoctor(doctor.id);
@@ -43,15 +44,15 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     setHighlightOpening(true);
     setExpanded(true);
   }, [bookingRequest, available]);
-  const toggle = () => {
+  const open = useCallback(() => {
     setStarted(true);
-    setHighlightOpening(!expanded);
-    setExpanded(value => !value);
-  };
+    setHighlightOpening(true);
+    setExpanded(true);
+  }, []);
   const close = () => {
     setHighlightOpening(false);
     setExpanded(false);
-    requestAnimationFrame(() => action.current?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => (editAction.current ?? action.current)?.focus({ preventScroll: true }));
   };
   return <>
     <BookingBackdrop open={expanded} suspended={authOpen} onDismiss={close} />
@@ -72,20 +73,20 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     <div className={styles.surface}>
     {started && bookingDoctor ? <BookingControls doctor={bookingDoctor}
       initialSelection={design20RequestedSelection(bookingDoctor, new URLSearchParams({ mode: bookingRequest?.mode ?? initialMode, hospital: bookingRequest?.hospital ?? doctor.hospital, ...(date ? { date } : {}) }))}
-      returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} toggle={toggle} close={close} action={action} panelId={id} onAuthChange={setAuthOpen} />
+      returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} open={open} close={close} action={action} editAction={editAction} panelId={id} onAuthChange={setAuthOpen} />
       : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary}>
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
-        <div className={styles.actionGroup}>{available ? <button ref={action} type="button" className={styles.primary} onClick={toggle} aria-expanded={false} aria-controls={id}>Book appointment</button>
-          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}{available && <MobileCallAction />}</div>
+        <div className={styles.actionGroup}>{available ? <button ref={action} type="button" className={styles.primary} onClick={open} aria-expanded={false} aria-controls={id}>Book appointment</button>
+          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}{available && <CallAction />}</div>
       </motion.div>}
     </div>
     </motion.div>
   </motion.aside></>;
 }
 
-function MobileCallAction() {
-  return <a className={styles.mobileCall} href="tel:08067506836" aria-label="Call 08067506836 to book an appointment" title="Call to book an appointment"><Phone aria-hidden /></a>;
+function CallAction() {
+  return <a className={styles.callAction} href="tel:08067506836" aria-label="Call 08067506836 to book an appointment" title="Call to book an appointment"><Phone aria-hidden /></a>;
 }
 
 function Price({ fee }: { fee: string }) {
@@ -93,17 +94,30 @@ function Price({ fee }: { fee: string }) {
   return <div className={styles.price}><strong>{priced ? appointmentPricing(fee).base : "Confirm fee"}</strong>{priced && <span>onwards</span>}</div>;
 }
 
-function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, resume, expanded, toggle, close, action, panelId, onAuthChange }: {
+function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, resume, expanded, open, close, action, editAction, panelId, onAuthChange }: {
   doctor: BookingDoctorSummary; initialSelection: AppointmentSelection; returnTo: string; bookingRequest?: ProfileBookingRequest; resume: boolean;
-  expanded: boolean; toggle: () => void; close: () => void; action: RefObject<HTMLButtonElement | null>; panelId: string;
+  expanded: boolean; open: () => void; close: () => void; action: RefObject<HTMLButtonElement | null>; editAction: RefObject<HTMLButtonElement | null>; panelId: string;
   onAuthChange: (open: boolean) => void;
 }) {
   const flow = useDesign20Booking(doctor, { initialSelection, returnTo, inline: true, preserveEntry: true, resume });
   const reduced = useReducedMotion();
   const heading = useRef<HTMLHeadingElement>(null);
+  const continuationRequested = useRef(false);
   const signingIn = flow.phase === "auth" && !flow.isUserLoggedIn;
   useEffect(() => { onAuthChange(signingIn); }, [signingIn, onAuthChange]);
   const { selection } = flow.draft;
+  const showContinue = expanded || Boolean(selection.time);
+  const continueBooking = () => {
+    continuationRequested.current = true;
+    flow.continueBooking();
+  };
+  useEffect(() => {
+    // Validation can reject a saved slot, including after signing in. Reveal
+    // the existing notice and choices rather than leaving feedback hidden.
+    if (!continuationRequested.current || flow.phase !== "slots" || !flow.notice) return;
+    continuationRequested.current = false;
+    if (!expanded) open();
+  }, [expanded, flow.phase, flow.notice, open]);
   const appliedRequest = useRef<number | null>(null);
   useEffect(() => {
     if (!bookingRequest || !flow.loaded || flow.busy || appliedRequest.current === bookingRequest.id) return;
@@ -132,13 +146,23 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
     </motion.div>}</AnimatePresence>
     <motion.div layout={reduced ? false : "position"} layoutId={`${panelId}-summary`} className={styles.summary}
       transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
-      {expanded || selection.time ? <div className={styles.selected} aria-live="polite" aria-atomic="true"><span>Your appointment</span><strong>{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong>{!expanded && <span>{selection.mode === "hospital" ? selection.hospital : "Video consultation"}</span>}</div>
+      {expanded || selection.time ? <div className={styles.selected}>
+        <div className={styles.selectionDetails}>
+          <div className={styles.slotLine}>
+            <strong aria-live="polite" aria-atomic="true">{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong>
+            {!expanded && <button ref={editAction} type="button" className={styles.editSelection} onClick={open}
+              disabled={flow.busy} aria-label="Edit appointment date, time and consultation details" aria-expanded={false} aria-controls={panelId}>Edit</button>}
+          </div>
+          {!expanded && <span>{selection.mode === "hospital" ? selection.hospital : "Video consultation"}</span>}
+        </div>
+      </div>
         : <div className={styles.doctor}><strong>{doctor.name}</strong><span>{selection.mode === "hospital" ? "Hospital visit" : "Video consultation"}</span></div>}
       <Price fee={selectedDoctor?.fee ?? doctor.fee} />
-      <div className={styles.actionGroup}><button ref={action} type="button" className={styles.primary} aria-expanded={expanded} aria-controls={panelId}
-        disabled={expanded && (!flow.loaded || !selection.time || flow.busy || flow.expired)}
-        onClick={expanded ? flow.continueBooking : toggle}><span>{expanded ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{expanded && <ArrowRight className={styles.continueArrow} aria-hidden />}</button>{!expanded && <MobileCallAction />}</div>
+      <div className={styles.actionGroup}><button ref={action} type="button" className={styles.primary}
+        aria-expanded={showContinue ? undefined : false} aria-controls={showContinue ? undefined : panelId}
+        disabled={showContinue && (!flow.loaded || !selection.time || flow.busy || flow.expired)}
+        onClick={showContinue ? continueBooking : open}><span>{showContinue ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{showContinue && <ArrowRight className={styles.continueArrow} aria-hidden />}</button>{!expanded && <CallAction />}</div>
     </motion.div>
-    <LoginModal previewOtp isOpen={signingIn} onClose={() => flow.setLoginOpen(false)} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
+    <LoginModal previewOtp isOpen={signingIn} onClose={() => { continuationRequested.current = false; flow.setLoginOpen(false); }} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </>;
 }

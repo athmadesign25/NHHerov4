@@ -5,7 +5,7 @@ import ts from "typescript";
 
 const source = readFileSync(new URL("../src/features/health-checkups/healthDiscovery.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-const { matchesHealthQuery, healthComparisonFacts, healthListingHeading } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
+const { matchesHealthQuery, healthListingHeading } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
 const packageItem = { name: "Male Health Check-Up", description: "Annual screening", inclusions: ["Complete Blood Count (CBC)", "Liver function"], preparation: "", reportTime: "", kind: "package" };
 const labTest = { name: "Complete Blood Count", description: "CBC", inclusions: [], preparation: "", reportTime: "", kind: "test" };
 
@@ -28,11 +28,4 @@ test("search does not confuse male with female or invent medical aliases", () =>
   assert.equal(matchesHealthQuery({ ...packageItem, name: "Female Health Check-Up" }, "male"), false);
   assert.equal(matchesHealthQuery(labTest, "anaemia"), false);
   assert.equal(matchesHealthQuery(packageItem, ""), true);
-});
-test("missing comparison facts remain unknown, never excluded or zero", () => {
-  const facts = healthComparisonFacts(labTest);
-  assert.equal(facts["Coverage highlights"], "Not listed");
-  assert.equal(facts.Preparation, "Not listed");
-  assert.equal(facts["Report availability"], "Not listed");
-  assert.equal(healthComparisonFacts(packageItem)["Coverage highlights"], "Complete Blood Count (CBC) · Liver function");
 });

@@ -1,0 +1,176 @@
+.contact {
+  position: fixed;
+  z-index: 40;
+  inset-inline-end: max(var(--space-24), env(safe-area-inset-right));
+  bottom: max(var(--space-24), env(safe-area-inset-bottom), var(--support-dock-clearance, var(--space-24)));
+  display: none;
+  align-items: center;
+  gap: var(--space-8);
+  flex-shrink: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) { .contact { display: inline-flex; } }
+/* Booking remains the foreground interaction while the slot picker is open. */
+:global(body:has([data-profile-booking][data-expanded="true"])) .contact { visibility: hidden; }
+.number, .phone {
+  display: grid;
+  place-items: center;
+  min-height: var(--space-40);
+  border: var(--space-1) solid rgba(var(--slate-800-rgb), 0.12);
+  border-radius: var(--radius-full);
+  background: rgba(var(--white-rgb), 0.8);
+  backdrop-filter: blur(var(--space-20));
+  -webkit-backdrop-filter: blur(var(--space-20));
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+.number { display: flex; align-items: center; justify-content: center; gap: var(--space-8); padding: var(--space-8) var(--space-12); font-variant-numeric: tabular-nums; }
+.label { display: block; }
+.copyIcon { display: grid; place-items: center; flex-shrink: 0; }
+.copyIcon svg { width: var(--space-16); height: var(--space-16); }
+.phone { position: relative; display: flex; justify-content: center; gap: 0; min-width: var(--space-40); padding: 0; flex-shrink: 0; }
+.helpLabel { padding-inline-start: var(--space-12); }
+.phoneIcon { display: grid; place-items: center; width: var(--space-40); height: var(--space-40); flex-shrink: 0; }
+.phone svg { width: var(--space-16); height: var(--space-16); fill: currentColor; stroke-width: 0; }
+.number:focus-visible, .phone:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.number:active, .phone:active { background: rgba(var(--white-rgb), 0.95); }
+.status { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.error { position: absolute; inset-block-end: calc(100% + var(--space-8)); inset-inline-end: 0; padding: var(--space-8) var(--space-12); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); box-shadow: var(--elevation-2); }
+
+@media (hover: hover) {
+  .number:hover, .phone:hover { background: rgba(var(--white-rgb), 0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .number, .phone { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .number, .phone { background: var(--white); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .number, .phone { border-color: ButtonText; background: Canvas; color: ButtonText; }
+}
+
+/* Listing desktop: the full text collapses into a single call icon. */
+.combined {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  height: var(--space-48);
+  box-sizing: border-box;
+  border: var(--space-1) solid transparent;
+  border-radius: var(--radius-full);
+  background-image: linear-gradient(to bottom right,
+    rgba(var(--blue-brand-rgb), 0.12),
+    rgba(var(--blue-brand-rgb), 0.08) 45%,
+    rgba(var(--white-rgb), 0.5));
+  background-color: rgba(var(--white-rgb), 0.6);
+  backdrop-filter: blur(var(--space-20)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--space-20)) saturate(150%);
+  color: var(--color-primary);
+  text-decoration: none;
+  /* Reveal the surface without scaling the glass, text, or phone icon.
+     The clipped area also stops receiving pointer events. */
+  clip-path: inset(0 0 0 calc(100% - var(--space-48)) round var(--radius-full));
+  transition: clip-path var(--duration-base) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-out);
+}
+.combined[data-expanded="true"] {
+  clip-path: inset(0 round var(--radius-full));
+  transition-duration: var(--duration-moderate), var(--duration-fast);
+}
+/* Draw a complete edge for both silhouettes. Clipping the expanded pill's
+   border alone cuts off the left curve of the collapsed circle. */
+.combined::before,
+.combined::after {
+  content: "";
+  position: absolute;
+  inset-block: calc(var(--space-1) * -1);
+  inset-inline-end: calc(var(--space-1) * -1);
+  pointer-events: none;
+  box-sizing: border-box;
+  border: var(--space-1) solid rgba(var(--blue-brand-rgb), 0.16);
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 var(--space-1) 0 rgba(var(--white-rgb), 0.7);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.combined::before {
+  inset-inline-start: calc(var(--space-1) * -1);
+  opacity: 0;
+}
+.combined::after {
+  width: var(--space-48);
+  opacity: 1;
+}
+.combined[data-expanded="true"]::before { opacity: 1; }
+.combined[data-expanded="true"]::after { opacity: 0; }
+.combinedIcon {
+  width: var(--space-20);
+  height: var(--space-20);
+  flex-shrink: 0;
+  fill: currentColor;
+  stroke-width: 0;
+}
+.combinedText {
+  display: grid;
+  gap: 0;
+  padding-inline: var(--space-16) var(--space-8);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--duration-instant) var(--ease-standard);
+}
+.combined[data-expanded="true"] .combinedText {
+  opacity: 1;
+  transition-duration: var(--duration-fast);
+  transition-delay: var(--duration-instant);
+}
+.combinedCall {
+  display: grid;
+  place-items: center;
+  width: calc(var(--space-48) - var(--space-2));
+  height: calc(var(--space-48) - var(--space-2));
+  flex-shrink: 0;
+}
+.combinedHint {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+}
+.combinedNumber {
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.combined:focus-visible {
+  outline: var(--space-2) solid var(--color-primary);
+  outline-offset: calc(var(--space-4) * -1);
+}
+@media (hover: hover) {
+  .combined:hover { background-color: rgba(var(--white-rgb), 0.7); }
+}
+.combined:active { background-color: rgba(var(--white-rgb), 0.8); }
+@media (prefers-reduced-motion: reduce) {
+  .combined, .combined .combinedText,
+  .combined::before, .combined::after { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .combined, .combined:is(:hover, :active) { background: var(--white); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .combined { border-color: ButtonText; background: Canvas; color: LinkText; }
+  .combined::before, .combined::after { border-color: ButtonText; box-shadow: none; }
+  .combinedHint { color: CanvasText; }
+}

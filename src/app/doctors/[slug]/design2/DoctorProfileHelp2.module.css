@@ -6,7 +6,9 @@
   margin-top: var(--profile-section-gap, var(--section-y-sm));
   padding: var(--space-24);
   border-radius: var(--radius-xl);
-  background: linear-gradient(120deg, var(--color-primary-light), rgba(var(--white-rgb), .8));
+  background:
+    radial-gradient(ellipse at top right, color-mix(in srgb, var(--white) 95%, var(--red-500)), rgba(var(--white-rgb), 0) 60%),
+    linear-gradient(to bottom right, var(--color-primary-light), color-mix(in srgb, var(--color-primary-light) 92%, var(--color-primary)));
   scroll-margin-top: var(--profile-scroll-offset);
 }
 

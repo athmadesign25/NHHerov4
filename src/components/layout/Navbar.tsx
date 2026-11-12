@@ -179,6 +179,8 @@ export default function Navbar() {
   return (
     <nav
       ref={navRef}
+      data-site-nav
+      data-nav-hidden={!isVisible && !activeDropdown ? "true" : "false"}
       role={isMobileMenuOpen ? "dialog" : undefined}
       aria-modal={isMobileMenuOpen || undefined}
       aria-labelledby={isMobileMenuOpen ? "mobile-menu-title" : undefined}

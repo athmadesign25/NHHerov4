@@ -1,5 +1,0 @@
-.options {
-  max-height: calc(100dvh - var(--preview-dock-offset, 0px) - var(--space-96));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}

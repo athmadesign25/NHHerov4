@@ -15,9 +15,10 @@ const previewDoctorIds = new Set([...searchDoctorsData, ...design3CityDoctors].m
 /** City choices apply to practice units, including a doctor's secondary affiliation. */
 export function design16DoctorsInLocation(doctors: readonly DoctorListingItem[], location: string): DoctorListingItem[] {
   if (location === "All") return [...doctors];
+  const cityIds = new Set(location.split(",").map(city => getCityId(city)).filter(id => id !== null));
   return doctors.flatMap((doctor) => {
     const hospitals = doctorHospitals(doctor).filter((hospital) =>
-      getCityId(getDesign16HospitalPreview(hospital)?.city ?? doctor.city) === getCityId(location));
+      cityIds.has(getCityId(getDesign16HospitalPreview(hospital)?.city ?? doctor.city)!));
     if (!hospitals.length) return [];
     const hospital = hospitals.includes(doctor.hospital) ? doctor.hospital : hospitals[0];
     return [{ ...doctor, hospital, hospitals, city: getDesign16HospitalPreview(hospital)?.city ?? doctor.city }];

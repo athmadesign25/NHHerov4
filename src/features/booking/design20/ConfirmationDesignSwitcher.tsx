@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { Check, ChevronUp, Layers2 } from "lucide-react";
+import { Check, ChevronUp } from "lucide-react";
 import styles from "./BookingDesignSwitcher.module.css";
-import layout from "./ConfirmationDesignSwitcher.module.css";
 
 export type ConfirmationDesign = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -54,13 +53,13 @@ export default function ConfirmationDesignSwitcher({ active, onChange }: {
   }} onBlur={event => {
     if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
   }}>
-    {open && <div id={id} className={`${styles.options} ${layout.options}`} role="group" aria-label="Appointment confirmation design">
+    {open && <div id={id} className={styles.options} role="group" aria-label="Appointment confirmation design">
       {([1, 2, 3, 4, 5, 6, 7] as const).map(design => <button key={design} type="button" aria-pressed={active === design} onClick={() => {
         onChange(design); setOpen(false); trigger.current?.focus({ preventScroll: true });
       }}><span><strong>Design {design}</strong><small>{designLabels[design]}</small></span>{active === design && <Check size={16} aria-hidden />}</button>)}
     </div>}
     <button ref={trigger} type="button" className={styles.trigger} aria-label={`Compare confirmation designs. Design ${active} selected`} aria-expanded={open} aria-controls={open ? id : undefined} title="Compare confirmation designs" onClick={() => setOpen(value => !value)}>
-      <Layers2 size={16} aria-hidden /><span>Design {active}</span><ChevronUp size={14} aria-hidden className={open ? styles.expanded : undefined} />
+      <span>Design {active}</span><ChevronUp size={14} aria-hidden className={open ? styles.expanded : undefined} />
     </button>
   </div>;
 }

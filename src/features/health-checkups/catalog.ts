@@ -1,7 +1,7 @@
 import { appointmentDates, indiaAppointmentTimestamp, indiaDate } from "@/features/booking/shared/dates";
 import sourceItems from "@/data/health-checkups/items.json";
 import sourceFacilities from "@/data/health-checkups/active-facilities.json";
-import type { HealthDetailSource } from "./healthDetailTypes";
+import type { HealthDetailSource, HealthTestGroup } from "./healthDetailTypes";
 
 export type FacilityId = string;
 
@@ -28,6 +28,8 @@ export interface HealthItem extends HealthDetailSource {
   kind: "package" | "test";
   description: string;
   price: number;
+  originalPrice?: number;
+  includedTests?: HealthTestGroup[];
   facilityId: FacilityId;
   category: string;
   testCount: number;

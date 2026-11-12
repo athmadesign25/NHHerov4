@@ -5,6 +5,7 @@ import sourceDetails from "@/data/health-checkups/source-details.json";
 import { normalizeHealthDetails } from "@/features/health-checkups/normalizeHealthDetails";
 import { findHealthDetailSource, resolveHealthDetailItem } from "@/features/health-checkups/healthDetailRouting";
 import HealthDetail from "@/features/health-checkups/HealthDetail";
+import { resolveHealthDesign } from "@/features/health-checkups/healthDesigns";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -33,5 +34,5 @@ export default async function HealthDetailPage(props: Props) {
   const source = findHealthDetailSource(sourceDetails, item);
   const detailItem = source ? { ...item, details: normalizeHealthDetails(source.detailsData) } : item;
   const query = await props.searchParams;
-  return <HealthDetail item={detailItem} facility={facility} design={query.design === "1" ? "1" : "2"} />;
+  return <HealthDetail item={detailItem} facility={facility} design={resolveHealthDesign(query.design)} />;
 }

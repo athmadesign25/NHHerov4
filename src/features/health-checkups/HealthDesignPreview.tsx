@@ -20,12 +20,12 @@ export default function HealthDesignPreview({ design, hasSelection, onChange }: 
   useLayoutEffect(() => {
     const preview = root.current;
     if (!preview) return;
-    const dock = document.querySelector<HTMLElement>("[data-health-selection-dock]");
+    const dock = preview.closest("[data-health-design]")?.querySelector<HTMLElement>("[data-health-selection-dock]");
     if (!hasSelection || !dock) {
-      preview.style.removeProperty("--health-preview-dock-offset");
+      preview.style.removeProperty("--health-preview-clearance");
       return;
     }
-    const measure = () => preview.style.setProperty("--health-preview-dock-offset", `${Math.max(0, innerHeight - dock.getBoundingClientRect().top)}px`);
+    const measure = () => preview.style.setProperty("--health-preview-clearance", `${Math.max(0, innerHeight - dock.getBoundingClientRect().top)}px`);
     const observer = new ResizeObserver(measure);
     observer.observe(dock);
     window.addEventListener("resize", measure);

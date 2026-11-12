@@ -20,8 +20,6 @@
 .details:hover { color: var(--color-primary-dark); }
 .remove { color: var(--red-600); font-weight: 400; }
 .remove:hover { color: var(--color-primary-dark); }
-.compare { display: flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); color: var(--color-text-secondary); font-size: var(--font-size-sm); cursor: pointer; }
-.compare input { width: var(--space-16); height: var(--space-16); accent-color: var(--red-600); }
 .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-12); margin: var(--space-8) var(--space-20) var(--space-16); padding-top: var(--space-16); border-top: var(--space-1) solid var(--color-border); }
 .footer > strong { font-size: var(--font-size-base); line-height: var(--leading-snug); font-weight: 600; font-variant-numeric: tabular-nums; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-12); }

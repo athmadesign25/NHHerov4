@@ -1,58 +1,7 @@
-.preview {
-  position: fixed;
-  z-index: 1002;
-  right: max(var(--space-16), env(safe-area-inset-right));
-  bottom: max(var(--space-16), env(safe-area-inset-bottom));
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-xs);
-  line-height: var(--leading-normal);
-}
-.trigger, .options button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-8);
-  min-height: calc(var(--space-40) + var(--space-4));
-  padding: var(--space-8) var(--space-16);
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-.trigger {
-  border: var(--space-1) solid color-mix(in srgb, var(--slate-500) 20%, transparent);
-  border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--slate-200) 80%, transparent);
-  backdrop-filter: blur(var(--space-8));
-  -webkit-backdrop-filter: blur(var(--space-8));
-  box-shadow: none;
-}
-.preview svg { width: var(--space-12); height: var(--space-12); flex-shrink: 0; }
-.open { transform: rotate(180deg); }
+.preview { composes: root from "../../../../features/design-preview/DesignPreview.module.css"; z-index: 1002; }
+.trigger { composes: trigger from "../../../../features/design-preview/DesignPreview.module.css"; }
+.open { composes: expanded from "../../../../features/design-preview/DesignPreview.module.css"; }
 .options {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + var(--space-8));
-  min-width: calc(var(--space-128) + var(--space-32));
-  max-width: calc(100vw - var(--space-32));
-  padding: var(--space-4);
-  border: var(--space-1) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--grey-100) 95%, transparent);
-  backdrop-filter: blur(var(--space-12));
-  -webkit-backdrop-filter: blur(var(--space-12));
+  composes: options from "../../../../features/design-preview/DesignPreview.module.css";
+  --preview-menu-width: calc(var(--space-128) + var(--space-32));
 }
-.options button { width: 100%; border: 0; border-radius: var(--radius-sm); background: transparent; text-align: left; }
-.options button[aria-pressed="true"] { color: var(--color-text); font-weight: 500; }
-.preview button:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
-@media (hover: hover) { .preview button:hover { background-color: var(--slate-200); } }
-@media (max-width: 640px) { .preview { right: max(var(--space-8), env(safe-area-inset-right)); } }
-/* Keep the design-only switcher clear of the patient-facing mobile call action. */
-@media (max-width: 1023px) {
-  :global([data-design="d21"]:has([data-doctor-call="mobile"]:not([hidden]))) .preview {
-    bottom: calc(var(--space-16) + env(safe-area-inset-bottom) + var(--space-48) + var(--space-8));
-  }
-}
-@media (prefers-reduced-transparency: reduce) {
-  .trigger, .options { background: var(--grey-100); backdrop-filter: none; -webkit-backdrop-filter: none; }
-}
-@media (forced-colors: active) { .trigger, .options { border-color: ButtonText; background: Canvas; } }

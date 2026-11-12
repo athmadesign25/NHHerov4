@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Filter, Loader2, MapPin } from "lucide-react";
+import { Filter } from "lucide-react";
 import type Lenis from "lenis";
 import { NH_CITIES } from "@/lib/searchService";
 import type { ConsultationMode } from "@/features/search/doctorListing";
 import { requestDoctorCity } from "@/features/search/doctorLocation";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
+import SearchCityPicker from "@/components/ui/search-location/SearchCityPicker";
 import DoctorSearchHint from "./DoctorSearchHint";
 import styles from "@/components/ui/search-location/SearchToolbar.module.css";
 import listing from "./DoctorSearchTop.module.css";
@@ -32,7 +33,6 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
   const locationOffered = useRef(false);
   const automaticRequest = useRef(0);
   const locationChange = useRef(onLocation);
-  const locationPointerInteraction = useRef(false);
   useEffect(() => { locationChange.current = onLocation; }, [onLocation]);
   const rememberLocationOffer = () => {
     locationOffered.current = true;
@@ -114,32 +114,20 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
     else window.scrollTo({ top, behavior: "instant" });
   };
 
-  const handleLocationChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      // Pointer selection is complete. Keyboard selection retains focus so arrows
-      // and Tab continue to work, with a visible focus indicator.
-      if (locationPointerInteraction.current) event.currentTarget.blur();
+  const handleLocationChange = (value: string) => {
       automaticRequest.current += 1;
       setDetectingLocation(null);
       setLocationFeedback(false);
       setLocationStatus("");
       rememberLocationOffer();
-      if (event.target.value === "__device") void detectLocation();
-      else onLocation(event.target.value);
+      if (value === "__device") void detectLocation();
+      else onLocation(value);
   };
 
-  const locationSelect = (className: string) => <label className={`${styles.location} ${className}`} data-active={location !== "All" || undefined}>
-    {detectingLocation === location ? <Loader2 size={16} className={styles.locationSpinner} aria-hidden /> : <MapPin size={16} aria-hidden />}
-    <span className={styles.srOnly}>Search location</span>
-    <select data-doctor-location aria-busy={detectingLocation === location} aria-describedby="d3-location-status d3-refinement-help" value={detectingLocation === location ? "__device" : location}
-      onPointerDown={() => { locationPointerInteraction.current = true; }}
-      onKeyDown={() => { locationPointerInteraction.current = false; }}
-      onBlur={() => { locationPointerInteraction.current = false; }}
-      onChange={handleLocationChange}>
-      <option value="All">All locations</option>
-      {!locationFirst && <option value="__device" disabled={detectingLocation === location}>{detectingLocation === location ? "Finding location…" : "Use my location…"}</option>}
-      {NH_CITIES.map((city) => <option key={city.id} value={city.value}>{city.label}</option>)}
-    </select>
-  </label>;
+  const locationSelect = (className: string) => <SearchCityPicker
+    className={`${styles.location} ${className}`} cities={NH_CITIES} value={location}
+    busy={detectingLocation === location} showDeviceLocation={!locationFirst}
+    describedBy="d3-location-status d3-refinement-help" onChange={handleLocationChange} />;
   const filterButton = <button type="button" className={styles.filterButton} data-active={filterCount > 0 || undefined} onClick={onOpenFilters} aria-haspopup="dialog"
     aria-label={`Filters${filterCount ? `, ${filterCount} active` : ""}`} title="Filters">
     <Filter size={16} aria-hidden /><span className={styles.filterLabel}>Filters</span>{filterCount > 0 && <span className={styles.filterCount} aria-hidden>{filterCount}</span>}
