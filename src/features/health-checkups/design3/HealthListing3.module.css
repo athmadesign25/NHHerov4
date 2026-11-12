@@ -16,12 +16,8 @@
     -webkit-mask-image: linear-gradient(180deg, var(--color-text-inverse) 0, var(--color-text-inverse) calc(100% - var(--space-8)), transparent);
   }
 }
+.searchAndType { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-16); }
 .searchRow { min-width: 0; }
-.refinements { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); padding-top: var(--space-4); }
-.segmented { display: inline-flex; min-width: 0; padding: var(--space-4); gap: var(--space-4); background: color-mix(in srgb, var(--slate-200) 40%, transparent); border-radius: var(--radius-full); }
-.segmented button { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); padding: var(--space-8) var(--space-20); border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); font: inherit; font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 500; cursor: pointer; transition: color var(--duration-base), background-color var(--duration-base); }
-.segmented button svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
-.segmented button[aria-pressed="true"] { color: var(--color-text-inverse); background: var(--color-primary); }
 .categories { --d3-ui-selection: var(--color-primary); --d3-ui-selection-label: var(--color-text-inverse); --d3-ui-selection-hover: var(--color-text-inverse); --d3-ui-selection-pressed: var(--color-text-inverse); --d3-ui-selection-surface: var(--color-primary); display: flex; flex-wrap: nowrap; overflow-x: auto; gap: var(--space-8); padding-block: var(--space-4); scrollbar-width: thin; }
 .results { margin-top: var(--space-20); }
 .results:focus { outline: none; }
@@ -48,18 +44,15 @@
 .empty > div { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-24); }
 .srOnly { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); }
 @media (hover: hover) {
-  .segmented button:not([aria-pressed="true"]):hover { background: color-mix(in srgb, var(--slate-300) 25%, transparent); color: var(--color-text); }
   .primary:hover { background: var(--color-primary-dark); }
   .textAction:hover { color: var(--color-primary-dark); }
 }
-@media (max-width: 1024px) { .cardGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chooseCentre { gap: var(--space-16); padding: var(--space-24); } }
+@media (max-width: 1024px) { .searchAndType { grid-template-columns: minmax(0, 1fr); gap: var(--space-12); } .searchAndType > :last-child { justify-self: end; } .cardGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .chooseCentre { gap: var(--space-16); padding: var(--space-24); } }
 @media (max-width: 768px) { .discoveryBar { margin-inline: calc(var(--space-16) * -1); padding-inline: var(--space-16); } .chooseCentre { flex-wrap: wrap; } .chooseCentre .primary { margin-left: calc(var(--space-64) + var(--space-16)); } }
 @media (max-width: 640px) {
   .discoveryBar { padding-block: var(--space-8); }
   .searchRow { display: block; }
-  .refinements { padding-top: 0; }
-  .segmented { width: 100%; }
-  .segmented button { flex: 1 1 auto; padding-inline: var(--space-12); white-space: nowrap; }
+  .searchAndType > :last-child { justify-self: stretch; }
   .cardGrid { grid-template-columns: minmax(0, 1fr); gap: var(--space-16); }
   .chooseCentre { display: grid; justify-items: start; gap: var(--space-16); padding: var(--space-24); margin-top: var(--space-16); }
   .chooseCentre .primary { margin: 0; }
@@ -67,7 +60,7 @@
   .chooseCentre h2 { font-size: var(--font-size-lg); }
   .resultHeading { align-items: flex-start; }
 }
-@media (prefers-reduced-motion: reduce) { .segmented button, .primary { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .primary { transition: none; } }
 @media (prefers-reduced-transparency: reduce) { .discoveryBar.discoveryBar::before { background: var(--color-bg); backdrop-filter: none; -webkit-backdrop-filter: none; mask-image: none; -webkit-mask-image: none; bottom: 0; } }
 
 .categories > button { flex-shrink: 0; }

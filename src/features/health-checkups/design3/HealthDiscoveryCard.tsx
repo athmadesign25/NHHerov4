@@ -2,9 +2,11 @@
 
 import { useId } from "react";
 import Image from "next/image";
-import { Check, ChevronRight, History, ShoppingCart } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, Building2, CalendarDays, Check, ChevronRight, History, ShoppingCart } from "lucide-react";
+import { duration, ease } from "@/lib/motion";
 import { money, type HealthItem } from "../catalog";
-import { healthCardContent, healthCardTone } from "../healthCardContent";
+import { healthCardContent } from "../healthCardContent";
 import styles from "./HealthDiscoveryCard.module.css";
 
 interface Props {
@@ -29,24 +31,48 @@ function itemImage(item: HealthItem) {
   return "/health-checkups/source/645dcfb312b746759d699e1a.webp";
 }
 
-/** Compact cards keep the full detail page accessible through the title/image. */
+/** Source facts lead; imagery and the purchase action support the decision. */
 export default function HealthDiscoveryCard({ item, eager = false, selected, included, onAdd, onDetails, onTests, previouslyBooked = false }: Props) {
   const titleId = useId();
+  const reducedMotion = useReducedMotion();
   const hasPrice = Number.isFinite(item.price) && item.price >= 0;
-  const { originalPrice, testCount } = healthCardContent(item);
+  const { originalPrice, testCount, highlights, samples, preparation, reportTime } = healthCardContent(item);
+  const shortDescription = !highlights.length && item.description.trim().length <= 110 ? item.description.trim() : "";
   const selectedLabel = included ? "Included" : selected ? "Added" : "Add";
 
-  return <article className={styles.card} data-kind={item.kind} data-tone={healthCardTone(item)} data-selected={selected || undefined} aria-labelledby={titleId}>
-    <button type="button" className={styles.visual} onClick={onDetails} aria-label={`View ${item.name}`} tabIndex={-1}>
-      <Image src={itemImage(item)} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" priority={eager} className={styles.image} />
-    </button>
+  return <motion.article className={styles.card} data-kind={item.kind} data-selected={selected || undefined} aria-labelledby={titleId}
+    initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: duration.emphasis, ease: ease.out }}>
     <div className={styles.content}>
       {previouslyBooked && <span className={styles.history}><History aria-hidden />Booked before</span>}
-      <h3 id={titleId} className={styles.title}><button type="button" onClick={onDetails}>{item.name}</button></h3>
-      <button type="button" className={styles.includes} onClick={onTests} aria-haspopup="dialog" aria-label={`View included tests for ${item.name}`}>
-        {testCount ? `Includes ${testCount} ${testCount === 1 ? "test" : "tests"}` : "View included tests"}<ChevronRight aria-hidden />
-      </button>
-      <footer className={styles.footer}>
+      <div className={styles.intro}>
+        <div className={styles.identity}>
+          <h3 id={titleId} className={styles.title}><button type="button" onClick={onDetails}>{item.name}</button></h3>
+          {testCount ? <button type="button" className={styles.includes} onClick={onTests} aria-haspopup="dialog" aria-label={`View included tests for ${item.name}`}>
+            Includes {testCount} {testCount === 1 ? "test" : "tests"}<ChevronRight aria-hidden />
+          </button> : <button type="button" className={styles.includes} onClick={onDetails} aria-label={`View details for ${item.name}`}>
+            View details<ArrowUpRight aria-hidden />
+          </button>}
+        </div>
+        <button type="button" className={styles.visual} onClick={onDetails} aria-label={`View ${item.name}`} tabIndex={-1}>
+          <Image src={itemImage(item)} alt="" fill sizes="80px" priority={eager} className={styles.image} />
+        </button>
+      </div>
+      {highlights.length > 0 && <div className={styles.coverage}>
+        <span className={styles.label}>Key inclusions</span>
+        <p>{highlights.join(" · ")}</p>
+      </div>}
+      {shortDescription && <p className={styles.summary}>{shortDescription}</p>}
+      {(samples.length > 0 || preparation || reportTime) && <dl className={styles.facts}>
+        {samples.length > 0 && <div><dt>Sample</dt><dd>{samples.join(", ")}</dd></div>}
+        {preparation && <div><dt>Preparation</dt><dd>{preparation}</dd></div>}
+        {reportTime && <div><dt>Reports</dt><dd>{reportTime}</dd></div>}
+      </dl>}
+      <div className={styles.visit}>
+        <span><Building2 aria-hidden />Centre visit</span>
+        {item.requiresSlot && <span><CalendarDays aria-hidden />Choose a time at checkout</span>}
+      </div>
+    </div>
+    <footer className={styles.footer}>
         <div className={styles.prices}>
           {originalPrice !== undefined && <del aria-label={`Original price ${money(originalPrice)}`}>{money(originalPrice)}</del>}
           <strong className={hasPrice ? styles.price : styles.unpriced}>{hasPrice ? money(item.price) : "Price not listed"}</strong>
@@ -55,9 +81,8 @@ export default function HealthDiscoveryCard({ item, eager = false, selected, inc
           aria-pressed={included ? undefined : selected} disabled={included || (!hasPrice && !selected)}
           aria-label={included ? `${item.name} is included in your package` : selected ? `Remove ${item.name} from cart` : `Add ${item.name} to cart`}
           onClick={onAdd}>
-          {included || selected ? <Check aria-hidden /> : <ShoppingCart aria-hidden />}{selectedLabel}
+          <span key={selectedLabel} className={styles.selectionIcon}>{included || selected ? <Check aria-hidden className={styles.check} /> : <ShoppingCart aria-hidden />}</span>{selectedLabel}
         </button>
-      </footer>
-    </div>
-  </article>;
+    </footer>
+  </motion.article>;
 }

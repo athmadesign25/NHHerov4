@@ -16,7 +16,7 @@
 }
 @media (max-width: 767px) {
   .reserve[data-docked] { height: calc(var(--payment-dock-height, var(--space-128)) + max(var(--space-8), env(safe-area-inset-bottom)) + var(--space-16)); padding: 0; }
-  .bar[data-docked] { position: fixed; z-index: 40; inset: auto var(--space-8) max(var(--space-8), env(safe-area-inset-bottom)); padding: var(--space-12); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-card); box-shadow: var(--elevation-3); }
+  .bar[data-docked] { position: fixed; z-index: 40; inset: auto var(--booking-dock-gutter) max(var(--space-8), env(safe-area-inset-bottom)); padding: var(--space-12); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-card); box-shadow: var(--elevation-3); }
   .amount { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--space-16); }
   .bar[data-docked]::before { content: ""; position: absolute; inset: calc(var(--space-12) * -1) 0 auto; height: var(--space-12); pointer-events: none; background: linear-gradient(transparent, color-mix(in srgb, var(--color-bg-card) 20%, transparent)); }
   @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

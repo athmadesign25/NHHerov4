@@ -26,25 +26,29 @@ export default function Design21Refinements(props: ComponentProps<typeof Design1
           aria-pressed={!props.date && props.filters.availability === day} disabled={unavailable && props.filters.availability !== day}
           onClick={() => props.onFiltersChange({ ...props.filters, availability: !props.date && props.filters.availability === day ? "any" : day })}>
           {day === "today" ? "Today" : "Tomorrow"}
+          <span className={chip.selectionClear} data-selected={!props.date && props.filters.availability === day} aria-hidden><X size={14} /></span>
         </button>)}
-        <ChooseDate tone="blue" value={props.date} min={props.minDate} max={props.maxDate} disabled={unavailable && !props.date} onChange={props.onDateChange} />
+        <ChooseDate tone="red" showSelectionClear value={props.date} min={props.minDate} max={props.maxDate} disabled={unavailable && !props.date} onChange={props.onDateChange} />
         </div>
         <div className={styles.chipGroup} role="group" aria-label="Access to care">
-        <NearMeLocation showSelectionClear={false} cityOnly label="Near me" location={props.location} selected={nearbySelected} disabled={props.loading || props.error} onLocated={props.onNearMe} onClear={() => props.onNearMe("")} onFeedback={setFeedback} />
+        <NearMeLocation reserveSelectionClear cityOnly label="Near me" location={props.location} selected={nearbySelected} disabled={props.loading || props.error} onLocated={props.onNearMe} onClear={() => props.onNearMe("")} onFeedback={setFeedback} />
         <button type="button" className={chip.chip} aria-pressed={props.mode === "video"} onClick={() => props.onModeChange(props.mode === "video" ? "hospital" : "video")}>
           <Video size={16} aria-hidden />Video consultation
+          <span className={chip.selectionClear} data-selected={props.mode === "video"} aria-hidden><X size={14} /></span>
         </button>
         </div>
         <div className={styles.chipGroup} role="group" aria-label="Personal preferences">
         <button type="button" className={chip.chip} aria-pressed={props.historySelected} aria-haspopup={props.historyRequiresLogin ? "dialog" : undefined}
           title={props.historyRequiresLogin ? "Sign in to see your previous doctors" : undefined} onClick={props.onHistoryChange}>
           <History size={16} aria-hidden />{props.historyLabel}
+          <span className={chip.selectionClear} data-selected={props.historySelected} aria-hidden><X size={14} /></span>
         </button>
         {props.children}
         </div>
         <button type="button" className={chip.chip} aria-label="Order by earliest appointment" aria-pressed={props.sort === "earliest"}
           disabled={unavailable && props.sort !== "earliest"} onClick={() => props.onSortChange(props.sort === "earliest" ? "relevance" : "earliest")}>
           <ArrowUpDown size={16} aria-hidden />Earliest slot
+          <span className={chip.selectionClear} data-selected={props.sort === "earliest"} aria-hidden><X size={14} /></span>
         </button>
       </DoctorRefinementRow>
       <DoctorCallToBook placement="filters" />

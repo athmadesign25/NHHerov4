@@ -11,7 +11,7 @@
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  min-height: calc(var(--sp-6) - var(--sp-1) / 2);
+  min-height: var(--space-48);
   font-size: var(--font-size-xs);
   line-height: 1.5;
   white-space: nowrap;
@@ -19,4 +19,7 @@
 .label { color: var(--color-text-secondary); font-weight: 400; }
 .tags { min-width: 0; flex: 0 1 auto; --applied-tag-max: max(var(--sp-16), calc(100vw - var(--d3-gutter-start) - var(--d3-gutter-end) - var(--sp-16))); }
 @media (min-width: 768px) { .row { column-gap: var(--sp-2); } }
+@media (min-width: 1024px) and (pointer: fine) {
+  .label { min-height: calc(var(--space-40) + var(--space-4)); }
+}
 @media (forced-colors: active) { .label { color: CanvasText; } }

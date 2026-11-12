@@ -52,8 +52,8 @@
 .instructions li, .subtitle, .plainTest { overflow-wrap: anywhere; }
 .missingDetails { padding-block: var(--space-24); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
 .missingDetails p { max-width: 100%; overflow-wrap: anywhere; }
-.dock { position: fixed; bottom: var(--space-16); inset-inline: var(--space-16); z-index: 50; pointer-events: none; }
-.dockInner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-12); max-width: var(--max-width); margin-inline: auto; padding: var(--space-16); border: var(--space-1) solid var(--journey-paper-border); border-radius: var(--radius-xl); background: var(--journey-paper-glass); backdrop-filter: blur(var(--space-12)); box-shadow: var(--elevation-3); pointer-events: auto; }
+.dock { position: fixed; bottom: var(--space-16); inset-inline: var(--booking-dock-gutter); z-index: 50; pointer-events: none; }
+.dockInner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-12); max-width: var(--booking-dock-max-width); margin-inline: auto; padding: var(--space-16); border: var(--space-1) solid var(--journey-paper-border); border-radius: var(--radius-xl); background: var(--journey-paper-glass); backdrop-filter: blur(var(--space-12)); box-shadow: var(--elevation-3); pointer-events: auto; }
 .dockContext { display: none; min-width: 0; }
 .dockContext strong { display: block; font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dockContext span { display: block; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -65,7 +65,7 @@
 .primary svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
 .dockAction > .primary { flex-grow: 1; }
 .page :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
-@media (min-width: 640px) { .page { padding-inline: var(--space-24); } .hero[data-image] { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; } .image { aspect-ratio: 4 / 3; } .parameters ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dock { inset-inline: var(--space-24); } .dockInner { flex-wrap: nowrap; padding-inline: var(--space-24); gap: var(--space-24); } .dockContext { display: block; flex: 1; } .dockAction { width: auto; flex-shrink: 0; } }
+@media (min-width: 640px) { .page { padding-inline: var(--space-24); } .hero[data-image] { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; } .image { aspect-ratio: 4 / 3; } .parameters ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dockInner { flex-wrap: nowrap; padding-inline: var(--space-24); gap: var(--space-24); } .dockContext { display: block; flex: 1; } .dockAction { width: auto; flex-shrink: 0; } }
 @media (min-width: 1024px) { .hero { gap: var(--space-48); padding-block: var(--space-32) var(--space-40); } .hero[data-image] { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); } .section { padding-block: var(--space-40); } .prose { max-width: 85%; } .parameters ul { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .page *, .page *::before, .page *::after { transition: none; animation: none; scroll-behavior: auto; } }
 @media (prefers-reduced-transparency: reduce) { .dockInner, .sections { background: var(--color-surface); backdrop-filter: none; } }

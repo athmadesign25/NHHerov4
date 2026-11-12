@@ -7,9 +7,9 @@ import { X } from "lucide-react";
 import styles from "./SearchDialog.module.css";
 import ui from "@/components/ui/search-location/SearchTheme.module.css";
 
-interface Props { title: string; children: ReactNode; footer?: ReactNode; headerAction?: ReactNode; headerContent?: ReactNode; onClose: () => void; mobileOnly?: boolean; doctorPreview?: boolean }
+interface Props { title: string; children: ReactNode; footer?: ReactNode; headerAction?: ReactNode; headerContent?: ReactNode; onClose: () => void; mobileOnly?: boolean; doctorPreview?: boolean; className?: string }
 
-export default function SearchDialog({ title, children, footer, headerAction, headerContent, onClose, mobileOnly = false, doctorPreview = false }: Props) {
+export default function SearchDialog({ title, children, footer, headerAction, headerContent, onClose, mobileOnly = false, doctorPreview = false, className = "" }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
   const titleId = useId();
@@ -36,7 +36,7 @@ export default function SearchDialog({ title, children, footer, headerAction, he
       trigger?.focus({ preventScroll: true });
     };
   }, [mobileOnly, doctorPreview]);
-  return createPortal(<motion.dialog layoutRoot ref={ref} className={`${styles.dialog} ${doctorPreview ? ui.theme : ""}`} aria-labelledby={titleId} data-lenis-prevent data-d3-ui data-doctor-preview={doctorPreview || undefined}
+  return createPortal(<motion.dialog layoutRoot ref={ref} className={`${styles.dialog} ${doctorPreview ? ui.theme : ""} ${className}`} aria-labelledby={titleId} data-lenis-prevent data-d3-ui data-doctor-preview={doctorPreview || undefined}
     inert={!present} data-closing={!present || undefined} initial={animate ? { opacity: 0, y: 16 } : false} animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: animate ? 8 : 0, transition: { duration: animate ? .15 : 0 } }}
     transition={{ duration: animate ? .25 : 0, ease: [.22, 1, .36, 1] }}

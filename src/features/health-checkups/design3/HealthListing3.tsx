@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Building2, FlaskConical, HeartPulse, Search, X, History, Heart, Droplets, Sparkles, UserRound, Activity } from "lucide-react";
+import { Building2, Search, X, History, Heart, Droplets, Sparkles, UserRound, Activity } from "lucide-react";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import searchStyles from "@/components/ui/search-location/SearchToolbar.module.css";
 import searchTheme from "@/components/ui/search-location/SearchTheme.module.css";
@@ -12,6 +12,7 @@ import HealthIncludedTests from "../HealthIncludedTests";
 import { HEALTH_CATEGORIES, healthCategories } from "../healthCardContent";
 import HealthLocationPicker from "./HealthLocationPicker";
 import HealthDiscoveryCard from "./HealthDiscoveryCard";
+import HealthTypeToggle from "./HealthTypeToggle";
 import styles from "./HealthListing3.module.css";
 
 interface Props {
@@ -74,18 +75,15 @@ export default function HealthListing3(props: Props) {
     {testsItem && <HealthIncludedTests item={testsItem} onClose={() => setTestsItem(null)} onDetails={() => { setTestsItem(null); onDetails(testsItem); }} />}
     <section className={`${searchStyles.searchBar} ${searchTheme.theme} ${styles.discoveryBar} ${!navVisible ? searchStyles.navHidden : ""}`} aria-label="Find health packages and tests">
       <div className={searchStyles.toolbarContent}>
-        <div className={`${searchStyles.searchRow} ${searchStyles.locationFirst} ${styles.searchRow}`}>
+        <div className={styles.searchAndType}>
+          <div className={`${searchStyles.searchRow} ${searchStyles.locationFirst} ${styles.searchRow}`}>
           <SearchLocationUnit id="health-discovery-search" query={query} onQuery={value => { onQuery(value); onCategory("All"); }} maxLength={120}
             searchLabel="Find health packages and tests" inputLabel="Search packages and lab tests" placeholder="Search packages or lab tests"
             onSubmit={event => { event.preventDefault(); if (!facility) onOpenFacility(); else results.current?.focus({ preventScroll: true }); }}
             locationControl={<HealthLocationPicker cities={cities} facilities={facilities} selectedFacility={facility} open={facilityOpen}
               onOpen={onOpenFacility} onClose={onCloseFacility} onSelect={onFacility} />} />
-        </div>
-        <div className={styles.refinements}>
-          <div className={styles.segmented} role="group" aria-label="Browse by type">
-            <button type="button" aria-pressed={!searching && tab === "package"} onClick={() => browse("package")}><HeartPulse aria-hidden /><span>Health packages</span></button>
-            <button type="button" aria-pressed={!searching && tab === "test"} onClick={() => browse("test")}><FlaskConical aria-hidden /><span>Lab tests</span></button>
           </div>
+          <HealthTypeToggle value={tab} searching={searching} onChange={browse} />
         </div>
         {facility && !searching && (categories.length > 0 || hasHistory) && <div className={styles.categories} role="group" aria-label="Filter by health focus">
           <button type="button" className={chip.chip} aria-pressed={activeCategory === "All"} onClick={() => onCategory("All")}>All</button>

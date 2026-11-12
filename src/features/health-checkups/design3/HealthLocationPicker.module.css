@@ -37,75 +37,42 @@
 .triggerText > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); }
 .chevron { width: var(--space-16); height: var(--space-16); flex-shrink: 0; box-sizing: content-box; padding: var(--space-6); border-radius: var(--radius-full); transition: background-color var(--duration-fast) var(--ease-out); }
 
-.panel {
-  padding: 0;
-  margin: 0;
-  border: var(--space-1) solid var(--color-border);
-  color: var(--color-text);
-  color-scheme: light;
-  background: color-mix(in srgb, var(--journey-paper-surface) 95%, transparent);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  box-shadow: var(--elevation-4);
-  overflow: hidden;
-  font-family: var(--font-family);
-}
-
-.popover { position: absolute; inset-block-start: calc(100% + var(--space-8)); inset-inline-start: 0; z-index: 60; width: min(calc(var(--space-128) * 4), calc(100vw - var(--space-48))); max-width: none; max-height: var(--health-location-panel-max-height, calc(100dvh - var(--nav-height) - var(--space-128))); border-radius: var(--radius-xl); animation: reveal var(--duration-base) var(--ease-out); }
-.panelBody { display: flex; flex-direction: column; min-height: 0; max-height: inherit; padding: var(--space-16); }
-.header { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; gap: var(--space-8); margin-bottom: var(--space-12); }
+/* Reuse the booking city picker's surface, header, search, rows and scrollbar. */
+/* More specific than the shared city menu: centre names need a wider surface. */
+.location .popover { width: min(calc(var(--space-128) * 4 + var(--space-48)), calc(100vw - var(--space-48))); }
 .titleGroup { display: flex; align-items: center; gap: var(--space-4); min-width: 0; }
-.titleGroup h2 { font-size: var(--font-size-lg); font-weight: 600; line-height: var(--leading-snug); }
-.iconButton { display: inline-grid; place-items: center; flex-shrink: 0; width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out); }
-.iconButton svg { width: var(--space-20); height: var(--space-20); }
-.cityContext { display: inline-flex; align-self: flex-start; align-items: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); margin-top: calc(var(--space-12) * -1); margin-bottom: var(--space-8); padding: 0 var(--space-8); border: 0; border-radius: var(--radius-md); background: none; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
+.cityContext { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--space-40); margin-bottom: var(--space-8); padding: 0 var(--space-8); border: 0; border-radius: var(--radius-md); background: none; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
 .cityContext svg { width: var(--space-16); height: var(--space-16); }
-.cityContext svg:last-child { color: var(--color-text-secondary); }
-.search { display: flex; align-items: center; gap: var(--space-8); flex-shrink: 0; min-height: var(--space-48); padding-inline: var(--space-12) var(--space-4); margin-bottom: var(--space-8); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-md); background: rgba(var(--white-rgb), .85); color: var(--color-text-secondary); }
-.search > svg { width: var(--space-20); height: var(--space-20); flex-shrink: 0; }
-.search input { width: 100%; min-width: 0; border: 0; outline: none; background: none; color: var(--color-text); font: inherit; font-size: var(--font-size-sm); line-height: var(--leading-body); }
-.search input::placeholder { color: var(--color-text-secondary); }
-.search input::-webkit-search-cancel-button { appearance: none; }
-.search:focus-within { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
-.results { flex: 1; overflow-y: auto; overscroll-behavior: contain; min-height: 0; max-height: min(45dvh, calc(var(--space-128) * 3)); scrollbar-width: thin; scrollbar-color: var(--slate-300) transparent; }
-.options { display: grid; gap: var(--space-4); list-style: none; margin: 0; padding: var(--space-4); }
-.option { display: flex; align-items: flex-start; width: 100%; gap: var(--space-12); min-height: var(--space-48); padding: var(--space-12); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-text-secondary); cursor: pointer; text-align: left; transition: background-color var(--duration-fast) var(--ease-out); }
-.optionIcon { width: var(--space-20); height: var(--space-20); margin-top: var(--space-2); flex-shrink: 0; }
 .optionCopy { display: grid; gap: var(--space-4); flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .optionCopy strong { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; color: var(--color-text); }
 .optionCopy small { color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
-.rowChevron { width: var(--space-16); height: var(--space-16); margin-top: var(--space-4); flex-shrink: 0; }
-.radio { display: grid; place-items: center; flex-shrink: 0; width: var(--space-20); height: var(--space-20); margin-top: var(--space-2); border: var(--space-1) solid var(--color-border); border-radius: var(--radius-full); }
-.option[aria-pressed="true"] { background: var(--color-primary-light); }
-.option[aria-pressed="true"] .radio { border-color: var(--red-500); background: var(--red-500); color: var(--color-text-inverse); }
-.radio svg { width: var(--space-14); height: var(--space-14); stroke-width: 3; }
-.empty { display: grid; justify-items: center; gap: var(--space-8); padding: var(--space-24) var(--space-16); color: var(--color-text-secondary); text-align: center; font-size: var(--font-size-sm); line-height: var(--leading-body); }
-.empty button { min-height: calc(var(--space-40) + var(--space-4)); padding-inline: var(--space-12); border: 0; background: none; color: var(--color-primary); font-size: inherit; font-weight: 500; cursor: pointer; }
-.srOnly { position: absolute; width: var(--space-1); height: var(--space-1); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.location :focus-visible, .panel :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
-.search input:focus-visible { outline: none; }
-
+.radio { display: grid; place-items: center; flex-shrink: 0; align-self: flex-start; margin-top: var(--space-2); width: var(--space-20); height: var(--space-20); border: var(--space-1) solid var(--color-text-muted); border-radius: var(--radius-full); background: transparent; }
+.radio::after { content: ""; width: var(--space-10); height: var(--space-10); border-radius: var(--radius-full); background: var(--red-500); opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.centreRow [aria-checked="true"] .radio { border-color: var(--red-500); }
+.centreRow [aria-checked="true"] .radio::after { opacity: 1; }
+.optionIcon { flex-shrink: 0; }
+.rowChevron { flex-shrink: 0; }
+.location :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 @media (hover: hover) {
-  .trigger:hover .chevron, .iconButton:hover { background: var(--color-disclosure-hover); }
-  .option:hover { background: var(--color-disclosure-hover); }
-  .option[aria-pressed="true"]:hover { background: color-mix(in srgb, var(--color-primary-light) 85%, var(--color-surface)); }
-  .cityContext:hover, .empty button:hover { color: var(--color-primary-dark); }
+  .trigger:hover .chevron, .cityContext:hover { background: var(--color-disclosure-hover); }
 }
-
 @media (max-width: 639px) {
   .location { flex: 1 1 auto; max-width: 100%; width: 100%; }
   .location::after { display: none; }
   .trigger { min-height: var(--space-56); padding-inline: var(--space-16); }
-  .triggerText strong { font-size: var(--font-size-sm); }
-  .sheet { position: fixed; inset: auto 0 0; width: 100%; max-width: 100%; max-height: calc(100dvh - var(--space-24)); border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-bottom: 0; animation: sheetReveal var(--duration-moderate) var(--ease-out); }
-  .sheet::backdrop { background: var(--scrim); }
-  .sheet .panelBody { padding-bottom: max(var(--space-16), env(safe-area-inset-bottom)); }
-  .sheet .results { max-height: min(55dvh, calc(var(--space-128) * 4)); }
-  .search input { font-size: var(--font-size-base); }
+  .cityContext { min-height: calc(var(--space-40) + var(--space-4)); }
 }
+@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
 
-@keyframes reveal { from { opacity: 0; transform: translateY(calc(var(--space-4) * -1)); } to { opacity: 1; transform: none; } }
-@keyframes sheetReveal { from { opacity: 0; transform: translateY(var(--space-16)); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .panel, .iconButton, .chevron, .option { animation: none; transition: none; } }
-@media (prefers-reduced-transparency: reduce) { .panel { background: var(--journey-paper-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
-@media (forced-colors: active) { .option[aria-pressed="true"] .radio { background: Highlight; color: HighlightText; border-color: Highlight; } }
+.centreRow { border-radius: var(--radius-md); transition: background-color var(--duration-fast) var(--ease-out); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--space-4); }
+.distancePill { composes: distancePill from "../../booking/design20/BookingSummary.module.css"; --d7-muted: var(--color-text-secondary); margin: var(--space-8) var(--space-8) 0 0; }
+.distancePill::before { inset: 0; }
+
+/* One hover surface for selection; the directions link remains its own action. */
+.centreRow > button:hover { background: transparent; }
+@media (hover: hover) {
+  .centreRow:has(> button:hover) { background: var(--color-disclosure-hover); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .centreRow, .radio::after { transition: none; }
+}

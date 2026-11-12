@@ -149,7 +149,9 @@ test("discovery search groups image cards and retains selection without comparis
   assert.match(markup, /<section aria-label="Health packages"/);
   assert.match(markup, /<section aria-label="Lab tests"/);
   assert.match(markup, /aria-label="Remove Thyroid health package from cart"/);
-  assert.equal((markup.match(/<img /g) ?? []).length, 2);
+  const cards = markup.match(/<article\b[\s\S]*?<\/article>/g) ?? [];
+  assert.equal(cards.length, 2);
+  for (const card of cards) assert.equal((card.match(/<img /g) ?? []).length, 1);
   assert.doesNotMatch(markup, /Compare|comparison/);
   const testsOnly = renderToStaticMarkup(createElement(HealthListing3, { ...props, query: "" }));
   assert.doesNotMatch(testsOnly, /<article[^>]*data-kind="package"/);
@@ -187,4 +189,26 @@ test("booked-before status is member-specific and clears on sign-out", async () 
   assert.deepEqual(getServerHealthBookingHistory(), {});
   clearHealthBookingHistory();
   assert.deepEqual(getHealthBookingHistory(), {});
+});
+
+test("card facts retain source samples and distinguish test groups from their parameters", async () => {
+  const { healthCardContent } = await import("../src/features/health-checkups/healthCardContent.ts");
+  const content = healthCardContent({ ...item, id: "source-6024-pkg037822", kind: "package" });
+  assert.deepEqual(content.samples, ["Blood", "Urine"]);
+  assert.equal(content.testCount, 26);
+  assert.equal(content.preparation, "");
+  assert.equal(content.reportTime, "");
+  assert.ok(content.highlights.every(name => content.groups.some(group => group.name === name)));
+  const fallback = healthCardContent({ ...item, details: { profileTestGroups: [], testGroups: [{ name: "Thyroid profile", parameters: ["T3", "T4", "TSH"] }], sampleRequired: [" Blood ", "", "Blood"] } });
+  assert.deepEqual(fallback.samples, ["Blood"]);
+  assert.equal(fallback.testCount, 1);
+  assert.deepEqual(healthCardContent(item).samples, []);
+});
+
+test("packages without captured inclusions open details instead of an empty included-tests dialog", () => {
+  const markup = renderToStaticMarkup(createElement(HealthDiscoveryCard, { item: { ...item, kind: "package", requiresSlot: true }, selected: false, included: false, onAdd() {}, onDetails() {}, onTests() {} }));
+  assert.match(text(markup), /View details/);
+  assert.match(text(markup), /Choose a time at checkout/);
+  assert.doesNotMatch(markup, /aria-haspopup="dialog"/);
+  assert.doesNotMatch(text(markup), /Sample|Reports|Preparation|Includes 0/);
 });

@@ -2,16 +2,24 @@ import capturedContent from "@/data/health-checkups/card-content.json";
 import type { HealthItem } from "./catalog";
 import type { HealthTestGroup } from "./healthDetailTypes";
 
-interface CardContent { originalPrice?: number; catalogueName?: string; testGroups?: HealthTestGroup[] }
+interface CardContent { originalPrice?: number; catalogueName?: string; testGroups?: HealthTestGroup[]; sampleRequired?: string[] }
 const content: Record<string, CardContent> = capturedContent as Record<string, CardContent>;
 
 export function healthCardContent(item: HealthItem) {
   const source = content[item.id];
   const originalPrice = item.originalPrice ?? source?.originalPrice;
-  const groups = item.includedTests ?? source?.testGroups ?? (item.kind === "test" ? [{ name: item.name, parameters: [] }] : []);
+  const groups = [item.includedTests, item.details?.profileTestGroups, source?.testGroups, item.details?.testGroups].find(value => value?.length)
+    ?? (item.kind === "test" ? [{ name: item.name, parameters: [] }] : []);
+  // Show source-authored facts only. A blank field is not a clinical promise.
+  const samples = [...new Set((item.details?.sampleRequired ?? source?.sampleRequired ?? []).map(value => value.trim()).filter(Boolean))];
+  const highlights = [...new Set(groups.map(group => group.name.trim()).filter(name => name && name.toLowerCase() !== item.name.toLowerCase()))].slice(0, 3);
   return {
     originalPrice: originalPrice !== undefined && Number.isFinite(originalPrice) && originalPrice > item.price ? originalPrice : undefined,
     groups,
+    samples,
+    highlights,
+    preparation: item.preparation.trim(),
+    reportTime: item.reportTime.trim(),
     testCount: groups.length || undefined,
     catalogueName: source?.catalogueName ?? item.name,
   };

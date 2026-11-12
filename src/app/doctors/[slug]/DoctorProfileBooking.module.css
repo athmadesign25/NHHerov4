@@ -12,8 +12,9 @@
   --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
   position: fixed;
   z-index: 50;
-  inset: auto var(--sp-2) calc(var(--sp-2) + env(safe-area-inset-bottom, 0px));
-  max-width: calc(var(--sp-16) * 7);
+  inset: auto var(--booking-dock-gutter) calc(var(--sp-2) + env(safe-area-inset-bottom, 0px));
+  width: var(--booking-dock-width);
+  max-width: var(--booking-dock-max-width);
   margin-inline: auto;
   color: var(--d7-text);
 }

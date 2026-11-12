@@ -324,6 +324,10 @@
 
   /* Layout */
   --max-width: 1240px;
+  /* Shared booking and health-checkup docks retain one width in every state. */
+  --booking-dock-max-width: calc(var(--space-128) * 7);
+  --booking-dock-gutter: var(--space-16);
+  --booking-dock-width: min(calc(100% - var(--booking-dock-gutter) * 2), var(--booking-dock-max-width));
   --doctor-listing-max-width: 1600px;
   --doctor-listing-card-min-width: 360px;
   --nav-height: 72px;

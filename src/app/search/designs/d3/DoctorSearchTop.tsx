@@ -10,6 +10,7 @@ import { requestDoctorCity } from "@/features/search/doctorLocation";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import SearchCityPicker from "@/components/ui/search-location/SearchCityPicker";
+import ui from "@/components/ui/search-location/SearchTheme.module.css";
 import DoctorSearchHint from "./DoctorSearchHint";
 import styles from "@/components/ui/search-location/SearchToolbar.module.css";
 import listing from "./DoctorSearchTop.module.css";
@@ -126,6 +127,7 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
 
   const locationSelect = (className: string) => <SearchCityPicker
     className={`${styles.location} ${className}`} cities={NH_CITIES} value={location}
+    panelClassName={ui.blueSelection}
     busy={detectingLocation === location} showDeviceLocation={!locationFirst}
     describedBy="d3-location-status d3-refinement-help" onChange={handleLocationChange} />;
   const filterButton = <button type="button" className={styles.filterButton} data-active={filterCount > 0 || undefined} onClick={onOpenFilters} aria-haspopup="dialog"
