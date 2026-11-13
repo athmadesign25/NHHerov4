@@ -71,6 +71,10 @@
   padding-right: calc(max(4vw, 40px) + 184px);
 }
 
+.subConditionsContainer {
+  padding-bottom: 96px;
+}
+
 
 
 .heroContent {
@@ -106,22 +110,22 @@
   gap: 8px;
   padding: 12px 28px;
   border-radius: 8px;
-  border: 1.5px solid rgba(var(--white-rgb), 0.5);
-  background: rgba(var(--white-rgb), 0.06);
-  color: var(--white);
+  border: 1.5px solid var(--white);
+  background: var(--white);
+  color: var(--color-primary);
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.10);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.12);
 }
 
 .heroButton:hover {
-  background: rgba(var(--white-rgb), 0.14);
-  border-color: var(--white);
+  background: rgba(var(--white-rgb), 0.92);
+  border-color: rgba(var(--white-rgb), 0.92);
+  color: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.20);
 }
@@ -474,7 +478,12 @@
 }
 
 .treatmentsSection {
-  padding: 150px 0;
+  padding-top: 150px;
+  padding-bottom: 0;
+  background: transparent;
+  position: relative;
+  overflow: visible;
+  z-index: 100;
 }
 
 @media (max-width: 700px) {
@@ -484,7 +493,8 @@
   }
 
   .treatmentsSection {
-    padding: 80px 0;
+    padding-top: 80px;
+    padding-bottom: 0;
   }
 }
 
@@ -559,11 +569,10 @@
   z-index: 2;
 }
 
-/* ─── Circular Programme Navigation Tabs (Sticky Pinned on Scroll) ─── */
+/* ─── Circular Programme Navigation Tabs ─── */
 .programmeTabsWrapper {
-  position: sticky;
-  top: 0;
-  z-index: 900;
+  position: relative;
+  z-index: 50;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -571,18 +580,9 @@
   padding: 14px 4vw 16px;
   box-sizing: border-box;
   background: transparent;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  border-bottom: 1px solid transparent;
-  box-shadow: 0 0 0 rgba(var(--black-rgb), 0);
-  transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              padding 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              backdrop-filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              -webkit-backdrop-filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: top, padding, background, box-shadow;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Pinned state with exact navbar blur glass background, lesser height, and compact padding.
@@ -838,12 +838,12 @@
   pointer-events: auto !important;
 }
 
-/* When scrolling down, hide the pinned tabs off-screen */
+/* When scrolling down, keep the pinned tabs docked flush at the top */
 :global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned {
   top: 0;
-  transform: translateY(-120%) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 @media (max-width: 1024px) {
@@ -853,13 +853,20 @@
     opacity: 1 !important;
     pointer-events: auto !important;
   }
+  :global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned {
+    top: 0;
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
 }
 
-/* Hide or push away gracefully when footer is reached */
+/* Hide or push away gracefully when pinned or footer is reached */
 .programmeTabsWrapperHidden {
   opacity: 0 !important;
+  visibility: hidden !important;
   pointer-events: none !important;
-  transform: translateY(-20px) !important;
+  transform: translateY(-12px) scale(0.98) !important;
 }
 
 .programmeTabsScroll {
@@ -1278,6 +1285,8 @@
 }
 
 .accordionContainerFullWidth {
+  position: relative;
+  z-index: 3;
   margin-bottom: var(--sp-8);
   width: 100%;
   box-sizing: border-box;
@@ -1377,62 +1386,106 @@
 }
 
 .subConditionsGrid {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-4);
 }
 
 .subConditionCard {
-  background: rgba(var(--white-rgb), 0.05);
-  border: 1px solid rgba(var(--white-rgb), 0.1);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-5);
+  height: 120px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md, 8px);
+  padding: 16px 18px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .subConditionCard:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  border-color: rgba(3, 78, 162, 0.25);
+  box-shadow: 0 8px 24px rgba(3, 78, 162, 0.12);
 }
 
 .subConditionIcon {
   display: flex;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: var(--radius-md);
+  border-radius: 6px;
   background: linear-gradient(180deg, rgba(var(--red-emergency-rgb), 0.85) 0%, var(--red-emergency-dark) 100%);
   box-shadow: 0 1px 0 1px rgba(var(--red-emergency-rgb), 0.1) inset;
   backdrop-filter: blur(var(--blur-sm));
   -webkit-backdrop-filter: blur(var(--blur-sm));
   color: var(--red-50);
-  margin-bottom: var(--sp-4);
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.subConditionContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .subConditionTitle {
+  font-family: var(--font-family);
   font-weight: 700;
-  margin-bottom: var(--sp-2);
-  font-size: var(--font-size-base);
-  color: var(--color-text, var(--navy-ink));
+  margin-bottom: 4px;
+  font-size: 16px;
+  line-height: 1.25;
+  color: #1a1a2e;
   transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subConditionDesc {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base, 16px);
   color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin-bottom: var(--sp-4);
-  flex: 1;
+  line-height: var(--leading-relaxed, 1.5);
+  margin-bottom: 0;
   transition: color 0.2s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subConditionArrowWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  margin-left: 6px;
+  color: #034EA2;
 }
 
 .subConditionArrow {
-  align-self: flex-start;
-  color: inherit;
+  color: currentColor;
+  width: 14px;
+  height: 14px;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 

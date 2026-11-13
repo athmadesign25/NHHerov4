@@ -1,0 +1,111 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0;
+  padding: 0;
+  list-style: none;
+  background: none;
+  border: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.step.clickable {
+  cursor: pointer;
+}
+
+.step.clickable:hover .label {
+  color: var(--color-primary);
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg-alt);
+  flex-shrink: 0;
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+}
+
+.nodeNumber {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-family: var(--font-family);
+  line-height: 1;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+  font-family: var(--font-family);
+  text-align: center;
+}
+
+.step.active .label {
+  color: var(--color-primary);
+}
+
+.step.completed .label {
+  color: var(--color-success);
+}
+
+/* ─── CONNECTOR LINE ─────────────────────────────────────────────────────── */
+.connector {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  position: relative;
+  margin-bottom: 24px; /* offset for labels below */
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.connectorFill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-success);
+  border-radius: 2px;
+  transform-origin: left center;
+}
+
+/* ─── MOBILE: compact pill row ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .wrapper {
+    gap: 0;
+  }
+
+  .node {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nodeNumber {
+    font-size: 11px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+
+  .connector {
+    margin-bottom: 20px;
+  }
+}

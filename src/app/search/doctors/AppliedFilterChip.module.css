@@ -1,0 +1,35 @@
+.chip { max-width: 100%; text-align: left; }
+.chip span { min-width: 0; overflow-wrap: anywhere; }
+.chip:disabled { pointer-events: none; }
+
+/* Same pill geometry and NH-red selection language as the smart-filter row.
+   The neutral glass fill keeps this summary visually quieter. */
+.chip.neutral {
+  min-height: var(--space-48);
+  max-width: min(calc(var(--sp-16) * 3), var(--applied-tag-max, 100cqi));
+  padding-inline: var(--space-12);
+  gap: var(--space-8);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  color: var(--d3-ui-selection-label);
+}
+.chip.neutral span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip.neutral svg { width: var(--space-14); height: var(--space-14); color: inherit; transition: color var(--transition-fast); }
+.chip.neutral::before { inset-block: var(--space-6); border-color: var(--color-border); background: var(--d3-control-surface, var(--color-bg-card)); }
+.chip.neutral:not(:disabled):hover { color: var(--d3-ui-selection-hover); }
+.chip.neutral:not(:disabled):active { color: var(--d3-ui-selection-pressed); }
+.chip.neutral:not(:disabled):hover svg { color: inherit; }
+.chip.neutral:not(:disabled):is(:hover, :active)::before { border-color: var(--color-border); background: var(--d3-control-surface, var(--color-bg-card)); }
+@media (min-width: 1024px) and (pointer: fine) {
+  .chip.neutral { min-height: calc(var(--space-40) + var(--space-4)); }
+}
+@media (prefers-reduced-motion: reduce) { .chip.neutral svg { transition: none; } }
+@media (forced-colors: active) {
+  .chip.neutral { color: ButtonText; }
+  .chip.neutral::before { border-color: ButtonText; background: Canvas; }
+  .chip.neutral:not(:disabled):is(:hover, :active) { color: Highlight; }
+  .chip.neutral:not(:disabled):is(:hover, :active)::before { border-color: Highlight; background: Canvas; }
+  .chip.neutral svg, .chip.neutral:not(:disabled):hover svg { color: inherit; }
+}

@@ -315,15 +315,15 @@ export default function CentreOfExcellence() {
             ))}
           </div>
 
-          {/* Seamless Dark Grid Extension with View All Specialties CTA */}
+          {/* Seamless Dark Grid Extension with View All Centres of Excellence CTA */}
           <div className={styles.gridBottomStrip}>
             <motion.a
-              href="/specialities?category=Centres+of+Excellence"
+              href="/centre-of-excellence"
               ref={viewAllBtnRef}
               className={styles.viewAllBtn}
               style={{ opacity: dimOpacity, filter: dimBlur }}
             >
-              View All Specialties
+              View All Centres of Excellence
             </motion.a>
           </div>
 

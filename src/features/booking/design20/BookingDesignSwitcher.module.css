@@ -1,0 +1,7 @@
+.switcher { composes: root from "../../design-preview/DesignPreview.module.css"; z-index: 45; }
+.trigger { composes: trigger from "../../design-preview/DesignPreview.module.css"; }
+.expanded { composes: expanded from "../../design-preview/DesignPreview.module.css"; }
+.options {
+  composes: options from "../../design-preview/DesignPreview.module.css";
+  --preview-menu-width: calc(var(--space-96) * 2);
+}

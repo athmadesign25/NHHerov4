@@ -1,0 +1,434 @@
+[
+  {
+    "id": "1001",
+    "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "258/A, Bommasandra Industrial Area , Anekal Taluk, Hosur Road Bangalore, Karnataka - 560099",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1001"
+  },
+  {
+    "id": "1002",
+    "name": "Mazumdar Shaw Medical Centre, Bangalore",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "258/A, Bommasandra Industrial Area, Hosur Road , Anekal Taluk Bangalore, Karnataka - 560099",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1002"
+  },
+  {
+    "id": "1006",
+    "name": "SDM Narayana Heart Centre, Dharwad",
+    "city": "Dharwad",
+    "serviceCities": [
+      "Dharwad"
+    ],
+    "address": "Sdm College Of Medical Science , Manjushree Nagar, Sattur Dharwad, Karnataka - 580009",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1006"
+  },
+  {
+    "id": "1009",
+    "name": "Sahyadri Narayana Multispeciality Hospital, Shimoga",
+    "city": "Shimoga",
+    "serviceCities": [
+      "Shimoga"
+    ],
+    "address": "NT Road, Harakere Shivamogga, Karnataka - 577202",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1009"
+  },
+  {
+    "id": "1011",
+    "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "Basant Health Centre Building, No-1 , 18th main (Opp.HSR Club), Sector 3, HSR Layout Bangalore, Karnataka - 560102",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1011"
+  },
+  {
+    "id": "1014",
+    "name": "Narayana Multispeciality Hospital, Mysore",
+    "city": "Mysore",
+    "serviceCities": [
+      "Mysore"
+    ],
+    "address": "CAH/1, 3rd Phase, Devanur 2nd Stage , R.S.Naidu Nagar Mysore, Karnataka - 570019",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1014"
+  },
+  {
+    "id": "1020",
+    "name": "Narayana Health City, International Wing",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1020"
+  },
+  {
+    "id": "1029",
+    "name": "Narayana Hospital - Banashankari, Bangalore",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "634, Outer Ring Rd, 2nd Phase, TMC Layout, Banashankari 3rd Stage, Banashankari, Bengaluru, Karnataka 560085",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1029"
+  },
+  {
+    "id": "1251",
+    "name": "Narayana Multispeciality Hospital, Ahmedabad",
+    "city": "Ahmedabad",
+    "serviceCities": [
+      "Ahmedabad"
+    ],
+    "address": "Nr. Chakudiya Mahadev, Rakhial Cross Road , Opp. Rakhial Police Station, Rakhial Ahmedabad, Gujarat - 380023",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1251"
+  },
+  {
+    "id": "1501",
+    "name": "NH-Jaipur Health City",
+    "city": "Jaipur",
+    "serviceCities": [
+      "Jaipur"
+    ],
+    "address": "Sector 28, Kumbha Marg , Pratap Nagar, Sanganer Jaipur, Rajasthan - 302033",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1501"
+  },
+  {
+    "id": "1505",
+    "name": "Dharamshila Narayana Superspeciality Hospital",
+    "city": "Delhi",
+    "serviceCities": [
+      "Delhi"
+    ],
+    "address": "Vasundhara Enclave , Near New Ashok Nagar Metro Station Dallupura, New Delhi, Delhi - 110096",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1505"
+  },
+  {
+    "id": "1506",
+    "name": "Narayana Superspeciality Hospital, Gurugram",
+    "city": "Gurugram",
+    "serviceCities": [
+      "Gurugram"
+    ],
+    "address": "Plot 3201, Block - V , DLF Phase - III, Nathupur, Sector 24 Gurugram, Haryana - 122002",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1506"
+  },
+  {
+    "id": "1753",
+    "name": "Brahmananda Narayana Multispeciality Hospital, Jamshedpur",
+    "city": "Jamshedpur",
+    "serviceCities": [
+      "Jamshedpur"
+    ],
+    "address": "NH-33, Near Pardih Chowk, Tamolia , District Saraikela Kharsawan Jamshedpur, Jharkhand - 831012",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1753"
+  },
+  {
+    "id": "1754",
+    "name": "MMI Narayana Multispeciality Hospital, Raipur",
+    "city": "Raipur",
+    "serviceCities": [
+      "Raipur"
+    ],
+    "address": "New Dhamtari Road, Lalpur Near Pachpedi Naka Raipur, Chhattisgarh - 492001",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1754"
+  },
+  {
+    "id": "1755",
+    "name": "Narayana Superspeciality Hospital, Guwahati",
+    "city": "Guwahati",
+    "serviceCities": [
+      "Guwahati"
+    ],
+    "address": "Tularam Bafna, Civil Hospital complex , Amingoan Guwahati, Assam - 781031",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1755"
+  },
+  {
+    "id": "1760",
+    "name": "Narayana Multispeciality Hospital, Barasat",
+    "city": "Barasat",
+    "serviceCities": [
+      "Barasat",
+      "Kolkata"
+    ],
+    "address": "78, Jessore Road ( South), Kolkata, West Bengal - 700127",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1760"
+  },
+  {
+    "id": "1764",
+    "name": "Narayana Multispeciality Hospital, Howrah",
+    "city": "Howrah",
+    "serviceCities": [
+      "Howrah",
+      "Kolkata"
+    ],
+    "address": "Podrah , Near Chunabati, Andul Road Howrah, West Bengal - 711109",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1764"
+  },
+  {
+    "id": "1765",
+    "name": "Narayana Superspeciality Hospital,  Howrah",
+    "city": "Howrah",
+    "serviceCities": [
+      "Howrah",
+      "Kolkata"
+    ],
+    "address": "120/1, Andul Rd , Near Nabanna Howrah, West Bengal - 711103",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1765"
+  },
+  {
+    "id": "1771",
+    "name": "Narayana Medical Center, Gopala",
+    "city": "Shimoga",
+    "serviceCities": [
+      "Shimoga"
+    ],
+    "address": "CS arcade, Gopala Gowda Road, opp. to Karnataka Gramina Bank, E Block, Gopala Gowda Extension, Shivamogga, Karnataka 577205",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1771"
+  },
+  {
+    "id": "2012",
+    "name": "Narayana Clinic, Harlur Road",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "1st Floor, Haralur Main Rd, below Cult Fit, HSR Extension, Reliable Residency Layout Phase 3, Reliable Tranquil Layout, HSR Layout, Bengaluru, Karnataka 560102",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "2012"
+  },
+  {
+    "id": "2013",
+    "name": "Narayana Clinic, Hosur",
+    "city": "Hosur",
+    "serviceCities": [
+      "Bangalore",
+      "Hosur"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "2013"
+  },
+  {
+    "id": "2014",
+    "name": "Narayana Clinic, Sarjapur",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "Above HDFC Bank, 83/3 Doddakannelli, Sarjapura Main Road Bangalore, Karnataka - 560035",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "2014"
+  },
+  {
+    "id": "2015",
+    "name": "Narayana Clinic, Jayanagar",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "1st Floor, Uday House, Opposite Jain temple 4th Block, Jayanagar Bangalore, Karnataka - 560011",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "2015"
+  },
+  {
+    "id": "electronic-city",
+    "name": "Narayana Clinic, Electronic City",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "E-City 1 (Velankani): Shop No. 5,6,7 SJR Equinox Retail, Opp. Gate No. 3 Velankani Information Systems Pvt. Ltd Electronic City Phase – 1, Karnataka - 560100",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "3010"
+  },
+  {
+    "id": "3011",
+    "name": "Narayana Clinic, Manipal County",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "2nd Floor, 36, 37, Manipal County Rd, above KFC, opp. Aratt Royal Citadel, SRK Paradise Layout, Wellington Paradise, Singasandra, Bengaluru, Karnataka 560114",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "3011"
+  },
+  {
+    "id": "3012",
+    "name": "Narayana Clinic, HSR Layout",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "459, Sector 4, HSR Layout, Bengaluru, Karnataka 560102",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "3012"
+  },
+  {
+    "id": "prestige",
+    "name": "Narayana Aarogyam, Prestige Tech Park",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "Ground floor, Cosmos Building, PRESTIGE TECH PARK, Narayana Arogyam, Outer Ring Rd, Kadubeesanahalli, Bengaluru, Karnataka 560103",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "6024"
+  },
+  {
+    "id": "6028",
+    "name": "Narayana Clinic, JP Nagar",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "734, 5th Main Rd, Sarakki Industrial Layout, 3rd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "6028"
+  },
+  {
+    "id": "6030",
+    "name": "Narayana Clinic, Kanakapura Road",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "P.N.Towers , Site No.04, Narayana Nagar, Kanakapura Main Rd, Doddakallasandra, Uttarahalli Hobli, Bengaluru, Karnataka 560062",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "6030"
+  },
+  {
+    "id": "6530",
+    "name": "Narayana Clinic, Chandapura",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "1st Floor, 425/426, Chandapura- Anekal Rd, near Surya City, above Pizza hut, Iggalur, Suryanagar Phase I, Chandapura, Bengaluru, Andapura, Karnataka 560081",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "6530"
+  },
+  {
+    "id": "6538",
+    "name": "Narayana Clinic, Nagarabhavi",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "Raju Plaza, No.15/14, 1st Main, ORR, Nagarbhavi, Bengaluru - 560078, Bengaluru, Karnataka 560072",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "6538"
+  },
+  {
+    "id": "centre-bangalore-narayana-clinic-banashankari-bangalore",
+    "name": "Narayana Clinic - Banashankari, Bangalore",
+    "city": "Bangalore",
+    "serviceCities": [
+      "Bangalore"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true
+  },
+  {
+    "id": "1751",
+    "name": "Rabindranath Tagore International Institute of Cardiac Sciences, Kolkata",
+    "city": "Kolkata",
+    "serviceCities": [
+      "Kolkata"
+    ],
+    "address": "124, Eastern Metropolitan Bypass , Premises No: 1489, Mukundapur Kolkata, West Bengal - 700099",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true,
+    "unitCode": "1751"
+  },
+  {
+    "id": "centre-mumbai-nh-children-s-hospital-mumbai",
+    "name": "NH Children's Hospital, Mumbai",
+    "city": "Mumbai",
+    "serviceCities": [
+      "Mumbai"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true
+  },
+  {
+    "id": "centre-mysore-narayana-multispeciality-clinic-mysore",
+    "name": "Narayana Multispeciality Clinic, Mysore",
+    "city": "Mysore",
+    "serviceCities": [
+      "Mysore"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true
+  },
+  {
+    "id": "centre-mysore-narayana-multispeciality-clinic-vijayanagar-mysore",
+    "name": "Narayana Multispeciality Clinic- Vijayanagar -Mysore",
+    "city": "Mysore",
+    "serviceCities": [
+      "Mysore"
+    ],
+    "address": "",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+    "catalogueObserved": true
+  }
+]

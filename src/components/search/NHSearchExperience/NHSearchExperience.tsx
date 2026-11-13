@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
 import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
-import Image from "next/image";
+import { duration, ease } from "@/lib/motion";
+import { searchDockProgress } from "./dockProgress";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
-import { Search, X, CalendarCheck, Activity, QrCode, Mic, Sparkles } from "lucide-react";
+import { animate, motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { Search, X, CalendarCheck, Activity, HeartPulse, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
@@ -19,9 +21,9 @@ import SkeletonResultsCanvas from "./SkeletonResultsCanvas";
 import PulseAIView from "./PulseAIView";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
 import AnimatedGradientWaves from "./AnimatedGradientWaves";
-import { 
-  getSearchResults, 
-  SearchResultsData, 
+import {
+  getSearchResults,
+  SearchResultsData,
   CARDIOLOGY_RESULTS,
   countWords,
   enforceWordLimit,
@@ -76,30 +78,13 @@ export default function NHSearchExperience({
   const [mounted, setMounted] = useState(false);
   const [winSize, setWinSize] = useState({ w: 1200, h: 800 });
 
-  // Search Experience Theme. Light is the default; the dark variant is
-  // still reachable through the same localStorage key, attribute and
-  // event, so nothing that used to set it has stopped working.
+  // Search Experience Theme: "white" (primary Figma experience)
   const [searchTheme, setSearchTheme] = useState<"dark" | "white">("white");
 
   useEffect(() => {
-    // Check initial search theme from localStorage or data-search-theme attribute
     if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("nh_search_theme") as "dark" | "white" | null;
-      const docAttr = document.documentElement.getAttribute("data-search-theme") as "dark" | "white" | null;
-      // Only an explicit "dark" moves off the default now.
-      if (savedTheme === "dark" || docAttr === "dark") {
-        setSearchTheme("dark");
-      }
+      document.documentElement.setAttribute("data-search-theme", "white");
     }
-
-    const handleThemeChange = (e: Event) => {
-      const customEvent = e as CustomEvent<{ theme: "dark" | "white" }>;
-      if (customEvent.detail?.theme) {
-        setSearchTheme(customEvent.detail.theme);
-      }
-    };
-    window.addEventListener("nh:search-theme-change", handleThemeChange);
-    return () => window.removeEventListener("nh:search-theme-change", handleThemeChange);
   }, []);
 
   useEffect(() => {
@@ -115,25 +100,18 @@ export default function NHSearchExperience({
 
   const isMobile = winSize.w <= 900;
   const router = useRouter();
+  const pathname = usePathname();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
-  const [isQrOpen, setIsQrOpen] = useState(false);
-
-  // Close QR code popover when clicking outside
-  useEffect(() => {
-    if (!isQrOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest(`.${styles.qrPopoverCard}`) && !target.closest(`.${styles.morphingActionBtn}`) && !target.closest(`.${styles.islandBubble}`)) {
-        setIsQrOpen(false);
-      }
-    };
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => window.removeEventListener("mousedown", handleClickOutside);
-  }, [isQrOpen]);
+  const bannerBubble =
+    useSyncExternalStore(
+      bannerCollapse.subscribe,
+      bannerCollapse.get,
+      bannerCollapse.getServerSnapshot,
+    ) === "island" && pathname === "/L1banner";
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -143,43 +121,44 @@ export default function NHSearchExperience({
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
   // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
-  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
+  const naturalProgress = isMobile ? fastMobileProgress : baseProgress;
+  const announcementDockProgress = useMotionValue(0);
+  // An announcement closes into the real island even at the top of the hero.
+  // Scroll resumes control when L3 is restored.
+  useEffect(() => {
+    const animation = animate(announcementDockProgress, bannerBubble ? 1 : 0, {
+      duration: prefersReducedMotion ? 0 : duration.slowest, ease: ease.out,
+    });
+    return () => animation.stop();
+  }, [announcementDockProgress, bannerBubble, prefersReducedMotion]);
+  const activeProgress = useTransform([naturalProgress, announcementDockProgress], ([scroll, announcement]) => Math.max(Number(scroll), Number(announcement)));
 
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
   const startWidth = isMobile ? Math.min(winSize.w - 32, 600) : (anchorRect?.width || Math.min(840, winSize.w - 48));
-  const startHeight = anchorRect ? (isMobile ? 114 : Math.max(132, anchorRect.height)) : (isMobile ? 114 : 132);
-  const startTop = isMobile 
-    ? (winSize.h > 0 ? winSize.h - 36 - startHeight : 500)
+  const startHeight = isMobile ? 96 : (anchorRect ? Math.max(132, anchorRect.height) : 132);
+  const startTop = isMobile
+    ? (winSize.h > 0 ? winSize.h - 116 - startHeight : 420)
     : (anchorRect ? anchorRect.top : (winSize.h > 0 ? winSize.h / 2 - 72 : 300));
   const startLeft = isMobile ? Math.round((winSize.w - startWidth) / 2) : (anchorRect?.left || Math.round((winSize.w - startWidth) / 2));
 
   // Apple Spotlight Bottom Floating Island Dimensions
-  const bubbleSize = isPhone ? 46 : 46;
   const bubbleGap = isPhone ? 8 : 10;
-  // A collapsed marketing banner takes a fourth slot in the dock. The
-  // island widens to make room rather than the bubble overlapping the
-  // spotlight, which is why the count is read here rather than at render.
-  const bannerBubble =
-    useSyncExternalStore(
-      bannerCollapse.subscribe,
-      bannerCollapse.get,
-      bannerCollapse.getServerSnapshot,
-    ) === "island";
-  // Two utilities, three with a collapsed banner. "Book Tests" was a
-  // third and is gone — the search field itself is the way to that.
+  const bubbleWidth1 = isMobile ? 65 : 46;
+  const bubbleWidth2 = isMobile ? 65 : 46;
+  const bubbleWidth3 = 46;
   const bubblesCount = bannerBubble ? 3 : 2;
-  const bubblesTotalWidth = (bubbleSize * bubblesCount) + (bubbleGap * (bubblesCount - 1));
-  
-  const spotlightWidth = isMobile 
-    ? Math.max(130, Math.min(200, winSize.w - 32 - bubblesTotalWidth - bubbleGap)) 
+  const bubblesTotalWidth = bubbleWidth1 + bubbleWidth2 + (bannerBubble ? bubbleWidth3 : 0) + bubbleGap * (bubblesCount - 1);
+
+  const spotlightWidth = isMobile
+    ? Math.max(96, Math.min(192, winSize.w - 24 - bubblesTotalWidth - bubbleGap))
     : 360;
   const spotlightHeight = isPhone ? 46 : 46;
   const islandTotalWidth = spotlightWidth + bubbleGap + bubblesTotalWidth;
   const islandLeft = Math.round((winSize.w - islandTotalWidth) / 2);
 
   // Raised above the bottom edge by the height of the compact search for an elevated floating dock
-  const bottomClearance = isMobile ? 38 : 56;
+  const bottomClearance = isMobile ? 32 : 56;
   const targetTop = winSize.h > 0 ? winSize.h - bottomClearance - spotlightHeight : 600;
   const targetLeft = islandLeft;
 
@@ -198,87 +177,92 @@ export default function NHSearchExperience({
 
   // Docked Buttons Target Coordinates (flanking the Spotlight pill at the bottom dock)
   const dockBtn1Left = targetLeft + spotlightWidth + bubbleGap;
-  const dockBtn2Left = dockBtn1Left + bubbleSize + bubbleGap;
-  const dockBtn3Left = dockBtn2Left + bubbleSize + bubbleGap;
+  const dockBtn2Left = dockBtn1Left + bubbleWidth1 + bubbleGap;
+  const dockBtn3Left = dockBtn2Left + bubbleWidth2 + bubbleGap;
 
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
-    setIsMorphing(latest > 0.02);
-    const docked = latest >= 0.08;
+    searchDockProgress.set(latest);
+    setIsMorphing(latest > 0.02 && latest < 0.35);
+    const docked = latest >= 0.22;
     setIsDocked(docked);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("nh:search-docked", { detail: { isDocked: docked } }));
     }
   });
 
-  // Intermediate centered pill width & left position (Stage 1)
-  const centerPillWidth = isMobile ? Math.max(240, winSize.w - 32) : 380;
-  const centerPillLeft = Math.round((winSize.w - centerPillWidth) / 2);
+  // ── 3-Stage Choreography: Center Down -> Minimize Length -> Water-Drop Bubbles ──
+  // Stage 1 (0.02 -> 0.14): Take search bar center down & round into pill
+  // Stage 2 (0.14 -> 0.24): Minimize length/width & shift to left dock position
+  // Stage 3 (0.22 -> 0.34): Out of the search bar, bubbles pop out like water droplets
 
-  // Choreography:
-  // Stage 1 (0.02 -> 0.16): Search bar shrinks and glides down to centered position
-  // Stage 2 (0.16 -> 0.30): Centered search bar gets pushed to the left, reduces width, and pops out water-drop bubbles to the right
-  const composerTop = useTransform(activeProgress, [0.04, 0.18, 0.30], [startTop, targetTop, targetTop]);
-  const composerLeft = useTransform(activeProgress, [0.04, 0.16, 0.30], [startLeft, centerPillLeft, targetLeft]);
-  const composerWidth = useTransform(activeProgress, [0.02, 0.16, 0.30], [startWidth, centerPillWidth, spotlightWidth]);
-  const composerHeight = useTransform(activeProgress, [0.02, 0.16], [startHeight, spotlightHeight]);
-  const composerRadius = useTransform(activeProgress, [0.02, 0.16], [20, 9999]);
-  const composerPaddingX = useTransform(activeProgress, [0.02, 0.16], [22, 14]);
-  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.16], [18, 0]);
-  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.16], [12, 0]);
+  // Stage 1: Glides straight down to bottom center & rounds into compact pill
+  const composerTop = useTransform(activeProgress, [0.02, 0.14], [startTop, targetTop]);
+  const composerHeight = useTransform(activeProgress, [0.02, 0.14], [startHeight, spotlightHeight]);
+  const composerRadius = useTransform(activeProgress, [0.02, 0.14], [20, 9999]);
+  const composerPaddingTop = useTransform(activeProgress, [0.02, 0.14], [isMobile ? 12 : 18, 0]);
+  const composerPaddingBottom = useTransform(activeProgress, [0.02, 0.14], [isMobile ? 10 : 12, 0]);
 
-  // Content cross-fades inside Search Bar
-  const promptOpacity = useTransform(activeProgress, [0.02, 0.12], [1, 0]);
-  const spotlightOpacity = useTransform(activeProgress, [0.12, 0.22], [0, 1]);
+  // Stage 2: Stays centered wide during Stage 1 (0.02 -> 0.14), then minimizes width & glides left in Stage 2 (0.14 -> 0.24)
+  const composerLeft = useTransform(activeProgress, [0.02, 0.14, 0.24], [startLeft, startLeft, targetLeft]);
+  const composerWidth = useTransform(activeProgress, [0.02, 0.14, 0.24], [startWidth, startWidth, spotlightWidth]);
+  const composerPaddingX = useTransform(activeProgress, [0.02, 0.14, 0.24], [isMobile ? 14 : 22, isMobile ? 14 : 22, isMobile ? 10 : 14]);
 
-  // 2. WATER-DROP BUBBLE EJECTION (Stage 2: 0.16 -> 0.36):
-  // Origin: As search bar shifts left from centerPillLeft, bubbles emerge from its right edge!
-  const splitStartLeft = centerPillLeft + centerPillWidth - 10;
+  // Inside content immediately blurs & dissolves on initial scroll before shape morphs
+  // Eliminates all cluttered text/buttons during transition ("kachra inside transition")
+  const promptOpacity = useTransform(activeProgress, [0.005, 0.032], [1, 0]);
+  const promptBlur = useTransform(activeProgress, [0.005, 0.032], ["blur(0px)", "blur(12px)"]);
+  const spotlightOpacity = useTransform(activeProgress, [0.08, 0.16], [0, 1]);
 
-  // Water-Bubble 1 (Book Appointment): Ejects out as search pill gets pushed left
-  const btn1Top = useTransform(activeProgress, [0.16, 0.28], [targetTop, targetTop]);
-  const btn1Left = useTransform(activeProgress, [0.16, 0.28], [splitStartLeft, dockBtn1Left]);
-  const btn1Opacity = useTransform(activeProgress, [0.16, 0.22], [0, 1]);
-  const btn1Scale = useTransform(activeProgress, [0.16, 0.24, 0.30], [0.15, 1.25, 1.0]);
+  // Stage 3: WATER DROP BUBBLE EJECTION
+  // Starts ONLY after search bar has minimized its length at targetLeft
+  // Origin: emerging right from the right edge of the minimized search bar
+  const bubbleOrigin = targetLeft + spotlightWidth - 10;
 
-  // Water-Bubble 2 (Book Tests & Checkups): Ejects right after Bubble 1
-  const btn2Top = useTransform(activeProgress, [0.20, 0.32], [targetTop, targetTop]);
-  const btn2Left = useTransform(activeProgress, [0.20, 0.32], [splitStartLeft, dockBtn2Left]);
-  const btn2Opacity = useTransform(activeProgress, [0.20, 0.26], [0, 1]);
-  const btn2Scale = useTransform(activeProgress, [0.20, 0.28, 0.34], [0.15, 1.25, 1.0]);
+  // Water-Bubble 1 (Book Appointment): Ejects out of right edge of minimized search pill
+  const btn1Top = useTransform(activeProgress, [0.22, 0.28], [targetTop, targetTop]);
+  const btn1Left = useTransform(activeProgress, [0.22, 0.28], [bubbleOrigin, dockBtn1Left]);
+  const btn1Opacity = useTransform(activeProgress, [0.22, 0.24], [0, 1]);
+  const btn1Scale = useTransform(activeProgress, [0.22, 0.26, 0.29], [0, 1.08, 1.0]);
 
-  // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2
-  const btn3Top = useTransform(activeProgress, [0.23, 0.35], [targetTop, targetTop]);
-  const btn3Left = useTransform(activeProgress, [0.23, 0.35], [splitStartLeft, dockBtn3Left]);
-  // Last in the row, and last to arrive.
-  const btn3Opacity = useTransform(activeProgress, [0.23, 0.29], [0, 1]);
-  const btn3Scale = useTransform(activeProgress, [0.23, 0.31, 0.37], [0.15, 1.25, 1.0]);
+  // Water-Bubble 2 (Book Tests & Checkups): Ejects in synchronized wave behind Bubble 1
+  const btn2Top = useTransform(activeProgress, [0.25, 0.31], [targetTop, targetTop]);
+  const btn2Left = useTransform(activeProgress, [0.25, 0.31], [bubbleOrigin, dockBtn2Left]);
+  const btn2Opacity = useTransform(activeProgress, [0.25, 0.27], [0, 1]);
+  const btn2Scale = useTransform(activeProgress, [0.25, 0.29, 0.32], [0, 1.08, 1.0]);
+
+  // Water-Bubble 3 (QR Code App Download): Ejects next to Bubble 2 (desktop only)
 
   // Secondary buttons and prompt cross-fades
-  const controlsOpacity = useTransform(activeProgress, [0.02, isMobile ? 0.25 : 0.08], [1, 0]);
-  const controlsHeight = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], ["36px", "0px"]);
-  const controlsMarginBottom = useTransform(activeProgress, [0.02, isMobile ? 0.30 : 0.09], [isMobile ? "14px" : "18px", "0px"]);
+  const controlsOpacity = useTransform(activeProgress, [0.02, 0.08], [1, 0]);
+  const controlsHeight = useTransform(activeProgress, [0.02, 0.10], ["36px", "0px"]);
+  const controlsMarginBottom = useTransform(activeProgress, [0.02, 0.10], [isMobile ? "6px" : "18px", "0px"]);
 
-  // Moving gradient border around landing search bar edges (vibrant 0.95 on landing, refined 0.40 on docked pill)
+  // Moving gradient border around landing search bar edges
   const landingBorderOpacity = searchTheme === "white" ? 0.75 : 0.95;
-  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.10, 0.32], [landingBorderOpacity, 0.65, 0.40]);
+  const gradientBorderOpacity = useTransform(activeProgress, [0.0, 0.10, 0.24], [landingBorderOpacity, 0.50, 0.18]);
 
-  // Translucent dark glass for default landing prompt, smoothly deepening only as it docks into the bottom pill
+  // Translucent dark glass for default landing prompt, smoothly deepening as it docks into the bottom pill
   const composerBg = useTransform(
     activeProgress,
-    [0.0, 0.12, 0.32],
+    [0.0, 0.12, 0.24],
     [
       "rgba(22, 28, 36, 0.28)",
-      "rgba(22, 28, 36, 0.45)",
-      "rgba(20, 26, 36, 0.72)"
+      "rgba(22, 28, 36, 0.36)",
+      "rgba(20, 26, 36, 0.46)"
     ]
   );
 
   // Section-aware contextual placeholder for docked Spotlight Search
-  const [dockedPlaceholder, setDockedPlaceholder] = useState("Search doctors, symptoms, packages...");
+  const [dockedPlaceholder, setDockedPlaceholder] = useState(isMobile ? "Search doctors, tests..." : "Search doctors, symptoms, packages...");
+
+  // Section theme detection: probes what section is directly underneath the docked island
+  const [isDockOverDark, setIsDockOverDark] = useState(false);
 
   useEffect(() => {
+    let rafId: number | null = null;
+
     const handleSectionScroll = () => {
       if (typeof window === "undefined") return;
       const vh = window.innerHeight;
@@ -294,19 +278,47 @@ export default function NHSearchExperience({
       };
 
       if (isElementInView(whyEl)) {
-        setDockedPlaceholder("Search hospitals & network...");
+        setDockedPlaceholder(isMobile ? "Hospitals & care..." : "Search hospitals & network...");
       } else if (isElementInView(healthEl)) {
-        setDockedPlaceholder("Search health checkups & tests...");
+        setDockedPlaceholder(isMobile ? "Checkups & tests..." : "Search health checkups & tests...");
       } else if (isElementInView(coeEl)) {
-        setDockedPlaceholder("Search by speciality...");
+        setDockedPlaceholder(isMobile ? "Specialities..." : "Search by speciality...");
       } else {
-        setDockedPlaceholder(isMobile ? "Search Narayana Health..." : "Search doctors, symptoms, packages...");
+        setDockedPlaceholder(isMobile ? "Search doctors, tests..." : "Search doctors, symptoms, packages...");
       }
+
+      // Sample theme at the exact center of the docked floating island
+      const probeX = Math.round(window.innerWidth / 2);
+      const probeY = Math.round(window.innerHeight - (isMobile ? 32 : 56) - 23);
+      const elements = document.elementsFromPoint(probeX, probeY);
+      let detectedTheme = "light";
+
+      for (const el of elements) {
+        if (el.closest(`.${styles.searchExperienceWrapper}`) || el.closest("nav")) continue;
+        const themeEl = el.closest("[data-nav-theme]");
+        if (themeEl) {
+          detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
+          break;
+        }
+      }
+
+      setIsDockOverDark(detectedTheme === "dark");
     };
 
-    window.addEventListener("scroll", handleSectionScroll, { passive: true });
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        handleSectionScroll();
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
     handleSectionScroll();
-    return () => window.removeEventListener("scroll", handleSectionScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, [isMobile]);
 
   const morphShellOpacity = useTransform(activeProgress, [0.84, 0.88], [1, 1]);
@@ -350,15 +362,30 @@ export default function NHSearchExperience({
       : (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0);
     savedScrollY.current = currentScroll;
     setQuery(""); // Always show active empty search state when launched
+    setActivePill(null);
     setSearchState("active");
     onOpenChange?.(true);
   };
 
-  // Close search (Active/Results → Landing)
+  // Exit animation mode: 'collapse' (drops back down to hero search box on manual dismiss) vs 'expand' (expands forward into page upon clicking a result)
+  const [exitMode, setExitMode] = useState<"collapse" | "expand">("collapse");
+
+  // Close search manually (Active/Results → Landing via X or backdrop click)
   const handleClose = () => {
+    setExitMode("collapse");
     setSearchState("landing");
     setActivePill(null);
     onOpenChange?.(false);
+  };
+
+  // Navigate forward to a clinical destination (procedure, library, doctor) with an expanding forward transition
+  const handleNavigateOut = (targetHref: string) => {
+    setExitMode("expand");
+    setSearchState("landing");
+    onOpenChange?.(false);
+    setTimeout(() => {
+      router.push(targetHref);
+    }, 200);
   };
 
   // Listen for global open-search event triggered from the 3rd floating action (Pulse AI Search)
@@ -402,8 +429,8 @@ export default function NHSearchExperience({
 
     const getLenis = () => {
       if (typeof window === "undefined") return null;
-      return (window as unknown as { __lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).__lenis 
-        || (window as unknown as { lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).lenis 
+      return (window as unknown as { __lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).__lenis
+        || (window as unknown as { lenis?: { stop: () => void; start: () => void; scrollTo?: (y: number, opts?: { immediate?: boolean }) => void } }).lenis
         || null;
     };
 
@@ -490,6 +517,27 @@ export default function NHSearchExperience({
     } else {
       setQuery(newQuery);
     }
+
+    if (!newQuery.trim()) {
+      setActivePill(null);
+    } else {
+      setActivePill((currentPill) => {
+        if (!currentPill) return null;
+        const lower = newQuery.toLowerCase().trim();
+        if (currentPill === "doctor" && !lower.startsWith("find a doctor")) {
+          return null;
+        }
+        if (
+          currentPill === "symptoms" &&
+          !lower.startsWith("i have chest pain") &&
+          !lower.startsWith("book health checkup") &&
+          !lower.startsWith("describe my symptom")
+        ) {
+          return null;
+        }
+        return currentPill;
+      });
+    }
   }, []);
 
   // Open Pulse AI Workspace
@@ -509,10 +557,11 @@ export default function NHSearchExperience({
   const handleSubmit = async (searchQuery: string) => {
     const targetQuery = enforceWordLimit(searchQuery.trim() || "I have chest pain and need a doctor", MAX_SEARCH_WORDS);
     setQuery(targetQuery);
-    
+    setActivePill(null);
+
     // Step 1: Transition to Pulse AI clinical intelligence analyzing state
     setSearchState("skeleton");
-    
+
     // Step 2: AI clinical intelligence matching delay (1100ms)
     const [results] = await Promise.all([
       getSearchResults(targetQuery, selectedLocation),
@@ -536,6 +585,7 @@ export default function NHSearchExperience({
     const targetQuery = enforceWordLimit(rawQuery, MAX_SEARCH_WORDS);
     setQuery(targetQuery);
     setPulseInitialQuery(targetQuery);
+    setActivePill(null);
 
     // Step 1: Transition into analyzing screen
     setSearchState("skeleton");
@@ -575,6 +625,7 @@ export default function NHSearchExperience({
     setQuery(targetQuery);
     setPulseInitialQuery(targetQuery);
     setAttachedReportFile(file);
+    setActivePill(null);
 
     try {
       const triage = analyzePulseIntent(targetQuery, [], selectedLocation);
@@ -606,9 +657,20 @@ export default function NHSearchExperience({
     }
   };
 
-  // Handle quick action pill clicks
-  const handleSelectActionPill = (pill: "doctor" | "symptoms") => {
+  // Handle quick action pill clicks (toggle on/off)
+  const handleSelectActionPill = (pill: "doctor" | "symptoms" | "checkups") => {
+    if (pill === "checkups") {
+      const params = new URLSearchParams();
+      if (selectedLocation && selectedLocation !== "All") params.set("location", selectedLocation);
+      router.push(`/health-checkups${params.size ? `?${params}` : ""}`);
+      return;
+    }
     captureOrigin();
+    if (activePill === pill) {
+      setActivePill(null);
+      setQuery("");
+      return;
+    }
     setActivePill(pill);
     setSearchState("active");
     if (pill === "doctor") {
@@ -643,8 +705,8 @@ export default function NHSearchExperience({
 
   // Handle Ask Pulse CTA: Smoothly transitions into the attached Pulse AI window
   const handleAskPulse = () => {
-    const q = query && query.trim().length > 0 
-      ? query.trim() 
+    const q = query && query.trim().length > 0
+      ? query.trim()
       : "I have chest pain and need clinical guidance";
     setPulseInitialQuery(q);
     setSearchState("pulse");
@@ -656,7 +718,7 @@ export default function NHSearchExperience({
   };
 
   // Class mapping based on state:
-  const stateClass = 
+  const stateClass =
     searchState === "landing"
       ? styles.stateLanding
       : searchState === "active"
@@ -668,8 +730,8 @@ export default function NHSearchExperience({
       : styles.stateResults;
 
   return (
-    <div 
-      className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`} 
+    <div
+      className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
       data-search-theme={searchTheme}
       ref={containerRef}
       style={
@@ -689,8 +751,9 @@ export default function NHSearchExperience({
       {/* Landing / Hero search composer (morphs to floating dock on scroll) */}
       <motion.div
         ref={landingShellRef}
-        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${styles.themeDark}`}
+        className={`${styles.searchShell} ${styles.stateLanding} ${isMorphing ? styles.searchShellMorphing : ""} ${isDocked ? styles.searchShellDocked : ""} ${isDocked ? (isDockOverDark ? styles.dockThemeDark : styles.dockThemeLight) : ""} ${styles.themeDark}`}
         data-search-theme="dark"
+        data-dock-theme={isDocked ? (isDockOverDark ? "dark" : "light") : undefined}
         onClick={() => {
           if (hasScroll) {
             handleActivate();
@@ -744,15 +807,16 @@ export default function NHSearchExperience({
         {hasScroll && searchState === "landing" && (
           <motion.div
             aria-hidden="true"
+            className={`${styles.dockedGlassLayer} ${isDocked ? (isDockOverDark ? styles.dockGlassDark : styles.dockGlassLight) : ""}`}
             style={{
               position: "absolute",
               inset: 0,
               borderRadius: "inherit",
-              background: composerBg,
-              backdropFilter: "blur(24px) saturate(140%)",
-              WebkitBackdropFilter: "blur(24px) saturate(140%)",
-              border: "1px solid rgba(255, 255, 255, 0.14)",
-              boxShadow: "0 16px 40px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.16)",
+              background: !isDocked ? composerBg : undefined,
+              backdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              WebkitBackdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              border: !isDocked ? "1px solid rgba(255, 255, 255, 0.14)" : undefined,
+              boxShadow: !isDocked ? "0 12px 32px -8px rgba(0, 0, 0, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.14)" : undefined,
               pointerEvents: "none",
               zIndex: 1,
             }}
@@ -772,12 +836,12 @@ export default function NHSearchExperience({
 
         {/* Apple Spotlight Content (fades in as search morphs into bottom pill) */}
         {hasScroll && searchState === "landing" && (
-          <motion.div 
+          <motion.div
             className={styles.spotlightContent}
-            style={{ 
+            style={{
               position: "absolute",
               inset: 0,
-              opacity: spotlightOpacity, 
+              opacity: spotlightOpacity,
               pointerEvents: isDocked ? "auto" : "none",
               zIndex: 10,
             }}
@@ -798,7 +862,7 @@ export default function NHSearchExperience({
                     </linearGradient>
                   </defs>
                 </svg>
-                <Search size={17} className={styles.spotlightSearchIcon} strokeWidth={2.5} />
+                <Search size={17} className={styles.spotlightSearchIcon} strokeWidth={2.0} />
               </div>
               <AnimatePresence mode="wait">
                 <motion.span
@@ -827,6 +891,7 @@ export default function NHSearchExperience({
           searchTheme="dark"
           isMobile={isMobile}
           promptOpacity={hasScroll ? promptOpacity : undefined}
+          promptBlur={hasScroll ? promptBlur : undefined}
           controlsOpacity={hasScroll ? controlsOpacity : undefined}
           controlsHeight={hasScroll ? controlsHeight : undefined}
           controlsMarginBottom={hasScroll ? controlsMarginBottom : undefined}
@@ -840,59 +905,75 @@ export default function NHSearchExperience({
           {/* Water-Bubble 1: Book Appointment -> Ejects out into Docked Bubble 1 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isDocked ? (isDockOverDark ? styles.dockBtnDark : styles.dockBtnLight) : ""}`}
             style={{
               position: "fixed",
               top: btn1Top,
               left: btn1Left,
-              width: bubbleSize,
+              width: bubbleWidth1,
               height: spotlightHeight,
-              borderRadius: 9999,
+              borderRadius: isMobile ? 14 : 9999,
               opacity: btn1Opacity,
               scale: btn1Scale,
-              pointerEvents: isDocked || isMorphing ? "auto" : "none",
+              background: !isDocked ? composerBg : undefined,
+              backdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              WebkitBackdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              border: !isDocked ? "1px solid rgba(255, 255, 255, 0.14)" : undefined,
+              boxShadow: !isDocked ? "0 12px 32px -8px rgba(0, 0, 0, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.14)" : undefined,
+              pointerEvents: isDocked ? "auto" : "none",
               zIndex: 9990,
             }}
             onClick={(e) => {
               e.stopPropagation();
-              router.push("/doctors");
+              router.push(`/search/doctors?design=d21&location=${encodeURIComponent(selectedLocation)}`);
             }}
             aria-label="Book Appointment"
           >
             <div className={styles.morphingActionIcon}>
-              <CalendarCheck size={18} strokeWidth={2.0} />
+              <CalendarCheck size={18} strokeWidth={1.8} />
             </div>
-            <span className={styles.bubbleTooltip}>Book Appointment</span>
-            {isDocked && <span className={styles.mwebBubbleTag}>Book Appt</span>}
+            {isMobile ? (
+              <span className={styles.dockedBtnText}>Book Appt</span>
+            ) : (
+              <span className={styles.bubbleTooltip}>Book Appointment</span>
+            )}
           </motion.button>
 
-          {/* Water-Bubble 3: QR Code App Download -> Splits out next to Bubble 2 */}
+          {/* Water-Bubble 2: Book Tests & Checkups -> Ejects out into Docked Bubble 2 */}
           <motion.button
             type="button"
-            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isQrOpen ? styles.qrBubbleActive : ""}`}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isDocked ? (isDockOverDark ? styles.dockBtnDark : styles.dockBtnLight) : ""}`}
             style={{
               position: "fixed",
               top: btn2Top,
               left: btn2Left,
-              width: bubbleSize,
+              width: bubbleWidth2,
               height: spotlightHeight,
-              borderRadius: 9999,
+              borderRadius: isMobile ? 14 : 9999,
               opacity: btn2Opacity,
               scale: btn2Scale,
-              pointerEvents: isDocked || isMorphing ? "auto" : "none",
+              background: !isDocked ? composerBg : undefined,
+              backdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              WebkitBackdropFilter: !isDocked ? "blur(24px) saturate(140%)" : undefined,
+              border: !isDocked ? "1px solid rgba(255, 255, 255, 0.14)" : undefined,
+              boxShadow: !isDocked ? "0 12px 32px -8px rgba(0, 0, 0, 0.24), inset 0 1px 1.5px rgba(255, 255, 255, 0.14)" : undefined,
+              pointerEvents: isDocked ? "auto" : "none",
               zIndex: 9990,
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setIsQrOpen((prev) => !prev);
+              handleSelectActionPill("checkups");
             }}
-            aria-label="Download NH Care App (QR Code)"
+            aria-label="Book Health Checkups"
           >
             <div className={styles.morphingActionIcon}>
-              <QrCode size={19} strokeWidth={2.2} />
+              <HeartPulse size={18} strokeWidth={2} />
             </div>
-            <span className={styles.bubbleTooltip}>Download NH Care App</span>
-            {isDocked && <span className={styles.mwebBubbleTag}>NH App</span>}
+            {isMobile ? (
+              <span className={styles.dockedBtnText}>Checkups</span>
+            ) : (
+              <span className={styles.bubbleTooltip}>Book Health Checkups</span>
+            )}
           </motion.button>
 
           {/* Water-Bubble 4: a collapsed marketing banner. Present only
@@ -906,101 +987,70 @@ export default function NHSearchExperience({
               className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
               style={{
                 position: "fixed",
-                top: btn3Top,
-                left: btn3Left,
-                width: bubbleSize,
+                top: targetTop,
+                left: dockBtn3Left,
+                width: bubbleWidth3,
                 height: spotlightHeight,
                 borderRadius: 9999,
-                opacity: btn3Opacity,
-                scale: btn3Scale,
-                pointerEvents: isDocked || isMorphing ? "auto" : "none",
+                opacity: 1,
+                scale: 1,
+                pointerEvents: "auto",
                 zIndex: 9990,
               }}
               onClick={(e) => {
                 e.stopPropagation();
                 (window as unknown as { __reopenBanner?: () => void }).__reopenBanner?.();
               }}
-              aria-label="Announcement"
+              aria-label="Announcements, 3 unread"
             >
-              <div className={styles.morphingActionIcon}>
+              <motion.div className={styles.morphingActionIcon} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slow, duration: prefersReducedMotion ? 0 : duration.slow, ease: ease.out }}>
                 <AnnouncementIcon size={19} />
-              </div>
-              <span className={styles.bubbleTooltip}>Announcement</span>
-              {isDocked && <span className={styles.mwebBubbleTag}>News!</span>}
+              </motion.div>
+              <motion.span className={styles.announcementCount} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slowest, duration: prefersReducedMotion ? 0 : duration.base, ease: ease.spring }} aria-hidden="true">3</motion.span>
+              <span className={styles.bubbleTooltip}>3 announcements</span>
             </motion.button>
           )}
         </>
       )}
 
-      {/* ── QR Code Popover Card ── */}
-      <AnimatePresence>
-        {isQrOpen && searchState === "landing" && (
-          <motion.div
-            className={styles.qrPopoverCard}
-            style={{
-              bottom: bottomClearance + spotlightHeight + 12,
-              left: Math.min(
-                winSize.w - 266,
-                Math.max(16, dockBtn2Left - 190)
-              ),
+      {/* Mobile-Only Balanced Quick Actions (Directly beneath search box on landing) */}
+      {isMobile && searchState === "landing" && (
+        <motion.div
+          className={styles.mwebHeroActionsRow}
+          style={{
+            position: "fixed",
+            top: startTop + startHeight + 12,
+            left: startLeft,
+            width: startWidth,
+            opacity: controlsOpacity,
+            pointerEvents: isDocked || isMorphing ? "none" : "auto",
+            zIndex: 9980,
+          }}
+        >
+          <button
+            type="button"
+            className={styles.mwebHeroActionBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/search/doctors?design=d21&location=${encodeURIComponent(selectedLocation)}`);
             }}
-            initial={{ opacity: 0, y: 12, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.94 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.qrHeader}>
-              <div className={styles.qrTitleGroup}>
-                <span className={styles.qrAppTitle}>Narayana Health App</span>
-                <span className={styles.qrAppSubtitle}>Scan with phone camera to install</span>
-              </div>
-              <button
-                type="button"
-                className={styles.qrCloseBtn}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsQrOpen(false);
-                }}
-                aria-label="Close QR Code Popover"
-              >
-                <X size={15} />
-              </button>
-            </div>
-
-            <div className={styles.qrImageWrapper}>
-              <Image
-                src="/app-download-QR.png"
-                alt="Scan to download NH Care App"
-                width={124}
-                height={124}
-                className={styles.qrCodeImage}
-                priority
-              />
-            </div>
-
-            <div className={styles.qrStoreBadges}>
-              <a
-                href="https://apps.apple.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.storeBadgeLink}
-              >
-                App Store
-              </a>
-              <a
-                href="https://play.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.storeBadgeLink}
-              >
-                Google Play
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-
+            <CalendarCheck size={14} className={styles.mwebHeroActionIcon} strokeWidth={1.8} />
+            <span>Book Appointment</span>
+          </button>
+          <button
+            type="button"
+            className={styles.mwebHeroActionBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelectActionPill("checkups");
+            }}
+          >
+            <HeartPulse size={14} className={styles.mwebHeroActionIcon} strokeWidth={2} />
+            <span>Health Checkups</span>
+          </button>
+        </motion.div>
+      )}
 
       {/* Viewport-level Active Search Modal Overlay (Portaled directly to document.body) */}
       {/* Operates at the true viewport level anywhere on the page without hero-anchored transforms */}
@@ -1010,7 +1060,7 @@ export default function NHSearchExperience({
             const isPhone = winSize.w <= 640;
             const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
             const modalTargetTop = typeof window !== "undefined"
-              ? (isPhone 
+              ? (isPhone
                   ? (isCompactModal ? 10 : 16)
                   : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
               : 100;
@@ -1058,18 +1108,20 @@ export default function NHSearchExperience({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: prefersReducedMotion ? 0.1 : 0.32, ease: "easeOut" }}
+                  transition={{ duration: prefersReducedMotion ? 0.1 : (exitMode === "expand" ? 0.25 : 0.32), ease: "easeOut" }}
                   onClick={handleClose}
                   style={{
                     position: "fixed",
                     inset: 0,
-                    // Always the dark scrim, whichever way the panel is
-                    // themed. The white theme used to dim the page with a
-                    // 40% WHITE wash, which washed the homepage out to
-                    // near-nothing instead of holding it behind the panel.
-                    background: "rgba(5, 10, 18, 0.55)",
-                    backdropFilter: "blur(14px)",
-                    WebkitBackdropFilter: "blur(14px)",
+                    background: searchTheme === "white"
+                      ? "rgba(255, 255, 255, 0.40)"
+                      : "rgba(5, 10, 18, 0.55)",
+                    backdropFilter: searchTheme === "white"
+                      ? "blur(12px)"
+                      : "blur(14px)",
+                    WebkitBackdropFilter: searchTheme === "white"
+                      ? "blur(12px)"
+                      : "blur(14px)",
                     zIndex: 1,
                     touchAction: "none",
                   }}
@@ -1110,10 +1162,10 @@ export default function NHSearchExperience({
                     display: "flex",
                     justifyContent: "center",
                     width: modalTargetWidth,
-                    height: (searchState === "results" || searchState === "skeleton") 
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
-                      : searchState === "pulse" 
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                    height: (searchState === "results" || searchState === "skeleton")
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
+                      : searchState === "pulse"
+                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
                       : undefined,
                     maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                     zIndex: 3,
@@ -1136,24 +1188,33 @@ export default function NHSearchExperience({
                       scale: 1,
                       borderRadius: isPhone ? 18 : 24,
                     }}
-                    exit={{
-                      opacity: 0,
-                      y: originDeltaY,
-                      scale: originScale,
-                      borderRadius: 20,
-                    }}
+                    exit={
+                      exitMode === "expand"
+                        ? {
+                            opacity: 0,
+                            scale: 1.05,
+                            y: -14,
+                            filter: "blur(6px)",
+                          }
+                        : {
+                            opacity: 0,
+                            y: originDeltaY,
+                            scale: originScale,
+                            borderRadius: 20,
+                          }
+                    }
                     transition={{
-                      duration: prefersReducedMotion ? 0.1 : 0.42,
+                      duration: prefersReducedMotion ? 0.1 : (exitMode === "expand" ? 0.28 : 0.42),
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     style={{
                       position: "relative",
                       zIndex: 2,
                       width: "100%",
-                      height: (searchState === "results" || searchState === "skeleton") 
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
-                        : searchState === "pulse" 
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)") 
+                      height: (searchState === "results" || searchState === "skeleton")
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
+                        : searchState === "pulse"
+                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
                         : undefined,
                       maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
                       display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,
@@ -1235,6 +1296,7 @@ export default function NHSearchExperience({
                             onEditSearch={handleEditSearch}
                             onSubmit={handleSubmit}
                             onClose={handleClose}
+                            onNavigateOut={handleNavigateOut}
                             selectedLocation={selectedLocation}
                             onSelectLocation={handleSelectLocation}
                             onSelectSpecialtyTag={handleSelectSpecialtyTag}
@@ -1258,6 +1320,7 @@ export default function NHSearchExperience({
                             doctors={resultsData.doctors}
                             onBack={handleBackToResults}
                             onClose={handleClose}
+                            onNavigateOut={handleNavigateOut}
                             attachedFile={attachedReportFile}
                           />
                         </motion.div>

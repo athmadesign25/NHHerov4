@@ -1,0 +1,67 @@
+/* ─── MINIMAL FLOATING VERSION PILL (V1 / V2 TOGGLE) ──────────────────────── */
+
+.pillContainer {
+  position: fixed;
+  left: 20px;
+  top: 104px;
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(6, 14, 27, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 4px 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .pillContainer {
+    left: 14px;
+    top: 84px;
+    padding: 3px 5px;
+  }
+}
+
+.toggleBtn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+}
+
+.toggleBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btnActive {
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.5);
+}
+
+.btnActive:hover {
+  background: #023d7f;
+}
+
+.divider {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 11px;
+  font-weight: 400;
+  pointer-events: none;
+}

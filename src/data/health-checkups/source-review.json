@@ -1,0 +1,81 @@
+[
+  {
+    "unitCode": "6024",
+    "code": "PKG037822",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-enhanced-health-m-45?unitCode=6024&code=PKG037822",
+    "field": "testCount",
+    "sourceValues": {
+      "operational": 28,
+      "cms": 26,
+      "profileGroups": 26
+    },
+    "treatment": "Preserved all raw counts; omit headline count until the source owner reconciles them."
+  },
+  {
+    "unitCode": "6024",
+    "code": "PKG037822",
+    "field": "audience",
+    "sourceValues": {
+      "displayName": "Male Enhanced Health (m >45)",
+      "subtitle": "For men aged between 35-45 years"
+    },
+    "treatment": "Preserve source text; do not infer or enforce eligibility."
+  },
+  {
+    "unitCode": "6024",
+    "code": "PKG037822",
+    "field": "instructions",
+    "sourceText": "Avoid high-fat meals, snacks, and fried foods 46 hours prior to the scan.",
+    "treatment": "Source wording preserved verbatim; clinical editorial review required before production."
+  },
+  {
+    "unitCode": "6024",
+    "code": "PKG037823",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-comprehesive-wellness-m-45?unitCode=6024&code=PKG037823",
+    "field": "testCount",
+    "sourceValues": {
+      "operational": 1,
+      "cms": 31,
+      "profileGroups": 31
+    },
+    "treatment": "Preserved all raw counts; omit headline count until the source owner reconciles them."
+  },
+  {
+    "unitCode": "6024",
+    "code": "PKG037823",
+    "field": "instructions",
+    "sourceText": "Avoid high-fat meals, snacks, and fried foods 46 hours prior to the scan.",
+    "treatment": "Source wording preserved verbatim; clinical editorial review required before production."
+  },
+  {
+    "unitCode": "3012",
+    "code": "PKG032011",
+    "field": "testCount",
+    "sourceValues": {
+      "operational": 23,
+      "cms": 20,
+      "profileGroups": 20
+    },
+    "treatment": "Preserved all raw counts; omit headline count until the source owner reconciles them."
+  },
+  {
+    "unitCode": "3012",
+    "code": "PKG032011",
+    "field": "audience",
+    "sourceValues": {
+      "displayName": "Nhic Master Healthcheckup - Male",
+      "about": "The male package description includes female ovarian-health wording."
+    },
+    "treatment": "Mixed-audience source copy requires editorial review; do not infer eligibility or silently rewrite clinical content."
+  },
+  {
+    "unitCode": "3012",
+    "code": "PKG032011",
+    "field": "image",
+    "sourceValues": {
+      "cmsDimensions": "68 x 50",
+      "listingImage": "Official health-packages placeholder"
+    },
+    "treatment": "Use the observed listing artwork instead of enlarging the CMS thumbnail; retain raw source media."
+  }
+]

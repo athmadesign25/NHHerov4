@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:46:32+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Shimoga",
+  "facility": "Sahyadri Narayana Multispeciality Hospital, Shimoga",
+  "facilityId": "1009",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1009",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1009-tests.mhtml",
+      "sha256": "ebd39a1398aa925ba14f8575a9dcaa750beb8836eeedb48451eb1d42d50a1770",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

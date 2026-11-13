@@ -1,37 +1,63 @@
 "use client";
 
-import Image from "next/image";
+import { useId, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { SERVICE_CENTRES as centres, SERVICE_TILES as services } from "./service-menu-data";
+import { ChevronDown } from "lucide-react";
+import { SERVICE_MENU_SECTIONS } from "./service-menu-data";
+import ServicesMenuCollage from "./ServicesMenuCollage";
+import MenuAction from "./MenuAction";
+import ServicesContactBand from "./ServicesContactBand";
+import mobilePatterns from "./MobileMenuPatterns.module.css";
+import { mobileMenuLabel } from "./mobile-menu-label";
 import styles from "./ServicesMegaMenu.module.css";
+import grouped from "./EditorialMegaMenu.module.css";
 
-export default function ServicesMegaMenu({ onNavigate }: { onNavigate: () => void }) {
+type Section = (typeof SERVICE_MENU_SECTIONS)[number];
+
+function ServiceContent({ section, onNavigate }: { section: Section; onNavigate: () => void }) {
+  return <div className={mobilePatterns.surface}>
+    <ul className={mobilePatterns.list} aria-label={mobileMenuLabel(section.label)}>
+      {section.groups.flatMap(group => group.links).map(link => <li key={link.href}>
+        <Link href={link.href} className={mobilePatterns.link} onClick={onNavigate}>{mobileMenuLabel(link.label)}</Link>
+      </li>)}
+    </ul>
+    {section.notice && <p className={styles.notice}>{section.notice}</p>}
+    {section.footer && <Link href={section.footer.href} className={mobilePatterns.link} onClick={onNavigate}>{mobileMenuLabel(section.footer.label)}</Link>}
+  </div>;
+}
+
+export default function ServicesMegaMenu({ onNavigate, mobile = false }: { onNavigate: () => void; mobile?: boolean }) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const id = useId();
+
+  if (mobile) return <div className={styles.mobile}>
+    {SERVICE_MENU_SECTIONS.map(item => <section key={item.id} className={styles.mobileGroup}>
+      <h3 className={mobilePatterns.heading}><button type="button" className={mobilePatterns.toggle} aria-expanded={expanded === item.id} aria-controls={`${id}-${item.id}-content`} onClick={() => setExpanded(expanded === item.id ? null : item.id)}>{mobileMenuLabel(item.label)}<ChevronDown aria-hidden="true" /></button></h3>
+      <div id={`${id}-${item.id}-content`} hidden={expanded !== item.id}><ServiceContent section={item} onNavigate={onNavigate} /></div>
+    </section>)}
+  </div>;
+
   return (
-    <div className={styles.menu}>
-      <section className={styles.centres} aria-labelledby="nav-centres-title">
-        <div className={styles.centreImage}>
-          <Image src="/assets/hospital_1.png" alt="Hospital campus" fill sizes="(min-width: 1600px) 24vw, 22vw" />
-        </div>
-        <div className={styles.centreContent}>
-          <h2 id="nav-centres-title">Centres of Excellence</h2>
-          <ul className={styles.centreLinks}>
-            {centres.map((centre) => <li key={centre.href}><Link href={centre.href} onClick={onNavigate}>{centre.label}</Link></li>)}
-          </ul>
-          <Link href="/specialities?category=Centres+of+Excellence" className={styles.viewAll} onClick={onNavigate}>View All</Link>
-        </div>
-      </section>
-      <div className={styles.tiles} aria-label="Our services">
-        {services.map((service) => (
-          <Link key={service.label} href={service.href} className={`${styles.tile} ${styles[service.tone]}`} onClick={onNavigate}
-            aria-label={service.label}>
-            <Image src={service.image} alt="" fill sizes="(min-width: 1600px) 18vw, 16vw" className={styles.tileImage} />
-            <span className={styles.tileWash} aria-hidden="true" />
-            <span className={styles.tileTitle}>{service.lines.map((line) => <span key={line}>{line}</span>)}</span>
-            <span className={styles.arrow} aria-hidden="true"><ArrowUpRight size={16} /></span>
-          </Link>
+    <div className={`${grouped.menu} ${styles.servicesMenu}`} data-service-menu>
+      <div className={`${grouped.content} ${styles.servicesContent}`}>
+        <ServicesMenuCollage />
+        {SERVICE_MENU_SECTIONS.map(section => (
+          <section key={section.id} className={`${grouped.group} ${styles.serviceGroup}`} aria-labelledby={`${id}-${section.id}-heading`}>
+            <h3 id={`${id}-${section.id}-heading`} className={`section-eyebrow ${grouped.groupTitle}`}>{section.label}</h3>
+            <ul className={grouped.links}>
+              {section.groups.flatMap(group => group.links).map(link => (
+                <li key={link.href}>
+                  <Link href={link.href} onClick={onNavigate} className={grouped.link}>
+                    <span className={`${grouped.label} ${styles.serviceLabel}`} title={link.label}>{link.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            {section.footer && <div className={styles.groupFooter}><MenuAction label={section.footer.label} href={section.footer.href} context={section.footer.label} onClick={onNavigate} /></div>}
+          </section>
         ))}
       </div>
+      <ServicesContactBand onNavigate={onNavigate} />
     </div>
   );
 }

@@ -94,14 +94,19 @@ const DOCTOR_VIDEOS: DoctorVideoItem[] = [
   },
 ];
 
-export default function DoctorOverviewCarousel() {
+export interface DoctorOverviewCarouselProps {
+  videos?: DoctorVideoItem[];
+}
+
+export default function DoctorOverviewCarousel({ videos = DOCTOR_VIDEOS }: DoctorOverviewCarouselProps = {}) {
+  const videoList = videos && videos.length > 0 ? videos : DOCTOR_VIDEOS;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const currentItem = DOCTOR_VIDEOS[currentIndex];
-  const totalItems = DOCTOR_VIDEOS.length;
-  const nextItem = currentIndex < totalItems - 1 ? DOCTOR_VIDEOS[currentIndex + 1] : null;
+  const currentItem = videoList[currentIndex] || videoList[0];
+  const totalItems = videoList.length;
+  const nextItem = currentIndex < totalItems - 1 ? videoList[currentIndex + 1] : null;
 
   const isPrevDisabled = currentIndex === 0;
   const isNextDisabled = currentIndex === totalItems - 1;
@@ -273,7 +278,7 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
             {String(currentIndex + 1).padStart(2, "0")} / {String(totalItems).padStart(2, "0")}
           </span>
           <div className={styles.indicatorBars}>
-            {DOCTOR_VIDEOS.map((item, idx) => (
+            {videoList.map((item, idx) => (
               <div 
                 key={item.id} 
                 className={`${styles.indicatorBar} ${idx === currentIndex ? styles.indicatorBarActive : ""}`}

@@ -1,0 +1,176 @@
+"use client";
+
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useReducedMotion } from "framer-motion";
+import { Filter } from "lucide-react";
+import type Lenis from "lenis";
+import { NH_CITIES } from "@/lib/searchService";
+import type { ConsultationMode } from "@/features/search/doctorListing";
+import { requestDoctorCity } from "@/features/search/doctorLocation";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
+import SearchCityPicker from "@/components/ui/search-location/SearchCityPicker";
+import ui from "@/components/ui/search-location/SearchTheme.module.css";
+import DoctorSearchHint from "./DoctorSearchHint";
+import styles from "@/components/ui/search-location/SearchToolbar.module.css";
+import listing from "./DoctorSearchTop.module.css";
+
+interface Props {
+  allConsultationTypes?: boolean;
+  query: string; location: string; total: number; mode: ConsultationMode;
+  heading: string; summary: string; locationFirst?: boolean;
+  compactMobile?: boolean; hideTotal?: boolean;
+  loading: boolean; error: boolean; filterCount: number; children: ReactNode;
+  onQuery: (query: string) => void; onLocation: (location: string) => void;
+  onOpenFilters: () => void;
+}
+
+export default function DoctorSearchTop({ query, location, total, mode, allConsultationTypes = false, heading, summary, locationFirst = false, compactMobile = false, hideTotal = false, loading, error, filterCount, children, onQuery, onLocation, onOpenFilters }: Props) {
+  const reducedMotion = Boolean(useReducedMotion());
+  const [navVisible, setNavVisible] = useState(true);
+  const [detectingLocation, setDetectingLocation] = useState<string | null>(null);
+  const [locationFeedback, setLocationFeedback] = useState(false);
+  const [locationStatus, setLocationStatus] = useState("");
+  const locationOffered = useRef(false);
+  const automaticRequest = useRef(0);
+  const locationChange = useRef(onLocation);
+  useEffect(() => { locationChange.current = onLocation; }, [onLocation]);
+  const rememberLocationOffer = () => {
+    locationOffered.current = true;
+    // Store only that we requested permission, never coordinates or a city.
+    try { sessionStorage.setItem("nh:d3:location-requested", "1"); } catch { /* Storage may be unavailable. */ }
+  };
+  const detectLocation = async () => {
+    const request = ++automaticRequest.current;
+    const sourceLocation = window.location.search;
+    const sameCity = () => {
+      const before = new URLSearchParams(sourceLocation);
+      const after = new URLSearchParams(window.location.search);
+      return ["location", "city", "cityId"].every((key) => before.get(key) === after.get(key));
+    };
+    setDetectingLocation(location);
+    setLocationFeedback(false);
+    setLocationStatus("Finding your location…");
+    const result = await requestDoctorCity(() => request === automaticRequest.current && sameCity());
+    if (request !== automaticRequest.current) return;
+    setDetectingLocation(null);
+    if (!sameCity()) { setLocationStatus(""); return; }
+    setLocationFeedback(Boolean(result.error));
+    if (result.city !== undefined) {
+      setLocationStatus(`Showing doctors near ${result.city}.`);
+      locationChange.current(result.city);
+    } else setLocationStatus(result.error);
+  };
+  useEffect(() => () => { automaticRequest.current += 1; }, []);
+  useEffect(() => {
+    if (locationFirst) return;
+    let cancelled = false;
+    const timer = window.setTimeout(async () => {
+      if (locationOffered.current) return;
+      const params = new URLSearchParams(window.location.search);
+      let seen = false;
+      try { seen = sessionStorage.getItem("nh:d3:location-requested") === "1"; } catch { /* Use the in-memory guard. */ }
+      if (seen || location !== "All" || ["location", "city", "cityId"].some((key) => params.has(key))) {
+        rememberLocationOffer();
+        return;
+      }
+      rememberLocationOffer();
+      const request = ++automaticRequest.current;
+      const current = () => !cancelled && request === automaticRequest.current;
+      // Native browser permission on entry; automatic failures stay unobtrusive.
+      const result = await requestDoctorCity(current);
+      if (!current()) return;
+      if (result.city !== undefined) {
+        setLocationStatus(`Showing doctors in nearby ${result.city}. You can change the city in Search location.`);
+        locationChange.current(result.city);
+      } else setLocationStatus(result.error);
+    }, 0);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [location, locationFirst]);
+  useEffect(() => {
+    // Follow the navbar's actual state, including an open navigation menu.
+    // Independent direction/dead-zone tracking can disagree after restoration.
+    const nav = document.querySelector<HTMLElement>("[data-site-nav]");
+    if (!nav) return;
+    const sync = () => setNavVisible(nav.dataset.navHidden !== "true");
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(nav, { attributes: true, attributeFilter: ["data-nav-hidden"] });
+    return () => observer.disconnect();
+  }, []);
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const heading = document.getElementById("d3-results-title");
+    if (!heading) return;
+    const page = heading.closest<HTMLElement>("[data-design]");
+    const inset = document.querySelector("nav")?.getBoundingClientRect().height ?? 0;
+    const gap = page ? parseFloat(getComputedStyle(page).getPropertyValue("--sp-2")) : 0;
+    const top = Math.max(0, window.scrollY + heading.getBoundingClientRect().top - inset - gap);
+    // Finish editing immediately; a cancelled scroll must not leave the input active.
+    heading.focus({ preventScroll: true });
+    // Hand scrolling to Lenis so its momentum cannot fight the search submission.
+    const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
+    if (lenis) lenis.scrollTo(top, { duration: .4, immediate: reducedMotion });
+    else window.scrollTo({ top, behavior: "instant" });
+  };
+
+  const handleLocationChange = (value: string) => {
+      automaticRequest.current += 1;
+      setDetectingLocation(null);
+      setLocationFeedback(false);
+      setLocationStatus("");
+      rememberLocationOffer();
+      if (value === "__device") void detectLocation();
+      else onLocation(value);
+  };
+
+  const locationSelect = (className: string) => <SearchCityPicker
+    className={`${styles.location} ${className}`} cities={NH_CITIES} value={location}
+    panelClassName={ui.blueSelection}
+    busy={detectingLocation === location} showDeviceLocation={!locationFirst}
+    describedBy="d3-location-status d3-refinement-help" onChange={handleLocationChange} />;
+  const filterButton = <button type="button" className={styles.filterButton} data-active={filterCount > 0 || undefined} onClick={onOpenFilters} aria-haspopup="dialog"
+    aria-label={`Filters${filterCount ? `, ${filterCount} active` : ""}`} title="Filters">
+    <Filter size={16} aria-hidden /><span className={styles.filterLabel}>Filters</span>{filterCount > 0 && <span className={styles.filterCount} aria-hidden>{filterCount}</span>}
+  </button>;
+
+  return <>
+    <div className={styles.navGap} aria-hidden />
+    <header className={`${styles.container} ${styles.titleRow} ${listing.header}`}>
+      <div className={styles.title}>
+        <h1 id="d3-results-title" tabIndex={-1}>{heading}</h1>
+        {/* Keep the heading readable and focusable beneath the decorative brand wipe. */}
+        {/* CSS hides the sweep for reduced motion without changing hydration markup. */}
+        <div className={styles.titleSweep} aria-hidden="true">
+          <TextSweepEffect key={heading} words={[heading]} sweepMs={1200}
+            // Design 16 replays on each heading change, independently of viewport entry.
+            active={locationFirst ? !reducedMotion : undefined}
+            sweepColor="var(--d3-ui-accent, var(--color-primary))" finalColor="var(--color-text)" />
+        </div>
+      </div>
+      <div className={`${styles.summary} ${hideTotal && !loading && !error ? styles.srOnly : ""}`}>
+        <p role="status" aria-live="polite" aria-atomic="true">
+          {loading ? "Searching…" : error ? "Results unavailable" : hideTotal ? "Doctor results updated" : <><strong>{total}</strong> {total === 1 ? "doctor" : "doctors"}</>}
+          <span className={styles.srOnly}>{query.trim() ? ` matching ${query.trim()}` : ""}, {location === "All" ? "all locations" : location}, {allConsultationTypes ? "all consultation types" : mode === "hospital" ? "hospital visits" : "video consultations"}</span>
+        </p>
+      </div>
+      <p className={styles.pageSummary}>{summary}</p>
+      {!locationFirst && locationSelect(styles.mobileLocation)}
+    </header>
+    <div className={`${styles.searchBar} ${!navVisible ? styles.navHidden : ""}`} data-d3-search-bar data-d3-ui>
+      <div className={`${styles.container} ${styles.toolbarContent}`}>
+        <div className={`${styles.searchRow} ${locationFirst ? styles.locationFirst : ""} ${compactMobile ? styles.compactMobile : ""}`}>
+          <SearchLocationUnit id="d3-search" query={query} onQuery={onQuery} onSubmit={submit}
+            searchLabel="Find a doctor" inputLabel="Search doctors by name, speciality or hospital"
+            locationControl={locationFirst ? locationSelect(styles.leadingLocation) : undefined}
+            hint={paused => <DoctorSearchHint active={!query} paused={paused} />} />
+          {!locationFirst && locationSelect(styles.desktopLocation)}
+          {!compactMobile && filterButton}
+        </div>
+        <p id="d3-location-status" className={locationFeedback ? styles.locationFeedback : styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{locationStatus}</p>
+        {children}
+      </div>
+    </div>
+  </>;
+}

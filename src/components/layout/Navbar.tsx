@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
-import LoginModal from "@/features/auth/LoginModal";
+import LoginModal from "@/features/auth/NavbarLoginModal";
+import { useAuthState } from "@/features/auth/hooks/useAuthState";
+import AccountMenu from "./AccountMenu";
+import { chooseBookingMember, getBookingMemberSelection, getServerBookingMemberSelection, resetBookingMemberSelection, subscribeBookingMembers } from "@/features/booking/design20/memberSelection";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Search, Menu, X, User, CalendarCheck, FileText, LogOut, Check } from "lucide-react";
+import { ChevronDown, Search, Menu, X } from "lucide-react";
 import styles from "./Navbar.module.css";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import { TriangleAlert } from "@/components/animate-ui/icons/hugeicons/triangle-alert";
@@ -15,13 +18,6 @@ import DesktopMegaMenu from "./navigation/DesktopMegaMenu";
 import { DESKTOP_NAV_ITEMS } from "./navigation/menu-data";
 
 const MotionLink = motion.create(Link);
-
-const MOCK_FAMILY_MEMBERS = [
-  { id: 1, name: "Toshib", img: "https://i.pravatar.cc/150?img=11" },
-  { id: 2, name: "Aarav", img: "https://i.pravatar.cc/150?img=12" },
-  { id: 3, name: "Neha", img: "https://i.pravatar.cc/150?img=5" },
-  { id: 4, name: "Rahul", img: "https://i.pravatar.cc/150?img=8" },
-];
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -45,15 +41,11 @@ export default function Navbar() {
   useLayoutEffect(() => {
     const measure = () => {
       const nav = navRef.current;
-      if (!nav) return;
-      const rect = nav.getBoundingClientRect();
-      if (rect.height > 0) {
-        document.documentElement.style.setProperty("--nav-actual-height", `${rect.height}px`);
-      }
-      const firstLink = nav.querySelector<HTMLElement>("[data-desktop-links] > li > a");
-      if (!firstLink) return;
+      const firstLink = nav?.querySelector<HTMLElement>("[data-desktop-links] > li > a");
+      if (!nav || !firstLink) return;
       const inset = firstLink.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(firstLink).paddingLeft);
       nav.style.setProperty("--desktop-menu-inset", `${inset}px`);
+      document.documentElement.style.setProperty("--nav-find-doctor-left", `${inset}px`);
       if (window.innerWidth < 1100) setActiveDropdown(null);
       else setIsMobileMenuOpen(false);
     };
@@ -76,6 +68,7 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), [setIsMobileMenuOpen]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginAfterMobileClose, setLoginAfterMobileClose] = useState(false);
 
   // Search theme state ("dark" | "white") for stakeholder simulation
   useEffect(() => {
@@ -90,28 +83,13 @@ export default function Navbar() {
   }, []);
 
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
-    }
-  }, []);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const profileDropdownRef = useRef<HTMLDivElement>(null);
-  const [activeUserId, setActiveUserId] = useState(1);
-  const activeUser = MOCK_FAMILY_MEMBERS.find(m => m.id === activeUserId) || MOCK_FAMILY_MEMBERS[0];
-  const [isMembersExpanded, setIsMembersExpanded] = useState(false);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
-        setIsProfileDropdownOpen(false);
-        setIsMembersExpanded(false); // Reset on close
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const { isUserLoggedIn: isLoggedIn, setIsUserLoggedIn: setIsLoggedIn } = useAuthState();
+  const bookingMembers = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
+  const activeUserId = bookingMembers.selectedId ?? bookingMembers.members[0]?.id ?? "existing-self";
+  const signOut = () => {
+    setIsLoggedIn(false);
+    resetBookingMemberSelection();
+  };
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isOverLightBackground, setIsOverLightBackground] = useState(false);
@@ -138,16 +116,18 @@ export default function Navbar() {
       let detectedTheme = "light";
 
       for (const el of elements) {
-        if (el.closest("nav") || el.closest('[class*="programmeTabsWrapper"]') || el.closest("aside") || el.closest("footer")) continue;
+        if (el.closest("nav") || el.closest('[class*="programmeTabsWrapper"]') || el.closest("footer")) continue;
         const themeEl = el.closest("[data-nav-theme]");
-        if (themeEl && !themeEl.closest("footer")) {
+        if (themeEl) {
           detectedTheme = themeEl.getAttribute("data-nav-theme") || "light";
           break;
         }
       }
 
       const isLight = detectedTheme !== "dark";
-      document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
+      if (typeof document !== "undefined") {
+        document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
+      }
       if (isLight !== isOverLightRef.current) {
         isOverLightRef.current = isLight;
         setIsOverLightBackground(isLight);
@@ -168,7 +148,9 @@ export default function Navbar() {
       // Always show navbar near the top
       if (currentScrollY < 120) {
         setIsVisible(true);
-        document.documentElement.setAttribute("data-nav-visible", "true");
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
         lastScrollY.current = currentScrollY;
         return;
       }
@@ -183,25 +165,56 @@ export default function Navbar() {
       if (delta > 0) {
         // Sustained downward scroll
         setIsVisible(false);
-        document.documentElement.setAttribute("data-nav-visible", "false");
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "false");
+        }
       } else {
         // Sustained upward scroll
         setIsVisible(true);
-        document.documentElement.setAttribute("data-nav-visible", "true");
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
       }
 
       // Update baseline after a meaningful scroll distance
       lastScrollY.current = currentScrollY;
     };
 
-    if (typeof document !== "undefined") {
-      document.documentElement.setAttribute("data-nav-visible", window.scrollY < 120 ? "true" : "false");
+    const initialScrollY = typeof window !== "undefined" ? window.scrollY : 0;
+    if (initialScrollY < 120) {
+      setIsVisible(true);
+      if (typeof document !== "undefined") {
+        document.documentElement.setAttribute("data-nav-visible", "true");
+      }
+    } else {
+      setIsVisible(false);
+      if (typeof document !== "undefined") {
+        document.documentElement.setAttribute("data-nav-visible", "false");
+      }
+    }
+
+    const lenis = (window as unknown as { lenis?: { on?: (evt: string, fn: () => void) => void; off?: (evt: string, fn: () => void) => void } }).lenis;
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", handleScroll);
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", handleScroll);
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen || activeDropdown !== null) {
+      if (typeof document !== "undefined") {
+        document.documentElement.setAttribute("data-nav-visible", "true");
+      }
+    }
+  }, [isMobileMenuOpen, activeDropdown]);
 
   // Every route uses the same scroll, section-theme and menu behavior.
   const isNavbarActive = scrolled || isMobileMenuOpen || activeDropdown !== null;
@@ -210,6 +223,8 @@ export default function Navbar() {
   return (
     <nav
       ref={navRef}
+      data-site-nav
+      data-nav-hidden={!isVisible && !activeDropdown ? "true" : "false"}
       role={isMobileMenuOpen ? "dialog" : undefined}
       aria-modal={isMobileMenuOpen || undefined}
       aria-labelledby={isMobileMenuOpen ? "mobile-menu-title" : undefined}
@@ -312,178 +327,18 @@ export default function Navbar() {
           </MotionLink>
 
           {isLoggedIn ? (
-            <div style={{ position: "relative" }} ref={profileDropdownRef}>
-              <button
-                onClick={() => {
-                  setIsProfileDropdownOpen(!isProfileDropdownOpen);
-                  if (isProfileDropdownOpen) setIsMembersExpanded(false);
-                }}
-                className={styles.loginBtnResponsive}
-                style={{
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  padding: "6px 12px 6px 6px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  background: isProfileDropdownOpen
-                    ? (isNavbarLight ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)")
-                    : (isNavbarLight ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)"),
-                  color: "var(--nav-fg-color)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  border: isNavbarLight ? "1px solid rgba(var(--slate-900-rgb), 0.2)" : "1px solid rgba(var(--white-rgb), 0.4)",
-                  borderRadius: "100px",
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={(e) => {
-                  if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isNavbarLight ? "rgba(var(--slate-900-rgb), 0.1)" : "rgba(var(--white-rgb), 0.2)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isProfileDropdownOpen) {
-                    e.currentTarget.style.background = isNavbarLight ? "rgba(var(--slate-900-rgb), 0.03)" : "rgba(var(--white-rgb), 0.16)";
-                  }
-                }}
-              >
-                <img src={activeUser.img} alt={activeUser.name} style={{ width: "28px", height: "28px", borderRadius: "50%", objectFit: "cover" }} />
-                <span style={{ fontWeight: 600, fontSize: "15px" }}>{activeUser.name}</span>
-                <ChevronDown size={16} strokeWidth={2.5} style={{ opacity: 0.7, transform: isProfileDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
-              </button>
-
-              {isProfileDropdownOpen && (
-                <div style={{
-                  position: "absolute",
-                  top: "calc(100% + 8px)",
-                  right: 0,
-                  width: "240px",
-                  background: "var(--color-surface)",
-                  borderRadius: "16px",
-                  boxShadow: "0 10px 25px -5px rgba(var(--black-rgb), 0.1), 0 8px 10px -6px rgba(var(--black-rgb), 0.1)",
-                  border: "1px solid var(--color-border, var(--slate-200))",
-                  overflow: "hidden",
-                  zIndex: 50,
-                  display: "flex",
-                  flexDirection: "column"
-                }}>
-                  <div style={{ padding: "12px 8px", borderBottom: "1px solid var(--color-border, var(--slate-200))", background: "var(--slate-50)" }}>
-                    <div style={{ padding: "0 8px 8px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <h4 style={{ margin: 0, fontSize: "12px", color: "var(--color-text-secondary, var(--slate-600))", textTransform: "uppercase", letterSpacing: "0.5px" }}>Switch Accounts</h4>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: isMembersExpanded ? "300px" : "none", overflowY: "auto" }}>
-                      {MOCK_FAMILY_MEMBERS.slice(0, isMembersExpanded ? MOCK_FAMILY_MEMBERS.length : 3).map((member) => {
-                        const isActive = member.id === activeUserId;
-                        return (
-                          <button
-                            key={member.id}
-                            onClick={() => {
-                              setActiveUserId(member.id);
-                              setIsProfileDropdownOpen(false);
-                              setIsMembersExpanded(false);
-                            }}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                              padding: "8px",
-                              background: isActive ? "#e0efff" : "transparent",
-                              border: "none",
-                              borderRadius: "8px",
-                              cursor: "pointer",
-                              transition: "background 0.2s"
-                            }}
-                            onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "#f1f5f9" }}
-                            onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent" }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                              <img src={member.img} alt={member.name} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
-                              <span style={{ fontSize: "14px", fontWeight: isActive ? 600 : 500, color: isActive ? "var(--color-primary)" : "var(--color-text, var(--slate-900))" }}>
-                                {member.name} {isActive && "(You)"}
-                              </span>
-                            </div>
-                            {isActive && <Check size={16} color="var(--color-primary)" />}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {MOCK_FAMILY_MEMBERS.length > 3 && (
-                      <button
-                        onClick={() => setIsMembersExpanded(!isMembersExpanded)}
-                        style={{
-                          marginTop: "8px",
-                          padding: "8px",
-                          width: "100%",
-                          background: "none",
-                          border: "none",
-                          color: "var(--color-primary)",
-                          fontSize: "13px",
-                          fontWeight: 600,
-                          cursor: "pointer",
-                          textAlign: "center"
-                        }}
-                      >
-                        {isMembersExpanded ? "View fewer members" : `View all ${MOCK_FAMILY_MEMBERS.length} members`}
-                      </button>
-                    )}
-                  </div>
-
-                  <div style={{ padding: "8px" }}>
-                    <Link href="/profile" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, var(--slate-900))", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <User size={18} style={{ color: "var(--color-text-secondary, var(--slate-600))" }} /> My account
-                    </Link>
-                    <Link href="/bookings" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, var(--slate-900))", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <CalendarCheck size={18} style={{ color: "var(--color-text-secondary, var(--slate-600))" }} /> My bookings
-                    </Link>
-                    <Link href="/records" onClick={() => setIsProfileDropdownOpen(false)} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-text, var(--slate-900))", textDecoration: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", transition: "background 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.background = "#f1f5f9"} onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}>
-                      <FileText size={18} style={{ color: "var(--color-text-secondary, var(--slate-600))" }} /> Health records
-                    </Link>
-                  </div>
-
-                  <div style={{ borderTop: "1px solid var(--color-border, var(--slate-200))", padding: "8px" }}>
-                    <button
-                      onClick={() => {
-                        setIsProfileDropdownOpen(false);
-                        setIsLoggedIn(false); localStorage.removeItem('isLoggedIn');
-                      }}
-                      style={{ width: "100%", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", color: "var(--color-emergency, var(--red-500))", background: "transparent", border: "none", fontSize: "14px", fontWeight: 500, borderRadius: "8px", cursor: "pointer", transition: "background 0.2s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = "#fef2f2"}
-                      onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                    >
-                      <LogOut size={18} /> Sign out
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <AccountMenu memberId={activeUserId} onMemberChange={chooseBookingMember} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onLogout={signOut}
+              tone={isNavbarLight ? "light" : "dark"} onOpen={() => setActiveDropdown(null)} />
           ) : (
-            <button
-              className={`${styles.loginBtnResponsive} ${styles.desktopLogin}`}
-              onClick={() => setIsLoginModalOpen(true)}
-            >
-              Login
-            </button>
+            <button type="button" className={`${styles.loginBtnResponsive} ${styles.desktopLogin}`}
+              onClick={() => { setActiveDropdown(null); setIsLoginModalOpen(true); }}>Login</button>
           )}
-          <Link
-            href="/login"
-            className={styles.loginIconResponsive}
-            style={{
-              color: "var(--nav-fg-color)",
-              padding: "8px",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "color 0.4s ease"
-            }}
-          >
-            <User size={18} strokeWidth={2.5} />
-          </Link>
           <button onClick={() => setIsMobileMenuOpen(true)} aria-label="Open navigation menu" style={{ color: "var(--nav-fg-color)", padding: "8px", display: "none", cursor: "pointer", background: "none", border: "none", transition: "color 0.4s ease" }} className="mobile-menu-btn">
             <Menu size={24} />
           </button>
         </div>
 
-        {/* ─── Mobile Navbar (<= 1024px): [ NH Logo ] [ Search ] [ Book Appointment ] [ Menu ] ─── */}
+        {/* Mobile navbar: logo, contact shortcuts and menu toggle. */}
         <div className={styles.mobileNav}>
           <Link aria-label="Narayana Health Home" href="/" className={styles.mobileLogoLink}>
             <div
@@ -513,9 +368,14 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.mobileActionGroup}>
-            {!isMobileMenuOpen && <a href="tel:18003090309" className={styles.mobileEmergency} aria-label="24/7 Emergency">
-              <TriangleAlert size={16} /><span>24/7 Emergency</span>
-            </a>}
+            {!isMobileMenuOpen && <>
+              <motion.a href="tel:18003090309" className={`${styles.callUs} ${styles.mobileCallUs}`} initial="initial" whileHover="animate" whileFocus="animate">
+                <PhoneCall animateOnHover /><span>Call Us</span>
+              </motion.a>
+              <Link href="/emergency" className={styles.mobileEmergency} aria-label="Emergency">
+                <TriangleAlert size={16} /><span>Emergency</span>
+              </Link>
+            </>}
             {/* No search affordance in the mobile bar: the hero composer
                 docks into the bottom action bar on scroll and carries search
                 from there, so a second entry point up here was a duplicate. */}
@@ -539,8 +399,10 @@ export default function Navbar() {
       {activeDropdown && <DesktopMegaMenu activeMenu={activeDropdown} direction={menuDirection} onNavigate={() => setActiveDropdown(null)} />}
 
       {/* Local mobile-menu exploration; the closed navbar stays unchanged. */}
-      <AnimatePresence>
-        {isMobileMenuOpen && <MobileMegaMenu onClose={closeMobileMenu} onLogin={() => { closeMobileMenu(); setIsLoginModalOpen(true); }} />}
+      <AnimatePresence onExitComplete={() => {
+        if (loginAfterMobileClose) { setLoginAfterMobileClose(false); setIsLoginModalOpen(true); }
+      }}>
+        {isMobileMenuOpen && <MobileMegaMenu isLoggedIn={isLoggedIn} memberId={activeUserId} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onMemberChange={chooseBookingMember} onLogout={signOut} onClose={closeMobileMenu} onLogin={() => { setLoginAfterMobileClose(true); closeMobileMenu(); }} />}
       </AnimatePresence>
 
       {isSearchOpen && (
@@ -582,7 +444,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => { setIsLoggedIn(true); localStorage.setItem('isLoggedIn', 'true'); }} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => setIsLoggedIn(true)} />
     </nav>
   );
 }

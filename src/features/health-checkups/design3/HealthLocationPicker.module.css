@@ -1,0 +1,78 @@
+.location {
+  position: relative;
+  flex: 0 1 32%;
+  min-width: 0;
+  max-width: calc(var(--space-128) * 3);
+  align-self: stretch;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: var(--space-56);
+  height: 100%;
+  padding: var(--space-8) var(--space-20);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.location::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block: var(--space-12);
+  border-inline-end: var(--space-1) solid var(--color-border);
+  pointer-events: none;
+}
+
+.pin { width: var(--space-20); height: var(--space-20); flex-shrink: 0; }
+.triggerText { display: flex; flex-direction: column; min-width: 0; flex: 1; gap: var(--space-2); }
+.triggerText strong { font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-normal); color: var(--color-text); }
+.triggerText > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); }
+.chevron { width: var(--space-16); height: var(--space-16); flex-shrink: 0; box-sizing: content-box; padding: var(--space-6); border-radius: var(--radius-full); transition: background-color var(--duration-fast) var(--ease-out); }
+
+/* Reuse the booking city picker's surface, header, search, rows and scrollbar. */
+/* More specific than the shared city menu: centre names need a wider surface. */
+.location .popover { width: min(calc(var(--space-128) * 4 + var(--space-48)), calc(100vw - var(--space-48))); }
+.titleGroup { display: flex; align-items: center; gap: var(--space-4); min-width: 0; }
+.cityContext { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--space-40); margin-bottom: var(--space-8); padding: 0 var(--space-8); border: 0; border-radius: var(--radius-md); background: none; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
+.cityContext svg { width: var(--space-16); height: var(--space-16); }
+.optionCopy { display: grid; gap: var(--space-4); flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.optionCopy strong { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; color: var(--color-text); }
+.optionCopy small { color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); }
+.radio { display: grid; place-items: center; flex-shrink: 0; align-self: flex-start; margin-top: var(--space-2); width: var(--space-20); height: var(--space-20); border: var(--space-1) solid var(--color-text-muted); border-radius: var(--radius-full); background: transparent; }
+.radio::after { content: ""; width: var(--space-10); height: var(--space-10); border-radius: var(--radius-full); background: var(--red-500); opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.centreRow [aria-checked="true"] .radio { border-color: var(--red-500); }
+.centreRow [aria-checked="true"] .radio::after { opacity: 1; }
+.optionIcon { flex-shrink: 0; }
+.rowChevron { flex-shrink: 0; }
+.location :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+@media (hover: hover) {
+  .trigger:hover .chevron, .cityContext:hover { background: var(--color-disclosure-hover); }
+}
+@media (max-width: 639px) {
+  .location { flex: 1 1 auto; max-width: 100%; width: 100%; }
+  .location::after { display: none; }
+  .trigger { min-height: var(--space-56); padding-inline: var(--space-16); }
+  .cityContext { min-height: calc(var(--space-40) + var(--space-4)); }
+}
+@media (prefers-reduced-motion: reduce) { .chevron { transition: none; } }
+
+.centreRow { border-radius: var(--radius-md); transition: background-color var(--duration-fast) var(--ease-out); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--space-4); }
+.distancePill { composes: distancePill from "../../booking/design20/BookingSummary.module.css"; --d7-muted: var(--color-text-secondary); margin: var(--space-8) var(--space-8) 0 0; }
+.distancePill::before { inset: 0; }
+
+/* One hover surface for selection; the directions link remains its own action. */
+.centreRow > button:hover { background: transparent; }
+@media (hover: hover) {
+  .centreRow:has(> button:hover) { background: var(--color-disclosure-hover); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .centreRow, .radio::after { transition: none; }
+}

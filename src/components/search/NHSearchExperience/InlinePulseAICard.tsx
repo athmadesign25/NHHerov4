@@ -406,7 +406,7 @@ export default function InlinePulseAICard({
                             <span>Available Today</span>
                           </span>
                           <Link
-                            href={`/doctors/${doc.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                            href={`/doctors/${encodeURIComponent(doc.id)}/book?hospital=${encodeURIComponent(doc.hospital)}&name=${encodeURIComponent(doc.name)}&city=${encodeURIComponent(selectedLocation)}`}
                             className={styles.pulseCuratedDocBookBtn}
                           >
                             <span>Book</span>
@@ -440,7 +440,7 @@ export default function InlinePulseAICard({
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
                 <span className={styles.pulseThinkingDot} />
-                <span style={{ fontSize: 11.5, color: "#94A3B8", marginLeft: 6 }}>
+                <span className={styles.pulseThinkingText}>
                   Pulse AI is analyzing specialists…
                 </span>
               </div>

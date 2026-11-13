@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T17:00:56+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Mysore",
+  "facility": "Narayana Multispeciality Clinic, Mysore",
+  "facilityId": "",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": null,
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-mysore-clinic-packages.mhtml",
+      "sha256": "6c192ec6e76e4c59433a81e69d57c8853d7d39ccbca60eb6b4d3ad41c7e6d171",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

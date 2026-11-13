@@ -9,12 +9,12 @@ import pulseAnimation from "../../../../public/assets/pulse animation.json";
 import styles from "./NHSearchExperience.module.css";
 import LocationSelector from "./LocationSelector";
 import TypewriterPrompt from "./TypewriterPrompt";
-import { 
-  MAX_SEARCH_WORDS, 
-  MAX_AUDIO_DURATION_SECONDS, 
-  countWords, 
-  enforceWordLimit, 
-  formatAudioDuration 
+import {
+  MAX_SEARCH_WORDS,
+  MAX_AUDIO_DURATION_SECONDS,
+  countWords,
+  enforceWordLimit,
+  formatAudioDuration
 } from "./searchData";
 
 interface DefaultSearchPromptProps {
@@ -23,7 +23,7 @@ interface DefaultSearchPromptProps {
   onDocumentSubmit?: (file: { name: string; size?: number }, prompt: string) => void;
   selectedLocation: string;
   onSelectLocation: (loc: string) => void;
-  onSelectActionPill: (action: "doctor" | "symptoms") => void;
+  onSelectActionPill: (action: "doctor" | "symptoms" | "checkups") => void;
   onOpenPulse?: () => void;
   searchTheme?: "dark" | "white";
   isMobile?: boolean;
@@ -37,6 +37,7 @@ interface DefaultSearchPromptProps {
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
   controlsOverflow?: MotionValue<"hidden" | "visible">;
+  promptBlur?: MotionValue<string>;
 }
 
 // Minimal SpeechRecognition interfaces for standard TypeScript
@@ -100,6 +101,7 @@ export default function DefaultSearchPrompt({
   searchTheme = "dark",
   isMobile = false,
   promptOpacity,
+  promptBlur,
   minimizedSearchOpacity,
   textColor,
   compactLabelOpacity,
@@ -365,9 +367,9 @@ export default function DefaultSearchPrompt({
     const file = e.target.files?.[0];
     if (file) {
       const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      setAttachedPdf({ 
-        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`, 
-        size: file.size 
+      setAttachedPdf({
+        name: isPdf ? file.name : `${file.name.replace(/\.[^/.]+$/, "")}.pdf`,
+        size: file.size
       });
     } else {
       setAttachedPdf({ name: "Blood_Test_Report.pdf", size: 245000 });
@@ -411,19 +413,28 @@ export default function DefaultSearchPrompt({
   };
 
   return (
-    <div 
-      className={styles.landingContainer} 
-      style={{ height: "100%", justifyContent: "flex-start", cursor: voiceMode === "idle" ? "pointer" : "default", position: "relative", overflow: "visible", zIndex: 5 }}
+    <motion.div
+      className={styles.landingContainer}
+      style={{
+        height: "100%",
+        justifyContent: "flex-start",
+        cursor: voiceMode === "idle" ? "pointer" : "default",
+        position: "relative",
+        overflow: "visible",
+        zIndex: 5,
+        opacity: promptOpacity,
+        filter: promptBlur,
+      }}
       onClick={handleContainerClick}
     >
       {/* Top row: Primary Prompt or Voice In-Place Mode */}
       <motion.div
         className={styles.landingInputRow}
         style={{
-          ...(voiceMode === "listening" 
-            ? { marginBottom: 0 } 
-            : controlsMarginBottom 
-            ? { marginBottom: controlsMarginBottom } 
+          ...(voiceMode === "listening"
+            ? { marginBottom: 0 }
+            : controlsMarginBottom
+            ? { marginBottom: controlsMarginBottom }
             : {}),
           position: "relative",
           alignItems: "center",
@@ -520,7 +531,7 @@ export default function DefaultSearchPrompt({
 
               {/* Only in last 10 seconds: slight blinking alert text */}
               {recordingSeconds >= MAX_AUDIO_DURATION_SECONDS - 10 && recordingSeconds < MAX_AUDIO_DURATION_SECONDS && (
-                <div 
+                <div
                   className={styles.voiceLastSecondsBlink}
                   role="status"
                   aria-live="polite"
@@ -553,7 +564,7 @@ export default function DefaultSearchPrompt({
                   title="Cancel recording"
                   aria-label="Cancel voice recording"
                 >
-                  <X size={15} strokeWidth={2.2} />
+                  <X size={15} strokeWidth={2.0} />
                 </button>
                 <button
                   type="button"
@@ -565,7 +576,7 @@ export default function DefaultSearchPrompt({
                   title="Done recording"
                   aria-label="Confirm and finish voice recording"
                 >
-                  <Check size={16} strokeWidth={2.4} />
+                  <Check size={15} strokeWidth={2.0} />
                 </button>
               </div>
             </motion.div>
@@ -614,7 +625,7 @@ export default function DefaultSearchPrompt({
 
               {countWords(transcribedText) >= MAX_SEARCH_WORDS && (
                 <div className={styles.transcribedActions}>
-                  <span 
+                  <span
                     className={styles.transcribedWordLimitError}
                     role="alert"
                   >
@@ -666,7 +677,7 @@ export default function DefaultSearchPrompt({
       {/* Continuous horizontal interaction row */}
       <AnimatePresence initial={false}>
         {voiceMode !== "listening" ? (
-          <motion.div 
+          <motion.div
             key="standard-bottom-controls"
             className={styles.landingBottomRow}
             initial={{ opacity: 0, y: 4 }}
@@ -708,24 +719,36 @@ export default function DefaultSearchPrompt({
                 onSelectLocation={onSelectLocation}
               />
 
-              {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
-              <button
-                type="button"
-                className={styles.insideActionPill}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push("/doctors");
-                }}
-                title="Book Doctor Appointment"
-              >
-                <CalendarCheck size={14} className={styles.insideActionIcon} />
-                {/* Two labels, one shown per width. Left to truncate, the
-                    full one became "Book ..." on a phone, which is an
-                    ellipsis where the verb's object should be. */}
-                <span className={styles.pillLabelFull}>Book Appointment</span>
-                <span className={styles.pillLabelShort}>Book Appt</span>
-              </button>
+              {/* Quick Action Pills Group: Book Appointment & Book Tests */}
+              <div className={styles.insideActionPillsGroup}>
+                {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
+                <button
+                  type="button"
+                  className={styles.insideActionPill}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/search/doctors?design=d21&location=${encodeURIComponent(selectedLocation)}`);
+                  }}
+                  aria-label="Book Doctor Appointment"
+                >
+                  <CalendarCheck size={14} className={styles.insideActionIcon} />
+                  <span>Book Appointment</span>
+                </button>
 
+                {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
+                <button
+                  type="button"
+                  className={styles.insideActionPill}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectActionPill("checkups");
+                  }}
+                  aria-label="Book Tests & Health Checkups"
+                >
+                  <Activity size={14} className={styles.insideActionIcon} />
+                  <span>Book Tests &amp; Checkups</span>
+                </button>
+              </div>
             </div>
 
             {/* Right side controls: splits into Send + Mic */}
@@ -759,13 +782,13 @@ export default function DefaultSearchPrompt({
                     }
                   }}
                 >
-                  <ArrowRight size={16} strokeWidth={2.5} />
+                  <ArrowRight size={16} strokeWidth={2.0} />
                 </button>
               </div>
             </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

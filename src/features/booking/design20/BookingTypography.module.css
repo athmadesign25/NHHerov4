@@ -1,0 +1,32 @@
+/* Booking details use two sizes. Hierarchy comes from role, weight and proximity. */
+.value {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-body);
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+.emphasis {
+  composes: value;
+  font-weight: 600;
+}
+
+.supporting {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.action {
+  composes: supporting;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.savings {
+  composes: supporting;
+  color: var(--journey-paper-success);
+}

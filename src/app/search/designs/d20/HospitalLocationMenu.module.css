@@ -1,0 +1,57 @@
+.menu.menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 0;
+  max-height: calc(var(--space-128) * 2 + var(--space-96) + var(--space-8));
+  overflow: hidden;
+}
+
+.menu:popover-open {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu.menu > p {
+  flex: none;
+  margin: 0;
+  padding: var(--space-16);
+  line-height: var(--leading-normal);
+}
+
+.menu .options {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-muted) transparent;
+}
+
+/* The site hides WebKit scrollbars globally; this menu needs an overflow cue. */
+.options::-webkit-scrollbar {
+  display: block !important;
+  width: var(--space-6);
+  height: var(--space-6);
+}
+
+.options::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-full);
+  background: var(--color-text-muted);
+}
+
+.options::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .menu:popover-open {
+    animation: appear var(--duration-fast) var(--ease-out);
+  }
+}
+
+@keyframes appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

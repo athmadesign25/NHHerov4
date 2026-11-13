@@ -5,13 +5,13 @@ import Link from "next/link";
 import { Search, X, ArrowRight, Plus, Mic, Send, Briefcase, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./NHSearchExperience.module.css";
-import { 
-  SearchResultsData, 
+import {
+  SearchResultsData,
   DoctorCardData,
-  getSearchResults, 
-  countWords, 
-  enforceWordLimit, 
-  MAX_SEARCH_WORDS 
+  getSearchResults,
+  countWords,
+  enforceWordLimit,
+  MAX_SEARCH_WORDS
 } from "./searchData";
 import LocationSelector from "./LocationSelector";
 import PrimaryResults from "./PrimaryResults";
@@ -19,6 +19,8 @@ import TertiaryResults from "./TertiaryResults";
 import PulseAnalyzingCentral from "./PulseAnalyzingCentral";
 import PulseAIAvatar from "./PulseAIAvatar";
 import { analyzePulseIntent } from "./pulseClinicalEngine";
+import { getPulseEmergencyResponse } from "./pulseEmergency";
+import PulseEmergencyCard from "./PulseEmergencyCard";
 
 interface SearchResultsCanvasProps {
   query: string;
@@ -30,6 +32,7 @@ interface SearchResultsCanvasProps {
   onSelectLocation: (loc: string) => void;
   onSelectSpecialtyTag?: (tag: string) => void;
   onAskPulse?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
 }
 
 interface CompletedTurn {
@@ -38,6 +41,7 @@ interface CompletedTurn {
   introText: string;
   narrative: string;
   doctor?: DoctorCardData;
+  emergency?: boolean;
   followupChips: string[];
   timestamp: string;
 }
@@ -50,6 +54,7 @@ interface ActiveTurnState {
   displayedNarrative: string;
   typedIndex: number;
   doctor?: DoctorCardData;
+  emergency?: boolean;
   followupChips: string[];
   phase: "thinking" | "drafting" | "skeleton" | "complete";
 }
@@ -60,6 +65,7 @@ export default function SearchResultsCanvas({
   onEditSearch,
   onSubmit,
   onClose,
+  onNavigateOut,
   selectedLocation,
   onSelectLocation,
   onSelectSpecialtyTag,
@@ -254,6 +260,15 @@ export default function SearchResultsCanvas({
   // Staged automatic scroll on transition into Pulse AI or new prompt
   useEffect(() => {
     if (!isPulseActive || !activeTurn) return;
+
+    if (activeTurn.emergency) {
+      // Reveal the call action above the composer, including on narrow phones.
+      const frame = requestAnimationFrame(() => {
+        const container = unifiedScrollRef.current;
+        container?.scrollTo({ top: container.scrollHeight, behavior: "instant" });
+      });
+      return () => cancelAnimationFrame(frame);
+    }
 
     if (completedTurns.length === 0) {
       // First turn: smoothly glide semantic cards up so chat begins right at the top
@@ -751,7 +766,7 @@ export default function SearchResultsCanvas({
 
     // 15. General clinical intent triage fallback via pulseClinicalEngine
     const triage = analyzePulseIntent(queryText, [], location);
-    const matchingDoc = availableDoctors.find((d) => 
+    const matchingDoc = availableDoctors.find((d) =>
       triage.specialty && d.speciality.toLowerCase().includes(triage.specialty.toLowerCase())
     ) || availableDoctors[0] || {
       id: "doc-devi-shetty",
@@ -782,8 +797,13 @@ export default function SearchResultsCanvas({
     const raw = (customPrompt ?? pulseInput).trim();
     if (!raw) return;
 
-    // If an animation is actively in progress, don't interrupt
-    if (activeTurn && activeTurn.phase !== "complete") return;
+    // Emergency updates take priority, even while a routine answer is animating.
+    const emergencyReply = getPulseEmergencyResponse(raw, [
+      activeQuery,
+      ...completedTurns.map((turn) => turn.userPrompt),
+      ...(activeTurn ? [activeTurn.userPrompt] : []),
+    ]);
+    if (activeTurn && activeTurn.phase !== "complete" && !emergencyReply) return;
 
     // Archive current completed turn if present
     if (activeTurn && activeTurn.phase === "complete") {
@@ -795,6 +815,7 @@ export default function SearchResultsCanvas({
           introText: activeTurn.introText,
           narrative: activeTurn.fullNarrative,
           doctor: activeTurn.doctor,
+          emergency: activeTurn.emergency,
           followupChips: activeTurn.followupChips,
           timestamp: "Just now",
         },
@@ -808,36 +829,45 @@ export default function SearchResultsCanvas({
     const userPrompt = raw;
 
     // Intelligent clinical conversation resolution based on user inquiry
-    const pulseReply = resolvePulseAIResponse(raw, selectedLocation, currentResults.doctors);
+    const pulseReply = emergencyReply
+      ? { ...emergencyReply, doctor: undefined, followupChips: [] }
+      : resolvePulseAIResponse(raw, selectedLocation, currentResults.doctors);
 
     // Step 1: Transition into unified AI mode
     setIsPulseActive(true);
     setIsScrolledToTop(false);
 
-    // Initialize Active Turn in thinking phase
+    // Emergency guidance and its call action appear immediately.
     setActiveTurn({
       id: turnId,
       userPrompt,
       introText: pulseReply.introText,
       fullNarrative: pulseReply.narrative,
-      displayedNarrative: "",
+      displayedNarrative: emergencyReply ? pulseReply.narrative : "",
       typedIndex: 0,
       doctor: pulseReply.doctor,
+      emergency: Boolean(emergencyReply),
       followupChips: pulseReply.followupChips,
-      phase: "thinking",
+      phase: emergencyReply ? "complete" : "thinking",
     });
   };
+
+  const isZeroResults =
+    !isPulseActive &&
+    (currentResults.status === "empty" ||
+      currentResults.doctors.length === 0 ||
+      currentResults.status === "error");
 
   return (
     <div className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
-      <div 
-        className={`${styles.pulseActiveAmbientBg} ${isPulseActive ? styles.pulseActiveAmbientBgVisible : ""}`} 
-        aria-hidden="true" 
+      <div
+        className={`${styles.pulseActiveAmbientBg} ${isPulseActive ? styles.pulseActiveAmbientBgVisible : ""}`}
+        aria-hidden="true"
       />
 
       {/* ── 1. Top Header Row: Location Dropdown + Close Button ── */}
-      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 10 }}>
+      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 60 }}>
         <div className={styles.headerLeftGroup}>
           <LocationSelector
             selectedLocation={selectedLocation}
@@ -865,17 +895,17 @@ export default function SearchResultsCanvas({
         {showTopSearchBar && (
           <motion.div
             key="topQueryBarGroup"
-            style={{ position: "relative", zIndex: 10, width: "100%" }}
+            style={{ position: "relative", zIndex: 1, width: "100%" }}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0, overflow: "hidden" }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
-            <form 
-              className={styles.resultsQueryBar} 
+            <form
+              className={styles.resultsQueryBar}
               onSubmit={handleTopSearchSubmit}
             >
-              <div 
+              <div
                 className={styles.resultsQueryLeft}
                 onClick={() => topInputRef.current?.focus()}
               >
@@ -926,9 +956,9 @@ export default function SearchResultsCanvas({
 
       {/* ── 3. Single Permanent Unified Canvas Container ── */}
       {/* ALWAYS mounted so layout, dimensions, and scroll transitions are 100% reliable */}
-      <div 
+      <div
         ref={unifiedScrollRef}
-        className={styles.unifiedResultsScrollArea}
+        className={`${styles.unifiedResultsScrollArea} ${isPulseActive ? styles.unifiedResultsScrollAreaActive : ""}`}
         data-lenis-prevent="true"
         style={{
           position: "relative",
@@ -936,8 +966,8 @@ export default function SearchResultsCanvas({
           overflowY: isPulseActive ? "auto" : "hidden",
         }}
       >
-        {/* Mobile Viewport Segmented Control */}
-        {!isRequerying && (
+        {/* Mobile Viewport Segmented Control (Hidden when zero results) */}
+        {!isRequerying && !isZeroResults && (
           <div className={styles.mobileSegmentedControl} role="tablist" aria-label="Search results views">
             <button
               type="button"
@@ -966,6 +996,24 @@ export default function SearchResultsCanvas({
             query={inputValue.trim() || activeQuery}
             selectedLocation={selectedLocation}
           />
+        ) : isZeroResults ? (
+          <div className={styles.resultsEmptyLayout}>
+            <PrimaryResults
+              doctors={currentResults.doctors}
+              totalDoctors={currentResults.totalDoctors}
+              selectedLocation={selectedLocation}
+              proximityMessage={currentResults.proximityMessage}
+              proximityTier={currentResults.proximityTier}
+              query={activeQuery}
+              status={currentResults.status}
+              errorMessage={currentResults.errorMessage}
+              onRetry={() => handleTopSearchSubmit()}
+              onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
+              onAskPulse={(customPrompt?: string) => {
+                handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
+              }}
+            />
+          </div>
         ) : (
           <div className={styles.resultsSplitLayout} data-mobile-tab={mobileTab}>
             {/* ── LEFT COLUMN: Recommended Doctors ── */}
@@ -981,12 +1029,13 @@ export default function SearchResultsCanvas({
                 aria-label="Doctors list"
                 style={
                   isPulseActive
-                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0 }
-                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 110 }
+                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0, maskImage: "none", WebkitMaskImage: "none" }
+                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 90 }
                 }
               >
                 <PrimaryResults
                   doctors={currentResults.doctors}
+                  totalDoctors={currentResults.totalDoctors}
                   selectedLocation={selectedLocation}
                   proximityMessage={currentResults.proximityMessage}
                   proximityTier={currentResults.proximityTier}
@@ -995,16 +1044,11 @@ export default function SearchResultsCanvas({
                   errorMessage={currentResults.errorMessage}
                   onRetry={() => handleTopSearchSubmit()}
                   onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
-                  onAskPulse={() => {
-                    handleSendPulsePrompt(`Help me understand care options for ${activeQuery}`);
+                  onAskPulse={(customPrompt?: string) => {
+                    handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
                   }}
                 />
               </div>
-
-              {/* White gradient fade with background blur below small Pulse bar in non-active mode */}
-              {!isPulseActive && (
-                <div className={styles.pulseBottomGradientFade} aria-hidden="true" />
-              )}
             </div>
 
             {/* ── RIGHT COLUMN: Treatments, Articles & Specialties (Steady & Static) ── */}
@@ -1020,6 +1064,8 @@ export default function SearchResultsCanvas({
                 }
               }}
               query={activeQuery}
+              onClose={onClose}
+              onNavigateOut={onNavigateOut}
             />
           </div>
         )}
@@ -1042,6 +1088,8 @@ export default function SearchResultsCanvas({
                 <div className={styles.aiBotResponseRow}>
                   <p className={styles.aiBotIntroText}>{turn.introText}</p>
                   <p className={styles.aiBotNarrativeText}>{turn.narrative}</p>
+
+                  {turn.emergency && <PulseEmergencyCard />}
 
                   {turn.doctor && (
                     <div className={styles.aiBotDoctorCardWrap}>
@@ -1072,7 +1120,7 @@ export default function SearchResultsCanvas({
                             </div>
 
                             <Link
-                              href={`/doctors/${turn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                              href={`/doctors/${encodeURIComponent(turn.doctor.id)}/book?hospital=${encodeURIComponent(turn.doctor.hospital)}&name=${encodeURIComponent(turn.doctor.name)}&city=${encodeURIComponent(selectedLocation)}`}
                               className={styles.refBookBtnWhite}
                             >
                               Book
@@ -1084,7 +1132,7 @@ export default function SearchResultsCanvas({
                   )}
 
                   {/* Follow-up suggestion chips */}
-                  <div className={styles.aiBotFollowupsWrap}>
+                  {turn.followupChips.length > 0 && <div className={styles.aiBotFollowupsWrap}>
                     <div className={styles.aiBotFollowupsHeader}>
                       <Sparkles size={16} className={styles.aiBotSparkleIcon} />
                       <span>If you are looking for something else</span>
@@ -1102,7 +1150,7 @@ export default function SearchResultsCanvas({
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div>}
                 </div>
               </div>
             ))}
@@ -1145,6 +1193,7 @@ export default function SearchResultsCanvas({
                 {(activeTurn.phase === "drafting" || activeTurn.phase === "skeleton" || activeTurn.phase === "complete") && (
                   <motion.div
                     className={styles.aiBotResponseRow}
+                    role={activeTurn.emergency ? "alert" : undefined}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -1158,6 +1207,8 @@ export default function SearchResultsCanvas({
                         <span className={styles.typewriterCaret} />
                       )}
                     </p>
+
+                    {activeTurn.emergency && <PulseEmergencyCard />}
 
                     {/* Step 4: Doctor Skeleton Card with Shimmer appears while thinking/loading */}
                     {activeTurn.phase === "skeleton" && (
@@ -1215,7 +1266,7 @@ export default function SearchResultsCanvas({
                                   </div>
 
                                   <Link
-                                    href={`/doctors/${activeTurn.doctor.id}/book?city=${encodeURIComponent(selectedLocation)}`}
+                                    href={`/doctors/${encodeURIComponent(activeTurn.doctor.id)}/book?hospital=${encodeURIComponent(activeTurn.doctor.hospital)}&name=${encodeURIComponent(activeTurn.doctor.name)}&city=${encodeURIComponent(selectedLocation)}`}
                                     className={styles.refBookBtnWhite}
                                   >
                                     Book
@@ -1226,7 +1277,7 @@ export default function SearchResultsCanvas({
                           </motion.div>
                         )}
 
-                        <motion.div
+                        {activeTurn.followupChips.length > 0 && <motion.div
                           className={styles.aiBotFollowupsWrap}
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -1252,7 +1303,7 @@ export default function SearchResultsCanvas({
                               </motion.button>
                             ))}
                           </div>
-                        </motion.div>
+                        </motion.div>}
                       </>
                     )}
                   </motion.div>
@@ -1265,103 +1316,86 @@ export default function SearchResultsCanvas({
         )}
       </div>
 
-      {/* ── Gradient Fade across the bottom dock when active in chat mode ── */}
-      {isPulseActive && (
-        <div className={styles.pulseDockActiveGradientFade} aria-hidden="true" />
-      )}
-
-      {/* ── Aurora Glow Field extending upward from bottom dock in Empty State ── */}
-      {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
-        <div className={styles.pulseAuroraGlowField} aria-hidden="true" />
+      {/* ── Progressive Feathered Backdrop Gradient & Blur behind Floating Pulse Bar ── */}
+      {!isZeroResults && (
+        <div
+          className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact}`}
+          aria-hidden="true"
+        />
       )}
 
       {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
-      {/* Small in non-active mode over doctor cards, expands smoothly to 100% full width in active mode */}
-      <div 
-        className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
-        style={{ zIndex: 25 }}
-      >
-        <div 
-          className={styles.floatingPulseDockCol}
-          style={{ width: "100%", maxWidth: "100%" }}
+      {/* Hidden when zero results (since empty state itself has the clean Pulse AI bridge and top input is present) */}
+      {!isZeroResults && (
+        <div
+          className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
+          style={{ zIndex: 25 }}
         >
-          {/* Subtle Nudge when in Empty State */}
-          {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
-            <motion.button
-              type="button"
-              className={styles.pulseDockNudgePill}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => {
-                pulseInputRef.current?.focus();
-              }}
-            >
-              <Sparkles size={13} className={styles.pulseDockNudgeIcon} />
-              <span>Can&apos;t find your condition? Describe symptoms to Pulse AI below</span>
-            </motion.button>
-          )}
-
-          <form 
-            className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+          <div
+            className={styles.floatingPulseDockCol}
             style={{ width: "100%", maxWidth: "100%" }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendPulsePrompt();
-            }}
           >
-          {/* Round Blue Plus Button */}
-          <button
-            type="button"
-            className={styles.floatingPulsePlusBtn}
-            onClick={() => pulseInputRef.current?.focus()}
-            aria-label="New Prompt"
-            title="Ask Pulse"
-          >
-            <Plus size={18} strokeWidth={2.4} />
-          </button>
-
-          {/* Input Field */}
-          <input
-            ref={pulseInputRef}
-            type="text"
-            className={styles.floatingPulseInput}
-            placeholder="Ask Pulse ai"
-            value={pulseInput}
-            onChange={(e) => setPulseInput(e.target.value)}
-            aria-label="Ask Pulse AI"
-          />
-
-          {/* Right Action: Send Button (if text entered) or Mic Icon */}
-          {pulseInput.trim().length > 0 ? (
-            <button
-              type="submit"
-              className={styles.floatingPulseSendBtn}
-              aria-label="Send prompt"
-              title="Send to Pulse AI"
-            >
-              <Send size={15} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-              onClick={() => {
-                setIsListening((prev) => !prev);
-                if (!isListening) {
-                  setPulseInput("Tell me more about Dr Pradeep kumar");
-                  pulseInputRef.current?.focus();
-                }
+            <form
+              className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+              style={{ width: "100%", maxWidth: "100%" }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendPulsePrompt();
               }}
-              aria-label="Voice input"
-              title={isListening ? "Listening..." : "Speak to Pulse AI"}
             >
-              <Mic size={19} />
-            </button>
-          )}
-        </form>
-      </div>
+              {/* Round Blue Plus Button */}
+              <button
+                type="button"
+                className={styles.floatingPulsePlusBtn}
+                onClick={() => pulseInputRef.current?.focus()}
+                aria-label="New Prompt"
+                title="Ask Pulse"
+              >
+                <Plus size={18} strokeWidth={2.0} />
+              </button>
+
+              {/* Input Field */}
+              <input
+                ref={pulseInputRef}
+                type="text"
+                className={styles.floatingPulseInput}
+                placeholder="Ask Pulse ai"
+                value={pulseInput}
+                onChange={(e) => setPulseInput(e.target.value)}
+                aria-label="Ask Pulse AI"
+              />
+
+              {/* Right Action: Send Button (if text entered) or Mic Icon */}
+              {pulseInput.trim().length > 0 ? (
+                <button
+                  type="submit"
+                  className={styles.floatingPulseSendBtn}
+                  aria-label="Send prompt"
+                  title="Send to Pulse AI"
+                >
+                  <Send size={15} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+                  onClick={() => {
+                    setIsListening((prev) => !prev);
+                    if (!isListening) {
+                      setPulseInput("Tell me more about Dr Pradeep kumar");
+                      pulseInputRef.current?.focus();
+                    }
+                  }}
+                  aria-label="Voice input"
+                  title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                >
+                  <Mic size={19} />
+                </button>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
 );
 }

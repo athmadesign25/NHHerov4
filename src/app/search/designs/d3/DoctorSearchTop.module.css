@@ -1,0 +1,2 @@
+.header.header { grid-template-columns: minmax(0, 1fr); }
+.header > p { grid-column: 1; }

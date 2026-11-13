@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-11-06T16:23:51+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Mazumdar Shaw Medical Centre, Bangalore",
+  "facilityId": "1002",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Rendered catalogue cards present in the supplied snapshot; not proof of complete facility inventory"
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "snapshotFormat": "mhtml"
+}

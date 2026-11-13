@@ -1,0 +1,10 @@
+.dialog { width: min(calc(100% - var(--space-32)), calc(var(--space-128) * 4.5)); max-width: none; max-height: calc(100dvh - var(--space-48)); margin: auto; padding: 0; border: var(--space-1) solid var(--journey-paper-border); border-radius: var(--radius-xl); background: var(--journey-paper-glass); color: var(--color-text); backdrop-filter: blur(var(--space-20)); box-shadow: var(--elevation-5); overflow-y: auto; overscroll-behavior: contain; }
+.dialog::backdrop { background: rgba(var(--slate-900-rgb), .3); backdrop-filter: blur(var(--space-4)); }
+.wide { width: min(calc(100% - var(--space-32)), var(--max-width)); }
+.body { padding: var(--space-24); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); margin-bottom: var(--space-24); }
+.header h2 { font-size: var(--font-size-xl); line-height: var(--leading-snug); font-weight: 600; }
+.header button { display: grid; place-items: center; width: var(--space-40); height: var(--space-40); flex-shrink: 0; background: rgba(var(--white-rgb), .5); color: var(--color-text-secondary); border: 0; border-radius: var(--radius-full); cursor: pointer; transition: background var(--duration-fast); }
+.header button:hover { background: var(--color-surface); }
+.dialog :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+@media (max-width: 640px) { .body { padding: var(--space-16); } .header button { width: calc(var(--space-40) + var(--space-4)); height: calc(var(--space-40) + var(--space-4)); } }

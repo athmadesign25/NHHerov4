@@ -13,7 +13,7 @@ function SpecialityPageContent({ slug }: { slug: string }) {
   const queryDesign = searchParams.get("design");
   const coeParam = searchParams.get("coe");
   const currentSpec = ALL_SPECIALITIES.find((s) => s.slug === slug);
-  const isCoE = coeParam !== null ? coeParam === "true" : Boolean(currentSpec?.isCoE);
+  const isCoE = coeParam !== null ? coeParam === "true" : false;
 
   const initialDesign: SpecialityDesignId = queryDesign === "2" ? 2 : 1;
   const [activeDesign, setActiveDesign] = useState<SpecialityDesignId>(initialDesign);

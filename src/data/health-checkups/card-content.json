@@ -1,0 +1,603 @@
+{
+  "source-1014-pkg023271": {
+    "catalogueName": "Ehp Copd Health Check Up"
+  },
+  "source-1014-pkg022222": {
+    "catalogueName": "1014 Mys Health Heart Package Silver"
+  },
+  "source-1014-pkg022449": {
+    "catalogueName": "Mysore Well Women Check 2(obg Package )"
+  },
+  "source-1020-pkg043130": {
+    "catalogueName": "Ehp Infosys Platinum Pkg"
+  },
+  "source-1020-pkg043128": {
+    "catalogueName": "Ehp Infosys Silver Pkg"
+  },
+  "source-1020-pkg043129": {
+    "catalogueName": "Ehp Infosys Gold Pkg"
+  },
+  "source-1029-pkg045955": {
+    "catalogueName": "Nh Advanced Heart & Cancer Screening Package For Male Senior Citizens"
+  },
+  "source-1506-pkg028094": {
+    "catalogueName": "Gur Cardiac Screen Package - Male"
+  },
+  "source-2012-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-2012-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-2012-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-2012-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-2013-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-2013-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-2013-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-2014-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-2014-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-2014-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-2014-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-2015-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-2015-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-2015-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-2015-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-3010-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-3010-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-3010-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-3010-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-3011-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-3011-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-3011-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-3011-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-3012-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male",
+    "testGroups": [
+      {
+        "name": "COMPLETE BLOOD COUNT",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "RENAL PACKAGE  (RFT RANDOM)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "STOOL (OCCULT BLOOD)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "URINE ROUTINE & MICROSCOPY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIVER FUNCTION TEST(LFT)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIPID PROFILE (CHOL,TRIG,HDL,LDL,VLDL)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "THYROID PROFILE (T3, T4, TSH)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HBA1C",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "IRON PROFILE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECG",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PROSTATE SPECIFIC ANTIGEN (PSA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "XRAY CHEST PA",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN B-12",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN D 25 HYDROXY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "USG ABDOMEN WHOLE SCREENING",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECHO COLOR DOPPLER",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CRP (C-REACTIVE PROTEIN)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "TREADMILL TEST",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CA-125",
+        "parameters": [],
+        "itemLabel": "parameters"
+      }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine",
+      "Stool"
+    ]
+  },
+  "source-3012-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-3012-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-3012-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-6024-pkg037822": {
+    "originalPrice": 38000.0,
+    "catalogueName": "Male Enhanced Health (m >45)",
+    "testGroups": [
+      {
+        "name": "BONE DENSITOMETRY - SPINE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CALCIUM SCORE SCREENING",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PULMONARY FUNCTION TEST",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "DOPPLER CAROTID BOTH",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HCV (ANTI HCV ANTIBODY) - CHEMILUMINESCENCE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HBSAG (HEPATITS B SURFACE ANTIGEN) - CHEMILUMINESCENCE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "XRAY CHEST PA",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "USG ABDOMEN WHOLE SCREENING",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECHO COLOR DOPPLER",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECG",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PROSTATE SPECIFIC ANTIGEN (PSA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "APOLIPOPROTEIN B",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "APOLIPOPROTEINS A-1",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "URINE FOR MICROALBUMIN TO CREATININE RATIO",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "URINE ROUTINE & MICROSCOPY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN D 25 HYDROXY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "THYROID PROFILE (T3, T4, TSH)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIPID PROFILE (CHOL,TRIG,HDL,LDL,VLDL)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HBA1C",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "RENAL PACKAGE - 2 (RFT RANDOM)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "COMPLETE BLOOD COUNT",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIVER FUNCTION TEST(LFT)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "BONE DENSITOMETRY- FRAX SCORE - HIP & FOREARM",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN B-12",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PURE TONE AUDIOMETRY (PTA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine"
+    ]
+  },
+  "source-6024-pkg037823": {
+    "originalPrice": 50000.0,
+    "catalogueName": "Male Comprehesive Wellness (m >45)",
+    "testGroups": [
+      {
+        "name": "CA-125",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CT ABDOMEN PLAIN",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CT CHEST",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "STOOL ROUTINE EXAMINATION",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CARCINO EMBRYONIC ANTIGEN (CEA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PURE TONE AUDIOMETRY (PTA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN B-12",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "BONE DENSITOMETRY - SPINE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "BONE DENSITOMETRY- TOTAL BODY SCAN",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "COMPLETE BLOOD COUNT",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIPID PROFILE (CHOL,TRIG,HDL,LDL,VLDL)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "LIVER FUNCTION TEST(LFT)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "RENAL PACKAGE - 2 (RFT RANDOM)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "URINE FOR MICROALBUMIN TO CREATININE RATIO",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "URINE ROUTINE & MICROSCOPY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HBA1C",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "APOLIPOPROTEIN B",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "APOLIPOPROTEINS A-1",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "THYROID PROFILE (T3, T4, TSH)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "VITAMIN D 25 HYDROXY",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ERYTHROCYTE SEDIMENTATION RATE (ESR)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PROSTATE SPECIFIC ANTIGEN (PSA)",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECG",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "ECHO COLOR DOPPLER",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HCV (ANTI HCV ANTIBODY) - CHEMILUMINESCENCE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "HBSAG (HEPATITS B SURFACE ANTIGEN) - CHEMILUMINESCENCE",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "USG ABDOMEN WHOLE SCREENING",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "DOPPLER CAROTID BOTH",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "PULMONARY FUNCTION TEST",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CALCIUM SCORE SCREENING",
+        "parameters": [],
+        "itemLabel": "parameters"
+      },
+      {
+        "name": "CA - 19 - 9",
+        "parameters": [],
+        "itemLabel": "parameters"
+      }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine",
+      "Stool"
+    ]
+  },
+  "source-6024-pkg037821": {
+    "originalPrice": 29000.0,
+    "catalogueName": "Male Prime Health (m >35)"
+  },
+  "source-6024-pkg037820": {
+    "originalPrice": 20000.0,
+    "catalogueName": "Male Vital Care (m <35)"
+  },
+  "source-6028-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-6028-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-6028-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-6028-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-6030-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-6030-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-6030-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  },
+  "source-6030-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-6530-pkg043831": {
+    "originalPrice": 35570.0,
+    "catalogueName": "Nhic Ultimate Full Body Healthcheckup Male"
+  },
+  "source-6530-pkg032009": {
+    "originalPrice": 12470.0,
+    "catalogueName": "Nhic Senior Citizen - Male"
+  },
+  "source-6530-pkg032007": {
+    "originalPrice": 10470.0,
+    "catalogueName": "Nhic Executive Healthcheckup - Male"
+  },
+  "source-6530-pkg032011": {
+    "originalPrice": 23480.0,
+    "catalogueName": "Nhic Master Healthcheckup - Male"
+  }
+}

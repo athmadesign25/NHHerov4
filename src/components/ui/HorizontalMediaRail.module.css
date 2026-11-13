@@ -1,0 +1,102 @@
+.root {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  min-height: var(--space-48);
+}
+
+.heading { min-width: 0; }
+
+.controls { display: flex; flex: none; gap: var(--space-4); }
+
+.controls button {
+  display: grid;
+  place-items: center;
+  width: var(--space-48);
+  height: var(--space-48);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: rgba(var(--slate-900-rgb), 0.05);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out);
+}
+
+.controls svg { width: var(--space-20); height: var(--space-20); }
+.controls button:disabled { opacity: 0.3; cursor: default; }
+
+.rail {
+  min-width: 0;
+  display: grid;
+  grid-auto-flow: column;
+  /* Reserve a visible slice of the next card, including the gap. */
+  grid-auto-columns: calc((100% - var(--space-16)) / 1.2);
+  gap: var(--space-16);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: var(--space-8) var(--space-8) var(--space-16);
+  margin: 0 calc(-1 * var(--space-8));
+  scroll-padding-inline: var(--space-8);
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Alpha fades reveal the actual page gradient rather than painting over it. */
+.rail[data-fade-start],
+.rail[data-fade-end] {
+  --rail-fade-start: calc(var(--space-1) * 0);
+  --rail-fade-end: calc(var(--space-1) * 0);
+  --rail-fade-width: var(--space-24);
+  mask-image: linear-gradient(to right, transparent, var(--slate-900) var(--rail-fade-start), var(--slate-900) calc(100% - var(--rail-fade-end)), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--slate-900) var(--rail-fade-start), var(--slate-900) calc(100% - var(--rail-fade-end)), transparent);
+}
+.rail[data-fade-start] { --rail-fade-start: var(--rail-fade-width); }
+.rail[data-fade-end] { --rail-fade-end: var(--rail-fade-width); }
+.rail::-webkit-scrollbar { display: none; }
+.rail[data-overflow] { cursor: grab; }
+.rail[data-dragging], .rail[data-dragging] * { cursor: grabbing !important; }
+.rail[data-dragging] a, .rail[data-dragging] img { transform: none; transition: none; }
+.item { min-width: 0; }
+.item:only-child { grid-column: 1; }
+.rail:has(.item:only-child) { grid-auto-columns: 100%; }
+
+.root:has(.rail:focus-visible), .controls button:focus-visible {
+  outline: var(--space-2) solid var(--color-primary);
+  outline-offset: var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 768px) {
+  .rail {
+    grid-auto-columns: calc((100% - var(--space-48)) / 2.25);
+    gap: var(--space-24);
+  }
+  .rail[data-fade-start], .rail[data-fade-end] { --rail-fade-width: var(--space-48); }
+  /* Short collections do not imply that there are additional cards. */
+  .rail:has(.item:only-child),
+  .rail:has(.item:nth-child(2):last-child) { grid-auto-columns: calc((100% - var(--space-24)) / 2); }
+}
+
+@media (hover: hover) {
+  .controls button:hover:not(:disabled) { background: rgba(var(--slate-900-rgb), 0.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .controls button { transition: none; }
+}
+
+/* Keep keyboard focus and high-contrast outlines fully legible. */
+.rail:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .rail { mask-image: none; -webkit-mask-image: none; }
+}

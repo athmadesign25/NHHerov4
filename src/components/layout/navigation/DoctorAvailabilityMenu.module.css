@@ -1,0 +1,20 @@
+.menu { grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: "banner directory" "banner footer"; row-gap: var(--space-12); }
+.banner { grid-area: banner; }
+.menu .banner.sunday img { object-position: center 70%; transform: scale(1.15); transform-origin: center 70%; }
+.menu .banner.today img { transform: scale(1.25); transform-origin: center 60%; }
+.directory { grid-area: directory; column-count: 4; column-gap: var(--space-12); column-fill: auto; height: 100%; min-width: 0; min-height: 0; }
+.footer { grid-area: footer; display: flex; justify-content: flex-end; }
+.cityGroup { break-inside: avoid; min-width: 0; margin-bottom: var(--space-16); padding-inline: var(--space-2); }
+.cityGroup h3 { margin: 0 0 var(--space-2); font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 600; }
+.cityGroup ul { list-style: none; margin: 0; padding: 0; }
+.cityButton, .localityButton { display: block; padding-block: var(--space-2); text-decoration: none; transition: color var(--duration-base) var(--ease-out); }
+.cityButton { color: var(--color-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.localityButton { color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-normal); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cityButton:hover, .localityButton:hover { color: var(--color-primary); text-decoration: none; }
+.menu a:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+@media (max-width: 1280px) {
+  .directory { column-gap: var(--space-8); }
+  .cityGroup { margin-bottom: var(--space-12); }
+  .localityButton { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { .cityButton, .localityButton { transition: none; } }
