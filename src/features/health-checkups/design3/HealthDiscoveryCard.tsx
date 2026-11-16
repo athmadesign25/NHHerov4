@@ -8,6 +8,7 @@ import { ArrowUpRight, Building2, CalendarDays, Check, ChevronRight, History, Sh
 import { duration, ease } from "@/lib/motion";
 import { money, type HealthItem } from "../catalog";
 import { healthCardContent } from "../healthCardContent";
+import { DEFAULT_HEALTH_DESIGN } from "../healthDesigns";
 import { healthItemDetailHref } from "../healthDetailTypes";
 import styles from "./HealthDiscoveryCard.module.css";
 
@@ -49,7 +50,7 @@ export default function HealthDiscoveryCard({ item, eager = false, selected, inc
       <div className={styles.intro}>
         <div className={styles.identity}>
           <h3 id={titleId} className={styles.title}>
-            <Link href={healthItemDetailHref(item, "3")} onNavigate={(event) => {
+            <Link href={healthItemDetailHref(item, DEFAULT_HEALTH_DESIGN)} onNavigate={(event) => {
               event.preventDefault();
               onDetails();
             }}>{item.name}</Link>

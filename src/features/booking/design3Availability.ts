@@ -5,6 +5,7 @@ import { doctorHospitals, fromDirectoryDoctor, nextSlot, type ConsultationMode }
 import { generateTimeSlots } from "./useBookingState";
 import type { TimeSlot } from "./types";
 import { indiaAppointmentTimestamp, indiaClock, indiaDate } from "./appointmentTime";
+import { getExecutiveSlot } from "./executiveSlots";
 
 /**
  * Design 3 preview schedule only. Its demo grid includes the exact listing slot;
@@ -43,6 +44,9 @@ export function getDesign3BookingSlots(
   return slots
     .map((slot) => ({
       ...slot,
+      ...(scheduleContext === "d20" ? {
+        isExecutive: Boolean(getExecutiveSlot({ doctorId, date, mode, hospital, time: slot.time })),
+      } : {}),
       available: slot.available && timestamp(slot.time) > now.getTime() &&
         (!advertisedSlot || timestamp(slot.time) >= advertisedSlot.getTime()),
     }))

@@ -1,9 +1,0 @@
-.switcher {
-  composes: root from "../../../features/design-preview/DesignPreview.module.css";
-  --preview-bottom: max(var(--preview-edge), env(safe-area-inset-bottom), var(--preview-dock-clearance, var(--preview-edge)));
-  z-index: 85;
-}
-.trigger { composes: trigger from "../../../features/design-preview/DesignPreview.module.css"; }
-.expanded { composes: expanded from "../../../features/design-preview/DesignPreview.module.css"; }
-.options { composes: options from "../../../features/design-preview/DesignPreview.module.css"; }
-.switcher[data-open-direction="down"] .options { top: calc(100% + var(--space-8)); bottom: auto; }

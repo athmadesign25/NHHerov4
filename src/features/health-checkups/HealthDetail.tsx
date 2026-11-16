@@ -61,7 +61,7 @@ export default function HealthDetail({ item, facility, design = DEFAULT_HEALTH_D
       <motion.header className={styles.hero} data-image={Boolean(item.image) || undefined} initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: duration.slow, ease: ease.out }}>
         <div className={styles.identity}>
           <p className={styles.type}>{contentLabel}</p>
-          {design === "1" ? <h1>{item.name}</h1> : <JourneyHeading>{item.name}</JourneyHeading>}
+          <JourneyHeading>{item.name}</JourneyHeading>
           {detail?.subtitle && <p className={styles.subtitle}>{detail.subtitle}</p>}
           <div className={styles.facility}><Building2 aria-hidden /><div><p>{facility.name}</p><span><MapPin aria-hidden />{facility.city}</span></div></div>
           {(samples.length > 0 || hasTestCount || reportTime) && <dl className={styles.facts}>

@@ -20,6 +20,7 @@
 }
 
 .menu .options {
+  padding: var(--space-8);
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type KeyboardEvent } from "react";
 import SearchLocationUnit from "@/components/ui/search-location/SearchLocationUnit";
 import RotatingSearchHint from "@/components/ui/search-location/RotatingSearchHint";
 import { money, type HealthItem } from "../catalog";
@@ -7,9 +7,9 @@ import { matchesHealthQuery } from "../healthDiscovery";
 import styles from "./HealthCatalogueSearch.module.css";
 
 const terms = ["health packages", "lab tests"] as const;
-interface Props { catalog: HealthItem[]; query: string; onQuery: (value: string) => void; onDetails: (item: HealthItem) => void; onSubmit: () => void }
+interface Props { locationControl?: ReactNode; locationOpen?: boolean; catalog: HealthItem[]; query: string; onQuery: (value: string) => void; onDetails: (item: HealthItem) => void; onSubmit: () => void }
 
-export default function HealthCatalogueSearch({ catalog, query, onQuery, onDetails, onSubmit }: Props) {
+export default function HealthCatalogueSearch({ catalog, query, onQuery, onDetails, onSubmit, locationControl, locationOpen }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const listId = useId();
   const [open, setOpen] = useState(false);
@@ -18,7 +18,7 @@ export default function HealthCatalogueSearch({ catalog, query, onQuery, onDetai
     items: catalog.filter(item => item.kind === kind && matchesHealthQuery(item, query)).slice(0, 3),
   })), [catalog, query]);
   const options = groups.flatMap(group => group.items);
-  const expanded = open && Boolean(query.trim()) && options.length > 0;
+  const expanded = !locationOpen && open && Boolean(query.trim()) && options.length > 0;
   useEffect(() => {
     const outside = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
     document.addEventListener("pointerdown", outside);
@@ -38,7 +38,7 @@ export default function HealthCatalogueSearch({ catalog, query, onQuery, onDetai
     }
   }
   return <div ref={root} className={styles.root} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false); }}>
-    <SearchLocationUnit id="health-discovery-search" query={query} maxLength={120}
+    <SearchLocationUnit locationControl={locationControl} id="health-discovery-search" query={query} maxLength={120}
       onQuery={value => { onQuery(value); setOpen(true); setActive(-1); }}
       searchLabel="Find health packages and lab tests" inputLabel="Search health packages and lab tests at this centre"
       hint={paused => <RotatingSearchHint active={!query} paused={paused} prefix="Search for" terms={terms} />}

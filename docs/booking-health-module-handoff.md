@@ -1,6 +1,18 @@
 # Booking and Health Checkups: module ownership
 
-Use `aditya4_work` for the current Booking and Health Checkup work. Keep each change in its module; this reduces shared-file edits and merge conflicts. It cannot guarantee a conflict-free merge when two branches edit the same file.
+Use `aditya_final` for the approved Booking and Health Checkup handoff. This branch starts from `demo-no-tokens` at `8ca98e70` and integrates `aditya4_work` through `4354f086`.
+
+| Screen | Approved design |
+| --- | --- |
+| Doctor listing and expanded slot selection | Design A |
+| Doctor profile | Design 2 |
+| Complete your booking | Design 4 |
+| Appointment confirmation | Design 7 |
+| Health Checkups listing | Design 4 |
+
+These screens have no design-preview switcher. Old preview links resolve to the approved version. Unused alternative screen components have been removed; shared components and styles required by the approved flow remain. `aditya3_work` and `aditya4_work` preserve the iterations and are not cleaned by this handoff.
+
+Continue experiments on the iteration branches. Promote only reviewed changes to `aditya_final`; do not merge an iteration branch wholesale without checking for reintroduced previews. Other designers can merge `aditya_final` into the shared branch after reviewing its changes against their current baseline. Keep each change in its module; this reduces overlap but cannot guarantee a conflict-free merge when two branches edit the same file.
 
 ## Where changes belong
 
@@ -53,9 +65,9 @@ Avoid unrelated formatting, global token renaming, dependency updates and asset 
 ```bash
 export PATH="/Users/a374590/Desktop/NH website main/.node-portable/bin:$PATH"
 node scripts/check-booking-health-boundaries.mjs
-node scripts/check-booking-health-boundaries.mjs --base origin/main
+node scripts/check-booking-health-boundaries.mjs --base origin/demo-no-tokens
 ```
 
 The checker reads TypeScript/JavaScript import syntax, including relative paths and aliases, and uses the already-installed TypeScript compiler. It adds no package dependency. It checks direct module boundaries, not every transitive dependency or CSS reference. `--base` uses the local Git ref and reports files changed on both sides since their common ancestor, including local uncommitted work. It does not fetch, modify Git state, prove that a merge will conflict, or prove that the application works. Refresh the receiving ref through the team's normal sync process before relying on the comparison.
 
-Current public URLs and approved previews remain unchanged by this organisation. New Health Checkup iterations belong under that feature's preview structure, not in the Booking route folders.
+Current public routes remain available and render only the approved designs. New Health Checkup iterations belong in the feature on an iteration branch, not in the Booking route folders or this final handoff.

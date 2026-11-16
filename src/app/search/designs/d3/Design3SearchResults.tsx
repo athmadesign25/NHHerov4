@@ -3,6 +3,7 @@ import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import { DESIGN16_BOOKING_DAYS,indiaDate } from "@/features/booking/appointmentTime";
 import { design20ListingReturnTo,design20RequestedSelection } from "@/features/booking/design20/model";
+import { bookingHistoryEntryState } from "@/features/booking/designA/bookingHistoryLease";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { presentationDoctorName } from "@/features/design-preview/presentationCopy";
 import { getDesign16LanguageShortcut } from "@/features/search/design16Language";
@@ -20,7 +21,6 @@ import { getSearchTabById,getSearchTabFromPathname,getSearchTabPath,type SearchT
 import { useDesign3BookedDoctors } from "@/features/search/useDesign3BookedDoctors";
 import { useDesign3Search } from "@/features/search/useDesign3Search";
 import { AnimatePresence } from "framer-motion";
-import type Lenis from "lenis";
 import { ArrowRight,Filter,Info,PhoneCall,X } from "lucide-react";
 import { usePathname,useRouter,useSearchParams } from "next/navigation";
 import { useCallback,useEffect,useMemo,useRef,useState,type ComponentProps,type ComponentType,type MouseEvent } from "react";
@@ -33,7 +33,6 @@ import AppliedFilterSummary from "../d21/AppliedFilterSummary";
 import d21 from "../d21/Design21Filters.module.css";
 import Design21Refinements from "../d21/Design21Refinements";
 import FilterSearch from "../d21/FilterSearch";
-import ListingBackdropPreview from "../d21/ListingBackdropPreview";
 import CatalogFilters from "./CatalogFilters";
 import styles from "./Design3SearchResults.module.css";
 import DoctorListingFAQ from "./DoctorListingFAQ";
@@ -71,7 +70,6 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const directory = design20Directory;
     const scheduleContext = "d20";
     const searchParams = useSearchParams();
-    const listingPreview = searchParams.get("listingPreview") === "1" ? "1" : "2";
     const pathname = usePathname();
     const router = useRouter();
     const landing = getDoctorLandingContext(pathname);
@@ -88,67 +86,18 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const bookingId = searchParams.get("booking");
     const bookingSource = bookingId ? (getDesign20BookingDoctor(bookingId)) : null;
     const activeBooking = bookingSource ? { ...bookingSource, name: presentationDoctorName(bookingSource.name) } : null;
-    const previousBooking = useRef<string | null>(null);
     const openedHere = useRef(false);
-    const closingPreview = useRef<"1" | "2" | null>(null);
     const visitedCards = useRef(new Set<string>());
     const [resumeCard, setResumeCard] = useState(false);
-    useEffect(() => {
-        const preservePreviewOnClose = () => {
-            const preview = closingPreview.current;
-            closingPreview.current = null;
-            if (!preview || window.location.pathname !== pathname) return;
-            const url = new URL(window.location.href);
-            if ((url.searchParams.get("listingPreview") === "1" ? "1" : "2") === preview) return;
-            url.searchParams.set("listingPreview", preview);
-            window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-        };
-        window.addEventListener("popstate", preservePreviewOnClose);
-        return () => {
-            window.removeEventListener("popstate", preservePreviewOnClose);
-            closingPreview.current = null;
-        };
-    }, [pathname]);
     const closeBookingCard = () => {
         if (openedHere.current) {
             openedHere.current = false;
-            // Collapse the booking history entry without reverting a presentation
-            // choice made while its slot picker was open.
-            closingPreview.current = listingPreview;
             window.history.back();
         }
         else
             window.history.replaceState(null, "", listingReturnTo ?? "/search/doctors?design=d21");
     };
-    useEffect(() => {
-        const previous = previousBooking.current;
-        previousBooking.current = bookingId;
-        if (bookingId) {
-            visitedCards.current.add(bookingId);
-            // Direct entry and Edit details return to the selected card. An ordinary
-            // Book click keeps its exact current position and never scrolls the page.
-            if (!openedHere.current) {
-                const frame = requestAnimationFrame(() => {
-                    const card = document.querySelector<HTMLElement>(`[data-booking-card="${CSS.escape(bookingId)}"]`);
-                    if (!card)
-                        return;
-                    const top = Math.max(0, window.scrollY + card.getBoundingClientRect().top - parseFloat(getComputedStyle(card).scrollMarginTop));
-                    const lenis = (window as Window & {
-                        __lenis?: Lenis;
-                    }).__lenis;
-                    if (lenis)
-                        lenis.scrollTo(top, { immediate: true });
-                    else
-                        window.scrollTo({ top, behavior: "instant" });
-                });
-                return () => cancelAnimationFrame(frame);
-            }
-        }
-        if (!bookingId && previous) {
-            const frame = requestAnimationFrame(() => document.querySelector<HTMLElement>(`[data-book-doctor="${CSS.escape(previous)}"]`)?.focus({ preventScroll: true }));
-            return () => cancelAnimationFrame(frame);
-        }
-    }, [bookingId]);
+    useEffect(() => { if (bookingId) visitedCards.current.add(bookingId); }, [bookingId]);
     const cardSelectionParams = new URLSearchParams(searchParams.toString());
     if (searchParams.get("bookingMode"))
         cardSelectionParams.set("mode", searchParams.get("bookingMode")!);
@@ -369,10 +318,10 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
             else
                 next.delete("date");
             if (bookingId)
-                window.history.replaceState(null, "", `${pathname}?${next}`);
+                window.history.replaceState(bookingHistoryEntryState(), "", `${pathname}?${next}`);
             else {
                 openedHere.current = true;
-                window.history.pushState(null, "", `${pathname}?${next}`);
+                window.history.pushState(bookingHistoryEntryState(), "", `${pathname}?${next}`);
             }
             return;
         }
@@ -491,13 +440,13 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
             {sample && <span className={styles.sample}><Info size={14} aria-hidden/>Sample directory</span>}
           </div>}
           {!sample && doctorTab && !loading && !error && <p className={styles.dataNote}>Contact NH to confirm appointment times and consultation fees.</p>}
-          <div className={`${styles.grid} ${doctorTab ? gridClassName || styles.doctorGrid : ""}`} aria-busy={loading}>
+          <div className={`${styles.grid} ${doctorTab ? gridClassName || styles.doctorGrid : ""}`} data-doctor-results-grid={doctorTab || undefined} aria-busy={loading}>
             {loading ? <ResultSkeletons doctors={doctorTab}/> : error || !total ? <SearchState recovery={recovery ? { message: `The next matching appointments are on ${dateLabel(recovery.date)}. Your other filters will stay selected.`, label: `View ${dateLabel(recovery.date)}`, onApply: () => changeDate(recovery.date) } : filterRecovery ? { message: `${filterRecovery.count} doctors are available without the ${filterRecovery.label} filter. Your other preferences will stay selected.`, label: `Clear ${filterRecovery.label} filter`, onApply: () => changeDoctorFilters(filterRecovery.filters) } : undefined} emptyState={previouslyBooked ? {
                 title: bookedDoctors.size ? `No ${historyLabel.toLowerCase()} doctors match` : `No ${historyLabel.toLowerCase()} doctors yet`,
                 message: bookedDoctors.size ? `Try another location or remove a filter to find a doctor you’ve ${"booked"} before.` : "Doctors you book will appear here, making your next visit easier.",
                 action: "Browse doctors",
             } : undefined} error={error} filtered={filterCount > 0} onRetry={request.retry} onReset={previouslyBooked ? () => setHistory(false) : filterCount ? clearFilters : () => update((next) => { next.delete("q"); next.delete("location"); })}/>
-            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} browsingPreview={listingPreview === "2"} doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
+            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} expandingPreview doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
                 : items.slice(0, visible).map((item) => <ResultCard key={item.id} item={item} onDetails={() => setItemDetails(item)}/>)}
           </div>
           {doctorTab && <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{!loading && !error && visible > 16 ? "More doctors loaded" : ""}</p>}
@@ -566,6 +515,6 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     {pendingUrl && <LoginModal previewOtp={true} isOpen manageFocus onClose={() => setPendingUrl(null)} onLoginSuccess={() => { const url = pendingUrl; setPendingUrl(null); router.push(url); }}/>}
     {historyLogin && <LoginModal previewOtp={true} isOpen manageFocus purpose="history" onClose={() => setHistoryLogin(false)} onLoginSuccess={() => { setHistoryLogin(false); setHistory(true); }}/>}
     {doctorTab && <DoctorCallToBook placement="mobile" hidden={Boolean(activeBooking)} />}
-    {doctorTab && <ListingBackdropPreview active={listingPreview} />}
+
   </div>;
 }

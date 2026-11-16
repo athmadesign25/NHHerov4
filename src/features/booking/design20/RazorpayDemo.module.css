@@ -187,3 +187,9 @@
 @media (prefers-reduced-motion: reduce) {
   .dialog :is(button, input) { transition: none; }
 }
+
+/* The row supplies feedback; its disclosure arrow only reflects open state. */
+.merchantRow, .offerChip { --disclosure-icon-hover: transparent; }
+.merchantRow[aria-expanded] > svg:last-child, .offerChip[aria-expanded] > svg:last-child { transition: transform var(--duration-fast) var(--ease-out); }
+.merchantRow[aria-expanded="true"] > svg:last-child, .offerChip[aria-expanded="true"] > svg:last-child { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .merchantRow[aria-expanded] > svg:last-child, .offerChip[aria-expanded] > svg:last-child { transition: none; } }

@@ -3,6 +3,8 @@
   width: 100%;
   min-width: 0;
   padding-top: 0;
+  /* Tighten only this row against the toolbar’s 8px sibling gap. */
+  margin-block-start: calc(-1 * var(--space-4));
   display: flex;
   align-items: start;
   column-gap: var(--sp-1);

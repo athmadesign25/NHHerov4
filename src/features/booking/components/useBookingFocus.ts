@@ -2,6 +2,7 @@
 
 import { useEffect, type RefObject } from "react";
 import type Lenis from "lenis";
+import { acquireInertLease } from "@/lib/inertLease";
 import styles from "./BookingFocus.module.css";
 
 /** Keep background controls inactive while a booking surface has focus. */
@@ -15,18 +16,19 @@ export default function useBookingFocus(expanded: boolean, dock: RefObject<HTMLE
     const preview = lockScroll ? null : document.querySelector<HTMLElement>("[data-listing-preview]");
 
     // Inert siblings at each ancestor level, leaving the dock and its popovers live.
-    const background = new Map<HTMLElement, boolean>();
+    const background = new Set<HTMLElement>();
     let branch: HTMLElement = panel;
     while (branch.parentElement) {
       for (const sibling of branch.parentElement.children) {
-        if (!(sibling instanceof HTMLElement) || sibling === branch || sibling === preview || sibling.inert
+        if (!(sibling instanceof HTMLElement) || sibling === branch || sibling === preview
           || sibling.matches("script, style, link, [data-booking-backdrop]")) continue;
-        background.set(sibling, sibling.inert);
-        sibling.setAttribute("inert", "");
+        background.add(sibling);
       }
       if (branch.parentElement === document.body) break;
       branch = branch.parentElement;
     }
+    // Already-inert siblings may belong to another dialog; join its lease too.
+    const releaseBackground = acquireInertLease(background);
 
     const root = document.documentElement;
     const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
@@ -67,7 +69,7 @@ export default function useBookingFocus(expanded: boolean, dock: RefObject<HTMLE
     return () => {
       document.removeEventListener("keydown", trapTab);
       document.removeEventListener("focusin", containFocus);
-      background.forEach((wasInert, element) => { element.toggleAttribute("inert", wasInert); });
+      releaseBackground();
       if (lockScroll) {
         root.classList.remove(styles.scrollLocked);
         if (!wasStopped) lenis?.start();

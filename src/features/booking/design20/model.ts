@@ -197,8 +197,7 @@ export function design20ProfileEntryUrl(entry: string | null | undefined, doctor
     const doctor = getDesign20DirectoryDoctor(doctorId);
     const source = match ? getDesign20DirectoryDoctor(decodeURIComponent(match[1])) : null;
     if (url.origin !== "https://nh.local" || !doctor || source?.id !== doctor.id) return undefined;
-    const profileDesign = url.searchParams.get("profileDesign");
-    return `${doctorProfilePath(doctor)}${profileDesign === "1" || profileDesign === "2" ? `?profileDesign=${profileDesign}` : ""}`;
+    return `${doctorProfilePath(doctor)}?profileDesign=2`;
   } catch { return undefined; }
 }
 

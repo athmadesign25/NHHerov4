@@ -40,7 +40,6 @@ registerHooks({
 });
 
 const { default: HealthDetail } = await import("../src/features/health-checkups/HealthDetail.tsx");
-const { default: HealthItemCard } = await import("../src/features/health-checkups/HealthItemCard.tsx");
 const { default: HealthDiscoveryCard } = await import("../src/features/health-checkups/design3/HealthDiscoveryCard.tsx");
 const { default: HealthListing3 } = await import("../src/features/health-checkups/design3/HealthListing3.tsx");
 const { normalizeHealthDetails } = await import("../src/features/health-checkups/normalizeHealthDetails.ts");
@@ -64,10 +63,10 @@ test("unknown counts and price never render malformed numeric claims or enabled 
   assert.doesNotMatch(text(detail), /Infinity|NaN|Tests included|Report availability/);
   assert.match(text(detail), /Price not listed/);
   assert.match(detail, /<button[^>]*disabled/);
-  const card = renderToStaticMarkup(createElement(HealthItemCard, { item: sparse, selected: false, included: false, onAdd: () => {}, onDetails: () => {} }));
-  assert.doesNotMatch(text(card), /Infinity|NaN|included/);
+  const card = renderToStaticMarkup(createElement(HealthDiscoveryCard, { item: sparse, selected: false, included: false, onAdd: () => {}, onDetails: () => {}, onTests: () => {} }));
+  assert.doesNotMatch(text(card), /Infinity|NaN/);
   assert.match(card, /disabled/);
-  assert.match(card, /aria-label="View details for/);
+  assert.match(card, /aria-label="View (included tests for|details for)/);
 });
 
 test("test detail content uses supplied description and preparation without losing centre pricing", () => {
@@ -85,9 +84,9 @@ test("package links require explicit membership at the same centre", () => {
   const included = { ...item, id: "package-a", kind: "package", name: "Included package", price: 1200, includedTestIds: [item.id] };
   const otherCentre = { ...included, id: "package-b", name: "Wrong centre package", facilityId: "another-centre" };
   const unrelated = { ...included, id: "package-c", name: "Unrelated package", includedTestIds: [] };
-  const markup = renderToStaticMarkup(createElement(HealthDetail, { item, facility, design: "2", relatedPackages: [included, otherCentre, unrelated] }));
+  const markup = renderToStaticMarkup(createElement(HealthDetail, { item, facility, design: "4", relatedPackages: [included, otherCentre, unrelated] }));
   assert.match(text(markup), /Packages that include this test/);
-  assert.match(markup, /href="\/health-checkups\/package-a\?design=2&amp;item=package-a"/);
+  assert.match(markup, /href="\/health-checkups\/package-a\?design=4&amp;item=package-a"/);
   assert.doesNotMatch(text(markup), /Wrong centre package|Unrelated package/);
   assert.doesNotMatch(text(render(item)), /Packages that include this test/);
 });
@@ -95,7 +94,7 @@ test("package links require explicit membership at the same centre", () => {
 test("test titles expose direct detail links with the facility identity", () => {
   const entry = { ...item, slug: "test-name", unitCode: "1014", code: "TEST01" };
   const markup = renderToStaticMarkup(createElement(HealthDiscoveryCard, { item: entry, selected: false, included: false, onAdd() {}, onDetails() {}, onTests() {} }));
-  assert.match(markup, /<h3[^>]*><a href="\/health-checkups\/test-name\?design=3&amp;unitCode=1014&amp;code=TEST01&amp;item=test"/);
+  assert.match(markup, /<h3[^>]*><a href="\/health-checkups\/test-name\?design=4&amp;unitCode=1014&amp;code=TEST01&amp;item=test"/);
 });
 
 test("missing-detail source action is limited to safe official NH URLs", () => {
@@ -123,7 +122,7 @@ test("source-backed sections and nested test descriptions render completely with
 
 test("detail navigation retains the chosen listing design for Back and Add", async () => {
   const { healthItemDetailHref } = await import("../src/features/health-checkups/healthDetailTypes.ts");
-  for (const design of ["1", "2", "3"]) {
+  for (const design of ["4"]) {
     const href = healthItemDetailHref({ ...item, unitCode: "6024", code: "T1" }, design);
     const query = new URL(href, "https://preview.example").searchParams;
     assert.equal(query.get("design"), design);
@@ -141,7 +140,7 @@ test("direct detail entries return and add to the current listing preview", () =
   const listingLinks = [...markup.matchAll(/href="(\/health-checkups\?[^\"]*)"/g)].map(match => new URL(match[1].replaceAll("&amp;", "&"), "https://preview.example"));
   assert.ok(listingLinks.length >= 2);
   for (const link of listingLinks) {
-    assert.equal(link.searchParams.get("design"), "3");
+    assert.equal(link.searchParams.get("design"), "4");
     assert.equal(link.searchParams.get("hospital"), facility.id);
     assert.equal(link.searchParams.get("tab"), "tests");
   }

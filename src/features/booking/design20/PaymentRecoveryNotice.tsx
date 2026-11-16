@@ -39,7 +39,7 @@ export default function PaymentRecoveryNotice({ status, expired, covered = false
       <p>{expired
         ? "Your reservation has expired. Choose another slot to continue."
         : covered ? "Your benefits now cover the full fee. Confirm your appointment to finish booking."
-        : "Your appointment isn’t confirmed. Retry payment, or choose Skip to view your reservation and pay in the patient portal before the 15-minute hold ends."}</p>
+        : "Your appointment isn’t confirmed. Retry payment now, or choose Skip to view your reserved slot and retry before the 15-minute hold ends."}</p>
     </div>
   </motion.section>;
 }

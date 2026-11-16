@@ -4,7 +4,8 @@ import { useCallback, useEffect, useId, useRef, useState, type MouseEvent } from
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, History, UserRound, Zap } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, History, UserRound } from "lucide-react";
+import ExecutiveIcon from "@/features/booking/components/ExecutiveIcon";
 import { indiaDate } from "@/features/booking/appointmentTime";
 import { doctorHospitals, readListingParams, withSelectedDoctorHospital, type ConsultationMode, type DoctorListingItem } from "@/features/search/doctorListing";
 import { presentationDoctorName } from "@/features/design-preview/presentationCopy";
@@ -20,6 +21,7 @@ import { getDesign20CardContent } from "@/features/search/design20CardContent";
 import { appointmentPricing } from "@/features/booking/design17/pricing";
 import styles from "./DefaultDoctorCard.module.css";
 import { cardLayoutTransition } from "./cardMotion";
+import { duration, ease } from "@/lib/motion";
 
 interface Props {
   doctor: DoctorListingItem;
@@ -31,6 +33,7 @@ interface Props {
   bookingDate?: string;
   bookedEarlier?: boolean;
   focusTerms?: string[];
+  expandFromSurface?: boolean;
   onBook: (event: MouseEvent, doctor: DoctorListingItem, mode: ConsultationMode, includeSlot: boolean) => void;
   onDetails: (doctor: DoctorListingItem) => void;
   onHospitalChange?: (hospital: string) => void;
@@ -45,7 +48,7 @@ function formatAppointment(slot: Date) {
 }
 
 /** Essential booking information first; clinical details stay available on demand. */
-export default function DoctorCard({ doctor, mode, live, priority = false, cardDesign = "d17", listingReturnTo, bookingDate = "", bookedEarlier = false, focusTerms = [], onBook, onHospitalChange }: Props) {
+export default function DoctorCard({ doctor, mode, live, priority = false, cardDesign = "d17", listingReturnTo, bookingDate = "", bookedEarlier = false, focusTerms = [], expandFromSurface = false, onBook, onHospitalChange }: Props) {
   const doc = { ...doctor, name: presentationDoctorName(doctor.name) };
   const isDesign21 = new URLSearchParams(listingReturnTo?.split("?")[1] ?? "").get("design") === "d21";
   const reduced = useReducedMotion();
@@ -105,20 +108,25 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
 
   const closeLocations = useCallback(() => setLocOpen(false), []);
 
-  return <motion.article aria-labelledby={nameId} className={styles.card} data-doctor-card data-locations-open={locOpen || undefined}
-    layoutId={cardDesign === "d20" && !reduced ? `d20-card-${doc.id}` : undefined}
+  return <motion.article aria-labelledby={nameId} className={styles.card} data-doctor-card data-locations-open={locOpen || undefined} data-expanding-preview={expandFromSurface || undefined}
+    layoutId={cardDesign === "d20" && !reduced && !expandFromSurface ? `d20-card-${doc.id}` : undefined}
     initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25, ease: [.22, 1, .36, 1] }}>
-    <motion.div className={`${styles.portrait} ${officialPortrait ? styles.officialPortrait : ""} ${thumbnailPortrait ? styles.thumbnailPortrait : ""}`} layoutId={cardDesign === "d20" && !reduced ? `d20-portrait-${doc.id}` : undefined}>
+    {/* Morph only the surface. The portrait stays at its natural size beneath
+        the returning panel instead of inheriting the panel's scale/translation. */}
+    {expandFromSurface && <motion.div className={styles.morphSurface} aria-hidden
+      layoutId={reduced ? undefined : `d20-card-${doc.id}`}
+      transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.standard } }} />}
+    <div className={`${styles.portrait} ${officialPortrait ? styles.officialPortrait : ""} ${thumbnailPortrait ? styles.thumbnailPortrait : ""}`}>
       {doc.img && failedImage !== doc.img
         ? <><div className={styles.photoFrame}><Image src={doc.img} alt="" fill sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1199px) 48vw, (max-width: 1519px) 36vw, 408px" loading={priority ? "eager" : "lazy"} className={styles.photo} onError={() => setFailedImage(doc.img)} /></div>
           {thumbnailPortrait && <Image src={doc.img} alt="" fill sizes="(max-width: 639px) 100vw, 408px" className={styles.photoAmbient} aria-hidden />}</>
         : <div className={styles.portraitFallback}><UserRound size={64} strokeWidth={1} aria-hidden /><span>Photo unavailable</span></div>}
-    </motion.div>
+    </div>
     <span className={styles.scrim} aria-hidden />
     <ProfileShare className={styles.share} doctorName={doc.name} profileUrl={profileUrl} />
     <header className={styles.identity}>
       {(doc.isExecutive || bookedEarlier) && <div className={styles.tags}>
-        {doc.isExecutive && <span className={`${styles.tag} ${styles.tagExecutive}`}><Zap size={13} aria-hidden />Executive</span>}
+        {doc.isExecutive && <span className={`${styles.tag} ${styles.tagExecutive}`}><ExecutiveIcon />Executive</span>}
         {bookedEarlier && <span className={`${styles.tag} ${styles.tagBooked}`}><History size={13} aria-hidden />{isDesign21 ? "Previously booked" : "Previously consulted"}</span>}
       </div>}
       <div className={styles.identityText}>
@@ -182,8 +190,8 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
         <footer className={styles.footer}>
           <motion.div layout={reduced ? false : "position"} layoutId={cardDesign === "d20" && !reduced ? `d20-fee-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }} className={styles.fee} aria-label={`${fee}${hasFee ? " onwards" : ""}`}><span className={styles.feeAmount}>{fee}</span>{hasFee && <span className={styles.label}>onwards</span>}</motion.div>
           <motion.div className={styles.bookSlot} layout={reduced ? false : "position"} layoutId={cardDesign === "d20" && !reduced ? `d20-action-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }}>
-            {canBook ? <Link href={url} data-book-doctor={doc.id} onClick={event => onBook(event, bookingDoctor, mode, false)} className={styles.book} aria-label={`Book appointment with ${doc.name}`} aria-describedby={slotId}><span className={styles.bookContent}>Book appointment{!isDesign21 && <span className={styles.bookArrow} aria-hidden><ArrowRight /><ArrowRight /></span>}</span></Link>
-            : <a href="tel:18602080208" className={styles.book} aria-label={`Contact hospital about ${doc.name}`}><span className={styles.bookContent}>Contact hospital<ArrowRight size={17} aria-hidden /></span></a>}
+            {canBook ? <Link href={url} data-book-doctor={doc.id} onClick={event => onBook(event, bookingDoctor, mode, false)} className={styles.book} aria-label={`Book appointment with ${doc.name}`} aria-describedby={slotId}><span className={styles.bookContent}>Book appointment</span></Link>
+            : <a href="tel:18602080208" className={styles.book} aria-label={`Contact hospital about ${doc.name}`}><span className={styles.bookContent}>Contact hospital</span></a>}
           </motion.div>
         </footer>
       </div>

@@ -25,6 +25,16 @@
   transition: box-shadow var(--transition-base), border-color var(--transition-base);
 }
 .card[data-locations-open] { z-index: 5; }
+.morphSurface {
+  position: absolute;
+  inset: calc(var(--space-1) * -1);
+  z-index: -1;
+  border: inherit;
+  border-radius: inherit;
+  background: inherit;
+  box-shadow: inherit;
+  pointer-events: none;
+}
 /* Keep room for both slot rows while trimming surplus portrait space.
    The concealed browsing card shares this footprint with the booking state. */
 :global([data-design="d21"]) .card { --card-image-extension: calc(var(--sp-5) + var(--sp-2)); }
@@ -144,18 +154,18 @@
   /* Use one glass layer while a menu is open, rather than frosting the
      booking summary again beneath the menu's own translucent surface. */
   .card:is([data-locations-open], :has(.expertiseToggle[aria-expanded="true"]), :has([data-share-open])) .body { backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .locationsPopover { background: rgba(var(--white-rgb), .95); backdrop-filter: blur(var(--space-16)); -webkit-backdrop-filter: blur(var(--space-16)); }
+  .locationsPopover { background: var(--color-menu-surface); backdrop-filter: blur(var(--space-16)); -webkit-backdrop-filter: blur(var(--space-16)); }
 }
 .locationsAbove { top: auto; bottom: calc(100% + var(--sp-1)); }
 .locationsPopover > p { margin: 0 0 var(--sp-1); padding-inline: var(--sp-2); font-size: var(--font-size-sm); font-weight: 600; }
-.locationsPopover ul { list-style: none; margin: 0; padding: 0; }
-.locationsPopover li + li { border-top: 1px solid color-mix(in srgb, var(--card-ink) 5%, transparent); }
-.locationOption { display: grid; grid-template-columns: var(--sp-2) minmax(0, 1fr) var(--sp-2); align-items: start; gap: var(--sp-1); width: 100%; min-height: var(--card-target); padding: calc(var(--sp-1) * 1.5) var(--sp-2); border-radius: 0; color: var(--card-ink); background: transparent; font-size: var(--font-size-sm); line-height: 1.5; text-align: left; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.locationsPopover ul { list-style: none; margin: 0; padding: var(--space-8); }
+.locationsPopover li + li { border-top: 0; }
+.locationOption { display: grid; grid-template-columns: var(--sp-2) minmax(0, 1fr) var(--sp-2); align-items: start; gap: var(--sp-1); width: 100%; min-height: var(--card-target); padding: var(--space-12); border-radius: var(--radius-md); color: var(--card-ink); background: transparent; font-size: var(--font-size-sm); line-height: 1.5; text-align: left; transition: background-color var(--transition-fast), color var(--transition-fast); }
 .locationOption > span:first-of-type { min-width: 0; overflow-wrap: anywhere; }
 .locationOption > svg, .locationOption > .locationIcon, .locationOption > .locationCheck { margin-top: calc((1.5em - var(--sp-2)) / 2); }
-.locationOption[aria-pressed="true"] { color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 6%, transparent); }
-.card .locationOption:focus-visible { outline-offset: -3px; color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
-.locationOption:active { background: color-mix(in srgb, var(--card-ink) 16%, transparent); }
+.locationOption[aria-pressed="true"] { color: var(--card-ink); background: var(--color-menu-selected); }
+.card .locationOption:focus-visible { outline-offset: -3px; color: var(--card-ink); background: var(--color-menu-hover); }
+.locationOption:active { background: var(--color-menu-pressed); }
 .locationsPopover.locationsPopover :is(a, button, input):focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(var(--space-2) * -1); }
 .locationHint { display: block; margin-top: calc(var(--sp-1) / 2); color: var(--card-muted); font-size: var(--font-size-xs); }
 .locationCheck { display: grid; place-items: center; width: var(--sp-2); height: var(--sp-2); flex-shrink: 0; border: 1px solid var(--card-line); border-radius: var(--radius-full); }
@@ -194,10 +204,13 @@
   .book:hover { background: var(--color-primary-light); border-color: var(--color-primary-light); }
   .profileCue:hover, .call:hover { background: var(--icon-glass-active-fill); border-color: var(--icon-glass-active-line); box-shadow: var(--icon-glass-active-shadow); }
   .profileAction:hover { color: var(--color-primary); }
-  .locationOption:hover { color: var(--card-ink); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
+  .locationOption[aria-pressed="true"]:hover { background: var(--color-menu-pressed); }
+  .locationOption:hover { color: var(--card-ink); background: var(--color-menu-hover); }
   .directions:hover { border-color: color-mix(in srgb, var(--card-ink) 40%, transparent); background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) { .card:hover .photo { transform: scale(1.02); } }
+/* Closing the expanded panel can leave the pointer over this portrait. Keep
+   Design A's image steady rather than starting a second hover animation. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) { .card:not([data-expanding-preview]):hover .photo { transform: scale(1.02); } }
 /* Lite changes only the palette; both previews share the same card structure. */
 :global(:is([data-design="d17-lite"], [data-design="d18"], :is([data-design="d20"], [data-design="d21"]))) .card {
   --card-night: var(--d17-lite-surface);

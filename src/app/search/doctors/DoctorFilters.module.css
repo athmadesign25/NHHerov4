@@ -58,7 +58,7 @@
 .showMore:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: 2px; border-radius: var(--radius-sm); }
 .hint { font-size: var(--font-size-sm); color: var(--color-text-secondary); padding-block: var(--sp-1); }
 @media (hover: hover) {
-  .option:has(input:not(:disabled)):hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .option:has(input:not(:disabled)):hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); background: var(--color-menu-hover); }
   .groupToggle:hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); }
   .search:hover:not(:focus-within) { color: var(--d3-ui-ink-hover, var(--color-text)); }
   .clearGroup:not(:disabled):hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); }

@@ -12,7 +12,6 @@ interface HealthCartDockProps {
   items: HealthItem[];
   centre: string;
   expanded: boolean;
-  legacy?: boolean;
   addition: number;
   onExpandedChange: (expanded: boolean) => void;
   onRemove: (id: string) => void;
@@ -22,7 +21,7 @@ interface HealthCartDockProps {
 }
 
 /** The cart grows from the same bottom anchor as the doctor-profile booking bar. */
-export default function HealthCartDock({ items, centre, expanded, legacy, addition, onExpandedChange, onRemove, onContinue, onBrowse, onEmptyClose }: HealthCartDockProps) {
+export default function HealthCartDock({ items, centre, expanded, addition, onExpandedChange, onRemove, onContinue, onBrowse, onEmptyClose }: HealthCartDockProps) {
   const reduced = useReducedMotion();
   const dock = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -111,8 +110,8 @@ export default function HealthCartDock({ items, centre, expanded, legacy, additi
             </button>
             <div className={styles.total} aria-live="polite" aria-atomic="true"><span>Total payable</span><strong>{money(cartTotal(items))}</strong></div>
             <button type="button" className={styles.primary} disabled={!items.length}
-              onClick={legacy && !expanded ? () => onExpandedChange(true) : onContinue}>
-              {legacy && !expanded ? "Review selection" : "Continue"}<ArrowRight size={16} aria-hidden />
+              onClick={onContinue}>
+              Continue<ArrowRight size={16} aria-hidden />
             </button>
           </motion.div>
         </div>
