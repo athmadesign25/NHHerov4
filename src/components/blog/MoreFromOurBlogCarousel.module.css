@@ -128,7 +128,7 @@
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
-  background-color: var(--navy-900) (ΔRGB 8.9);
+  background-color: var(--navy-900);
   width: 100%;
   height: 340px;
   min-height: 340px;
@@ -198,7 +198,7 @@
 }
 
 .cardCategory {
-  font-size: var(--font-size-xs) (+0.5px);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   color: rgba(var(--white-rgb), 0.92);
   text-transform: uppercase;
@@ -324,9 +324,9 @@
 }
 
 .navBtn:hover:not(:disabled) {
-  background: var(--blue-brand) (ΔRGB 1.0);
+  background: var(--blue-brand);
   color: var(--white);
-  border-color: var(--blue-brand) (ΔRGB 1.0);
+  border-color: var(--blue-brand);
   transform: scale(1.05);
 }
 
@@ -359,6 +359,6 @@
 .dotActive {
   width: 18px;
   border-radius: var(--radius-full, 9999px);
-  background: var(--blue-brand) (ΔRGB 1.0);
+  background: var(--blue-brand);
 }
 

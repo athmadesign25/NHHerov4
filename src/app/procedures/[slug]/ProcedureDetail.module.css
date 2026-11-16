@@ -126,7 +126,7 @@
 
 /* Eyebrow - Clean Uppercase with proper breathing room */
 .heroEyebrow {
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -166,7 +166,7 @@
 }
 
 .heroPrimaryBtn {
-  background: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -203,7 +203,7 @@
   align-items: center;
   gap: 8px;
   color: rgba(var(--white-rgb), 0.88);
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   text-decoration: none;
   transition: all var(--duration-fast) ease;
 }
@@ -240,7 +240,7 @@
     -webkit-backdrop-filter: blur(10px);
     color: var(--white);
     font-weight: 600;
-    font-size: var(--font-size-sm) (+0.5px);
+    font-size: var(--font-size-sm);
   }
   .phoneDesktopSpan {
     display: none;
@@ -312,9 +312,9 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    color-mix(in srgb, var(--v2-bg, var(--slate-900) (ΔRGB 8.1)) 38%, transparent) 38%,
-    color-mix(in srgb, var(--v2-bg, var(--slate-900) (ΔRGB 8.1)) 76%, transparent) 72%,
-    var(--v2-bg, var(--slate-900) (ΔRGB 8.1)) 100%
+    color-mix(in srgb, var(--v2-bg, var(--slate-900)) 38%, transparent) 38%,
+    color-mix(in srgb, var(--v2-bg, var(--slate-900)) 76%, transparent) 72%,
+    var(--v2-bg, var(--slate-900)) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -338,17 +338,17 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
-  background: var(--v2-bg, var(--slate-900) (ΔRGB 8.1));
+  background: var(--v2-bg, var(--slate-900));
 }
 
 .readingExperienceWrapperV2 .mainSectionTitle,
 .readingExperienceWrapperV2 .subSectionTitle {
-  color: var(--v2-heading, var(--slate-900) (ΔRGB 3.7));
+  color: var(--v2-heading, var(--slate-900));
 }
 
 .readingExperienceWrapperV2 .leadParagraph,
 .readingExperienceWrapperV2 .bodyParagraph {
-  color: var(--v2-body, var(--slate-700) (ΔRGB 5.7));
+  color: var(--v2-body, var(--slate-700));
 }
 
 .readingExperienceWrapperV2 .tocEyebrow,
@@ -363,7 +363,7 @@
 }
 
 .readingExperienceWrapperV2 .tocLink {
-  color: var(--v2-toc-link, var(--slate-600) (ΔRGB 7.2));
+  color: var(--v2-toc-link, var(--slate-600));
 }
 
 .readingExperienceWrapperV2 .tocLink:hover {
@@ -372,12 +372,12 @@
 }
 
 .readingExperienceWrapperV2 .tocLinkActive {
-  color: var(--v2-toc-active, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--v2-toc-active, var(--blue-brand));
   background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
 }
 
 .readingExperienceWrapperV2 .tocIndicatorMarker {
-  background: var(--v2-toc-active, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--v2-toc-active, var(--blue-brand));
 }
 
 .readingExperienceWrapperV2 .shareWidgetBorderless {
@@ -395,7 +395,7 @@
 }
 
 .readingExperienceWrapperV2 .helpCardDesc {
-  color: var(--v2-body, var(--slate-600) (ΔRGB 7.2));
+  color: var(--v2-body, var(--slate-600));
 }
 
 /* ─── V3: SOFT ATMOSPHERIC BLUR MIST BAND (MATCHING REFERENCE IMAGE) ──────── */
@@ -465,7 +465,7 @@
   background: linear-gradient(
     180deg,
     var(--blue-tint-50) 0px,
-    var(--color-bg-alt) (ΔRGB 1.4) 110px,
+    var(--color-bg-alt) 110px,
     var(--slate-50) 230px,
     var(--white) 360px
   );
@@ -503,11 +503,11 @@
 }
 
 .v4SectionEyebrow {
-  font-size: var(--font-size-xs) (+0.5px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--v4-eyebrow, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--v4-eyebrow, var(--blue-brand));
   margin-bottom: 8px;
 }
 
@@ -533,21 +533,21 @@
 }
 
 .readingExperienceWrapperV4 .tocLink {
-  color: var(--v4-toc-link, var(--slate-600) (ΔRGB 7.2));
+  color: var(--v4-toc-link, var(--slate-600));
 }
 
 .readingExperienceWrapperV4 .tocLink:hover {
-  color: var(--v4-toc-active, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--v4-toc-active, var(--blue-brand));
   background: var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.05));
 }
 
 .readingExperienceWrapperV4 .tocLinkActive {
-  color: var(--v4-toc-active, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--v4-toc-active, var(--blue-brand));
   background: var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
 }
 
 .readingExperienceWrapperV4 .tocIndicatorMarker {
-  background: var(--v4-toc-active, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--v4-toc-active, var(--blue-brand));
 }
 
 .readingExperienceWrapperV4 .shareWidgetBorderless {
@@ -607,12 +607,12 @@
   border: none;
   background: transparent;
   color: rgba(var(--white-rgb), 0.65);
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 9999px;
   cursor: pointer;
-  transition: all var(--duration-base) (Δ20ms) ease;
+  transition: all var(--duration-base) ease;
   line-height: 1.2;
 }
 
@@ -621,7 +621,7 @@
 }
 
 .blendToggleBtnActive {
-  background: linear-gradient(135deg, var(--blue-brand) (ΔRGB 1.0) 0%, var(--sky-600) 100%);
+  background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
   color: var(--white);
   box-shadow: 0 2px 8px rgba(var(--blue-brand-rgb), 0.45);
 }
@@ -686,7 +686,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -736,9 +736,9 @@
   display: flex;
   align-items: baseline;
   gap: 10px;
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   line-height: 1.45;
-  color: var(--slate-600) (ΔRGB 7.2);
+  color: var(--slate-600);
   padding: 6px 10px;
   border-radius: 6px;
   text-decoration: none;
@@ -746,7 +746,7 @@
 }
 
 .tocLink:hover {
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   transform: translateX(3px);
   background: rgba(var(--blue-brand-rgb), 0.05);
 }
@@ -758,13 +758,13 @@
   transform: translateY(-50%);
   width: 3px;
   height: 0;
-  background: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--color-primary, var(--blue-brand));
   border-radius: 4px;
   transition: height var(--duration-moderate) var(--ease-spring), box-shadow var(--duration-moderate) ease;
 }
 
 .tocLinkActive {
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   font-weight: 700;
   background: rgba(var(--blue-brand-rgb), 0.08);
   transform: translateX(3px);
@@ -789,7 +789,7 @@
 }
 
 .shareWidgetTitle {
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -821,14 +821,14 @@
 }
 
 .shareBtn:hover {
-  background: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--color-primary, var(--blue-brand));
   color: var(--white);
-  border-color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  border-color: var(--color-primary, var(--blue-brand));
   transform: translateY(-1px);
 }
 
 .copyToastNotice {
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   color: var(--emerald-500);
   font-weight: 600;
 }
@@ -845,14 +845,14 @@
 }
 
 .helpCardTitle {
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-primary-dark, var(--blue-900));
 }
 
 .helpCardDesc {
   font-size: var(--font-size-xs);
-  color: var(--slate-600) (ΔRGB 7.2);
+  color: var(--slate-600);
   line-height: 1.45;
   margin: 0;
 }
@@ -861,7 +861,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: var(--font-size-sm) (+1.0px);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-emergency, var(--red-emergency));
   text-decoration: none;
@@ -899,7 +899,7 @@
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.015em;
-  color: var(--slate-900) (ΔRGB 3.7);
+  color: var(--slate-900);
   margin: 0 0 14px 0;
 }
 
@@ -909,24 +909,24 @@
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.01em;
-  color: var(--slate-900) (ΔRGB 3.7);
+  color: var(--slate-900);
   margin: 0 0 12px 0;
 }
 
 .leadParagraph {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: var(--font-size-base) (+1.0px);
+  font-size: var(--font-size-base);
   line-height: 1.65;
-  color: var(--slate-700) (ΔRGB 5.7);
+  color: var(--slate-700);
   margin-bottom: 20px;
   font-weight: 400;
 }
 
 .bodyParagraph {
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: var(--font-size-base) (+1.0px);
+  font-size: var(--font-size-base);
   line-height: 1.65;
-  color: var(--slate-700) (ΔRGB 5.7);
+  color: var(--slate-700);
   margin-bottom: 16px;
   font-weight: 400;
 }
@@ -937,7 +937,7 @@
   border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   border: 1px solid var(--slate-200, var(--slate-200));
-  background: var(--navy-900) (ΔRGB 6.4);
+  background: var(--navy-900);
   position: relative;
 }
 
@@ -1010,7 +1010,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--color-primary, var(--blue-brand));
   box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.15);
   display: block;
 }
@@ -1030,7 +1030,7 @@
 }
 
 .symptomTriageDesc {
-  font-size: var(--font-size-sm) (+1.0px);
+  font-size: var(--font-size-sm);
   color: var(--slate-500);
   line-height: 1.4;
 }
@@ -1041,7 +1041,7 @@
 }
 
 .symptomTriageItem:hover .symptomTriageArrow {
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   transform: translate(2px, -2px);
 }
 
@@ -1087,14 +1087,14 @@
 
 .conditionDossierTitle {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-base) (+1.0px);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--slate-900);
   margin: 0 0 4px 0;
 }
 
 .conditionDossierDesc {
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   line-height: 1.55;
   color: var(--slate-600);
   margin: 0;
@@ -1133,7 +1133,7 @@
 
 .eligibilityHeading {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-base) (+0.5px);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--slate-900);
   margin: 0;
@@ -1155,7 +1155,7 @@
   font-family: var(--font-inter, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-size: 14.5px;
   line-height: 1.55;
-  color: var(--slate-700) (ΔRGB 5.7);
+  color: var(--slate-700);
 }
 
 /* ─── SURGICAL APPROACH & STEPS (EDITORIAL SEQUENCE) ─────────────────────── */
@@ -1186,7 +1186,7 @@
 
 .stepBadge {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-sm) (+1.0px);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   color: var(--color-primary, var(--blue-brand));
   background: rgba(var(--blue-brand-rgb), 0.08);
@@ -1205,7 +1205,7 @@
 
 .stepTitle {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-base) (+0.5px);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: var(--slate-900);
   margin: 0 0 4px 0;
@@ -1213,7 +1213,7 @@
 }
 
 .stepDesc {
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   line-height: 1.55;
   color: var(--slate-600);
   margin: 0;
@@ -1251,7 +1251,7 @@
 .recoveryEstPill {
   font-size: var(--font-size-xs);
   font-weight: 600;
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   background: rgba(var(--blue-brand-rgb), 0.07);
   padding: 4px 12px;
   border-radius: var(--radius-full, 9999px);
@@ -1282,9 +1282,9 @@
 
 .milestoneNum {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-xs) (+0.5px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   background: rgba(var(--blue-brand-rgb), 0.08);
   width: 26px;
   height: 26px;
@@ -1306,7 +1306,7 @@
 .milestoneDays {
   font-size: var(--font-size-xs);
   font-weight: 600;
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   margin-bottom: 6px;
   display: block;
 }
@@ -1340,11 +1340,11 @@
 }
 
 .costBadge {
-  font-size: var(--font-size-xs) (+0.5px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   margin-bottom: 6px;
 }
 
@@ -1358,7 +1358,7 @@
 }
 
 .costInternationalText {
-  font-size: var(--font-size-sm) (+1.0px);
+  font-size: var(--font-size-sm);
   color: var(--slate-500);
   margin-top: 4px;
 }
@@ -1389,7 +1389,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: var(--font-size-sm) (+0.5px);
+  font-size: var(--font-size-sm);
   line-height: 1.5;
   color: var(--slate-700);
 }
@@ -1399,7 +1399,7 @@
   border: 1px solid var(--slate-200);
   border-radius: var(--radius-md, 8px);
   padding: 14px 18px;
-  font-size: var(--font-size-sm) (+1.0px);
+  font-size: var(--font-size-sm);
   line-height: 1.55;
   color: var(--slate-600);
 }
@@ -1494,7 +1494,7 @@
 }
 
 .refDocName {
-  font-size: var(--font-size-base) (+1.0px);
+  font-size: var(--font-size-base);
   font-weight: 700;
   color: var(--white);
   margin: 0 0 3px 0;
@@ -1518,13 +1518,13 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   color: rgba(var(--white-rgb), 0.7);
   margin-bottom: 4px;
 }
 
 .refDocHospital {
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   color: rgba(var(--white-rgb), 0.65);
   white-space: nowrap;
   overflow: hidden;
@@ -1536,7 +1536,7 @@
   align-items: center;
   justify-content: center;
   background: var(--white);
-  color: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  color: var(--color-primary, var(--blue-brand));
   font-size: var(--font-size-xs);
   font-weight: 700;
   padding: 7px 16px;
@@ -1548,7 +1548,7 @@
 }
 
 .refBookBtnWhite:hover {
-  background: var(--slate-100) (ΔRGB 6.4);
+  background: var(--slate-100);
   transform: translateY(-1px);
 }
 
@@ -1616,9 +1616,9 @@
 
 .faqAnswer {
   padding: 0 24px 20px;
-  font-size: var(--font-size-base) (+1.0px);
+  font-size: var(--font-size-base);
   line-height: 1.6;
-  color: var(--color-text-secondary, var(--slate-600) (ΔRGB 3.2));
+  color: var(--color-text-secondary, var(--slate-600));
 }
 
 /* ─── FLOATING ACTION BOXES (FAB GROUP ON RIGHT MID-HEIGHT) ───────── */
@@ -1731,7 +1731,7 @@
 
 .boxLabel {
   font-family: var(--font-inter, "Inter"), sans-serif;
-  font-size: var(--font-size-xs) (+1.0px);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   line-height: 1.25;
   color: var(--slate-700);
@@ -1741,7 +1741,7 @@
 }
 
 .floatingBoxItem:hover .boxLabel {
-  color: var(--blue-brand) (ΔRGB 1.0);
+  color: var(--blue-brand);
 }
 
 /* ─── TABLET & MOBILE RESPONSIVE ENGINE (OVERRIDING ALL DESKTOP RULES) ─── */
@@ -1848,7 +1848,7 @@
     border-radius: 9999px !important;
     background: var(--slate-50) !important;
     border: 1px solid var(--slate-200) !important;
-    font-size: var(--font-size-sm) (+1.0px) !important;
+    font-size: var(--font-size-sm) !important;
     font-weight: 500 !important;
     color: var(--slate-600) !important;
     transform: none !important;
@@ -1861,9 +1861,9 @@
   }
 
   .tocLinkActive {
-    background: var(--blue-tint-100) (ΔRGB 5.8) !important;
+    background: var(--blue-tint-100) !important;
     border-color: #BFDBFE !important;
-    color: var(--blue-brand) (ΔRGB 1.0) !important;
+    color: var(--blue-brand) !important;
     font-weight: 700 !important;
     box-shadow: 0 1px 4px rgba(var(--blue-brand-rgb), 0.12) !important;
   }
@@ -1880,7 +1880,7 @@
     height: 32px !important;
     padding: 0 12px !important;
     border-radius: 9999px !important;
-    background: var(--blue-brand) (ΔRGB 1.0) !important;
+    background: var(--blue-brand) !important;
     color: var(--white) !important;
     border: none !important;
     font-size: var(--font-size-xs) !important;
@@ -1939,7 +1939,7 @@
   }
 
   .heroSubTitle {
-    font-size: var(--font-size-sm) (+0.5px) !important;
+    font-size: var(--font-size-sm) !important;
     line-height: 1.5 !important;
     margin-bottom: 20px !important;
     display: -webkit-box !important;
@@ -1977,7 +1977,7 @@
   }
 
   .statLabel {
-    font-size: var(--font-size-xs) (+1.0px) !important;
+    font-size: var(--font-size-xs) !important;
     color: rgba(var(--white-rgb), 0.50) !important;
     font-weight: 400 !important;
     margin-top: 2px !important;

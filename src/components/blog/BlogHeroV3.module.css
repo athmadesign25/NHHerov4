@@ -109,7 +109,7 @@
 }
 
 .eyebrow {
-  font-size: var(--font-size-xs) (+0.5px);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -147,7 +147,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-primary, var(--blue-brand) (ΔRGB 1.0));
+  background: var(--color-primary, var(--blue-brand));
   color: var(--white);
   padding: 13px 26px;
   border-radius: 8px;
