@@ -1,6 +1,6 @@
 import os
 import csv
-from generate_handover_excel import make_excel
+from generate_handover_excel import make_clean_xlsx, make_excel_xml
 
 # ─── 1. SHEET 1: COMPONENTS & DESIGN TOKEN MATRIX ────────────────────────────
 components_headers = [
@@ -409,7 +409,7 @@ audit_rows = []
 for path, section, cnt, status, notes in audit_files:
     audit_rows.append([path, section, str(cnt), status, notes])
 
-# ─── BUILD EXCEL WORKBOOK ────────────────────────────────────────────────────
+# ─── BUILD EXCEL WORKBOOKS ───────────────────────────────────────────────────
 sheets = [
     {
         "name": "Components & Tokens",
@@ -437,9 +437,11 @@ sheets = [
     }
 ]
 
-excel_path = "handover/NH_Design_Tokens_and_Components_Master.xlsx"
-make_excel(excel_path, sheets)
-print(f"Generated Excel workbook: {excel_path}")
+excel_xlsx_path = "handover/NH_Design_Tokens_and_Components_Master.xlsx"
+make_clean_xlsx(excel_xlsx_path, sheets)
+
+excel_xls_path = "handover/NH_Design_Tokens_and_Components_Master.xls"
+make_excel_xml(excel_xls_path, sheets)
 
 # ─── BUILD CSV EXPORTS ───────────────────────────────────────────────────────
 def write_csv(path, headers, rows):

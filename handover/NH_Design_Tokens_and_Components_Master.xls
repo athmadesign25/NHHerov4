@@ -1,0 +1,744 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Title>Narayana Health Design Tokens &amp; Components Handover</Title>
+  <Author>Narayana Health Design System</Author>
+ </DocumentProperties>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1F2937"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="HeaderStyle">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>
+   </Borders>
+   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10.5" ss:Bold="1" ss:Color="#FFFFFF"/>
+   <Interior ss:Color="#034EA2" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="RowEven">
+   <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+   </Borders>
+   <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>
+   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1E293B"/>
+  </Style>
+  <Style ss:ID="RowOdd">
+   <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+   </Borders>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1E293B"/>
+  </Style>
+  <Style ss:ID="CodeStyle">
+   <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Menlo" x:Family="Modern" ss:Size="9.5" ss:Bold="1" ss:Color="#034EA2"/>
+   <Interior ss:Color="#EFF6FF" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Components &amp; Tokens">
+  <Table>
+   <Column ss:AutoFitWidth="0" ss:Width="180"/>
+   <Column ss:AutoFitWidth="0" ss:Width="210"/>
+   <Column ss:AutoFitWidth="0" ss:Width="150"/>
+   <Column ss:AutoFitWidth="0" ss:Width="270"/>
+   <Column ss:AutoFitWidth="0" ss:Width="315"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="330"/>
+   <Column ss:AutoFitWidth="0" ss:Width="300"/>
+   <Column ss:AutoFitWidth="0" ss:Width="285"/>
+   <Column ss:AutoFitWidth="0" ss:Width="285"/>
+   <Row ss:Height="28" ss:StyleID="HeaderStyle">
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Simple Name</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Tech Component (JSX)</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">File Path (TSX)</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">CSS Module Path</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Token Status</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Core Design Tokens Applied</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Key Props &amp; Parameters</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Variant States / Themes</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Mounted On Pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Breadcrumbs Navigation Trail</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;Breadcrumbs /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Navigation</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/Breadcrumbs.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/Breadcrumbs.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--slate-500), var(--slate-900), var(--blue-brand), var(--font-size-xs), var(--duration-fast)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">items: [{ label, href }], theme: 'light' | 'dark'</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Dark scrim header &amp; light page reading modes</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Treatments, Diseases, Symptoms, Diagnostics, Blog, all Detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Animated Gradient Shimmer Heading</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;TextSweepEffect /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical Editorial</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/TextSweepEffect.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Inline motion styles + globals.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--blue-brand), var(--color-primary), var(--slate-900), var(--font-size-display), var(--leading-tight)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">words: string[], sweepMs?: number, finalColor?: string</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Infinite shimmer gradient, sweep reveal</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Library pages, Procedure detail (V4), Blog V3 hero</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Organ Filter Chips Carousel</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;OrganSystemChipsCarousel /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Navigation &amp; Filtering</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/OrganSystemChipsCarousel.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/OrganSystemChipsCarousel.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--blue-brand), var(--slate-700), var(--slate-900), var(--radius-full), var(--duration-base)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">items: OrganItem[], activeId: string, onSelect: (id) =&gt; void, showAllOption: boolean</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Active pill (brand blue + glow), Inactive pill (soft slate outline)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Treatments, Diseases, Symptoms, Diagnostics libraries</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical Executive Summary Banner</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;ClinicalSummaryBanner /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical Editorial</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--summary-bg), var(--summary-text), var(--summary-accent), var(--summary-border), var(--radius-lg)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">eyebrow?: string, summary: string, reviewerName?: string, reviewAnchorId?: string</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">V1 elevated curved sheet (charcoal text), V2 scroll blend, V4 text sweep blend</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Procedure, Disease, Symptom, Diagnostic, and Article detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Google E-E-A-T 'Reviewed By' Card</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;ClinicalReviewedBySection /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Trust &amp; Compliance</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--slate-50), var(--slate-100), var(--blue-brand), var(--radius-xl), var(--shadow-sm)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">doctorName, doctorRole, speciality, hospital, experience, doctorImage, reviewDate, id</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Full credential trust card with NABL/NABH badges and bio links</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Procedure, Disease, Symptom, Diagnostic, and Article detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical Editorial Figures &amp; Suites</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;ClinicalEditorialFigures /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Media &amp; Clinical Content</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--slate-900), var(--slate-600), var(--radius-xl), var(--elevation-2), var(--font-size-xs)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">items: [{ src: string, alt: string, caption: string }]</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Single figure highlight, 2-column surgical suite comparison</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Procedure, Disease, Symptom, and Diagnostic detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Nearby Specialists Carousel</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;NearbySpecialistsCarousel /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Clinical Consultations</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/NearbyClinicalCarousels.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/NearbyClinicalCarousels.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--blue-brand), var(--navy-900), var(--radius-xl), var(--radius-md), var(--elevation-1)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">id?: string, title: string, subtitle: string, doctors: DoctorData[], actionLabel?: string</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Full doctor card with portrait, hospital unit, experience, and 8px Book CTA</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Procedure, Disease, Symptom, Diagnostic, and Article detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Equipped Care Centres Carousel</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;NearbyCareCentresCarousel /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Hospitals &amp; Infrastructure</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/NearbyClinicalCarousels.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/NearbyClinicalCarousels.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--navy-900), var(--slate-700), var(--blue-brand), var(--radius-xl), var(--elevation-2)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">id?: string, title: string, subtitle: string, hospitals: HospitalData[]</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Multi-unit tertiary hospitals grid/carousel with ICU count and directions link</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Procedure, Disease, Symptom, and Diagnostic detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tertiary Hospital Unit Card</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;HospitalCard /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Hospitals &amp; Units</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/HospitalCarousel.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/HospitalCarousel.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--slate-800), var(--slate-500), var(--radius-xl), var(--elevation-1), var(--duration-fast)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">hosp: HospitalData, cardIndex?: number, className?: string</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Standard card, Compact carousel tile</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Nearby hospitals carousel, Hospital directory pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical FAQs Accordion</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;SpecialityFAQ /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Editorial &amp; Q&amp;A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/SpecialityFAQ.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/SpecialityFAQ.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--slate-900), var(--blue-brand), var(--slate-100), var(--radius-lg), var(--duration-base)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">faqs: FAQItem[], theme?: 'light' | 'dark', fluid?: boolean</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Dark mode (atmospheric hero) and light mode (reading sheet)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Procedure, Disease, Symptom, and Diagnostic detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">More From Our Blog Cards Carousel</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;MoreFromOurBlogCarousel /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Editorial Discovery</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/MoreFromOurBlogCarousel.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/MoreFromOurBlogCarousel.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--white), var(--blue-brand), var(--slate-600), var(--radius-2xl), var(--elevation-3)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">articles: BlogArticle[], title?: string, subtitle?: string, categoryFilter?: string</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Top-scrim category tag, bottom dual scrim, hover zoom (1.05)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Blog listing (V3), Article reading detail pages</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Blog Page Header Hero (V3)</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogHeroV3 /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Editorial Header</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogHeroV3.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogHeroV3.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--navy-900), var(--blue-brand), var(--white), var(--radius-xl), var(--font-size-display)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">featuredArticle: BlogArticle, trendingTopics: string[], onTopicSelect: (t) =&gt; void</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Immersive split-hero with full photography and live search input</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Blog listing page (/blog, /articles)</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Blog Topic Filter &amp; Article Grid</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogCategoryExplore /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Editorial Navigation</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogCategoryExplore.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogCategoryExplore.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--blue-brand), var(--slate-800), var(--slate-100), var(--radius-full), var(--elevation-1)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">categories: string[], activeCategory: string, onSelect: (c) =&gt; void</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Interactive filter pills + responsive 3-column editorial cards grid</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Blog listing page (/blog, /articles)</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Medical Advisory Board &amp; Experts</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogMedicalExperts /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Trust &amp; Governance</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogMedicalExperts.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogMedicalExperts.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--slate-900), var(--blue-brand), var(--radius-2xl), var(--elevation-2), var(--slate-600)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">experts: DoctorData[], title?: string, subtitle?: string</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Editorial portraits with clinical credentials and department tabs</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Blog listing page (/blog, /articles)</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Narayana Health Trust Bento Grid</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogBentoGrid /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Trust &amp; Metrics</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogBentoGrid.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogBentoGrid.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--slate-900), var(--blue-brand), var(--navy-800), var(--radius-2xl), var(--elevation-2)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">stats: BentoStatItem[], title?: string</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">High-contrast 4-tile Bento layout showcasing surgeries, NABL labs, and JCI units</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Blog listing page (/blog, /articles)</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Article Multilingual Language Changer</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogLanguageChanger /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Accessibility &amp; i18n</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogLanguageChanger.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogLanguageChanger.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--blue-brand), var(--slate-700), var(--slate-100), var(--radius-md), var(--elevation-1)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">languages: [{ code: string, label: string }], activeLang: string, onLanguageChange: (code) =&gt; void</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Inline language pill dropdown with native script support (English, Hindi, Kannada, etc.)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Article reading detail pages (/articles/[slug])</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Pre-Footer Universal CTA Card Banner</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;BlogCtaBanner /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Conversion &amp; Outreach</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogCtaBanner.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogCtaBanner.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--blue-brand), #0b1a33, #022d61, var(--white), var(--radius-2xl), var(--radius-md)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">bg?: 'white' | 'dark', eyebrow?: string, title?: string, subtitle?: string, primaryBtn?: {}, secondaryBtn?: {}, phoneText?: string</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Mandatory 135deg dark blue card with crisp 8px rounded rectangle action buttons</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">All Health Library listings, Detail pages, Blog pages, and Landing routes</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Clinical Floating Side Action Pill (FAB)</Data></Cell>
+    <Cell ss:StyleID="CodeStyle"><Data ss:Type="String">&lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Patient Utility</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalFloatingSideActions.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalFloatingSideActions.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--blue-brand), var(--slate-900), var(--white), var(--radius-full), var(--elevation-4)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">consultHref: string, consultLabel?: string, phoneHref?: string, phoneLabel?: string, pulseQuery?: string, isScrolled?: boolean</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Fixed right dock: Quick Book OPD, 24x7 Helpline call, Ask Pulse AI modal trigger</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">All Health Library listings, Detail pages, Blog pages, and Speciality routes</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+ <Worksheet ss:Name="Pages vs Components">
+  <Table>
+   <Column ss:AutoFitWidth="0" ss:Width="210"/>
+   <Column ss:AutoFitWidth="0" ss:Width="180"/>
+   <Column ss:AutoFitWidth="0" ss:Width="240"/>
+   <Column ss:AutoFitWidth="0" ss:Width="315"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="345"/>
+   <Column ss:AutoFitWidth="0" ss:Width="375"/>
+   <Row ss:Height="28" ss:StyleID="HeaderStyle">
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Page Title</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Route URL</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Main Component File</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">CSS Module File</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Token Status</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Design Layout Architecture</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Mounted Handover Components</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Treatments &amp; Procedures Library</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">/treatments (and /procedures)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/treatments/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/treatments/TreatmentsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Hero Scrim (Sweet Spot) + Organ Chips Carousel + Search + Filterable 3-Col Cards + Pinned Drawer</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;TextSweepEffect /&gt;, &lt;OrganSystemChipsCarousel /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diseases &amp; Conditions Library</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">/diseases</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/DiseasesLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Hero Scrim + Organ Chips Carousel + Search + Filterable 3-Col Condition Cards + Pinned Drawer</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;TextSweepEffect /&gt;, &lt;OrganSystemChipsCarousel /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Symptoms Clinical Triage Library</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">/symptoms</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/SymptomsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Hero Scrim + Organ Chips Carousel + Search + Filterable 3-Col Triage Cards + Pinned Drawer</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;TextSweepEffect /&gt;, &lt;OrganSystemChipsCarousel /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diagnostics &amp; Lab Tests Library</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">/diagnostics</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/DiagnosticsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Hero Scrim + Organ Chips Carousel + Search + Filterable 3-Col Test Packages + Pinned Drawer</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;TextSweepEffect /&gt;, &lt;OrganSystemChipsCarousel /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Procedure &amp; Treatment Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">/procedures/[slug] &amp; /treatments/[slug]</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/procedures/[slug]/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/procedures/[slug]/ProcedureDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Stationary Atmospheric Canvas + V1/V2/V3/V4 Blend Modes + Sticky TOC Rail + E-E-A-T Review</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;TextSweepEffect /&gt; (V4), &lt;ClinicalSummaryBanner /&gt;, &lt;ClinicalEditorialFigures /&gt;, &lt;NearbySpecialistsCarousel /&gt;, &lt;NearbyCareCentresCarousel /&gt;, &lt;SpecialityFAQ /&gt;, &lt;ClinicalReviewedBySection /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Disease &amp; Condition Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">/diseases/[slug]</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/[slug]/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/[slug]/DiseaseDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Full Atmospheric Canvas + Clinical Summary Box + Diagnostic Stages + Specialists Carousel</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;ClinicalSummaryBanner /&gt;, &lt;ClinicalEditorialFigures /&gt;, &lt;NearbySpecialistsCarousel /&gt;, &lt;NearbyCareCentresCarousel /&gt;, &lt;SpecialityFAQ /&gt;, &lt;ClinicalReviewedBySection /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Symptom Clinical Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">/symptoms/[slug]</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/[slug]/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/[slug]/SymptomDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Full Atmospheric Canvas + Triage Red Flag Warning + Specialty Consult + Specialists Carousel</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;ClinicalSummaryBanner /&gt;, &lt;ClinicalEditorialFigures /&gt;, &lt;NearbySpecialistsCarousel /&gt;, &lt;NearbyCareCentresCarousel /&gt;, &lt;SpecialityFAQ /&gt;, &lt;ClinicalReviewedBySection /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diagnostic Test Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">/diagnostics/[slug]</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/[slug]/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/[slug]/DiagnosticDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Full Atmospheric Canvas + Test Fasting Protocol + Turnaround Time + Care Centres Carousel</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;ClinicalSummaryBanner /&gt;, &lt;ClinicalEditorialFigures /&gt;, &lt;NearbySpecialistsCarousel /&gt;, &lt;NearbyCareCentresCarousel /&gt;, &lt;SpecialityFAQ /&gt;, &lt;ClinicalReviewedBySection /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Narayana Health Editorial Blog Listing (V3)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">/blog &amp; /articles</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/blog/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/blog/page.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Split Photography Hero V3 + Trending Chips + Medical Experts + Trust Bento Grid + More From Blog</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;BlogHeroV3 /&gt;, &lt;MoreFromOurBlogCarousel /&gt;, &lt;BlogCategoryExplore /&gt;, &lt;BlogMedicalExperts /&gt;, &lt;BlogBentoGrid /&gt;, &lt;TextSweepEffect /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Editorial Article Reading Page</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">/articles/[slug] &amp; /blog/[slug]</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/blog/[slug]/page.tsx</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/blog/[slug]/ArticleDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized (100%)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Hero Scrim + Multilingual Language Switcher + Clinical Summary + E-E-A-T Reviewer Bio + More Blogs</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">&lt;Breadcrumbs /&gt;, &lt;BlogLanguageChanger /&gt;, &lt;ClinicalSummaryBanner /&gt;, &lt;NearbySpecialistsCarousel /&gt;, &lt;ClinicalReviewedBySection /&gt;, &lt;MoreFromOurBlogCarousel /&gt;, &lt;BlogCtaBanner /&gt;, &lt;ClinicalFloatingSideActions /&gt;</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+ <Worksheet ss:Name="Design Tokens Dictionary">
+  <Table>
+   <Column ss:AutoFitWidth="0" ss:Width="165"/>
+   <Column ss:AutoFitWidth="0" ss:Width="150"/>
+   <Column ss:AutoFitWidth="0" ss:Width="240"/>
+   <Column ss:AutoFitWidth="0" ss:Width="255"/>
+   <Column ss:AutoFitWidth="0" ss:Width="360"/>
+   <Row ss:Height="28" ss:StyleID="HeaderStyle">
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Token Name</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Category</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">CSS Value / Definition</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">RGB Alias for Opacity</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Usage Rules &amp; Permitted Application in NH Redesign</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--blue-brand</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Brand Color</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#034EA2</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--blue-brand-rgb): 3, 78, 162</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Primary brand color for buttons, active tabs, links, and key highlights.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--navy-900</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Dark Surface</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#022d61 / rgb(3, 18, 36)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--navy-900-rgb): 3, 18, 36</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Used for dark atmospheric hero scrims, footer background, and deep surfaces.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--navy-800</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Dark Surface</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#223148</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">22, 31, 48</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Used for secondary dark cards, hero stat dividers, and dark borders.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--red-emergency</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Emergency Accent</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#ED1C24</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--red-emergency-rgb): 237, 28, 36</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">RESERVED strictly for genuine 24x7 emergency alerts and ambulance CTAs.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--red-500</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Semantic Accent</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#ef4444</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">239, 68, 68</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Non-emergency alert badge, warning signal, or destructive interaction.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--slate-900</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Neutral Text</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#0f172a</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">15, 23, 42</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Primary high-contrast heading text on white reading sheets (WCAG AAA).</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--slate-800</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Neutral Text</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#1e293b</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">30, 41, 59</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Secondary body text and clinical summary text on light cards.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--slate-600</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Neutral Text</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#475569</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">71, 85, 105</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Muted body text, captions, and secondary metadata.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--slate-500</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Neutral Text</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#64748b</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">100, 116, 139</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Breadcrumb inactive items, unselected icons, and tertiary labels.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--slate-100</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Neutral Surface</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#f1f5f9</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">241, 245, 249</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Card backgrounds, chip containers, and subtle dividers.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--slate-50</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Neutral Surface</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">#f8fafc</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">248, 250, 252</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Reading sheet gradient start and executive summary card background.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--white</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Neutral Surface</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">#ffffff</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--white-rgb): 255, 255, 255</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Pure white surfaces, primary CTA button fill, and light backgrounds.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--radius-sm</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">4px</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tooltips, micro tags, and inline badges.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--radius-md</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">8px</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">MANDATORY geometry for CTA action buttons (Book, Call, View Details).</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--radius-lg</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">12px</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Summary cards, filter chips, and dialog corners.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--radius-xl</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">16px</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Hospital cards, doctor cards, and editorial figures.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--radius-2xl</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">24px</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Universal Pre-footer CTA card banner and Bento grid cards.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--radius-full</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Border Radius</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">9999px</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Circular avatar containers, floating action buttons (FABs), and pill badges.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--elevation-1</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Box Shadow</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">0 1px 2px rgba(...), 0 2px 6px rgba(...)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--shadow-rgb): 12, 24, 57</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Resting state for doctor cards and filter chips.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--elevation-2</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Box Shadow</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">0 1px 2px rgba(...), 0 4px 12px rgba(...)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--shadow-rgb)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Resting state for editorial bento cards and care centres.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--elevation-3</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Box Shadow</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">0 2px 4px rgba(...), 0 8px 24px rgba(...)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--shadow-rgb)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Hover state lift for doctor and hospital cards.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--elevation-4</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Box Shadow</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">0 4px 8px -2px rgba(...), 0 16px 40px -8px rgba(...)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">var(--shadow-rgb)</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Floating clinical FAB and modal dialogs.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--elevation-5</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Box Shadow</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">0 8px 16px -4px rgba(...), 0 24px 64px -12px rgba(...)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">var(--shadow-rgb)</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Pinned reading sheet top elevation shadow in V1.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--duration-fast</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Transition Motion</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">150ms</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Micro hover interactions, color changes, and icon transitions.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">--duration-base</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Transition Motion</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">250ms</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Card lift hover transitions, tab switching, and dropdowns.</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">--duration-slow</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Transition Motion</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">400ms</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">N/A</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Drawer expansion, hero text reveals, and accordion folds.</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+ <Worksheet ss:Name="Tokenized CSS Audit">
+  <Table>
+   <Column ss:AutoFitWidth="0" ss:Width="360"/>
+   <Column ss:AutoFitWidth="0" ss:Width="210"/>
+   <Column ss:AutoFitWidth="0" ss:Width="165"/>
+   <Column ss:AutoFitWidth="0" ss:Width="120"/>
+   <Column ss:AutoFitWidth="0" ss:Width="330"/>
+   <Row ss:Height="28" ss:StyleID="HeaderStyle">
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">CSS File Path</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Section / Page</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Token Count (var(--))</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Status</Data></Cell>
+    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">Key Replaced Elements</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/procedures/[slug]/ProcedureDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Procedure Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">119</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Hero scrim, metrics, TOC rail, V1-V4 blends, figures</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/[slug]/DiseaseDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Disease Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">406</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Overview, stages, symptoms, doctor carousel, FAQs</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/[slug]/SymptomDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Symptom Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">75</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Triage signals, red flags, emergency callout, consult</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/[slug]/DiagnosticDetail.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diagnostic Detail Page</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">75</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Fasting preparation, test turnaround, package inclusions</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/treatments/TreatmentsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Treatments &amp; Procedures Library</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">270</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Sweet spot scrim, search input, filter chips, procedure cards</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diseases/DiseasesLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diseases Library</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">306</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Search bar, category tabs, condition cards, drawer</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/app/symptoms/SymptomsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Symptoms Library</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">306</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Triage filter, red flag pills, condition mapper</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/diagnostics/DiagnosticsLibrary.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Diagnostics Library</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">312</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Pathology tests, imaging packages, NABL accreditations</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/BlogHeroV3.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Blog V3 Header Hero</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">25</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Atmospheric image, search bar, trending topic pills</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/blog/BlogCtaBanner.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Pre-Footer Universal CTA Banner</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">44</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">135deg gradient, 8px CTA buttons, radial ambient glow</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/blog/MoreFromOurBlogCarousel.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Editorial Blog Carousel</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">65</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Top/bottom dual scrim, zoom hover, card tags</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/OrganSystemChipsCarousel.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Organ Filter Carousel</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">36</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Active pill glow, border tokens, scroll arrows</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/NearbyClinicalCarousels.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Specialists &amp; Hospital Carousels</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">64</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Doctor portrait, 8px Book button, hospital chips</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/components/ui/ClinicalReviewedBySection.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">E-E-A-T &amp; Clinical Summary</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">65</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Summary card border, verified badge, reviewer bio</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">src/components/ui/ClinicalFloatingSideActions.module.css</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Floating Clinical FAB</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">49</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowOdd"><Data ss:Type="String">Pill shape, elevation-4 shadow, brand blue CTA</Data></Cell>
+   </Row>
+   <Row ss:Height="24">
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">src/app/dev-handover/DevHandover.module.css</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Developer Handover Dashboard</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">73</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Tokenized</Data></Cell>
+    <Cell ss:StyleID="RowEven"><Data ss:Type="String">Matrix tables, token badges, status pills, code tags</Data></Cell>
+   </Row>
+  </Table>
+ </Worksheet>
+</Workbook>

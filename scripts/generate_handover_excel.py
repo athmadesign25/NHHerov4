@@ -1,25 +1,134 @@
 import os
 import zipfile
-import xml.etree.ElementTree as ET
-import csv
+import xml.sax.saxutils as saxutils
 
-def make_excel(filename, sheets_data):
+def make_excel_xml(filename_xls, sheets_data):
     """
-    Creates a native OpenXML .xlsx file without external dependencies.
-    sheets_data: list of dicts:
-      {
-         'name': 'Sheet Name',
-         'headers': ['Col1', 'Col2', ...],
-         'rows': [ ['Val1', 'Val2', ...], ... ],
-         'col_widths': [20, 30, ...]
-      }
+    Creates an Excel 2003 XML spreadsheet (.xls).
+    This format is 100% natively supported by every version of Microsoft Excel,
+    Apple Numbers, Google Sheets, and LibreOffice without any schema or zip issues.
     """
-    
-    # Pre-build shared strings table
+    xml_lines = [
+        '<?xml version="1.0"?>',
+        '<?mso-application progid="Excel.Sheet"?>',
+        '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"',
+        ' xmlns:o="urn:schemas-microsoft-com:office:office"',
+        ' xmlns:x="urn:schemas-microsoft-com:office:excel"',
+        ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"',
+        ' xmlns:html="http://www.w3.org/TR/REC-html40">',
+        ' <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">',
+        '  <Title>Narayana Health Design Tokens &amp; Components Handover</Title>',
+        '  <Author>Narayana Health Design System</Author>',
+        ' </DocumentProperties>',
+        ' <Styles>',
+        '  <Style ss:ID="Default" ss:Name="Normal">',
+        '   <Alignment ss:Vertical="Center"/>',
+        '   <Borders/>',
+        '   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1F2937"/>',
+        '   <Interior/>',
+        '   <NumberFormat/>',
+        '   <Protection/>',
+        '  </Style>',
+        '  <Style ss:ID="HeaderStyle">',
+        '   <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>',
+        '   <Borders>',
+        '    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>',
+        '    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>',
+        '    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>',
+        '    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#022D61"/>',
+        '   </Borders>',
+        '   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10.5" ss:Bold="1" ss:Color="#FFFFFF"/>',
+        '   <Interior ss:Color="#034EA2" ss:Pattern="Solid"/>',
+        '  </Style>',
+        '  <Style ss:ID="RowEven">',
+        '   <Alignment ss:Vertical="Center" ss:WrapText="1"/>',
+        '   <Borders>',
+        '    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '   </Borders>',
+        '   <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>',
+        '   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1E293B"/>',
+        '  </Style>',
+        '  <Style ss:ID="RowOdd">',
+        '   <Alignment ss:Vertical="Center" ss:WrapText="1"/>',
+        '   <Borders>',
+        '    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '   </Borders>',
+        '   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>',
+        '   <Font ss:FontName="Segoe UI" x:Family="Swiss" ss:Size="10" ss:Color="#1E293B"/>',
+        '  </Style>',
+        '  <Style ss:ID="CodeStyle">',
+        '   <Alignment ss:Vertical="Center" ss:WrapText="1"/>',
+        '   <Borders>',
+        '    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>',
+        '   </Borders>',
+        '   <Font ss:FontName="Menlo" x:Family="Modern" ss:Size="9.5" ss:Bold="1" ss:Color="#034EA2"/>',
+        '   <Interior ss:Color="#EFF6FF" ss:Pattern="Solid"/>',
+        '  </Style>',
+        ' </Styles>'
+    ]
+
+    for sheet in sheets_data:
+        sheet_name = saxutils.escape(sheet['name'])
+        xml_lines.append(f' <Worksheet ss:Name="{sheet_name}">')
+        xml_lines.append('  <Table>')
+        
+        # Columns definition
+        if 'col_widths' in sheet:
+            for w in sheet['col_widths']:
+                # Multiply width approx for points
+                pts = max(60, int(w * 7.5))
+                xml_lines.append(f'   <Column ss:AutoFitWidth="0" ss:Width="{pts}"/>')
+
+        # Header row
+        xml_lines.append('   <Row ss:Height="28" ss:StyleID="HeaderStyle">')
+        for h in sheet['headers']:
+            esc_val = saxutils.escape(str(h))
+            xml_lines.append(f'    <Cell ss:StyleID="HeaderStyle"><Data ss:Type="String">{esc_val}</Data></Cell>')
+        xml_lines.append('   </Row>')
+
+        # Data rows
+        for row_idx, row in enumerate(sheet['rows']):
+            base_style = "RowEven" if row_idx % 2 == 1 else "RowOdd"
+            xml_lines.append(f'   <Row ss:Height="24">')
+            for col_idx, val in enumerate(row):
+                esc_val = saxutils.escape(str(val))
+                # Highlight code or JSX tag
+                if col_idx == 1 and str(val).startswith('<'):
+                    style_id = "CodeStyle"
+                else:
+                    style_id = base_style
+                xml_lines.append(f'    <Cell ss:StyleID="{style_id}"><Data ss:Type="String">{esc_val}</Data></Cell>')
+            xml_lines.append('   </Row>')
+
+        xml_lines.append('  </Table>')
+        xml_lines.append(' </Worksheet>')
+
+    xml_lines.append('</Workbook>')
+
+    os.makedirs(os.path.dirname(filename_xls), exist_ok=True)
+    with open(filename_xls, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(xml_lines))
+    print(f"Generated Excel XML (.xls): {filename_xls}")
+
+
+def make_clean_xlsx(filename_xlsx, sheets_data):
+    """
+    Creates a minimal, 100% compliant OpenXML .xlsx file
+    adhering strictly to Microsoft ECMA-376 schema standards.
+    """
     shared_strings = []
     string_map = {}
-    
-    def get_string_id(s):
+
+    def get_sid(s):
         s = str(s) if s is not None else ""
         if s in string_map:
             return string_map[s]
@@ -28,16 +137,15 @@ def make_excel(filename, sheets_data):
         string_map[s] = idx
         return idx
 
-    # Pre-index all cell values
     for sheet in sheets_data:
         for h in sheet['headers']:
-            get_string_id(h)
+            get_sid(h)
         for row in sheet['rows']:
             for val in row:
-                get_string_id(val)
+                get_sid(val)
 
-    # 1. [Content_Types].xml
-    content_types = [
+    # [Content_Types].xml
+    ct = [
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">',
         '  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>',
@@ -47,10 +155,10 @@ def make_excel(filename, sheets_data):
         '  <Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedString+xml"/>'
     ]
     for i in range(len(sheets_data)):
-        content_types.append(f'  <Override PartName="/xl/worksheets/sheet{i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>')
-    content_types.append('</Types>')
+        ct.append(f'  <Override PartName="/xl/worksheets/sheet{i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>')
+    ct.append('</Types>')
 
-    # 2. _rels/.rels
+    # _rels/.rels
     root_rels = [
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">',
@@ -58,7 +166,7 @@ def make_excel(filename, sheets_data):
         '</Relationships>'
     ]
 
-    # 3. xl/_rels/workbook.xml.rels
+    # xl/_rels/workbook.xml.rels
     wb_rels = [
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
@@ -69,66 +177,65 @@ def make_excel(filename, sheets_data):
     wb_rels.append(f'  <Relationship Id="rId{len(sheets_data)+2}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>')
     wb_rels.append('</Relationships>')
 
-    # 4. xl/workbook.xml
+    # xl/workbook.xml
     wb_xml = [
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">',
+        '  <bookViews><workbookView xWindow="0" yWindow="0" windowWidth="22000" windowHeight="12000"/></bookViews>',
         '  <sheets>'
     ]
     for i, s in enumerate(sheets_data):
-        wb_xml.append(f'    <sheet name="{s["name"]}" sheetId="{i+1}" r:id="rId{i+1}"/>')
+        wb_xml.append(f'    <sheet name="{saxutils.escape(s["name"])}" sheetId="{i+1}" r:id="rId{i+1}"/>')
     wb_xml.append('  </sheets>')
     wb_xml.append('</workbook>')
 
-    # 5. xl/styles.xml (professional styling: NH Blue header, alternate zebra rows, borders, clean font)
+    # xl/styles.xml with 100% compliant schema: fonts, fills, borders (with diagonal!), cellStyleXfs, cellXfs
     styles_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
   <fonts count="3">
-    <font><name val="Inter"/><sz val="10"/><color rgb="FF1F2937"/></font>
-    <font><name val="Inter"/><sz val="10.5"/><b/><color rgb="FFFFFFFF"/></font>
-    <font><name val="Inter"/><sz val="10"/><b/><color rgb="FF034EA2"/></font>
+    <font><sz val="10"/><color rgb="FF1F2937"/><name val="Arial"/><family val="2"/></font>
+    <font><b/><sz val="10.5"/><color rgb="FFFFFFFF"/><name val="Arial"/><family val="2"/></font>
+    <font><b/><sz val="10"/><color rgb="FF034EA2"/><name val="Arial"/><family val="2"/></font>
   </fonts>
-  <fills count="5">
+  <fills count="4">
     <fill><patternFill patternType="none"/></fill>
     <fill><patternFill patternType="gray125"/></fill>
     <fill><patternFill patternType="solid"><fgColor rgb="FF034EA2"/></patternFill></fill>
     <fill><patternFill patternType="solid"><fgColor rgb="FFF8FAFC"/></patternFill></fill>
-    <fill><patternFill patternType="solid"><fgColor rgb="FFE2E8F0"/></patternFill></fill>
   </fills>
   <borders count="2">
-    <border><left/><right/><top/><bottom/></border>
+    <border><left/><right/><top/><bottom/><diagonal/></border>
     <border>
       <left style="thin"><color rgb="FFE2E8F0"/></left>
       <right style="thin"><color rgb="FFE2E8F0"/></right>
       <top style="thin"><color rgb="FFE2E8F0"/></top>
       <bottom style="thin"><color rgb="FFE2E8F0"/></bottom>
+      <diagonal/>
     </border>
   </borders>
   <cellStyleXfs count="1">
     <xf numFmtId="0" fontId="0" fillId="0" borderId="0"/>
   </cellStyleXfs>
   <cellXfs count="4">
-    <!-- 0: normal -->
     <xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1"/>
-    <!-- 1: header NH blue -->
     <xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1">
       <alignment horizontal="center" vertical="center" wrapText="1"/>
     </xf>
-    <!-- 2: alternate zebra row -->
     <xf numFmtId="0" fontId="0" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"/>
-    <!-- 3: bold tag / code -->
     <xf numFmtId="0" fontId="2" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1"/>
   </cellXfs>
+  <cellStyles count="1">
+    <cellStyle name="Normal" xfId="0" builtinId="0"/>
+  </cellStyles>
 </styleSheet>"""
 
-    # 6. xl/sharedStrings.xml
+    # xl/sharedStrings.xml
     ss_xml = [
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',
         f'<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="{len(shared_strings)}" uniqueCount="{len(shared_strings)}">'
     ]
     for s in shared_strings:
-        # Escape XML entities
-        esc = s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+        esc = saxutils.escape(str(s))
         ss_xml.append(f'  <si><t>{esc}</t></si>')
     ss_xml.append('</sst>')
 
@@ -139,10 +246,8 @@ def make_excel(filename, sheets_data):
             res = chr(65 + rem) + res
         return res
 
-    # Write ZIP
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with zipfile.ZipFile(filename, 'w', compression=zipfile.ZIP_DEFLATED) as z:
-        z.writestr('[Content_Types].xml', '\n'.join(content_types))
+    with zipfile.ZipFile(filename_xlsx, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+        z.writestr('[Content_Types].xml', '\n'.join(ct))
         z.writestr('_rels/.rels', '\n'.join(root_rels))
         z.writestr('xl/_rels/workbook.xml.rels', '\n'.join(wb_rels))
         z.writestr('xl/workbook.xml', '\n'.join(wb_xml))
@@ -155,7 +260,6 @@ def make_excel(filename, sheets_data):
                 '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
             ]
             
-            # Column widths
             if 'col_widths' in sheet and sheet['col_widths']:
                 sheet_xml.append('  <cols>')
                 for col_idx, w in enumerate(sheet['col_widths']):
@@ -164,7 +268,7 @@ def make_excel(filename, sheets_data):
 
             sheet_xml.append('  <sheetData>')
             
-            # Header row (row 1)
+            # Header
             sheet_xml.append('    <row r="1" ht="28" customHeight="1">')
             for col_idx, h in enumerate(sheet['headers']):
                 cell_ref = f'{col_name(col_idx+1)}1'
@@ -172,15 +276,14 @@ def make_excel(filename, sheets_data):
                 sheet_xml.append(f'      <c r="{cell_ref}" t="s" s="1"><v>{sid}</v></c>')
             sheet_xml.append('    </row>')
 
-            # Data rows
+            # Rows
             for row_idx, row in enumerate(sheet['rows']):
                 r_num = row_idx + 2
                 style_id = 2 if row_idx % 2 == 1 else 0
-                sheet_xml.append(f'    <row r="{r_num}" ht="22" customHeight="1">')
+                sheet_xml.append(f'    <row r="{r_num}" ht="24" customHeight="1">')
                 for col_idx, val in enumerate(row):
                     cell_ref = f'{col_name(col_idx+1)}{r_num}'
                     sid = string_map[str(val)]
-                    # Check if col 1 or 2 to give bold accent
                     cell_style = 3 if col_idx == 1 and str(val).startswith('<') else style_id
                     sheet_xml.append(f'      <c r="{cell_ref}" t="s" s="{cell_style}"><v>{sid}</v></c>')
                 sheet_xml.append('    </row>')
@@ -188,5 +291,4 @@ def make_excel(filename, sheets_data):
             sheet_xml.append('  </sheetData>')
             sheet_xml.append('</worksheet>')
             z.writestr(f'xl/worksheets/sheet{idx+1}.xml', '\n'.join(sheet_xml))
-
-print("Excel helper script created successfully.")
+    print(f"Generated clean OpenXML (.xlsx): {filename_xlsx}")
