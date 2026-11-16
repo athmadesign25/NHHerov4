@@ -79,3 +79,9 @@
 .instructionGroups { display: grid; gap: var(--space-24); margin-top: var(--space-24); }
 .instructionGroups .instructions { margin-top: var(--space-8); }
 .instructionGroups .prose { margin-top: var(--space-8); }
+
+.references { padding-block: var(--space-16); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.references summary { cursor: pointer; min-height: var(--space-40); display: list-item; }
+.references ul { padding-left: var(--space-20); display: grid; gap: var(--space-12); list-style: disc; }
+.references a { color: var(--color-primary); overflow-wrap: anywhere; }
+.references a:hover { color: var(--color-primary-dark); }

@@ -29,3 +29,29 @@ export function resolveHealthFacility(facilities: readonly HealthFacility[], val
   const key = value.trim();
   return facilities.find(facility => facility.id === key) ?? facilities.find(facility => facility.unitCode === key);
 }
+
+/** Explicit entry wins; a city never silently picks among multiple centres. */
+export function resolveHealthEntryCentre(facilities: readonly HealthFacility[], context: {
+  explicitFacility?: string | null;
+  rememberedFacility?: string | null;
+  city?: string | null;
+}): HealthFacility | undefined {
+  const explicit = resolveHealthFacility(facilities, context.explicitFacility);
+  if (explicit) return explicit;
+  const remembered = resolveHealthFacility(facilities, context.rememberedFacility);
+  if (context.city) {
+    const centres = facilities.filter(facility => healthFacilityServesCity(facility, context.city!));
+    if (remembered && centres.includes(remembered)) return remembered;
+    return centres.length === 1 ? centres[0] : undefined;
+  }
+  return remembered;
+}
+
+const CENTRE_PREFERENCE_KEY = "nh-health-centre";
+// A centre preference is not a cart: never persist test, member or payment data here.
+export function readHealthCentrePreference(): string | null {
+  try { return window.localStorage.getItem(CENTRE_PREFERENCE_KEY); } catch { return null; }
+}
+export function rememberHealthCentrePreference(id: string): void {
+  try { window.localStorage.setItem(CENTRE_PREFERENCE_KEY, id); } catch { /* Browsing works with storage disabled. */ }
+}

@@ -1,0 +1,10 @@
+.hint { position: absolute; inset-inline: var(--space-12) var(--space-4); display: flex; align-items: baseline; gap: var(--space-4); min-width: 0; pointer-events: none; color: var(--color-text-secondary); font-size: var(--font-size-base); line-height: var(--leading-body); white-space: nowrap; overflow: hidden; }
+.terms { display: grid; min-width: 0; }
+.prefix { flex-shrink: 0; }
+.staticHint { display: block; font-weight: 400; text-overflow: ellipsis; }
+.measure { grid-area: 1 / 1; visibility: hidden; font-weight: 600; }
+.keyword { grid-area: 1 / 1; color: var(--color-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+/* The compact city + search layout keeps the keyword readable on narrow phones. */
+@container (width < 220px) {
+  .prefix { display: none; }
+}

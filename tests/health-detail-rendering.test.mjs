@@ -70,6 +70,34 @@ test("unknown counts and price never render malformed numeric claims or enabled 
   assert.match(card, /aria-label="View details for/);
 });
 
+test("test detail content uses supplied description and preparation without losing centre pricing", () => {
+  const markup = render({ ...item, description: "Source description of this test.", preparation: "Source preparation instructions.", price: 650 });
+  assert.match(text(markup), /What is this test\?/);
+  assert.match(text(markup), /How to prepare/);
+  assert.equal(text(markup).split("Source description of this test.").length - 1, 1);
+  assert.match(text(markup), /Source preparation instructions/);
+  assert.match(text(markup), /Where to book.*A long hospital and clinic name.*Test price ₹650/);
+  assert.match(markup, /id="where-to-book"/);
+  assert.match(markup, /google\.com\/maps\/dir\//);
+});
+
+test("package links require explicit membership at the same centre", () => {
+  const included = { ...item, id: "package-a", kind: "package", name: "Included package", price: 1200, includedTestIds: [item.id] };
+  const otherCentre = { ...included, id: "package-b", name: "Wrong centre package", facilityId: "another-centre" };
+  const unrelated = { ...included, id: "package-c", name: "Unrelated package", includedTestIds: [] };
+  const markup = renderToStaticMarkup(createElement(HealthDetail, { item, facility, design: "2", relatedPackages: [included, otherCentre, unrelated] }));
+  assert.match(text(markup), /Packages that include this test/);
+  assert.match(markup, /href="\/health-checkups\/package-a\?design=2&amp;item=package-a"/);
+  assert.doesNotMatch(text(markup), /Wrong centre package|Unrelated package/);
+  assert.doesNotMatch(text(render(item)), /Packages that include this test/);
+});
+
+test("test titles expose direct detail links with the facility identity", () => {
+  const entry = { ...item, slug: "test-name", unitCode: "1014", code: "TEST01" };
+  const markup = renderToStaticMarkup(createElement(HealthDiscoveryCard, { item: entry, selected: false, included: false, onAdd() {}, onDetails() {}, onTests() {} }));
+  assert.match(markup, /<h3[^>]*><a href="\/health-checkups\/test-name\?design=3&amp;unitCode=1014&amp;code=TEST01&amp;item=test"/);
+});
+
 test("missing-detail source action is limited to safe official NH URLs", () => {
   for (const sourceUrl of ["javascript:alert(1)", "https://narayanahealth.org.evil.example/test", "not a url"]) {
     assert.doesNotMatch(render({ ...item, sourceUrl }), /View on Narayana Health/);
@@ -136,7 +164,7 @@ test("discovery cards show only available source information and keep selection 
   assert.match(included, /disabled=""[^>]*aria-label="[^"]*is included in your package"/);
 });
 
-test("discovery search groups image cards and retains selection without comparison controls", () => {
+test("unified search includes both types while browse shortcuts retain cart selection", () => {
   const packageItem = { ...item, id: "package", kind: "package", name: "Thyroid health package" };
   const testItem = { ...item, id: "lab", name: "Thyroid function test" };
   const noop = () => {};
@@ -146,20 +174,27 @@ test("discovery search groups image cards and retains selection without comparis
     category: "All", onCategory: noop, ids: [packageItem.id], includedIds: [],
     onAdd: noop, onDetails: noop };
   const markup = renderToStaticMarkup(createElement(HealthListing3, props));
-  assert.match(markup, /<section aria-label="Health packages"/);
-  assert.match(markup, /<section aria-label="Lab tests"/);
-  assert.match(markup, /aria-label="Remove Thyroid health package from cart"/);
+  assert.match(markup, /role="combobox"/);
+  assert.doesNotMatch(markup, /role="tablist"|role="tabpanel"/);
+  assert.match(markup, /<article[^>]*data-kind="package"/);
+  assert.match(markup, /<article[^>]*data-kind="test"/);
   const cards = markup.match(/<article\b[\s\S]*?<\/article>/g) ?? [];
   assert.equal(cards.length, 2);
   for (const card of cards) assert.equal((card.match(/<img /g) ?? []).length, 1);
+  const packagesOnly = renderToStaticMarkup(createElement(HealthListing3, { ...props, tab: "package" }));
+  assert.match(packagesOnly, /aria-label="Remove Thyroid health package from cart"/);
+  assert.match(packagesOnly, /<article[^>]*data-kind="test"/);
   assert.doesNotMatch(markup, /Compare|comparison/);
   const testsOnly = renderToStaticMarkup(createElement(HealthListing3, { ...props, query: "" }));
   assert.doesNotMatch(testsOnly, /<article[^>]*data-kind="package"/);
   assert.match(testsOnly, /<article[^>]*data-kind="test"/);
   assert.doesNotMatch(testsOnly, /Compare|comparison/);
   const noCentre = renderToStaticMarkup(createElement(HealthListing3, { ...props, facility: undefined }));
-  assert.match(text(noCentre), /Choose where you’ll visit/);
-  assert.doesNotMatch(noCentre, /<article|<select/);
+  assert.match(text(noCentre), /Where would you like to visit?/);
+  assert.doesNotMatch(noCentre, /<article|<select|role="tablist"|id="health-discovery-search"/);
+  const otherMatches = renderToStaticMarkup(createElement(HealthListing3, { ...props, tab: "package", catalog: [testItem] }));
+  assert.match(otherMatches, /<article[^>]*data-kind="test"/);
+  assert.doesNotMatch(otherMatches, /<article[^>]*data-kind="package"/);
 });
 
 test("card pricing never invents a discount and included counts agree with the popup list", async () => {
@@ -211,4 +246,38 @@ test("packages without captured inclusions open details instead of an empty incl
   assert.match(text(markup), /Choose a time at checkout/);
   assert.doesNotMatch(markup, /aria-haspopup="dialog"/);
   assert.doesNotMatch(text(markup), /Sample|Reports|Preparation|Includes 0/);
+});
+
+const { withHealthDemoContent, researchProfileFor } = await import("../src/features/health-checkups/content/withHealthDemoContent.ts");
+
+test("researched demo content covers the catalogue without changing prices or inclusions", () => {
+  const items = JSON.parse(readFileSync(new URL("../src/data/health-checkups/items.json", import.meta.url), "utf8"));
+  for (const entry of items) {
+    const result = withHealthDemoContent(entry);
+    assert.ok(result.details.about.some(Boolean), entry.name);
+    assert.ok(result.details.instructions.some(Boolean) || result.details.instructionGroups?.length, entry.name);
+    if (entry.kind === "test") assert.ok(researchProfileFor(entry), entry.name);
+    for (const key of ["price", "originalPrice", "testCount", "includedTestIds", "inclusions", "reportTime", "requiresSlot", "facilityId"])
+      assert.deepEqual(result[key], entry[key], `${entry.name}: ${key}`);
+    for (const source of result.details.editorial?.sources ?? []) assert.equal(new URL(source).protocol, "https:");
+    assert.deepEqual(withHealthDemoContent(result), result, entry.name);
+  }
+});
+
+test("demo adapter preserves supplied clinical fields and structured instructions", () => {
+  const details = { about: ["Approved clinical content"], sampleRequired: ["Specified sample"], instructions: ["Approved preparation"], testGroups: [{ name: "Source group", parameters: [] }] };
+  const populated = withHealthDemoContent({ ...item, name: "Hba 1c", details });
+  for (const key of Object.keys(details)) assert.deepEqual(populated.details[key], details[key]);
+  assert.equal(populated.details.editorial, undefined);
+  const grouped = withHealthDemoContent({ ...item, details: { instructionGroups: [{ title: "On arrival", items: ["Specific instruction"] }] } });
+  assert.deepEqual(grouped.details.instructions, []);
+  assert.deepEqual(grouped.details.instructionGroups, [{ title: "On arrival", items: ["Specific instruction"] }]);
+});
+
+test("similar medical names do not cross clinical families", () => {
+  for (const [name, expected] of [["Crp (c -reactive Protein ) Hs", "inflammation"], ["Procalcitonin (pct )", "inflammation"], ["Thiopurine Methyltransferase (tpmt )", "drug-monitoring"], ["Anti -tpo Antibody", "thyroid-antibody"], ["Serum Immunoglobulin", "protein-immunity"], ["24 Hours Urine For Cortisol", "urine-timed"]])
+    assert.equal(researchProfileFor({ kind: "test", name })?.id, expected, name);
+  const service = withHealthDemoContent({ ...item, name: "Nebulisation" });
+  assert.match(text(render(service)), /About this service/);
+  assert.doesNotMatch(text(render(service)), /What is this test/);
 });

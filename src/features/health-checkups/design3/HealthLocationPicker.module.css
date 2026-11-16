@@ -31,6 +31,16 @@
   pointer-events: none;
 }
 
+/* Catalogue context shares the existing city/centre picker, without a search divider. */
+.location.compact { width: fit-content; max-width: 100%; align-self: start; z-index: 41; }
+.compact::after { display: none; }
+.compact .trigger { min-height: calc(var(--space-40) + var(--space-4)); padding: var(--space-4) 0; gap: var(--space-8); border-radius: var(--radius-sm); }
+.compact .triggerText { display: block; font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.compact .triggerText strong { color: var(--color-text-secondary); }
+.compact .triggerText > span { white-space: normal; font-size: inherit; overflow-wrap: anywhere; }
+.compact .contextDot { padding-inline: var(--space-8); }
+.compact .pin { width: var(--space-16); height: var(--space-16); }
+
 .pin { width: var(--space-20); height: var(--space-20); flex-shrink: 0; }
 .triggerText { display: flex; flex-direction: column; min-width: 0; flex: 1; gap: var(--space-2); }
 .triggerText strong { font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-normal); color: var(--color-text); }
@@ -76,3 +86,18 @@
 @media (prefers-reduced-motion: reduce) {
   .centreRow, .radio::after { transition: none; }
 }
+
+.inlineRoot { width: 100%; min-width: 0; }
+.inlineRoot .inlinePanel { position: relative; width: 100%; border-radius: var(--radius-xl); box-shadow: none; }
+.inlinePanel .optionCopy { overflow-wrap: break-word; }
+@media (max-width: 639px) {
+  .inlineRoot .inlinePanel { --city-heading-height: var(--space-56); }
+  .inlinePanel .centreRow { grid-template-columns: minmax(0, 1fr); gap: 0; padding-bottom: var(--space-8); }
+  .inlinePanel .distancePill { justify-self: start; margin: 0 0 0 calc(var(--space-8) + var(--space-20) + var(--space-8)); }
+}
+
+.locateAction { display: inline-flex; align-items: center; gap: var(--space-8); min-height: calc(var(--space-40) + var(--space-4)); margin-bottom: var(--space-8); padding: var(--space-8); border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
+.locateAction svg { width: var(--space-16); height: var(--space-16); }
+.locateAction:disabled { cursor: wait; }
+.locationMessage { padding: 0 var(--space-8) var(--space-12); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+@media (hover: hover) { .locateAction:hover { color: var(--color-primary-dark); background: var(--color-disclosure-hover); } }

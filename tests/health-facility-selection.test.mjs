@@ -5,7 +5,7 @@ import ts from "typescript";
 
 const source = readFileSync(new URL("../src/features/health-checkups/healthFacilitySelection.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-const { healthCityKey, healthCityOptions, healthFacilityServesCity, resolveHealthFacility } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
+const { healthCityKey, healthCityOptions, healthFacilityServesCity, resolveHealthFacility, resolveHealthEntryCentre } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
 const centres = [
   { id: "prestige", name: "Centre one", city: "Bangalore", unitCode: "6024" },
   { id: "second", name: "Centre two", city: " BANGALORE ", unitCode: "3010" },
@@ -70,4 +70,30 @@ test("every captured official city is included without inventing facility record
   const options = healthCityOptions([], official);
   assert.equal(options.length, new Set(official.map(city => healthCityKey(city.label))).size);
   for (const city of official) assert.ok(options.some(option => option.value === healthCityKey(city.label)));
+});
+
+
+test("centre-first browsing never chooses an arbitrary centre", () => {
+  assert.equal(resolveHealthEntryCentre(centres, {}), undefined);
+  assert.equal(resolveHealthEntryCentre(centres, { city: "Bangalore" }), undefined);
+  assert.equal(resolveHealthEntryCentre(centres, { city: "Kolkata" }), centres[2]);
+  assert.equal(resolveHealthEntryCentre(centres, { city: "Unknown" }), undefined);
+});
+
+test("explicit hospital entry overrides remembered centre and supports unit codes", () => {
+  assert.equal(resolveHealthEntryCentre(centres, { explicitFacility: "4040", rememberedFacility: "prestige", city: "Bangalore" }), centres[2]);
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "prestige" }), centres[0]);
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "retired" }), undefined);
+});
+
+test("a supplied city constrains the remembered centre", () => {
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "prestige", city: "Bangalore" }), centres[0]);
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "kolkata", city: "Bangalore" }), undefined);
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "prestige", city: "Kolkata" }), centres[2]);
+});
+
+test("centres without captured catalogue remain selectable and restorable", () => {
+  assert.equal(resolveHealthEntryCentre(centres, { rememberedFacility: "second" }), centres[1]);
+  assert.equal(resolveHealthEntryCentre(centres, { explicitFacility: "9090" }), centres[3]);
+  assert.equal(resolveHealthEntryCentre(centres, { city: "Bangalore" }), undefined);
 });
