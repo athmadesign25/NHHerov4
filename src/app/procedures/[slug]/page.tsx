@@ -268,6 +268,12 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               "--v2-toc-active-bg": v2TocActiveBg,
               "--v2-border": v2BorderColor,
               "--v2-card-bg": v2CardBg,
+              "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
+              "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
+              "--summary-accent": "var(--color-primary, var(--blue-brand))",
+              "--summary-text": "var(--slate-800)",
+              "--summary-badge-bg": "var(--white)",
+              "--summary-badge-text": "var(--slate-700)",
             } as React.CSSProperties)
           : blendVersion === 4
           ? ({
@@ -287,7 +293,14 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               "--summary-badge-bg": v4BadgeBg,
               "--summary-badge-text": v4BodyColor,
             } as React.CSSProperties)
-          : undefined
+          : ({
+              "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
+              "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
+              "--summary-accent": "var(--color-primary, var(--blue-brand))",
+              "--summary-text": "var(--slate-800)",
+              "--summary-badge-bg": "var(--white)",
+              "--summary-badge-text": "var(--slate-700)",
+            } as React.CSSProperties)
       }
     >
       {/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ──── */}
