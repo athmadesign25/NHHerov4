@@ -5,18 +5,18 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(3, 78, 162, 0.12);
-  border: 1.5px solid rgba(3, 78, 162, 0.25);
+  background: rgba(var(--blue-brand-rgb), 0.12);
+  border: 1.5px solid rgba(var(--blue-brand-rgb), 0.25);
   pointer-events: none;
   z-index: 99999;
   will-change: transform;
   mix-blend-mode: multiply;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transition: background var(--duration-moderate) ease, border-color var(--duration-moderate) ease;
 }
 
 .cursorButton {
-  background: rgba(3, 78, 162, 0.08);
-  border-color: rgba(3, 78, 162, 0.4);
+  background: rgba(var(--blue-brand-rgb), 0.08);
+  border-color: rgba(var(--blue-brand-rgb), 0.4);
 }
 
 .dot {

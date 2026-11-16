@@ -1,0 +1,69 @@
+/* Dev-only variant badge. Deliberately plain and out of the way — it sits
+   on top of work being judged, so it must not compete with it. */
+
+.badge {
+  position: fixed;
+  left: var(--space-12);
+  bottom: var(--space-12);
+  z-index: 2147483000; /* above the FAB and the search overlay */
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-10);
+  border-radius: var(--radius-full);
+  background: rgba(var(--navy-900-rgb), 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--elevation-3);
+  font-family: var(--font-family);
+  /* Pointer events only on the chips, so the badge never blocks a hover or
+     scroll on the thing underneath it. */
+  pointer-events: none;
+}
+
+.label {
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--white-rgb), 0.5);
+}
+
+.chip,
+.chipActive {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 var(--space-6);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.chip {
+  color: rgba(var(--white-rgb), 0.6);
+  background: rgba(var(--white-rgb), 0.08);
+}
+
+.chip:hover {
+  color: var(--color-text-inverse);
+  background: rgba(var(--white-rgb), 0.16);
+}
+
+.chipActive {
+  color: var(--color-text-inverse);
+  background: var(--blue-brand);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .chipActive {
+    transition: none;
+  }
+}

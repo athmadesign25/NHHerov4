@@ -14,6 +14,7 @@ import {
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./Hero.module.css";
 import { NHSearchExperience } from "@/components/search/NHSearchExperience";
+import { searchDockProgress } from "@/components/search/NHSearchExperience/dockProgress";
 
 const STAT_GROUPS = [
   [
@@ -119,6 +120,30 @@ export default function Hero() {
   // Scale down and round border radius on scroll
   const heroScale = useTransform(smoothProgress, [0, 0.6], [1, 0.88]);
   const heroRadius = useTransform(smoothProgress, [0, 0.6], ["0px", "20px"]);
+
+  // On mobile the hero is pinned dead still while the search composer
+  // detaches and flies down into the action bar, so the two read as
+  // unrelated: one thing moving across a backdrop that is not. Drifting the
+  // hero up a little across the same trip couples them. Driven by the dock's
+  // own progress rather than the hero's scroll, so it tracks the composer
+  // exactly. The drift is the only transform the hero gets on mobile — the
+  // scale is held at 1 below, since the stylesheet's mobile block deliberately
+  // sizes the hero to fill the viewport rather than sit inset. Its travel is
+  // covered by the 32px of extra height that block adds.
+  //
+  // 768px, matching the stylesheet's own mobile breakpoint, so the scale is
+  // dropped over exactly the range where the full-bleed sizing applies.
+  const [isMobileHero, setIsMobileHero] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const sync = () => setIsMobileHero(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const heroDockY = useTransform(searchDockProgress, [0, 1], [0, -26]);
 
   // Blurs out only once CentreOfExcellence's own header has scrolled up
   // to the vertical center of the viewport — rather than reacting to the
@@ -298,9 +323,10 @@ export default function Hero() {
         id="hero-section-search-first"
         data-nav-theme="dark"
         style={{
-          scale: heroScale,
+          scale: isMobileHero ? 1 : heroScale,
           borderRadius: heroRadius,
           filter: heroBlur,
+          y: isMobileHero ? heroDockY : undefined,
         }}
       >
         <video
@@ -360,7 +386,8 @@ export default function Hero() {
           <div className={`${styles.heroStack} ${isOpen ? styles.heroStackActive : ""}`}>
             <div className={`${styles.titleUnit} ${isOpen ? styles.titleHidden : ""}`}>
               <h1 className={styles.headline}>
-                <TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
+                <span className={styles.headlineDesktop}><TextSweepEffect words={["Trusted Care, Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /></span>
+                <span className={styles.headlineMobile}><TextSweepEffect words={["Trusted Care,"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /><br /><TextSweepEffect words={["Every Day"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" /></span>
               </h1>
               <motion.p
                 className={styles.subHeadline}
@@ -375,7 +402,16 @@ export default function Hero() {
             {/* Layout spacer reserving the search composer's position in the hero stack */}
             <div
               ref={heroAnchorRef}
-              className={styles.heroAnchorSpacer}
+              style={{
+                width: "min(840px, calc(100vw - 48px))",
+                // 132 + 64 from chetan_work: the composer grew a row of
+                // morphing action pills, so the anchor it measures itself
+                // against had to move up to leave room.
+                height: 132,
+                marginBottom: 64,
+                pointerEvents: "none",
+                opacity: 0,
+              }}
               aria-hidden="true"
             />
           </div>

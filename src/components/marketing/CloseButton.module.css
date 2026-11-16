@@ -1,0 +1,64 @@
+/**
+ * The close affordance, shared by both banners.
+ *
+ * `CloseIcon` already gives the two a single mark; this gives them a
+ * single behaviour. They are composed into `.close` in each banner's own
+ * module rather than copied, because the mark itself drifted twice before
+ * it was centralised and the interaction would have gone the same way.
+ *
+ * The mark is a disc with the cross cut out of it, so `color` is the
+ * disc. White on both banners: on L1 it sits on the scrim, on L2 it sits
+ * on the band's own light gradient.
+ */
+
+/* Properties either banner also sets are deliberately absent here —
+   `composes` puts both classes on the element at equal specificity, so a
+   property declared in both would be decided by bundle order rather than
+   by intent. Padding and the plate colour are left to the banners for
+   that reason; the plate's default lives in the `var()` fallback below. */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--color-text-inverse);
+  cursor: pointer;
+}
+
+/* The plate and the step-up ride on the mark, not on the button. L1's
+   close carries "Back to homepage" beside the icon, so a plate drawn
+   around the button would wrap the words too. */
+.iconButton svg {
+  border-radius: var(--radius-full);
+  background: transparent;
+  /* Spread rather than a wider box, so the plate grows past the disc
+     without changing the icon's layout box. */
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow var(--duration-base) var(--ease-out),
+    background var(--duration-base) var(--ease-out),
+    scale var(--duration-base) var(--ease-out);
+}
+
+/* The plate has to read against each banner's own ground — the scrim on
+   L1, a light blue gradient on L2 — so a banner may set `--close-plate`.
+   The motion either side of it stays identical, which is the part that
+   makes the two feel like one control. */
+.iconButton:hover svg,
+.iconButton:focus-visible svg {
+  background: var(--close-plate, rgba(var(--white-rgb), 0.18));
+  box-shadow: 0 0 0 6px var(--close-plate, rgba(var(--white-rgb), 0.18));
+  /* The `scale` property, not a transform: L1's close is a motion.button
+     and Framer owns the transform on it. */
+  scale: 1.06;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconButton svg {
+    transition: none;
+  }
+  .iconButton:hover svg,
+  .iconButton:focus-visible svg {
+    scale: 1;
+  }
+}

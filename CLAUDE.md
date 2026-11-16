@@ -33,6 +33,7 @@ npm run dev
 - Each component has a co-located `.module.css` file.
 - All reusable values (colors, spacing, fonts, shadows) are CSS custom properties in `globals.css`.
 - When asked to adjust a value, **change the CSS**, not inline styles.
+- **Read [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) before writing CSS.** It holds the token rules, the patterns and the traps. `AGENTS.md` carries the token index; `/ds-lab` in the running app renders every token with its live value.
 
 ---
 
@@ -47,7 +48,7 @@ npm run dev
 ### Responsive Design (Critical)
 - **DO** add `@media` queries to every new grid/multi-column layout
 - **DO** use `grid-template-columns: 1fr` for mobile, scaling up for larger screens
-- **DO** use `clamp()` for any font size on headings: e.g., `clamp(28px, 3.2vw, 44px)`
+- **DO** use `--font-size-*` for headings (`--font-size-display` is the 42px section title), paired with `--leading-tight` or `--leading-snug`. `clamp()` only where display type must scale fluidly
 - **DO** test search dropdowns and overlays work on mobile viewport widths
 - **DO** collapse horizontal card layouts to vertical stacks on mobile
 - **DO** ensure touch targets are at least 44×44px
@@ -72,7 +73,7 @@ npm run dev
 ## ❌ DON'Ts — Extended for Claude
 
 ### Common Mistakes to Avoid
-- **DON'T** use `px` for font sizes on headings — always use `clamp()` or CSS variables
+- **DON'T** write a raw value in a component — no hex, no `rgba()`, no px font size, no `0.3s`, no `cubic-bezier(...)`. If nothing in the system fits, that is a gap worth raising, not working around
 - **DON'T** create grid layouts without mobile breakpoints — every grid must collapse
 - **DON'T** use `position: absolute` with fixed pixel values for responsive elements
 - **DON'T** add inline `style={{}}` for things that should be CSS classes
@@ -141,9 +142,11 @@ npm run dev
 
 Before considering any component "done", verify:
 
-- [ ] Typography uses design tokens and `clamp()` for fluid sizing
-- [ ] Colors come from CSS custom properties, not hard-coded hex values
-- [ ] Spacing uses the 8px scale tokens (`--sp-1` through `--sp-16`)
+- [ ] Typography uses `--font-size-*`, and every size is paired with a `--leading-*`
+- [ ] Colors come from tokens — no hex, no raw `rgba()`. Opacity composes: `rgba(var(--white-rgb), 0.08)`
+- [ ] Spacing uses `--space-*` inside a section and `--section-y-*` between sections (`--sp-*` is deprecated)
+- [ ] Shadows use `--elevation-*`, and hover steps the ramp rather than brightening a glow
+- [ ] Transitions use `--duration-*` / `--ease-*`; Framer animations import from `src/lib/motion.ts`
 - [ ] Hover states exist on all interactive elements with smooth transitions
 - [ ] Component has entrance animation via Framer Motion `whileInView`
 - [ ] Layout is responsive at 320px, 768px, 1024px, and 1440px

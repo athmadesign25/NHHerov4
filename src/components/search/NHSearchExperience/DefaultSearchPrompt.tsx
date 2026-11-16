@@ -37,7 +37,6 @@ interface DefaultSearchPromptProps {
   controlsHeight?: MotionValue<string>;
   controlsMarginBottom?: MotionValue<string>;
   controlsOverflow?: MotionValue<"hidden" | "visible">;
-  promptBlur?: MotionValue<string>;
 }
 
 // Minimal SpeechRecognition interfaces for standard TypeScript
@@ -101,7 +100,6 @@ export default function DefaultSearchPrompt({
   searchTheme = "dark",
   isMobile = false,
   promptOpacity,
-  promptBlur,
   minimizedSearchOpacity,
   textColor,
   compactLabelOpacity,
@@ -413,18 +411,9 @@ export default function DefaultSearchPrompt({
   };
 
   return (
-    <motion.div 
+    <div 
       className={styles.landingContainer} 
-      style={{
-        height: "100%",
-        justifyContent: "flex-start",
-        cursor: voiceMode === "idle" ? "pointer" : "default",
-        position: "relative",
-        overflow: "visible",
-        zIndex: 5,
-        opacity: promptOpacity,
-        filter: promptBlur,
-      }}
+      style={{ height: "100%", justifyContent: "flex-start", cursor: voiceMode === "idle" ? "pointer" : "default", position: "relative", overflow: "visible", zIndex: 5 }}
       onClick={handleContainerClick}
     >
       {/* Top row: Primary Prompt or Voice In-Place Mode */}
@@ -564,7 +553,7 @@ export default function DefaultSearchPrompt({
                   title="Cancel recording"
                   aria-label="Cancel voice recording"
                 >
-                  <X size={15} strokeWidth={2.0} />
+                  <X size={15} strokeWidth={2.2} />
                 </button>
                 <button
                   type="button"
@@ -576,7 +565,7 @@ export default function DefaultSearchPrompt({
                   title="Done recording"
                   aria-label="Confirm and finish voice recording"
                 >
-                  <Check size={15} strokeWidth={2.0} />
+                  <Check size={16} strokeWidth={2.4} />
                 </button>
               </div>
             </motion.div>
@@ -719,36 +708,24 @@ export default function DefaultSearchPrompt({
                 onSelectLocation={onSelectLocation}
               />
 
-              {/* Quick Action Pills Group: Book Appointment & Book Tests */}
-              <div className={styles.insideActionPillsGroup}>
-                {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
-                <button
-                  type="button"
-                  className={styles.insideActionPill}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push("/doctors");
-                  }}
-                  aria-label="Book Doctor Appointment"
-                >
-                  <CalendarCheck size={14} className={styles.insideActionIcon} />
-                  <span>Book Appointment</span>
-                </button>
+              {/* Quick Action Pill 1: Book Appointment (Inside Search Box) */}
+              <button
+                type="button"
+                className={styles.insideActionPill}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/doctors");
+                }}
+                title="Book Doctor Appointment"
+              >
+                <CalendarCheck size={14} className={styles.insideActionIcon} />
+                {/* Two labels, one shown per width. Left to truncate, the
+                    full one became "Book ..." on a phone, which is an
+                    ellipsis where the verb's object should be. */}
+                <span className={styles.pillLabelFull}>Book Appointment</span>
+                <span className={styles.pillLabelShort}>Book Appt</span>
+              </button>
 
-                {/* Quick Action Pill 2: Book Tests & Checkups (Inside Search Box) */}
-                <button
-                  type="button"
-                  className={styles.insideActionPill}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectActionPill("symptoms");
-                  }}
-                  aria-label="Book Tests & Health Checkups"
-                >
-                  <Activity size={14} className={styles.insideActionIcon} />
-                  <span>Book Tests &amp; Checkups</span>
-                </button>
-              </div>
             </div>
 
             {/* Right side controls: splits into Send + Mic */}
@@ -782,13 +759,13 @@ export default function DefaultSearchPrompt({
                     }
                   }}
                 >
-                  <ArrowRight size={16} strokeWidth={2.0} />
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

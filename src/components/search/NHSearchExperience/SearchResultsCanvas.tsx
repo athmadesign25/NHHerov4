@@ -30,7 +30,6 @@ interface SearchResultsCanvasProps {
   onSelectLocation: (loc: string) => void;
   onSelectSpecialtyTag?: (tag: string) => void;
   onAskPulse?: () => void;
-  onNavigateOut?: (targetHref: string) => void;
 }
 
 interface CompletedTurn {
@@ -61,7 +60,6 @@ export default function SearchResultsCanvas({
   onEditSearch,
   onSubmit,
   onClose,
-  onNavigateOut,
   selectedLocation,
   onSelectLocation,
   onSelectSpecialtyTag,
@@ -90,7 +88,6 @@ export default function SearchResultsCanvas({
   // Synchronize incoming props
   useEffect(() => {
     setCurrentResults(results);
-    setHasScrolledDoctors(false);
   }, [results]);
 
   useEffect(() => {
@@ -100,9 +97,6 @@ export default function SearchResultsCanvas({
 
   // Scroll position tracking: Re-appear top search bar ONLY when user scrolls all the way back up to semantic results
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
-  // Follow-up intent state: Show "Ask Pulse ai" bar ONLY after user scrolls down primary doctor results (or activates Pulse AI)
-  const [hasScrolledDoctors, setHasScrolledDoctors] = useState(false);
-  const [isPulseInputFocused, setIsPulseInputFocused] = useState(false);
 
   useEffect(() => {
     const container = unifiedScrollRef.current;
@@ -112,45 +106,11 @@ export default function SearchResultsCanvas({
       // Re-appear when user scrolls all the way up to semantic results (<= 35px from top)
       const atTop = container.scrollTop <= 35;
       setIsScrolledToTop(atTop);
-      if (container.scrollTop > 18) {
-        setHasScrolledDoctors(true);
-      } else if (container.scrollTop <= 8 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
-        setHasScrolledDoctors(false);
-      }
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Track scrolling inside the primary Doctor Cards column (leftColRef)
-  useEffect(() => {
-    const leftEl = leftColRef.current;
-    if (!leftEl) return;
-
-    const handleLeftScroll = () => {
-      if (leftEl.scrollTop > 18) {
-        setHasScrolledDoctors(true);
-      } else if (leftEl.scrollTop <= 8 && (!unifiedScrollRef.current || unifiedScrollRef.current.scrollTop <= 8)) {
-        setHasScrolledDoctors(false);
-      }
-    };
-
-    const handleLeftWheel = (e: WheelEvent) => {
-      if (e.deltaY > 15) {
-        setHasScrolledDoctors(true);
-      } else if (e.deltaY < -15 && leftEl.scrollTop <= 8) {
-        setHasScrolledDoctors(false);
-      }
-    };
-
-    leftEl.addEventListener("scroll", handleLeftScroll, { passive: true });
-    leftEl.addEventListener("wheel", handleLeftWheel, { passive: true });
-    return () => {
-      leftEl.removeEventListener("scroll", handleLeftScroll);
-      leftEl.removeEventListener("wheel", handleLeftWheel);
-    };
-  }, [currentResults, isRequerying, isPulseActive]);
 
   // Top search bar is visible if:
   // 1. In non-active mode (standard semantic search)
@@ -204,14 +164,10 @@ export default function SearchResultsCanvas({
         setCurrentResults(newResults);
         // Reset to initial semantic mode where left column scrolls independently
         setIsPulseActive(false);
-        setHasScrolledDoctors(false);
         setActiveTurn(null);
         setCompletedTurns([]);
         if (unifiedScrollRef.current) {
           unifiedScrollRef.current.scrollTop = 0;
-        }
-        if (leftColRef.current) {
-          leftColRef.current.scrollTop = 0;
         }
       }
     } catch (err) {
@@ -872,16 +828,6 @@ export default function SearchResultsCanvas({
     });
   };
 
-  const isZeroResults =
-    !isPulseActive &&
-    (currentResults.status === "empty" ||
-      currentResults.doctors.length === 0 ||
-      currentResults.status === "error");
-
-  const showPulseFollowupBar =
-    !isZeroResults &&
-    (isPulseActive || hasScrolledDoctors || isPulseInputFocused || pulseInput.trim().length > 0);
-
   return (
     <div className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
@@ -891,7 +837,7 @@ export default function SearchResultsCanvas({
       />
 
       {/* ── 1. Top Header Row: Location Dropdown + Close Button ── */}
-      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 60 }}>
+      <div className={styles.topHeaderRow} style={{ position: "relative", zIndex: 10 }}>
         <div className={styles.headerLeftGroup}>
           <LocationSelector
             selectedLocation={selectedLocation}
@@ -919,7 +865,7 @@ export default function SearchResultsCanvas({
         {showTopSearchBar && (
           <motion.div
             key="topQueryBarGroup"
-            style={{ position: "relative", zIndex: 1, width: "100%" }}
+            style={{ position: "relative", zIndex: 10, width: "100%" }}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0, overflow: "hidden" }}
@@ -982,7 +928,7 @@ export default function SearchResultsCanvas({
       {/* ALWAYS mounted so layout, dimensions, and scroll transitions are 100% reliable */}
       <div 
         ref={unifiedScrollRef}
-        className={`${styles.unifiedResultsScrollArea} ${isPulseActive ? styles.unifiedResultsScrollAreaActive : ""}`}
+        className={styles.unifiedResultsScrollArea}
         data-lenis-prevent="true"
         style={{
           position: "relative",
@@ -990,8 +936,8 @@ export default function SearchResultsCanvas({
           overflowY: isPulseActive ? "auto" : "hidden",
         }}
       >
-        {/* Mobile Viewport Segmented Control (Hidden when zero results) */}
-        {!isRequerying && !isZeroResults && (
+        {/* Mobile Viewport Segmented Control */}
+        {!isRequerying && (
           <div className={styles.mobileSegmentedControl} role="tablist" aria-label="Search results views">
             <button
               type="button"
@@ -1020,36 +966,8 @@ export default function SearchResultsCanvas({
             query={inputValue.trim() || activeQuery}
             selectedLocation={selectedLocation}
           />
-        ) : isZeroResults ? (
-          <div className={styles.resultsEmptyLayout}>
-            <PrimaryResults
-              doctors={currentResults.doctors}
-              totalDoctors={currentResults.totalDoctors}
-              selectedLocation={selectedLocation}
-              proximityMessage={currentResults.proximityMessage}
-              proximityTier={currentResults.proximityTier}
-              query={activeQuery}
-              status={currentResults.status}
-              errorMessage={currentResults.errorMessage}
-              onRetry={() => handleTopSearchSubmit()}
-              onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
-              onAskPulse={(customPrompt?: string) => {
-                handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
-              }}
-            />
-          </div>
         ) : (
-          <div
-            className={styles.resultsSplitLayout}
-            data-mobile-tab={mobileTab}
-            onWheel={(e) => {
-              if (e.deltaY > 15) {
-                setHasScrolledDoctors(true);
-              } else if (e.deltaY < -15 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
-                setHasScrolledDoctors(false);
-              }
-            }}
-          >
+          <div className={styles.resultsSplitLayout} data-mobile-tab={mobileTab}>
             {/* ── LEFT COLUMN: Recommended Doctors ── */}
             {/* Before Pulse is active: ONLY this left column scrolls vertically, with white gradient blur at bottom */}
             {/* When Pulse is active: overflow becomes visible so content flows up into the unified feed */}
@@ -1063,24 +981,12 @@ export default function SearchResultsCanvas({
                 aria-label="Doctors list"
                 style={
                   isPulseActive
-                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0, maskImage: "none", WebkitMaskImage: "none" }
-                    : {
-                        overflowY: "auto",
-                        height: "100%",
-                        maxHeight: "100%",
-                        paddingBottom: 84,
-                        maskImage: showPulseFollowupBar
-                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
-                          : "none",
-                        WebkitMaskImage: showPulseFollowupBar
-                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
-                          : "none",
-                      }
+                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0 }
+                    : { overflowY: "auto", height: "100%", maxHeight: "100%", paddingBottom: 110 }
                 }
               >
                 <PrimaryResults
                   doctors={currentResults.doctors}
-                  totalDoctors={currentResults.totalDoctors}
                   selectedLocation={selectedLocation}
                   proximityMessage={currentResults.proximityMessage}
                   proximityTier={currentResults.proximityTier}
@@ -1089,11 +995,16 @@ export default function SearchResultsCanvas({
                   errorMessage={currentResults.errorMessage}
                   onRetry={() => handleTopSearchSubmit()}
                   onSelectSpecialty={(spec) => handleTopSearchSubmit(undefined, spec)}
-                  onAskPulse={(customPrompt?: string) => {
-                    handleSendPulsePrompt(customPrompt || `Help me understand care options for ${activeQuery}`);
+                  onAskPulse={() => {
+                    handleSendPulsePrompt(`Help me understand care options for ${activeQuery}`);
                   }}
                 />
               </div>
+
+              {/* White gradient fade with background blur below small Pulse bar in non-active mode */}
+              {!isPulseActive && (
+                <div className={styles.pulseBottomGradientFade} aria-hidden="true" />
+              )}
             </div>
 
             {/* ── RIGHT COLUMN: Treatments, Articles & Specialties (Steady & Static) ── */}
@@ -1109,8 +1020,6 @@ export default function SearchResultsCanvas({
                 }
               }}
               query={activeQuery}
-              onClose={onClose}
-              onNavigateOut={onNavigateOut}
             />
           </div>
         )}
@@ -1356,87 +1265,103 @@ export default function SearchResultsCanvas({
         )}
       </div>
 
-      {/* ── Clean Edge Backing & Follow-up "Ask Pulse ai" Input Bar ── */}
-      {/* Appears smoothly ONLY when user scrolls down primary doctor results (or activates Pulse AI) */}
-      {!isZeroResults && (
-        <>
-          <div
-            className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
-            aria-hidden="true"
+      {/* ── Gradient Fade across the bottom dock when active in chat mode ── */}
+      {isPulseActive && (
+        <div className={styles.pulseDockActiveGradientFade} aria-hidden="true" />
+      )}
+
+      {/* ── Aurora Glow Field extending upward from bottom dock in Empty State ── */}
+      {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
+        <div className={styles.pulseAuroraGlowField} aria-hidden="true" />
+      )}
+
+      {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
+      {/* Small in non-active mode over doctor cards, expands smoothly to 100% full width in active mode */}
+      <div 
+        className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
+        style={{ zIndex: 25 }}
+      >
+        <div 
+          className={styles.floatingPulseDockCol}
+          style={{ width: "100%", maxWidth: "100%" }}
+        >
+          {/* Subtle Nudge when in Empty State */}
+          {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
+            <motion.button
+              type="button"
+              className={styles.pulseDockNudgePill}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              onClick={() => {
+                pulseInputRef.current?.focus();
+              }}
+            >
+              <Sparkles size={13} className={styles.pulseDockNudgeIcon} />
+              <span>Can&apos;t find your condition? Describe symptoms to Pulse AI below</span>
+            </motion.button>
+          )}
+
+          <form 
+            className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+            style={{ width: "100%", maxWidth: "100%" }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendPulsePrompt();
+            }}
+          >
+          {/* Round Blue Plus Button */}
+          <button
+            type="button"
+            className={styles.floatingPulsePlusBtn}
+            onClick={() => pulseInputRef.current?.focus()}
+            aria-label="New Prompt"
+            title="Ask Pulse"
+          >
+            <Plus size={18} strokeWidth={2.4} />
+          </button>
+
+          {/* Input Field */}
+          <input
+            ref={pulseInputRef}
+            type="text"
+            className={styles.floatingPulseInput}
+            placeholder="Ask Pulse ai"
+            value={pulseInput}
+            onChange={(e) => setPulseInput(e.target.value)}
+            aria-label="Ask Pulse AI"
           />
 
-          <div
-            className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
-            style={{ zIndex: 25 }}
-          >
-            <div
-              className={styles.floatingPulseDockCol}
-              style={{ width: "100%", maxWidth: "100%" }}
+          {/* Right Action: Send Button (if text entered) or Mic Icon */}
+          {pulseInput.trim().length > 0 ? (
+            <button
+              type="submit"
+              className={styles.floatingPulseSendBtn}
+              aria-label="Send prompt"
+              title="Send to Pulse AI"
             >
-              <form
-                className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
-                style={{ width: "100%", maxWidth: "100%", pointerEvents: showPulseFollowupBar ? "auto" : "none" }}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSendPulsePrompt();
-                }}
-              >
-                {/* Round Blue Plus Button */}
-                <button
-                  type="button"
-                  className={styles.floatingPulsePlusBtn}
-                  onClick={() => pulseInputRef.current?.focus()}
-                  aria-label="New Prompt"
-                  title="Ask Pulse"
-                >
-                  <Plus size={18} strokeWidth={2.0} />
-                </button>
-
-                {/* Input Field */}
-                <input
-                  ref={pulseInputRef}
-                  type="text"
-                  className={styles.floatingPulseInput}
-                  placeholder="Ask Pulse ai"
-                  value={pulseInput}
-                  onChange={(e) => setPulseInput(e.target.value)}
-                  onFocus={() => setIsPulseInputFocused(true)}
-                  onBlur={() => setIsPulseInputFocused(false)}
-                  aria-label="Ask Pulse AI"
-                />
-
-                {/* Right Action: Send Button (if text entered) or Mic Icon */}
-                {pulseInput.trim().length > 0 ? (
-                  <button
-                    type="submit"
-                    className={styles.floatingPulseSendBtn}
-                    aria-label="Send prompt"
-                    title="Send to Pulse AI"
-                  >
-                    <Send size={15} />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-                    onClick={() => {
-                      setIsListening((prev) => !prev);
-                      if (!isListening) {
-                        setPulseInput("Tell me more about Dr Pradeep kumar");
-                        pulseInputRef.current?.focus();
-                      }
-                    }}
-                    aria-label="Voice input"
-                    title={isListening ? "Listening..." : "Speak to Pulse AI"}
-                  >
-                    <Mic size={19} />
-                  </button>
-                )}
-              </form>
-            </div>
-          </div>
-        </>
-      )}
+              <Send size={15} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+              onClick={() => {
+                setIsListening((prev) => !prev);
+                if (!isListening) {
+                  setPulseInput("Tell me more about Dr Pradeep kumar");
+                  pulseInputRef.current?.focus();
+                }
+              }}
+              aria-label="Voice input"
+              title={isListening ? "Listening..." : "Speak to Pulse AI"}
+            >
+              <Mic size={19} />
+            </button>
+          )}
+        </form>
+      </div>
     </div>
+  </div>
 );
 }

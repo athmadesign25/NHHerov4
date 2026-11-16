@@ -1,0 +1,19 @@
+{
+  "checked": "2026-10-26",
+  "facilities": 40,
+  "cities": 18,
+  "directory": "https://www.narayanahealth.org/hospitals-clinics",
+  "sitemap": "https://www.narayanahealth.org/hospitals-sitemap.xml",
+  "contactDirectory": "https://www.narayanahealth.org/contact-us",
+  "eyeCareCitySources": [
+    "https://nbccindia.in/pdfData/EX-EMPL/Link-K%20TPA%20Hospital%20List%201_909839_248466.pdf",
+    "https://cewacor.nic.in/Docs/PRBM_TPA_Circular_for_period_05_04_2023_to_04_04_2024_date_04_04_2023_dsc_updated.pdf"
+  ],
+  "localitySources": [
+    "https://www.narayanahealth.org/contact-us",
+    "https://www.narayanaone.health/clinics/narayana-clinic-hosur",
+    "https://www.pnbnet.net.in/pdf/PAN%20INDIA%20HOSPITAL%20LIST.pdf",
+    "https://www.natboard.edu.in/pdoof/cns14/cet14_first/remainingseat240314.pdf",
+    "https://www.bajajfinservhealth.in/hospitals/east-singhbhum/brahmananda-narayana-multispeciality-dialysis-centre-bhalubasa-bhalubasa/contact"
+  ]
+}

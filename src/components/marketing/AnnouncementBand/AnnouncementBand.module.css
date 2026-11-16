@@ -1,0 +1,410 @@
+/* L2 announcement band. Sits above the navbar, full bleed, light. */
+
+.band {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* One above the navbar's 1000 — the navbar moves down to meet it rather
+     than sliding under it, but the band still owns the top edge. */
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-24);
+  height: 62px;
+  overflow: hidden;
+  background: var(--slate-100);
+  /* The gutter the navbar's own container uses, so the message's first
+     character lines up with the left edge of the logo. The right side is
+     deliberately NOT symmetrical — the close sits closer to the edge than
+     the grid would put it. */
+  padding-left: max(4vw, 40px);
+  padding-right: var(--space-12);
+  font-family: var(--font-family);
+}
+
+/* The existing gradient arrives as a growing, sliding surface under
+   the artwork and copy, then remains in its original resting position. */
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* token-ok: supplied as a design value, so the stops are literals
+     rather than palette tokens. Opaque in its own right — an earlier
+     version layered a low-alpha tint over a white base and the top edge
+     came out almost transparent, with the hero video playing through it.
+
+     The edges fade continuously into the pale ground. On the right the
+     blue finishes within 48px of the edge, before the link begins. */
+  background: linear-gradient(
+    90deg,
+    hsl(212deg 100% 74.1098%) 0,
+    hsl(212deg 100% 90.8804%) var(--space-96),
+    var(--slate-100) 50%,
+    hsl(212deg 100% 90.8804%) calc(100% - var(--space-48)),
+    hsl(212deg 100% 76.2094%) 100%
+  );
+  transform-origin: left center;
+  animation: bandGradientEntry calc(var(--duration-slowest) * 2) var(--ease-out) both;
+}
+
+/* Each desktop half enters from its own edge. Both use the full-width
+   resting gradient, cropped at its neutral centre to preserve the paint. */
+.band::after { display: none; }
+@media (min-width: 769px) {
+  .band::before,
+  .band::after {
+    background-size: 200% 100%;
+    animation-play-state: paused;
+  }
+  .band::before { right: 50%; background-position: left center; }
+  .band::after {
+    display: block;
+    left: 50%;
+    background-position: right center;
+    transform-origin: right center;
+    animation-name: bandGradientEntryRight;
+  }
+  .band[data-entered="true"]::before,
+  .band[data-entered="true"]::after { animation-play-state: running; }
+}
+
+@keyframes bandGradientEntryRight {
+  from { opacity: 0; transform: translateX(var(--space-48)) scaleX(0.85); }
+  to { opacity: 1; transform: translateX(0) scaleX(1); }
+}
+
+@keyframes bandGradientEntry {
+  from { opacity: 0; transform: translateX(calc(-1 * var(--space-48))) scaleX(0.85); }
+  to { opacity: 1; transform: translateX(0) scaleX(1); }
+}
+
+/* ─── Inner edge ─────────────────────────────────────────────────────────
+   The supplied inset shadow. It stays on a child rather than on .band
+   itself because an element's own inset shadow paints beneath its
+   children — on .band the pattern would sit on top of it, which is the
+   wrong way round for an edge treatment. */
+.innerEdge {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Alpha 0, so this currently paints nothing. Kept as a declaration
+     rather than deleted: the geometry is the design's, and turning the
+     treatment back on is a change to one number. */
+  box-shadow: 0 -4px 34px 0 hsl(220deg 83.2238% 40.8541% / 0) inset;
+}
+
+/* One regular lattice: equal-size units on a shared pitch, with a wider
+   middle row. The band clips the upper and lower rows symmetrically. */
+.pattern { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.patternCentre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--space-128) * 2 + var(--space-24));
+  height: var(--space-80);
+  transform: translate(-50%, -50%);
+  background: rgba(var(--cyan-bright-rgb), 0.3);
+  mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat;
+  -webkit-mask: url("/band-pattern-mid.svg") center / auto 100% no-repeat;
+}
+.pattern::before,
+.pattern::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: var(--space-128);
+  height: calc(var(--space-80) + var(--space-4));
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(var(--white-rgb), 0.6), rgba(var(--white-rgb), 0.3) 60%, transparent);
+  mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat;
+  -webkit-mask: url("/band-pattern-edge.svg") left center / auto var(--space-64) no-repeat;
+}
+.pattern::before { left: 0; }
+.pattern::after { right: 0; transform: translateY(-50%) scaleX(-1); }
+
+/* ─── Copy ──────────────────────────────────────────────────────────── */
+
+.message {
+  position: relative;
+  z-index: 2;
+  /* min-width: 0 so a long message truncates instead of pushing the
+     actions off the right edge. */
+  min-width: 0;
+  margin: 0;
+  font-size: var(--font-size-base);
+  /* 500, not 400. At 400 on a tinted ground the line sat behind the
+     background rather than on it. */
+  font-weight: 500;
+  line-height: var(--leading-snug);
+  color: var(--color-text);
+}
+
+/* A light sweeps across the copy once, on hover of the band.
+   The duplicate sits exactly over the live text and is clipped to the
+   glyphs, so what travels is a highlight ON the letters rather than a
+   band across the row. */
+.message::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  /* Light blue, not white. Clipped to glyphs on a light band, a white
+     sweep does not brighten the letters — it erases them, and the effect
+     read as the copy briefly dropping out. A light blue lifts the glyphs
+     and keeps them legible the whole way across. */
+  background-image: linear-gradient(
+    100deg,
+    transparent 36%,
+    rgba(var(--sky-400-rgb), 0.95) 47%,
+    rgba(var(--cyan-bright-rgb), 0.9) 53%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  /* 110% and -10% are the two points at which the highlight is just
+     clear of the text on either side. Wider than that and most of the
+     duration is spent travelling off-screen — at 135% the light crossed
+     the copy inside the first 40ms and the rest of the transition was
+     the gradient finishing its journey past the right edge. */
+  background-position: 110% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+  /* No transition at rest on purpose: the wipe plays on the way IN and
+     snaps back on the way out, so it reads as one pass rather than a
+     highlight sliding back and forth with the cursor. */
+}
+
+.band:hover .message::after {
+  background-position: -10% 0;
+  /* Linear, not --ease-out. An eased curve front-loads the travel, so the
+     light shot across the copy in the first few frames and then crawled;
+     a wipe only reads as a wipe at constant speed.
+     Derived from the token rather than written as a raw duration — the
+     ramp tops out at 0.6s, and a full crossing needs about twice that. */
+  transition: background-position calc(var(--duration-slowest) * 1.8) linear;
+}
+
+.actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex-shrink: 0;
+}
+
+/* ─── Link ───────────────────────────────────────────────────────────────
+   Underline wipes in from the left on hover rather than appearing whole,
+   and lives on a pseudo-element so the band's line-height never shifts. */
+.link {
+  position: relative;
+  padding: var(--space-8) var(--space-4);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: var(--leading-snug);
+  color: var(--blue-brand);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-6);
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--color-primary-dark);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ─── Close ──────────────────────────────────────────────────────────── */
+.close {
+  composes: iconButton from "../CloseButton.module.css";
+  /* Smaller than the 44px rule and sitting outside the content gutter:
+     this is a dismiss, not a destination, and it should not read as
+     equal in weight to the link beside it. The band's own 62px height
+     keeps the hit area tall enough to be comfortable. */
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-full);
+  /* The band's ground is a light blue gradient, so the plate is brand
+     blue rather than the white default — white on white would leave the
+     hover with nothing to show. */
+  --close-plate: rgba(var(--blue-brand-rgb), 0.22);
+}
+
+@media (max-width: 1024px) {
+  .band {
+    gap: var(--space-16);
+  }
+  .message {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────────────
+   48px, edge to edge, with the message travelling right to left. The
+   page below it is a rounded canvas, so the band reads as the surface
+   the canvas is sitting on rather than a strip stuck to its top.
+
+   token-ok throughout this block: these are the design's own gradient
+   stops and the nearest palette entries are 30+ ΔRGB away. */
+@media (max-width: 768px) {
+  /* Its own gradient again. The base rule pins the blue to a 52px cap so
+     it clears the link, but there is no link down here — the marquee
+     runs the full width and the close is the only thing at the end. So
+     the phone keeps the softer ramp across the whole band, which is what
+     the design asked for. */
+  .band {
+    height: 48px;
+    padding: 0;
+
+  }
+
+  /* One paint source for the strip and the backing exposed by both
+     hero corners. The shared height keeps the angled gradient aligned. */
+  .band,
+  .mobileBackdrop {
+    background: linear-gradient(
+      98deg,
+      hsl(212deg 100% 74.1098%) 5.33%,
+      hsl(212deg 100% 90.8804%) 32.47%,
+      var(--slate-100) 63.93%,
+      hsl(212deg 100% 76.2094%) 96.13%
+    );
+    background-size: 100% calc(var(--space-48) + var(--radius-xl));
+    background-repeat: no-repeat;
+  }
+
+  /* On phones the gradient is the band itself, already painted before
+     the scroll reveal starts. Remounting must not replay an edge wipe. */
+  .band::before { display: none; animation: none; }
+
+  .patternCentre { display: none; }
+  .pattern::before,
+  .pattern::after { width: var(--space-96); height: var(--space-48); mask-size: auto var(--space-48); -webkit-mask-size: auto var(--space-48); }
+
+  /* ── the marquee ── */
+  .marquee {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    /* Edge to edge. Capped at 330 it was inset from the band, so the
+       text was cut at the cap rather than at the band's edge and the
+       fades sat in the middle of a plain strip. */
+    width: 100%;
+  }
+
+  .marqueeTrack {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    height: 100%;
+    /* -50% is exactly one copy. Any other value and the seam between
+       the two shows as a jump. */
+    animation: bandMarquee 18s linear infinite;
+    will-change: transform;
+  }
+
+  .marqueeItem {
+    padding-right: var(--space-40);
+    white-space: nowrap;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: 0;
+    color: var(--color-text);
+    text-shadow: 0 4px 34px rgba(var(--black-rgb), 0.44);
+  }
+
+  /* The ends the text runs out of and into.
+
+     A mask on the strip, not a gradient laid over it. The band's
+     background is itself a gradient, so an overlay had to guess the
+     colour underneath it at each edge — and guessed wrong, leaving a
+     paler patch with the text still legible through it. Masking fades
+     the TEXT to transparent instead, which is correct whatever is
+     behind it. The right side is wider because the close sits in it. */
+  .marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 56px),
+      transparent calc(100% - 8px)
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 28px,
+      #000 calc(100% - 56px),
+      transparent calc(100% - 8px)
+    );
+  }
+
+  /* Sits where the text has already faded out. */
+  .close {
+    position: absolute;
+    right: var(--space-4);
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 3;
+    width: 28px;
+    height: 28px;
+  }
+
+  .actions {
+    position: static;
+  }
+
+  /* The link has nowhere to go beside a moving line. */
+  .link {
+    display: none;
+  }
+}
+
+@keyframes bandMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band::before,
+  .band::after {
+    animation: none;
+  }
+  .message::after {
+    display: none;
+  }
+  .link::after {
+    transition: none;
+  }
+}

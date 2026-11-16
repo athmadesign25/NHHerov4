@@ -1,4 +1,4 @@
 .highlight {
-  color: #0f58b8;
+  color: var(--blue-700);
   font-weight: 800;
 }

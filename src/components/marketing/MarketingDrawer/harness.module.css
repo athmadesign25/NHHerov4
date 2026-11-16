@@ -1,0 +1,31 @@
+/* The prototype's trigger. Temporary — it exists so the drawer can be
+   opened from anywhere on the page while iterating. In production the
+   drawer opens from a CMS rule, not a button. */
+
+.toggle {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2147481900;
+  padding: var(--space-14) var(--space-32);
+  border: 1px solid rgba(var(--white-rgb), 0.35);
+  border-radius: var(--radius-full);
+  background: rgba(var(--navy-900-rgb), 0.78);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  box-shadow: var(--elevation-4);
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.toggle:hover {
+  background: var(--blue-brand);
+  transform: translate(-50%, -50%) scale(1.04);
+}

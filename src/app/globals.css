@@ -174,9 +174,7 @@
      family was downloaded twice and the @import was a render-blocking
      external request — exactly what next/font exists to avoid. The @import
      is gone; this is now the single source. */
-  --font-inter-fallback: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-family: var(--font-inter, var(--font-inter-fallback));
-  --font-sans: var(--font-family);
+  --font-family: var(--font-inter), 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* 10px, for the smallest badge and overline labels. The scale previously
      bottomed out at 12px, so everything below it was written as a literal. */
   --font-size-2xs: 10px;
@@ -468,7 +466,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   line-height: 1.6;
-  overflow-x: clip;
+  overflow-x: hidden;
   scrollbar-width: none; /* Hide scrollbar for Firefox */
   -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
 }
@@ -488,20 +486,11 @@ a {
   text-decoration: none;
 }
 
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-feature-settings: inherit;
-  font-variation-settings: inherit;
-}
-
 button {
   cursor: pointer;
   border: none;
   background: none;
+  font-family: var(--font-family);
 }
 
 ul, ol {
@@ -744,4 +733,40 @@ body.pulse-maximized nav { display: none !important; opacity: 0; pointer-events:
 @media (max-width: 900px) {
   .hideOnMobile { display: none !important; }
   .hideOnDesktop { display: block !important; }
+}
+
+/* Shared mobile section typography; card rails keep their own gutters. */
+@media (max-width: 1024px) {
+  .mobile-section-title {
+    font-family: var(--font-family);
+    font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-4xl)) !important;
+    font-weight: 800;
+    line-height: var(--leading-tight) !important;
+    letter-spacing: -0.025em;
+    white-space: normal;
+    max-width: 100%;
+    text-wrap: balance;
+  }
+  .mobile-section-subtitle {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base) !important;
+    font-weight: 400;
+    line-height: var(--leading-body) !important;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    text-wrap: pretty;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section-eyebrow,
+  .mobile-section-eyebrow {
+    font-family: var(--font-family);
+    font-size: var(--font-size-xs) !important;
+    font-weight: 700;
+    line-height: var(--leading-normal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
 }

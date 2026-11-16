@@ -45,7 +45,6 @@ export interface TreatmentItemData {
   title: string;
   subtitle: string;
   iconType: "heart" | "activity" | "angiography" | "stethoscope" | "joint" | "xray";
-  slug?: string;
 }
 
 export interface ArticleItemData {
@@ -73,7 +72,6 @@ export interface SearchResultsData {
   matchCountText: string;
   pulseRecommendationText: string;
   doctors: DoctorCardData[];
-  totalDoctors?: number;
   relatedSpecialties: string[];
   treatments: TreatmentItemData[];
   articles: ArticleItemData[];
@@ -498,7 +496,6 @@ export const SEMANTIC_C_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Want a more personalised recommendation?",
-  totalDoctors: 16,
   doctors: [
     {
       id: "doc-chythanya",
@@ -645,7 +642,6 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Personalise recommendation",
-  totalDoctors: 24,
   doctors: [
     {
       id: "doc-devi-shetty",
@@ -749,28 +745,24 @@ export const CARDIOLOGY_RESULTS: SearchResultsData = {
       title: "Cardiac consultation",
       subtitle: "Specialist assessment",
       iconType: "heart",
-      slug: "cardiac-consultation",
     },
     {
       id: "t-2",
       title: "ECG · Electrocardiogram",
       subtitle: "Heart rhythm test",
       iconType: "activity",
-      slug: "ecg-electrocardiogram",
     },
     {
       id: "t-3",
       title: "Coronary angiography",
       subtitle: "Diagnostic procedure",
       iconType: "angiography",
-      slug: "coronary-angiography",
     },
     {
       id: "t-4",
       title: "Echocardiography (ECHO)",
       subtitle: "Heart ultrasound & imaging",
       iconType: "activity",
-      slug: "echocardiography",
     },
   ],
   articles: [
@@ -811,7 +803,6 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
   proximityMessage: "Showing care near Bangalore",
   matchCountText: "Showing care near Bangalore",
   pulseRecommendationText: "Personalise recommendation",
-  totalDoctors: 18,
   doctors: [
     {
       id: "doc-prakash",
@@ -916,28 +907,24 @@ export const ORTHOPAEDICS_RESULTS: SearchResultsData = {
       title: "Orthopaedic consultation",
       subtitle: "Specialist joint & bone assessment",
       iconType: "joint",
-      slug: "knee-replacement-surgery",
     },
     {
       id: "t-ortho-2",
       title: "Knee pain assessment",
       subtitle: "Comprehensive clinical evaluation",
       iconType: "stethoscope",
-      slug: "knee-arthroscopy",
     },
     {
       id: "t-ortho-3",
       title: "Knee replacement surgery",
       subtitle: "Advanced robotic-assisted procedure",
       iconType: "joint",
-      slug: "knee-replacement-surgery",
     },
     {
       id: "t-ortho-4",
       title: "Digital X-ray & Knee MRI",
       subtitle: "High resolution joint imaging",
       iconType: "xray",
-      slug: "knee-mri-imaging",
     },
   ],
   articles: [
@@ -1088,7 +1075,6 @@ export function mapApiResultsToSearchData(
         title: item.name,
         subtitle: item.speciality ? `${item.speciality} Procedure` : "Specialist assessment & care",
         iconType,
-        slug: (item as { slug?: string }).slug || item.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       };
     });
   } else {
@@ -1133,8 +1119,6 @@ export function mapApiResultsToSearchData(
     }
   }
 
-  const totalLiveDocs = rawDocs.length > 8 ? rawDocs.length : Math.max(rawDocs.length, 16);
-
   return {
     categoryTitle,
     proximityTier: proximity.tier,
@@ -1142,7 +1126,6 @@ export function mapApiResultsToSearchData(
     matchCountText: proximity.contextMessage,
     pulseRecommendationText: "Personalise recommendation",
     doctors: mappedDocs,
-    totalDoctors: totalLiveDocs,
     relatedSpecialties: Array.from(specSet).slice(0, 8),
     treatments: mappedTreatments,
     articles: mappedArticles,
@@ -1169,7 +1152,6 @@ export async function getSearchResults(
       matchCountText: "0 matching doctors",
       pulseRecommendationText: "Service temporarily unavailable",
       doctors: [],
-      totalDoctors: 0,
       relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "General Medicine"],
       treatments: [],
       articles: [],
@@ -1187,7 +1169,6 @@ export async function getSearchResults(
       matchCountText: "0 matching results",
       pulseRecommendationText: "Describe your symptoms to Pulse AI",
       doctors: [],
-      totalDoctors: 0,
       relatedSpecialties: ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"],
       treatments: [],
       articles: [],
@@ -1204,7 +1185,6 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "1 doctor available",
       status: "success",
-      totalDoctors: 1,
       doctors: [SEMANTIC_C_RESULTS.doctors[0]],
     };
   }
@@ -1217,7 +1197,6 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "2 doctors available",
       status: "success",
-      totalDoctors: 2,
       doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 2),
     };
   }
@@ -1230,7 +1209,6 @@ export async function getSearchResults(
       proximityMessage: proximity.contextMessage,
       matchCountText: "3 doctors available",
       status: "success",
-      totalDoctors: 3,
       doctors: SEMANTIC_C_RESULTS.doctors.slice(0, 3),
     };
   }

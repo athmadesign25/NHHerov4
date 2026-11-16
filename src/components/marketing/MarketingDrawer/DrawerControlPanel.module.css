@@ -1,0 +1,256 @@
+/* Prototyping panel. Deliberately utilitarian — it sits on top of work
+   being judged, so it must not read as part of the design. */
+
+.panel {
+  position: fixed;
+  z-index: 2147482300;
+  width: 316px;
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: rgba(var(--navy-900-rgb), 0.92);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+  box-shadow: var(--elevation-5);
+  color: var(--color-text-inverse);
+  font-family: var(--font-family);
+}
+
+/* Parked away from whichever edge the drawer occupies. */
+.atBottomRight { right: var(--space-20); bottom: var(--space-20); }
+.atBottomLeft { left: var(--space-20); bottom: var(--space-20); }
+.atTopRight { right: var(--space-20); top: calc(var(--nav-height) + var(--space-20)); }
+
+/* A left/right drawer leaves a full-height column free, so the panel can
+   use its normal height. A top/bottom drawer spans the whole width and
+   leaves only a strip — so the panel is capped to that strip rather than
+   being allowed to sit over the thing being judged. It scrolls internally,
+   and it is draggable if the strip is still too tight. */
+.strip {
+  /* drawer height (min(560px, 62vh)) + its inset + breathing room */
+  max-height: calc(100vh - min(560px, 62vh) - var(--space-80));
+}
+
+/* When the drawer is at the BOTTOM the panel sits top-right, so the strip
+   also has to subtract the navbar it starts below — without that it
+   measured from the viewport top and still ran ~36px into the drawer. */
+.stripTop {
+  max-height: calc(100vh - min(560px, 62vh) - var(--nav-height) - var(--space-48));
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--space-12) var(--space-14);
+  border-bottom: 1px solid rgba(var(--white-rgb), 0.1);
+}
+
+.title {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hint {
+  font-size: var(--font-size-2xs);
+  color: rgba(var(--white-rgb), 0.4);
+}
+
+.body {
+  overflow-y: auto;
+  padding: var(--space-12) var(--space-14) var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-14);
+  /* Scrolls independently. The drag handle is the header, so this never
+     fights the drag. */
+  overscroll-behavior: contain;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--white-rgb), 0.5);
+}
+
+/* ── segmented control ── */
+.seg {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(var(--white-rgb), 0.06);
+}
+
+.segOn,
+.segOff {
+  flex: 1;
+  padding: var(--space-6) var(--space-4);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.segOff {
+  background: transparent;
+  color: rgba(var(--white-rgb), 0.55);
+}
+.segOff:hover { color: var(--color-text-inverse); }
+
+.segOn {
+  background: var(--blue-brand);
+  color: var(--color-text-inverse);
+}
+
+.swatch { border: 1px solid rgba(var(--white-rgb), 0.2); }
+.swatchOn {
+  border: 2px solid var(--white);
+  transform: scale(1.06);
+}
+
+/* ── headline parts ── */
+.part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-8);
+  border-radius: var(--radius-sm);
+  background: rgba(var(--white-rgb), 0.05);
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-6) var(--space-8);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(var(--white-rgb), 0.14);
+  background: rgba(var(--black-rgb), 0.25);
+  color: var(--color-text-inverse);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+}
+.input:focus {
+  outline: none;
+  border-color: rgba(var(--blue-brand-rgb), 0.8);
+}
+
+.partTools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.spacer { flex: 1; }
+
+.dot,
+.dotOn {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+.dot { border: 1px solid rgba(var(--white-rgb), 0.25); }
+.dotOn { border: 2px solid var(--white); }
+
+.icon,
+.iconOn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+.icon {
+  background: rgba(var(--white-rgb), 0.08);
+  color: rgba(var(--white-rgb), 0.65);
+}
+.icon:hover {
+  background: rgba(var(--white-rgb), 0.16);
+  color: var(--color-text-inverse);
+}
+.iconOn {
+  background: var(--blue-brand);
+  color: var(--color-text-inverse);
+}
+
+/* ── switches ── */
+.switchOn,
+.switchOff {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out);
+}
+.switchOn { background: var(--green-500); }
+.switchOff { background: rgba(var(--white-rgb), 0.18); }
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background: var(--white);
+  box-shadow: var(--elevation-1);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.switchOn .knob { transform: translateX(16px); }
+
+.add {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-8);
+  border: none;
+  border-radius: var(--radius-full);
+  background: rgba(var(--white-rgb), 0.12);
+  color: var(--color-text-inverse);
+  font-family: inherit;
+  font-size: var(--font-size-2xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+.add:hover { background: rgba(var(--white-rgb), 0.2); }
+
+@media (max-width: 768px) {
+  .panel {
+    width: calc(100vw - (2 * var(--space-12)));
+    left: var(--space-12);
+    right: var(--space-12);
+    bottom: var(--space-12);
+    top: auto;
+    max-height: 56vh;
+  }
+}
