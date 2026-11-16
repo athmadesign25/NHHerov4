@@ -43,7 +43,7 @@
 .ctaCard {
   position: relative;
   border-radius: var(--radius-2xl, 24px);
-  background: linear-gradient(135deg, var(--shadow) 0%, var(--blue-brand) 55%, #022d61 100%);
+  background: linear-gradient(135deg, rgb(var(--shadow-rgb)) 0%, var(--blue-brand) 55%, #022d61 100%);
   color: var(--white);
   padding: 56px 48px;
   overflow: hidden;

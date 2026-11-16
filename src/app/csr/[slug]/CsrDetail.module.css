@@ -536,7 +536,7 @@
 }
 
 .metricCard {
-  background: linear-gradient(135deg, var(--shadow) 0%, var(--blue-brand) 100%);
+  background: linear-gradient(135deg, rgb(var(--shadow-rgb)) 0%, var(--blue-brand) 100%);
   border-radius: 14px;
   padding: 22px 18px;
   display: flex;
