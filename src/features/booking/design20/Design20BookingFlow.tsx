@@ -64,7 +64,6 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
         : !flow.isUserLoggedIn ? <section className={styles.panel}><h2>Sign in to continue</h2><p className={styles.muted}>{confirmed ? "Sign in to view your confirmed appointment." : "Your appointment choices are saved. Sign in to select a member."}</p><button type="button" className={styles.primary} onClick={() => { setLoginDismissed(false); flow.setLoginOpen(true); }}>Sign in</button></section>
         : <div className={`${styles.layout} ${styles.reviewLayout}`}><div className={styles.main}>
           {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
-          {flow.recoveryUnavailable && <p className={styles.muted} role="status">Keep this page open to retain your booking progress.</p>}
           {draft.paymentRecovery && !reserved && draft.stage !== "payment" && !draft.receipt && <PaymentRecoveryNotice status={draft.paymentRecovery} expired={flow.expired} covered={pricing.amounts.total === 0} />}
           {reserved && <PaymentReservation seconds={flow.seconds} expired={flow.expired} doctor={activeDoctor} member={draft.patients.find(entry => entry.id === draft.selectedPatientId)} selection={draft.selection} total={pricing.total} busy={flow.busy} onRetry={() => { void flow.submitReview("online"); }} onChooseSlot={() => { void flow.backToSlots(); }} />}
           {!draft.receipt && !reserved && <BookingSummary4 doctor={activeDoctor} flow={flow} />}
