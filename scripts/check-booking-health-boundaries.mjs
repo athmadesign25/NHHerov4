@@ -8,6 +8,8 @@ import ts from "typescript";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const healthRoot = "src/features/health-checkups";
+const healthDataRoot = "src/data/health-checkups";
+const bookingRoots = ["src/features/booking", "src/app/doctors", "src/app/search/designs"];
 const sharedRoot = "src/components/ui/search-location";
 const dragHook = "src/components/ui/useMouseDragScroll.ts";
 const within = (file, folder) => file === folder || file.startsWith(`${folder}/`);
@@ -43,7 +45,10 @@ export function checkSource(filename, source) {
       const appImport = target && within(target, "src/app");
       const privateBooking = target && within(target, "src/features/booking") && !within(target, "src/features/booking/shared");
       const featureImport = target && within(target, "src/features");
+      const healthImport = target && [healthRoot, healthDataRoot, "src/app/health-checkups"].some(folder => within(target, folder));
       const invalid = within(local, healthRoot) ? appImport || privateBooking
+        : within(local, healthDataRoot) ? appImport || featureImport
+        : bookingRoots.some(folder => within(local, folder)) ? healthImport
         : within(local, sharedRoot) || local === dragHook ? appImport || featureImport : false;
       if (invalid) {
         const line = parsed.getLineAndCharacterOfPosition(moduleSpecifier.getStart(parsed)).line + 1;
@@ -90,12 +95,13 @@ function main(args) {
     console.error("Usage: node scripts/check-booking-health-boundaries.mjs [--base origin/main]");
     return 2;
   }
-  const files = [healthRoot, sharedRoot, dragHook].flatMap(sources);
+  const files = [healthRoot, healthDataRoot, ...bookingRoots, sharedRoot, dragHook].flatMap(sources);
   const failures = files.flatMap(file => checkSource(file, readFileSync(file, "utf8")));
   if (failures.length) {
     console.error("Module boundary violations:");
     for (const failure of failures) console.error(`  ${failure}`);
-    console.error("Health Checkups must use booking/shared; shared controls must not depend on routes or features.");
+    console.error("Health Checkups must use booking/shared; Booking must not depend on Health Checkups.");
+    console.error("Health data and shared search/drag controls must not depend on routes or features.");
   } else console.log(`Module boundaries pass (${files.length} source files checked).`);
   if (args[1]) reportOverlap(args[1]);
   return failures.length ? 1 : 0;

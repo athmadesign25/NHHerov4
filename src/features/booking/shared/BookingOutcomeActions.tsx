@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { duration, ease } from "@/lib/motion";
-import surface from "../design20/previous/BookingPaymentBar.module.css";
+import surface from "./BookingDockSurface.module.css";
 import styles from "./BookingOutcomeActions.module.css";
 
 type OutcomeAction = { label: string; href?: string; onClick?: () => void; external?: boolean; disabled?: boolean };

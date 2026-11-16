@@ -11,8 +11,11 @@ This feature owns the health-package/test listing, details, selection, checkout 
 
 Reuse member/payment/date behaviour through `src/features/booking/shared/`. Reuse the search surface from `src/components/ui/search-location/` and drag behaviour from `src/components/ui/useMouseDragScroll.ts`. Do not import implementations from `src/app/` or numbered Booking design folders.
 
-Design 3 is the default listing preview. Its components live in `design3/`:
-`HealthListing3` composes the shared search surface with `HealthLocationPicker`
+`aditya_final` ships only the approved **Design 4** listing. Unspecified and old
+preview query values resolve to Design 4; this branch has no preview switcher.
+Its hero and discovery rail live in `design4/`. The common listing components
+remain in `design3/`: `HealthListing3` composes the Design 4 presentation with
+the shared search surface, `HealthLocationPicker`
 (desktop popover / mobile sheet) and `HealthDiscoveryCard` (package and test
 cards). City selection stays local until a centre is chosen; the shared controller
 still handles centre-change confirmation, selection and checkout.
@@ -30,14 +33,14 @@ prices or package membership. Source fields take priority; draft-field provenanc
 is retained. These pages stay unindexed until item-specific clinical and pricing
 approval. See the diagnostic-page document above before preparing a release.
 
-Designs 1 and 2 remain available from the bottom-left preview switcher or
-`?design=1` / `?design=2`; `?design=3` opens the new listing. All previews use the
-same catalogue and booking state, not separate booking implementations.
+Use `aditya4_work` for new previews and comparisons. Promote only approved
+changes back to this branch, preserving its final-only design resolution.
+The historical `design3/` name identifies shared live code, not a second preview.
 
-Designs 2 and 3 use `JourneyHeading` for the same heading wipe as doctor discovery,
+The listing uses `JourneyHeading` for the same heading wipe as doctor discovery,
 `ControlChip` styles for service filters, and shared `BookingActionBar` and
-`SuccessMark` for checkout and confirmation. Design 1 remains the earlier listing
-preview. Discovery headings name a city only after a centre is selected.
+`SuccessMark` for checkout and confirmation. Discovery headings name a city only
+after a centre is selected.
 
 Keep filters and detail sections driven by published catalogue fields. The current
 source categories distinguish packages and tests; do not invent clinical filters
@@ -46,4 +49,4 @@ continue without a slot. A mixed selection follows the package scheduling rule.
 
 See [module ownership and merge handoff](../../../docs/booking-health-module-handoff.md) before changing shared navigation, global styles or shared controls.
 
-Design 3 uses image-led package and test cards; catalogue comparison is intentionally removed from every preview. Selection feedback is a transient accessible success notice. The listing action bar uses the shared booking bar’s 896px maximum width and responsive gutters.
+The listing uses image-led package and test cards; catalogue comparison is intentionally removed. Selection feedback is a transient accessible success notice. The listing action bar uses the shared booking bar’s 896px maximum width and responsive gutters.

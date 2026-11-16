@@ -38,9 +38,12 @@ Historical folder names such as `d3`, `d16`, `d17` and booking `design14`–`des
 
 - Health UI stays in its feature folder; its route files remain thin composition/metadata entry points.
 - Health Checkups imports reusable Booking behaviour through explicit files in `booking/shared/`, never through numbered design folders or `src/app/`.
+- Booking, doctor profiles and doctor-listing designs must not import Health Checkup implementations or catalogue data. The dependency runs from Health to Booking's shared interfaces, not back in the opposite direction.
+- Health catalogue records must not depend on route or feature UI. Keep data adaptation inside the Health feature.
 - Keep types and pure date helpers separate from client components and session APIs. Do not introduce a single barrel that mixes server and client code.
 - Shared search and drag controls must not import a route or feature. Booking and Health both consume the same implementation, preserving their visual and interaction consistency.
 - Put module-specific styling in co-located CSS Modules. Use existing global tokens; do not add global overrides for a single page.
+- Common action/payment dock styling lives in `src/features/booking/shared/BookingDockSurface.module.css`. Booking and Health reuse the same surface rather than copying an older screen stylesheet.
 
 ## Shared integration points
 
@@ -66,8 +69,31 @@ Avoid unrelated formatting, global token renaming, dependency updates and asset 
 export PATH="/Users/a374590/Desktop/NH website main/.node-portable/bin:$PATH"
 node scripts/check-booking-health-boundaries.mjs
 node scripts/check-booking-health-boundaries.mjs --base origin/demo-no-tokens
+node --test tests/health-module-boundaries.test.mjs
 ```
 
 The checker reads TypeScript/JavaScript import syntax, including relative paths and aliases, and uses the already-installed TypeScript compiler. It adds no package dependency. It checks direct module boundaries, not every transitive dependency or CSS reference. `--base` uses the local Git ref and reports files changed on both sides since their common ancestor, including local uncommitted work. It does not fetch, modify Git state, prove that a merge will conflict, or prove that the application works. Refresh the receiving ref through the team's normal sync process before relying on the comparison.
 
 Current public routes remain available and render only the approved designs. New Health Checkup iterations belong in the feature on an iteration branch, not in the Booking route folders or this final handoff.
+
+## Receiving the final handoff
+
+Use a clean integration checkout. Fetch both branches, review the diff, then merge
+the final branch into the receiving branch (currently `demo-no-tokens`). Do not
+replace the receiving branch or force-push it.
+
+```bash
+git fetch origin demo-no-tokens aditya_final
+git diff --stat origin/demo-no-tokens...origin/aditya_final
+git merge-tree --write-tree origin/demo-no-tokens origin/aditya_final
+```
+
+The last command checks Git's actual merge result without checking out files or
+moving either branch. Exit code 0 means no Git-level conflicts at those two tips;
+it does not replace a build or integration test. Recheck after either branch
+changes. Merge from the receiving branch only after reviewing the result.
+
+For the next iteration, work in `aditya4_work` with module-local commits. Shared
+prerequisites should be promoted once, before dependent UI changes. Do not
+reintroduce preview switchers or overwrite final-only design resolvers by merging
+the entire iteration branch blindly.

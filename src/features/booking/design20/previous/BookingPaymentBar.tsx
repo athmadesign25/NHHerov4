@@ -6,7 +6,7 @@ import { duration, ease } from "@/lib/motion";
 import type { PaymentChoice } from "../../design7/model";
 import type { design20Pricing } from "../pricing";
 import BookingAmount from "./BookingAmount";
-import styles from "./BookingPaymentBar.module.css";
+import styles from "../../shared/BookingDockSurface.module.css";
 
 type Props = {
   pricing: ReturnType<typeof design20Pricing>;
