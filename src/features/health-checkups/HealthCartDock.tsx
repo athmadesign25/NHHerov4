@@ -3,8 +3,7 @@
 import { useEffect, useId, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
-import { BookingBackdrop } from "@/features/booking/components/BookingFocus";
-import useBookingFocus from "@/features/booking/components/useBookingFocus";
+import { BookingBackdrop, useBookingFocus } from "@/features/booking/shared/BookingFocus";
 import { duration, ease } from "@/lib/motion";
 import { cartTotal, money, type HealthItem } from "./catalog";
 import styles from "./HealthCartDock.module.css";

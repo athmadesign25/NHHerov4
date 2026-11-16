@@ -1,11 +1,11 @@
 // NH's live CoE directory order, verified 4 November 2026:
 // https://www.narayanahealth.org/center-of-excellence
 export const SERVICE_CENTRES = [
-  { label: "Cardiac Sciences", href: "/specialities/cardiology" },
-  { label: "Cancer Care", href: "/specialities/oncology" },
-  { label: "Neuro Sciences", href: "/specialities/neurology" },
-  { label: "Gastro Sciences", href: "/specialities/gastroenterology" },
-  { label: "Orthopaedics", href: "/specialities/orthopaedics" },
+  { label: "Cardiac Sciences", href: "/centre-of-excellence/cardiology" },
+  { label: "Cancer Care", href: "/centre-of-excellence/oncology" },
+  { label: "Neuro Sciences", href: "/centre-of-excellence/neurology" },
+  { label: "Gastro Sciences", href: "/centre-of-excellence/gastroenterology" },
+  { label: "Orthopaedics", href: "/centre-of-excellence/orthopaedics" },
   { label: "Image Guided Therapy", href: "/search?q=Image%20Guided%20Therapy" },
   { label: "Robotic Surgery", href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
   { label: "Solid-Organ & Bone Marrow Transplant", href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
