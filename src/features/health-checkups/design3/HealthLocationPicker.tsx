@@ -2,16 +2,22 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type KeyboardEvent, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, Building2, Check, ChevronDown, ChevronRight, MapPin, Search, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronRight, MapPin, Search, X, LocateFixed } from "lucide-react";
 import type Lenis from "lenis";
+import { requestDoctorCity } from "@/features/search/doctorLocation";
+import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
 import type { FacilityId, HealthFacility } from "../catalog";
 import { healthCityKey, healthFacilityServesCity } from "../healthFacilitySelection";
 import styles from "./HealthLocationPicker.module.css";
+import pickerStyles from "@/components/ui/search-location/SearchCityPicker.module.css";
+import CityPickerScrollbar from "@/components/ui/search-location/CityPickerScrollbar";
 
 interface Props {
+  compact?: boolean;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
   selectedFacility?: HealthFacility;
+  initialCity?: string;
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -29,37 +35,53 @@ function serverSnapshot() { return false; }
 
 /** City and centre are one committed location; changing the city alone never clears a selection. */
 export default function HealthLocationPicker(props: Props) {
-  const { selectedFacility, open, onOpen, onClose } = props;
+  const { selectedFacility, open, onOpen, onClose, compact = false } = props;
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const trigger = useRef<HTMLButtonElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const id = useId();
   const panel = open ? <LocationPanel {...props} key={mobile ? "sheet" : "popover"} mobile={mobile} id={id} trigger={trigger} root={root} /> : null;
 
-  return <div className={styles.location} ref={root} data-health-location>
+  return <div className={`${styles.location} ${compact ? styles.compact : ""}`} ref={root} data-health-location>
     <button ref={trigger} type="button" className={styles.trigger} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
       aria-label={selectedFacility ? `Change location: ${selectedFacility.city}, ${selectedFacility.name}` : "Choose city and centre"}
       title={selectedFacility ? `${selectedFacility.city} · ${selectedFacility.name}` : undefined}
       onClick={open ? onClose : onOpen}>
       <MapPin className={styles.pin} aria-hidden />
-      <span className={styles.triggerText}><strong>{selectedFacility?.city ?? "Choose city"}</strong><span>{selectedFacility?.name ?? "Hospital or clinic"}</span></span>
+      <span className={styles.triggerText}><strong>{selectedFacility?.city ?? "Choose city"}</strong>{compact && <span className={styles.contextDot} aria-hidden>·</span>}<span>{selectedFacility?.name ?? "Hospital or clinic"}</span></span>
       <ChevronDown className={styles.chevron} aria-hidden />
     </button>
     {mobile && panel ? createPortal(panel, document.body) : panel}
   </div>;
 }
 
-function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect, mobile, id, trigger, root }: Props & {
+/** The first visit uses the same picker inline, without a modal or an extra CTA. */
+export function HealthCentreChooser(props: Pick<Props, "cities" | "facilities" | "onSelect" | "initialCity">) {
+  const trigger = useRef<HTMLButtonElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const id = useId();
+  return <div ref={root} className={styles.inlineRoot}>
+    <LocationPanel {...props} open onOpen={() => {}} onClose={() => {}} inline mobile={false} id={id} trigger={trigger} root={root} />
+  </div>;
+}
+
+function LocationPanel({ cities, facilities, selectedFacility, initialCity, onClose, onSelect, mobile, inline = false, id, trigger, root }: Props & {
+  inline?: boolean;
   mobile: boolean;
   id: string;
   trigger: RefObject<HTMLButtonElement | null>;
   root: RefObject<HTMLDivElement | null>;
 }) {
-  const [city, setCity] = useState<string | null>(() => selectedFacility ? healthCityKey(selectedFacility.city) : null);
+  const [city, setCity] = useState<string | null>(() => selectedFacility ? healthCityKey(selectedFacility.city) : initialCity ?? null);
   const [query, setQuery] = useState("");
+  const [locating, setLocating] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const locationRequest = useRef(0);
+  useEffect(() => () => { locationRequest.current += 1; }, []);
   const input = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const options = useRef<HTMLUListElement>(null);
+  const scrollViewport = useRef<HTMLDivElement>(null);
   const restoreFocus = useRef(true);
   const titleId = `${id}-title`;
   const searchId = `${id}-search`;
@@ -70,6 +92,7 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
   const visibleCentres = city ? facilities.filter(entry => healthFacilityServesCity(entry, city) && matches(`${entry.name} ${entry.address}`)) : [];
 
   useEffect(() => {
+    if (inline) return;
     const panel = dialog.current;
     const returnTo = trigger.current;
     const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
@@ -80,9 +103,8 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       document.body.style.overflow = "hidden";
       if (!wasStopped) lenis?.stop();
     }
-    // Keep the mobile keyboard closed until the user chooses to search.
-    if (mobile) panel?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
-    else input.current?.focus({ preventScroll: true });
+    // Search is opt-in on desktop and mobile; opening never activates the field.
+    panel?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
     return () => {
       if (mobile) {
         panel?.close();
@@ -91,15 +113,15 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       }
       if (restoreFocus.current && returnTo?.isConnected) returnTo.focus({ preventScroll: true });
     };
-  }, [mobile, trigger]);
+  }, [inline, mobile, trigger]);
 
   useEffect(() => {
-    if (mobile) return;
+    if (mobile || inline) return;
     const keepInViewport = () => {
       const panel = dialog.current;
       if (!panel) return;
       const gap = parseFloat(getComputedStyle(panel).getPropertyValue("--space-16"));
-      panel.style.setProperty("--health-location-panel-max-height", `${Math.max(0, window.innerHeight - panel.getBoundingClientRect().top - gap)}px`);
+      panel.style.setProperty("--city-picker-max-height", `${Math.max(0, window.innerHeight - panel.getBoundingClientRect().top - gap)}px`);
     };
     const outside = (event: PointerEvent) => {
       if (event.target instanceof Node && !root.current?.contains(event.target)) { restoreFocus.current = false; onClose(); }
@@ -118,17 +140,35 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       window.removeEventListener("resize", keepInViewport);
       window.removeEventListener("scroll", keepInViewport);
     };
-  }, [mobile, onClose, root]);
+  }, [inline, mobile, onClose, root]);
+
+  async function locateCity() {
+    const request = ++locationRequest.current;
+    setLocating(true); setLocationMessage("");
+    const result = await requestDoctorCity(() => locationRequest.current === request);
+    if (locationRequest.current !== request) return;
+    setLocating(false);
+    if (result.error) { setLocationMessage(result.error); return; }
+    const match = cities.find(entry => entry.value === healthCityKey(result.city ?? ""));
+    if (!match) { setLocationMessage("No nearby health checkup city found. Please choose a city."); return; }
+    changeCity(match.value);
+    setLocationMessage(`Showing centres near ${match.label}.`);
+  }
 
   function changeCity(value: string | null) {
+    locationRequest.current += 1; setLocating(false); setLocationMessage("");
+    const centres = value ? facilities.filter(entry => healthFacilityServesCity(entry, value)) : [];
+    if (centres.length === 1) { onSelect(centres[0].id); return; }
     setCity(value);
     setQuery("");
-    if (!mobile) input.current?.focus({ preventScroll: true });
-    else requestAnimationFrame(() => dialog.current?.querySelector<HTMLHeadingElement>("h2")?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => {
+      scrollViewport.current?.scrollTo({ top: 0, behavior: "instant" });
+      (inline ? root.current : dialog.current)?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+    });
   }
 
   function navigateOptions(event: KeyboardEvent<HTMLElement>) {
-    if (event.key === "Escape" && !mobile) { event.preventDefault(); onClose(); return; }
+    if (event.key === "Escape" && !mobile && !inline) { event.preventDefault(); onClose(); return; }
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     const buttons = [...options.current?.querySelectorAll<HTMLButtonElement>("button") ?? []];
     if (!buttons.length) return;
@@ -140,36 +180,50 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
     buttons[next]?.focus();
   }
 
-  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${styles.panel} ${mobile ? styles.sheet : styles.popover}`}
-    aria-labelledby={titleId} aria-modal={mobile || undefined} data-lenis-prevent onKeyDown={navigateOptions}
-    onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (mobile && event.target === event.currentTarget) onClose(); }}>
-    <div className={styles.panelBody}>
-      <header className={styles.header}>
+  const content = <>
+      <header className={pickerStyles.header}>
         <div className={styles.titleGroup}>
-          {city && <button type="button" className={styles.iconButton} aria-label="Choose another city" onClick={() => changeCity(null)}><ArrowLeft aria-hidden /></button>}
+          {city && <button type="button" className={pickerStyles.iconButton} aria-label="Choose another city" onClick={() => changeCity(null)}><ArrowLeft aria-hidden /></button>}
           <h2 id={titleId} tabIndex={-1}>{city ? "Choose a centre" : "Choose a city"}</h2>
         </div>
-        <button type="button" className={styles.iconButton} aria-label="Close location picker" onClick={onClose}><X aria-hidden /></button>
+        {!inline && <button type="button" className={pickerStyles.iconButton} aria-label="Close location picker" onClick={onClose}><X aria-hidden /></button>}
       </header>
+    <div ref={scrollViewport} className={pickerStyles.panelBody}>
+      {!city && <button type="button" className={styles.locateAction} onClick={locateCity} disabled={locating}><LocateFixed aria-hidden />{locating ? "Finding your city…" : "Use my location"}</button>}
+      {locationMessage && <p className={styles.locationMessage} role="status">{locationMessage}</p>}
       {city && <button type="button" className={styles.cityContext} onClick={() => changeCity(null)} aria-label={`Change city, currently ${cityLabel}`}><MapPin aria-hidden /><span>{cityLabel}</span><ChevronDown aria-hidden /></button>}
-      <div className={styles.search}>
+      <div className={pickerStyles.search}>
         <Search aria-hidden />
-        <label className={styles.srOnly} htmlFor={searchId}>{city ? "Search hospitals and clinics" : "Search cities"}</label>
+        <label className={pickerStyles.srOnly} htmlFor={searchId}>{city ? "Search hospitals and clinics" : "Search cities"}</label>
         <input ref={input} id={searchId} type="search" placeholder={city ? "Search hospitals and clinics" : "Search cities"} value={query} autoComplete="off" maxLength={120} onChange={event => setQuery(event.target.value)} />
-        {query && <button type="button" className={styles.iconButton} aria-label="Clear location search" onClick={() => { setQuery(""); input.current?.focus(); }}><X aria-hidden /></button>}
+        {query && <button type="button" className={pickerStyles.iconButton} aria-label="Clear location search" onClick={() => { setQuery(""); input.current?.focus(); }}><X aria-hidden /></button>}
       </div>
-      <div className={styles.results}>
-        <ul ref={options} className={styles.options} aria-label={city ? `Hospitals and clinics in ${cityLabel}` : "Cities"}>
-          {city ? visibleCentres.map(entry => <li key={entry.id}><button type="button" className={styles.option} aria-pressed={selectedFacility?.id === entry.id} onClick={() => onSelect(entry.id)}>
-            <Building2 className={styles.optionIcon} aria-hidden />
-            <span className={styles.optionCopy}><strong>{entry.name}</strong>{entry.address && entry.address !== entry.name && <small>{entry.address}</small>}</span>
-            <span className={styles.radio} aria-hidden>{selectedFacility?.id === entry.id && <Check />}</span>
-          </button></li>) : visibleCities.map(entry => <li key={entry.value}><button type="button" className={styles.option} onClick={() => changeCity(entry.value)}>
+      <div className={pickerStyles.results}>
+        <ul ref={options} className={pickerStyles.options} role={city ? "radiogroup" : undefined} aria-label={city ? `Hospitals and clinics in ${cityLabel}` : "Cities"}>
+          {city ? visibleCentres.map(entry => {
+            const travel = getDesign16HospitalPreview(entry.name);
+            const distance = entry.distanceKm ?? travel?.distanceKm;
+            const label = distance !== undefined ? `${distance.toLocaleString("en-IN", { maximumFractionDigits: 1 })} km` : "Directions";
+            const href = travel?.directionsUrl ?? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(entry.address || entry.name)}`;
+            return <li key={entry.id} role="none" className={styles.centreRow}>
+              <button type="button" className={pickerStyles.option} role="radio" aria-checked={selectedFacility?.id === entry.id} onClick={() => onSelect(entry.id)}>
+                <span className={styles.radio} aria-hidden />
+                <span className={styles.optionCopy}><strong>{entry.name}</strong></span>
+              </button>
+              <a className={styles.distancePill} href={href} target="_blank" rel="noopener noreferrer" title="Get directions" aria-label={`Get directions to ${entry.name} (opens in a new tab)`}>{label}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="m10.6 2.6-8 8a2 2 0 0 0 0 2.8l8 8a2 2 0 0 0 2.8 0l8-8a2 2 0 0 0 0-2.8l-8-8a2 2 0 0 0-2.8 0Z" /><path d="M8.5 15v-4h7m-3-3 3 3-3 3" /></svg></a>
+            </li>;
+          }) : visibleCities.map(entry => <li key={entry.value}><button type="button" className={pickerStyles.option} onClick={() => changeCity(entry.value)}>
             <MapPin className={styles.optionIcon} aria-hidden /><span className={styles.optionCopy}><strong>{entry.label}</strong></span><ChevronRight className={styles.rowChevron} aria-hidden />
           </button></li>)}
         </ul>
-        {(city ? !visibleCentres.length : !visibleCities.length) && <div className={styles.empty} role="status"><p>{query ? "No matching locations" : "No health checkup centres listed here"}</p><button type="button" onClick={() => query ? setQuery("") : changeCity(null)}>{query ? "Clear search" : "Choose another city"}</button></div>}
+        {(city ? !visibleCentres.length : !visibleCities.length) && <div className={pickerStyles.empty} role="status"><p>{query ? "No matching locations" : "No health checkup centres listed here"}</p><button type="button" onClick={() => query ? setQuery("") : changeCity(null)}>{query ? "Clear search" : "Choose another city"}</button></div>}
       </div>
     </div>
-  </dialog>;
+    <CityPickerScrollbar viewport={scrollViewport} />
+  </>;
+  if (inline) return <section id={id} className={`${pickerStyles.panel} ${styles.inlinePanel}`} aria-labelledby={titleId} onKeyDown={navigateOptions} data-lenis-prevent>{content}</section>;
+  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${pickerStyles.panel} ${mobile ? pickerStyles.sheet : `${pickerStyles.popover} ${styles.popover}`}`}
+    aria-labelledby={titleId} aria-modal={mobile || undefined} data-lenis-prevent onKeyDown={navigateOptions}
+    onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (mobile && event.target === event.currentTarget) onClose(); }}>
+{content}</dialog>;
 }

@@ -219,6 +219,11 @@
         "parameters": [],
         "itemLabel": "parameters"
       }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine",
+      "Stool"
     ]
   },
   "source-3012-pkg032007": {
@@ -367,6 +372,10 @@
         "parameters": [],
         "itemLabel": "parameters"
       }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine"
     ]
   },
   "source-6024-pkg037823": {
@@ -528,6 +537,11 @@
         "parameters": [],
         "itemLabel": "parameters"
       }
+    ],
+    "sampleRequired": [
+      "Blood",
+      "Urine",
+      "Stool"
     ]
   },
   "source-6024-pkg037821": {

@@ -36,6 +36,9 @@ for item in items:
             groups.append({"name": name, "parameters": [p for p in parameters if p], "itemLabel": "parameters"})
         if groups:
             entry["testGroups"] = groups
+        samples = [sample.get("Description", "").strip() for sample in cms.get("SampleRequired", [])]
+        if any(samples):
+            entry["sampleRequired"] = [sample for sample in samples if sample]
     if entry:
         result[item["id"]] = entry
 (DATA / "card-content.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")

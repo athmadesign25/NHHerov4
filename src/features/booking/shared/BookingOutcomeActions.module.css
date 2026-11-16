@@ -31,7 +31,6 @@
 .dock.dock {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-32);
-  width: min(calc(100% - var(--space-32)), calc(var(--space-128) * 7.5));
   padding: var(--space-16) var(--space-24);
   color: var(--color-text);
   border-color: var(--color-border);
@@ -42,7 +41,7 @@
 }
 @media (max-width: 767px) {
   .reserve { height: calc(var(--outcome-dock-height, var(--space-128)) + max(var(--space-8), env(safe-area-inset-bottom)) + var(--space-16)); }
-  .dock.dock { grid-template-columns: minmax(0, 1fr); width: calc(100% - var(--space-16)); padding: var(--space-12); gap: var(--space-12); }
+  .dock.dock { grid-template-columns: minmax(0, 1fr); padding: var(--space-12); gap: var(--space-12); }
   .actions { gap: var(--space-8); }
   .message { font-size: var(--font-size-xs); }
   .amount { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-16); }

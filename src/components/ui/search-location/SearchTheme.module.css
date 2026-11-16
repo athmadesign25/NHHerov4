@@ -30,6 +30,20 @@
   --d3-ui-base: 250ms cubic-bezier(.22, 1, .36, 1);
 }
 
+/* Discovery filters share one selection meaning, including portalled pickers.
+   Keep this opt-in so appointment slots and other modules retain their palette. */
+.blueSelection {
+  --d3-ui-selection: var(--color-primary);
+  --d3-ui-selection-label: var(--color-primary);
+  --d3-ui-selection-hover: var(--color-primary-dark);
+  --d3-ui-selection-pressed: var(--color-primary-dark);
+  --d3-ui-selection-border-hover: var(--color-primary);
+  --d3-ui-selection-border-pressed: var(--color-primary);
+  --d3-ui-selection-surface: var(--color-primary-light);
+  --d3-ui-selection-surface-hover: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg-card));
+  --d3-ui-selection-surface-pressed: color-mix(in srgb, var(--color-primary) 15%, var(--color-bg-card));
+}
+
 /* Opt-in scopes keep existing doctor cards and the global navigation unchanged. */
 .theme [data-d3-ui] :is(button, a):focus-visible,
 .theme[data-d3-ui] :is(button, a):focus-visible {

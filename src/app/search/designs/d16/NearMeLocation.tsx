@@ -13,6 +13,7 @@ interface Props {
   label?: string;
   selected: boolean;
   showSelectionClear?: boolean;
+  reserveSelectionClear?: boolean;
   disabled?: boolean;
   onLocated: (city: string) => void;
   onClear: () => void;
@@ -20,7 +21,7 @@ interface Props {
 }
 
 /** Native location permission, followed by D16's stable sample-distance ordering. */
-export default function NearMeLocation({ location, selected, showSelectionClear = true, disabled, cityOnly = false, label, onLocated, onClear, onFeedback }: Props) {
+export default function NearMeLocation({ location, selected, showSelectionClear = true, reserveSelectionClear = false, disabled, cityOnly = false, label, onLocated, onClear, onFeedback }: Props) {
   const requestId = useRef(0);
   const [detecting, setDetecting] = useState(false);
 
@@ -54,6 +55,7 @@ export default function NearMeLocation({ location, selected, showSelectionClear 
     aria-label={detecting ? "Finding your city" : label ?? (cityOnly ? "Use my location" : "Near me")} title={selected ? (cityOnly ? "Clear detected city" : "Remove nearby ordering") : "Find doctors in your nearest available city"}
     onClick={() => { void detect(); }}>
     {detecting ? <Loader2 size={16} className={styles.spinner} aria-hidden /> : <Navigation size={16} aria-hidden />}
-    {detecting ? "Locating…" : label ?? (cityOnly ? "Use my location" : "Near me")}{selected && showSelectionClear && <X size={14} aria-hidden />}
+    {detecting ? "Locating…" : label ?? (cityOnly ? "Use my location" : "Near me")}
+    {showSelectionClear && (selected || reserveSelectionClear) && <span className={chip.selectionClear} data-selected={selected} aria-hidden><X size={14} /></span>}
   </button>;
 }

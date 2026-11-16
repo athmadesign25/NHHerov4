@@ -1,4 +1,5 @@
 import { appointmentDates, indiaAppointmentTimestamp, indiaDate } from "@/features/booking/shared/dates";
+import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
 import sourceItems from "@/data/health-checkups/items.json";
 import sourceFacilities from "@/data/health-checkups/active-facilities.json";
 import type { HealthDetailSource, HealthTestGroup } from "./healthDetailTypes";
@@ -71,10 +72,21 @@ const PREVIEW_FACILITIES: HealthFacility[] = [
   },
 ];
 
+// Preview-only distances, matching the booking prototype. Real route distances
+// must replace these fixtures when location/API integration is connected.
+function withPreviewDistance(facility: HealthFacility): HealthFacility {
+  let hash = 0;
+  for (const letter of facility.id) hash = (Math.imul(hash, 31) + letter.charCodeAt(0)) >>> 0;
+  return {
+    ...facility,
+    distanceKm: facility.distanceKm ?? getDesign16HospitalPreview(facility.name)?.distanceKm ?? (20 + hash % 190) / 10,
+  };
+}
+
 export const FACILITIES: HealthFacility[] = [...new Map([
   ...PREVIEW_FACILITIES,
   ...sourceFacilities,
-].map(facility => [facility.id, facility])).values()];
+].map(facility => [facility.id, facility])).values()].map(withPreviewDistance);
 
 const preparation = "Confirm preparation instructions with the clinic before your visit.";
 

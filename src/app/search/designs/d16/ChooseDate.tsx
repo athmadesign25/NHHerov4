@@ -12,6 +12,7 @@ interface Props {
   max: string;
   disabled?: boolean;
   tone?: "red" | "blue";
+  showSelectionClear?: boolean;
   onChange: (date: string) => void;
 }
 
@@ -32,15 +33,21 @@ function shiftMonth(value: string, amount: number): string {
   return iso(first);
 }
 
-export default function ChooseDate({ value, min, max, disabled = false, tone = "red", onChange }: Props) {
+export default function ChooseDate({ value, min, max, disabled = false, tone = "red", showSelectionClear = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const validRange = Boolean(readDate(min) && readDate(max) && min <= max);
   const selected = readDate(value) && value >= min && value <= max ? value : "";
   const label = selected ? format(selected, { weekday: "short", day: "numeric", month: "short" }) : "Choose date";
-  return <>
-    <button type="button" className={chipStyles.chip} data-selected={Boolean(selected) || undefined} disabled={disabled || !validRange}
+  const trigger = <button ref={triggerRef} type="button" className={showSelectionClear ? styles.dateTrigger : chipStyles.chip} data-selected={Boolean(selected) || undefined} disabled={disabled || !validRange}
       aria-haspopup="dialog" aria-expanded={open} aria-label={selected ? `Appointment date: ${format(selected, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. Change date` : "Choose appointment date"}
-      onClick={() => setOpen(true)}><CalendarDays size={16} aria-hidden /><span>{label}</span></button>
+      onClick={() => setOpen(true)}><CalendarDays size={16} aria-hidden /><span>{label}</span></button>;
+  return <>
+    {showSelectionClear ? <div className={`${chipStyles.chip} ${styles.dateChip}`} data-selected={Boolean(selected) || undefined} role="group" aria-label="Appointment date">
+      {trigger}
+      <button type="button" className={styles.dateRemove} aria-label="Clear appointment date" aria-hidden={!selected || undefined} disabled={!selected} tabIndex={selected ? 0 : -1}
+        onClick={() => { onChange(""); triggerRef.current?.focus({ preventScroll: true }); }}><X size={14} aria-hidden /></button>
+    </div> : trigger}
     {open && validRange && <Calendar key={`${min}-${max}`} tone={tone} value={selected} min={min} max={max} onClose={() => setOpen(false)}
       onChange={(date) => { onChange(date); setOpen(false); }} />}
   </>;

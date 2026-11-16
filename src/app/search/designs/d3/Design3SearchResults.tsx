@@ -455,7 +455,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
                 next.delete("sort");
             else
                 next.set("sort", value); }, false, true); }} onFiltersChange={changeDoctorFilters} onDateChange={changeDate} onHistoryChange={changeHistory}>
-        <LanguageShortcut showSelectionClear={false} doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={filterMode} location={location} now={availabilityNow} requireSuppliedLanguage={true} onChange={changeDoctorFilters}/>
+        <LanguageShortcut reserveSelectionClear doctors={doctors} matchingDoctors={dateFilteredDoctors(false)} filters={filters} mode={filterMode} location={location} now={availabilityNow} requireSuppliedLanguage={true} onChange={changeDoctorFilters}/>
         {false}
       </Refinements>}
       {<AppliedFilterSummary value={filters} smartLanguage={smartLanguage} extraChips={appliedExtraChips} onChange={changeDoctorFilters}/>}
@@ -473,7 +473,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
         <button type="button" className={styles.mobileFilter} onClick={openFilters} aria-haspopup="dialog"><Filter size={18} aria-hidden/>Filters{filterCount > 0 && <span>{filterCount}</span>}</button>
       </header>}
       <div className={`${styles.layout} ${""}`}>
-        <aside className={`${styles.sidebar} ${""}`} aria-label={`${tab.label} filters`} aria-describedby={doctorTab ? "d3-refinement-help" : undefined} data-lenis-prevent data-d3-ui>
+        <aside className={styles.sidebar} aria-label={`${tab.label} filters`} aria-describedby={doctorTab ? "d3-refinement-help" : undefined} data-lenis-prevent data-d3-ui>
           {<div className={d21.filterTools} data-filter-tools>{filterHeading}</div>}
           <FilterScrollArea key={tab.id}>{<div className={d21.scrollSearch}>{renderFilterSearch(false)}</div>}{doctorTab && true && false && <SidebarDoctorFilters value={filters} onChange={changeDoctorFilters} onClearAll={clearFilters} extraChips={appliedExtraChips}/>}{renderFilters(false)}</FilterScrollArea>
         </aside>

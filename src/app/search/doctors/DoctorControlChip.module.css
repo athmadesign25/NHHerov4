@@ -1,2 +1,21 @@
 /* Compatibility export: doctor and health discovery share one control chip. */
 .chip { composes: chip from "@/components/ui/search-location/ControlChip.module.css"; }
+
+/* Discovery geometry only: booking time pills share this base class.
+   A date chip groups two buttons and supplies its padding individually. */
+:global([data-d21-smart-filters]) .chip:not([role="group"]) {
+  gap: var(--space-8);
+  padding-inline: var(--space-12);
+  line-height: var(--leading-normal);
+}
+
+/* Only selected shortcuts allocate space for the clear affordance. */
+.selectionClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  inline-size: var(--space-14);
+  block-size: var(--space-14);
+}
+.selectionClear[data-selected="false"] { display: none; }

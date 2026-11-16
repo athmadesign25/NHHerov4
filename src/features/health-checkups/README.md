@@ -7,6 +7,7 @@ This feature owns the health-package/test listing, details, selection, checkout 
 - Images: `public/health-checkups/`
 - Source audit: `docs/health-checkups/`
 - Existing tests: `tests/health-*`
+- Diagnostic/test page requirements and publication gaps: `docs/health-checkups/diagnostic-test-pages.md`
 
 Reuse member/payment/date behaviour through `src/features/booking/shared/`. Reuse the search surface from `src/components/ui/search-location/` and drag behaviour from `src/components/ui/useMouseDragScroll.ts`. Do not import implementations from `src/app/` or numbered Booking design folders.
 
@@ -17,6 +18,17 @@ cards). City selection stays local until a centre is chosen; the shared controll
 still handles centre-change confirmation, selection and checkout.
 Search groups matches across both service types. Switching the type preserves
 the selection. Detail links retain the selected preview.
+
+`HealthCatalogueSearch` provides grouped suggestions and keyboard navigation.
+The shared `RotatingSearchHint` highlights the current search term in NH blue;
+it is also used by doctor search. Typing searches both service types at the
+chosen centre; the browse shortcuts clear the query and show one service type.
+
+`content/` contains the researched stakeholder-copy adapter and source references.
+It fills missing detail-page descriptions/preparation without changing source
+prices or package membership. Source fields take priority; draft-field provenance
+is retained. These pages stay unindexed until item-specific clinical and pricing
+approval. See the diagnostic-page document above before preparing a release.
 
 Designs 1 and 2 remain available from the bottom-left preview switcher or
 `?design=1` / `?design=2`; `?design=3` opens the new listing. All previews use the
@@ -34,4 +46,4 @@ continue without a slot. A mixed selection follows the package scheduling rule.
 
 See [module ownership and merge handoff](../../../docs/booking-health-module-handoff.md) before changing shared navigation, global styles or shared controls.
 
-Design 3 uses image-led package and test cards; catalogue comparison is intentionally removed from every preview. Selection feedback is a transient accessible success notice. The listing action bar uses the booking bar’s 1024px maximum width.
+Design 3 uses image-led package and test cards; catalogue comparison is intentionally removed from every preview. Selection feedback is a transient accessible success notice. The listing action bar uses the shared booking bar’s 896px maximum width and responsive gutters.

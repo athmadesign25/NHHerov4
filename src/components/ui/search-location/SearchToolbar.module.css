@@ -51,7 +51,7 @@
 .form { flex: 1; min-width: 0; display: flex; align-items: center; gap: calc(var(--sp-1) / 2); min-height: var(--sp-6); padding: 1px; border: 1px solid var(--d3-ui-border, var(--color-border)); border-radius: var(--radius-full); background: var(--d3-control-surface); transition: border-color var(--d3-ui-fast, var(--transition-fast)); }
 .form:has(input:focus-visible) { outline: 1px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: -1px; }
 .form:has(input:focus) { border-color: var(--d3-ui-focus, var(--color-primary)); }
-.searchField { position: relative; display: flex; align-items: center; gap: var(--sp-1); min-width: 0; flex: 1; padding-inline: calc(var(--sp-1) * 1.5) 0; }
+.searchField { position: relative; container-type: inline-size; display: flex; align-items: center; gap: var(--sp-1); min-width: 0; flex: 1; padding-inline: calc(var(--sp-1) * 1.5) 0; }
 .searchField input { min-width: 0; width: 100%; min-height: calc(var(--sp-6) - var(--sp-1) / 2); padding-right: calc(var(--sp-6) - var(--sp-1) / 2); border: 0; outline: 0; background: transparent; color: var(--color-text); font: inherit; font-size: var(--font-size-base); font-weight: 400; }
 .searchField input::placeholder { color: var(--color-text-secondary); }
 .searchField input:placeholder-shown { padding-right: 0; }

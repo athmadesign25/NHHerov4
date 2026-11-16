@@ -12,6 +12,7 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  panelClassName?: string;
   describedBy?: string;
   busy?: boolean;
   showDeviceLocation?: boolean;
@@ -53,7 +54,7 @@ export default function SearchCityPicker(props: Props) {
   </div>;
 }
 
-function CityPanel({ cities, value, busy, showDeviceLocation, onChange, onClose, mobile, id, trigger, root }: Props & {
+function CityPanel({ cities, value, busy, showDeviceLocation, panelClassName = "", onChange, onClose, mobile, id, trigger, root }: Props & {
   mobile: boolean;
   id: string;
   trigger: RefObject<HTMLButtonElement | null>;
@@ -137,7 +138,7 @@ function CityPanel({ cities, value, busy, showDeviceLocation, onChange, onClose,
     buttons[next]?.focus();
   }
 
-  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${styles.panel} ${mobile ? styles.sheet : styles.popover}`}
+  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${styles.panel} ${mobile ? styles.sheet : styles.popover} ${panelClassName}`}
     aria-labelledby={`${id}-title`} aria-modal={mobile || undefined} data-lenis-prevent onKeyDown={navigateOptions}
     onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (mobile && event.target === event.currentTarget) onClose(); }}>
       <header className={styles.header}>

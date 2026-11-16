@@ -1,8 +1,8 @@
 .reserve { height: var(--space-96); }
 .bar {
   --bar-surface: var(--d17-lite-surface);
-  position: fixed; z-index: 40; inset: auto var(--space-16) max(var(--space-16), env(safe-area-inset-bottom));
-  width: min(calc(100% - var(--space-32)), calc(var(--space-128) * 8)); margin-inline: auto;
+  position: fixed; z-index: 40; inset: auto var(--booking-dock-gutter) max(var(--space-16), env(safe-area-inset-bottom));
+  width: var(--booking-dock-width); margin-inline: auto;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-24);
   padding: calc(var(--space-8) * 1.5) var(--space-24); border: var(--space-1) solid color-mix(in srgb, var(--d17-lite-ink) 12%, transparent); border-radius: var(--radius-xl);
   color: var(--d17-lite-ink); background: radial-gradient(ellipse at 82% 100%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 58%), linear-gradient(135deg, color-mix(in srgb, var(--color-bg-card) 70%, transparent), transparent 75%), color-mix(in srgb, var(--bar-surface) 84%, transparent);
@@ -26,7 +26,7 @@
 }
 @media (max-width: 767px) {
   .reserve { height: calc(var(--space-128) + var(--space-32)); }
-  .bar { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); padding: calc(var(--space-8) * 1.5); inset-inline: var(--space-8); width: calc(100% - var(--space-16)); bottom: max(var(--space-8), env(safe-area-inset-bottom)); }
+  .bar { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); padding: calc(var(--space-8) * 1.5); inset-inline: var(--booking-dock-gutter); bottom: max(var(--space-8), env(safe-area-inset-bottom)); }
   .amount { grid-row: 1; display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: baseline; column-gap: var(--space-12); }
   .amount > span, .amount strong { white-space: nowrap; }
   .amount strong { justify-self: end; text-align: right; }

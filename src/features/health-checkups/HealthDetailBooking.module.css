@@ -1,0 +1,19 @@
+.location { display: grid; gap: var(--space-24); margin-top: var(--space-24); }
+.centre { min-width: 0; }
+.nameRow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8) var(--space-12); }
+.nameRow h3, .packages h3 { font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 500; overflow-wrap: anywhere; }
+.centre > p { margin-top: var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); overflow-wrap: anywhere; }
+.directions { display: inline-flex; align-items: center; gap: var(--space-6); padding: var(--space-8) var(--space-12); border-radius: var(--radius-full); background: var(--journey-paper-icon-bg); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-body); white-space: nowrap; transition: background-color var(--duration-fast) var(--ease-out); }
+.directions svg { width: var(--space-16); height: var(--space-16); }
+.cost { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-16); }
+.cost dt { color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.cost dd { font-size: var(--font-size-lg); line-height: var(--leading-body); font-weight: 600; white-space: nowrap; }
+.packages { margin-top: var(--space-32); }
+.packages ul { display: grid; gap: var(--space-8); margin-top: var(--space-12); list-style: none; }
+.packages li { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-16); font-size: var(--font-size-sm); line-height: var(--leading-body); }
+.packages a { display: inline-flex; align-items: center; min-height: calc(var(--space-40) + var(--space-4)); color: var(--color-primary); overflow-wrap: anywhere; }
+.packages li > span { white-space: nowrap; }
+@media (hover: hover) { .directions:hover { background: var(--color-disclosure-hover); } .packages a:hover { color: var(--color-primary-dark); } }
+@media (max-width: 639px) { .directions { min-height: calc(var(--space-40) + var(--space-4)); } }
+@media (min-width: 640px) { .location { grid-template-columns: minmax(0, 1fr) auto; } .cost { display: block; text-align: end; } .cost dd { margin-top: var(--space-4); } }
+@media (prefers-reduced-motion: reduce) { .directions { transition: none; } }

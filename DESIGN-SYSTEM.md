@@ -111,6 +111,17 @@ them holds at every width. You do not need to write a media query for it.
 For spacing *inside* a section — between cards, rows, labels — use the
 `--space-*` ramp instead.
 
+### Booking and health-checkup action docks
+
+Use `--booking-dock-max-width` (896px) and `--booking-dock-gutter`
+(16px each side) for booking, payment, outcome and cart FABs.
+A viewport-anchored dock uses `width: var(--booking-dock-width)` and
+`margin-inline: auto`. Expanded and collapsed states keep the same width.
+If an outer wrapper already supplies the gutters, its inner surface uses
+only `max-width: var(--booking-dock-max-width)` to avoid double insets.
+Do not override these dimensions at mobile breakpoints. This rule excludes
+small call-support and design-preview controls.
+
 ### Motion
 
 ```css
