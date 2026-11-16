@@ -325,6 +325,12 @@
   box-shadow:
     0 -24px 64px rgba(6, 14, 27, 0.45),
     0 -1px 0 rgba(255, 255, 255, 0.9) inset;
+  --summary-bg: rgba(var(--slate-50-rgb), 0.95);
+  --summary-border: rgba(var(--slate-900-rgb), 0.08);
+  --summary-accent: var(--color-primary, var(--blue-brand));
+  --summary-text: var(--slate-800);
+  --summary-badge-bg: var(--white);
+  --summary-badge-text: var(--slate-700);
 }
 
 /* ─── V2: SCROLL-DRIVEN SECTION COLOUR CHANGE (#0a1128 -> #172d56 -> #e2ebf6 -> #ffffff) ─── */
