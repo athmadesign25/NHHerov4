@@ -22,6 +22,7 @@ export function expandedBookingPlacement(
   gutter: number,
   results?: BookingResultsBounds,
   mobileDock?: { bottomInset: number },
+  desktopTopInset = gutter,
 ) {
   const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(minimum, value), maximum);
   const horizontalGutter = Math.min(Math.max(0, gutter), viewport.width / 2);
@@ -53,11 +54,12 @@ export function expandedBookingPlacement(
     : edge === "right" ? sourceRight - leftBoundary
     : 2 * Math.min(centre - leftBoundary, rightBoundary - centre);
   const width = Math.min(Math.max(0, panel.width), availableWidth);
-  const height = Math.min(Math.max(0, source.height), Math.max(0, viewport.height - verticalGutter * 2));
+  const topInset = clamp(desktopTopInset, verticalGutter, viewport.height - verticalGutter);
+  const height = Math.min(Math.max(0, source.height), Math.max(0, viewport.height - topInset - verticalGutter));
 
   return {
     left: edge === "left" ? sourceLeft : edge === "right" ? sourceRight - width : centre - width / 2,
-    top: clamp(source.top, verticalGutter, viewport.height - verticalGutter - height),
+    top: clamp(source.top, topInset, viewport.height - verticalGutter - height),
     width,
     height,
     edge,

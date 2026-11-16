@@ -42,7 +42,7 @@
   position: fixed;
   inset: auto;
   margin: 0;
-  padding: 0;
+  padding: var(--space-8);
   overflow-y: auto;
   overscroll-behavior: contain;
   color: var(--card-ink);
@@ -51,9 +51,9 @@
   line-height: 1.5;
 }
 
-.option { display: flex; align-items: center; gap: var(--sp-1); width: 100%; min-height: var(--share-target); padding: calc(var(--sp-1) * 1.5) var(--sp-2); border: 0; border-radius: 0; color: inherit; background: transparent; font: inherit; text-align: left; text-decoration: none; cursor: pointer; transition: background-color var(--transition-fast); }
+.option { display: flex; align-items: center; gap: var(--sp-1); width: 100%; min-height: var(--share-target); padding: var(--space-12); border: 0; border-radius: var(--radius-md); color: inherit; background: transparent; font: inherit; text-align: left; text-decoration: none; cursor: pointer; transition: background-color var(--transition-fast); }
 .option svg, .option img { flex-shrink: 0; color: var(--color-text-secondary); }
-.option:active { background: color-mix(in srgb, var(--card-ink) 16%, transparent); }
+.option:active { background: var(--color-menu-pressed); }
 .root :is(button, a, input):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .popover :is(button, a, input):focus-visible { outline-offset: -2px; }
 .root button:disabled { cursor: wait; opacity: 0.6; }
@@ -66,7 +66,7 @@
 
 @media (hover: hover) {
   .trigger:hover::before { background: color-mix(in srgb, var(--color-bg-card) 76%, transparent); box-shadow: var(--shadow-md); }
-  .option:hover { background: color-mix(in srgb, var(--card-ink) 12%, transparent); }
+  .option:hover { background: var(--color-menu-hover); }
 }
 @media (prefers-reduced-motion: reduce) { .trigger, .trigger::before, .option { transition: none; } }
 @media (prefers-reduced-transparency: reduce) { .trigger::before, .popover { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; } }

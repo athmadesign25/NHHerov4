@@ -19,7 +19,7 @@
 .dialog::backdrop { background: color-mix(in srgb, var(--d17-lite-ink) 26%, transparent); }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .dialog {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--benefit-ink) 6%, transparent), transparent 65%), color-mix(in srgb, var(--d17-lite-surface) 64%, transparent);
+    background: var(--color-menu-surface);
     backdrop-filter: blur(var(--sp-2)) saturate(130%);
     -webkit-backdrop-filter: blur(var(--sp-2)) saturate(130%);
   }

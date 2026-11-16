@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Banknote, Building2, Check, ChevronRight, CreditCard, DoorOpen, Landmark, LockKeyhole, ShieldCheck, Smartphone, Sparkles, Wallet, X } from "lucide-react";
+import { Banknote, Building2, Check, ChevronRight, CreditCard, DoorOpen, Landmark, LockKeyhole, ShieldCheck, Smartphone, Sparkles, Wallet, X } from "lucide-react";
 import type Lenis from "lenis";
 import styles from "./RazorpayDemo.module.css";
 
@@ -133,7 +133,7 @@ export default function RazorpayDemo({ fee, busy, expired, onPay, onClose }: Pro
             </div>}
             <div className={styles.payArea}>
               {expired && <p className={styles.error} role="alert">Your slot hold has expired. Return to booking to select a time.</p>}
-              <button type="button" className={styles.primary} disabled={busy || expired} onClick={onPay}>{busy ? "Processing…" : `Pay ${fee}`}<ArrowRight size={18} aria-hidden /></button>
+              <button type="button" className={styles.primary} disabled={busy || expired} onClick={onPay}>{busy ? "Processing…" : `Pay ${fee}`}</button>
               <p className={styles.demoNote}><LockKeyhole size={13} aria-hidden /> Demo payment · No money will be deducted</p>
             </div>
           </div>

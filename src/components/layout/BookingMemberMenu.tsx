@@ -71,7 +71,7 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
           onClick={() => { chooseBookingMember(entry.id); setAnnouncement(`Booking for ${entry.name}`); close(true); }}>
           <MemberAvatar src={bookingMemberAvatar(entry)} name={entry.name} className={styles.avatar} />
           <span className={styles.memberCopy}><strong>{entry.name}</strong><small>{entry.relation === "self" ? "You" : entry.relation.charAt(0).toUpperCase() + entry.relation.slice(1)}{entry.age ? ` · ${entry.age} yrs` : ""}</small></span>
-          {entry.id === member.id && <Check size={16} className={styles.check} aria-hidden />}
+          <span className={styles.check} aria-hidden>{entry.id === member.id && <Check size={12} />}</span>
         </button>)}
       </div>
       <div className={styles.account} role="group" aria-label="Your account">

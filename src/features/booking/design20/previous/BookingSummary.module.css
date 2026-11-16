@@ -131,7 +131,7 @@
 .appointmentDoctorPhoto { display: grid; place-items: center; width: var(--space-40); height: var(--space-40); border-radius: var(--radius-full); object-fit: cover; object-position: center top; }
 .appointmentDoctor .doctorIdentity h3 { color: var(--d7-text); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; overflow-wrap: anywhere; }
 .appointmentDoctor .doctorIdentity p { margin-top: var(--space-4); color: var(--d7-muted); font-size: var(--font-size-xs); font-weight: 400; line-height: var(--leading-body); overflow-wrap: anywhere; }
-.slotDetails { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 0 var(--space-12); min-width: 0; }
+.slotDetails { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: var(--space-4) var(--space-12); min-width: 0; }
 .slotDetails > strong { min-width: 0; }
 .slotDetails .edit { flex-shrink: 0; margin-block: calc(var(--space-8) * -1); line-height: var(--leading-body); }
 .feedbackCheck { display: inline-flex; flex-shrink: 0; }

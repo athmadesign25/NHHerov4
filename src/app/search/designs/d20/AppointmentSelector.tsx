@@ -15,6 +15,9 @@ import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
 import chip from "../../doctors/DoctorControlChip.module.css";
 import styles from "./DoctorCard.module.css";
 import { cardLayoutTransition } from "./cardMotion";
+import ExecutiveIcon from "@/features/booking/components/ExecutiveIcon";
+import ExecutiveSlotTag from "@/features/booking/components/ExecutiveSlotTag";
+import executiveStyles from "@/features/booking/components/ExecutiveSlotTag.module.css";
 
 export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false, showHospitalDirections = false }: {
   doctor: BookingDoctorSummary;
@@ -30,6 +33,7 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
   const availableModes = (["hospital", "video"] as const).filter(mode => profile?.modes[mode] === true);
   const availableSlots = (date: string, mode = selection.mode, hospital = selection.hospital) => getDesign3BookingSlots(doctor.id, date, mode, hospital, new Date(now), DESIGN16_BOOKING_DAYS, "d20").filter(slot => slot.available);
   const slots = availableSlots(selection.date);
+  const firstExecutiveTime = slots.find(slot => slot.isExecutive)?.time;
   const firstAvailableTime = slots[0]?.time;
   useEffect(() => {
     // Default only an empty selection; never overwrite a visitor's chosen time.
@@ -76,7 +80,7 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
     if (!strip) return;
     strip.scrollLeft = 0;
     const selected = strip.querySelector<HTMLElement>('[aria-pressed="true"]');
-    if (selected) strip.scrollLeft = Math.max(0, selected.offsetLeft - strip.clientWidth / 2 + selected.offsetWidth / 2);
+    if (selected) strip.scrollLeft = Math.max(0, selected.getBoundingClientRect().left - strip.getBoundingClientRect().left - strip.clientWidth / 2 + selected.offsetWidth / 2);
     updateTimeEdges();
     const observer = new ResizeObserver(updateTimeEdges);
     observer.observe(strip);
@@ -124,8 +128,20 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
       </button>;
     })}</div>)}</div><span className={styles.stickyMonth} aria-hidden><span>{activeMonth}</span></span>{scrollControls("dates", dateEdges)}</div></motion.section>
     <motion.section layout={reduced ? false : "position"} layoutDependency={`${selection.mode}:${selection.hospital}`} transition={{ layout: cardLayoutTransition }} className={styles.fieldset} aria-labelledby={`${id}-time-title`}>
-      <div className={styles.timeHeading}><h3 id={`${id}-time-title`}>Select time</h3></div>
-      {slots.length ? <div className={styles.scrollRow} data-lenis-prevent-horizontal><div className={styles.times} ref={times} id={`${id}-times`} data-d20-times data-rows={slots.length > 4 ? 2 : 1} data-fade-start={timeEdges.start} data-fade-end={timeEdges.end} onScroll={updateTimeEdges} data-lenis-prevent-horizontal role="group" aria-labelledby={`${id}-time-title`}>{slots.map(slot => <button key={slot.time} className={chip.chip} type="button" aria-pressed={selection.time === slot.time} aria-label={`Choose ${slot.time} on ${formatBookingDate(selection.date)}`} onClick={() => onChange({ ...selection, time: slot.time })}>{slot.time}</button>)}</div>{scrollControls("times", timeEdges)}</div>
+      <div className={styles.timeHeading}><h3 id={`${id}-time-title`}>Select time</h3>{firstExecutiveTime && <ExecutiveSlotTag discovery selection={{ ...selection, time: firstExecutiveTime }} />}</div>
+      {slots.length ? <div className={styles.scrollRow} data-lenis-prevent-horizontal>
+        <div className={styles.times} ref={times} id={`${id}-times`} data-d20-times data-rows={slots.length > 4 ? 2 : 1} data-fade-start={timeEdges.start} data-fade-end={timeEdges.end} onScroll={updateTimeEdges} data-lenis-prevent-horizontal role="group" aria-labelledby={`${id}-time-title`}>
+          {slots.map(slot => {
+            const selected = selection.time === slot.time;
+            return <button key={slot.time} className={`${chip.chip} ${slot.isExecutive ? executiveStyles.slot : ""}`} type="button" data-executive={slot.isExecutive || undefined} aria-pressed={selected} aria-label={`Choose ${slot.time}${slot.isExecutive ? ", executive slot" : ""} on ${formatBookingDate(selection.date)}`} onClick={() => onChange({ ...selection, time: slot.time })}>
+              {slot.isExecutive && <ExecutiveIcon selected={selected} />}
+              <span className={executiveStyles.slotLabel}>{slot.time}</span>
+              {slot.isExecutive && selected && <span key={`${selection.date}:${selection.hospital}:${slot.time}`} className={executiveStyles.shimmer} aria-hidden />}
+            </button>;
+          })}
+        </div>
+        {scrollControls("times", timeEdges)}
+      </div>
         : <p className={styles.hint}>No times available. Choose another date.</p>}
     </motion.section>
   </div>;

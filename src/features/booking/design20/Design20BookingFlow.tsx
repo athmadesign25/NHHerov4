@@ -1,5 +1,6 @@
 "use client";
 
+import { getAppointmentFee } from "@/features/booking/executiveSlots";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
@@ -56,8 +57,10 @@ export default function Design20BookingFlow({ doctor, confirmationRef }: { docto
     if ((confirmed || reserved) && flow.isUserLoggedIn) return protectConfirmedBookingMember();
   }, [confirmed, reserved, flow.isUserLoggedIn]);
   useEffect(() => { if (flow.loaded) heading.current?.focus({ preventScroll: true }); }, [flow.loaded, confirmed, flow.isUserLoggedIn]);
-  const listingDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: draft.selection.hospital }));
-  const activeDoctor = listingDoctor ? { ...doctor, name: listingDoctor.name, hospital: listingDoctor.hospital, fee: listingDoctor.fee } : doctor;
+  const pricingSelection = draft.receipt?.selection ?? draft.selection;
+  const listingDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: pricingSelection.hospital }));
+  const baseDoctor = listingDoctor ? { ...doctor, name: listingDoctor.name, hospital: listingDoctor.hospital, fee: listingDoctor.fee } : doctor;
+  const activeDoctor = { ...baseDoctor, fee: getAppointmentFee(baseDoctor.fee, pricingSelection) };
   const needsSlotSelection = flow.loaded && confirmationRef === undefined && !draft.receipt && !flow.missingReceipt && !draft.selection.time;
   const slotEntry = design20BookingEntryUrl({ ...doctor, hospital: draft.selection.hospital }, draft.selection.mode, draft.selection.date, flow.returnTo);
   useEffect(() => {

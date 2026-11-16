@@ -26,6 +26,8 @@ export interface TimeSlot {
   time: string;         // e.g. "09:15 AM"
   available: boolean;
   period: SlotPeriod;
+  /** The availability service explicitly identifies executive appointments. */
+  isExecutive?: boolean;
 }
 
 export interface DateSlot {

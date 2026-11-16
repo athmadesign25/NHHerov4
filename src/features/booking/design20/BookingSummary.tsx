@@ -1,5 +1,6 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import type Lenis from "lenis";
@@ -108,7 +109,7 @@ export default function BookingSummary({ doctor, flow, onEditingChange }: { doct
               <div className={`${styles.detailRow} ${styles.updatedSlot}`}>
                 {appointmentUpdated > 0 && <motion.span key={appointmentUpdated} className={styles.slotHighlight} aria-hidden initial={{ opacity: reduced ? 0 : 0.7 }} animate={{ opacity: 0 }} transition={{ duration: reduced ? 0 : 1.2, ease: [.22, 1, .36, 1] }} />}
                 <CalendarDays size={18} aria-hidden />
-                <div><span className={styles.label}>Date & time</span><strong className={styles.selectedSlot}>{selection.time ? <><span>{formatBookingDate(selection.date, "short")}</span><span className={styles.slotTime}><span className={styles.slotSeparator} aria-hidden>·</span>{selection.time}</span></> : "Choose a time"}</strong><div className={styles.updateFeedback} aria-hidden="true"><AnimatePresence>{appointmentUpdated > 0 && <motion.span key={appointmentUpdated} initial={{ opacity: 0, y: reduced ? 0 : 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .32, ease: [.22, 1, .36, 1] }}><Check size={14} aria-hidden />Appointment updated</motion.span>}</AnimatePresence></div></div>
+                <div><span className={styles.label}>Date & time</span><div className={styles.slotDetails}><SlotSelectionValue selection={selection}><strong className={styles.selectedSlot}>{selection.time ? <><span>{formatBookingDate(selection.date, "short")}</span><span className={styles.slotTime}><span className={styles.slotSeparator} aria-hidden>·</span>{selection.time}</span></> : "Choose a time"}</strong></SlotSelectionValue></div><div className={styles.updateFeedback} aria-hidden="true"><AnimatePresence>{appointmentUpdated > 0 && <motion.span key={appointmentUpdated} initial={{ opacity: 0, y: reduced ? 0 : 3 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .32, ease: [.22, 1, .36, 1] }}><Check size={14} aria-hidden />Appointment updated</motion.span>}</AnimatePresence></div></div>
               </div>
             </div>}
         </section>

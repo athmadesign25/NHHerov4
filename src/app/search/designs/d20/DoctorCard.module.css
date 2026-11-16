@@ -93,19 +93,20 @@
 .stickyMonth { position: absolute; z-index: 2; left: 0; inset-block: calc(var(--sp-1) / 2); pointer-events: none; }
 .monthPill > span, .stickyMonth > span { transform: rotate(-90deg); white-space: nowrap; text-transform: uppercase; font-size: var(--font-size-xs); font-weight: 500; }
 
-.times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--sp-6); position: relative; display: grid; grid-template-rows: repeat(2, var(--slot-target)); grid-auto-flow: column; grid-auto-columns: minmax(calc(var(--sp-12) + var(--sp-1)), max-content); gap: 0 var(--sp-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: calc(var(--sp-1) / 2); margin-inline: calc(var(--sp-1) / -2); scroll-padding-inline: var(--sp-3); --fade-start: 0px; --fade-end: 0px; --fade-clear-start: 0px; --fade-clear-end: 0px; mask-image: linear-gradient(to right, transparent var(--fade-clear-start), black var(--fade-start), black calc(100% - var(--fade-end)), transparent calc(100% - var(--fade-clear-end))); }
+.times { --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 50%, transparent); --slot-target: var(--space-48); --time-rows: 2; position: relative; display: grid; grid-template-rows: repeat(var(--time-rows), var(--slot-target)); grid-auto-flow: column; grid-auto-columns: minmax(calc(var(--space-96) + var(--space-8)), max-content); gap: 0 var(--space-8); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: var(--space-4); margin-inline: calc(var(--space-4) * -1); scroll-padding-inline: var(--space-24); --fade-start: 0px; --fade-end: 0px; --fade-clear-start: 0px; --fade-clear-end: 0px; mask-image: linear-gradient(to right, transparent var(--fade-clear-start), black var(--fade-start), black calc(100% - var(--fade-end)), transparent calc(100% - var(--fade-clear-end))); }
 .times::-webkit-scrollbar { display: none; }
+
 /* In-card booking uses one horizontal rail; the full-page editor can use two rows. */
-.card .times { grid-template-rows: var(--slot-target); }
-.times[data-rows="1"] { grid-template-rows: var(--slot-target); }
+.card .times { --time-rows: 1; }
+.times[data-rows="1"] { --time-rows: 1; }
 /* Use the existing horizontal rail when a second row would crowd the footer. */
 @container booking-content (max-height: 22rem) {
-  .times { grid-template-rows: var(--slot-target); }
+  .times { --time-rows: 1; }
 }
 /* Design 21 reserves the extra height in its browsing card. Keep the second
    row even in a shorter content container; discovery remains horizontal. */
 :global([data-design="d21"]) .card .times[data-rows="2"] {
-  grid-template-rows: repeat(2, var(--slot-target));
+  --time-rows: 2;
 }
 /* The footer already overlaps the viewport: retain clearance without an
    extra invisible padding strip creating vertical overflow in tighter cards. */
@@ -124,7 +125,11 @@
 .timeHeading { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-1); min-height: 0; margin-bottom: calc(var(--sp-1) / 2); }
 .scrollRow { position: relative; min-width: 0; }
 .scrollControls { position: absolute; z-index: 3; inset: 0; pointer-events: none; }
-.scrollControls button { position: absolute; inset-block: 0; display: grid; place-items: center; width: var(--target); min-height: var(--target); padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--scroll-chevron); pointer-events: auto; transition: color var(--transition-fast); }
+.scrollControls button { --disclosure-icon-hover: transparent; position: absolute; inset-block: 0; display: grid; place-items: center; width: var(--target); min-height: var(--target); padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--scroll-chevron); cursor: pointer; pointer-events: auto; transition: color var(--duration-fast) var(--ease-out); }
+/* Own the hover here: listing overlays are portalled outside page-level
+   disclosure styles. Keep the circle centred without changing the hit area. */
+.scrollControls button::before { content: ""; position: absolute; place-self: center; width: calc(var(--space-20) + var(--space-8)); aspect-ratio: 1; border-radius: var(--radius-full); background-color: transparent; pointer-events: none; transition: background-color var(--duration-fast) var(--ease-out); }
+.scrollControls button > svg { position: relative; }
 /* Align the visible chevron strokes, rather than their 44px hit areas. */
 .scrollControls button:first-child { left: calc(var(--sp-3) * -1 + var(--sp-1) / 2); }
 .scrollControls button:last-child { right: calc(var(--sp-3) * -1 + var(--sp-1) / 2); }
@@ -177,10 +182,11 @@
   .dates, .times, .dates button, .times button { cursor: grab; }
   .dates[data-dragging="true"], .times[data-dragging="true"], .dates[data-dragging="true"] button, .times[data-dragging="true"] button { cursor: grabbing; }
   .scrollControls button:hover:not(:disabled) { color: var(--scroll-chevron-hover); }
+  .scrollControls button:hover:not(:disabled)::before { background-color: var(--color-disclosure-hover); }
   .continue:hover:not(:disabled) { background: var(--color-primary-dark); }
 }
 .dates button[aria-pressed="true"]:active { color: var(--d3-ui-selection-pressed, var(--d3-ui-selection-label, var(--color-emergency))); }
-@media (prefers-reduced-motion: reduce) { .card * { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .card *, .scrollControls button, .scrollControls button::before { transition: none; } }
 @media (prefers-reduced-transparency: reduce) { .times { --d3-control-surface: var(--color-bg-card); } .back::before { background: var(--d7-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } .footer { background: var(--d7-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media (forced-colors: active) { .times, .dates { mask-image: none; scrollbar-width: thin; } .stickyMonth { display: none; } .card, .footer { border: 1px solid CanvasText; color: CanvasText; background: Canvas; box-shadow: none; } .card button[aria-pressed="true"] { outline: 2px solid Highlight; outline-offset: -2px; } }
 
@@ -235,3 +241,6 @@
 .textHeader + .scrollArea > [data-card-scrollbar] > div { background: var(--d7-border); }
 .textHeader + .scrollArea > [data-card-scrollbar]:hover > div,
 .textHeader + .scrollArea[data-dragging="true"] > [data-card-scrollbar] > div { background: color-mix(in srgb, var(--d17-lite-ink) 25%, transparent); }
+
+.slotSummaryValue { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); }
+.slotSummaryValue strong { margin-top: 0; }

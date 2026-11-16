@@ -1,5 +1,6 @@
 "use client";
 
+import { getAppointmentFee } from "@/features/booking/executiveSlots";
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
@@ -126,6 +127,7 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
     requestAnimationFrame(() => heading.current?.focus({ preventScroll: true }));
   }, [bookingRequest, doctor, flow, selection]);
   const selectedDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: selection.hospital }));
+  const selectedFee = getAppointmentFee(selectedDoctor?.fee ?? doctor.fee, selection);
   useEffect(() => {
     if (expanded) heading.current?.focus({ preventScroll: true });
   }, [expanded]);
@@ -135,8 +137,8 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
       loaded={flow.loaded} notice={flow.notice}
       autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired}
       onChange={flow.selectTime}
-      price={/\d/.test(selectedDoctor?.fee ?? doctor.fee) ? appointmentPricing(selectedDoctor?.fee ?? doctor.fee).base : "Confirm fee"}
-      showOnwards={/\d/.test(selectedDoctor?.fee ?? doctor.fee)}
+      price={/\d/.test(selectedFee) ? appointmentPricing(selectedFee).base : "Confirm fee"}
+      showOnwards={/\d/.test(selectedFee)}
       busy={flow.busy} disabled={!flow.loaded || !selection.time || flow.busy || flow.expired}
       onContinue={continueBooking} onClose={close} onOpen={open} expanded={expanded}
       headingRef={heading} actionRef={action} editActionRef={editAction}

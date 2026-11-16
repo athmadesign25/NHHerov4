@@ -5,10 +5,11 @@ import test from "node:test";
 import ts from "typescript";
 
 const placementUrl = new URL("../src/features/booking/designA/placement.ts", import.meta.url);
+const sizingUrl = new URL("../src/features/booking/designA/sizing.ts", import.meta.url);
 registerHooks({
   load(url, context, nextLoad) {
-    if (url === placementUrl.href) {
-      return { format: "module", shortCircuit: true, source: ts.transpileModule(readFileSync(placementUrl, "utf8"), {
+    if (url === placementUrl.href || url === sizingUrl.href) {
+      return { format: "module", shortCircuit: true, source: ts.transpileModule(readFileSync(new URL(url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
       }).outputText };
     }
@@ -17,7 +18,36 @@ registerHooks({
 });
 
 const { expandedBookingPlacement } = await import(placementUrl.href);
+const { bookingPanelHeight } = await import(sizingUrl.href);
 const gutter = 16;
+
+test("a revealed desktop card respects the sticky toolbar clearance", () => {
+  const result = expandedBookingPlacement({ left: 384, top: 80, width: 320, height: 560 },
+    { width: 1440, height: 900 }, { width: 896, height: 560 }, gutter,
+    { left: 384, width: 1008 }, undefined, 200);
+  assert.equal(result.top, 200);
+  assert.equal(result.height, 560);
+  assert.ok(result.top + result.height <= 884);
+});
+
+test("video height is independent of whether it was opened directly or switched from hospital", () => {
+  const source = 611;
+  const available = 700;
+  assert.equal(bookingPanelHeight(source, 490, available, "hospital"), source);
+  const switchedVideo = bookingPanelHeight(source, 410, available, "video");
+  const reopenedVideo = bookingPanelHeight(source, 410, available, "video");
+  assert.equal(switchedVideo, reopenedVideo);
+  assert.equal(reopenedVideo, 410);
+  assert.equal(bookingPanelHeight(source, 490, available, "hospital"), source);
+});
+
+test("long content grows only as far as the available viewport, in either consultation mode", () => {
+  for (const mode of ["hospital", "video"]) {
+    assert.equal(bookingPanelHeight(611, 760, 800, mode), 760);
+    assert.equal(bookingPanelHeight(611, 760, 568, mode), 568);
+    assert.equal(bookingPanelHeight(611, 760, 0, mode), 0);
+  }
+});
 
 test("the first card expands from its left edge without covering the filters", () => {
   const source = { left: 384, top: 160, width: 320, height: 560 };

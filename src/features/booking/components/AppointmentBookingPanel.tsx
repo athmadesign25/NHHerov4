@@ -1,9 +1,10 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useId, type ReactNode, type RefObject } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import AppointmentSelector from "@/app/search/designs/d20/AppointmentSelector";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { formatBookingDate } from "@/features/booking/format";
@@ -59,7 +60,7 @@ export default function AppointmentBookingPanel({
         className={`${presentation.panel} ${styles.panel}`} data-appointment-options layout={reduced ? false : "position"}
         initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: reduced ? 0 : duration.base, ease: ease.out, layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
-        <header className={`${presentation.header} ${showDoctorImage ? styles.doctorHeader : ""}`}>
+        <header className={`${presentation.header} ${showDoctorImage ? styles.doctorHeader : ""}`} data-appointment-header>
           {showDoctorImage ? <div className={styles.identity}>
             <span className={styles.portrait}><Image src={doctor.img} alt="" fill sizes="48px" /></span>
             <div className={styles.identityText}>
@@ -71,24 +72,26 @@ export default function AppointmentBookingPanel({
             <ChevronDown className={styles.closeIcon} aria-hidden />
           </button>
         </header>
-        <div className={presentation.options} data-lenis-prevent aria-busy={!loaded || undefined}>
-          {notice && <p className={presentation.notice} role="status">{notice}</p>}
-          <div inert={!loaded || undefined}>
+        <div className={presentation.options} data-appointment-scroll data-lenis-prevent aria-busy={!loaded || undefined}>
+          <div data-appointment-intrinsic>
+            {notice && <p className={presentation.notice} role="status">{notice}</p>}
+            <div inert={!loaded || undefined}>
             <AppointmentSelector showHospitalDirections doctor={doctor} selection={selection}
               now={now} onChange={onChange} autoSelectFirst={loaded && autoSelectFirst} />
+            </div>
           </div>
         </div>
       </motion.div>}
     </AnimatePresence>
     <motion.div layout={reduced ? false : "position"} layoutId={`${panelId}-summary`}
-      className={`${presentation.summary} ${styles.summary}`}
+      className={`${presentation.summary} ${styles.summary}`} data-appointment-summary
       transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
       {expanded || selection.time ? <div className={presentation.selected}>
         <div className={presentation.selectionDetails}>
-          <div className={presentation.slotLine}>
-            <strong aria-live="polite" aria-atomic="true">{selection.time
+          <div className={`${presentation.slotLine} ${styles.slotLine}`}>
+            <SlotSelectionValue selection={selection}><strong aria-live="polite" aria-atomic="true">{selection.time
               ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</>
-              : "Choose an available time"}</strong>
+              : "Choose an available time"}</strong></SlotSelectionValue>
             {!expanded && <button ref={editActionRef} type="button" className={presentation.editSelection} onClick={onOpen}
               disabled={busy} aria-label="Edit appointment date, time and consultation details" aria-expanded={false} aria-controls={panelId}>Edit</button>}
           </div>
@@ -103,7 +106,6 @@ export default function AppointmentBookingPanel({
           aria-expanded={showContinue ? undefined : false} aria-controls={showContinue ? undefined : panelId}
           disabled={showContinue && disabled} onClick={showContinue ? onContinue : onOpen}>
           <span>{showContinue ? busy ? "Continuing…" : "Continue" : "Book appointment"}</span>
-          {showContinue && <ArrowRight className={presentation.continueArrow} aria-hidden />}
         </button>
         {!expanded && collapsedAction}
       </div>

@@ -24,6 +24,7 @@
 
 .panel { min-height: 0; flex: 1 1 auto; }
 .summary { flex-shrink: 0; }
+.slotLine { flex-wrap: wrap; align-items: center; row-gap: var(--space-4); }
 .root[data-expanded="true"] .summary {
   border-top: var(--space-1) solid color-mix(in srgb, var(--color-border) 55%, transparent);
 }

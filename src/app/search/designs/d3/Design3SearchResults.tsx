@@ -3,6 +3,7 @@ import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import { DESIGN16_BOOKING_DAYS,indiaDate } from "@/features/booking/appointmentTime";
 import { design20ListingReturnTo,design20RequestedSelection } from "@/features/booking/design20/model";
+import { bookingHistoryEntryState } from "@/features/booking/designA/bookingHistoryLease";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { presentationDoctorName } from "@/features/design-preview/presentationCopy";
 import { getDesign16LanguageShortcut } from "@/features/search/design16Language";
@@ -126,9 +127,9 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
         previousBooking.current = bookingId;
         if (bookingId) {
             visitedCards.current.add(bookingId);
-            // Direct entry and Edit details return to the selected card. An ordinary
-            // Book click keeps its exact current position and never scrolls the page.
-            if (!openedHere.current) {
+            // Design A reveals its source before mounting the expanding surface.
+            // The inline previews still restore their selected card here.
+            if (!openedHere.current && listingPreview !== "a") {
                 const frame = requestAnimationFrame(() => {
                     const card = document.querySelector<HTMLElement>(`[data-booking-card="${CSS.escape(bookingId)}"]`);
                     if (!card)
@@ -138,20 +139,18 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
                         __lenis?: Lenis;
                     }).__lenis;
                     if (lenis)
-                        // Design A locks page scrolling before this queued restoration.
-                        // Only its source frame may bypass that lock for explicit entry/Back.
-                        lenis.scrollTo(top, { immediate: true, force: card.hasAttribute("data-booking-active") });
+                        lenis.scrollTo(top, { immediate: true });
                     else
                         window.scrollTo({ top, behavior: "instant" });
                 });
                 return () => cancelAnimationFrame(frame);
             }
         }
-        if (!bookingId && previous) {
+        if (!bookingId && previous && listingPreview !== "a") {
             const frame = requestAnimationFrame(() => document.querySelector<HTMLElement>(`[data-book-doctor="${CSS.escape(previous)}"]`)?.focus({ preventScroll: true }));
             return () => cancelAnimationFrame(frame);
         }
-    }, [bookingId]);
+    }, [bookingId, listingPreview]);
     const cardSelectionParams = new URLSearchParams(searchParams.toString());
     if (searchParams.get("bookingMode"))
         cardSelectionParams.set("mode", searchParams.get("bookingMode")!);
@@ -372,10 +371,10 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
             else
                 next.delete("date");
             if (bookingId)
-                window.history.replaceState(null, "", `${pathname}?${next}`);
+                window.history.replaceState(bookingHistoryEntryState(), "", `${pathname}?${next}`);
             else {
                 openedHere.current = true;
-                window.history.pushState(null, "", `${pathname}?${next}`);
+                window.history.pushState(bookingHistoryEntryState(), "", `${pathname}?${next}`);
             }
             return;
         }

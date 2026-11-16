@@ -15,17 +15,15 @@
   top: var(--expanded-booking-top, var(--booking-dock-gutter));
   left: var(--expanded-booking-left, var(--booking-dock-gutter));
   width: var(--expanded-booking-width, var(--booking-dock-width));
+  height: var(--expanded-booking-height, auto);
   max-width: var(--booking-dock-max-width);
   max-height: calc(100dvh - var(--booking-dock-gutter) * 2);
+  border-radius: var(--radius-xl);
 }
 
 .surface {
-  position: relative;
-  width: 100%;
-  height: var(--expanded-booking-height, auto);
-  min-width: 0;
-  min-height: 0;
-  max-height: inherit;
+  position: absolute;
+  inset: 0;
   border: var(--space-1) solid color-mix(in srgb, var(--color-primary) 12%, var(--color-border));
   border-radius: var(--radius-xl);
   color: var(--d17-lite-ink);
@@ -33,19 +31,22 @@
   backdrop-filter: blur(var(--space-16)) saturate(110%);
   -webkit-backdrop-filter: blur(var(--space-16)) saturate(110%);
   box-shadow: var(--elevation-5);
-  pointer-events: auto;
-  outline: none;
+  pointer-events: none;
 }
 
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
   height: 100%;
   max-height: inherit;
-  overflow: clip;
   border-radius: inherit;
+  color: var(--d17-lite-ink);
+  pointer-events: auto;
+  clip-path: var(--booking-content-clip, none);
+  outline: none;
 }
 
 /* A short viewport scrolls only the options; the close and Continue controls stay visible. */
@@ -57,6 +58,15 @@
 .content [data-appointment-options] {
   max-height: none;
 }
+
+.content[data-compact] {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.content[data-compact] [data-appointment-booking-panel] { height: auto; max-height: none; }
+.content[data-compact] [data-appointment-options] { flex: none; }
+.content[data-compact] [data-appointment-scroll] { overflow: visible; }
 
 @media (max-width: 639px) {
   .positioner {

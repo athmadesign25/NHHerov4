@@ -382,19 +382,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                       {/* Country Code */}
                       <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
                         <select
-                          style={{
-                            width: "100%",
-                            padding: "14px 32px 14px 16px",
-                            borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, #e2e8f0)",
-                            background: "#ffffff",
-                            fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, #0f172a)",
-                            fontWeight: 500,
-                            appearance: "none",
-                            outline: "none",
-                            cursor: "pointer"
-                          }}
+                          className={styles.countrySelect}
+                          aria-label="Country calling code"
                           defaultValue="+91"
                         >
                           <option value="+91">🇮🇳 +91</option>

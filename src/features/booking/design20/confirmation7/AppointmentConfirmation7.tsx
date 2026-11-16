@@ -1,5 +1,6 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useCallback, useId, useRef, useState, type RefObject } from "react";
 import Link from "next/link";
 import { CalendarDays, CalendarPlus, MapPin, Video } from "lucide-react";
@@ -98,7 +99,7 @@ export default function AppointmentConfirmation7({ doctor, draft, pricing, headi
               <div className={layout.dateCopy}>
                 <h3 className={styles.detailLabel}>Slot date &amp; time</h3>
                 <div className={layout.dateGroup}>
-                  <p className={styles.dateValue}><span className={styles.dateDay}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden>·</span></span>{" "}<span className={styles.time}>{selection.time}</span></p>
+                  <SlotSelectionValue selection={selection}><p className={styles.dateValue}><span className={styles.dateDay}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden>·</span></span>{" "}<span className={styles.time}>{selection.time}</span></p></SlotSelectionValue>
                   {calendarUrl && <a className={`${styles.calendar} ${layout.calendar}`} href={calendarUrl} download="nh-appointment.ics" onClick={() => setCalendarReady(true)}><CalendarPlus size={17} aria-hidden />Add to calendar</a>}
                 </div>
               </div>

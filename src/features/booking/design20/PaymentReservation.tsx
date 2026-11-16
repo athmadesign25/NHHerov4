@@ -1,5 +1,6 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useEffect, useId, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CalendarDays, Clock3, MapPin, Video } from "lucide-react";
@@ -80,7 +81,7 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
           </div>
           <div className={styles.detail}>
             <span className={styles.detailIcon} aria-hidden><CalendarDays size={18} /></span>
-            <div><p className={styles.label}>Slot date &amp; time</p><p className={styles.value}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden> · </span><span className={styles.time}>{selection.time}</span></p></div>
+            <div><p className={styles.label}>Slot date &amp; time</p><div className={styles.slotLine}><SlotSelectionValue selection={selection}><p className={styles.value}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden> · </span><span className={styles.time}>{selection.time}</span></p></SlotSelectionValue></div></div>
           </div>
         </div>
       </section>

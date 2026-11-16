@@ -42,7 +42,7 @@
 .actions {
   display: flex;
   justify-content: center;
-  padding: 0 var(--confirmation-inset) var(--space-24);
+  padding: var(--space-4) var(--confirmation-inset) var(--space-24);
 }
 
 .homeLink {
@@ -51,14 +51,18 @@
   align-items: center;
   justify-content: center;
   min-height: var(--space-48);
-  padding-inline: var(--space-16);
-  border-radius: var(--radius-sm);
+  padding-inline: var(--space-24);
+  border-radius: var(--radius-md);
+  border: var(--space-1) solid var(--color-primary);
+  background-color: transparent;
+  font-weight: 500;
   text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
 }
 
 .homeLink:hover {
   color: var(--color-primary-dark);
+  background-color: var(--color-primary-tint);
 }
 
 .homeLink:focus-visible {
