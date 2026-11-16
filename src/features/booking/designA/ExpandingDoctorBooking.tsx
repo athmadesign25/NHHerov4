@@ -49,7 +49,7 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
   const priorAuth = useRef(false);
   const [openingMode] = useState(initialSelection.mode);
   const [hospitalHeight, setHospitalHeight] = useState(0);
-  const [placement, setPlacement] = useState<(ReturnType<typeof expandedBookingPlacement> & { availableHeight: number }) | null>(null);
+  const [placement, setPlacement] = useState<(ReturnType<typeof expandedBookingPlacement> & { availableHeight: number; bottomAnchored: boolean }) | null>(null);
   const signingIn = flow.phase === "auth" && !flow.isUserLoggedIn;
   const selectedDoctor = getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: draft.selection.hospital }));
   const pricing = appointmentPricing(selectedDoctor?.fee ?? doctor.fee, draft.discountCode);
@@ -57,8 +57,8 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
   useBookingFocus(present, surface);
   useEffect(() => { if (flow.loaded) onSelectionChange(draft.selection); }, [flow.loaded, draft.selection, onSelectionChange]);
 
-  // The grid supplies horizontal bounds, while the source card supplies the
-  // height and top edge. Content changes never recenter this surface.
+  // Desktop expands within the grid; mobile docks to the viewport bottom.
+  // Both keep the source card height as their initial baseline.
   useLayoutEffect(() => {
     const panel = surface.current;
     const anchor = sourceRef.current;
@@ -68,10 +68,13 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
     const place = () => {
       const computed = getComputedStyle(shell);
       const gutter = parseFloat(computed.getPropertyValue("--booking-dock-gutter")) || 0;
+      const bottomAnchored = computed.getPropertyValue("--expanded-booking-anchor").trim() === "bottom";
+      const bottomInset = parseFloat(computed.bottom) || gutter;
       const viewport = { width: document.documentElement.clientWidth, height: window.visualViewport?.height ?? window.innerHeight };
       const bounds = expandedBookingPlacement(anchor.getBoundingClientRect(),
-        viewport, { width: parseFloat(computed.maxWidth), height: anchor.offsetHeight }, gutter, grid?.getBoundingClientRect());
-      const next = { ...bounds, availableHeight: viewport.height - gutter - bounds.top };
+        viewport, { width: parseFloat(computed.maxWidth), height: anchor.offsetHeight }, gutter, grid?.getBoundingClientRect(),
+        bottomAnchored ? { bottomInset } : undefined);
+      const next = { ...bounds, bottomAnchored, availableHeight: viewport.height - gutter - (bottomAnchored ? bottomInset : bounds.top) };
       setPlacement(previous => previous && Object.keys(next).every(key => previous[key as keyof typeof next] === next[key as keyof typeof next]) ? previous : next);
     };
     // This DOM measurement must finish before first paint to avoid a visible
@@ -93,8 +96,8 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
     };
   }, [sourceRef]);
 
-  // Cache the real hospital block (including its grid gap). Removing it moves
-  // only the bottom edge; its previous measurement survives the exit animation.
+  // Cache the hospital block and its gap. The anchored edge stays fixed when
+  // switching modes; this measurement survives the hospital exit animation.
   useLayoutEffect(() => {
     if (draft.selection.mode !== "hospital") return;
     const hospital = surface.current?.querySelector<HTMLElement>("[data-appointment-hospital]");
@@ -132,7 +135,7 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
         <motion.article ref={surface} className={styles.surface} data-booking-focus data-design-a-booking={doctor.id}
           role="dialog" aria-modal="true" aria-labelledby={`${id}-heading`} tabIndex={-1}
           layoutId={reduced ? undefined : `d20-card-${doctor.id}`} layout
-          style={{ originX: placement?.edge === "right" ? 1 : placement?.edge === "center" ? 0.5 : 0, originY: 0 }}
+          style={{ originX: placement?.edge === "right" ? 1 : placement?.edge === "center" ? 0.5 : 0, originY: placement?.bottomAnchored ? 1 : 0 }}
           initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           transition={{ layout: { duration: reduced ? 0 : present ? duration.slow : duration.emphasis, ease: ease.standard }, opacity: { duration: reduced ? 0 : duration.base } }}
           onKeyDown={event => {

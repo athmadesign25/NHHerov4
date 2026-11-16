@@ -21,12 +21,22 @@ export function expandedBookingPlacement(
   panel: { width: number; height: number },
   gutter: number,
   results?: BookingResultsBounds,
+  mobileDock?: { bottomInset: number },
 ) {
   const clamp = (value: number, minimum: number, maximum: number) => Math.min(Math.max(minimum, value), maximum);
   const horizontalGutter = Math.min(Math.max(0, gutter), viewport.width / 2);
   const verticalGutter = Math.min(Math.max(0, gutter), viewport.height / 2);
   const viewportLeft = horizontalGutter;
   const viewportRight = viewport.width - horizontalGutter;
+
+  // On mobile the viewport, not the scrolled source card, anchors the sheet.
+  if (mobileDock) {
+    const bottomInset = clamp(mobileDock.bottomInset, verticalGutter, viewport.height - verticalGutter);
+    const width = Math.min(Math.max(0, panel.width), viewportRight - viewportLeft);
+    const height = Math.min(Math.max(0, source.height), viewport.height - verticalGutter - bottomInset);
+    return { left: (viewport.width - width) / 2, top: viewport.height - bottomInset - height, width, height, edge: "center" as const };
+  }
+
   const leftBoundary = results ? clamp(results.left, viewportLeft, viewportRight) : viewportLeft;
   const rightBoundary = results
     ? clamp(results.left + Math.max(0, results.width), leftBoundary, viewportRight)

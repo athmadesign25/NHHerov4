@@ -58,6 +58,15 @@
   max-height: none;
 }
 
+@media (max-width: 639px) {
+  .positioner {
+    --expanded-booking-anchor: bottom;
+    top: auto;
+    bottom: calc(var(--booking-dock-gutter) + env(safe-area-inset-bottom));
+    max-height: calc(100dvh - var(--booking-dock-gutter) * 2 - env(safe-area-inset-bottom));
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   .surface { background: var(--color-bg-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
