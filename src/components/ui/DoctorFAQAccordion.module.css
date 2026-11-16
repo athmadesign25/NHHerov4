@@ -5,6 +5,9 @@
   border-top: 1px solid var(--d3-ui-border, var(--color-border));
 }
 
+.profileSection { row-gap: 0; }
+.profileSection .answer p { font-size: inherit; line-height: inherit; }
+
 .header {
   margin-bottom: var(--sp-2);
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import DoctorFAQAccordion from "@/components/ui/DoctorFAQAccordion";
+import faqStyles from "@/components/ui/DoctorFAQAccordion.module.css";
 import { ChevronDown, MapPin, PhoneCall } from "lucide-react";
 import DoctorProfileAvailability from "./DoctorProfileAvailability";
 import DoctorProfileVideos from "./DoctorProfileVideos";
@@ -66,12 +68,9 @@ export default function DoctorProfileDetails({ doctor, content }: Props) {
 
     <DoctorProfileVideos doctor={doctor} />
 
-    {!!faqs.length && <section id="profile-faq" className={styles.panel} aria-labelledby="profile-faq-heading">
-      <header className={styles.sectionHeading}><h2 id="profile-faq-heading">Frequently asked questions</h2></header>
-      <div className={styles.faqList}>{faqs.map((faq, index) => <details key={faq.question} className={styles.disclosure} name={`doctor-${doctor.id}-faq`}>
-        <summary aria-controls={`doctor-faq-answer-${index}`}>{faq.question}<ChevronDown size={16} aria-hidden /></summary>
-        <div id={`doctor-faq-answer-${index}`} className={styles.faqAnswer}><p>{faq.answer}</p></div>
-      </details>)}</div>
+    {!!faqs.length && <section id="profile-faq" className={`${styles.panel} ${faqStyles.profileSection}`} aria-labelledby="profile-faq-heading">
+      <header className={faqStyles.header}><h2 id="profile-faq-heading">Frequently asked questions</h2></header>
+      <DoctorFAQAccordion items={faqs} idPrefix={`doctor-${doctor.id}-faq`} />
     </section>}
 
     <aside className={styles.assistance} aria-label="Appointment assistance">
