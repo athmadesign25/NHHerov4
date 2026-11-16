@@ -1,0 +1,268 @@
+.summaryBannerCard {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: var(--summary-bg, rgba(248, 250, 252, 0.85));
+  border: 1px solid var(--summary-border, rgba(15, 23, 42, 0.07));
+  border-left: 3.5px solid var(--summary-accent, var(--color-primary, #034EA2));
+}
+
+.summaryEyebrowRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.summaryEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--summary-accent, var(--color-primary, #034EA2));
+}
+
+.inlineReviewerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--summary-badge-text, #334155);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: var(--summary-badge-bg, #ffffff);
+  border: 1px solid var(--summary-border, rgba(15, 23, 42, 0.09));
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.inlineReviewerBadge:hover {
+  color: var(--summary-accent, var(--color-primary, #034EA2));
+  border-color: rgba(3, 78, 162, 0.3);
+}
+
+.inlineCheckIcon {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.summaryText {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--summary-text, #1e293b);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ─── DEDICATED "REVIEWED BY DR. ___" SECTION (GOOGLE E-E-A-T) ─────────── */
+.reviewedSection {
+  margin: 36px 0;
+  padding: 24px 26px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8fbff 0%, #f0f6ff 100%);
+  border: 1px solid rgba(3, 78, 162, 0.14);
+  box-shadow: 0 6px 20px rgba(3, 78, 162, 0.05);
+}
+
+.reviewedInner {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.avatarContainer {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  padding: 2px;
+  background: linear-gradient(135deg, #034EA2 0%, #10b981 100%);
+}
+
+.avatarImgWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.avatarImg {
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.verifiedShieldBadge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+}
+
+.reviewedContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reviewedTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.eeatBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #034EA2;
+  background: rgba(3, 78, 162, 0.08);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.reviewDateText {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.reviewerHeading {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 2px 0 0 0;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.reviewerCredentials {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.reviewerNote {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #475569;
+  margin: 4px 0 0 0;
+}
+
+.profileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #034EA2);
+  text-decoration: none;
+  width: fit-content;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.profileLink:hover {
+  color: #023070;
+  transform: translateX(2px);
+}
+
+/* ─── EDITORIAL DEMO IMAGE GALLERY / FIGURE GRID ───────────────────────── */
+.editorialFiguresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: 22px 0 26px;
+}
+
+.editorialFigureCard {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.editorialFigureImgWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.editorialFigureImg {
+  object-fit: cover;
+  object-position: center 25%;
+  transition: transform 0.35s ease;
+}
+
+.editorialFigureCard:hover .editorialFigureImg {
+  transform: scale(1.03);
+}
+
+.editorialFigureCaption {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #475569;
+  font-weight: 500;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+@media (max-width: 640px) {
+  .summaryBannerCard {
+    padding: 18px 18px;
+    margin-bottom: 28px;
+  }
+
+  .reviewedSection {
+    padding: 18px;
+  }
+
+  .reviewedInner {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .editorialFiguresGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

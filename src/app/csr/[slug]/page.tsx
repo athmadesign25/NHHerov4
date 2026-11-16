@@ -183,7 +183,8 @@ export default function CsrDetailPage({ params }: PageProps) {
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} />
-                <span>Narayana Foundation Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneDesktopSpan}>Narayana Foundation Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneMobileSpan}>Call Helpline</span>
               </a>
             </div>
           </motion.div>

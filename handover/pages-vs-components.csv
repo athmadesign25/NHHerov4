@@ -1,0 +1,11 @@
+Page,Route,Components Used (simple name -> tech name)
+Treatments & Procedures list,/treatments,"Breadcrumb trail -> <Breadcrumbs />; Animated heading -> <TextSweepEffect />; Organ chips carousel -> <OrganSystemChipsCarousel />; Blue CTA banner -> <BlogCtaBanner />; Floating buttons -> <ClinicalFloatingSideActions />"
+Diseases list,/diseases,"<Breadcrumbs />; <TextSweepEffect />; <OrganSystemChipsCarousel />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Symptoms list,/symptoms,"<Breadcrumbs />; <TextSweepEffect />; <OrganSystemChipsCarousel />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Diagnostics list,/diagnostics,"<Breadcrumbs />; <TextSweepEffect />; <OrganSystemChipsCarousel />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Procedure / Treatment detail,/procedures/[slug],"<Breadcrumbs />; <TextSweepEffect /> (V4); <ClinicalSummaryBanner />; <ClinicalEditorialFigures />; <NearbySpecialistsCarousel />; <NearbyCareCentresCarousel />; <SpecialityFAQ />; <ClinicalReviewedBySection />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Disease detail,/diseases/[slug],"<Breadcrumbs />; <ClinicalSummaryBanner />; <ClinicalEditorialFigures />; <NearbySpecialistsCarousel />; <NearbyCareCentresCarousel />; <SpecialityFAQ />; <ClinicalReviewedBySection />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Symptom detail,/symptoms/[slug],"<Breadcrumbs />; <ClinicalSummaryBanner />; <ClinicalEditorialFigures />; <NearbySpecialistsCarousel />; <NearbyCareCentresCarousel />; <SpecialityFAQ />; <ClinicalReviewedBySection />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Diagnostic detail,/diagnostics/[slug],"<Breadcrumbs />; <ClinicalSummaryBanner />; <ClinicalEditorialFigures />; <NearbySpecialistsCarousel />; <NearbyCareCentresCarousel />; <SpecialityFAQ />; <ClinicalReviewedBySection />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Blog listing,/blog (/articles),"<Breadcrumbs />; <BlogHeroV3 />; <MoreFromOurBlogCarousel />; <BlogCategoryExplore />; <BlogMedicalExperts />; <BlogBentoGrid />; <TextSweepEffect />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"
+Article detail,/articles/[slug],"<Breadcrumbs />; <BlogLanguageChanger />; <ClinicalSummaryBanner />; <NearbySpecialistsCarousel />; <ClinicalReviewedBySection />; <MoreFromOurBlogCarousel />; <BlogCtaBanner />; <ClinicalFloatingSideActions />"

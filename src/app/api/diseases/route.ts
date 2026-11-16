@@ -11,11 +11,20 @@ export async function GET(request: NextRequest) {
     let results = [...DISEASES_DATA];
 
     if (organ && organ !== "all") {
-      results = results.filter((item) => {
+      const aliasMap: Record<string, RegExp> = {
+        urinary: /kidney|renal|urinary|bladder|prostate|urolog/,
+        gynaecology: /gynaec|breast|cervical|ovar|uter|cancer/,
+        endocrine: /diabet|thyroid|endocrin|metabolic|liver/,
+        rheumatology: /joint|bone|arthritis|rheuma|ortho/,
+        surgery: /surg|hernia|gallbladder|gastro|stomach|colon/,
+      };
+      const matched = results.filter((item) => {
         if (item.organ === organ) return true;
         const fullContent = `${item.title} ${item.shortTitle} ${item.speciality} ${item.summary} ${item.overview}`.toLowerCase();
+        if (aliasMap[organ] && aliasMap[organ].test(fullContent)) return true;
         return fullContent.includes(organ);
       });
+      if (matched.length > 0) results = matched;
     }
 
     if (query) {

@@ -18,23 +18,16 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import OrganSystemChipsCarousel, {
+  DEFAULT_ORGAN_FILTER_OPTIONS,
+} from "@/components/ui/OrganSystemChipsCarousel";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { SYMPTOMS_DATA, SymptomItem } from "@/data/symptomsData";
 import styles from "./SymptomsLibrary.module.css";
 
-// 10 Key Organ Filters
-const ORGAN_FILTER_OPTIONS = [
-  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
-  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
-  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
-  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
-  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
-  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
-  { label: "Stomach", value: "stomach", image: "/Specialities icons/General Surgery.jpeg" },
-  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
-  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
-  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
-];
+// 14 Key Organ & Clinical Filters
+const ORGAN_FILTER_OPTIONS = DEFAULT_ORGAN_FILTER_OPTIONS;
 
 // Secondary credentials on right hero column
 const HERO_ANALYTICS_PARAMETERS = [
@@ -292,39 +285,13 @@ export default function SymptomsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
-      <motion.section
-        className={styles.categorySection}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className={styles.bubblesRow}>
-          {ORGAN_FILTER_OPTIONS.map((opt) => {
-            const isActive = selectedOrgan === opt.value;
-            return (
-              <button
-                key={opt.value}
-                className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
-                onClick={() => handleToggleOrgan(opt.value)}
-                type="button"
-                aria-pressed={isActive}
-              >
-                <div className={styles.bubbleImgWrap}>
-                  <Image
-                    src={opt.image}
-                    alt={opt.label}
-                    fill
-                    sizes="52px"
-                    className={styles.bubbleImg}
-                  />
-                </div>
-                <span className={styles.bubbleLabel}>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.section>
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      <OrganSystemChipsCarousel
+        options={ORGAN_FILTER_OPTIONS}
+        selectedOrgan={selectedOrgan}
+        onSelectOrgan={(val) => setSelectedOrgan(val)}
+        eyebrow="Explore Symptoms by Organ System & Speciality"
+      />
 
       {/* ─── DYNAMIC FEEDBACK TEXT ROW ─────────────────────────────────────── */}
       <motion.div
@@ -510,8 +477,8 @@ export default function SymptomsLibraryPage() {
         title="Experiencing Severe or Sudden Symptoms?"
         subtitle="Don't ignore critical warning signs. Our emergency care units and rapid triage helpline are available 24×7 with state-of-the-art ambulances, cath labs, and trauma specialists."
         primaryBtn={{
-          href: "/doctors",
-          text: "Consult a Specialist Now",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
           href: "/treatments",
@@ -520,6 +487,7 @@ export default function SymptomsLibraryPage() {
         phoneText="Emergency Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

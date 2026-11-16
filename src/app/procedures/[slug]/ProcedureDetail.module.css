@@ -46,39 +46,48 @@
   display: flex;
   align-items: center;
   padding-top: calc(var(--nav-height, 72px) + 36px);
-  padding-bottom: 56px;
+  padding-bottom: clamp(92px, 12vh, 128px);
   overflow: hidden;
   background: transparent;
   color: #ffffff;
+}
+
+.detailHero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(80px, 10vh, 112px);
+  background: linear-gradient(
+    180deg,
+    rgba(6, 14, 27, 0) 0%,
+    rgba(6, 14, 27, 0.35) 55%,
+    rgba(6, 14, 27, 0.72) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background: 
-    /* Horizontal readability gradient: deep dark behind left text (0–34%), smooth feather (34–66%), clear on right image */
+    /* Horizontal readability gradient: balanced navy behind left text, clear on right image */
     linear-gradient(
       90deg,
-      rgba(6, 14, 27, 0.96) 0%,
-      rgba(6, 14, 27, 0.92) 34%,
-      rgba(6, 14, 27, 0.65) 50%,
-      rgba(6, 14, 27, 0.20) 66%,
-      rgba(6, 14, 27, 0.04) 82%,
+      rgba(8, 20, 38, 0.90) 0%,
+      rgba(8, 20, 38, 0.84) 34%,
+      rgba(8, 20, 38, 0.54) 50%,
+      rgba(8, 20, 38, 0.16) 66%,
+      rgba(8, 20, 38, 0.03) 82%,
       transparent 100%
-    ),
-    /* Bottom anchor blend */
-    linear-gradient(
-      0deg,
-      #060e1b 0%,
-      rgba(6, 14, 27, 0.72) 6%,
-      rgba(6, 14, 27, 0.18) 16%,
-      transparent 28%
     ),
     /* Top edge blend */
     linear-gradient(
       180deg,
-      rgba(6, 14, 27, 0.65) 0%,
-      rgba(6, 14, 27, 0.15) 12%,
+      rgba(8, 20, 38, 0.60) 0%,
+      rgba(8, 20, 38, 0.14) 12%,
       transparent 24%
     );
   pointer-events: none;
@@ -188,15 +197,15 @@
 }
 
 
-/* Clean Phone Number (Call icon + text, no second competing button) */
+/* Clean Phone Number (Desktop) / Tap-to-Call Button (Mobile) */
 .heroPhoneText {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.88);
   font-size: 13.5px;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .heroPhoneText strong {
@@ -209,8 +218,36 @@
 }
 
 .phoneIcon {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.72);
   flex-shrink: 0;
+}
+
+.phoneDesktopSpan {
+  display: inline;
+}
+
+.phoneMobileSpan {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .heroPhoneText {
+    padding: 11px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13.5px;
+  }
+  .phoneDesktopSpan {
+    display: none;
+  }
+  .phoneMobileSpan {
+    display: inline;
+  }
 }
 
 /* ─── RIGHT COLUMN: SECONDARY CREDENTIAL METRICS (MATCHING TREATMENTS LIBRARY) */
@@ -260,12 +297,340 @@
 }
 
 
-/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SOLID WHITE READING SHEET) ─── */
+/* ─── V2: SCROLL-DRIVEN SECTION COLOUR-CHANGE LANGUAGE (MATCHING SPECIALITY PAGE) ─── */
+.detailHeroV2 {
+  padding-bottom: clamp(64px, 8vh, 88px);
+}
+
+.detailHeroV2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: clamp(140px, 18vh, 190px);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--v2-bg, #0a1128) 38%, transparent) 38%,
+    color-mix(in srgb, var(--v2-bg, #0a1128) 76%, transparent) 72%,
+    var(--v2-bg, #0a1128) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (V1: ELEVATED CURVED READING SHEET) ─── */
 .readingExperienceWrapper {
   position: relative;
   width: 100%;
+  z-index: 2;
+  margin-top: -36px;
+  border-radius: 32px 32px 0 0;
+  background: linear-gradient(180deg, #f8fafc 0px, #ffffff 180px);
+  box-shadow:
+    0 -24px 64px rgba(6, 14, 27, 0.45),
+    0 -1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+/* ─── V2: SCROLL-DRIVEN SECTION COLOUR CHANGE (#0a1128 -> #172d56 -> #e2ebf6 -> #ffffff) ─── */
+.readingExperienceWrapperV2 {
+  margin-top: -1px;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--v2-bg, #0a1128);
+}
+
+.readingExperienceWrapperV2 .mainSectionTitle,
+.readingExperienceWrapperV2 .subSectionTitle {
+  color: var(--v2-heading, #111827);
+}
+
+.readingExperienceWrapperV2 .leadParagraph,
+.readingExperienceWrapperV2 .bodyParagraph {
+  color: var(--v2-body, #374151);
+}
+
+.readingExperienceWrapperV2 .tocEyebrow,
+.readingExperienceWrapperV2 .tocEyebrowIcon,
+.readingExperienceWrapperV2 .shareWidgetTitle {
+  color: var(--v2-muted, #64748b);
+  border-bottom-color: var(--v2-border, rgba(15, 23, 42, 0.08));
+}
+
+.readingExperienceWrapperV2 .tocNavRail {
+  border-left-color: var(--v2-border, rgba(15, 23, 42, 0.10));
+}
+
+.readingExperienceWrapperV2 .tocLink {
+  color: var(--v2-toc-link, #4b5563);
+}
+
+.readingExperienceWrapperV2 .tocLink:hover {
+  color: var(--v2-toc-active, #034EA2);
+  background: var(--v2-toc-active-bg, rgba(3, 78, 162, 0.05));
+}
+
+.readingExperienceWrapperV2 .tocLinkActive {
+  color: var(--v2-toc-active, #034EA2);
+  background: var(--v2-toc-active-bg, rgba(3, 78, 162, 0.08));
+}
+
+.readingExperienceWrapperV2 .tocIndicatorMarker {
+  background: var(--v2-toc-active, #034EA2);
+}
+
+.readingExperienceWrapperV2 .shareWidgetBorderless {
+  border-top-color: var(--v2-border, rgba(3, 78, 162, 0.1));
+}
+
+.readingExperienceWrapperV2 .sidebarHelpCallout,
+.readingExperienceWrapperV2 .keyPointsCard {
+  background: var(--v2-card-bg, #f8fafc);
+  border-color: var(--v2-border, #e2e8f0);
+}
+
+.readingExperienceWrapperV2 .helpCardTitle {
+  color: var(--v2-heading, #023070);
+}
+
+.readingExperienceWrapperV2 .helpCardDesc {
+  color: var(--v2-body, #4b5563);
+}
+
+/* ─── V3: SOFT ATMOSPHERIC BLUR MIST BAND (MATCHING REFERENCE IMAGE) ──────── */
+.detailHeroV3 {
+  padding-bottom: clamp(116px, 14.5vh, 152px);
+}
+
+/* Layer 1: Pure Progressive Optical Blur (separate from color gradient so alpha is never squared) */
+.detailHeroV3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(190px, 24vh, 250px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.22) 28%,
+    rgba(0, 0, 0, 0.62) 60%,
+    black 90%,
+    black 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.22) 28%,
+    rgba(0, 0, 0, 0.62) 60%,
+    black 90%,
+    black 100%
+  );
+  pointer-events: none;
   z-index: 1;
-  background: #ffffff;
+}
+
+/* Layer 2: Unmasked 9-stop S-Curve Mist Gradient dissolving seamlessly into #eef2f7 */
+.detailHeroV3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: clamp(190px, 24vh, 250px);
+  background: linear-gradient(
+    180deg,
+    rgba(238, 242, 247, 0) 0%,
+    rgba(238, 242, 247, 0.05) 14%,
+    rgba(238, 242, 247, 0.16) 28%,
+    rgba(238, 242, 247, 0.35) 44%,
+    rgba(238, 242, 247, 0.58) 60%,
+    rgba(238, 242, 247, 0.79) 74%,
+    rgba(238, 242, 247, 0.93) 86%,
+    rgba(238, 242, 247, 0.985) 94%,
+    #eef2f7 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Reading sheet starts at exact #eef2f7 to eliminate any seam line, easing into pure #ffffff */
+.readingExperienceWrapperV3 {
+  margin-top: -1px;
+  border-radius: 0;
+  box-shadow: none;
+  background: linear-gradient(
+    180deg,
+    #eef2f7 0px,
+    #f3f6fa 110px,
+    #f8fafc 230px,
+    #ffffff 360px
+  );
+}
+
+/* ─── V4: REFINED DYNAMIC BG CHANGE + TEXT SWEEP BLEND (MATCHING BLOG V3) ─── */
+.detailHeroV4 {
+  padding-bottom: clamp(72px, 9vh, 100px);
+}
+
+.detailHeroV4::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: clamp(180px, 24vh, 240px);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--v4-bg, #060c18) 22%, transparent) 30%,
+    color-mix(in srgb, var(--v4-bg, #060c18) 62%, transparent) 64%,
+    color-mix(in srgb, var(--v4-bg, #060c18) 90%, transparent) 86%,
+    var(--v4-bg, #060c18) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.readingExperienceWrapperV4 {
+  margin-top: -1px;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--v4-bg, #060c18);
+}
+
+.v4SectionEyebrow {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--v4-eyebrow, #034EA2);
+  margin-bottom: 8px;
+}
+
+.readingExperienceWrapperV4 .mainSectionTitle,
+.readingExperienceWrapperV4 .subSectionTitle {
+  color: var(--v4-heading, #0f172a);
+}
+
+.readingExperienceWrapperV4 .leadParagraph,
+.readingExperienceWrapperV4 .bodyParagraph {
+  color: var(--v4-body, #334155);
+}
+
+.readingExperienceWrapperV4 .tocEyebrow,
+.readingExperienceWrapperV4 .tocEyebrowIcon,
+.readingExperienceWrapperV4 .shareWidgetTitle {
+  color: var(--v4-muted, #64748b);
+  border-bottom-color: var(--v4-border, rgba(15, 23, 42, 0.08));
+}
+
+.readingExperienceWrapperV4 .tocNavRail {
+  border-left-color: var(--v4-border, rgba(15, 23, 42, 0.10));
+}
+
+.readingExperienceWrapperV4 .tocLink {
+  color: var(--v4-toc-link, #4b5563);
+}
+
+.readingExperienceWrapperV4 .tocLink:hover {
+  color: var(--v4-toc-active, #034EA2);
+  background: var(--v4-toc-active-bg, rgba(3, 78, 162, 0.05));
+}
+
+.readingExperienceWrapperV4 .tocLinkActive {
+  color: var(--v4-toc-active, #034EA2);
+  background: var(--v4-toc-active-bg, rgba(3, 78, 162, 0.08));
+}
+
+.readingExperienceWrapperV4 .tocIndicatorMarker {
+  background: var(--v4-toc-active, #034EA2);
+}
+
+.readingExperienceWrapperV4 .shareWidgetBorderless {
+  border-top-color: var(--v4-border, rgba(3, 78, 162, 0.1));
+}
+
+/* ─── COMPACT V1 / V2 BLEND VARIATION TOGGLE PILL ─────────────────────────── */
+.blendVersionToggle {
+  position: fixed;
+  bottom: 20px;
+  left: 68px;
+  z-index: 9990;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 5px 4px 10px;
+  background: rgba(10, 17, 40, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+.blendToggleLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.72);
+  padding-right: 4px;
+}
+
+.blendToggleDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00D47E;
+  box-shadow: 0 0 8px #00D47E;
+}
+
+.blendToggleButtons {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 2px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.blendToggleBtn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1.2;
+}
+
+.blendToggleBtn:hover {
+  color: #ffffff;
+}
+
+.blendToggleBtnActive {
+  background: linear-gradient(135deg, #034EA2 0%, #0284c7 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.45);
+}
+
+@media (max-width: 640px) {
+  .blendVersionToggle {
+    bottom: 84px;
+    left: 16px;
+  }
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
@@ -279,7 +644,7 @@
 
 .twoColumnGrid {
   display: grid;
-  grid-template-columns: 310px 1fr;
+  grid-template-columns: 310px minmax(0, 1fr);
   gap: 36px;
   align-items: start;
 }
@@ -520,6 +885,8 @@
   border-radius: 0;
   padding: 0;
   box-shadow: none;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sectionBlock {

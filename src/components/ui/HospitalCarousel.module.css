@@ -284,7 +284,7 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Subtle dark gradient all over for contrast + dense blur glassmorphism over bottom 65% */
+/* Softened bottom gradient & gentle glass blur confined to bottom half (reduced contrast per review) */
 .bottomOverlay {
   position: absolute;
   inset: 0;
@@ -292,15 +292,15 @@
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(var(--navy-900-rgb), 0.12) 0%,
-    rgba(var(--navy-900-rgb), 0.32) 40%,
-    rgba(var(--navy-900-rgb), 0.78) 65%,
-    rgba(var(--navy-900-rgb), 0.96) 100%
+    transparent 0%,
+    transparent 44%,
+    rgba(12, 25, 48, 0.34) 66%,
+    rgba(10, 22, 42, 0.76) 100%
   );
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 35%, black 65%, black 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 35%, black 65%, black 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 48%, black 78%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 48%, black 78%, black 100%);
 }
 
 .cardBody {

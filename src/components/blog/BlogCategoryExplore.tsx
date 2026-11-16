@@ -90,17 +90,15 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
   return (
     <section className={styles.exploreSection} data-nav-theme="light" id="explore-categories">
       <div className={styles.container}>
-        {/* Section Header (Centered with Signature Color Gradient Title) */}
+        {/* Section Header (Centered with Dynamic TextSweepEffect) */}
         <div className={styles.sectionHeader}>
-          <motion.h2
-            className={styles.sectionTitle}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className={styles.gradientTitle}>Explore By Category</span>
-          </motion.h2>
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect
+              words={["Explore By Category"]}
+              sweepMs={1400}
+              finalColor="#0f172a"
+            />
+          </h2>
           <p className={styles.sectionSubtitle}>
             Here are a few categories of blogs that you can explore
           </p>

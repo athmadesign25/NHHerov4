@@ -20,6 +20,8 @@ import AdvanceTechnology from "@/components/sections/advance-technology/AdvanceT
 import AdvanceTestsCarousel from "@/components/ui/AdvanceTestsCarousel";
 import DoctorOverviewCarousel from "@/components/ui/DoctorOverviewCarousel";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import AboutSpecialitySection from "./AboutSpecialitySection";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
 import { ALL_SPECIALITIES } from "@/data/specialities";
@@ -1191,10 +1193,10 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
   const doctorsRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: doctorsRef,
-    offset: ["start end", "start center"]
+    offset: ["start 0.92", "start 0.30"]
   });
-  const pageBgColor = useTransform(scrollYProgress, [0, 1], ["#0a1128", "#ffffff"]);
-  const pageTextColor = useTransform(scrollYProgress, [0, 1], ["#ffffff", "#0f172a"]);
+  const pageBgColor = useTransform(scrollYProgress, [0, 0.35, 0.72, 1], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
+  const pageTextColor = useTransform(scrollYProgress, [0, 0.55, 1], ["#ffffff", "#1e293b", "#0f172a"]);
   const subCardBg = useTransform(scrollYProgress, [0, 1], ["rgba(255, 255, 255, 0.05)", "#ffffff"]);
   const subCardBorder = useTransform(scrollYProgress, [0, 1], ["rgba(255, 255, 255, 0.1)", "rgba(15, 23, 42, 0.08)"]);
   const subCardShadow = useTransform(scrollYProgress, [0, 1], ["0 0 0 rgba(0, 0, 0, 0)", "0 4px 16px rgba(0, 0, 0, 0.04)"]);
@@ -2134,6 +2136,20 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
 
       {/* Sleek Medically Reviewed Band above footer */}
       <MedicallyReviewedBand specialityName={currentSpec?.name || "Cancer Care / Oncology"} />
+
+      {/* Unified Page-Aware Pre-Footer CTA & Floating Side Actions */}
+      <BlogCtaBanner
+        bg="white"
+        title={`Connect with a ${title} Specialist Today`}
+        primaryBtn={{
+          href: `/book-an-appointment?speciality=${encodeURIComponent(slug)}`,
+          text: "Find a Specialist",
+        }}
+      />
+      <ClinicalFloatingSideActions
+        consultHref={`/book-an-appointment?speciality=${encodeURIComponent(slug)}`}
+        conditionTitle={title}
+      />
 
       {/* Footer sentinel for hiding pinned bar */}
       <div ref={footerSentinelRef} style={{ height: "0px", width: "100%", pointerEvents: "none", opacity: 0 }} />

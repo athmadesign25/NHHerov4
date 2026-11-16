@@ -226,6 +226,50 @@
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.02) 100%);
 }
 
+.carouselArrows {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.carouselArrowBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carouselArrowBtn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.subCardsCarouselTrack {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  gap: 22px;
+  padding: 4px 2px 10px;
+  scrollbar-width: none;
+}
+
+.subCardsCarouselTrack::-webkit-scrollbar {
+  display: none;
+}
+
 .subCardsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -233,6 +277,10 @@
 }
 
 @media (max-width: 1024px) {
+  .subCardsCarouselTrack {
+    gap: 14px;
+  }
+
   .subCardsGrid {
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
@@ -240,6 +288,7 @@
 }
 
 @media (max-width: 640px) {
+  .subCardsCarouselTrack,
   .subCardsGrid {
     display: flex;
     flex-direction: row;
@@ -258,7 +307,7 @@
   }
 
   .cardMotionWrapper {
-    flex: 0 0 82%;
+    flex: 0 0 82% !important;
     scroll-snap-align: start;
   }
 
@@ -332,16 +381,16 @@
   transform: scale(1.05);
 }
 
-/* Card Scrim Overlay */
+/* Card Scrim Overlay (Softened per review feedback) */
 .cardScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(6, 12, 24, 0.12) 0%,
-    rgba(6, 12, 24, 0.45) 40%,
-    rgba(6, 12, 24, 0.92) 80%,
-    rgba(6, 12, 24, 0.98) 100%
+    transparent 0%,
+    rgba(6, 12, 24, 0.28) 44%,
+    rgba(6, 12, 24, 0.78) 80%,
+    rgba(6, 12, 24, 0.90) 100%
   );
   z-index: 2;
   transition: opacity 0.3s ease;

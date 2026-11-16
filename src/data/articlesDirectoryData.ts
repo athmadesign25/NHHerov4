@@ -517,9 +517,9 @@ export function getArticleDetailData(slug: string): ArticleDetailData {
   const matchedDocs = doctorsData.filter((d: DoctorData) =>
     d.speciality.toLowerCase().includes(match.categorySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.categorySlug))
-  ).slice(0, 3);
+  ).slice(0, 6);
 
-  const fallbackDocs = matchedDocs.length > 0 ? matchedDocs : doctorsData.slice(0, 3);
+  const fallbackDocs = matchedDocs.length >= 6 ? matchedDocs : [...matchedDocs, ...doctorsData].slice(0, 6);
 
   const doctors = fallbackDocs.map((d: DoctorData) => ({
     name: d.name,

@@ -4,7 +4,8 @@ import { type FamilyMember } from "@/components/booking/MemberSelector/MemberSel
 import { allSearchDataDoctors } from "@/components/search/NHSearchExperience/searchData";
 import DoctorFAQ from "@/components/seo-marketing/DoctorFAQ/DoctorFAQ";
 import DoctorVideoGallery from "@/components/seo-marketing/DoctorVideoGallery/DoctorVideoGallery";
-import RequestCallbackCTA from "@/components/seo-marketing/RequestCallbackCTA/RequestCallbackCTA";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
@@ -388,7 +389,7 @@ export default function DoctorDetailPage({ params }: {
       <Link href={design20DoctorRecoveryUrl(searchParams)} className={bookingStyles.primary}>Find a doctor</Link>
     </section></div>
   </div>;
-    return (<div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "var(--color-bg-card)" }}>
+    return (<div style={{ paddingTop: "var(--nav-height)", minHeight: "100vh", background: "linear-gradient(180deg, #eef4fb 0px, #f8fafc 160px, #ffffff 340px)" }}>
       <div className="container" style={{ padding: "var(--sp-4) var(--sp-3)", maxWidth: 1320 }}>
         <Breadcrumbs theme="light" items={[
             { label: "Home", href: "/" },
@@ -402,7 +403,7 @@ export default function DoctorDetailPage({ params }: {
             
             {/* Top Profile Card */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ background: "var(--color-bg-card)", borderRadius: 16, border: "1px solid var(--color-border)", boxShadow: "var(--shadow-sm)", overflow: "hidden" }}>
-              <div style={{ background: "linear-gradient(135deg, #ffffff 0%, var(--color-primary-light) 100%)", padding: 24 }}>
+              <div style={{ background: "linear-gradient(180deg, #eaf2fc 0%, #f5f9ff 58%, #ffffff 100%)", padding: 24 }}>
                 <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
                   <div style={{ position: "relative", width: 180, height: 180, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(255,255,255,0.5)" }}>
                     {doc.img ? <Image src={doc.img} alt={doc.name} fill sizes="180px" style={{ objectFit: "cover" }}/> : <User size={72} aria-label="Doctor photo unavailable"/>}
@@ -514,7 +515,6 @@ export default function DoctorDetailPage({ params }: {
             {/* SEO & Marketing Components */}
             <DoctorVideoGallery doctorName={doc.name}/>
             <DoctorFAQ doctorName={doc.name}/>
-            <RequestCallbackCTA />
 
           </div>
 
@@ -576,21 +576,85 @@ export default function DoctorDetailPage({ params }: {
             {/* Date Selector */}
             {false}
             {/* CTAs */}
-            {(!listingDoctor || listingDoctor.modes[consultationType === "Hospital Visit" ? "hospital" : "video"] !== true) ? <a href="tel:18602080208">Contact NH for appointments</a> :
-            <button id="book-appointment-btn" type="button" onClick={handleBookAppointment} style={{
-                    width: "100%", padding: "14px", background: "var(--color-primary)", color: "#fff",
-                    fontWeight: 700, fontSize: "var(--font-size-base)", borderRadius: 100, border: "none",
-                    cursor: "pointer", transition: "background 0.15s, transform 0.15s", marginBottom: 10
-                }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--color-primary)"; (e.currentTarget as HTMLElement).style.transform = ""; }}>
-              Book Appointment
-            </button>}
-            <a href={"tel:18602080208"} id="doctor-call-btn" style={{
-            width: "100%", padding: "12px", border: "1.5px solid var(--color-primary)", color: "var(--color-primary)",
-            fontWeight: 600, fontSize: "var(--font-size-sm)", borderRadius: 100, display: "flex",
-            alignItems: "center", justifyContent: "center", gap: 6, transition: "background-color 0.15s", textDecoration: "none"
-        }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}>
-              <PhoneCall size={15}/>
-              Call for Enquiry
+            {(!listingDoctor || listingDoctor.modes[consultationType === "Hospital Visit" ? "hospital" : "video"] !== true) ? (
+              <a
+                href="tel:18003090309"
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: "var(--color-primary)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "var(--font-size-base)",
+                  borderRadius: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  textDecoration: "none",
+                  marginBottom: 10,
+                }}
+              >
+                <PhoneCall size={16} />
+                Call to Book Appointment
+              </a>
+            ) : (
+              <button
+                id="book-appointment-btn"
+                type="button"
+                onClick={handleBookAppointment}
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  background: "var(--color-primary)",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "var(--font-size-base)",
+                  borderRadius: 8,
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background 0.15s, transform 0.15s",
+                  marginBottom: 10,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "var(--color-primary-dark)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "var(--color-primary)";
+                  (e.currentTarget as HTMLElement).style.transform = "";
+                }}
+              >
+                Book Appointment
+              </button>
+            )}
+            <a
+              href="tel:18003090309"
+              id="doctor-call-btn"
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "1.5px solid var(--color-primary)",
+                color: "var(--color-primary)",
+                fontWeight: 600,
+                fontSize: "var(--font-size-sm)",
+                borderRadius: 8,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                transition: "background-color 0.15s",
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+              }}
+            >
+              <PhoneCall size={15} />
+              Call 24×7 Helpline
             </a>
 
           </motion.div>
@@ -708,6 +772,22 @@ export default function DoctorDetailPage({ params }: {
             </div>
           </div>)}
       </div>
+
+      {/* Unified Pre-Footer CTA & Floating Side Actions */}
+      <BlogCtaBanner
+        bg="white"
+        title={`Need Assistance Booking with ${doc.name}?`}
+        subtitle={`Speak with our appointment desk or explore more ${doc.speciality} specialists at ${doc.hospital}.`}
+        primaryBtn={{
+          href: listingReturnTo || "/book-an-appointment",
+          text: "Find a Specialist",
+        }}
+      />
+      <ClinicalFloatingSideActions
+        consultHref="#book-appointment-btn"
+        consultLabel={"Book\nAppointment"}
+        conditionTitle={`${doc.name} (${doc.speciality})`}
+      />
 
       {/* Auth Login Modal */}
       <LoginModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} onLoginSuccess={handleLoginSuccess}/>

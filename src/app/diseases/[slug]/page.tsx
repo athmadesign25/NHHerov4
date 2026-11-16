@@ -26,6 +26,14 @@ import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalReviewedBySection, {
+  ClinicalSummaryBanner,
+  ClinicalEditorialFigures,
+} from "@/components/ui/ClinicalReviewedBySection";
+import {
+  NearbySpecialistsCarousel,
+  NearbyCareCentresCarousel,
+} from "@/components/ui/NearbyClinicalCarousels";
 import styles from "./DiseaseDetail.module.css";
 
 interface PageProps {
@@ -140,13 +148,9 @@ export default function DiseaseDetailPage({ params }: PageProps) {
               {detail.speciality} &bull; {detail.stageOrType}
             </div>
 
-            <h1 className={styles.heroMainTitle}>
+            <h1 className={styles.heroMainTitle} style={{ marginBottom: "26px" }}>
               {detail.heroTitle}
             </h1>
-
-            <p className={styles.heroSubTitle}>
-              {detail.heroSubtitle}
-            </p>
 
             <div className={styles.heroActionsRow}>
               <Link 
@@ -160,7 +164,8 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneDesktopSpan}>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneMobileSpan}>Call 24×7 Helpline</span>
               </a>
             </div>
           </motion.div>
@@ -265,10 +270,14 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* SECTION: Overview */}
+              {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Disease Overview</h2>
-                <p className={styles.leadParagraph}>{detail.leadParagraph}</p>
+                <ClinicalSummaryBanner
+                  eyebrow={`${detail.speciality} · Condition Executive Summary`}
+                  summary={`${detail.leadParagraph} Early clinical recognition, precision staging (${detail.stageOrType}), and evidence-based ${detail.metrics.treatmentApproach.toLowerCase()} protocols at Narayana Health ensure optimal long-term organ preservation and patient outcomes.`}
+                  reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                />
                 <div className={styles.quickFactsGrid}>
                   <div className={styles.factCard}>
                     <span className={styles.factCardLabel}>Speciality</span>
@@ -335,6 +344,21 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                     </div>
                   ))}
                 </div>
+
+                <ClinicalEditorialFigures
+                  items={[
+                    {
+                      src: detail.heroImage || "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} clinical overview`,
+                      caption: `Pathophysiology & Clinical Assessment · ${detail.shortTitle}`,
+                    },
+                    {
+                      src: "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} diagnostic imaging`,
+                      caption: `High-Resolution Diagnostic Staging & Multidisciplinary Review (${detail.speciality})`,
+                    },
+                  ]}
+                />
               </section>
 
               {/* SECTION: Treatment Protocols */}
@@ -353,51 +377,15 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 </div>
               </section>
 
-              {/* SECTION: Recommended Specialists */}
-              <section id="specialists" className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Consult Senior Specialists</h2>
-                <p className={styles.sectionLeadText}>
-                  Consult with accredited consultants specializing in {detail.speciality}:
-                </p>
-                <div className={styles.doctorsGrid}>
-                  {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.refDoctorCard}>
-                      <Image
-                        src={doc.image}
-                        alt={doc.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 300px"
-                        className={styles.refDocFullImage}
-                      />
-                      <div className={styles.refDocFullGradient} />
-                      <div className={styles.refDocOverlayContent}>
-                        <div className={styles.refDocBottomFlex}>
-                          <div className={styles.refDocTextCol}>
-                            <h3 className={styles.refDocName} title={doc.name}>
-                              {doc.name}
-                            </h3>
-                            <div className={styles.refDocSpecialty}>
-                              {doc.speciality || detail.speciality}
-                            </div>
-                            <div className={styles.refDocExpRow}>
-                              <span>{doc.experience}</span>
-                            </div>
-                            <div className={styles.refDocHospital} title={doc.hospital}>
-                              {doc.hospital}
-                            </div>
-                          </div>
-                          <Link 
-                            href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
-                            className={styles.refBookBtnWhite}
-                          >
-                            Book
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* SECTION: Recommended Specialists Carousel (Modular & Softened Gradient) */}
+              <NearbySpecialistsCarousel
+                id="specialists"
+                title="Consult Senior Specialists"
+                subtitle={`Consult with accredited consultants specializing in ${detail.speciality} across our hospital network:`}
+                doctors={detail.doctors}
+                specialityFilter={detail.specialitySlug}
+                actionLabel="Book"
+              />
 
               {/* SECTION: FAQs */}
               <section id="faqs" className={styles.contentSection}>
@@ -405,20 +393,23 @@ export default function DiseaseDetailPage({ params }: PageProps) {
                 <SpecialityFAQ faqs={detail.faqs} theme="light" fluid />
               </section>
 
-              {/* Hospital Centers */}
-              <section className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Specialised Care Centers</h2>
-                <p className={styles.sectionLeadText}>
-                  Receive multidisciplinary surgical and clinical care at our accredited centers of excellence:
-                </p>
-                <div className={styles.hospitalsGrid}>
-                  {detail.hospitals.map((hosp, idx) => (
-                    <div key={idx} className={styles.hospitalCardWrap}>
-                      <HospitalCard hosp={hosp} className={carouselStyles.cardCompact} />
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* Hospital Centers Carousel (Multi-unit Bangalore & NH Network) */}
+              <NearbyCareCentresCarousel
+                id="hospitals"
+                title="Specialised Care Centers"
+                subtitle="Receive multidisciplinary surgical and clinical care across our multiple Bangalore units and accredited centers of excellence:"
+                hospitals={detail.hospitals}
+              />
+
+              {/* Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
+              <ClinicalReviewedBySection
+                doctorName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                doctorRole="Senior Consultant & Clinical Lead"
+                speciality={detail.doctors[0]?.speciality || detail.speciality}
+                hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
+                experience={detail.doctors[0]?.experience || "20+ Years Experience"}
+                doctorImage={detail.doctors[0]?.image || "/doctors/doc_vivek.jpg"}
+              />
             </div>
           </div>
         </main>

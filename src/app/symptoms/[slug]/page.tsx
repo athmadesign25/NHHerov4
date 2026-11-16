@@ -26,6 +26,14 @@ import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalReviewedBySection, {
+  ClinicalSummaryBanner,
+  ClinicalEditorialFigures,
+} from "@/components/ui/ClinicalReviewedBySection";
+import {
+  NearbySpecialistsCarousel,
+  NearbyCareCentresCarousel,
+} from "@/components/ui/NearbyClinicalCarousels";
 import styles from "./SymptomDetail.module.css";
 
 interface PageProps {
@@ -140,13 +148,9 @@ export default function SymptomDetailPage({ params }: PageProps) {
               {detail.speciality} &bull; {detail.severity} TRIAGE
             </div>
 
-            <h1 className={styles.heroMainTitle}>
+            <h1 className={styles.heroMainTitle} style={{ marginBottom: "26px" }}>
               {detail.heroTitle}
             </h1>
-
-            <p className={styles.heroSubTitle}>
-              {detail.heroSubtitle}
-            </p>
 
             <div className={styles.heroActionsRow}>
               <Link 
@@ -160,7 +164,8 @@ export default function SymptomDetailPage({ params }: PageProps) {
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Emergency Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneDesktopSpan}>24×7 Emergency Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneMobileSpan}>Call 24×7 Helpline</span>
               </a>
             </div>
           </motion.div>
@@ -265,10 +270,14 @@ export default function SymptomDetailPage({ params }: PageProps) {
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* SECTION: Overview */}
+              {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Clinical Overview</h2>
-                <p className={styles.leadParagraph}>{detail.leadParagraph}</p>
+                <ClinicalSummaryBanner
+                  eyebrow={`${detail.speciality} · Symptom Triage Summary`}
+                  summary={`${detail.leadParagraph} Prompt evaluation by a ${detail.metrics.specialist} helps differentiate benign triggers from high-priority medical conditions requiring rapid diagnostic workup (${detail.metrics.diagnosticTurnaround}) and targeted intervention.`}
+                  reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                />
                 <div className={styles.quickFactsGrid}>
                   <div className={styles.factCard}>
                     <span className={styles.factCardLabel}>Affected System</span>
@@ -293,8 +302,28 @@ export default function SymptomDetailPage({ params }: PageProps) {
                     <h2 className={styles.alertTitle}>Red-Flag Warning Signs (Seek Immediate Emergency Care)</h2>
                   </div>
                   <p className={styles.alertSub}>
-                    If you or a loved one experience any of the following critical warning signs, call 1800 309 0309 or proceed immediately to the nearest Narayana Health emergency department:
+                    If you or a loved one experience any of the following critical warning signs, proceed immediately to the nearest Narayana Health emergency department or call our 24×7 emergency team:
                   </p>
+                  <div style={{ marginBottom: "14px" }}>
+                    <a
+                      href="tel:18003090309"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        padding: "9px 16px",
+                        borderRadius: "8px",
+                        background: "#dc2626",
+                        color: "#ffffff",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        textDecoration: "none",
+                      }}
+                    >
+                      <PhoneCall size={14} />
+                      <span>Call Emergency 24×7</span>
+                    </a>
+                  </div>
                   <ul className={styles.alertList}>
                     {detail.emergencySigns.map((sign, idx) => (
                       <li key={idx} className={styles.alertListItem}>
@@ -355,53 +384,32 @@ export default function SymptomDetailPage({ params }: PageProps) {
                     </div>
                   ))}
                 </div>
+
+                <ClinicalEditorialFigures
+                  items={[
+                    {
+                      src: detail.heroImage || "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} clinical triage`,
+                      caption: `Clinical Triage & Differential Evaluation · ${detail.shortTitle}`,
+                    },
+                    {
+                      src: "/images/procedures/procedure_mri.png",
+                      alt: `${detail.shortTitle} diagnostic workup`,
+                      caption: `Rapid Diagnostic Imaging & Biomarker Profiling (${detail.speciality})`,
+                    },
+                  ]}
+                />
               </section>
 
-              {/* SECTION: Recommended Specialists */}
-              <section id="specialists" className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Consult Senior Specialists</h2>
-                <p className={styles.sectionLeadText}>
-                  Meet accredited senior consultants specializing in {detail.speciality} across the Narayana Health network:
-                </p>
-                <div className={styles.doctorsGrid}>
-                  {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.refDoctorCard}>
-                      <Image
-                        src={doc.image}
-                        alt={doc.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 300px"
-                        className={styles.refDocFullImage}
-                      />
-                      <div className={styles.refDocFullGradient} />
-                      <div className={styles.refDocOverlayContent}>
-                        <div className={styles.refDocBottomFlex}>
-                          <div className={styles.refDocTextCol}>
-                            <h3 className={styles.refDocName} title={doc.name}>
-                              {doc.name}
-                            </h3>
-                            <div className={styles.refDocSpecialty}>
-                              {doc.speciality || detail.speciality}
-                            </div>
-                            <div className={styles.refDocExpRow}>
-                              <span>{doc.experience}</span>
-                            </div>
-                            <div className={styles.refDocHospital} title={doc.hospital}>
-                              {doc.hospital}
-                            </div>
-                          </div>
-                          <Link 
-                            href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
-                            className={styles.refBookBtnWhite}
-                          >
-                            Book
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* SECTION: Recommended Specialists Carousel (Modular & Softened Gradient) */}
+              <NearbySpecialistsCarousel
+                id="specialists"
+                title="Consult Senior Specialists"
+                subtitle={`Meet accredited senior consultants specializing in ${detail.speciality} across the Narayana Health network:`}
+                doctors={detail.doctors}
+                specialityFilter={detail.specialitySlug}
+                actionLabel="Book"
+              />
 
               {/* SECTION: FAQs */}
               <section id="faqs" className={styles.contentSection}>
@@ -409,20 +417,23 @@ export default function SymptomDetailPage({ params }: PageProps) {
                 <SpecialityFAQ faqs={detail.faqs} theme="light" fluid />
               </section>
 
-              {/* Hospital Centers Carousel */}
-              <section className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Specialised Care Centers</h2>
-                <p className={styles.sectionLeadText}>
-                  Receive multidisciplinary emergency and clinical care at our tertiary and quaternary centers:
-                </p>
-                <div className={styles.hospitalsGrid}>
-                  {detail.hospitals.map((hosp, idx) => (
-                    <div key={idx} className={styles.hospitalCardWrap}>
-                      <HospitalCard hosp={hosp} className={carouselStyles.cardCompact} />
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* Hospital Centers Carousel (Multi-unit Bangalore & NH Network) */}
+              <NearbyCareCentresCarousel
+                id="hospitals"
+                title="Specialised Care Centers"
+                subtitle="Receive multidisciplinary emergency and clinical care across our multiple Bangalore units and tertiary centers:"
+                hospitals={detail.hospitals}
+              />
+
+              {/* Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
+              <ClinicalReviewedBySection
+                doctorName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                doctorRole="Senior Consultant & Clinical Lead"
+                speciality={detail.doctors[0]?.speciality || detail.speciality}
+                hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
+                experience={detail.doctors[0]?.experience || "20+ Years Experience"}
+                doctorImage={detail.doctors[0]?.image || "/doctors/doc_vivek.jpg"}
+              />
             </div>
           </div>
         </main>

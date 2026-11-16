@@ -19,6 +19,10 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import OrganSystemChipsCarousel, {
+  DEFAULT_ORGAN_FILTER_OPTIONS,
+} from "@/components/ui/OrganSystemChipsCarousel";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { 
   TREATMENTS_PROCEDURES_DATA, 
@@ -26,19 +30,8 @@ import {
 } from "@/data/treatmentsProceduresData";
 import styles from "@/app/treatments/TreatmentsLibrary.module.css";
 
-// 10 Key Organ Filters requested by user
-const ORGAN_FILTER_OPTIONS = [
-  { label: "Heart", value: "heart", image: "/Specialities icons/Cardiology.jpeg" },
-  { label: "Brain & Spine", value: "brain", image: "/Specialities icons/Neurology.jpeg" },
-  { label: "Kidneys", value: "kidney", image: "/Specialities icons/Nephrology.jpeg" },
-  { label: "Liver", value: "liver", image: "/Specialities icons/Liver Transplant.svg" },
-  { label: "Lungs", value: "lungs", image: "/Specialities icons/Pulmonology.jpeg" },
-  { label: "Bones & Joints", value: "bones", image: "/Specialities icons/Orthopedics.jpeg" },
-  { label: "Stomach", value: "stomach", image: "/Specialities icons/General Surgery.jpeg" },
-  { label: "Cancer Care", value: "cancer", image: "/Specialities icons/Cancer Care.jpeg" },
-  { label: "Urinary & Bladder", value: "urinary", image: "/Specialities icons/Urology.jpeg" },
-  { label: "Children & Neonatal", value: "paediatric", image: "/Specialities icons/Paediatrics.jpeg" },
-];
+// 14 Key Organ & Clinical Filters
+const ORGAN_FILTER_OPTIONS = DEFAULT_ORGAN_FILTER_OPTIONS;
 
 // Secondary credentials on right hero column (calm, non-distracting 4 parameters)
 const HERO_ANALYTICS_PARAMETERS = [
@@ -366,39 +359,13 @@ export default function TreatmentsV2Library({
         </div>
       </section>
 
-      {/* ─── 10 ORGAN CIRCLE BUBBLE FILTERS ───────────────────────────────── */}
-      <motion.section
-        className={styles.categorySection}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.68, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className={styles.bubblesRow}>
-          {ORGAN_FILTER_OPTIONS.map((opt) => {
-            const isActive = selectedOrgan === opt.value;
-            return (
-              <button
-                key={opt.value}
-                className={`${styles.bubbleBtn} ${isActive ? styles.bubbleBtnActive : ""}`}
-                onClick={() => handleToggleOrgan(opt.value)}
-                type="button"
-                aria-pressed={isActive}
-              >
-                <div className={styles.bubbleImgWrap}>
-                  <Image
-                    src={opt.image}
-                    alt={opt.label}
-                    fill
-                    sizes="52px"
-                    className={styles.bubbleImg}
-                  />
-                </div>
-                <span className={styles.bubbleLabel}>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.section>
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      <OrganSystemChipsCarousel
+        options={ORGAN_FILTER_OPTIONS}
+        selectedOrgan={selectedOrgan}
+        onSelectOrgan={(val) => setSelectedOrgan(val)}
+        eyebrow="Explore Treatments by Organ System & Speciality"
+      />
 
       {/* ─── DYNAMIC FEEDBACK TEXT ROW (MINIMAL TYPOGRAPHY, NO CHIPS/BADGES) ─ */}
       <motion.div
@@ -589,8 +556,8 @@ export default function TreatmentsV2Library({
         title="Looking for a Surgical Second Opinion or Cost Estimate?"
         subtitle="Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing."
         primaryBtn={{
-          href: "/doctors",
-          text: "Book Surgical Consultation",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
           href: "/health-packages",
@@ -599,6 +566,7 @@ export default function TreatmentsV2Library({
         phoneText="Surgical Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* ─── MOBILE FILTER BOTTOM SHEET DRAWER ─── */}
       <AnimatePresence>

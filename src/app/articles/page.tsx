@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, useTransform, useMotionValue } from "framer-motion";
 import BlogHero from "@/components/blog/BlogHero";
 import BlogHeroV2 from "@/components/blog/BlogHeroV2";
+import BlogHeroV3 from "@/components/blog/BlogHeroV3";
 import BlogVersionController, { BlogVersionId } from "@/components/blog/BlogVersionController";
 import BlogCategoryExplore from "@/components/blog/BlogCategoryExplore";
 import BlogMedicalExperts from "@/components/blog/BlogMedicalExperts";
@@ -17,7 +18,18 @@ function ArticlesLibraryInner() {
   const searchParams = useSearchParams();
   const queryVersion = searchParams?.get("v") || searchParams?.get("version");
 
-  const [activeVersion, setActiveVersion] = useState<BlogVersionId>(2); // Default to new V2 Immersion
+  const [activeVersion, setActiveVersion] = useState<BlogVersionId>(3); // Default to V3 (Clean Generic Hero + Featured Carousel Below)
+
+  // Initialize from query param
+  useEffect(() => {
+    if (queryVersion === "3") {
+      setActiveVersion(3);
+    } else if (queryVersion === "2") {
+      setActiveVersion(2);
+    } else if (queryVersion === "1") {
+      setActiveVersion(1);
+    }
+  }, [queryVersion]);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const transitionRef = useRef<HTMLDivElement>(null);
@@ -55,26 +67,6 @@ function ArticlesLibraryInner() {
     ["#ffffff", "#060c18"]
   );
 
-  // Initialize from query param or localStorage
-  useEffect(() => {
-    if (queryVersion === "1") {
-      setActiveVersion(1);
-      return;
-    }
-    if (queryVersion === "2") {
-      setActiveVersion(2);
-      return;
-    }
-
-    try {
-      const saved = localStorage.getItem("nh_blog_version");
-      if (saved === "1") setActiveVersion(1);
-      else if (saved === "2") setActiveVersion(2);
-    } catch {
-      // Ignore in private browsing
-    }
-  }, [queryVersion]);
-
   const handleVersionChange = (newVersion: BlogVersionId) => {
     setActiveVersion(newVersion);
     try {
@@ -107,8 +99,14 @@ function ArticlesLibraryInner() {
         onVersionChange={handleVersionChange}
       />
 
-      {/* ── SECTION 1: HERO (V1 GRID SHOWCASE OR V2 IMMERSIVE AUTO-FILM DECK) ── */}
-      {activeVersion === 1 ? <BlogHero /> : <BlogHeroV2 />}
+      {/* ── SECTION 1: HERO (V1 GRID SHOWCASE, V2 IMMERSIVE DECK, OR V3 GENERIC HEADER + FEATURED CAROUSEL) ── */}
+      {activeVersion === 1 ? (
+        <BlogHero />
+      ) : activeVersion === 2 ? (
+        <BlogHeroV2 />
+      ) : (
+        <BlogHeroV3 />
+      )}
 
       {/* ── SECTIONS 2, 3, 4 & 5: UNIFIED SCROLL-DRIVEN CANVAS (Zero Horizontal Cuts) ── */}
       <motion.div style={{ backgroundColor: pageBgColor }}>

@@ -2262,11 +2262,10 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(var(--navy-900-rgb), 0.86) 0%,
-    rgba(var(--navy-900-rgb), 0.65) 24%,
-    rgba(var(--navy-900-rgb), 0.32) 42%,
-    rgba(var(--navy-900-rgb), 0.06) 55%,
-    rgba(var(--black-rgb), 0) 68%
+    rgba(12, 25, 48, 0.76) 0%,
+    rgba(12, 25, 48, 0.44) 24%,
+    rgba(12, 25, 48, 0.16) 40%,
+    rgba(var(--black-rgb), 0) 54%
   );
   pointer-events: none;
   z-index: 1;
@@ -2391,7 +2390,7 @@
   position: relative;
   width: 100%;
   height: auto;
-  background: var(--white);
+  background: transparent;
 }
 
 .pinnedProceduresSticky {
@@ -2403,7 +2402,7 @@
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
-  background: var(--white);
+  background: transparent;
   padding: 150px 0;
   box-sizing: border-box;
   z-index: 5;

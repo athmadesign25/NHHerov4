@@ -5,10 +5,15 @@
   z-index: 10 !important;
   width: 100%;
   padding-block: 72px 88px;
-  background-color: #ffffff !important;
+  background-color: var(--carousel-bg, #ffffff);
   color: var(--color-text, #0f172a);
-  border-top: 1px solid var(--color-border-light, #e2e8f0);
+  border-top: 1px solid var(--carousel-border, var(--color-border-light, #e2e8f0));
   box-sizing: border-box;
+}
+
+.carouselSectionSeamless {
+  background-color: transparent !important;
+  border-top: none !important;
 }
 
 @media (max-width: 768px) {
@@ -39,51 +44,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   max-width: 820px;
   margin: 0 auto;
 }
 
-@keyframes titleGradientShimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.cleanEyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 2px;
 }
 
 .title {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(28px, 3.4vw, 38px);
+  font-size: clamp(30px, 3.4vw, 44px);
   font-weight: 800;
   letter-spacing: -0.025em;
   margin: 0;
   line-height: 1.18;
-  display: inline-block;
-  background: linear-gradient(
-    90deg,
-    #034EA2 0%,
-    #0284c7 25%,
-    #ED1C24 50%,
-    #0284c7 75%,
-    #034EA2 100%
-  );
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: titleGradientShimmer 4s ease infinite;
+  color: var(--featured-title-color, #0f172a);
 }
 
 .subtitle {
-  font-size: clamp(14px, 1.4vw, 15.5px);
+  font-size: clamp(14px, 1.4vw, 16px);
   color: #64748b;
   margin: 0;
-  line-height: 1.5;
+  max-width: 680px;
+  line-height: 1.6;
 }
 
 /* ── Carousel Track ── */

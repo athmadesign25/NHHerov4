@@ -420,8 +420,12 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
         inclusions: HEART_TRANSPLANT_DETAIL.costs.inclusions,
         insuranceNote: HEART_TRANSPLANT_DETAIL.costs.insuranceNote,
       },
-      doctors: SPECIALTY_DOCTORS_MAP.cardiology,
-      hospitals: HOSPITALS_DATA.slice(0, 3),
+      doctors: [
+        ...SPECIALTY_DOCTORS_MAP.cardiology,
+        ...SPECIALTY_DOCTORS_MAP.urology.slice(0, 2),
+        ...SPECIALTY_DOCTORS_MAP.neurology.slice(0, 1),
+      ],
+      hospitals: HOSPITALS_DATA.slice(0, 8),
       faqs: HEART_TRANSPLANT_DETAIL.faqs,
       toc,
     };
@@ -430,7 +434,11 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
   // Find procedure from TREATMENTS_PROCEDURES_DATA or fallback
   const proc = TREATMENTS_PROCEDURES_DATA.find((p) => p.slug === slug) || TREATMENTS_PROCEDURES_DATA[0];
   const symptomsList = SYMPTOMS_DICTIONARY[slug] || SYMPTOMS_DICTIONARY.default;
-  const docsList = SPECIALTY_DOCTORS_MAP[proc.specialitySlug] || SPECIALTY_DOCTORS_MAP.default;
+  const baseDocsList = SPECIALTY_DOCTORS_MAP[proc.specialitySlug] || SPECIALTY_DOCTORS_MAP.default;
+  const docsList =
+    baseDocsList.length >= 6
+      ? baseDocsList
+      : [...baseDocsList, ...SPECIALTY_DOCTORS_MAP.default, ...SPECIALTY_DOCTORS_MAP.urology].slice(0, 6);
 
   const toc: TOCItem[] = [
     { id: "overview", label: `${proc.shortTitle}: Overview` },
@@ -547,7 +555,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       insuranceNote: "All major health insurance policies and TPAs in India cover this surgical procedure. Narayana Health provides dedicated on-site insurance desk assistance for quick cashless authorization and paperless claims.",
     },
     doctors: docsList,
-    hospitals: HOSPITALS_DATA.slice(0, 3),
+    hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
         q: `What is the expected hospital stay for ${proc.shortTitle}?`,

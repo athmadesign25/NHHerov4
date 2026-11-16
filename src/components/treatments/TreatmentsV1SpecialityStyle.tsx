@@ -28,6 +28,7 @@ import {
   TreatmentProcedureItem 
 } from "@/data/treatmentsProceduresData";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import { NH_CITIES } from "@/lib/searchService";
 import styles from "./TreatmentsV1SpecialityStyle.module.css";
 
@@ -752,8 +753,8 @@ export default function TreatmentsV1SpecialityStyle({
         title="Looking for a Surgical Second Opinion or Cost Estimate?"
         subtitle="Our senior surgical boards review complex diagnoses, imaging reports, and recommend minimally invasive surgical alternatives with transparent, all-inclusive pricing."
         primaryBtn={{
-          href: "/doctors",
-          text: "Book Surgical Consultation",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
           href: "/health-packages",
@@ -762,6 +763,7 @@ export default function TreatmentsV1SpecialityStyle({
         phoneText="Surgical Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* ── 4. MOBILE FILTER DRAWER MODAL ── */}
       {mobileFilterOpen && (

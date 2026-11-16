@@ -1,0 +1,19 @@
+Simple Name,Tech Component (call this),File Path,Used On Pages
+Breadcrumb trail,<Breadcrumbs />,src/components/ui/Breadcrumbs.tsx,"Treatments, Diseases, Symptoms, Diagnostics, Blog, all Detail pages"
+Animated heading,<TextSweepEffect />,src/components/ui/TextSweepEffect.tsx,"Library pages, Procedure detail (V4), Blog"
+Organ filter chips carousel (with View All),<OrganSystemChipsCarousel />,src/components/ui/OrganSystemChipsCarousel.tsx,"Treatments, Diseases, Symptoms, Diagnostics"
+Clinical summary box (4-5 lines),<ClinicalSummaryBanner />,src/components/ui/ClinicalReviewedBySection.tsx,"Procedure, Disease, Symptom, Diagnostic, Article detail"
+Reviewed by Dr. section,<ClinicalReviewedBySection />,src/components/ui/ClinicalReviewedBySection.tsx,"Procedure, Disease, Symptom, Diagnostic, Article detail"
+In-content images,<ClinicalEditorialFigures />,src/components/ui/ClinicalReviewedBySection.tsx,"Procedure, Disease, Symptom, Diagnostic detail"
+Nearby doctors carousel (hide/show toggle),<NearbySpecialistsCarousel />,src/components/ui/NearbyClinicalCarousels.tsx,"Procedure, Disease, Symptom, Diagnostic, Article detail"
+Nearby hospitals carousel,<NearbyCareCentresCarousel />,src/components/ui/NearbyClinicalCarousels.tsx,"Procedure, Disease, Symptom, Diagnostic detail"
+Hospital card,<HospitalCard />,src/components/ui/HospitalCarousel.tsx,"Nearby hospitals carousel, Hospitals pages"
+FAQ accordion,<SpecialityFAQ />,src/components/ui/SpecialityFAQ.tsx,"Procedure, Disease, Symptom, Diagnostic detail"
+Blog cards carousel (Featured/More blogs),<MoreFromOurBlogCarousel />,src/components/blog/MoreFromOurBlogCarousel.tsx,"Blog listing (V3), Article detail"
+Blog page header hero (V3),<BlogHeroV3 />,src/components/blog/BlogHeroV3.tsx,Blog listing
+Blog topic filter + article grid,<BlogCategoryExplore />,src/components/blog/BlogCategoryExplore.tsx,Blog listing
+Doctors/experts section,<BlogMedicalExperts />,src/components/blog/BlogMedicalExperts.tsx,Blog listing
+Trust bento grid,<BlogBentoGrid />,src/components/blog/BlogBentoGrid.tsx,Blog listing
+Language switcher,<BlogLanguageChanger />,src/components/blog/BlogLanguageChanger.tsx,Article detail
+Pre-footer blue CTA banner,<BlogCtaBanner />,src/components/blog/BlogCtaBanner.tsx,"All our pages"
+Floating action buttons (Book / Call / Pulse AI),<ClinicalFloatingSideActions />,src/components/ui/ClinicalFloatingSideActions.tsx,"All our pages"

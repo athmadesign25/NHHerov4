@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, PhoneCall } from "lucide-react";
+import { Calendar, PhoneCall, Stethoscope, FlaskConical } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
@@ -19,16 +20,109 @@ interface ClinicalFloatingSideActionsProps {
 }
 
 export default function ClinicalFloatingSideActions({
-  consultHref = "/doctors",
-  consultLabel = "Book\nConsultation",
-  conditionTitle = "your condition",
+  consultHref,
+  consultLabel,
+  conditionTitle,
   pulseQuery,
   supportPhone = "18003090309",
   isScrolled: propIsScrolled,
 }: ClinicalFloatingSideActionsProps) {
+  const pathname = usePathname() || "/";
   const [internalScrolled, setInternalScrolled] = useState(false);
   const [isPulseOpen, setIsPulseOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Page-aware defaults based on current route
+  const pageContext = useMemo(() => {
+    if (pathname.startsWith("/diagnostics") || pathname.startsWith("/lab-tests")) {
+      return {
+        href: "/diagnostics",
+        desktopLabel: "Book\nLab Test",
+        mobileLabel: "Book Test",
+        icon: "lab" as const,
+        title: "Diagnostic Tests",
+        query: "Help me understand diagnostic lab tests, preparation requirements, and report timelines at Narayana Health.",
+      };
+    }
+    if (pathname.startsWith("/book-an-appointment") || pathname.startsWith("/doctors")) {
+      return {
+        href: pathname.startsWith("/doctors/") ? "#book-appointment-btn" : "/book-an-appointment",
+        desktopLabel: "Book\nAppointment",
+        mobileLabel: "Book Now",
+        icon: "calendar" as const,
+        title: "Doctor Consultation",
+        query: "Help me find the right specialist doctor and book an appointment at Narayana Health.",
+      };
+    }
+    if (pathname.startsWith("/symptoms")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Symptom Evaluation",
+        query: "I am experiencing symptoms and want clinical guidance on warning signs and which specialist to consult.",
+      };
+    }
+    if (pathname.startsWith("/diseases") || pathname.startsWith("/disease")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Condition Care",
+        query: "I want to learn about condition management, treatment options, and specialists at Narayana Health.",
+      };
+    }
+    if (pathname.startsWith("/treatments") || pathname.startsWith("/procedures")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Procedures & Care",
+        query: "I want to know about surgical procedures, recovery timelines, and specialist consultations at Narayana Health.",
+      };
+    }
+    if (pathname.startsWith("/specialities")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Clinical Specialities",
+        query: "Help me explore clinical specialities, treatments, and leading specialists at Narayana Health.",
+      };
+    }
+    if (pathname.startsWith("/hospitals")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Narayana Health Hospitals",
+        query: "Help me find the nearest Narayana Health hospital, emergency care, and available specialists.",
+      };
+    }
+    if (pathname.startsWith("/blog") || pathname.startsWith("/articles")) {
+      return {
+        href: "/book-an-appointment",
+        desktopLabel: "Find a\nSpecialist",
+        mobileLabel: "Find Specialist",
+        icon: "specialist" as const,
+        title: "Health Guides",
+        query: "I have questions about a health topic or want to consult a Narayana Health specialist.",
+      };
+    }
+    return {
+      href: "/book-an-appointment",
+      desktopLabel: "Find a\nSpecialist",
+      mobileLabel: "Find Specialist",
+      icon: "specialist" as const,
+      title: "Narayana Health Care",
+      query: "I want clinical guidance on symptoms, diagnosis, and finding a specialist at Narayana Health.",
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -44,7 +138,7 @@ export default function ClinicalFloatingSideActions({
 
     const handleScroll = () => {
       const scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      setInternalScrolled(scrollPos > 320);
+      setInternalScrolled(scrollPos > 280);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -53,7 +147,24 @@ export default function ClinicalFloatingSideActions({
   }, [propIsScrolled]);
 
   const showActions = propIsScrolled !== undefined ? propIsScrolled : internalScrolled;
-  const defaultQuery = pulseQuery || `I want to know about ${conditionTitle}: clinical guidance, diagnosis, and treatment options.`;
+
+  // Normalize generic "Book\nConsultation" to page-aware label so all pages share consistent context-aware phrasing
+  const isGenericConsultLabel =
+    !consultLabel ||
+    consultLabel === "Book\nConsultation" ||
+    consultLabel === "Book Consultation";
+
+  const resolvedDesktopLabel = isGenericConsultLabel ? pageContext.desktopLabel : consultLabel;
+  const resolvedMobileLabel = isGenericConsultLabel
+    ? pageContext.mobileLabel
+    : consultLabel.replace("\n", " ");
+  const resolvedHref = consultHref && consultHref !== "/doctors" ? consultHref : pageContext.href;
+  const resolvedConditionTitle = conditionTitle || pageContext.title;
+  const defaultQuery =
+    pulseQuery ||
+    (conditionTitle
+      ? `I want to know about ${conditionTitle}: clinical guidance, diagnosis, and treatment options.`
+      : pageContext.query);
 
   // Render label with <br /> if newline is present on desktop, inline on mobile
   const renderLabel = (text: string) => {
@@ -73,6 +184,12 @@ export default function ClinicalFloatingSideActions({
     );
   };
 
+  const renderPrimaryIcon = () => {
+    if (pageContext.icon === "lab") return <FlaskConical size={18} />;
+    if (pageContext.icon === "calendar") return <Calendar size={18} />;
+    return <Stethoscope size={18} />;
+  };
+
   return (
     <>
       <AnimatePresence>
@@ -86,35 +203,35 @@ export default function ClinicalFloatingSideActions({
             role="region"
             aria-label="Quick clinical actions"
           >
-            {/* Box 1: Book / Find Consultation */}
+            {/* Box 1: Page-Aware Primary Action (e.g. Find a Specialist / Book Lab Test / Book Appointment) */}
             <Link
-              href={consultHref}
+              href={resolvedHref}
               className={`${styles.floatingBoxItem} ${styles.floatingBoxPrimary}`}
-              title={`${consultLabel.replace("\n", " ")} for ${conditionTitle}`}
-              aria-label={consultLabel.replace("\n", " ")}
+              title={`${resolvedDesktopLabel.replace("\n", " ")} — ${resolvedConditionTitle}`}
+              aria-label={resolvedDesktopLabel.replace("\n", " ")}
             >
               <div className={styles.boxIconWrap}>
-                <Calendar size={18} />
+                {renderPrimaryIcon()}
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "Book OPD" : renderLabel(consultLabel)}
+                {isMobile ? resolvedMobileLabel : renderLabel(resolvedDesktopLabel)}
               </span>
             </Link>
 
             <div className={styles.boxDivider} aria-hidden="true" />
 
-            {/* Box 2: Contact Support */}
+            {/* Box 2: Tap-to-Call Button */}
             <a
               href={`tel:${supportPhone}`}
               className={styles.floatingBoxItem}
-              title={`Contact Support: ${supportPhone}`}
-              aria-label="Contact Support"
+              title="Tap to Call 24×7 Helpline"
+              aria-label="Call 24×7 Helpline"
             >
               <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
                 <PhoneCall size={17} />
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "Call 24×7" : <>Contact<br />Support</>}
+                {isMobile ? "Call 24×7" : <>Call<br />24×7</>}
               </span>
             </a>
 
@@ -125,7 +242,7 @@ export default function ClinicalFloatingSideActions({
               type="button"
               className={styles.floatingBoxItem}
               onClick={() => setIsPulseOpen(true)}
-              title={`Ask Pulse AI about ${conditionTitle}`}
+              title={`Ask Pulse AI about ${resolvedConditionTitle}`}
               aria-label="Ask Pulse AI"
             >
               <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
@@ -146,7 +263,7 @@ export default function ClinicalFloatingSideActions({
         <PulseAIWorkspace
           onClose={() => setIsPulseOpen(false)}
           initialQuery={defaultQuery}
-          backLabel={`Back to ${conditionTitle}`}
+          backLabel={`Back to ${resolvedConditionTitle}`}
         />
       )}
     </>

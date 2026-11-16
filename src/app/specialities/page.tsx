@@ -32,6 +32,8 @@ import {
   SidebarSpecialityFilters,
   SpecialityFilterDialog,
 } from "./filters";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import styles from "./page.module.css";
 
 
@@ -704,6 +706,10 @@ function SpecialitiesContent() {
           onClose={() => setMobileFilterOpen(false)}
         />
       )}
+
+      {/* Unified Page-Aware Pre-Footer CTA & Floating Side Actions */}
+      <BlogCtaBanner bg="transparent" />
+      <ClinicalFloatingSideActions />
     </div>
   );
 }

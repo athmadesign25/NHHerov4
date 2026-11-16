@@ -22,6 +22,11 @@ import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideAct
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import BlogLanguageChanger from "@/components/blog/BlogLanguageChanger";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalReviewedBySection, {
+  ClinicalSummaryBanner,
+  ClinicalEditorialFigures,
+} from "@/components/ui/ClinicalReviewedBySection";
+import { NearbySpecialistsCarousel } from "@/components/ui/NearbyClinicalCarousels";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -167,13 +172,9 @@ export default function ArticleDetailPage({ params }: PageProps) {
               {detail.category}
             </div>
 
-            <h1 className={styles.heroMainTitle}>
+            <h1 className={styles.heroMainTitle} style={{ marginBottom: "8px" }}>
               {detail.title}
             </h1>
-
-            <p className={styles.heroSubTitle}>
-              {detail.summary}
-            </p>
 
             {/* Author Attribution */}
             <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "16px", marginBottom: "20px" }}>
@@ -310,28 +311,18 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 </div>
                 {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
               </div>
-
-              {/* Help & Support Callout */}
-              <div className={styles.sidebarHelpCallout}>
-                <span className={styles.helpCardTitle}>Need Medical Guidance?</span>
-                <p className={styles.helpCardDesc}>
-                  Connect directly with our senior clinical specialists for a dedicated consultation.
-                </p>
-                <Link
-                  href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
-                  className={styles.helpCardPhoneBtn}
-                >
-                  <span>Book Consultation &rarr;</span>
-                </Link>
-              </div>
             </aside>
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* SECTION: Overview (Clean, unrepetitive text) */}
+              {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Overview &amp; Clinical Background</h2>
-                <p className={styles.editorialLeadParagraph}>{detail.overview}</p>
+                <ClinicalSummaryBanner
+                  eyebrow={`${detail.category} · Article Summary`}
+                  summary={`${detail.summary} ${detail.overview}`}
+                  reviewerName={detail.author}
+                />
               </section>
 
               {/* SECTION: Key Takeaways (Clean cohesive checklist box) */}
@@ -350,92 +341,52 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 </div>
               </section>
 
-              {/* SECTION: In-Depth Sections (Natural reading typography - NO boxed card borders or shadows) */}
+              {/* SECTION: In-Depth Sections (Natural reading typography + rich clinical demo images) */}
               {detail.sections.map((sec, idx) => (
                 <section key={idx} id={`section-${idx + 1}`} className={styles.contentSection}>
                   <h2 className={styles.sectionHeading}>{sec.heading}</h2>
                   <p className={styles.editorialBodyParagraph}>
                     {sec.body}
                   </p>
+                  {idx === 0 && (
+                    <ClinicalEditorialFigures
+                      items={[
+                        {
+                          src: detail.heroImage || "/images/procedures/procedure_surgery.png",
+                          alt: `${detail.title} clinical illustration`,
+                          caption: `Clinical Perspective · ${detail.category} Care at Narayana Health`,
+                        },
+                        {
+                          src: "/images/procedures/procedure_mri.png",
+                          alt: `${detail.category} diagnostic screening`,
+                          caption: `Evidence-Based Screening & Early Preventive Diagnostics`,
+                        },
+                      ]}
+                    />
+                  )}
                 </section>
               ))}
 
-              {/* SECTION: Author Review Board Callout */}
-              <section className={styles.contentSection}>
-                <div className={styles.authorEditorialCard}>
-                  <div className={styles.authorAvatarWrap}>
-                    <Image
-                      src={detail.authorAvatar}
-                      alt={detail.author}
-                      fill
-                      sizes="58px"
-                      className={styles.authorAvatarImg}
-                    />
-                  </div>
-                  <div className={styles.authorInfoCol}>
-                    <div className={styles.authorBadgeRow}>
-                      <UserCheck size={14} className={styles.authorCheckIcon} />
-                      <span className={styles.authorBadgeText}>
-                        Reviewed by Narayana Medical Board
-                      </span>
-                    </div>
-                    <h3 className={styles.authorName}>{detail.author}</h3>
-                    <p className={styles.authorRoleText}>
-                      {detail.authorRole} &bull; Narayana Health
-                    </p>
-                    <p className={styles.authorEditorialNote}>
-                      This content is reviewed periodically by certified physicians to reflect recent clinical trial data, ICMR protocols, and WHO healthcare benchmarks.
-                    </p>
-                  </div>
-                </div>
-              </section>
+              {/* SECTION: Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
+              <ClinicalReviewedBySection
+                doctorName={detail.author}
+                doctorRole={detail.authorRole}
+                speciality={detail.category}
+                hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
+                experience={detail.doctors[0]?.experience || "18+ Years Experience"}
+                doctorImage={detail.authorAvatar}
+                reviewDate={detail.publishedDate}
+              />
 
-              {/* SECTION: Consult Specialists (Standard site refDoctorCard format) */}
-              <section id="specialists" className={styles.contentSection}>
-                <h2 className={styles.sectionHeading}>Consult Leading {detail.category} Specialists</h2>
-                <p className={styles.sectionLeadText}>
-                  Connect in-person or via video consultation with Narayana Health senior consultants:
-                </p>
-                <div className={styles.doctorsGrid}>
-                  {detail.doctors.map((doc, idx) => (
-                    <div key={idx} className={styles.refDoctorCard}>
-                      <Image
-                        src={doc.image}
-                        alt={doc.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, 300px"
-                        className={styles.refDocFullImage}
-                      />
-                      <div className={styles.refDocFullGradient} />
-                      <div className={styles.refDocOverlayContent}>
-                        <div className={styles.refDocBottomFlex}>
-                          <div className={styles.refDocTextCol}>
-                            <h3 className={styles.refDocName} title={doc.name}>
-                              {doc.name}
-                            </h3>
-                            <div className={styles.refDocSpecialty}>
-                              {doc.speciality}
-                            </div>
-                            <div className={styles.refDocExpRow}>
-                              <span>{doc.experience}</span>
-                            </div>
-                            <div className={styles.refDocHospital} title={doc.hospital}>
-                              {doc.hospital}
-                            </div>
-                          </div>
-
-                          <Link 
-                            href={`/doctors?search=${encodeURIComponent(doc.name)}`} 
-                            className={styles.refBookBtnWhite}
-                          >
-                            Book
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {/* SECTION: Consult Specialists Carousel (Modular & Softened Gradient) */}
+              <NearbySpecialistsCarousel
+                id="specialists"
+                title={`Consult Leading ${detail.category} Specialists`}
+                subtitle="Connect in-person or via video consultation with Narayana Health senior consultants:"
+                doctors={detail.doctors}
+                specialityFilter={detail.categorySlug}
+                actionLabel="Book"
+              />
 
               {/* SECTION: More from Narayana Health (Signature NH Cards: Full Image + Scrim + Text Overlay) */}
               <section id="more-from-nh" className={styles.moreFromNhSection}>

@@ -1,0 +1,214 @@
+.heroSection {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  padding-top: calc(var(--nav-height, 72px) + clamp(48px, 7vh, 88px));
+  padding-bottom: clamp(76px, 9.5vh, 108px);
+  background-color: transparent;
+  color: #ffffff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Seamless scroll-driven bottom anchor matching the dynamic section background below */
+.heroSection::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: clamp(180px, 24vh, 240px);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--hero-bottom-bg, #060c18) 22%, transparent) 30%,
+    color-mix(in srgb, var(--hero-bottom-bg, #060c18) 62%, transparent) 64%,
+    color-mix(in srgb, var(--hero-bottom-bg, #060c18) 90%, transparent) 86%,
+    var(--hero-bottom-bg, #060c18) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.heroBgImage {
+  object-fit: cover;
+  object-position: center 22%;
+  filter: brightness(0.88) saturate(1.10) contrast(1.03);
+}
+
+/* Sweet-Spot Directional Gradient Scrim (per AGENTS.md Section 1.B) */
+.scrimOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(6, 14, 27, 0.96) 0%,
+      rgba(6, 14, 27, 0.92) 34%,
+      rgba(6, 14, 27, 0.65) 50%,
+      rgba(6, 14, 27, 0.20) 66%,
+      rgba(6, 14, 27, 0.04) 82%,
+      transparent 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.65) 0%,
+      rgba(6, 14, 27, 0.15) 12%,
+      transparent 24%
+    );
+}
+
+@media (max-width: 900px) {
+  .scrimOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.92) 0%,
+      rgba(6, 14, 27, 0.78) 45%,
+      rgba(6, 14, 27, 0.92) 100%
+    );
+  }
+}
+
+.heroInner {
+  position: relative;
+  z-index: 3;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1240px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: clamp(36px, 5vw, 72px);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .heroInner {
+    width: calc(100% - 32px);
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.heroLeftCol {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+}
+
+.breadcrumbsWrapper {
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(30px, 3.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
+
+.heroSubtitle {
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0 0 28px 0;
+  max-width: 640px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.exploreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(3, 78, 162, 0.42);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+}
+
+.exploreBtn:hover {
+  background: #023877;
+  transform: translateY(-2px);
+}
+
+/* Right Credential Stats (Sweet-Spot Floating Style per AGENTS.md) */
+.heroRightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  padding-left: clamp(20px, 2.5vw, 28px);
+}
+
+@media (max-width: 900px) {
+  .heroRightCol {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-left: 0;
+    padding-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 20px;
+  }
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.statNumber {
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 400;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.featuredCarouselWrapper {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+  margin-top: -1px;
+}

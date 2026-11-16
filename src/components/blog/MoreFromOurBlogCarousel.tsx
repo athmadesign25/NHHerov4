@@ -3,7 +3,9 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import styles from "./MoreFromOurBlogCarousel.module.css";
 
@@ -11,13 +13,61 @@ interface MoreFromOurBlogCarouselProps {
   articles: ArticleItem[];
   title?: string;
   subtitle?: string;
+  scrollYProgress?: MotionValue<number>;
+  seamless?: boolean;
 }
 
 export default function MoreFromOurBlogCarousel({
   articles,
   title = "More from Our Blog",
   subtitle = "Doctor-curated guides, symptom breakthroughs, and preventive clinical insights",
+  scrollYProgress,
+  seamless = false,
 }: MoreFromOurBlogCarouselProps) {
+  const fallbackProgress = useMotionValue(1);
+  const activeProgress = scrollYProgress || fallbackProgress;
+
+  // Dynamic text & control colors driven by scroll progress (0 = dark #060c18, 1 = light #ffffff)
+  const eyebrowColor = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+  );
+  const titleColor = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["#ffffff", "#1e293b", "#0f172a"]
+  );
+  const subtitleColor = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
+  );
+  const trackScale = useTransform(
+    activeProgress,
+    [0, 1],
+    [0.97, 1.0]
+  );
+  const navBtnBg = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.85)", "#ffffff"]
+  );
+  const navBtnBorder = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.26)", "#cbd5e1", "#cbd5e1"]
+  );
+  const navBtnColor = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["#ffffff", "#0f172a", "#0f172a"]
+  );
+  const dotsWrapBg = useTransform(
+    activeProgress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.12)", "#e2e8f0", "#f1f5f9"]
+  );
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -115,17 +165,44 @@ export default function MoreFromOurBlogCarousel({
   if (!displayArticles || displayArticles.length === 0) return null;
 
   return (
-    <section className={styles.carouselSection} aria-label={title} data-nav-theme="light">
+    <section
+      className={`${styles.carouselSection} ${seamless ? styles.carouselSectionSeamless : ""}`}
+      aria-label={title}
+      data-nav-theme="light"
+    >
       <div className={styles.container}>
-        {/* Section Header (Centered Clean Typography) */}
+        {/* Section Header (Dynamic TextSweepEffect + Scroll-Driven Color) */}
         <div className={styles.header}>
-          <h2 className={styles.title}>{title}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          <motion.div
+            className={styles.cleanEyebrow}
+            style={{ color: eyebrowColor }}
+          >
+            CURATED CLINICAL HIGHLIGHTS
+          </motion.div>
+          <motion.h2
+            className={styles.title}
+            style={{
+              color: titleColor,
+              ["--featured-title-color" as string]: titleColor,
+            }}
+          >
+            <TextSweepEffect
+              words={[title]}
+              sweepMs={1400}
+              finalColor="var(--featured-title-color, #0f172a)"
+            />
+          </motion.h2>
+          {subtitle && (
+            <motion.p className={styles.subtitle} style={{ color: subtitleColor }}>
+              {subtitle}
+            </motion.p>
+          )}
         </div>
 
         {/* Carousel Scroll Track (Pauses on Hover / Touch) */}
-        <div 
+        <motion.div 
           className={styles.carouselWrapper}
+          style={{ scale: seamless ? trackScale : 1 }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
@@ -182,22 +259,27 @@ export default function MoreFromOurBlogCarousel({
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Carousel Controls: Previous, Dots, Next (Matching Screenshot 1) */}
+        {/* Carousel Controls: Previous, Dots, Next (Dynamic Scroll-Driven Theme) */}
         <div className={styles.controlsRow}>
-          <button
+          <motion.button
             type="button"
             className={`${styles.navBtn} ${!canScrollLeft ? styles.navBtnDisabled : ""}`}
+            style={{
+              backgroundColor: navBtnBg,
+              borderColor: navBtnBorder,
+              color: navBtnColor,
+            }}
             onClick={() => scrollByDirection("left")}
             disabled={!canScrollLeft}
             aria-label="Previous articles"
           >
             <ChevronLeft size={20} />
-          </button>
+          </motion.button>
 
           {/* Pagination Dots */}
-          <div className={styles.dotsWrap}>
+          <motion.div className={styles.dotsWrap} style={{ backgroundColor: dotsWrapBg }}>
             {Array.from({ length: Math.min(totalCards, 6) }).map((_, dotIdx) => {
               const isActive = Math.min(activeIndex, 5) === dotIdx;
               return (
@@ -210,17 +292,22 @@ export default function MoreFromOurBlogCarousel({
                 />
               );
             })}
-          </div>
+          </motion.div>
 
-          <button
+          <motion.button
             type="button"
             className={`${styles.navBtn} ${!canScrollRight ? styles.navBtnDisabled : ""}`}
+            style={{
+              backgroundColor: navBtnBg,
+              borderColor: navBtnBorder,
+              color: navBtnColor,
+            }}
             onClick={() => scrollByDirection("right")}
             disabled={!canScrollRight}
             aria-label="Next articles"
           >
             <ChevronRight size={20} />
-          </button>
+          </motion.button>
         </div>
       </div>
     </section>

@@ -443,9 +443,9 @@ export function getDiagnosticDetailData(slug: string): DiagnosticDetailData {
   const matched = doctorsData.filter((d: DoctorData) =>
     d.speciality.toLowerCase().includes(match.specialitySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.organ) || k.toLowerCase().includes(match.specialitySlug))
-  ).slice(0, 3);
+  ).slice(0, 6);
 
-  const fallback = matched.length > 0 ? matched : doctorsData.slice(0, 3);
+  const fallback = matched.length >= 6 ? matched : [...matched, ...doctorsData].slice(0, 6);
 
   const doctors: DoctorDetailItem[] = fallback.map((d: DoctorData) => ({
     name: d.name,
@@ -490,7 +490,7 @@ export function getDiagnosticDetailData(slug: string): DiagnosticDetailData {
     preparationInstructions: match.preparationInstructions,
     testProcedure: match.testProcedure,
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 3),
+    hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
         q: `Do I need a doctor's prescription to undergo a ${match.shortTitle.toLowerCase()}?`,

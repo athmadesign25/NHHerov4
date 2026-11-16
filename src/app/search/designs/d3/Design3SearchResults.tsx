@@ -37,6 +37,8 @@ import SearchDialog from "./SearchDialog";
 import SearchHeader from "./SearchHeader";
 import SearchState,{ ResultSkeletons } from "./SearchState";
 import SidebarDoctorFilters from "./SidebarDoctorFilters";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 const titles: Record<SearchTabId, string> = {
     doctors: "Find the right doctor", hospitals: "Find a hospital or clinic", specialties: "Explore our specialities",
     treatments: "Explore treatments & procedures", packages_tests: "Health packages & tests", articles: "Health articles & insights",
@@ -419,6 +421,12 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
         </section>
       </div>
     </div>
+    <BlogCtaBanner bg="transparent" />
+    <ClinicalFloatingSideActions
+      consultHref="#d3-results-title"
+      consultLabel={"Find a\nSpecialist"}
+      conditionTitle={selectedSpeciality || "Doctor Consultation"}
+    />
     <AnimatePresence onExitComplete={() => {
             requestAnimationFrame(() => {
                 returnToResultsTop();

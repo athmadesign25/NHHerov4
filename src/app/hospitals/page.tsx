@@ -19,6 +19,7 @@ import {
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { HOSPITALS_DIRECTORY_DATA, HospitalDirectoryItem } from "@/data/hospitalsDirectoryData";
 import styles from "./HospitalsLibrary.module.css";
@@ -506,8 +507,8 @@ export default function HospitalsLibraryPage() {
         title="Emergency Admission or Ambulance Dispatch?"
         subtitle="Our central emergency control dispatch coordinates directly with the nearest Narayana Health hospital trauma team, stroke units, and cath labs."
         primaryBtn={{
-          href: "/doctors",
-          text: "Book Doctor Appointment",
+          href: "/book-an-appointment",
+          text: "Find a Specialist",
         }}
         secondaryBtn={{
           href: "/health-packages",
@@ -516,6 +517,7 @@ export default function HospitalsLibraryPage() {
         phoneText="Emergency Helpline: 1800 309 0309"
         phoneHref="tel:18003090309"
       />
+      <ClinicalFloatingSideActions />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

@@ -157,9 +157,10 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 <ArrowUpRight size={14} className={styles.btnArrow} />
               </Link>
 
-              <a href={`tel:${detail.emergencyPhone}`} className={styles.heroPhoneText}>
+              <a href={`tel:${detail.emergencyPhone ? detail.emergencyPhone.replace(/\s+/g, "") : "18003090309"}`} className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Emergency: <strong>{detail.emergencyPhone}</strong></span>
+                <span className={styles.phoneDesktopSpan}>24×7 Emergency: <strong>{detail.emergencyPhone}</strong></span>
+                <span className={styles.phoneMobileSpan}>Call Emergency 24×7</span>
               </a>
             </div>
           </motion.div>

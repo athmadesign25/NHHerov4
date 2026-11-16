@@ -46,39 +46,48 @@
   display: flex;
   align-items: center;
   padding-top: calc(var(--nav-height, 72px) + 36px);
-  padding-bottom: 56px;
+  padding-bottom: clamp(92px, 12vh, 128px);
   overflow: hidden;
   background: transparent;
   color: #ffffff;
+}
+
+.detailHero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(80px, 10vh, 112px);
+  background: linear-gradient(
+    180deg,
+    rgba(6, 14, 27, 0) 0%,
+    rgba(6, 14, 27, 0.35) 55%,
+    rgba(6, 14, 27, 0.72) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background: 
-    /* Horizontal readability gradient: deep dark behind left text (0–34%), smooth feather (34–66%), clear on right image */
+    /* Horizontal readability gradient: balanced navy behind left text, clear on right image */
     linear-gradient(
       90deg,
-      rgba(6, 14, 27, 0.96) 0%,
-      rgba(6, 14, 27, 0.92) 34%,
-      rgba(6, 14, 27, 0.65) 50%,
-      rgba(6, 14, 27, 0.20) 66%,
-      rgba(6, 14, 27, 0.04) 82%,
+      rgba(8, 20, 38, 0.90) 0%,
+      rgba(8, 20, 38, 0.84) 34%,
+      rgba(8, 20, 38, 0.54) 50%,
+      rgba(8, 20, 38, 0.16) 66%,
+      rgba(8, 20, 38, 0.03) 82%,
       transparent 100%
-    ),
-    /* Bottom anchor blend */
-    linear-gradient(
-      0deg,
-      #060e1b 0%,
-      rgba(6, 14, 27, 0.72) 6%,
-      rgba(6, 14, 27, 0.18) 16%,
-      transparent 28%
     ),
     /* Top edge blend */
     linear-gradient(
       180deg,
-      rgba(6, 14, 27, 0.65) 0%,
-      rgba(6, 14, 27, 0.15) 12%,
+      rgba(8, 20, 38, 0.60) 0%,
+      rgba(8, 20, 38, 0.14) 12%,
       transparent 24%
     );
   pointer-events: none;
@@ -188,15 +197,15 @@
 }
 
 
-/* Clean Phone Number (Call icon + text, no second competing button) */
+/* Clean Phone Number (Desktop) / Tap-to-Call Button (Mobile) */
 .heroPhoneText {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.88);
   font-size: 13.5px;
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .heroPhoneText strong {
@@ -209,8 +218,36 @@
 }
 
 .phoneIcon {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.72);
   flex-shrink: 0;
+}
+
+.phoneDesktopSpan {
+  display: inline;
+}
+
+.phoneMobileSpan {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .heroPhoneText {
+    padding: 11px 18px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13.5px;
+  }
+  .phoneDesktopSpan {
+    display: none;
+  }
+  .phoneMobileSpan {
+    display: inline;
+  }
 }
 
 /* ─── RIGHT COLUMN: SECONDARY CREDENTIAL METRICS (MATCHING TREATMENTS LIBRARY) */
@@ -260,12 +297,17 @@
 }
 
 
-/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SOLID WHITE READING SHEET) ─── */
+/* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SMOOTH BLENDED READING SHEET) ─── */
 .readingExperienceWrapper {
   position: relative;
   width: 100%;
-  z-index: 1;
-  background: #ffffff;
+  z-index: 2;
+  margin-top: -36px;
+  border-radius: 32px 32px 0 0;
+  background: linear-gradient(180deg, #f8fafc 0px, #ffffff 180px);
+  box-shadow:
+    0 -24px 64px rgba(6, 14, 27, 0.45),
+    0 -1px 0 rgba(255, 255, 255, 0.9) inset;
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */
@@ -279,7 +321,7 @@
 
 .twoColumnGrid {
   display: grid;
-  grid-template-columns: 310px 1fr;
+  grid-template-columns: 310px minmax(0, 1fr);
   gap: 36px;
   align-items: start;
 }
@@ -1405,6 +1447,8 @@
   display: flex;
   flex-direction: column;
   gap: 48px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .contentSection {

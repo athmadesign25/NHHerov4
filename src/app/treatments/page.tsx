@@ -11,24 +11,16 @@ function TreatmentsPageContent() {
   const searchParams = useSearchParams();
   const queryVersion = searchParams?.get("v") || searchParams?.get("version") || searchParams?.get("design");
 
-  const initialVersion: TreatmentsVersionId = queryVersion === "2" ? 2 : 1;
+  const initialVersion: TreatmentsVersionId = queryVersion === "1" ? 1 : 2;
   const [activeVersion, setActiveVersion] = useState<TreatmentsVersionId>(initialVersion);
 
   useEffect(() => {
-    if (queryVersion === "2") {
-      setActiveVersion(2);
-      return;
-    } else if (queryVersion === "1") {
+    if (queryVersion === "1") {
       setActiveVersion(1);
       return;
-    }
-
-    try {
-      const saved = localStorage.getItem("nh_treatments_version");
-      if (saved === "2") setActiveVersion(2);
-      else if (saved === "1") setActiveVersion(1);
-    } catch {
-      // Ignore in private mode
+    } else if (queryVersion === "2") {
+      setActiveVersion(2);
+      return;
     }
   }, [searchParams, queryVersion]);
 

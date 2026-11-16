@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { 
   Check, 
   CheckCircle2, 
@@ -18,12 +18,21 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ClinicalReviewedBySection, {
+  ClinicalSummaryBanner,
+  ClinicalEditorialFigures,
+} from "@/components/ui/ClinicalReviewedBySection";
+import {
+  NearbySpecialistsCarousel,
+  NearbyCareCentresCarousel,
+} from "@/components/ui/NearbyClinicalCarousels";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -39,9 +48,158 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
+
+  // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
+  const { scrollY } = useScroll();
+  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
+  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
+  const v2BodyColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
+  );
+  const v2MutedColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
+  );
+  const v2TocLinkColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
+  );
+  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
+  const v2TocActiveBg = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
+  );
+  const v2BorderColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
+  );
+  const v2CardBg = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
+  );
+
+  // V4: Refined Dynamic BG Change + TextSweepEffect Blend (matching Blog V3: pure #060c18 at scrollY 0..24px -> #0d2142 -> #eef4fb -> #ffffff at 320px)
+  const v4BgColor = useTransform(
+    scrollY,
+    [0, 24, 145, 245, 320],
+    ["#060c18", "#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+  );
+  const v4HeadingColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["#ffffff", "#ffffff", "#1e293b", "#0f172a"]
+  );
+  const v4EyebrowColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+  );
+  const v4BodyColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.86)", "rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
+  );
+  const v4MutedColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.64)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
+  );
+  const v4TocLinkColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
+  );
+  const v4TocActiveColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["#38bdf8", "#38bdf8", "#0284c7", "#034EA2"]
+  );
+  const v4TocActiveBg = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+  );
+  const v4BorderColor = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+  );
+  const v4SummaryBg = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
+  );
+  const v4BadgeBg = useTransform(
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const qv = params.get("v") || params.get("design");
+      if (qv === "4") {
+        setBlendVersion(4);
+        return;
+      } else if (qv === "3") {
+        setBlendVersion(3);
+        return;
+      } else if (qv === "2") {
+        setBlendVersion(2);
+        return;
+      } else if (qv === "1") {
+        setBlendVersion(1);
+        return;
+      }
+      try {
+        const saved = localStorage.getItem("nh_procedure_detail_blend");
+        if (saved === "4") setBlendVersion(4);
+        else if (saved === "3") setBlendVersion(3);
+        else if (saved === "2") setBlendVersion(2);
+        else if (saved === "1") setBlendVersion(1);
+      } catch {
+        // Ignore storage errors
+      }
+    }
+  }, []);
+
+  const handleBlendChange = (v: 1 | 2 | 3 | 4) => {
+    setBlendVersion(v);
+    try {
+      localStorage.setItem("nh_procedure_detail_blend", String(v));
+    } catch {
+      // Ignore
+    }
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("v", String(v));
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        return;
+      }
+      if (e.key === "1") handleBlendChange(1);
+      else if (e.key === "2") handleBlendChange(2);
+      else if (e.key === "3") handleBlendChange(3);
+      else if (e.key === "4") handleBlendChange(4);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Scroll listener for:
@@ -96,7 +254,42 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className={styles.detailPageContainer}>
+    <motion.div
+      className={styles.detailPageContainer}
+      style={
+        blendVersion === 2
+          ? ({
+              "--v2-bg": v2BgColor,
+              "--v2-heading": v2HeadingColor,
+              "--v2-body": v2BodyColor,
+              "--v2-muted": v2MutedColor,
+              "--v2-toc-link": v2TocLinkColor,
+              "--v2-toc-active": v2TocActiveColor,
+              "--v2-toc-active-bg": v2TocActiveBg,
+              "--v2-border": v2BorderColor,
+              "--v2-card-bg": v2CardBg,
+            } as React.CSSProperties)
+          : blendVersion === 4
+          ? ({
+              "--v4-bg": v4BgColor,
+              "--v4-heading": v4HeadingColor,
+              "--v4-eyebrow": v4EyebrowColor,
+              "--v4-body": v4BodyColor,
+              "--v4-muted": v4MutedColor,
+              "--v4-toc-link": v4TocLinkColor,
+              "--v4-toc-active": v4TocActiveColor,
+              "--v4-toc-active-bg": v4TocActiveBg,
+              "--v4-border": v4BorderColor,
+              "--summary-bg": v4SummaryBg,
+              "--summary-border": v4BorderColor,
+              "--summary-accent": v4TocActiveColor,
+              "--summary-text": v4BodyColor,
+              "--summary-badge-bg": v4BadgeBg,
+              "--summary-badge-text": v4BodyColor,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       {/* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ──── */}
       <div className={styles.stationaryCanvas} aria-hidden="true">
         <motion.div
@@ -118,7 +311,18 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </div>
 
       {/* ─── DETAIL HERO (FULL BACKGROUND ATMOSPHERIC GRADIENT & METRICS) ───── */}
-      <section className={styles.detailHero} data-nav-theme="dark">
+      <section
+        className={`${styles.detailHero} ${
+          blendVersion === 2
+            ? styles.detailHeroV2
+            : blendVersion === 3
+            ? styles.detailHeroV3
+            : blendVersion === 4
+            ? styles.detailHeroV4
+            : ""
+        }`}
+        data-nav-theme="dark"
+      >
         {/* Hero contrast overlay (ensures left-column typography is crisp) */}
         <div className={styles.heroBgOverlay} />
 
@@ -145,15 +349,10 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               {detail.speciality}
             </div>
 
-            {/* Refined, Balanced Title */}
-            <h1 className={styles.heroMainTitle}>
+            {/* Refined, Balanced Title (Subtext removed per stakeholder feedback) */}
+            <h1 className={styles.heroMainTitle} style={{ marginBottom: "26px" }}>
               {detail.heroTitle}
             </h1>
-
-            {/* Complementary Subtitle */}
-            <p className={styles.heroSubTitle}>
-              {detail.heroSubtitle}
-            </p>
 
             {/* Actions Row: Primary CTA (NH Blue) + Call Helpline Text */}
             <div className={styles.heroActionsRow}>
@@ -168,7 +367,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
               <a href="tel:18003090309" className={styles.heroPhoneText}>
                 <PhoneCall size={14} className={styles.phoneIcon} />
-                <span>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneDesktopSpan}>24×7 Care Helpline: <strong>1800 309 0309</strong></span>
+                <span className={styles.phoneMobileSpan}>Call 24×7 Helpline</span>
               </a>
             </div>
           </motion.div>
@@ -209,7 +409,17 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
-      <div className={styles.readingExperienceWrapper}>
+      <div
+        className={`${styles.readingExperienceWrapper} ${
+          blendVersion === 2
+            ? styles.readingExperienceWrapperV2
+            : blendVersion === 3
+            ? styles.readingExperienceWrapperV3
+            : blendVersion === 4
+            ? styles.readingExperienceWrapperV4
+            : ""
+        }`}
+      >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
             {/* ─── LEFT COLUMN: UNBOXED SECTION SELECTOR ON GRADIENT ─────── */}
@@ -310,30 +520,33 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   </div>
                 )}
               </div>
-
-              {/* Medical Guidance Helpline (Unboxed Callout on Gradient) */}
-              <div className={styles.sidebarHelpCallout}>
-                <div className={styles.helpCardTitle}>Need Medical Guidance?</div>
-                <p className={styles.helpCardDesc}>
-                  Speak directly with clinical surgical coordinators for consultations, second opinions, and procedure scheduling.
-                </p>
-                <a href="tel:18003090309" className={styles.helpCardPhoneBtn}>
-                  <PhoneCall size={14} />
-                  <span>1800 309 0309 (24×7)</span>
-                </a>
-              </div>
             </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
-            {/* 1. Overview */}
+            {/* 1. Overview & 4-5 Line Clinical Executive Summary */}
             <section id="overview" className={styles.sectionBlock}>
+              {blendVersion === 4 && (
+                <div className={styles.v4SectionEyebrow}>
+                  CLINICAL PROCEDURE GUIDE &bull; {detail.speciality}
+                </div>
+              )}
               <h2 className={styles.mainSectionTitle}>
-                {detail.title}
+                {blendVersion === 4 ? (
+                  <TextSweepEffect
+                    words={[detail.title]}
+                    sweepMs={1400}
+                    finalColor="var(--v4-heading, #0f172a)"
+                  />
+                ) : (
+                  detail.title
+                )}
               </h2>
-              <p className={styles.leadParagraph}>
-                {detail.leadParagraph}
-              </p>
+              <ClinicalSummaryBanner
+                eyebrow={`${detail.speciality} · Executive Clinical Summary`}
+                summary={`${detail.leadParagraph} ${detail.whatIsIt.description}`}
+                reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+              />
 
               {/* Clean Clinical Figure (No nested cards or duplicate metrics) */}
               <div className={styles.clinicalFigureContainer}>
@@ -501,6 +714,21 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   </div>
                 ))}
               </div>
+
+              <ClinicalEditorialFigures
+                items={[
+                  {
+                    src: "/images/procedures/procedure_surgery.png",
+                    alt: `${detail.shortTitle} surgical suite`,
+                    caption: `Advanced Surgical & Interventional Suite · Precision ${detail.speciality} Care at Narayana Health`,
+                  },
+                  {
+                    src: "/images/procedures/procedure_mri.png",
+                    alt: `${detail.shortTitle} pre-operative imaging`,
+                    caption: "High-Resolution Pre-Procedure Diagnostic Mapping & 3D Navigation",
+                  },
+                ]}
+              />
             </section>
 
             {/* 8. Recovery Care & Milestones */}
@@ -601,73 +829,39 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
             </section>
 
-            {/* 10. Top Specialists (Matching Pulse AI Doctor Cards) */}
-            <section id="specialists" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Specialist Surgeons & Consultants</h2>
-              <p className={styles.bodyParagraph}>
-                Our senior surgeons and clinical specialists bring decades of experience, board certifications, and high procedural success rates.
-              </p>
-              <div className={styles.doctorsGrid}>
-                {detail.doctors.map((doc, i) => (
-                  <div key={i} className={styles.refDoctorCard}>
-                    <Image
-                      src={doc.image}
-                      alt={doc.name}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 300px"
-                      className={styles.refDocFullImage}
-                    />
-                    <div className={styles.refDocFullGradient} />
-                    <div className={styles.refDocOverlayContent}>
-                      <div className={styles.refDocBottomFlex}>
-                        <div className={styles.refDocTextCol}>
-                          <h3 className={styles.refDocName} title={doc.name}>
-                            {doc.name}
-                          </h3>
-                          <div className={styles.refDocSpecialty}>
-                            {doc.speciality}
-                          </div>
-                          <div className={styles.refDocExpRow}>
-                            <span>{doc.experience}</span>
-                          </div>
-                          <div className={styles.refDocHospital} title={doc.hospital}>
-                            {doc.hospital}
-                          </div>
-                        </div>
+            {/* 10. Nearby Specialists Carousel (Modular & Softened Gradient Contrast) */}
+            <NearbySpecialistsCarousel
+              id="specialists"
+              title="Specialist Surgeons & Consultants"
+              subtitle="Our senior surgeons and clinical specialists bring decades of experience, board certifications, and high procedural success rates."
+              doctors={detail.doctors}
+              specialityFilter={detail.speciality}
+              actionLabel="Book"
+            />
 
-                        <Link href="/doctors" className={styles.refBookBtnWhite}>
-                          Book
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* 11. Equipped Hospitals & Clinics (Matching Speciality Hospital Cards) */}
-            <section id="hospitals" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>Equipped Surgical Centres &amp; Clinics</h2>
-              <p className={styles.bodyParagraph}>
-                Advanced tertiary hospitals and multispeciality clinical centres equipped with state-of-the-art surgical suites, hybrid cath labs, and 24×7 critical care monitoring.
-              </p>
-              <div className={styles.clinicalHospitalsGrid}>
-                {detail.hospitals.map((hosp, i) => (
-                  <HospitalCard
-                    key={hosp.id || i}
-                    hosp={hosp}
-                    cardIndex={i}
-                    className={carouselStyles.cardCompact}
-                  />
-                ))}
-              </div>
-            </section>
+            {/* 11. Equipped Hospitals & Care Centres Carousel (Multi-unit Bangalore & NH Network) */}
+            <NearbyCareCentresCarousel
+              id="hospitals"
+              title="Equipped Surgical Centres & Clinics"
+              subtitle="Advanced tertiary hospitals and multispeciality clinical centres across Bangalore and the Narayana Health network equipped with hybrid cath labs and 24×7 critical care."
+              hospitals={detail.hospitals}
+            />
 
             {/* 12. FAQs Accordion */}
             <section id="faqs" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>Frequently Asked Questions</h2>
               <SpecialityFAQ faqs={detail.faqs} theme="light" fluid />
             </section>
+
+            {/* 13. Dedicated Google E-E-A-T "Reviewed by Dr. ___" Section */}
+            <ClinicalReviewedBySection
+              doctorName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+              doctorRole="Senior Consultant & Clinical Lead"
+              speciality={detail.doctors[0]?.speciality || detail.speciality}
+              hospital={detail.doctors[0]?.hospital || "Narayana Health City, Bengaluru"}
+              experience={detail.doctors[0]?.experience || "20+ Years Experience"}
+              doctorImage={detail.doctors[0]?.image || "/doctors/doc_vivek.jpg"}
+            />
           </article>
         </div>
       </main>
@@ -690,6 +884,48 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         phoneHref="tel:18003090309"
       />
 
+      {/* Small V1 / V2 / V3 Blend Variation Toggle for Stakeholder Review */}
+      <div className={styles.blendVersionToggle} role="group" aria-label="Hero to Content Blend Variation">
+        <span className={styles.blendToggleLabel}>
+          <span className={styles.blendToggleDot} />
+          <span>Blend</span>
+        </span>
+        <div className={styles.blendToggleButtons}>
+          <button
+            type="button"
+            className={`${styles.blendToggleBtn} ${blendVersion === 1 ? styles.blendToggleBtnActive : ""}`}
+            onClick={() => handleBlendChange(1)}
+            title="V1: Elevated Curved Reading Sheet"
+          >
+            V1
+          </button>
+          <button
+            type="button"
+            className={`${styles.blendToggleBtn} ${blendVersion === 2 ? styles.blendToggleBtnActive : ""}`}
+            onClick={() => handleBlendChange(2)}
+            title="V2: Scroll-Driven Section Colour Change"
+          >
+            V2
+          </button>
+          <button
+            type="button"
+            className={`${styles.blendToggleBtn} ${blendVersion === 3 ? styles.blendToggleBtnActive : ""}`}
+            onClick={() => handleBlendChange(3)}
+            title="V3: Soft Atmospheric Blur Mist Band"
+          >
+            V3
+          </button>
+          <button
+            type="button"
+            className={`${styles.blendToggleBtn} ${blendVersion === 4 ? styles.blendToggleBtnActive : ""}`}
+            onClick={() => handleBlendChange(4)}
+            title="V4: Dynamic BG Change + TextSweepEffect Blend (Like Blog V3)"
+          >
+            V4
+          </button>
+        </div>
+      </div>
+
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
         consultHref={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
@@ -698,6 +934,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         pulseQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}
         isScrolled={isScrolled}
       />
-    </div>
+    </motion.div>
   );
 }

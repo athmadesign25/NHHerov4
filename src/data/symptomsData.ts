@@ -518,9 +518,9 @@ export function getSymptomDetailData(slug: string): SymptomDetailData {
   const matched = doctorsData.filter((d: DoctorData) => 
     d.speciality.toLowerCase().includes(match.specialitySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.organ) || k.toLowerCase().includes(match.specialitySlug))
-  ).slice(0, 3);
+  ).slice(0, 6);
 
-  const fallback = matched.length > 0 ? matched : doctorsData.slice(0, 3);
+  const fallback = matched.length >= 6 ? matched : [...matched, ...doctorsData].slice(0, 6);
 
   const doctors: DoctorDetailItem[] = fallback.map((d: DoctorData) => ({
     name: d.name,
@@ -576,7 +576,7 @@ export function getSymptomDetailData(slug: string): SymptomDetailData {
       desc: `Comprehensive evidence-based testing to rapidly establish a precise diagnosis and rule out critical complications.`,
     })),
     doctors: doctors,
-    hospitals: HOSPITALS_DATA.slice(0, 3),
+    hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
         q: `How quickly should I seek medical help for ${match.shortTitle.toLowerCase()}?`,
