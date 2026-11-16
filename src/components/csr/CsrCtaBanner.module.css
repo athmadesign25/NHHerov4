@@ -4,7 +4,7 @@
   z-index: 7;
   width: 100%;
   padding-block: 60px 84px;
-  background-color: #ffffff;
+  background-color: var(--white);
   box-sizing: border-box;
 }
 
@@ -29,14 +29,14 @@
 .ctaCard {
   position: relative;
   border-radius: 20px;
-  background: #f0f6fc;
+  background: var(--slate-100);
   border: 1px solid #dbeafe;
   padding: 40px 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  box-shadow: 0 4px 20px rgba(3, 78, 162, 0.05);
+  box-shadow: 0 4px 20px rgba(var(--blue-brand-rgb), 0.05);
   box-sizing: border-box;
 }
 
@@ -64,7 +64,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(24px, 2.5vw, 32px);
   font-weight: 800;
-  color: #0f172a;
+  color: var(--slate-900);
   line-height: 1.25;
   letter-spacing: -0.02em;
   margin: 0;
@@ -86,8 +86,8 @@
 
 .ctaDesc {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 15px;
-  color: #475569;
+  font-size: var(--font-size-base);
+  color: var(--slate-600);
   line-height: 1.5;
   margin: 0;
   text-align: right;
@@ -120,21 +120,21 @@
   gap: 8px;
   padding: 12px 24px;
   border-radius: var(--radius-md, 10px);
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
-  font-size: 14px;
+  background: var(--color-primary, var(--blue-brand));
+  color: var(--white);
+  font-size: var(--font-size-sm);
   font-weight: 700;
   text-decoration: none;
-  border: 1.5px solid var(--color-primary, #034EA2);
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.25);
-  transition: all var(--transition-fast, 150ms ease);
+  border: 1.5px solid var(--color-primary, var(--blue-brand));
+  box-shadow: 0 4px 14px rgba(var(--blue-brand-rgb), 0.25);
+  transition: all var(--transition-fast, var(--duration-fast) ease);
 }
 
 .primaryBtn:hover {
   background: #023877;
   border-color: #023877;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(3, 78, 162, 0.35);
+  box-shadow: 0 6px 18px rgba(var(--blue-brand-rgb), 0.35);
 }
 
 @media (max-width: 640px) {
@@ -150,18 +150,18 @@
   gap: 8px;
   padding: 12px 24px;
   border-radius: var(--radius-md, 10px);
-  background: #ffffff;
-  color: var(--color-primary, #034EA2);
-  font-size: 14px;
+  background: var(--white);
+  color: var(--color-primary, var(--blue-brand));
+  font-size: var(--font-size-sm);
   font-weight: 700;
   text-decoration: none;
-  border: 1.5px solid #cbd5e1;
-  transition: all var(--transition-fast, 150ms ease);
+  border: 1.5px solid var(--slate-300);
+  transition: all var(--transition-fast, var(--duration-fast) ease);
 }
 
 .secondaryBtn:hover {
-  border-color: var(--color-primary, #034EA2);
-  background: #f8fafc;
+  border-color: var(--color-primary, var(--blue-brand));
+  background: var(--slate-50);
   transform: translateY(-2px);
 }
 

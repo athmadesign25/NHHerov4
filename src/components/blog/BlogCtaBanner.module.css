@@ -5,13 +5,13 @@
   z-index: 2;
   width: 100%;
   padding-block: 64px 80px;
-  background-color: #ffffff;
-  color: #ffffff;
+  background-color: var(--white);
+  color: var(--white);
   box-sizing: border-box;
 }
 
 .bgWhite {
-  background-color: #ffffff;
+  background-color: var(--white);
 }
 
 .bgDark {
@@ -43,12 +43,12 @@
 .ctaCard {
   position: relative;
   border-radius: var(--radius-2xl, 24px);
-  background: linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--shadow) 0%, var(--blue-brand) 55%, #022d61 100%);
+  color: var(--white);
   padding: 56px 48px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(var(--black-rgb), 0.45);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
 }
 
 @media (max-width: 768px) {
@@ -65,7 +65,7 @@
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(3, 78, 162, 0) 70%);
+  background: radial-gradient(circle, rgba(var(--sky-400-rgb), 0.25) 0%, rgba(var(--blue-brand-rgb), 0) 70%);
   pointer-events: none;
 }
 
@@ -82,11 +82,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--white-rgb), 0.75);
 }
 
 .ctaTitle {
@@ -94,7 +94,7 @@
   font-size: clamp(28px, 3.4vw, 42px);
   font-weight: 800;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--white);
   margin: 0;
   line-height: 1.18;
 }
@@ -117,19 +117,19 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #ffffff;
-  color: var(--color-primary, #034EA2);
+  background: var(--white);
+  color: var(--color-primary, var(--blue-brand));
   padding: 13px 26px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  transition: transform var(--transition-fast, 150ms ease), background var(--transition-fast, 150ms ease);
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.2);
+  transition: transform var(--transition-fast, var(--duration-fast) ease), background var(--transition-fast, var(--duration-fast) ease);
 }
 
 .primaryBtn:hover {
-  background: #f8fafc;
+  background: var(--slate-50);
   transform: translateY(-2px);
 }
 
@@ -137,22 +137,22 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(var(--white-rgb), 0.12);
+  color: var(--white);
+  border: 1px solid rgba(var(--white-rgb), 0.25);
   padding: 13px 22px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-decoration: none;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: all var(--transition-fast, 150ms ease);
+  transition: all var(--transition-fast, var(--duration-fast) ease);
 }
 
 .secondaryBtn:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.4);
   transform: translateY(-2px);
 }
 
@@ -160,22 +160,22 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #ffffff;
-  font-size: 13.5px;
+  color: var(--white);
+  font-size: var(--font-size-sm);
   font-weight: 600;
   text-decoration: none;
   padding: 12px 18px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(var(--white-rgb), 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.22);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: all var(--transition-fast, 150ms ease);
+  transition: all var(--transition-fast, var(--duration-fast) ease);
 }
 
 .phoneLink:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(var(--white-rgb), 0.18);
+  border-color: rgba(var(--white-rgb), 0.38);
   transform: translateY(-2px);
 }
 
@@ -200,14 +200,14 @@
     width: 100%;
     box-sizing: border-box;
     padding: 13px 20px;
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     border-radius: 8px;
   }
   .phoneLink {
     margin-left: 0;
     margin-top: 0;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(var(--white-rgb), 0.14);
+    border: 1px solid rgba(var(--white-rgb), 0.28);
     font-weight: 700;
   }
   .phoneDesktopLabel {

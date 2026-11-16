@@ -29,8 +29,8 @@
   border-radius: var(--radius-lg, 12px);
   backdrop-filter: blur(var(--blur-sm, 8px));
   -webkit-backdrop-filter: blur(var(--blur-sm, 8px));
-  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.25);
-  transition: border-color var(--transition-base, 0.2s ease), background var(--transition-base, 0.2s ease);
+  box-shadow: 0 4px 16px -4px rgba(var(--black-rgb), 0.25);
+  transition: border-color var(--transition-base, var(--duration-base) ease), background var(--transition-base, var(--duration-base) ease);
   box-sizing: border-box;
 }
 

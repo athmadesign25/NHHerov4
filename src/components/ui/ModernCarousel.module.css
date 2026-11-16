@@ -62,15 +62,15 @@
   height: clamp(210px, 50%, 290px);
   background: linear-gradient(
     180deg,
-    rgba(3, 18, 36, 0) 0%,
-    rgba(3, 18, 36, 0.3) 25%,
-    rgba(3, 18, 36, 0.62) 70%,
-    rgba(3, 18, 36, 0.78) 100%
+    rgba(var(--navy-900-rgb), 0) 0%,
+    rgba(var(--navy-900-rgb), 0.3) 25%,
+    rgba(var(--navy-900-rgb), 0.62) 70%,
+    rgba(var(--navy-900-rgb), 0.78) 100%
   );
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 25%, black 50%, black 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 25%, black 50%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(var(--black-rgb), 0.6) 25%, black 50%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(var(--black-rgb), 0.6) 25%, black 50%, black 100%);
   pointer-events: none;
   z-index: 1;
   border-bottom-left-radius: inherit;

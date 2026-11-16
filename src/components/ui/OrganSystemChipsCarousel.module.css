@@ -23,11 +23,11 @@
 }
 
 .eyebrowLabel {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.56);
+  color: rgba(var(--white-rgb), 0.56);
 }
 
 .controlsRightGroup {
@@ -42,25 +42,25 @@
   gap: 6px;
   padding: 5px 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 11.5px;
+  background: rgba(var(--white-rgb), 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  color: rgba(var(--white-rgb), 0.88);
+  font-size: var(--font-size-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, transform var(--duration-base) ease;
 }
 
 .expandAllBtn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.28);
-  color: #ffffff;
+  background: rgba(var(--white-rgb), 0.14);
+  border-color: rgba(var(--white-rgb), 0.28);
+  color: var(--white);
 }
 
 .expandAllBtnActive {
-  background: rgba(3, 78, 162, 0.45);
-  border-color: rgba(56, 189, 248, 0.5);
-  color: #ffffff;
+  background: rgba(var(--blue-brand-rgb), 0.45);
+  border-color: rgba(var(--sky-400-rgb), 0.5);
+  color: var(--white);
 }
 
 .arrowGroup {
@@ -82,18 +82,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(var(--white-rgb), 0.10);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #ffffff;
+  border: 1px solid rgba(var(--white-rgb), 0.18);
+  color: var(--white);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, opacity var(--duration-base) ease, transform var(--duration-base) ease;
 }
 
 .carouselArrowBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.20);
-  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(var(--white-rgb), 0.20);
+  border-color: rgba(var(--white-rgb), 0.34);
   transform: translateY(-1px);
 }
 
@@ -143,7 +143,7 @@
   flex-shrink: 0;
   scroll-snap-align: start;
   outline: none;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-moderate) var(--ease-spring);
 }
 
 .bubbleBtn:hover {
@@ -159,15 +159,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  border: 1.5px solid rgba(var(--white-rgb), 0.22);
+  background: rgba(var(--white-rgb), 0.05);
+  box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.3);
+  transition: border-color var(--duration-moderate) ease, box-shadow var(--duration-moderate) ease, transform var(--duration-moderate) ease, background var(--duration-moderate) ease;
 }
 
 .viewAllIconWrap {
-  background: linear-gradient(135deg, rgba(3, 78, 162, 0.42) 0%, rgba(15, 23, 42, 0.78) 100%);
-  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, rgba(var(--blue-brand-rgb), 0.42) 0%, rgba(var(--slate-900-rgb), 0.78) 100%);
+  color: rgba(var(--white-rgb), 0.9);
 }
 
 .bubbleImg {
@@ -176,7 +176,7 @@
   object-fit: cover;
   filter: grayscale(35%);
   opacity: 0.88;
-  transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+  transition: transform var(--duration-moderate) ease, filter var(--duration-moderate) ease, opacity var(--duration-moderate) ease;
 }
 
 .bubbleBtn:hover .bubbleImg {
@@ -186,9 +186,9 @@
 }
 
 .bubbleLabel {
-  font-size: 11px;
+  font-size: var(--font-size-xs);
   line-height: 1.35;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(var(--white-rgb), 0.72);
   max-width: 84px;
   text-align: center;
   display: -webkit-box;
@@ -196,16 +196,16 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.2s ease, font-weight 0.2s ease;
+  transition: color var(--duration-base) ease, font-weight var(--duration-base) ease;
 }
 
 .bubbleBtn:hover .bubbleLabel {
-  color: #ffffff;
+  color: var(--white);
 }
 
 .bubbleBtnActive .bubbleImgWrap {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.45), 0 4px 16px rgba(0, 0, 0, 0.5);
+  border-color: var(--sky-400);
+  box-shadow: 0 0 0 2px rgba(var(--sky-400-rgb), 0.45), 0 4px 16px rgba(var(--black-rgb), 0.5);
   transform: scale(1.06);
 }
 
@@ -215,11 +215,11 @@
 }
 
 .bubbleBtnActive .viewAllIconWrap {
-  background: linear-gradient(135deg, #034EA2 0%, #0284c7 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
+  color: var(--white);
 }
 
 .bubbleBtnActive .bubbleLabel {
-  color: #ffffff;
+  color: var(--white);
   font-weight: 700;
 }

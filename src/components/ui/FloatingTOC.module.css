@@ -38,10 +38,10 @@
   height: 2px;
   border-radius: var(--radius-sm);
   width: 14px;
-  transition: width 160ms var(--ease-spring),
-              opacity 140ms ease,
-              background 300ms ease,
-              box-shadow 160ms ease;
+  transition: width var(--duration-fast) var(--ease-spring),
+              opacity var(--duration-fast) ease,
+              background var(--duration-emphasis) ease,
+              box-shadow var(--duration-fast) ease;
 }
 
 /* Dark theme — visible on deep navy sections */
@@ -62,7 +62,7 @@
 
 /* Light theme — visible on white/light sections using design tokens */
 .themeLight .dash {
-  background: var(--slate-300, #cbd5e1);
+  background: var(--slate-300, var(--slate-300));
   box-shadow: 0 0.5px 1.5px rgba(var(--slate-900-rgb), 0.08);
 }
 

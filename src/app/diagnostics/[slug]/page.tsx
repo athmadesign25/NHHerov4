@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  CheckCircle2, 
-  Link as LinkIcon, 
-  PhoneCall, 
-  ArrowUpRight, 
-  Calendar, 
-  Activity, 
-  Plus, 
+import {
+  CheckCircle2,
+  Link as LinkIcon,
+  PhoneCall,
+  ArrowUpRight,
+  Calendar,
+  Activity,
+  Plus,
   Minus,
   Check,
   Clock,
@@ -127,7 +127,7 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
         <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
-          <motion.div 
+          <motion.div
             className={styles.heroLeftCol}
             initial={{ opacity: 0, scale: 0.97, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -153,8 +153,8 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
             </h1>
 
             <div className={styles.heroActionsRow}>
-              <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`} 
+              <Link
+                href={`/doctors?speciality=${encodeURIComponent(detail.specialitySlug)}`}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -171,7 +171,7 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
           </motion.div>
 
           {/* Right Hero Analytics */}
-          <motion.div 
+          <motion.div
             className={styles.heroRightCol}
             initial={{ opacity: 0, scale: 0.97, x: 14 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
