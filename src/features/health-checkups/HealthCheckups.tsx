@@ -33,6 +33,9 @@ import { planHealthDetailAddition } from "./healthDetailSelection";
 import { healthCityKey, healthCityOptions, healthFacilityServesCity, resolveHealthFacility, resolveHealthEntryCentre, readHealthCentrePreference, rememberHealthCentrePreference } from "./healthFacilitySelection";
 import catalogueCities from "@/data/health-checkups/cities.json";
 import styles from "./HealthCheckups.module.css";
+import HealthHero4 from "./design4/HealthHero4";
+import preview4 from "./design4/HealthListing4.module.css";
+import preview5 from "./design5/HealthListing5.module.css";
 
 const ACCOUNT: AuthIdentity = { method: "email", value: "signed-in@nh.example" };
 const CITIES = healthCityOptions(FACILITIES, catalogueCities);
@@ -93,6 +96,8 @@ export default function HealthCheckups() {
   const total = cartTotal(cart);
   const selectedPackage = cart.find(item => item.kind === "package");
   const stage = receipt ? "confirmed" : params.get("step") === "review" && cart.length ? "review" : "browse";
+  const immersiveListing = design === "4" && stage === "browse";
+  const compactListing = design === "5" && stage === "browse";
   const facilityCatalog = ITEMS.filter(item => item.facilityId === facilityId);
   const catalog = facilityCatalog.filter(item => item.kind === tab);
   const categories = ["All", ...new Set(catalog.map(item => item.category).filter(Boolean))];
@@ -270,11 +275,11 @@ export default function HealthCheckups() {
     }, 600);
   }
 
-  return <div className={styles.page} data-health-design={design}>
-    <div className={styles.container}>
+  return <div className={`${styles.page} ${immersiveListing ? preview4.page : ""}`} data-health-design={design}>
+    <div className={`${styles.container} ${immersiveListing ? preview4.container : ""}`}>
       {stage === "browse" && <>
-        <header className={styles.intro}><div>{legacy ? <h1 ref={heading} tabIndex={-1}>Health checkups &amp; tests</h1> : <JourneyHeading ref={heading} tabIndex={-1}>{listingHeading}</JourneyHeading>}<p>Find the right checkup, at a centre near you.</p></div></header>
-        {design === "3" ? <HealthListing3 bookedIds={isUserLoggedIn && memberId ? bookingHistory[memberId] ?? [] : []} cities={CITIES} facilities={FACILITIES} initialCity={entryCity} facility={centreChosen ? facility : undefined}
+        {!immersiveListing && <header className={`${styles.intro} ${compactListing ? preview5.intro : ""}`}><div>{legacy ? <h1 ref={heading} tabIndex={-1}>Health checkups &amp; tests</h1> : <JourneyHeading ref={heading} tabIndex={-1}>{listingHeading}</JourneyHeading>}{!compactListing && <p>Find the right checkup, at a centre near you.</p>}</div></header>}
+        {design === "3" || design === "4" || design === "5" ? <HealthListing3 variant={design} renderHero={controls => <HealthHero4 title={listingHeading} headingRef={heading}>{controls}</HealthHero4>} bookedIds={isUserLoggedIn && memberId ? bookingHistory[memberId] ?? [] : []} cities={CITIES} facilities={FACILITIES} initialCity={entryCity} facility={centreChosen ? facility : undefined}
           facilityOpen={facilityOpen} onOpenFacility={() => openFacilityPicker()} onCloseFacility={closeFacilityPicker} onFacility={changeFacility}
           catalog={facilityCatalog} query={query} onQuery={setQuery} tab={tab} onTab={setTab} category={category} onCategory={setCategory}
           ids={ids} includedIds={selectedPackage?.includedTestIds ?? []} onAdd={add} onDetails={openDetails} /> : <>
@@ -316,7 +321,7 @@ export default function HealthCheckups() {
       onExpandedChange={setCartOpen} onRemove={remove} onContinue={review}
       onBrowse={() => { setCartOpen(false); requestAnimationFrame(() => heading.current?.focus({ preventScroll: true })); }}
       onEmptyClose={() => heading.current?.focus({ preventScroll: true })} />}
-    {facilityOpen && design !== "3" && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select ref={cityPicker} value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={() => cityPicker.current?.focus()}>Choose another city</button></div>}</HealthDialog>}
+    {facilityOpen && design !== "3" && design !== "4" && design !== "5" && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select ref={cityPicker} value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={() => cityPicker.current?.focus()}>Choose another city</button></div>}</HealthDialog>}
     {pendingPackage && <HealthDialog title="Replace your package?" onClose={() => setPendingPackage(null)}><p className={styles.dialogSub}>Replace {selectedPackage?.name} with {pendingPackage.name}? Your additional tests stay selected unless they’re already included in the new package.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={() => setPendingPackage(null)}>Keep current package</button><button type="button" className={styles.primary} onClick={replacePackage}>Replace package</button></div></HealthDialog>}
     {pendingFacility && <HealthDialog title="Change your centre?" onClose={keepFacility}><p className={styles.dialogSub}>Changing to {resolveHealthFacility(FACILITIES, pendingFacility)?.name} will remove {cart.length} {cart.length === 1 ? "item" : "items"} from your cart. Packages and prices vary by centre.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={keepFacility}>Keep selection</button><button type="button" className={styles.primary} onClick={() => applyFacility(pendingFacility)}>Change centre</button></div></HealthDialog>}
 

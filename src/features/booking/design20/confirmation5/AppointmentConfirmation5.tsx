@@ -2,7 +2,7 @@
 
 import { useId, useState, type RefObject } from "react";
 import Link from "next/link";
-import { ArrowUpRight, CalendarDays, CalendarPlus, MapPin, Video } from "lucide-react";
+import { CalendarDays, CalendarPlus, MapPin, Video } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
@@ -97,10 +97,8 @@ export default function AppointmentConfirmation5({ doctor, draft, pricing, headi
 
       <div className={styles.payment}><ConfirmationPayment pricing={pricing} paid={payment === "online"} /></div>
       <footer className={styles.footer}>
-        <p className={styles.footerNote}>Track appointments, view your medical history and access health records in your patient portal.</p>
         <div className={styles.actions}>
           <Link href="/" className={styles.primary}>Back to home</Link>
-          <a href="https://narayana.health/phrportal" target="_blank" rel="noopener noreferrer" className={styles.secondary} aria-label="Open patient portal (opens in a new tab)">Open patient portal<ArrowUpRight size={16} aria-hidden /></a>
         </div>
       </footer>
     </motion.div>

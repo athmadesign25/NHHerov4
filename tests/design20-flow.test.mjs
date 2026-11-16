@@ -29,6 +29,7 @@ const { confirmDesign20, design20RequestedSelection, design20CanRestoreSelection
 const { patientsForIdentity, holdAfterPaymentFailure } = await import("../src/features/booking/design15/model.ts");
 const { getDesign20BookingDoctor } = await import("../src/features/search/design20Directory.ts");
 const { getDesign3BookingSlots } = await import("../src/features/booking/design3Availability.ts");
+const { resolveListingPreview } = await import("../src/app/search/designs/d21/listingPreview.ts");
 const now = Date.parse("2026-10-27T02:00:00Z");
 const doctor = getDesign20BookingDoctor("dr-1");
 const selection = design20RequestedSelection(doctor, new URLSearchParams(), now);
@@ -230,6 +231,27 @@ test("review and return links retain D20, filters and appointment context withou
   }
   for (const unsafe of ["https://evil.test", "//evil.test", "/\\evil.test", "javascript:alert(1)"]) {
     assert.equal(design20ListingReturnTo(unsafe), "/search/doctors?design=d21&location=All");
+  }
+});
+
+test("listing interaction previews survive summary and Back without losing filters or a selected appointment", () => {
+  for (const preview of ["1", "2", "a"]) {
+    const returnTo = `/search/doctors?design=d21&listingPreview=${preview}&location=Bangalore&languages=Kannada&mode=video`;
+    const summary = new URL(design20FlowUrl(member, returnTo), "https://nh.local");
+    const restoredReturn = summary.searchParams.get("returnTo");
+    const back = new URL(design20BackUrl(member, restoredReturn), "https://nh.local");
+    assert.equal(resolveListingPreview(back.searchParams.get("listingPreview")), preview);
+    assert.equal(back.searchParams.get("booking"), doctor.id);
+    assert.equal(back.searchParams.get("bookingResume"), "1");
+    assert.equal(back.searchParams.get("hospital"), selection.hospital);
+    assert.equal(back.searchParams.get("date"), selection.date);
+    assert.equal(back.searchParams.get("bookingMode"), selection.mode);
+    assert.equal(back.searchParams.get("mode"), "video");
+    assert.equal(back.searchParams.get("languages"), "Kannada");
+    const closed = new URL(design20ListingReturnTo(`${back.pathname}${back.search}`), "https://nh.local");
+    assert.equal(resolveListingPreview(closed.searchParams.get("listingPreview")), preview);
+    assert.equal(closed.searchParams.has("booking"), false);
+    assert.equal(closed.searchParams.has("bookingResume"), false);
   }
 });
 

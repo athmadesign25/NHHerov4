@@ -72,6 +72,18 @@ test("D20 landing refinements and leaving the defining city retain the new desig
   assert.equal(search.searchParams.get("mode"), "video");
 });
 
+test("Design A stays selected when city and speciality refinements change the listing route", () => {
+  const pathname = "/book-an-appointment/cardiologist/bangalore";
+  const params = doctorListingParams(pathname, "design=d21&listingPreview=a&languages=English");
+  assert.equal(asUrl(doctorListingUrl(pathname, params)).searchParams.get("listingPreview"), "a");
+  params.set("location", "Mumbai");
+  const changed = asUrl(doctorListingUrl(pathname, params));
+  assert.equal(changed.pathname, "/search/doctors");
+  assert.equal(changed.searchParams.get("listingPreview"), "a");
+  assert.equal(changed.searchParams.get("specialties"), "Cardiologist");
+  assert.equal(changed.searchParams.get("languages"), "English");
+});
+
 test("D20 global directory links restore current filters and maintain mode and city", () => {
   const params = new URLSearchParams({ design: "d20", location: "Mumbai", mode: "video", q: "heart", languages: "Hindi" });
   const current = "/search/doctors";

@@ -3,7 +3,7 @@
 import { useState, type RefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, CalendarDays, Check, MapPin, UserRound, Video } from "lucide-react";
+import { CalendarDays, Check, MapPin, UserRound, Video } from "lucide-react";
 import type { BookingDoctorSummary } from "../types";
 import { formatBookingDate } from "../format";
 import type { Design20Draft } from "./model";
@@ -73,10 +73,8 @@ export default function AppointmentConfirmation({ doctor, draft, pricing, headin
     </div>
 
     <footer className={styles.footer}>
-      <div><h2>Manage your appointment</h2><p>Appointments and health records in your patient portal.</p></div>
       <div className={styles.actions}>
-        <a href="https://narayana.health/phrportal" target="_blank" rel="noopener noreferrer" className={styles.primary} aria-label="Open patient portal (opens in a new tab)">Open patient portal <ArrowUpRight size={17} aria-hidden /></a>
-        <Link href="/" className={styles.home}>Back to home</Link>
+        <Link href="/" className={styles.primary}>Back to home</Link>
       </div>
     </footer>
   </article>;

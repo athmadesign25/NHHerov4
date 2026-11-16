@@ -2,6 +2,7 @@
 .frame { align-self: stretch; }
 .baseline { display: grid; min-width: 0; }
 .frame[data-booking-active] { z-index: 41; }
+.frame[data-booking-card] { scroll-margin-top: calc(var(--d3-toolbar-bottom, var(--nav-height)) + var(--space-24)); }
 .baseline[data-concealed] { visibility: hidden; pointer-events: none; }
 .card {
   --d7-bg: var(--d17-lite-surface);

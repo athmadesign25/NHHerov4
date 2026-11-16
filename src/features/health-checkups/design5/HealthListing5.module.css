@@ -1,0 +1,41 @@
+/* Compact discovery uses the booking page background and shared controls.
+   Only the search/type row sticks; the heading and categories scroll away. */
+.intro.intro { margin-bottom: var(--space-12); }
+.intro h1 { text-wrap: balance; }
+
+.toolbar.toolbar { padding-block: var(--space-12); }
+.catalogueHeader.catalogueHeader {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-16);
+  padding-bottom: 0;
+}
+
+.categories.categories {
+  --d3-ui-selection: var(--red-600);
+  --d3-ui-selection-label: var(--red-600);
+  --d3-ui-selection-hover: var(--red-600);
+  --d3-ui-selection-pressed: var(--red-600);
+  --d3-ui-selection-surface: var(--red-50);
+  --d3-control-surface: rgba(var(--white-rgb), 0.6);
+  margin-top: var(--space-4);
+  padding-block: var(--space-4);
+  scroll-padding-inline: var(--space-8);
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+@media (max-width: 1024px) {
+  .catalogueHeader.catalogueHeader { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .catalogueHeader > [role="group"] { justify-self: start; }
+}
+
+@media (max-width: 640px) {
+  .toolbar.toolbar { padding-block: var(--space-8); }
+  .catalogueHeader > [role="group"] { justify-self: stretch; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .categories.categories { --d3-control-surface: var(--color-bg-card); }
+}

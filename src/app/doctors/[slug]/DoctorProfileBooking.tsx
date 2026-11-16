@@ -2,14 +2,13 @@
 
 import { useCallback, useEffect, useId, useRef, useState, type RefObject } from "react";
 import { useSearchParams } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, ChevronDown, Phone } from "lucide-react";
-import AppointmentSelector from "@/app/search/designs/d20/AppointmentSelector";
+import { motion, useReducedMotion } from "framer-motion";
+import { Phone } from "lucide-react";
+import AppointmentBookingPanel from "@/features/booking/components/AppointmentBookingPanel";
 import LoginModal from "@/features/auth/LoginModal";
 import useDesign20Booking from "@/features/booking/design20/useDesign20Booking";
 import { design20RequestedSelection } from "@/features/booking/design20/model";
 import { appointmentPricing } from "@/features/booking/design17/pricing";
-import { formatBookingDate } from "@/features/booking/format";
 import type { BookingDoctorSummary } from "@/features/booking/types";
 import type { AppointmentSelection } from "@/features/booking/design7/model";
 import { getDesign20BookingDoctor, getDesign20ProfileDoctor } from "@/features/search/design20Directory";
@@ -100,13 +99,11 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
   onAuthChange: (open: boolean) => void;
 }) {
   const flow = useDesign20Booking(doctor, { initialSelection, returnTo, inline: true, preserveEntry: true, resume });
-  const reduced = useReducedMotion();
   const heading = useRef<HTMLHeadingElement>(null);
   const continuationRequested = useRef(false);
   const signingIn = flow.phase === "auth" && !flow.isUserLoggedIn;
   useEffect(() => { onAuthChange(signingIn); }, [signingIn, onAuthChange]);
   const { selection } = flow.draft;
-  const showContinue = expanded || Boolean(selection.time);
   const continueBooking = () => {
     continuationRequested.current = true;
     flow.continueBooking();
@@ -133,36 +130,18 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
     if (expanded) heading.current?.focus({ preventScroll: true });
   }, [expanded]);
   return <>
-    <AnimatePresence initial={false} mode="popLayout">{expanded && <motion.div key="options" id={panelId} className={styles.panel} layout={reduced ? false : "position"}
-      initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      transition={{ duration: reduced ? 0 : duration.base, ease: ease.out, layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
-      <header className={styles.header}><div><h2 ref={heading} tabIndex={-1}>Choose your appointment</h2><p>{doctor.name}</p></div>
-        <button type="button" className={styles.collapse} onClick={close} aria-label="Minimise appointment options"><ChevronDown size={20} aria-hidden /></button></header>
-      <div className={styles.options} data-lenis-prevent>
-        {flow.notice && <p className={styles.notice} role="status">{flow.notice}</p>}
-        {!flow.loaded ? <p className={styles.notice} role="status">Finding available times…</p>
-          : <AppointmentSelector showHospitalDirections doctor={doctor} selection={selection} now={flow.now} onChange={flow.selectTime} autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired} />}
-      </div>
-    </motion.div>}</AnimatePresence>
-    <motion.div layout={reduced ? false : "position"} layoutId={`${panelId}-summary`} className={styles.summary}
-      transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.out } }}>
-      {expanded || selection.time ? <div className={styles.selected}>
-        <div className={styles.selectionDetails}>
-          <div className={styles.slotLine}>
-            <strong aria-live="polite" aria-atomic="true">{selection.time ? <>{formatBookingDate(selection.date, "short")} <span aria-hidden>·</span> {selection.time}</> : "Choose an available time"}</strong>
-            {!expanded && <button ref={editAction} type="button" className={styles.editSelection} onClick={open}
-              disabled={flow.busy} aria-label="Edit appointment date, time and consultation details" aria-expanded={false} aria-controls={panelId}>Edit</button>}
-          </div>
-          {!expanded && <span>{selection.mode === "hospital" ? selection.hospital : "Video consultation"}</span>}
-        </div>
-      </div>
-        : <div className={styles.doctor}><strong>{doctor.name}</strong><span>{selection.mode === "hospital" ? "Hospital visit" : "Video consultation"}</span></div>}
-      <Price fee={selectedDoctor?.fee ?? doctor.fee} />
-      <div className={styles.actionGroup}><button ref={action} type="button" className={styles.primary}
-        aria-expanded={showContinue ? undefined : false} aria-controls={showContinue ? undefined : panelId}
-        disabled={showContinue && (!flow.loaded || !selection.time || flow.busy || flow.expired)}
-        onClick={showContinue ? continueBooking : open}><span>{showContinue ? flow.busy ? "Continuing…" : "Continue" : "Book appointment"}</span>{showContinue && <ArrowRight className={styles.continueArrow} aria-hidden />}</button>{!expanded && <CallAction />}</div>
-    </motion.div>
+    <AppointmentBookingPanel
+      showDoctorImage id={panelId} doctor={doctor} selection={selection} now={flow.now}
+      loaded={flow.loaded} notice={flow.notice}
+      autoSelectFirst={flow.phase === "slots" && !flow.busy && !flow.expired}
+      onChange={flow.selectTime}
+      price={/\d/.test(selectedDoctor?.fee ?? doctor.fee) ? appointmentPricing(selectedDoctor?.fee ?? doctor.fee).base : "Confirm fee"}
+      showOnwards={/\d/.test(selectedDoctor?.fee ?? doctor.fee)}
+      busy={flow.busy} disabled={!flow.loaded || !selection.time || flow.busy || flow.expired}
+      onContinue={continueBooking} onClose={close} onOpen={open} expanded={expanded}
+      headingRef={heading} actionRef={action} editActionRef={editAction}
+      collapsedAction={<CallAction />}
+    />
     <LoginModal previewOtp isOpen={signingIn} onClose={() => { continuationRequested.current = false; flow.setLoginOpen(false); }} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </>;
 }

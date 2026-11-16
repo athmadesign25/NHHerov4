@@ -3,19 +3,15 @@
 import { Check, ChevronUp } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import styles from "./ListingBackdropPreview.module.css";
-
-const variants = [
-  { value: "1", label: "With dim" },
-  { value: "2", label: "Without dim" },
-] as const;
+import { LISTING_PREVIEWS, type ListingPreview } from "./listingPreview";
 
 /** Presentation-only comparison: keep the current listing and booking mounted. */
-export default function ListingBackdropPreview({ active }: { active: "1" | "2" }) {
+export default function ListingBackdropPreview({ active }: { active: ListingPreview }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const id = useId();
-  const label = variants.find(variant => variant.value === active)!.label;
+  const label = LISTING_PREVIEWS.find(variant => variant.value === active)!.label;
 
   useEffect(() => {
     if (!open) return;
@@ -26,7 +22,7 @@ export default function ListingBackdropPreview({ active }: { active: "1" | "2" }
     return () => document.removeEventListener("pointerdown", close);
   }, [open]);
 
-  return <nav ref={root} className={styles.preview} aria-label="Listing backdrop preview" data-listing-preview
+  return <nav ref={root} className={styles.preview} aria-label="Doctor listing preview" data-listing-preview
     onBlur={event => {
       if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
     }}
@@ -41,8 +37,8 @@ export default function ListingBackdropPreview({ active }: { active: "1" | "2" }
       aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen(value => !value)}>
       {label}<ChevronUp aria-hidden className={open ? styles.open : undefined} />
     </button>
-    {open && <div id={id} className={styles.options} role="group" aria-label="Compare backdrop treatments">
-      {variants.map(variant => <button key={variant.value} type="button" aria-pressed={active === variant.value}
+    {open && <div id={id} className={styles.options} role="group" aria-label="Compare listing interactions">
+      {LISTING_PREVIEWS.map(variant => <button key={variant.value} type="button" aria-pressed={active === variant.value}
         onClick={() => {
           const url = new URL(window.location.href);
           url.searchParams.set("listingPreview", variant.value);

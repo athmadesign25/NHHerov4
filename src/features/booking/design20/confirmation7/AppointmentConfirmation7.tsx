@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useId, useRef, useState, type RefObject } from "react";
+import Link from "next/link";
 import { CalendarDays, CalendarPlus, MapPin, Video } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
@@ -17,7 +18,6 @@ import ConfirmationIntro from "./ConfirmationIntro";
 import ConfirmationPayment from "../confirmation5/ConfirmationPayment";
 import styles from "../confirmation5/AppointmentConfirmation5.module.css";
 import layout from "./AppointmentConfirmation7.module.css";
-import BookingOutcomeActions from "../../shared/BookingOutcomeActions";
 
 interface Props {
   doctor: BookingDoctorSummary;
@@ -35,7 +35,7 @@ export default function AppointmentConfirmation7({ doctor, draft, pricing, headi
   const finishIntro = useCallback(() => setHeadingComplete(true), []);
   const showDetails = headingComplete || !!reduced;
   const paymentRef = useRef<HTMLDivElement>(null);
-  // Wait for the savings band as well as the payment heading, above the mobile dock.
+  // Wait until the complete payment summary and savings band are visible.
   const paymentVisible = useInView(paymentRef, { once: true, amount: "all", margin: "0px 0px -12% 0px" });
   const member = draft.patients.find(item => item.id === draft.selectedPatientId);
   const patient = member?.patient;
@@ -108,11 +108,10 @@ export default function AppointmentConfirmation7({ doctor, draft, pricing, headi
       </div>
 
       <div ref={paymentRef} className={styles.payment}><ConfirmationPayment pricing={pricing} paid={payment === "online"} animateSavings={paymentVisible && headingComplete && detailsComplete && !reduced} /></div>
+      <nav className={layout.actions} aria-label="Appointment confirmation actions">
+        <Link href="/" className={layout.homeLink}>Back to home</Link>
+      </nav>
     </motion.div>
-    <BookingOutcomeActions ready={showDetails} label="Appointment confirmation actions"
-      message="Manage appointments and access your health records in the patient portal."
-      primary={{ label: "Back to home", href: "/" }}
-      secondary={{ label: "Open patient portal", href: "https://narayana.health/phrportal", external: true }} />
     <span className={styles.srOnly} role="status" aria-live="polite">{calendarReady ? "Calendar file ready to download." : ""}</span>
   </article>;
 }

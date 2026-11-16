@@ -9,10 +9,10 @@ import { duration, ease } from "@/lib/motion";
 import surface from "../design20/previous/BookingPaymentBar.module.css";
 import styles from "./BookingOutcomeActions.module.css";
 
-type OutcomeAction = { label: string; href?: string; onClick?: () => void; external?: boolean };
+type OutcomeAction = { label: string; href?: string; onClick?: () => void; external?: boolean; disabled?: boolean };
 interface Props {
   primary: OutcomeAction;
-  secondary: OutcomeAction;
+  secondary?: OutcomeAction;
   label: string;
   message?: string;
   amount?: { label: string; value: string };
@@ -26,7 +26,7 @@ const getMounted = () => true;
 function Action({ action, primary }: { action: OutcomeAction; primary?: boolean }) {
   const className = `${styles.action} ${primary ? styles.primary : styles.secondary}`;
   const content = <>{action.label}{action.external && <ArrowUpRight size={16} aria-hidden />}</>;
-  if (!action.href) return <button type="button" className={className} onClick={action.onClick}>{content}</button>;
+  if (!action.href) return <button type="button" className={className} onClick={action.onClick} disabled={action.disabled}>{content}</button>;
   return action.external
     ? <a href={action.href} className={className} target="_blank" rel="noopener noreferrer" aria-label={`${action.label} (opens in a new tab)`}>{content}</a>
     : <Link href={action.href} className={className}>{content}</Link>;
@@ -39,6 +39,7 @@ export default function BookingOutcomeActions({ primary, secondary, label, messa
   const reserve = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLElement>(null);
   const visible = mounted && ready;
+  const hasContext = Boolean(amount || message);
 
   useLayoutEffect(() => {
     if (!visible || !bar.current || !reserve.current) return;
@@ -55,15 +56,15 @@ export default function BookingOutcomeActions({ primary, secondary, label, messa
     <div ref={reserve} className={styles.reserve} aria-hidden />
     {mounted && createPortal(<AnimatePresence>
       {visible && <motion.section key="outcome-actions" ref={bar}
-        className={`${surface.bar} ${styles.dock}`} data-enhanced data-confirmation-actions aria-label={label}
+        className={`${surface.bar} ${styles.dock}`} data-enhanced data-confirmation-actions data-actions-only={!hasContext || undefined} aria-label={label}
         initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
         transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}>
-        <div className={styles.context}>
+        {hasContext && <div className={styles.context}>
           {amount && <div className={styles.amount}><span>{amount.label}</span><strong>{amount.value}</strong></div>}
           {message && <p className={styles.message}>{message}</p>}
-        </div>
-        <nav className={styles.actions} aria-label={label}>
-          <Action action={secondary} /><Action action={primary} primary />
+        </div>}
+        <nav className={styles.actions} data-single={!secondary || undefined} aria-label={label}>
+          {secondary && <Action action={secondary} />}<Action action={primary} primary />
         </nav>
       </motion.section>}
     </AnimatePresence>, document.body)}

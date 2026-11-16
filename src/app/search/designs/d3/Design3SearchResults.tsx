@@ -34,6 +34,7 @@ import d21 from "../d21/Design21Filters.module.css";
 import Design21Refinements from "../d21/Design21Refinements";
 import FilterSearch from "../d21/FilterSearch";
 import ListingBackdropPreview from "../d21/ListingBackdropPreview";
+import { resolveListingPreview, type ListingPreview } from "../d21/listingPreview";
 import CatalogFilters from "./CatalogFilters";
 import styles from "./Design3SearchResults.module.css";
 import DoctorListingFAQ from "./DoctorListingFAQ";
@@ -71,7 +72,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const directory = design20Directory;
     const scheduleContext = "d20";
     const searchParams = useSearchParams();
-    const listingPreview = searchParams.get("listingPreview") === "1" ? "1" : "2";
+    const listingPreview = resolveListingPreview(searchParams.get("listingPreview"));
     const pathname = usePathname();
     const router = useRouter();
     const landing = getDoctorLandingContext(pathname);
@@ -90,7 +91,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
     const activeBooking = bookingSource ? { ...bookingSource, name: presentationDoctorName(bookingSource.name) } : null;
     const previousBooking = useRef<string | null>(null);
     const openedHere = useRef(false);
-    const closingPreview = useRef<"1" | "2" | null>(null);
+    const closingPreview = useRef<ListingPreview | null>(null);
     const visitedCards = useRef(new Set<string>());
     const [resumeCard, setResumeCard] = useState(false);
     useEffect(() => {
@@ -99,7 +100,7 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
             closingPreview.current = null;
             if (!preview || window.location.pathname !== pathname) return;
             const url = new URL(window.location.href);
-            if ((url.searchParams.get("listingPreview") === "1" ? "1" : "2") === preview) return;
+            if (resolveListingPreview(url.searchParams.get("listingPreview")) === preview) return;
             url.searchParams.set("listingPreview", preview);
             window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
         };
@@ -137,7 +138,9 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
                         __lenis?: Lenis;
                     }).__lenis;
                     if (lenis)
-                        lenis.scrollTo(top, { immediate: true });
+                        // Design A locks page scrolling before this queued restoration.
+                        // Only its source frame may bypass that lock for explicit entry/Back.
+                        lenis.scrollTo(top, { immediate: true, force: card.hasAttribute("data-booking-active") });
                     else
                         window.scrollTo({ top, behavior: "instant" });
                 });
@@ -491,13 +494,13 @@ export default function Design3SearchResults({ catalogs, cardComponent: Card = D
             {sample && <span className={styles.sample}><Info size={14} aria-hidden/>Sample directory</span>}
           </div>}
           {!sample && doctorTab && !loading && !error && <p className={styles.dataNote}>Contact NH to confirm appointment times and consultation fees.</p>}
-          <div className={`${styles.grid} ${doctorTab ? gridClassName || styles.doctorGrid : ""}`} aria-busy={loading}>
+          <div className={`${styles.grid} ${doctorTab ? gridClassName || styles.doctorGrid : ""}`} data-doctor-results-grid={doctorTab || undefined} aria-busy={loading}>
             {loading ? <ResultSkeletons doctors={doctorTab}/> : error || !total ? <SearchState recovery={recovery ? { message: `The next matching appointments are on ${dateLabel(recovery.date)}. Your other filters will stay selected.`, label: `View ${dateLabel(recovery.date)}`, onApply: () => changeDate(recovery.date) } : filterRecovery ? { message: `${filterRecovery.count} doctors are available without the ${filterRecovery.label} filter. Your other preferences will stay selected.`, label: `Clear ${filterRecovery.label} filter`, onApply: () => changeDoctorFilters(filterRecovery.filters) } : undefined} emptyState={previouslyBooked ? {
                 title: bookedDoctors.size ? `No ${historyLabel.toLowerCase()} doctors match` : `No ${historyLabel.toLowerCase()} doctors yet`,
                 message: bookedDoctors.size ? `Try another location or remove a filter to find a doctor you’ve ${"booked"} before.` : "Doctors you book will appear here, making your next visit easier.",
                 action: "Browse doctors",
             } : undefined} error={error} filtered={filterCount > 0} onRetry={request.retry} onReset={previouslyBooked ? () => setHistory(false) : filterCount ? clearFilters : () => update((next) => { next.delete("q"); next.delete("location"); })}/>
-            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} browsingPreview={listingPreview === "2"} doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
+            : doctorTab ? results.slice(0, shownDoctors).map((doctor, index) => <Card key={`${doctor.id}:${sort === "nearest"}`} browsingPreview={listingPreview === "2"} expandingPreview={listingPreview === "a"} doctor={doctor} mode={design21CardMode(doctor, mode, availabilityNow)} live={live} bookedEarlier={bookedDoctors.has(doctor.id)} onBook={book} onDetails={setDoctorDetails} priority={index < 3} bookingDate={customDate} listingReturnTo={listingReturnTo} cardDesign={"d20"} focusTerms={[...filters.expertise, query]} active={bookingId === doctor.id} onClose={closeBookingCard} initialSelection={bookingId === doctor.id ? activeCardSelection : undefined} resume={resumeCard} onHospitalChange={sort === "nearest" ? hospital => chooseNearestUnit(doctor.id, hospital) : undefined}/>)
                 : items.slice(0, visible).map((item) => <ResultCard key={item.id} item={item} onDetails={() => setItemDetails(item)}/>)}
           </div>
           {doctorTab && <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{!loading && !error && visible > 16 ? "More doctors loaded" : ""}</p>}

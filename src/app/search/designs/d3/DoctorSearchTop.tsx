@@ -127,7 +127,7 @@ export default function DoctorSearchTop({ query, location, total, mode, allConsu
 
   const locationSelect = (className: string) => <SearchCityPicker
     className={`${styles.location} ${className}`} cities={NH_CITIES} value={location}
-    panelClassName={ui.blueSelection}
+    panelClassName={ui.theme}
     busy={detectingLocation === location} showDeviceLocation={!locationFirst}
     describedBy="d3-location-status d3-refinement-help" onChange={handleLocationChange} />;
   const filterButton = <button type="button" className={styles.filterButton} data-active={filterCount > 0 || undefined} onClick={onOpenFilters} aria-haspopup="dialog"

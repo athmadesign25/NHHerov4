@@ -1,0 +1,65 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: inherit;
+}
+
+/* The shared selector uses the same light tokens in either expanded shell. */
+.root[data-expanded="true"] {
+  --target: calc(var(--space-48) - var(--space-4));
+  --d7-surface: var(--journey-paper-surface);
+  --d7-text: var(--d17-lite-ink);
+  --d7-muted: var(--color-text-secondary);
+  --scroll-chevron: var(--color-text-secondary);
+  --scroll-chevron-hover: var(--color-text);
+  --d3-ui-selection: var(--color-emergency);
+  --d3-ui-selection-label: color-mix(in srgb, var(--color-emergency) 78%, var(--color-text));
+  --d3-ui-selection-surface: var(--color-emergency-light);
+  --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
+  color: var(--d7-text);
+}
+
+.panel { min-height: 0; flex: 1 1 auto; }
+.summary { flex-shrink: 0; }
+.root[data-expanded="true"] .summary {
+  border-top: var(--space-1) solid color-mix(in srgb, var(--color-border) 55%, transparent);
+}
+.closeIcon { width: var(--space-20); height: var(--space-20); }
+.doctorHeader { align-items: center; }
+.identity { display: flex; align-items: center; gap: var(--space-12); min-width: 0; }
+.portrait {
+  position: relative;
+  flex: 0 0 var(--space-48);
+  width: var(--space-48);
+  height: var(--space-48);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-card);
+}
+.portrait img { object-fit: cover; object-position: center top; }
+.identityText { min-width: 0; }
+.doctorHeader .identityText h2 {
+  font-size: var(--font-size-base);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+.doctorHeader .identityText p {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.root :is(a, button):focus-visible {
+  outline: var(--space-2) solid var(--color-primary);
+  outline-offset: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root :is(a, button) { transition: none; }
+}

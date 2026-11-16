@@ -3,6 +3,8 @@ export const HEALTH_DESIGNS = [
   { id: "1", label: "Design 1", description: "Original" },
   { id: "2", label: "Design 2", description: "Compare & choose" },
   { id: "3", label: "Design 3", description: "Browse by centre" },
+  { id: "4", label: "Design 4", description: "Discover your checkup" },
+  { id: "5", label: "Design 5", description: "Compact discovery" },
 ] as const;
 
 export type HealthDesign = (typeof HEALTH_DESIGNS)[number]["id"];

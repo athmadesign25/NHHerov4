@@ -23,6 +23,7 @@ import { getDesign20CardContent } from "@/features/search/design20CardContent";
 import { readListingParams } from "@/features/search/doctorListing";
 import useInlineBookingSpotlight from "./useInlineBookingSpotlight";
 import { duration } from "@/lib/motion";
+import ExpandingDoctorBooking from "@/features/booking/designA/ExpandingDoctorBooking";
 
 type Props = Omit<ComponentProps<typeof Design17DoctorCard>, "cardDesign"> & {
   cardDesign?: "d17" | "d17-lite" | "d18" | "d19" | "d20";
@@ -31,11 +32,13 @@ type Props = Omit<ComponentProps<typeof Design17DoctorCard>, "cardDesign"> & {
   initialSelection?: AppointmentSelection;
   resume?: boolean;
   browsingPreview?: boolean;
+  expandingPreview?: boolean;
 };
 type BookingFlow = ReturnType<typeof useDesign20Booking>;
 
 /** The browsing card defines the responsive footprint for every booking state. */
-export default function DoctorCard({ active, onClose, initialSelection, resume, onBook, live, browsingPreview = false, ...props }: Props) {
+export default function DoctorCard({ active, onClose, initialSelection, resume, onBook, live, browsingPreview = false, expandingPreview = false, ...props }: Props) {
+  const sourceRef = useRef<HTMLDivElement>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [remembered, setRemembered] = useState<{ context: string; selection: AppointmentSelection } | null>(null);
   const contextParams = new URLSearchParams(props.listingReturnTo?.split("?")[1] ?? "");
@@ -52,24 +55,28 @@ export default function DoctorCard({ active, onClose, initialSelection, resume, 
   if (props.bookingDate) query.set("date", props.bookingDate);
   const booking = Boolean(active && bookingDoctor);
   const { active: dimRequested, highlight, start: startSpotlight } = useInlineBookingSpotlight(booking, authOpen);
-  const spotlight = dimRequested && !browsingPreview;
+  const spotlight = dimRequested && !browsingPreview && !expandingPreview;
   const openBooking: Props["onBook"] = useCallback((event, doctor, mode, includeSlot) => {
-    if (!live) startSpotlight();
+    if (!live && !expandingPreview) startSpotlight();
     onBook(event, doctor, mode, includeSlot);
-  }, [live, startSpotlight, onBook]);
+  }, [live, expandingPreview, startSpotlight, onBook]);
   const listingFilters = readListingParams(new URLSearchParams(props.listingReturnTo?.split("?")[1] ?? "")).filters;
   const cardContent = getDesign20CardContent(props.doctor, { specialties: listingFilters.specialties, focusTerms: props.focusTerms });
   return <LayoutGroup id={`d20-${props.doctor.id}`}>
     <BookingBackdrop inline open={spotlight} suspended={authOpen} onDismiss={onClose ?? (() => undefined)} />
-    <div className={styles.frame} data-booking-active={booking || undefined}>
+    <div ref={sourceRef} className={styles.frame} data-booking-active={booking || undefined} data-booking-card={expandingPreview && booking ? props.doctor.id : undefined}>
     {/* Retain natural sizing across resizing, deep links and browser Back.
         The concealed baseline is neither interactive nor exposed to AT. */}
     <div className={styles.baseline} data-concealed={booking || undefined} aria-hidden={booking || undefined} inert={booking}>
       <Design17DoctorCard {...props} live={live} cardDesign="d20" onBook={openBooking} />
     </div>
-    <AnimatePresence initial={false}>{bookingDoctor && <BookingCard key="booking" spotlight={spotlight} highlight={highlight} doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
+    <AnimatePresence initial={false}>{bookingDoctor && (expandingPreview ? <ExpandingDoctorBooking key="expanded-booking" sourceRef={sourceRef}
+      doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
+      initialSelection={restoredSelection ?? initialSelection ?? design20RequestedSelection(bookingDoctor, query)}
+      returnTo={props.listingReturnTo ?? "/search/doctors?design=d21"} onClose={onClose ?? (() => undefined)}
+      resume={Boolean(restoredSelection) || resume} onSelectionChange={rememberSelection} /> : <BookingCard key="booking" spotlight={spotlight} highlight={highlight} doctor={{ ...bookingDoctor, name: presentationDoctorName(bookingDoctor.name), speciality: cardContent.speciality }}
     initialSelection={restoredSelection ?? initialSelection ?? design20RequestedSelection(bookingDoctor, query)}
-    returnTo={props.listingReturnTo ?? "/search/doctors?design=d21"} onClose={onClose ?? (() => undefined)} resume={Boolean(restoredSelection) || resume} onAuthChange={setAuthOpen} onSelectionChange={rememberSelection} />}</AnimatePresence>
+    returnTo={props.listingReturnTo ?? "/search/doctors?design=d21"} onClose={onClose ?? (() => undefined)} resume={Boolean(restoredSelection) || resume} onAuthChange={setAuthOpen} onSelectionChange={rememberSelection} />)}</AnimatePresence>
   </div></LayoutGroup>;
 }
 

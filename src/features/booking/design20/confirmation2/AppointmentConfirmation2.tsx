@@ -3,7 +3,7 @@
 import { useId, useState, type RefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, CalendarPlus, Check, ChevronDown, MapPin, ShieldCheck, UserRound, Video } from "lucide-react";
+import { CalendarPlus, Check, ChevronDown, MapPin, ShieldCheck, UserRound, Video } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
@@ -93,8 +93,7 @@ export default function AppointmentConfirmation2({ doctor, draft, pricing, headi
       </div>
       {pricing.hasDiscount && <div className={styles.savings}><Check size={16} aria-hidden /><span>You saved <strong>{pricing.discount}</strong> on this booking</span><span className={styles.savingsSweep} aria-hidden /></div>}
       <footer className={styles.actions}>
-        <a href="https://narayana.health/phrportal" target="_blank" rel="noopener noreferrer" className={styles.primary} aria-label="Open patient portal (opens in a new tab)">Open patient portal<ArrowUpRight size={17} aria-hidden /></a>
-        <Link className={styles.home} href="/">Back to home</Link>
+        <Link className={styles.primary} href="/">Back to home</Link>
       </footer>
     </motion.div>
     <span className={styles.srOnly} role="status" aria-live="polite">{calendarReady ? "Calendar file ready to download." : ""}</span>
