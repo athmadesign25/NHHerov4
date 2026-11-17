@@ -1040,7 +1040,7 @@
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ - Pure NH Brand Blue (#034EA2), No Outline */
+/* Decision Button 2 (Primary): Read more ↗ - Pure NH Brand Blue (var(--blue-brand)), No Outline */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
