@@ -75,7 +75,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
   const [pinned, setPinned] = useState(false);
 
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
+  const isHomePage = pathname === "/" || /^\/L[12]banner\/?$/.test(pathname);
   const revealFooter = isHomePage && pinned;
 
   useEffect(() => {

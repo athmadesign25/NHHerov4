@@ -1,0 +1,306 @@
+/* ─── BLOG HERO V2 (NORMAL IMMERSIVE CAROUSEL WITH BOTTOM CENTER ARROWS) ─── */
+
+.heroSection {
+  position: relative;
+  width: 100%;
+  min-height: 88vh;
+  min-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #060c18;
+  color: #ffffff;
+  overflow: hidden;
+  padding-top: calc(var(--nav-height, 72px) + clamp(48px, 9vh, 100px));
+  padding-bottom: clamp(64px, 10vh, 96px);
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    min-height: auto;
+    padding-top: calc(var(--nav-height, 72px) + 24px);
+    padding-bottom: 72px;
+  }
+}
+
+/* ── Full Background Motion Wrapper ── */
+.heroBgWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.heroBgMotion {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heroBgImage {
+  object-fit: cover;
+  object-position: center right;
+  filter: brightness(0.90) saturate(1.10) contrast(1.02);
+}
+
+@media (max-width: 900px) {
+  .heroBgImage {
+    object-position: center 30%;
+    filter: brightness(0.80) saturate(1.06);
+  }
+}
+
+/* ── Photography Scrim: Directional feathering ── */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: 
+    /* Horizontal gradient: AAA contrast for text on left, clear on right */
+    linear-gradient(
+      90deg,
+      rgba(6, 12, 24, 0.94) 0%,
+      rgba(6, 12, 24, 0.86) 36%,
+      rgba(6, 12, 24, 0.50) 58%,
+      rgba(6, 12, 24, 0.14) 75%,
+      transparent 100%
+    ),
+    /* Vertical bottom blend to section below */
+    linear-gradient(
+      0deg,
+      #060c18 0%,
+      rgba(6, 12, 24, 0.65) 12%,
+      rgba(6, 12, 24, 0.15) 26%,
+      transparent 38%
+    ),
+    /* Top edge protection for fixed navbar */
+    linear-gradient(
+      180deg,
+      rgba(6, 12, 24, 0.70) 0%,
+      rgba(6, 12, 24, 0.18) 14%,
+      transparent 28%
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .heroScrim {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 12, 24, 0.88) 0%,
+      rgba(6, 12, 24, 0.72) 40%,
+      rgba(6, 12, 24, 0.92) 85%,
+      #060c18 100%
+    );
+  }
+}
+
+/* ── Container Layout ── */
+.heroInner {
+  position: relative;
+  z-index: 2;
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1240px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .heroInner {
+    width: calc(100% - 32px);
+    gap: 16px;
+  }
+}
+
+.breadcrumbsWrapper {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Featured Editorial Content ── */
+.featuredContent {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+}
+
+.storyDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Meta: Category & Date */
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.categoryLabel {
+  color: #38bdf8;
+}
+
+.metaDot {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.publishDate {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+}
+
+/* Headline */
+.heroTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(28px, 4.2vw, 52px);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 14px rgba(6, 12, 24, 0.95);
+}
+
+/* Subtitle */
+.heroSubtitle {
+  font-size: clamp(14.5px, 1.25vw, 17px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 2px 0 6px 0;
+  max-width: 660px;
+  text-shadow: 0 1px 6px rgba(6, 12, 24, 0.85);
+}
+
+/* Action Row with CTA */
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Strict Token: Crisp rounded rectangle 8px */
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(3, 78, 162, 0.45);
+  transition: transform var(--transition-fast, 150ms ease), background var(--transition-fast, 150ms ease), box-shadow var(--transition-fast, 150ms ease);
+}
+
+.primaryBtn:hover {
+  background: #023877;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(3, 78, 162, 0.55);
+}
+
+@media (max-width: 640px) {
+  .actionRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .primaryBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── BOTTOM CENTER CAROUSEL CONTROLS (SIGNATURE GLASSMORPHISM) ───────── */
+.bottomControlsWrap {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .bottomControlsWrap {
+    bottom: 16px;
+    gap: 8px;
+  }
+}
+
+.navBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  transition: all var(--transition-fast, 150ms ease);
+  flex-shrink: 0;
+}
+
+.navBtn:hover {
+  background: rgba(3, 78, 162, 0.85);
+  border-color: rgba(56, 189, 248, 0.6);
+  color: #ffffff;
+  transform: scale(1.06);
+  box-shadow: 0 10px 28px rgba(3, 78, 162, 0.5), 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.dotsWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: scale(1.2);
+}
+
+.dotActive {
+  width: 22px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(90deg, #034EA2 0%, #0077D7 100%);
+  box-shadow: 0 0 10px rgba(0, 119, 215, 0.7);
+}

@@ -25,7 +25,7 @@
   height: var(--space-1);
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: right;
+  transform-origin: left;
   transition: transform var(--duration-base) var(--ease-out);
 }
 .action:hover .label::after, .action:focus-visible .label::after { transform: scaleX(1); }

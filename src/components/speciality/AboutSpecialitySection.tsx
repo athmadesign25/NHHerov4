@@ -196,7 +196,7 @@ const CARDIOLOGY_TABS: AboutTabContent[] = [
 // Helper to generate content for any other speciality dynamically
 function getSpecialityTabs(slug: string, title: string): AboutTabContent[] {
   if (slug === "oncology") return ONCOLOGY_TABS;
-  if (slug === "cardiology") return CARDIOLOGY_TABS;
+  if (slug === "cardiology" || slug === "cardiac-sciences") return CARDIOLOGY_TABS;
 
   return [
     {
@@ -369,7 +369,7 @@ export default function AboutSpecialitySection({
                       src={activeContent.image}
                       alt={activeContent.title}
                       fill
-                      sizes="(max-width: 900px) 100vw, 800px"
+                      sizes="(max-width: 900px) 100vw, 460px"
                       className={styles.contentImage}
                     />
                   </div>

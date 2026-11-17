@@ -13,6 +13,7 @@ a second copy of state or change the booking flow.
 | `memberSelection.ts` | Shared selected member, subscriptions and confirmation protection | Client |
 | `MemberAvatar.tsx` | Member image with initials fallback | Client component |
 | `BookingMemberPicker.tsx` | Existing member selection | Client component |
+| `BookingFocus.tsx` | Existing backdrop and focus management for expanded booking/cart surfaces | Client |
 | `NewPatient.tsx` | New member form | Client component |
 | `RazorpayDemo.tsx` | Frontend demo payment gateway | Client component |
 | `BookingActionBar.tsx` | Existing booking FAB surface and animated amount with neutral action labels | Client component |

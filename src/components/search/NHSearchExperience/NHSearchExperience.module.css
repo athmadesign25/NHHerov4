@@ -221,7 +221,7 @@
 .stateResults {
   width: min(1080px, calc(100vw - 48px));
   max-width: 1080px;
-  padding: 26px 32px 28px;
+  padding: 24px 32px 14px;
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(22, 28, 36, 0.32);
@@ -2681,8 +2681,8 @@
   justify-content: flex-end;
   border-radius: 8px;
   background: #cbd5e1;
-  height: 285px;
-  min-height: 285px;
+  height: clamp(205px, 28.5vh, 275px);
+  min-height: clamp(205px, 28.5vh, 275px);
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
 }
@@ -2807,8 +2807,8 @@
   border: none;
   box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-  height: 285px;
-  min-height: 285px;
+  height: clamp(205px, 28.5vh, 275px);
+  min-height: clamp(205px, 28.5vh, 275px);
   touch-action: pan-y;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.22s ease;
@@ -9143,56 +9143,43 @@
   overflow: hidden;
 }
 
-/* ── Unified Full-Width Progressive Feathered Backdrop Blur & Gradient Fade (Zero Cut-off) ── */
+/* ── Unified Full-Width Progressive Feathered Backdrop (Zero Milky Wash-Out) ── */
 .pulseDockBackdrop,
 .pulseBottomGradientFade {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 76px;
+  height: 58px;
   pointer-events: none;
   z-index: 18;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 
-  /* Progressive subtle fade: solid pure white up to search bar top (66px = ~87%), smoothly fading to 0 over just 10px */
+  /* Crisp white backing strictly behind the 50px pill (0–86% = 50px),
+     with an 8px soft edge feather (86–100%) — zero encroachment into doctor cards above */
   background: linear-gradient(
     to top,
     #FFFFFF 0%,
-    #FFFFFF 87%,
-    rgba(255, 255, 255, 0.65) 92%,
-    rgba(255, 255, 255, 0.20) 96%,
+    #FFFFFF 86%,
+    rgba(255, 255, 255, 0.75) 93%,
     rgba(255, 255, 255, 0) 100%
   );
 
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  mask-image: linear-gradient(
-    to top,
-    #000000 0%,
-    #000000 87%,
-    rgba(0, 0, 0, 0.65) 92%,
-    rgba(0, 0, 0, 0.20) 96%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to top,
-    #000000 0%,
-    #000000 87%,
-    rgba(0, 0, 0, 0.65) 92%,
-    rgba(0, 0, 0, 0.20) 96%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  mask-image: none;
+  -webkit-mask-image: none;
+  will-change: opacity, transform;
+  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pulseDockBackdropCompact {
-  height: 76px;
+  height: 58px;
 }
 
 .pulseDockBackdropActive {
-  height: 76px;
+  height: 58px;
 }
 
 .themeWhite .pulseDockBackdrop,
@@ -9202,29 +9189,14 @@
   background: linear-gradient(
     to top,
     #FFFFFF 0%,
-    #FFFFFF 87%,
-    rgba(255, 255, 255, 0.65) 92%,
-    rgba(255, 255, 255, 0.20) 96%,
+    #FFFFFF 86%,
+    rgba(255, 255, 255, 0.75) 93%,
     rgba(255, 255, 255, 0) 100%
   ) !important;
-  backdrop-filter: blur(8px) saturate(120%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
-  mask-image: linear-gradient(
-    to top,
-    #000000 0%,
-    #000000 87%,
-    rgba(0, 0, 0, 0.65) 92%,
-    rgba(0, 0, 0, 0.20) 96%,
-    rgba(0, 0, 0, 0) 100%
-  ) !important;
-  -webkit-mask-image: linear-gradient(
-    to top,
-    #000000 0%,
-    #000000 87%,
-    rgba(0, 0, 0, 0.65) 92%,
-    rgba(0, 0, 0, 0.20) 96%,
-    rgba(0, 0, 0, 0) 100%
-  ) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
@@ -9241,9 +9213,8 @@
   background: linear-gradient(
     to top,
     #0B111E 0%,
-    #0B111E 87%,
-    rgba(11, 17, 30, 0.65) 92%,
-    rgba(11, 17, 30, 0.20) 96%,
+    #0B111E 86%,
+    rgba(11, 17, 30, 0.75) 93%,
     rgba(11, 17, 30, 0) 100%
   ) !important;
 }
@@ -9251,13 +9222,29 @@
 /* Floating Dock for Ask Pulse ai Bar (Small/compact in non-active, expands on active) */
 .floatingPulseDock {
   position: absolute;
-  bottom: 14px;
+  bottom: 2px;
   left: 18px;
   right: 18px;
   z-index: 25;
   pointer-events: none;
   display: flex;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pulseDockVisible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.pulseDockHidden {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.985);
+  pointer-events: none !important;
+}
+
+.pulseDockHidden * {
+  pointer-events: none !important;
 }
 
 .floatingPulseDockCompact {
@@ -10184,4 +10171,178 @@
   line-height: var(--leading-none);
   font-weight: 600;
   pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   WINDOWS 16:9 & SCALED DISPLAY OPTIMIZATION (125% / 150% DPI + Chrome Bar)
+   Ensures all 4 primary doctor cards (2×2 grid) and right-rail items fit
+   cleanly without clipping when browser viewport height is 560px–820px.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) and (max-height: 820px) {
+  .stateResults,
+  .themeWhite .stateResults,
+  [data-search-theme="white"] .stateResults {
+    padding: 14px 26px 8px !important;
+  }
+
+  .topUtilityRow {
+    margin-bottom: 8px !important;
+  }
+
+  .resultsQueryBar {
+    padding-bottom: 2px !important;
+  }
+
+  .redDivider {
+    margin: 5px 0 8px !important;
+  }
+
+  .resultsSplitLayout {
+    margin-top: 6px !important;
+    gap: 24px !important;
+  }
+
+  .chatSummaryTextRow {
+    margin-bottom: 10px !important;
+    padding: 0 !important;
+  }
+
+  .chatSummaryText {
+    font-size: 13.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  .doctorCountSimpleRow {
+    margin-top: 3px !important;
+  }
+
+  .doctorCountSimpleText {
+    font-size: 12px !important;
+  }
+
+  .refDoctorsGrid {
+    gap: 9px !important;
+  }
+
+  .refDoctorCard,
+  .refDocSkeletonCard {
+    height: clamp(162px, 24.5vh, 210px) !important;
+    min-height: clamp(162px, 24.5vh, 210px) !important;
+  }
+
+  .refDocOverlayContent {
+    padding: 9px 11px 10px !important;
+  }
+
+  .refDocName {
+    font-size: 14px !important;
+    line-height: 1.18 !important;
+  }
+
+  .refDocSpecialty {
+    font-size: 11px !important;
+  }
+
+  .refDocExpRow {
+    font-size: 10.5px !important;
+  }
+
+  .refDocHospital {
+    font-size: 10.5px !important;
+  }
+
+  .refBookBtnWhite,
+  .refBookBtn {
+    padding: 5px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Compact Right Column so all 3 sections fit without bottom cutoff */
+  .resultsRightCol {
+    gap: 16px !important;
+    padding-bottom: 64px !important;
+  }
+
+  .editorialHeadingRow {
+    margin-bottom: 6px !important;
+  }
+
+  .editorialItem {
+    padding: 5px 4px !important;
+  }
+
+  .editorialItemTitle {
+    font-size: 12.5px !important;
+  }
+
+  .editorialItemSub {
+    font-size: 11px !important;
+  }
+
+  .floatingPulsePill {
+    height: 46px !important;
+  }
+
+  .pulseDockBackdrop,
+  .pulseBottomGradientFade,
+  .pulseDockBackdropCompact,
+  .pulseDockBackdropActive {
+    height: 52px !important;
+  }
+}
+
+/* Ultra-short Windows viewports (150% OS scale + Chrome Bookmarks Bar + Taskbar: ~550px–700px vh) */
+@media (min-width: 769px) and (max-height: 700px) {
+  .stateResults,
+  .themeWhite .stateResults,
+  [data-search-theme="white"] .stateResults {
+    padding: 10px 22px 6px !important;
+  }
+
+  .topUtilityRow {
+    margin-bottom: 5px !important;
+  }
+
+  .redDivider {
+    margin: 4px 0 6px !important;
+  }
+
+  .resultsSplitLayout {
+    margin-top: 4px !important;
+  }
+
+  .chatSummaryTextRow {
+    margin-bottom: 8px !important;
+  }
+
+  .chatSummaryText {
+    font-size: 12.5px !important;
+    line-height: 1.38 !important;
+  }
+
+  .refDoctorsGrid {
+    gap: 8px !important;
+  }
+
+  .refDoctorCard,
+  .refDocSkeletonCard {
+    height: clamp(144px, 23.2vh, 174px) !important;
+    min-height: clamp(144px, 23.2vh, 174px) !important;
+  }
+
+  .refDocOverlayContent {
+    padding: 7px 10px 8px !important;
+  }
+
+  .refDocName {
+    font-size: 13.5px !important;
+  }
+
+  .resultsRightCol {
+    gap: 12px !important;
+  }
+
+  .editorialItem {
+    padding: 4px 4px !important;
+  }
 }

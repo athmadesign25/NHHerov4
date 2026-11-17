@@ -1,0 +1,20 @@
+{
+  "tool": "Built-in image_gen",
+  "reference": "Original Narayana Health emergency banner, supplied by the user and https://www.narayanahealth.org/emergency",
+  "assets": [
+    {
+      "file": "nh-ambulance-night-v2.webp",
+      "prompt": "Use case: ads-marketing. Create a high-resolution photorealistic 16:9 website hero background based closely on the supplied Narayana Health emergency banner. Preserve the recognizable white Narayana Health ambulance, its authentic blue-and-red Narayana Health logo on the side, red roof stripe, blue emergency lights and three-quarter front view. Move the ambulance into the RIGHT HALF of a wide cinematic night road scene, sharp and detailed, with red/amber horizontal light trails suggesting rapid response, dark teal/navy evening sky, realistic asphalt. It must look like the same NH ambulance from the reference, not a generic foreign ambulance. Leave the LEFT 40% as uncluttered dark road/sky with subtle light trails for a separate campaign artwork and call button. Provide ample sky at top for the navbar, and room below wheels. IMPORTANT remove ALL advertising text from the source image: no WITH YOU / NEAR / YOU text, no phone number, no Call Now button, no breadcrumb or other UI. The only lettering allowed is the actual Narayana Health branding and ambulance markings ON THE VEHICLE. No people, no extra vehicles in foreground. Full bleed photograph, no frame. Match the reference's understated realism, not a dramatic illustration."
+    },
+    {
+      "file": "near-campaign-v2.webp",
+      "prompt": "Create ONLY the exact campaign slogan graphic from the left of this reference, on a perfectly solid PURE BLACK background. Flat vector-sharp digital graphic; no texture, no shadows, no grunge. WHITE typography is fully opaque and has completely smooth clean edges. The text reads, stacked and centered: 'WITH' on line 1, 'YOU' on line 2, four red squares with large white letters 'N' 'E' 'A' 'R' on line 3, then 'YOU' on line 4. Within each red square, put the tiny white label underneath the large letter: 'Narayana', 'Emergency', 'Ambulance', 'Response' respectively. Match reference proportions: the NEAR row is wider than WITH/YOU; compact bold sans serif. ALL lettering must be readable, all letter strokes solid white and smooth. Black background is essential and must be uniform. Do NOT include ambulance, road, phone number, Call Now, or any additional slogan. No perspective, no bevel. Large clean artwork suitable for a hospital website, reference is for EXACT words and basic layout only.",
+      "rendering": "Screen blend removes the solid black backdrop while preserving the campaign artwork."
+    },
+    {
+      "file": "nh-ambulance-night-mobile-v2.webp",
+      "prompt": "Create a PORTRAIT 9:16 mobile website hero variant of this exact NH ambulance night photograph. Preserve the white Narayana Health ambulance, accurate blue Narayana and red Health branding, red stripe, blue roof emergency lights, realistic night road and horizontal red/amber light trails. IMPORTANT composition: the entire ambulance should fit across the LOWER THIRD of the portrait image, with its Narayana Health side logo fully visible, not cropped. It can be a slightly more side-on three-quarter view, vehicle occupies about 85% of the canvas width and only the lower 30% of the height, wheels completely visible. The TOP TWO THIRDS must be spacious uncluttered very dark teal/navy sky with subtle ambient light, no busy objects and no light poles in the upper central area, to place a brand graphic and call button separately. Road below ambulance. No advertising text, no phone numbers, no WITH YOU / NEAR / YOU slogan, no buttons, no UI, no people. The only text is branding on the vehicle. Photorealistic, premium, crisp, consistent with the reference."
+    }
+  ],
+  "note": "AI-generated redesign assets based on the supplied NH campaign; not original hospital photographs."
+}

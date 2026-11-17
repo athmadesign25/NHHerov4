@@ -3,7 +3,7 @@
 .exploreSection {
   width: 100%;
   padding-block: 64px 80px;
-  background-color: var(--white, #ffffff);
+  background-color: transparent;
   color: var(--color-text, #0f172a);
 }
 

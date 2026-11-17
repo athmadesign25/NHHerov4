@@ -19,7 +19,7 @@ This is a **Narayana Health (NH) hospital website redesign** built with Next.js 
 ## Tech Stack
 
 | Layer | Technology | Version |
-| ------- | ----------- | --------- |
+|-------|-----------|---------|
 | Framework | Next.js (App Router, Turbopack) | 16.2.4 |
 | UI Library | React | 19.2.4 |
 | Animation | Framer Motion | 12.x |
@@ -34,7 +34,7 @@ This is a **Narayana Health (NH) hospital website redesign** built with Next.js 
 Node.js is NOT installed globally on this machine. Use the portable installation:
 
 ```bash
-export PATH="/Users/a374590/Desktop/NH website main/.node-portable/bin:$PATH"
+export PATH="/Users/a919418/Downloads/NH Website Redesign Concept 2/nh-website/node-v20.18.0-darwin-x64/bin:$PATH"
 ```
 
 Always prefix commands with this PATH export before running `npm`, `node`, or `npx`.
@@ -90,7 +90,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 ## ✅ DOs
 
 ### Architecture & Code
-
 - **DO** use the App Router (`src/app/`) with `"use client"` directive for interactive components
 - **DO** keep components modular — one component per file with co-located `.module.css`
 - **DO** use TypeScript for all new files
@@ -103,7 +102,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DO** use Next.js `<Link>` component for internal navigation
 
 ### Responsive Design
-
 - **DO** design mobile-first, then layer on tablet and desktop styles
 - **DO** use these breakpoints consistently: `640px` (mobile), `768px` (tablet), `1024px` (laptop), `1100px` (desktop nav)
 - **DO** use the `--font-size-*` scale paired with a `--leading-*`. `clamp()` is still right for display type that must scale fluidly, but not for ordinary UI text
@@ -116,7 +114,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DO** stack grid columns to `1fr` on mobile, `repeat(2, 1fr)` on tablet
 
 ### Animation & Interaction
-
 - **DO** use Framer Motion for entrance animations, hover effects, and scroll-driven transitions
 - **DO** use `whileInView` with `viewport={{ once: true }}` for reveal-on-scroll animations
 - **DO** take easing and duration from `src/lib/motion.ts` (`ease.out`, `ease.spring`, `duration.base`) rather than writing the curve inline — those mirror the CSS `--ease-*` / `--duration-*` tokens, which Framer itself cannot read
@@ -125,7 +122,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DO** respect `prefers-reduced-motion` media query
 
 ### Performance
-
 - **DO** lazy-load images below the fold with `loading="lazy"`
 - **DO** set `priority` on above-the-fold hero images
 - **DO** use `sizes` attribute on all `<Image>` components for responsive loading
@@ -133,7 +129,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DO** use CSS transforms for animations (GPU-accelerated) over layout properties
 
 ### Accessibility
-
 - **DO** add `aria-label` to icon-only buttons and interactive elements
 - **DO** use proper heading hierarchy (`h1` → `h2` → `h3`)
 - **DO** ensure color contrast ratios meet WCAG AA (4.5:1 for text, 3:1 for large text)
@@ -145,7 +140,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 ## ❌ DON'Ts
 
 ### Architecture & Code
-
 - **DON'T** use TailwindCSS — this project uses vanilla CSS Modules exclusively
 - **DON'T** install new packages without explicit user approval
 - **DON'T** use inline styles for repeatable patterns — use CSS classes instead
@@ -155,7 +149,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DON'T** import the entire icon library — use named imports: `import { Search } from "lucide-react"`
 
 ### Responsive Design
-
 - **DON'T** use fixed pixel widths for containers — use `max-width` with `%` or `vw`
 - **DON'T** use `overflow: hidden` on body/html without considering mobile scroll behavior
 - **DON'T** forget to test the mobile hamburger menu and search overlay on small screens
@@ -165,7 +158,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DON'T** forget `@media` queries in every `.module.css` that defines multi-column layouts
 
 ### Animation & Interaction
-
 - **DON'T** animate layout properties (`width`, `height`, `top`, `left`) — use `transform` and `opacity`
 - **DON'T** use animation delays longer than 1 second — users will think the page is broken
 - **DON'T** create animations that block user interaction
@@ -173,14 +165,12 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **DON'T** add parallax or scroll-driven animations to mobile — they cause jank
 
 ### Performance
-
 - **DON'T** use unoptimized images — always compress and serve via Next.js `<Image>`
 - **DON'T** load web fonts synchronously — use `display=swap`
 - **DON'T** create layout shifts (CLS) — set explicit dimensions on images and embeds
 - **DON'T** use `position: fixed` elements that overlap scrollable content without `z-index` management
 
 ### Design
-
 - **DON'T** use generic colors (plain red, green, blue) — use the curated NH color palette
 - **DON'T** use browser-default fonts — always use Inter from the design system
 - **DON'T** use placeholder images — generate real assets with the image generation tool
@@ -192,14 +182,12 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 ## World-Class Website Fundamentals
 
 ### 1. Visual Hierarchy & Typography
-
 - Use a clear type scale with strong contrast between headings and body
 - Section eyebrows (small uppercase labels) establish context before titles
 - Line heights: headings at `1.1–1.2`, body text at `1.5–1.6`
 - Letter-spacing: negative on large headings (`-0.025em`), positive on eyebrows (`0.08–0.1em`)
 
 ### 2. Premium Design Patterns
-
 - **Glassmorphism**: `backdrop-filter: blur(12px)` with semi-transparent backgrounds
 - **Gradient overlays**: Multi-layered gradients on hero images for text readability
 - **Card elevation**: Subtle shadows on rest, pronounced shadows + lift on hover
@@ -208,21 +196,18 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - **Sticky sections**: Pin sections to navbar on scroll for immersive storytelling
 
 ### 3. Layout Principles
-
 - Max content width: 1240px, centered with auto margins
 - Consistent section padding: 80–96px vertical on desktop, scaling down on mobile
 - Grid-based layouts with explicit gap values from the spacing scale
 - White space is a feature — generous padding creates a premium feel
 
 ### 4. Color Strategy
-
 - Primary blue (`#034EA2`) for trust, professionalism, and CTAs
 - Emergency red (`#ED1C24`) for urgent actions and highlights (Book Appointment)
 - Neutral grays for text hierarchy and borders
 - Accent colors used sparingly and consistently (success green, warning amber)
 
 ### 5. Interaction Design
-
 - Every clickable element must have a hover state with visual feedback
 - Search dropdowns should feel instant — no loading spinners for local data
 - Form inputs need focus rings and placeholder styling
@@ -230,7 +215,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - Smooth scroll between sections using Lenis
 
 ### 6. Responsive Strategy
-
 - **Mobile (< 640px)**: Single column, stacked layouts, hamburger nav, full-width cards
 - **Tablet (768–1024px)**: 2-column grids, visible navigation starts to appear
 - **Desktop (> 1024px)**: Full multi-column layouts, hover effects active, parallax enabled
@@ -238,7 +222,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - Font sizes scale with viewport using `clamp()` — never fixed sizes for headings
 
 ### 7. Performance Targets
-
 - Largest Contentful Paint (LCP): < 2.5s
 - Cumulative Layout Shift (CLS): < 0.1
 - Interaction to Next Paint (INP): < 200ms
@@ -246,7 +229,6 @@ resolve as aliases onto `--space-*`, so existing uses keep working.
 - Above-the-fold content painted in first render
 
 ### 8. SEO & Metadata
-
 - Unique `<title>` and `<meta description>` per page
 - Single `<h1>` per page with proper heading hierarchy
 - Semantic HTML5 elements throughout
@@ -284,18 +266,16 @@ src/
 ## Security & VAPT Compliance Requirements
 
 ### 1. Static Application Security Testing (SAST)
-
 - **Sanitisation**: Never use `dangerouslySetInnerHTML` unless input is thoroughly sanitized.
 - **Dynamic Execution**: Do not use `eval()` or construct functions dynamically.
 - **Build Quality**: Keep the codebase clean of syntax errors and unhandled imports. The lint check must run clean with `npm run lint`.
 
 ### 2. Software Composition Analysis (SCA)
-
 - **Dependency Audit**: Routinely run `npm audit` to check for security vulnerabilities.
 - **Dependency Pinning**: If nested dependencies contain vulnerabilities (like `postcss` or `next` dependencies), use NPM `"overrides"` in `package.json` to force resolve to secure versions.
 
 ### 3. Dynamic Application Security Testing (DAST) & VAPT
-
 - **XSS & Injection Protection**: Sanitize all URL query variables, search params, and text inputs. Always use `encodeURIComponent` when passing query inputs to pages or API endpoints.
 - **Tabnabbing Protection**: Ensure any anchor tags opening a link in a new tab (`target="_blank"`) explicitly specify `rel="noopener noreferrer"`.
 - **Sensitive Data Storage**: Do not store private sensitive healthcare or patient information in plain local storage or cookies.
+

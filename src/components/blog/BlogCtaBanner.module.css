@@ -1,16 +1,30 @@
-/* ─── BLOG CTA BANNER ───────────────────────────────────────────────────── */
+/* ─── BLOG / UNIVERSAL CTA BANNER ────────────────────────────────────────── */
 
 .ctaSection {
+  position: relative;
+  z-index: 2;
   width: 100%;
-  padding-block: 72px 96px;
-  background-color: #060c18;
+  padding-block: 64px 80px;
+  background-color: #ffffff;
   color: #ffffff;
   box-sizing: border-box;
 }
 
+.bgWhite {
+  background-color: #ffffff;
+}
+
+.bgDark {
+  background-color: #060e1b;
+}
+
+.bgTransparent {
+  background-color: transparent;
+}
+
 @media (max-width: 768px) {
   .ctaSection {
-    padding-block: 48px 64px;
+    padding-block: 40px 56px;
   }
 }
 
@@ -106,7 +120,7 @@
   background: #ffffff;
   color: var(--color-primary, #034EA2);
   padding: 13px 26px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -127,7 +141,7 @@
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 13px 22px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;

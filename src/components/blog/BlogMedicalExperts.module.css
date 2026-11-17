@@ -1,26 +1,32 @@
 /* ─── BLOG MEDICAL EXPERTS SECTION ───────────────────────────────────────── */
 
 .expertsSection {
+  position: relative;
   width: 100%;
-  padding-block: 72px 84px;
-  background-color: #f8fafc;
-  border-top: 1px solid var(--color-border-light, #e2e8f0);
-  border-bottom: 1px solid var(--color-border-light, #e2e8f0);
+  padding-top: 72px;
+  padding-bottom: 56px;
+  background: transparent;
+  border: none;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
   .expertsSection {
-    padding-block: 48px 60px;
+    padding-top: 48px;
+    padding-bottom: 56px;
   }
 }
 
 .container {
+  position: relative;
+  z-index: 2;
   width: calc(100% - max(4vw, 40px) * 2);
   max-width: 1320px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 36px;
+  padding-bottom: 44px;
 }
 
 @media (max-width: 768px) {
@@ -61,6 +67,8 @@
 
 /* ── Centered Clickable Text CTA (Clean Text Link Feel) ── */
 .centerActionWrap {
+  position: relative;
+  z-index: 3;
   display: flex;
   justify-content: center;
   margin-top: 24px;
@@ -73,28 +81,24 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: var(--color-primary, #034EA2);
   text-decoration: none;
-  background: transparent;
-  border: none;
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-radius: var(--radius-sm, 8px);
-  transition: color var(--transition-fast, 150ms ease), gap var(--transition-fast, 150ms ease);
+  border: 1px solid transparent;
+  transition: transform var(--transition-fast, 150ms ease), gap var(--transition-fast, 150ms ease), box-shadow var(--transition-fast, 150ms ease);
 }
 
 .textLinkArrow {
-  color: var(--color-primary, #034EA2);
   transition: transform var(--transition-fast, 150ms ease);
 }
 
 .viewAllTextLink:hover {
-  color: #023877;
   gap: 12px;
+  transform: translateY(-1px);
 }
 
 .viewAllTextLink:hover .textLinkArrow {
-  transform: translateX(4px);
-  color: #023877;
+  transform: translateX(3px);
 }
 
 /* ── Doctor Cards Grid (Exact refDoctorCard style) ── */
@@ -306,7 +310,7 @@
   font-size: 13px;
   font-weight: 600;
   padding: 7px 16px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   text-decoration: none;
   flex-shrink: 0;
   align-self: flex-end;

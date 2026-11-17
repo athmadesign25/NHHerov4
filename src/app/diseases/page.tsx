@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { DISEASES_DATA, DiseaseItem } from "@/data/diseasesData";
 import styles from "./DiseasesLibrary.module.css";
@@ -504,40 +505,23 @@ export default function DiseasesLibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT ───────────────────────────────────────── */}
-      <section className={styles.trustBanner}>
-        <div className={styles.trustImageBg}>
-          <Image
-            src="/top-medical-experts.png"
-            alt="Narayana Health multidisciplinary clinical board"
-            fill
-            sizes="(max-width: 900px) 100vw, 640px"
-            className={styles.trustImage}
-          />
-          <div className={styles.trustGradientOverlay} />
-        </div>
-
-        <div className={styles.trustContent}>
-          <div className={styles.trustEyebrow}>MULTIDISCIPLINARY TUMOR & HEART BOARDS</div>
-          <h3 className={styles.trustTitle}>
-            Need an expert second opinion on a complex diagnosis?
-          </h3>
-          <p className={styles.trustDesc}>
-            Our institutional clinical boards review imaging, histology, and molecular staging to formulate personalized treatment protocols with transparent care pathways.
-          </p>
-
-          <div className={styles.trustActions}>
-            <Link href={defaultDoctorListingUrl(new URLSearchParams())} className={styles.trustPrimaryBtn}>
-              <Calendar size={16} />
-              <span>Book Clinical Consultation</span>
-            </Link>
-            <a href="tel:18003090309" className={styles.trustSecondaryBtn}>
-              <PhoneCall size={15} />
-              <span>Helpline: 1800 309 0309</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        bg="dark"
+        eyebrow="MULTIDISCIPLINARY TUMOR & HEART BOARDS"
+        title="Need an Expert Second Opinion on a Complex Diagnosis?"
+        subtitle="Our institutional clinical boards review imaging, histology, and molecular staging to formulate personalized treatment protocols with transparent care pathways."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Book Clinical Consultation",
+        }}
+        secondaryBtn={{
+          href: "/treatments",
+          text: "Explore Treatments",
+        }}
+        phoneText="Clinical Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

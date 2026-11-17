@@ -16,10 +16,13 @@ export default function Footer() {
             <div className={styles.brandCol}>
               <div className={styles.brand}>
                 <div className={styles.brandLogo}>
+                  {/* 136x60 matches the artwork's own 300:132 aspect, so the
+                      box holds no letterboxing and its left edge is the SVG's
+                      own x=0 — which is what makes the offset below exact. */}
                   <Image 
                     src="/NH Logo_white.svg" 
                     alt="Narayana Health" 
-                    width={180} 
+                    width={136} 
                     height={60} 
                     style={{ objectFit: "contain" }}
                   />

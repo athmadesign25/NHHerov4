@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useTransform, useMotionValue, MotionValue } from "framer-motion";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./BlogBentoGrid.module.css";
 
@@ -12,20 +12,59 @@ const ROTATING_STATS = [
   { value: "8,000+", label: "Complex Surgeries & Clinical Protocols Documented" },
 ];
 
-export default function BlogBentoGrid() {
+interface BlogBentoGridProps {
+  scrollYProgress?: MotionValue<number>;
+}
+
+export default function BlogBentoGrid({ scrollYProgress }: BlogBentoGridProps) {
   const [statIndex, setStatIndex] = useState(0);
   const comprehensiveVideoRef = useRef<HTMLVideoElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-linked expansion to fill full screen width (Exact same as homepage)
-  const { scrollYProgress: enterProgress } = useScroll({
-    target: bentoRef,
-    offset: ["start 92%", "start 25%"],
-  });
+  const fallbackProgress = useMotionValue(1);
+  const activeBgProgress = scrollYProgress || fallbackProgress;
 
-  const gridScale = useTransform(enterProgress, [0, 1], [0.92, 1.0]);
-  const gridWidth = useTransform(enterProgress, [0, 1], ["92%", "100%"]);
-  const gridBlur = useTransform(enterProgress, [0, 0.4], ["blur(12px)", "blur(0px)"]);
+  const eyebrowColor = useTransform(
+    activeBgProgress,
+    [0, 0.5, 1],
+    ["#034EA2", "rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.72)"]
+  );
+  const titleColor = useTransform(
+    activeBgProgress,
+    [0, 0.5, 1],
+    ["#0f172a", "#ffffff", "#ffffff"]
+  );
+  const subtitleColor = useTransform(
+    activeBgProgress,
+    [0, 0.5, 1],
+    ["#475569", "rgba(255, 255, 255, 0.75)", "rgba(255, 255, 255, 0.75)"]
+  );
+
+  // Deterministic bounding-box scroll expansion to fill full screen width
+  const enterProgress = useMotionValue(0);
+
+  useEffect(() => {
+    const updateEnter = () => {
+      const el = bentoRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 900;
+      const startY = vh * 0.92;
+      const endY = vh * 0.25;
+      const raw = (startY - rect.top) / (startY - endY);
+      enterProgress.set(Math.max(0, Math.min(1, raw)));
+    };
+    updateEnter();
+    window.addEventListener("scroll", updateEnter, { passive: true });
+    window.addEventListener("resize", updateEnter, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateEnter);
+      window.removeEventListener("resize", updateEnter);
+    };
+  }, [enterProgress]);
+
+  const gridScale = useTransform(enterProgress, [0, 1], [0.95, 1.0]);
+  const gridWidth = useTransform(enterProgress, [0, 1], ["94%", "100%"]);
 
   // Auto-rotating stat counter
   useEffect(() => {
@@ -90,6 +129,7 @@ export default function BlogBentoGrid() {
         <div className={styles.sectionHeader}>
           <motion.div
             className={styles.cleanEyebrow}
+            style={{ color: eyebrowColor }}
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -97,11 +137,22 @@ export default function BlogBentoGrid() {
           >
             CLINICAL EXCELLENCE IN HEALTH KNOWLEDGE
           </motion.div>
-          <h2 className={styles.sectionTitle}>
-            <TextSweepEffect words={["Why Millions Trust Narayana Health Information"]} sweepMs={1500} finalColor="#FFFFFF" />
-          </h2>
+          <motion.h2
+            className={styles.sectionTitle}
+            style={{
+              color: titleColor,
+              ["--bento-title-color" as string]: titleColor,
+            }}
+          >
+            <TextSweepEffect
+              words={["Why Millions Trust Narayana Health Information"]}
+              sweepMs={1500}
+              finalColor="var(--bento-title-color, #FFFFFF)"
+            />
+          </motion.h2>
           <motion.p
             className={styles.sectionSubtitle}
+            style={{ color: subtitleColor }}
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -111,14 +162,13 @@ export default function BlogBentoGrid() {
           </motion.p>
         </div>
 
-        {/* 12-Column Bento Grid with Scroll Expansion (Matching Homepage) */}
+        {/* 12-Column Bento Grid with Scroll Expansion (Crisp & High-Definition) */}
         <div ref={bentoRef} style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <motion.div
             className={styles.bentoExpandWrapper}
             style={{
               scale: gridScale,
               width: gridWidth,
-              filter: gridBlur,
             }}
           >
             <div className={styles.bentoGrid}>
@@ -126,10 +176,10 @@ export default function BlogBentoGrid() {
               <motion.div
                 className={styles.heroCard}
                 style={{ transformOrigin: "center" }}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(12px)" }}
-                whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               >
                 <img
                   src="/bento-clinical-excellence.png"
@@ -151,10 +201,10 @@ export default function BlogBentoGrid() {
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={ROTATING_STATS[statIndex].value}
-                        initial={{ opacity: 0, y: 6, filter: "blur(5px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        exit={{ opacity: 0, y: -6, filter: "blur(5px)" }}
-                        transition={{ duration: 0.45, ease: "easeInOut" }}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.35, ease: "easeInOut" }}
                       >
                         <div className={styles.heroStatValue}>{ROTATING_STATS[statIndex].value}</div>
                         <div className={styles.heroStatLabel}>{ROTATING_STATS[statIndex].label}</div>
@@ -168,10 +218,10 @@ export default function BlogBentoGrid() {
               <motion.div
                 className={`${styles.cardRow1Equal} ${styles.cardRow1Col2}`}
                 style={{ transformOrigin: "center" }}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(12px)" }}
-                whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
                 <img
                   src="/bento-patient-first.jpg"
@@ -191,10 +241,10 @@ export default function BlogBentoGrid() {
               <motion.div
                 className={`${styles.cardRow1Equal} ${styles.cardRow1Col3}`}
                 style={{ transformOrigin: "center" }}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(12px)" }}
-                whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
               >
                 <img
                   src="/bento-advanced-technology.jpg"
@@ -214,10 +264,10 @@ export default function BlogBentoGrid() {
               <motion.div
                 className={styles.cardRow2Wider}
                 style={{ transformOrigin: "center" }}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(12px)" }}
-                whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
               >
                 <img
                   src="/bento-top-medical-experts.jpg"
@@ -237,10 +287,10 @@ export default function BlogBentoGrid() {
               <motion.div
                 className={styles.accreditationsCard}
                 style={{ transformOrigin: "center" }}
-                initial={{ opacity: 0, scale: 0.96, filter: "blur(12px)" }}
-                whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
               >
                 <video
                   ref={comprehensiveVideoRef}

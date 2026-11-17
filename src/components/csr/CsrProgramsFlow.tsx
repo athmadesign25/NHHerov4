@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import Link from "next/link";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import {
   Stethoscope,
   GraduationCap,
@@ -27,36 +28,76 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
   const [selectedProgram, setSelectedProgram] = useState<CsrProgramItem | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const scrollProgress = useMotionValue(0);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: trackRef,
-    offset: ["start start", "end end"],
-  });
+    // Highly reliable scroll progress calculation:
+    // Tracks exactly when .stackingTrack reaches the sticky dock top (92px)
+    // and maps to 0.0 -> 1.0 until the track finishes scrolling.
+    const updateScrollProgress = () => {
+      const track = trackRef.current;
+      if (!track) return;
+      const rect = track.getBoundingClientRect();
+      const stickyTop = 92; // calc(var(--nav-height, 72px) + 20px)
+      const stickyViewport = track.firstElementChild as HTMLElement | null;
+      const viewportHeight = stickyViewport ? stickyViewport.offsetHeight : 620;
+      const totalScrollableDistance = Math.max(1, track.offsetHeight - viewportHeight);
+      const scrolled = stickyTop - rect.top;
+      const currentProgress = Math.min(1, Math.max(0, scrolled / totalScrollableDistance));
+      scrollProgress.set(currentProgress);
+    };
 
-  // Card 1 (second card)
-  const card1Y = useTransform(scrollYProgress, [0.15, 0.35], ["100%", "0%"]);
-  const card1Opacity = useTransform(scrollYProgress, [0.14, 0.22, 0.35], [0, 1, 1]);
-  const card1Scale = useTransform(scrollYProgress, [0.15, 0.35], [0.95, 1]);
-  const card1PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.2 ? "auto" : "none"));
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
 
-  // Card 2 (third card)
-  const card2Y = useTransform(scrollYProgress, [0.44, 0.64], ["100%", "0%"]);
-  const card2Opacity = useTransform(scrollYProgress, [0.43, 0.51, 0.64], [0, 1, 1]);
-  const card2Scale = useTransform(scrollYProgress, [0.44, 0.64], [0.95, 1]);
-  const card2PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.48 ? "auto" : "none"));
+    // Connect to Lenis smooth scroll instance
+    const connectLenis = () => {
+      const lenis = (window as any).lenis || (window as any).__lenis;
+      if (lenis && typeof lenis.on === "function") {
+        lenis.on("scroll", updateScrollProgress);
+      }
+    };
+    connectLenis();
+    const lenisTimer = setTimeout(connectLenis, 300);
 
-  // Card 3 (fourth card - completes 100% docking over Card 3)
-  const card3Y = useTransform(scrollYProgress, [0.72, 0.90], ["100%", "0%"]);
-  const card3Opacity = useTransform(scrollYProgress, [0.71, 0.79, 0.90], [0, 1, 1]);
-  const card3Scale = useTransform(scrollYProgress, [0.72, 0.90], [0.95, 1]);
-  const card3PointerEvents = useTransform(scrollYProgress, (v) => (v >= 0.76 ? "auto" : "none"));
+    return () => {
+      window.removeEventListener("resize", check);
+      window.removeEventListener("scroll", updateScrollProgress);
+      clearTimeout(lenisTimer);
+      const lenis = (window as any).lenis || (window as any).__lenis;
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", updateScrollProgress);
+      }
+    };
+  }, [scrollProgress]);
+
+  // Sequential Stacking Motion (Dramatic Bottom-to-Top Full Card Reveal):
+  // Card 1 (index 0) sits at base top: 0px.
+  // Card 2 (index 1): comes from bottom (100% -> 0%), fades in, and docks at top: 22px.
+  // Card 3 (index 2): comes from bottom (100% -> 0%), fades in, and docks at top: 44px.
+  // Card 4 (index 3): comes from bottom (100% -> 0%), fades in, and docks at top: 66px.
+
+  // Card 2 (second initiative - index 1)
+  const card1Y = useTransform(scrollProgress, [0.06, 0.32], ["100%", "0%"]);
+  const card1Opacity = useTransform(scrollProgress, [0.06, 0.16, 0.32], [0, 1, 1]);
+  const card1Scale = useTransform(scrollProgress, [0.06, 0.32], [0.94, 1]);
+  const card1PointerEvents = useTransform(scrollProgress, (v) => (v >= 0.15 ? "auto" : "none"));
+
+  // Card 3 (third initiative - index 2)
+  const card2Y = useTransform(scrollProgress, [0.36, 0.62], ["100%", "0%"]);
+  const card2Opacity = useTransform(scrollProgress, [0.36, 0.46, 0.62], [0, 1, 1]);
+  const card2Scale = useTransform(scrollProgress, [0.36, 0.62], [0.94, 1]);
+  const card2PointerEvents = useTransform(scrollProgress, (v) => (v >= 0.45 ? "auto" : "none"));
+
+  // Card 4 (fourth initiative - index 3)
+  const card3Y = useTransform(scrollProgress, [0.66, 0.92], ["100%", "0%"]);
+  const card3Opacity = useTransform(scrollProgress, [0.66, 0.76, 0.92], [0, 1, 1]);
+  const card3Scale = useTransform(scrollProgress, [0.66, 0.92], [0.94, 1]);
+  const card3PointerEvents = useTransform(scrollProgress, (v) => (v >= 0.75 ? "auto" : "none"));
 
   const renderIcon = (name: string) => {
     switch (name) {
@@ -106,7 +147,7 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
       case 1:
         return {
           zIndex: 2,
-          top: 22,
+          top: "22px",
           y: card1Y,
           opacity: card1Opacity,
           scale: card1Scale,
@@ -115,7 +156,7 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
       case 2:
         return {
           zIndex: 3,
-          top: 44,
+          top: "44px",
           y: card2Y,
           opacity: card2Opacity,
           scale: card2Scale,
@@ -125,7 +166,7 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
       default:
         return {
           zIndex: 4,
-          top: 66,
+          top: "66px",
           y: card3Y,
           opacity: card3Opacity,
           scale: card3Scale,
@@ -209,16 +250,15 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
                         ))}
                       </div>
 
-                      {/* Outlined "Know More" Action Button */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedProgram(prog)}
+                      {/* Solid Rounded Rectangle "Know More" Link CTA to Detail Page */}
+                      <Link
+                        href={`/csr/${prog.id}`}
                         className={styles.knowMoreBtn}
-                        aria-label={`Know more about ${prog.title}`}
+                        aria-label={`Read full initiative details on ${prog.title}`}
                       >
                         <span>Know More</span>
                         <ArrowRight size={14} />
-                      </button>
+                      </Link>
                     </div>
                   </article>
                 </motion.div>

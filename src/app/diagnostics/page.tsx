@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { DIAGNOSTICS_DATA, DiagnosticItem } from "@/data/diagnosticsData";
 import styles from "./DiagnosticsLibrary.module.css";
@@ -132,8 +133,8 @@ export default function DiagnosticsLibraryPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {/* ─── TWO-COLUMN HERO SECTION (WHITE MODE HERO) ────────────────────── */}
-      <section className={styles.hero} data-nav-theme="light">
+      {/* ─── TWO-COLUMN HERO SECTION (SIGNATURE DARK MODE) ───────────────── */}
+      <section className={styles.hero} data-nav-theme="dark">
         <div className={styles.heroBg}>
           <motion.div
             className={styles.heroBgMotion}
@@ -167,7 +168,7 @@ export default function DiagnosticsLibraryPage() {
                   { label: "Home", href: "/" },
                   { label: "Diagnostics & Lab Tests" },
                 ]}
-                theme="light"
+                theme="dark"
               />
             </motion.div>
 
@@ -177,11 +178,11 @@ export default function DiagnosticsLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect
-                words={["Diagnostics & Lab Tests"]}
-                sweepMs={2400}
-                delayMs={80}
-                finalColor="#0f172a"
+              <TextSweepEffect 
+                words={["Diagnostics & Lab Tests"]} 
+                sweepMs={2400} 
+                delayMs={80} 
+                finalColor="#FFFFFF" 
               />
             </motion.h1>
 
@@ -291,10 +292,8 @@ export default function DiagnosticsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── DIRECTORY SECTION (CLEAN WHITE WALL) ─────────────────────────── */}
-      <div className={styles.directorySection}>
-        {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
-        <motion.section
+      {/* ─── 10 ORGAN BUBBLE FILTERS ──────────────────────────────────────── */}
+      <motion.section
         className={styles.categorySection}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -443,23 +442,29 @@ export default function DiagnosticsLibraryPage() {
                       exit={{ opacity: 0, scale: 0.96 }}
                       transition={{ duration: 0.24, delay: Math.min(idx * 0.02, 0.15) }}
                     >
-                      <div className={styles.cardImageWrap}>
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          sizes="(max-width: 640px) 84px, (max-width: 1024px) 50vw, 33vw"
-                          className={styles.cardBgImage}
-                        />
-                        <div className={styles.cardGradient} />
-                      </div>
+                      {/* 1. Full Background Image */}
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                        className={styles.cardBgImage}
+                      />
 
+                      {/* 2. Soft Top Gradient Scrim for Top Category Text */}
+                      <div className={styles.cardTopScrim} />
+
+                      {/* 3. Pure Top-Left Category Text (NO bulky pill container) */}
+                      <span className={styles.cardTopCategoryText}>
+                        {item.modality}
+                      </span>
+
+                      {/* 4. Rich Photography Bottom Gradient Scrim */}
+                      <div className={styles.cardBottomScrim} />
+
+                      {/* 5. Content Overlaid on Scrim */}
                       <div className={styles.cardContent}>
                         <div className={styles.cardTextGroup}>
-                          <div className={styles.cardEyebrow}>
-                            {item.modality}
-                          </div>
-
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
                               {item.title}
@@ -490,7 +495,7 @@ export default function DiagnosticsLibraryPage() {
 
                             <Link href={detailUrl} className={styles.cardDetailBtn}>
                               <span>Test details</span>
-                              <ArrowUpRight size={11.5} className={styles.pillBtnArrow} />
+                              <ArrowUpRight size={12} className={styles.pillBtnArrow} />
                             </Link>
                           </div>
                         </div>
@@ -504,41 +509,23 @@ export default function DiagnosticsLibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* ─── BOTTOM TRUST HIGHLIGHT ───────────────────────────────────────── */}
-      <section className={styles.trustBanner}>
-        <div className={styles.trustImageBg}>
-          <Image
-            src="/top-medical-experts.png"
-            alt="Narayana Health automated laboratory center"
-            fill
-            sizes="(max-width: 900px) 100vw, 640px"
-            className={styles.trustImage}
-          />
-          <div className={styles.trustGradientOverlay} />
-        </div>
-
-        <div className={styles.trustContent}>
-          <div className={styles.trustEyebrow}>NABL ACCREDITED LABORATORY NETWORK</div>
-          <h3 className={styles.trustTitle}>
-            Need doorstep home sample collection?
-          </h3>
-          <p className={styles.trustDesc}>
-            Our trained, vaccinated phlebotomists collect blood and pathology samples directly from your home with barcode verification and automated temperature-controlled transit.
-          </p>
-
-          <div className={styles.trustActions}>
-            <Link href="/health-checkups?tab=tests" className={styles.trustPrimaryBtn}>
-              <Calendar size={16} />
-              <span>Schedule Home Collection</span>
-            </Link>
-            <a href="tel:18003090309" className={styles.trustSecondaryBtn}>
-              <PhoneCall size={15} />
-              <span>Diagnostics Helpline: 1800 309 0309</span>
-            </a>
-          </div>
-        </div>
-      </section>
-      </div>
+      {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
+      <BlogCtaBanner
+        bg="dark"
+        eyebrow="NABL ACCREDITED LABORATORY NETWORK"
+        title="Need Doorstep Home Sample Collection?"
+        subtitle="Our trained, vaccinated phlebotomists collect blood and pathology samples directly from your home with barcode verification and automated temperature-controlled transit."
+        primaryBtn={{
+          href: "/doctors",
+          text: "Schedule Home Collection",
+        }}
+        secondaryBtn={{
+          href: "/health-packages",
+          text: "Explore Health Packages",
+        }}
+        phoneText="Diagnostics Helpline: 1800 309 0309"
+        phoneHref="tel:18003090309"
+      />
 
       {/* Mobile Filters Drawer */}
       <AnimatePresence>

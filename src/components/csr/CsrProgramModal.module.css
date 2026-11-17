@@ -168,7 +168,7 @@
 
 .modalDoneBtn {
   padding: 9px 24px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 8px;
   background: var(--color-primary, #034EA2);
   color: #ffffff;
   border: none;

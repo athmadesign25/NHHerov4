@@ -33,7 +33,7 @@
   justify-content: space-between;
   height: 68px;
   margin: 0 auto;
-  padding: 0 80px;
+  padding: 0 max(4vw, 40px);
 }
 
 .desktopOnly {
@@ -654,9 +654,10 @@
   padding: var(--space-8) var(--space-24);
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
   font-weight: 600;
   text-decoration: none;
-  transition: all var(--duration-base) ease;
+  transition: color var(--duration-base) var(--ease-out), background var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
 }
 
 .loginBtnActive {
@@ -1123,6 +1124,7 @@
   font-weight: 500;
   color: inherit;
 }
+
 /* ─── Search Experience Theme Toggle (Dark / White Mode) ─── */
 .searchThemeToggle {
   background: transparent;
@@ -1346,47 +1348,10 @@
 
 .mobileEmergency::before { content: ""; position: absolute; inset: calc(-1 * var(--space-8)) 0; }
 .mobileEmergency:hover { background: var(--red-emergency); }
-
-/* Keep every booking journey, including checkups, within the mobile viewport. */
-@media (max-width: 639px) {
-  .mobileNav[data-booking-journey] {
-    --profile-mobile-action-size: calc(var(--space-40) + var(--space-4));
-    gap: var(--space-8);
-  }
-  .mobileNav[data-booking-journey] .mobileActionGroup {
-    flex: 1;
-    min-width: 0;
-    justify-content: flex-end;
-  }
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu]) {
-    flex: 0 1 auto;
-    min-width: 0;
-    max-width: calc(var(--space-128) + var(--space-32));
-  }
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu] > button) {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-  .mobileNav[data-booking-journey] .mobileEmergency {
-    flex-shrink: 0;
-    width: var(--profile-mobile-action-size);
-    min-height: var(--profile-mobile-action-size);
-    margin: 0;
-    padding: 0;
-  }
-  .mobileNav[data-booking-journey] .mobileEmergency > span { display: none; }
-  .mobileNav[data-booking-journey] .mobileEmergency::before { inset: 0; }
-  .mobileNav[data-booking-journey] .appleHamburgerBtn { flex-shrink: 0; }
-}
-@media (max-width: 374px) {
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu]) { flex: 0 0 var(--profile-mobile-action-size); }
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu] > button) {
-    min-height: var(--profile-mobile-action-size);
-    justify-content: center;
-    padding: 0;
-    gap: 0;
-  }
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu] > button > :nth-child(2)),
-  .mobileNav[data-booking-journey] :global([data-booking-member-menu] > button > svg) { display: none; }
+.mobileCallUs { min-height: var(--space-48); padding: 0; gap: var(--space-4); font-size: var(--font-size-xs); }
+.mobileCallUs svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.mobileCallUs:focus-visible { outline: var(--space-2) solid currentColor; outline-offset: var(--space-2); border-radius: var(--radius-sm); }
+@media (max-width: 360px) {
+  .mobileActionGroup { gap: var(--space-4); }
+  .mobileEmergency > svg { display: none; }
 }
