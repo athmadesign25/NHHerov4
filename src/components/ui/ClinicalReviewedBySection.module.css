@@ -1,53 +1,38 @@
-.summaryBannerCard {
+/* ─── UNBOXED CLINICAL EDITORIAL LEAD SUMMARY ────────────────────────────── */
+.summaryEditorialSection {
   position: relative;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  margin-bottom: 12px;
-  padding: 18px 22px;
-  border-radius: 12px;
-  background: var(--summary-bg, rgba(var(--slate-50-rgb), 0.85));
-  border: 1px solid var(--summary-border, rgba(var(--slate-900-rgb), 0.07));
-  border-left: 3.5px solid var(--summary-accent, var(--color-primary, var(--blue-brand)));
+  margin-top: 14px;
+  margin-bottom: clamp(28px, 4vh, 40px);
 }
 
-.summaryEyebrowRow {
+.summaryHeaderRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.summaryEyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--summary-accent, var(--color-primary, var(--blue-brand)));
+  margin-bottom: 12px;
 }
 
 .inlineReviewerBadge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-xs, 12px);
   font-weight: 600;
-  color: var(--summary-badge-text, var(--slate-700));
+  color: var(--v2-body, var(--v4-body, var(--slate-700)));
   text-decoration: none;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 9999px;
-  background: var(--summary-badge-bg, var(--white));
-  border: 1px solid var(--summary-border, rgba(var(--slate-900-rgb), 0.09));
-  transition: border-color var(--duration-base) ease, color var(--duration-base) ease;
+  background: rgba(var(--blue-brand-rgb), 0.06);
+  border: 1px solid rgba(var(--blue-brand-rgb), 0.14);
+  transition: border-color var(--duration-base) ease, color var(--duration-base) ease, background var(--duration-base) ease;
 }
 
 .inlineReviewerBadge:hover {
-  color: var(--summary-accent, var(--color-primary, var(--blue-brand)));
+  color: var(--blue-brand);
+  background: rgba(var(--blue-brand-rgb), 0.12);
   border-color: rgba(var(--blue-brand-rgb), 0.3);
 }
 
@@ -56,11 +41,11 @@
   flex-shrink: 0;
 }
 
-.summaryText {
+.summaryLeadText {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: var(--font-size-base);
-  line-height: 1.72;
-  color: var(--summary-text, var(--slate-800));
+  font-size: clamp(15.5px, 1.25vw, 17.5px);
+  line-height: 1.76;
+  color: var(--v2-body, var(--v4-body, var(--slate-700)));
   margin: 0;
   font-weight: 400;
 }

@@ -14,7 +14,6 @@ export interface ClinicalSummaryBannerProps {
 }
 
 export function ClinicalSummaryBanner({
-  eyebrow = "Clinical Executive Summary",
   summary,
   reviewerName,
   reviewAnchorId = "medically-reviewed-by",
@@ -26,18 +25,14 @@ export function ClinicalSummaryBanner({
     : "Dr. Devi Prasad Shetty";
 
   return (
-    <div className={styles.summaryBannerCard} role="region" aria-label={eyebrow}>
-      <div className={styles.summaryEyebrowRow}>
-        <span className={styles.summaryEyebrow}>
-          <FileText size={13} />
-          <span>{eyebrow}</span>
-        </span>
+    <div className={styles.summaryEditorialSection} role="region" aria-label="Clinical Summary">
+      <div className={styles.summaryHeaderRow}>
         <a href={`#${reviewAnchorId}`} className={styles.inlineReviewerBadge}>
           <CheckCircle2 size={13} className={styles.inlineCheckIcon} />
-          <span>Reviewed by {formattedReviewer}</span>
+          <span>Medically Reviewed by {formattedReviewer}</span>
         </a>
       </div>
-      <p className={styles.summaryText}>{summary}</p>
+      <p className={styles.summaryLeadText}>{summary}</p>
     </div>
   );
 }

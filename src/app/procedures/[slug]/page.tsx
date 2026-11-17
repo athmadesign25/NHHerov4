@@ -537,13 +537,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
-            {/* 1. Overview & 4-5 Line Clinical Executive Summary */}
+            {/* 1. Overview & Clinical Executive Summary */}
             <section id="overview" className={styles.sectionBlock}>
-              {blendVersion === 4 && (
-                <div className={styles.v4SectionEyebrow}>
-                  CLINICAL PROCEDURE GUIDE &bull; {detail.speciality}
-                </div>
-              )}
               <h2 className={styles.mainSectionTitle}>
                 {blendVersion === 4 ? (
                   <TextSweepEffect
@@ -556,7 +551,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 )}
               </h2>
               <ClinicalSummaryBanner
-                eyebrow={`${detail.speciality} · Executive Clinical Summary`}
                 summary={`${detail.leadParagraph} ${detail.whatIsIt.description}`}
                 reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
               />
