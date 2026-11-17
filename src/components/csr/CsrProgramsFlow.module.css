@@ -19,7 +19,7 @@
 
 .container {
   width: calc(100% - max(4vw, 40px) * 2);
-  max-width: 1240px;
+  max-width: 1320px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;

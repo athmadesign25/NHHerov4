@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import CsrHero from "@/components/csr/CsrHero";
 import CsrEditorialsGrid from "@/components/csr/CsrEditorialsGrid";
@@ -10,35 +10,48 @@ import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideAct
 import { CSR_HERO_DATA, CSR_EDITORIALS_DATA, CSR_PROGRAMS_DATA } from "@/data/csrData";
 
 export default function CsrPage() {
-  const transitionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: transitionRef,
-    offset: ["start 0.95", "start 0.25"],
-  });
+  const { scrollY } = useScroll();
 
-  const pageBgColor = useTransform(
-    scrollYProgress,
-    [0, 0.35, 0.72, 1],
-    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+  // Dynamic dark-to-white scroll transition: sweeps from hero dark to pure white across scroll
+  const dynamicBg = useTransform(
+    scrollY,
+    [100, 320, 560, 800],
+    ["#060c18", "#0c1d3b", "#e0ebf7", "#ffffff"]
   );
-  const pageTextColor = useTransform(
-    scrollYProgress,
-    [0, 0.45, 1],
-    ["#ffffff", "#1e293b", "#0f172a"]
+
+  const dynamicTextColor = useTransform(
+    scrollY,
+    [150, 420, 720],
+    ["#ffffff", "#cbd5e1", "#0f172a"]
+  );
+
+  const dynamicSubtitleColor = useTransform(
+    scrollY,
+    [150, 420, 720],
+    ["rgba(255, 255, 255, 0.76)", "rgba(148, 163, 184, 0.90)", "#64748B"]
+  );
+
+  const dynamicEyebrowColor = useTransform(
+    scrollY,
+    [150, 420, 720],
+    ["#38bdf8", "#0284c7", "#034EA2"]
   );
 
   return (
-    <main style={{ minHeight: "100vh", backgroundColor: "#ffffff" }}>
+    <motion.main
+      style={{
+        minHeight: "100vh",
+        backgroundColor: dynamicBg,
+        ["--csr-text" as unknown as string]: dynamicTextColor,
+        ["--csr-subtitle" as unknown as string]: dynamicSubtitleColor,
+        ["--csr-eyebrow" as unknown as string]: dynamicEyebrowColor,
+      }}
+    >
       {/* ── SECTION 1: HERO WITH VIDEO STORYTELLING & IMPACT NUMBERS ── */}
       <CsrHero data={CSR_HERO_DATA} />
 
       {/* ── SECTION 2: DOWNLOADABLE CSR EDITORIALS WITH DYNAMIC SCROLL TRANSITION ── */}
-      <motion.div
-        ref={transitionRef}
-        style={{ backgroundColor: pageBgColor, color: pageTextColor }}
-      >
-        <CsrEditorialsGrid items={CSR_EDITORIALS_DATA} />
-      </motion.div>
+      <CsrEditorialsGrid items={CSR_EDITORIALS_DATA} />
 
       {/* ── SECTION 3: FLAGSHIP PROGRAMS (ALTERNATING SMOOTH SCROLL REVEAL) ── */}
       <CsrProgramsFlow programs={CSR_PROGRAMS_DATA} />
@@ -53,7 +66,7 @@ export default function CsrPage() {
         conditionTitle="Corporate Social Responsibility"
         pulseQuery="Tell me more about Narayana Health's CSR initiatives, free pediatric heart surgeries, and community health camps."
       />
-    </main>
+    </motion.main>
   );
 }
 

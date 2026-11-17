@@ -45,9 +45,10 @@
 .eyebrow {
   font-size: var(--font-size-xs);
   font-weight: 700;
-  color: var(--color-primary, var(--blue-brand));
+  color: var(--csr-eyebrow, var(--color-primary, var(--blue-brand)));
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  transition: color 0.2s ease;
 }
 
 @keyframes titleGradientShimmer {
@@ -89,8 +90,9 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(14.5px, 1.4vw, 16px);
   line-height: 1.55;
-  color: var(--slate-500);
+  color: var(--csr-subtitle, var(--slate-500));
   margin: 0;
+  transition: color 0.2s ease;
 }
 
 /* ── 3-Column / 2-Column Responsive Card Grid ── */

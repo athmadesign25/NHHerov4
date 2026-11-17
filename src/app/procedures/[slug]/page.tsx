@@ -33,6 +33,7 @@ import {
   NearbySpecialistsCarousel,
   NearbyCareCentresCarousel,
 } from "@/components/ui/NearbyClinicalCarousels";
+import ShareWidget from "@/components/ui/ShareWidget";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -50,102 +51,97 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
 
-  // Scroll-driven section colour transition referenced to readingSectionRef
-  const readingSectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: readingProgress } = useScroll({
-    target: readingSectionRef,
-    offset: ["start 0.95", "start 0.25"],
-  });
-
-  const v2BgColor = useTransform(readingProgress, [0, 0.35, 0.72, 1], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
-  const v2HeadingColor = useTransform(readingProgress, [0, 0.45, 1], ["#ffffff", "#f1f5f9", "#111827"]);
+  // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
+  const { scrollY } = useScroll();
+  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
+  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
   const v2BodyColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.88)", "#374151", "#1e293b"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
   );
   const v2MutedColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.62)", "#64748b", "#64748b"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
   );
   const v2TocLinkColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.78)", "#4b5563", "#4b5563"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
   );
-  const v2TocActiveColor = useTransform(readingProgress, [0, 0.45, 1], ["#38bdf8", "#034EA2", "#034EA2"]);
+  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
   const v2TocActiveBg = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
   );
   const v2BorderColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
   );
   const v2CardBg = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.06)", "#f8fafc", "#ffffff"]
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
   );
 
   // V4: Refined Dynamic BG Change from #060c18 -> #0d2142 -> #eef4fb -> #ffffff
   const v4BgColor = useTransform(
-    readingProgress,
-    [0, 0.35, 0.72, 1],
-    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+    scrollY,
+    [0, 24, 145, 245, 320],
+    ["#060c18", "#060c18", "#0d2142", "#eef4fb", "#ffffff"]
   );
   const v4HeadingColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["#ffffff", "#1e293b", "#0f172a"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["#ffffff", "#ffffff", "#1e293b", "#0f172a"]
   );
   const v4EyebrowColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
   );
   const v4BodyColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.88)", "#334155", "#1e293b"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.86)", "rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
   );
   const v4MutedColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.64)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
   );
   const v4TocLinkColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
   );
   const v4TocActiveColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["#38bdf8", "#0284c7", "#034EA2"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["#38bdf8", "#38bdf8", "#0284c7", "#034EA2"]
   );
   const v4TocActiveBg = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v4BorderColor = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
   );
   const v4SummaryBg = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
   );
   const v4BadgeBg = useTransform(
-    readingProgress,
-    [0, 0.45, 1],
-    ["rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
+    scrollY,
+    [0, 24, 175, 290],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
   );
 
   useEffect(() => {
@@ -427,8 +423,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
-      <motion.div
-        ref={readingSectionRef}
+      <div
         className={`${styles.readingExperienceWrapper} ${
           blendVersion === 2
             ? styles.readingExperienceWrapperV2
@@ -438,13 +433,6 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             ? styles.readingExperienceWrapperV4
             : ""
         }`}
-        style={
-          blendVersion === 2
-            ? { backgroundColor: v2BgColor, color: v2BodyColor }
-            : blendVersion === 4
-            ? { backgroundColor: v4BgColor, color: v4BodyColor }
-            : undefined
-        }
       >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
@@ -497,76 +485,21 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 <span>Share</span>
               </button>
 
-              {/* Share Widget with Twitter, LinkedIn, Facebook, Copy Link */}
-              <div className={styles.shareWidgetBorderless}>
-                <div className={styles.shareWidgetTitle}>Share with your community!</div>
-                <div className={styles.shareIconsRow}>
-                  <button
-                    className={styles.shareBtn}
-                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`, "_blank")}
-                    title="Share on Facebook"
-                    aria-label="Share on Facebook"
-                  >
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                  </button>
-                  <button
-                    className={styles.shareBtn}
-                    onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`, "_blank")}
-                    title="Share on LinkedIn"
-                    aria-label="Share on LinkedIn"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                  </button>
-                  <button
-                    className={styles.shareBtn}
-                    onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`, "_blank")}
-                    title="Share on Twitter"
-                    aria-label="Share on Twitter"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
-                    </svg>
-                  </button>
-                  <button
-                    className={styles.shareBtn}
-                    onClick={handleCopyLink}
-                    title="Copy Link to Clipboard"
-                    aria-label="Copy Link"
-                  >
-                    <LinkIcon size={17} />
-                  </button>
-                </div>
-                {copyToast && (
-                  <div className={styles.copyToastNotice}>
-                    ✓ Link copied to clipboard!
-                  </div>
-                )}
-              </div>
+              {/* Standardized Share Widget with Twitter, LinkedIn, Facebook, Copy Link */}
+              <ShareWidget shareTitle={detail.title} />
             </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
             {/* 1. Overview & Clinical Executive Summary */}
             <section id="overview" className={styles.sectionBlock}>
-              <motion.h2
-                className={styles.mainSectionTitle}
-                style={
-                  blendVersion === 4
-                    ? { color: v4HeadingColor }
-                    : blendVersion === 2
-                    ? { color: v2HeadingColor }
-                    : undefined
-                }
-              >
+              <h2 className={styles.mainSectionTitle}>
                 {detail.title}
-              </motion.h2>
+              </h2>
               <ClinicalSummaryBanner
                 summary={`${detail.leadParagraph} ${detail.whatIsIt.description}`}
                 reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"}
               />
 
               {/* Clean Clinical Figure (No nested cards or duplicate metrics) */}
@@ -886,7 +819,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           </article>
         </div>
       </main>
-      </motion.div>
+      </div>
 
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner

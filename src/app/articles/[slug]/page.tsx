@@ -27,6 +27,7 @@ import ClinicalReviewedBySection, {
   ClinicalEditorialFigures,
 } from "@/components/ui/ClinicalReviewedBySection";
 import { NearbySpecialistsCarousel } from "@/components/ui/NearbyClinicalCarousels";
+import ShareWidget from "@/components/ui/ShareWidget";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -295,22 +296,8 @@ export default function ArticleDetailPage({ params }: PageProps) {
                 <span>Share</span>
               </button>
 
-              {/* Share widget */}
-              <div className={styles.shareWidgetBorderless}>
-                <span className={styles.shareTitle}>Share this Article</span>
-                <div className={styles.shareRow}>
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className={styles.shareBtn}
-                    aria-label="Copy article link"
-                    title="Copy Link"
-                  >
-                    {copyToast ? <Check size={14} className={styles.copySuccessIcon} /> : <LinkIcon size={14} />}
-                  </button>
-                </div>
-                {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
-              </div>
+              {/* Standardized Share widget */}
+              <ShareWidget shareTitle={detail.title} title="Share this Article" />
             </aside>
 
             {/* Reading Content Focus Canvas */}

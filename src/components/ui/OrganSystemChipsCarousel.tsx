@@ -45,14 +45,15 @@ export default function OrganSystemChipsCarousel({
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const updateScrollButtons = useCallback(() => {
     const el = trackRef.current;
-    if (!el) return;
+    if (!el || isExpanded) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
     setCanScrollLeft(scrollLeft > 8);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 8);
-  }, []);
+  }, [isExpanded]);
 
   useEffect(() => {
     updateScrollButtons();
@@ -73,6 +74,14 @@ export default function OrganSystemChipsCarousel({
     el.scrollBy({ left: delta, behavior: "smooth" });
   };
 
+  const handleViewAllClick = () => {
+    onSelectOrgan(null);
+    setIsExpanded((prev) => !prev);
+    if (trackRef.current) {
+      trackRef.current.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  };
+
   return (
     <motion.section
       className={styles.carouselOuterSection}
@@ -85,45 +94,57 @@ export default function OrganSystemChipsCarousel({
         <span className={styles.eyebrowLabel}>{eyebrow}</span>
 
         <div className={styles.controlsRightGroup}>
-          <div className={styles.arrowGroup}>
-            <button
-              type="button"
-              className={styles.carouselArrowBtn}
-              onClick={() => handleScrollBy("left")}
-              disabled={!canScrollLeft}
-              aria-label="Scroll organ systems left"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              className={styles.carouselArrowBtn}
-              onClick={() => handleScrollBy("right")}
-              disabled={!canScrollRight}
-              aria-label="Scroll organ systems right"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+          <button
+            type="button"
+            className={`${styles.expandAllBtn} ${isExpanded ? styles.expandAllBtnActive : ""}`}
+            onClick={() => setIsExpanded((prev) => !prev)}
+            aria-expanded={isExpanded}
+          >
+            <LayoutGrid size={13} />
+            <span>{isExpanded ? "Carousel View" : `View All (${options.length})`}</span>
+          </button>
+
+          {!isExpanded && (
+            <div className={styles.arrowGroup}>
+              <button
+                type="button"
+                className={styles.carouselArrowBtn}
+                onClick={() => handleScrollBy("left")}
+                disabled={!canScrollLeft}
+                aria-label="Scroll organ systems left"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                className={styles.carouselArrowBtn}
+                onClick={() => handleScrollBy("right")}
+                disabled={!canScrollRight}
+                aria-label="Scroll organ systems right"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.trackContainer}>
         <div
           ref={trackRef}
-          className={styles.bubblesRow}
+          className={`${styles.bubblesRow} ${isExpanded ? styles.bubblesRowExpanded : ""}`}
         >
           {/* 1. "View All" Chip */}
           <button
             type="button"
             className={`${styles.bubbleBtn} ${selectedOrgan === null ? styles.bubbleBtnActive : ""}`}
-            onClick={() => onSelectOrgan(null)}
+            onClick={handleViewAllClick}
             aria-pressed={selectedOrgan === null}
           >
             <div className={`${styles.bubbleImgWrap} ${styles.viewAllIconWrap}`}>
               <LayoutGrid size={22} />
             </div>
-            <span className={styles.bubbleLabel}>View All</span>
+            <span className={styles.bubbleLabel}>{isExpanded ? "Collapse" : "View All"}</span>
           </button>
 
           {/* 2. Organ-System Chips */}

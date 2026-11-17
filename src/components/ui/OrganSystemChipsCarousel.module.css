@@ -7,10 +7,10 @@
   z-index: 3;
 }
 
+/* Hide circular organ carousel on mobile web — mweb uses the dedicated [ Filters ] sheet */
 @media (max-width: 768px) {
   .carouselOuterSection {
-    width: calc(100% - 32px);
-    padding: 20px 0 10px 0;
+    display: none !important;
   }
 }
 
@@ -34,6 +34,34 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.expandAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(var(--white-rgb), 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  color: rgba(var(--white-rgb), 0.88);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--duration-base) ease, border-color var(--duration-base) ease, transform var(--duration-base) ease;
+}
+
+.expandAllBtn:hover {
+  background: rgba(var(--white-rgb), 0.14);
+  border-color: rgba(var(--white-rgb), 0.28);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.expandAllBtnActive {
+  background: rgba(var(--blue-brand-rgb), 0.45);
+  border-color: rgba(var(--sky-400-rgb), 0.5);
+  color: var(--white);
 }
 
 .arrowGroup {
@@ -119,6 +147,10 @@
 
 .bubbleBtn:hover {
   transform: translateY(-3px);
+}
+
+.bubbleBtn:active {
+  transform: scale(0.94);
 }
 
 .bubbleImgWrap {

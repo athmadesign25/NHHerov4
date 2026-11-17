@@ -21,21 +21,10 @@
   gap: 6px;
   font-size: var(--font-size-xs, 12px);
   font-weight: 600;
-  color: inherit;
-  opacity: 0.90;
   text-decoration: none;
   padding: 5px 12px;
   border-radius: 9999px;
-  background: rgba(var(--blue-brand-rgb), 0.08);
-  border: 1px solid rgba(var(--blue-brand-rgb), 0.18);
   transition: border-color var(--duration-base) ease, color var(--duration-base) ease, background var(--duration-base) ease;
-}
-
-.inlineReviewerBadge:hover {
-  color: var(--blue-brand);
-  background: rgba(var(--blue-brand-rgb), 0.14);
-  border-color: rgba(var(--blue-brand-rgb), 0.35);
-  opacity: 1;
 }
 
 .inlineCheckIcon {
@@ -47,9 +36,42 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(15.5px, 1.25vw, 17.5px);
   line-height: 1.76;
-  color: inherit;
   margin: 0;
   font-weight: 400;
+}
+
+/* ─── STATIONARY WHITE MODE (V1, V3, Diseases, Articles, Symptoms, Diagnostics, Hospitals) ─── */
+.summaryEditorialSectionWhite .summaryLeadText {
+  color: var(--slate-700, #334155);
+}
+
+.summaryEditorialSectionWhite .inlineReviewerBadge {
+  color: var(--slate-700, #334155);
+  background: rgba(var(--blue-brand-rgb), 0.06);
+  border: 1px solid rgba(var(--blue-brand-rgb), 0.16);
+}
+
+.summaryEditorialSectionWhite .inlineReviewerBadge:hover {
+  color: var(--blue-brand);
+  background: rgba(var(--blue-brand-rgb), 0.12);
+  border-color: rgba(var(--blue-brand-rgb), 0.35);
+}
+
+/* ─── DYNAMIC MODE (V2 & V4 scroll-driven colour transitions) ───────────── */
+.summaryEditorialSectionDynamic .summaryLeadText {
+  color: var(--v2-body, var(--v4-body, var(--slate-700)));
+}
+
+.summaryEditorialSectionDynamic .inlineReviewerBadge {
+  color: var(--v2-body, var(--v4-body, var(--slate-700)));
+  background: rgba(var(--blue-brand-rgb), 0.08);
+  border: 1px solid rgba(var(--blue-brand-rgb), 0.18);
+}
+
+.summaryEditorialSectionDynamic .inlineReviewerBadge:hover {
+  color: var(--blue-brand);
+  background: rgba(var(--blue-brand-rgb), 0.16);
+  border-color: rgba(var(--blue-brand-rgb), 0.40);
 }
 
 /* ─── DEDICATED "REVIEWED BY DR. ___" SECTION (GOOGLE E-E-A-T) ─────────── */

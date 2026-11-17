@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #060c18;
+  background-color: transparent;
   overflow: hidden;
   /* Comfortably pushed down, balanced lower vertically as per NH syntax */
   padding-top: calc(var(--nav-height, 72px) + clamp(32px, 9vh, 140px));
@@ -68,8 +68,9 @@
     180deg,
     rgba(6, 12, 24, 0.68) 0%,
     rgba(6, 12, 24, 0.35) 35%,
-    rgba(6, 12, 24, 0.80) 75%,
-    rgba(6, 12, 24, 0.98) 100%
+    rgba(6, 12, 24, 0.70) 75%,
+    rgba(6, 12, 24, 0.40) 92%,
+    transparent 100%
   );
   z-index: 2;
   pointer-events: none;
@@ -80,7 +81,7 @@
   position: relative;
   z-index: 3;
   width: calc(100% - max(4vw, 40px) * 2);
-  max-width: 1240px;
+  max-width: 1320px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;

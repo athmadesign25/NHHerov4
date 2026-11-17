@@ -341,16 +341,17 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
+  background: var(--v2-bg, #0a1128);
 }
 
 .readingExperienceWrapperV2 .mainSectionTitle,
 .readingExperienceWrapperV2 .subSectionTitle {
-  color: inherit;
+  color: var(--v2-heading, #111827);
 }
 
 .readingExperienceWrapperV2 .leadParagraph,
 .readingExperienceWrapperV2 .bodyParagraph {
-  color: inherit;
+  color: var(--v2-body, #374151);
 }
 
 .readingExperienceWrapperV2 .tocEyebrow,
@@ -402,72 +403,56 @@
 
 /* ─── V3: SOFT ATMOSPHERIC BLUR MIST BAND (MATCHING REFERENCE IMAGE) ──────── */
 .detailHeroV3 {
-  padding-bottom: clamp(116px, 14.5vh, 152px);
+  min-height: clamp(620px, 78vh, 860px);
+  padding-top: calc(var(--nav-height, 72px) + clamp(48px, 8vh, 88px));
+  padding-bottom: clamp(140px, 18vh, 200px);
 }
 
-/* Layer 1: Pure Progressive Optical Blur (separate from color gradient so alpha is never squared) */
+/* Remove overpowering blur overlay */
 .detailHeroV3::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(190px, 24vh, 250px);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  -webkit-mask-image: linear-gradient(180deg,
-      transparent 0%,
-      rgba(var(--black-rgb), 0.22) 28%,
-      rgba(var(--black-rgb), 0.62) 60%,
-      black 90%,
-      black 100%);
-  mask-image: linear-gradient(180deg,
-      transparent 0%,
-      rgba(var(--black-rgb), 0.22) 28%,
-      rgba(var(--black-rgb), 0.62) 60%,
-      black 90%,
-      black 100%);
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
-/* Layer 2: Unmasked 9-stop S-Curve Mist Gradient dissolving seamlessly into var(--blue-tint-50) */
+/* Deep, luxurious mist gradient with smooth 200px runway dissolving into #f0f4f9 */
 .detailHeroV3::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: -1px;
-  height: clamp(190px, 24vh, 250px);
+  height: clamp(160px, 22vh, 240px);
   background: linear-gradient(180deg,
-      rgba(238, 242, 247, 0) 0%,
-      rgba(238, 242, 247, 0.05) 14%,
-      rgba(238, 242, 247, 0.16) 28%,
-      rgba(238, 242, 247, 0.35) 44%,
-      rgba(238, 242, 247, 0.58) 60%,
-      rgba(238, 242, 247, 0.79) 74%,
-      rgba(238, 242, 247, 0.93) 86%,
-      rgba(238, 242, 247, 0.985) 94%,
-      var(--blue-tint-50) 100%);
+      transparent 0%,
+      rgba(240, 244, 249, 0.05) 20%,
+      rgba(240, 244, 249, 0.25) 45%,
+      rgba(240, 244, 249, 0.65) 70%,
+      rgba(240, 244, 249, 0.94) 90%,
+      #f0f4f9 100%);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Reading sheet starts at exact var(--blue-tint-50) to eliminate any seam line, easing into pure var(--white) */
+/* Reading sheet in V3: Seamless #f0f4f9 fading into pure var(--white) */
 .readingExperienceWrapperV3 {
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
-  background: linear-gradient(180deg,
-      var(--blue-tint-50) 0px,
-      #f3f6fa 110px,
-      var(--slate-50) 230px,
-      var(--white) 360px);
+  background: linear-gradient(180deg, #f0f4f9 0px, #f8fafc 90px, var(--white) 180px);
+}
+
+.readingExperienceWrapperV3 .mainSectionTitle,
+.readingExperienceWrapperV3 .subSectionTitle {
+  color: var(--slate-900, #0f172a);
+}
+
+.readingExperienceWrapperV3 .leadParagraph,
+.readingExperienceWrapperV3 .bodyParagraph {
+  color: var(--slate-700, #334155);
 }
 
 /* ─── V4: REFINED DYNAMIC BG CHANGE + TEXT SWEEP BLEND (MATCHING BLOG V3) ─── */
 .detailHeroV4 {
-  padding-bottom: clamp(72px, 9vh, 100px);
+  padding-bottom: clamp(64px, 8vh, 88px);
 }
 
 .detailHeroV4::after {
@@ -476,12 +461,12 @@
   left: 0;
   right: 0;
   bottom: -1px;
-  height: clamp(180px, 24vh, 240px);
+  height: clamp(140px, 18vh, 190px);
   background: linear-gradient(180deg,
       transparent 0%,
-      color-mix(in srgb, var(--v4-bg, #060c18) 22%, transparent) 30%,
-      color-mix(in srgb, var(--v4-bg, #060c18) 62%, transparent) 64%,
-      color-mix(in srgb, var(--v4-bg, #060c18) 90%, transparent) 86%,
+      color-mix(in srgb, var(--v4-bg, #060c18) 25%, transparent) 28%,
+      color-mix(in srgb, var(--v4-bg, #060c18) 65%, transparent) 60%,
+      color-mix(in srgb, var(--v4-bg, #060c18) 92%, transparent) 85%,
       var(--v4-bg, #060c18) 100%);
   pointer-events: none;
   z-index: 1;
@@ -491,6 +476,7 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
+  background: var(--v4-bg, #060c18);
 }
 
 .v4SectionEyebrow {
@@ -504,12 +490,12 @@
 
 .readingExperienceWrapperV4 .mainSectionTitle,
 .readingExperienceWrapperV4 .subSectionTitle {
-  color: inherit;
+  color: var(--v4-heading, var(--slate-900));
 }
 
 .readingExperienceWrapperV4 .leadParagraph,
 .readingExperienceWrapperV4 .bodyParagraph {
-  color: inherit;
+  color: var(--v4-body, var(--slate-700));
 }
 
 .readingExperienceWrapperV4 .tocEyebrow,

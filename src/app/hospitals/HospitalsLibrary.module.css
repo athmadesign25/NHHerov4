@@ -799,16 +799,17 @@
   }
 }
 
-/* ─── PROCEDURE CARD (UNIFIED PROPORTIONS, CRISP TYPOGRAPHY, COMPACT PILL BUTTONS) ─── */
+/* ─── PROCEDURE CARD (EDITORIAL OVERLAY ARCHITECTURE MATCHING IMAGE 2 & 3) ─── */
 .procedureCard {
+  position: relative;
   background: var(--navy-900);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 415px;
+  justify-content: flex-end;
+  min-height: 460px;
   height: 100%;
   transition: transform var(--duration-emphasis) var(--ease-spring),
               box-shadow var(--duration-emphasis) var(--ease-spring),
@@ -819,63 +820,76 @@
 .procedureCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.52);
-  border-color: rgba(var(--white-rgb), 0.25);
+  border-color: rgba(var(--white-rgb), 0.28);
 }
 
-/* Content text group */
-.cardTextGroup {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Top Image Container with Dark Gradient Fade */
+/* Full-height background image layer extending behind the gradient & text */
 .cardImageWrap {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 210px;
+  height: 100%;
   overflow: hidden;
   background: #060e1b;
+  z-index: 1;
 }
 
 .cardBgImage {
   object-fit: cover;
-  object-position: center 20%;
-  transition: transform var(--duration-slower) var(--ease-spring);
+  object-position: center 15%;
+  filter: brightness(0.96) saturate(1.08) contrast(1.02);
+  transition: transform var(--duration-slower) var(--ease-spring), filter var(--duration-moderate) ease;
 }
 
 .procedureCard:hover .cardBgImage {
   transform: scale(1.05);
+  filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
+/* Signature Deep Atmospheric Gradient Scrim (Calibrated for high contrast on light/white photos) */
 .cardGradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    var(--navy-900) 0%,
-    rgba(9, 19, 34, 0.72) 42%,
-    rgba(9, 19, 34, 0.15) 75%,
-    transparent 100%
+    180deg,
+    rgba(var(--navy-900-rgb), 0) 0%,
+    rgba(var(--navy-900-rgb), 0) 25%,
+    rgba(var(--navy-900-rgb), 0.25) 40%,
+    rgba(var(--navy-900-rgb), 0.68) 54%,
+    rgba(var(--navy-900-rgb), 0.90) 70%,
+    rgba(var(--navy-900-rgb), 0.98) 84%,
+    var(--navy-900) 100%
   );
   pointer-events: none;
+  z-index: 2;
 }
 
-/* Content block with structured typography and consistent vertical alignment */
+/* Content block pushed to bottom over the gradient */
 .cardContent {
-  padding: 18px 20px 20px;
+  position: relative;
+  z-index: 3;
+  padding: 24px 22px 22px;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
+  justify-content: flex-end;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.cardTextGroup {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
 }
 
 .cardEyebrow {
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(var(--white-rgb), 0.55);
-  margin-bottom: 7px;
+  color: rgba(var(--white-rgb), 0.88);
+  margin-bottom: 8px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
 }
 
 .cardTitleLink {
@@ -884,54 +898,52 @@
 }
 
 .cardTitle {
-  font-size: 16.5px;
-  font-weight: 600;
-  line-height: 1.35;
-  letter-spacing: -0.012em;
+  font-size: 18.5px;
+  font-weight: 700;
+  line-height: 1.30;
+  letter-spacing: -0.015em;
   color: var(--white);
-  margin: 0 0 7px 0;
+  margin: 0 0 8px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 44px;
-  text-shadow: none !important;
+  min-height: 48px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.80), 0 2px 10px rgba(0, 0, 0, 0.55);
 }
 
 .cardSub {
-  font-size: var(--font-size-xs);
+  font-size: 13px;
   line-height: 1.5;
-  color: rgba(var(--white-rgb), 0.60);
-  margin: 0;
+  color: rgba(var(--white-rgb), 0.78);
+  margin: 0 0 16px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 36px;
+  min-height: 38px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
 }
 
-/* ─── CARD BOTTOM SLOT: COMPACT RESTING META VS REFINED ACTION BUTTONS ─────── */
+/* ─── CARD BOTTOM SLOT: RESTING META VS HOVER ACTION BUTTONS ─────── */
 .cardBottomSlot {
   position: relative;
-  margin-top: auto;
-  padding-top: 14px;
-  height: 48px;
+  width: 100%;
+  height: 38px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   box-sizing: border-box;
 }
 
-/* Resting State: Procedure Clinical Metadata (Compact, unified scale) */
+/* Resting State: Procedure Clinical Metadata */
 .cardRestingMeta {
   display: flex;
   align-items: center;
   gap: 7px;
-  flex-wrap: nowrap;
-  overflow: hidden;
   width: 100%;
-  height: 34px;
-  transition: opacity var(--duration-base) var(--ease-spring),
-              transform var(--duration-base) var(--ease-spring);
+  height: 38px;
+  transition: opacity var(--duration-moderate) var(--ease-spring),
+              transform var(--duration-moderate) var(--ease-spring);
 }
 
 .metaBadge {
@@ -961,21 +973,17 @@
 .cardActions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  height: 34px;
+  height: 38px;
   align-items: center;
 }
 
-/* Desktop: at rest, resting metadata is shown.
-   On hover, metadata glides out and action buttons slide in with matching compact scale! */
+/* Desktop: Action buttons appear smoothly on hover ONLY! */
 @media (min-width: 1025px) and (hover: hover) {
   .cardActions {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 34px;
+    inset: 0;
     opacity: 0;
     transform: translateY(6px);
     pointer-events: none;
@@ -986,7 +994,7 @@
   .procedureCard:hover .cardRestingMeta,
   .procedureCard:focus-within .cardRestingMeta {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     pointer-events: none;
   }
 
@@ -998,37 +1006,38 @@
   }
 }
 
-/* iPad, Tablets & Mobile (mweb): action buttons always available with compact sizing */
+/* Mobile & Touch: CTAs always accessible without hover */
 @media (max-width: 1024px), (hover: none) {
   .cardRestingMeta {
     display: none;
   }
 
   .cardActions {
+    position: relative;
     opacity: 1;
     transform: none;
     pointer-events: auto;
   }
 }
 
-/* Decision Button 1 (Secondary): Find doctors - Subtle Glassmorphic Pill */
+/* Decision Button 1 (Secondary): Find doctors - Subtle Glassmorphic Outline */
 .cardDoctorBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 34px;
-  padding: 0 10px;
+  height: 38px;
+  padding: 0 12px;
   border-radius: 8px;
-  font-size: var(--font-size-xs);
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  color: rgba(var(--white-rgb), 0.92);
+  border: 1px solid rgba(var(--white-rgb), 0.22);
+  color: rgba(var(--white-rgb), 0.90);
   background: rgba(var(--white-rgb), 0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all var(--duration-base) var(--ease-spring);
   white-space: nowrap;
   box-sizing: border-box;
@@ -1036,39 +1045,43 @@
 
 .cardDoctorBtn:hover {
   background: rgba(var(--white-rgb), 0.12);
-  border-color: rgba(var(--white-rgb), 0.25);
+  border-color: rgba(var(--white-rgb), 0.45);
+  color: var(--white);
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary): Read more ↗ - Pure NH Brand Blue (#034EA2), No Outline */
+/* Decision Button 2 (Primary / Main CTA): Read more ↗ - High-Hierarchy NH Brand Blue */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   width: 100%;
-  height: 34px;
-  padding: 0 10px;
+  height: 38px;
+  padding: 0 12px;
   border-radius: 8px;
-  font-size: var(--font-size-xs);
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: none;
+  border: 1px solid var(--blue-brand);
   color: var(--white);
-  background: var(--color-primary, var(--blue-brand));
+  background: var(--blue-brand);
+  box-shadow: 0 2px 10px rgba(3, 78, 162, 0.40);
   transition: all var(--duration-base) var(--ease-spring);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDetailBtn:hover {
-  background: var(--color-primary-dark, var(--blue-900));
+  background: var(--blue-dark, #023a78);
+  border-color: var(--blue-dark, #023a78);
+  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.60);
   transform: translateY(-1px);
 }
 
 .pillBtnArrow {
-  transition: transform var(--duration-base) ease;
+  transition: transform var(--duration-base) var(--ease-spring);
   flex-shrink: 0;
 }
 
@@ -1537,74 +1550,76 @@
   }
 
   .cardActions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
     width: 100%;
-    height: auto;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
+    height: 38px;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
     position: static;
-    margin-left: 0;
+    margin-top: 8px;
+    z-index: 5;
   }
 
+  /* Decision Button 1 (Secondary): Find doctors - Clean Glassmorphic Button */
   .cardDoctorBtn {
-    display: none;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(var(--white-rgb), 0.22);
+    color: rgba(var(--white-rgb), 0.90);
+    background: rgba(var(--white-rgb), 0.08);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    pointer-events: auto;
+    position: relative;
+    z-index: 5;
+    box-sizing: border-box;
   }
 
-  /* Sleek "Read more →" action row matching Image 1 */
+  /* Decision Button 2 (Primary): Read more ↗ - Pure NH Brand Blue */
   .cardDetailBtn {
-    height: 32px;
-    width: 100%;
-    padding: 0;
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    color: var(--white);
-    display: flex;
+    display: inline-flex !important;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--blue-brand);
+    color: var(--white);
+    background: var(--blue-brand);
+    box-shadow: 0 2px 8px rgba(3, 78, 162, 0.40);
     text-decoration: none;
+    pointer-events: auto;
     position: relative;
-    z-index: 4;
+    z-index: 5;
+    box-sizing: border-box;
   }
 
   .cardDetailBtn span {
     display: inline-block;
     position: relative;
     color: var(--white);
-    font-size: var(--font-size-sm);
+    font-size: 12px;
     font-weight: 600;
   }
 
-  .cardDetailBtn span::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1.5px;
-    background: rgba(var(--white-rgb), 0.7);
-    border-radius: 1px;
-  }
-
   .pillBtnArrow {
-    width: 28px;
-    height: 28px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: rgba(var(--white-rgb), 0.16);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(var(--white-rgb), 0.28);
-    color: var(--white);
-    padding: 6px;
-    box-sizing: border-box;
     flex-shrink: 0;
   }
 

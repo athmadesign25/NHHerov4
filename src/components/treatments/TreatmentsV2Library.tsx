@@ -145,6 +145,15 @@ export default function TreatmentsV2Library({
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    setItems(TREATMENTS_PROCEDURES_DATA);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("organ");
+      url.searchParams.delete("search");
+      url.searchParams.delete("q");
+      url.searchParams.delete("query");
+      window.history.replaceState(null, "", url.toString());
+    }
   };
 
   return (
@@ -359,16 +368,27 @@ export default function TreatmentsV2Library({
         </div>
       </section>
 
-      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" (DESKTOP) ─────────── */}
       <OrganSystemChipsCarousel
         options={ORGAN_FILTER_OPTIONS}
         selectedOrgan={selectedOrgan}
-        onSelectOrgan={(val) => setSelectedOrgan(val)}
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            handleResetFilters();
+            const el = document.getElementById("procedures-directory");
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
         eyebrow="Explore Treatments by Organ System & Speciality"
       />
 
       {/* ─── DYNAMIC FEEDBACK TEXT ROW (MINIMAL TYPOGRAPHY, NO CHIPS/BADGES) ─ */}
       <motion.div
+        id="procedures-directory"
         className={styles.feedbackTextRow}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -378,15 +398,15 @@ export default function TreatmentsV2Library({
           <p className={styles.feedbackText}>
             {searchQuery.trim() ? (
               <>
-                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+                Search results for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
               </>
             ) : selectedOrgan ? (
               <>
-                Here based on your selection for treatment under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
+                Filtered by <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
               </>
             ) : (
               <>
-                Here based on your selection for clinical treatments &amp; procedures &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
+                Showing all clinical treatments &amp; procedures &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
               </>
             )}
           </p>

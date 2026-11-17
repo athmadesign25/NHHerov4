@@ -11,12 +11,14 @@ export interface ClinicalSummaryBannerProps {
   summary: string;
   reviewerName?: string;
   reviewAnchorId?: string;
+  theme?: "white" | "dynamic";
 }
 
 export function ClinicalSummaryBanner({
   summary,
   reviewerName,
   reviewAnchorId = "medically-reviewed-by",
+  theme = "white",
 }: ClinicalSummaryBannerProps) {
   const formattedReviewer = reviewerName
     ? reviewerName.startsWith("Dr.")
@@ -25,7 +27,15 @@ export function ClinicalSummaryBanner({
     : "Dr. Devi Prasad Shetty";
 
   return (
-    <div className={styles.summaryEditorialSection} role="region" aria-label="Clinical Summary">
+    <div 
+      className={`${styles.summaryEditorialSection} ${
+        theme === "dynamic" 
+          ? styles.summaryEditorialSectionDynamic 
+          : styles.summaryEditorialSectionWhite
+      }`} 
+      role="region" 
+      aria-label="Clinical Summary"
+    >
       <div className={styles.summaryHeaderRow}>
         <a href={`#${reviewAnchorId}`} className={styles.inlineReviewerBadge}>
           <CheckCircle2 size={13} className={styles.inlineCheckIcon} />
@@ -82,12 +92,12 @@ export default function ClinicalReviewedBySection({
           <div className={styles.reviewedTopRow}>
             <span className={styles.eeatBadge}>
               <ShieldCheck size={13} />
-              <span>Medically Reviewed Content</span>
+              <span>Clinical Quality Standard</span>
             </span>
-            <span className={styles.reviewDateText}>Last Reviewed: {reviewDate}</span>
+            <span className={styles.reviewDateText}>Updated {reviewDate}</span>
           </div>
 
-          <h3 className={styles.reviewerHeading}>Reviewed by {normalizedName}</h3>
+          <h3 className={styles.reviewerHeading}>{normalizedName}</h3>
 
           <p className={styles.reviewerCredentials}>
             {doctorRole} &bull; {speciality}
@@ -95,14 +105,14 @@ export default function ClinicalReviewedBySection({
           </p>
 
           <p className={styles.reviewerNote}>
-            This medical guide has been clinically reviewed and verified by {normalizedName} and the Narayana Health Medical Advisory Board to ensure adherence to evidence-based diagnostic, surgical, and patient-safety protocols.
+            Clinically verified in accordance with Narayana Health surgical care protocols, clinical pathways, and evidence-based patient-safety standards.
           </p>
 
           <Link
             href={`/doctors?search=${encodeURIComponent(normalizedName)}`}
             className={styles.profileLink}
           >
-            <span>Consult or View Specialist Profile</span>
+            <span>Consult Specialist Profile</span>
             <ArrowUpRight size={14} />
           </Link>
         </div>

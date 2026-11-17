@@ -122,6 +122,14 @@ export default function SymptomsLibraryPage() {
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("organ");
+      url.searchParams.delete("search");
+      url.searchParams.delete("q");
+      url.searchParams.delete("query");
+      window.history.replaceState(null, "", url.toString());
+    }
   };
 
   return (
@@ -285,11 +293,18 @@ export default function SymptomsLibraryPage() {
         </div>
       </section>
 
-      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" (DESKTOP) ─────────── */}
       <OrganSystemChipsCarousel
         options={ORGAN_FILTER_OPTIONS}
         selectedOrgan={selectedOrgan}
-        onSelectOrgan={(val) => setSelectedOrgan(val)}
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            setSelectedOrgan(null);
+            setSearchQuery("");
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
         eyebrow="Explore Symptoms by Organ System & Speciality"
       />
 

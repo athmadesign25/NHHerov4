@@ -28,6 +28,7 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { getCsrProgramBySlug, CSR_PROGRAMS_DATA, CsrProgramItem } from "@/data/csrData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ShareWidget from "@/components/ui/ShareWidget";
 import styles from "./CsrDetail.module.css";
 
 interface PageProps {
@@ -266,15 +267,8 @@ export default function CsrDetailPage({ params }: PageProps) {
               </div>
 
               {/* Share / Copy Link Button */}
-              <button
-                type="button"
-                onClick={handleShare}
-                className={styles.sidebarShareBtn}
-                aria-label="Share initiative"
-              >
-                <Share2 size={14} />
-                <span>Share Initiative</span>
-              </button>
+              {/* Standardized Share Widget */}
+              <ShareWidget shareTitle={program.title} title="Share this initiative" />
             </aside>
 
             {/* ─── RIGHT CONTENT COLUMN ───────────────────────────────────── */}

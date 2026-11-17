@@ -289,7 +289,14 @@ export default function DiagnosticsLibraryPage() {
       <OrganSystemChipsCarousel
         options={ORGAN_FILTER_OPTIONS}
         selectedOrgan={selectedOrgan}
-        onSelectOrgan={(val) => setSelectedOrgan(val)}
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            setSelectedOrgan(null);
+            setSearchQuery("");
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
         eyebrow="Explore Diagnostics & Lab Tests by Organ System"
       />
 

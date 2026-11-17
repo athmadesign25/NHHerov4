@@ -285,12 +285,19 @@ export default function DiseasesLibraryPage() {
         </div>
       </section>
 
-      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" ────────────────────── */}
+      {/* ─── ORGAN-SYSTEM CHIPS CAROUSEL + "VIEW ALL" (DESKTOP) ─────────── */}
       <OrganSystemChipsCarousel
         options={ORGAN_FILTER_OPTIONS}
         selectedOrgan={selectedOrgan}
-        onSelectOrgan={(val) => setSelectedOrgan(val)}
-        eyebrow="Explore Conditions by Organ System & Speciality"
+        onSelectOrgan={(val) => {
+          if (val === null) {
+            setSelectedOrgan(null);
+            setSearchQuery("");
+          } else {
+            handleToggleOrgan(val);
+          }
+        }}
+        eyebrow="Explore Diseases & Conditions by Organ System & Speciality"
       />
 
       {/* ─── DYNAMIC FEEDBACK TEXT ROW ─────────────────────────────────────── */}
