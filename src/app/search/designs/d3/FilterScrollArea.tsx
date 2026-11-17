@@ -22,6 +22,7 @@ export default function FilterScrollArea({ children }: { children: ReactNode }) 
     const rail = railRef.current;
     if (!viewport || !content || !rail) return;
     const sidebar = viewport.closest("aside");
+    const tools = sidebar?.querySelector<HTMLElement>("[data-filter-tools]");
     const page = sidebar?.closest<HTMLElement>("[data-design]");
     const toolbar = page?.querySelector<HTMLElement>("[data-d3-search-bar]");
     const wheelSurface = sidebar ?? rail;
@@ -40,6 +41,10 @@ export default function FilterScrollArea({ children }: { children: ReactNode }) 
       }
       if (sidebar && sidebar.getClientRects().length) {
         const styles = getComputedStyle(sidebar);
+        if (tools) {
+          const headerHeight = `${Math.max(0, tools.offsetHeight - parseFloat(styles.paddingTop))}px`;
+          if (sidebar.style.getPropertyValue("--filter-header-height") !== headerHeight) sidebar.style.setProperty("--filter-header-height", headerHeight);
+        }
         // Before the panel sticks, its actual top is lower than the sticky inset.
         const top = Math.max(sidebar.getBoundingClientRect().top, parseFloat(styles.top) || 0);
         const bottom = visualViewport ? visualViewport.offsetTop + visualViewport.height : window.innerHeight;
@@ -102,6 +107,7 @@ export default function FilterScrollArea({ children }: { children: ReactNode }) 
     };
     const observer = new ResizeObserver(schedule);
     observer.observe(viewport); observer.observe(content); observer.observe(rail);
+    if (tools) observer.observe(tools);
     // A chip row can grow without a scroll event. Update the panel before paint
     // so the taller toolbar cannot cover it for a frame.
     const toolbarObserver = new ResizeObserver(measure);
@@ -141,6 +147,7 @@ export default function FilterScrollArea({ children }: { children: ReactNode }) 
       pinnedHeader?.removeAttribute("data-pinned");
       pinnedHeader?.style.removeProperty("--filter-pinned-clip");
       sidebar?.style.removeProperty("--filter-panel-max-height");
+      if (tools) sidebar?.style.removeProperty("--filter-header-height");
       sidebar?.style.removeProperty("--filter-pinned-height");
       sidebar?.removeAttribute("data-pinned-filter-category");
     };

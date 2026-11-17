@@ -114,7 +114,7 @@
 .dismiss:hover::before { background: var(--color-primary-light); }
 .openToast:focus-visible, .cta:focus-visible, .dismiss:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(-1 * var(--space-4)); }
 @media (max-width: 768px) {
-  .toast { right: var(--space-12); bottom: auto; top: calc(var(--nav-height) + var(--space-12)); width: calc(var(--space-128) + var(--space-32)); }
+  .toast { right: var(--space-12); bottom: calc(var(--space-96) + var(--space-16) + env(safe-area-inset-bottom)); top: auto; width: calc(var(--space-128) + var(--space-16)); }
   .card { border-radius: var(--radius-sm); }
   .media { height: auto; aspect-ratio: 1.4; }
   .copy { padding: var(--space-8) var(--space-8) var(--space-12); }

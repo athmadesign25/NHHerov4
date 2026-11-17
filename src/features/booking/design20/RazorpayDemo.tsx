@@ -1,19 +1,17 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Banknote, Building2, Check, ChevronRight, CreditCard, DoorOpen, Landmark, LockKeyhole, ShieldCheck, Smartphone, Sparkles, UserRound, Wallet, X } from "lucide-react";
+import { ArrowRight, Banknote, Building2, Check, ChevronRight, CreditCard, DoorOpen, Landmark, LockKeyhole, ShieldCheck, Smartphone, Sparkles, Wallet, X } from "lucide-react";
 import type Lenis from "lenis";
 import styles from "./RazorpayDemo.module.css";
 
 type PaymentMethod = "upi" | "cards" | "emi" | "netbanking" | "wallet";
-type CheckoutView = "contact" | "payment" | "exit";
+type CheckoutView = "payment" | "exit";
 type Props = {
   fee: string;
   busy: boolean;
   expired: boolean;
-  mobile?: string;
-  email?: string;
   onPay: () => void;
   onClose: () => void;
 };
@@ -49,18 +47,14 @@ function DemoQr() {
   </div>;
 }
 
-export default function RazorpayDemo({ fee, busy, expired, mobile = "", email = "", onPay, onClose }: Props) {
+export default function RazorpayDemo({ fee, busy, expired, onPay, onClose }: Props) {
   const id = useId();
   const dialog = useRef<HTMLDialogElement>(null);
-  const focusTarget = useRef<HTMLInputElement>(null);
   const paymentHeading = useRef<HTMLHeadingElement>(null);
   const exitHeading = useRef<HTMLHeadingElement>(null);
-  const returnView = useRef<CheckoutView>("payment");
-  const [view, setView] = useState<CheckoutView>("contact");
+  const [view, setView] = useState<CheckoutView>("payment");
   const [method, setMethod] = useState<PaymentMethod>("upi");
   const [option, setOption] = useState(0);
-  const [contact, setContact] = useState(() => ({ mobile: mobile.replace(/\D/g, "").slice(-10), email }));
-  const [contactError, setContactError] = useState("");
   const [showOffers, setShowOffers] = useState(false);
 
   useEffect(() => {
@@ -82,25 +76,13 @@ export default function RazorpayDemo({ fee, busy, expired, mobile = "", email = 
   }, []);
 
   useEffect(() => {
-    const target = view === "contact" ? focusTarget.current : view === "exit" ? exitHeading.current : paymentHeading.current;
+    const target = view === "exit" ? exitHeading.current : paymentHeading.current;
     target?.focus({ preventScroll: true });
   }, [view]);
 
   function requestExit() {
     if (busy) return;
-    returnView.current = view === "exit" ? returnView.current : view;
     setView("exit");
-  }
-
-  function submitContact(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!/^\d{10}$/.test(contact.mobile)) {
-      setContactError("Enter a 10-digit mobile number.");
-      focusTarget.current?.focus();
-      return;
-    }
-    setContactError("");
-    setView("payment");
   }
 
   function selectMethod(next: PaymentMethod) {
@@ -110,7 +92,7 @@ export default function RazorpayDemo({ fee, busy, expired, mobile = "", email = 
 
   return <dialog ref={dialog} className={styles.dialog} data-lenis-prevent aria-labelledby={`${id}-${view}-heading`} onCancel={event => {
     event.preventDefault();
-    if (view === "exit") setView(returnView.current); else requestExit();
+    if (view === "exit") setView("payment"); else requestExit();
   }}>
     <div className={styles.shell} inert={view !== "payment"}>
       <aside className={styles.merchant} aria-label="Payment summary">
@@ -119,7 +101,6 @@ export default function RazorpayDemo({ fee, busy, expired, mobile = "", email = 
           <div><h2>Narayana Health</h2><span className={styles.trusted}><ShieldCheck size={16} aria-hidden /> Razorpay checkout preview</span></div>
         </div>
         <div className={styles.price}><span>Price Summary</span><strong>{fee}</strong></div>
-        <button className={styles.merchantRow} type="button" onClick={() => setView("contact")} disabled={busy}><UserRound size={20} aria-hidden /><span>{contact.mobile ? `Using as +91 ${contact.mobile.slice(0, 5)} ${contact.mobile.slice(5)}` : "Add contact details"}</span><ChevronRight size={18} aria-hidden /></button>
         <button className={`${styles.merchantRow} ${styles.merchantOffer}`} type="button" onClick={() => setShowOffers(value => !value)} aria-expanded={showOffers} disabled={busy}><Sparkles size={20} aria-hidden /><span>Offers on UPI & wallets</span><ChevronRight size={18} aria-hidden /></button>
         <div className={styles.merchantArt} aria-hidden><div className={styles.artCircle} /><div className={styles.artCard}><CreditCard size={76} strokeWidth={1.1} /></div><div className={styles.artShield}><ShieldCheck size={56} strokeWidth={1.2} /></div></div>
         <div className={styles.merchantFooter}><LockKeyhole size={14} aria-hidden /> <span>Powered by <strong>Razorpay</strong><small>Demo checkout</small></span></div>
@@ -163,21 +144,13 @@ export default function RazorpayDemo({ fee, busy, expired, mobile = "", email = 
 
     {view !== "payment" && <div className={styles.overlay}>
       <section className={styles.sheet} aria-labelledby={`${id}-${view}-heading`}>
-        <button type="button" className={styles.sheetClose} aria-label={view === "exit" ? "Continue to payment" : "Close payment"} onClick={view === "exit" ? () => setView(returnView.current) : requestExit}><X size={22} aria-hidden /></button>
-        {view === "contact" ? <form className={styles.contactForm} onSubmit={submitContact}>
-          <header><h2 id={`${id}-contact-heading`}>Contact details</h2><p>Enter mobile & email to continue</p></header>
-          <label htmlFor={`${id}-mobile`} className={styles.srOnly}>Mobile number</label>
-          <div className={styles.mobileField}><span>🇮🇳 +91</span><input ref={focusTarget} id={`${id}-mobile`} type="tel" inputMode="numeric" autoComplete="tel-national" placeholder="Mobile number" maxLength={10} value={contact.mobile} aria-invalid={!!contactError} aria-describedby={contactError ? `${id}-contact-error` : undefined} onChange={event => { setContact(value => ({ ...value, mobile: event.target.value.replace(/\D/g, "").slice(0, 10) })); setContactError(""); }} /></div>
-          <label className={styles.srOnly} htmlFor={`${id}-email`}>Email address (optional)</label><input className={styles.emailField} type="email" id={`${id}-email`} autoComplete="email" placeholder="Email address (optional)" value={contact.email} onChange={event => setContact(value => ({ ...value, email: event.target.value }))} />
-          {contactError && <p id={`${id}-contact-error`} className={styles.error} role="alert">{contactError}</p>}
-          <button type="submit" className={styles.primary}>Continue<ArrowRight size={18} aria-hidden /></button>
-          <p className={styles.demoNote}>Demo checkout · No money will be deducted</p>
-        </form> : <div className={styles.exitContent}>
+        <button type="button" className={styles.sheetClose} aria-label="Continue to payment" onClick={() => setView("payment")}><X size={22} aria-hidden /></button>
+        <div className={styles.exitContent}>
           <div className={styles.exitArt}><DoorOpen size={68} strokeWidth={1.3} aria-hidden /></div>
           <h2 ref={exitHeading} tabIndex={-1} id={`${id}-exit-heading`}>Are you sure you want to exit?</h2>
           <p>You will be taken back to Narayana Health.</p>
-          <div className={styles.exitActions}><button type="button" className={styles.secondary} onClick={() => setView(returnView.current)}>Continue to payment</button><button type="button" className={styles.primary} onClick={onClose}>Yes, exit</button></div>
-        </div>}
+          <div className={styles.exitActions}><button type="button" className={styles.secondary} onClick={() => setView("payment")}>Continue to payment</button><button type="button" className={styles.primary} onClick={onClose}>Yes, exit</button></div>
+        </div>
       </section>
     </div>}
   </dialog>;

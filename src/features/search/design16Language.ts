@@ -15,7 +15,7 @@ export interface Design16LanguageShortcut {
 export function getDesign16LanguageShortcut(
   doctors: readonly DoctorListingItem[],
   filters: DoctorFilters,
-  mode: ConsultationMode,
+  mode: ConsultationMode | "all",
   location: string,
   now = new Date(),
   matchingDoctors: readonly DoctorListingItem[] = doctors,

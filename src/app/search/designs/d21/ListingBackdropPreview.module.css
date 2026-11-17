@@ -1,0 +1,7 @@
+.preview { composes: root from "../../../../features/design-preview/DesignPreview.module.css"; z-index: 1002; }
+.trigger { composes: trigger from "../../../../features/design-preview/DesignPreview.module.css"; }
+.open { composes: expanded from "../../../../features/design-preview/DesignPreview.module.css"; }
+.options {
+  composes: options from "../../../../features/design-preview/DesignPreview.module.css";
+  --preview-menu-width: calc(var(--space-128) + var(--space-32));
+}

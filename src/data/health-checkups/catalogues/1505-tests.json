@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T17:00:56+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Delhi",
+  "facility": "Dharamshila Narayana Superspeciality Hospital",
+  "facilityId": "1505",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1505",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1505-tests.mhtml",
+      "sha256": "e3b64daad34d807a734ce1977ccbb340549932652dbea4a3c55577755b5c8542",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

@@ -1,0 +1,67 @@
+.hero.hero { padding-bottom: var(--space-32); }
+
+.title {
+  position: relative;
+  min-width: 0;
+  font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl));
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.title h1 { font: inherit; letter-spacing: inherit; }
+.titleSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; pointer-events: none; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .titleSweep { display: none; }
+}
+
+.patientAvatar.patientAvatar {
+  width: var(--space-40);
+  height: var(--space-40);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-32);
+  padding: var(--space-24) var(--confirmation-inset);
+}
+
+.group { min-width: 0; }
+.groupHeading {
+  composes: emphasis from "../BookingTypography.module.css";
+  margin: 0 0 var(--space-16);
+}
+
+.appointmentRows { display: grid; gap: var(--space-24); }
+.detailRow {
+  display: grid;
+  grid-template-columns: var(--space-40) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.dateGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8) var(--space-24);
+  min-width: 0;
+  margin-top: var(--space-4);
+}
+.dateGroup > p { margin: 0; }
+.dateCopy { min-width: 0; }
+.dateCopy time { overflow-wrap: anywhere; }
+
+/* Keep the action centred on the value, not on the label/value block. */
+.calendar.calendar { min-height: var(--space-24); }
+
+@media (min-width: 640px) {
+  .content { padding-block: var(--space-32); }
+}
+
+@media (max-width: 639px) {
+  .hero.hero { padding-bottom: var(--space-24); }
+  .dateGroup { align-items: baseline; }
+  .calendar.calendar { min-height: var(--space-48); }
+}

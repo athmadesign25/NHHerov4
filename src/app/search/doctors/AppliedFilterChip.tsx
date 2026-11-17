@@ -8,15 +8,17 @@ import styles from "./AppliedFilterChip.module.css";
 
 interface Props {
   label: string;
+  accessibleLabel?: string;
+  tone?: "selected" | "neutral";
   reducedMotion: boolean;
   onRemove: (button: HTMLButtonElement) => void;
 }
 
 // Forward the DOM ref so AnimatePresence can position an exiting chip.
-const AppliedFilterChip = forwardRef<HTMLButtonElement, Props>(function AppliedFilterChip({ label, reducedMotion, onRemove }, ref) {
+const AppliedFilterChip = forwardRef<HTMLButtonElement, Props>(function AppliedFilterChip({ label, accessibleLabel, tone = "selected", reducedMotion, onRemove }, ref) {
   const present = useIsPresent();
-  return <motion.button ref={ref} type="button" className={`${chipStyles.chip} ${styles.chip}`} data-selected="true" disabled={!present} aria-hidden={!present}
-    aria-label={`Remove filter: ${label}`} title={label} onClick={(event) => onRemove(event.currentTarget)}
+  return <motion.button ref={ref} type="button" className={`${chipStyles.chip} ${styles.chip} ${tone === "neutral" ? styles.neutral : ""}`} data-applied-filter={tone === "neutral" || undefined} data-selected={tone === "selected" || undefined} disabled={!present} aria-hidden={!present}
+    aria-label={accessibleLabel ?? `Remove filter: ${label}`} title={label} onClick={(event) => onRemove(event.currentTarget)}
     layout={reducedMotion ? false : "position"}
     initial={reducedMotion ? false : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
     exit={{ opacity: 0, y: reducedMotion ? 0 : -4, transition: { duration: reducedMotion ? 0 : .15 } }}

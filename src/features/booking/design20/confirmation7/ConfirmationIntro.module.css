@@ -1,0 +1,58 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  padding-bottom: var(--space-32);
+  text-align: center;
+}
+
+.mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--space-64);
+  height: var(--space-64);
+  color: var(--journey-paper-success);
+}
+.circle {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--journey-paper-success) 8%, transparent);
+}
+.tick { position: relative; width: var(--space-32); height: var(--space-32); }
+
+.copy { min-width: 0; max-width: 100%; }
+.title {
+  position: relative;
+  font-size: clamp(var(--font-size-2xl), 3vw, var(--font-size-3xl));
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  letter-spacing: normal;
+  text-wrap: balance;
+}
+.title h1 { margin: 0; font: inherit; letter-spacing: inherit; }
+.title h1:focus { outline: none; }
+.titleSweep { position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: center; letter-spacing: inherit; pointer-events: none; }
+.notice {
+  composes: supporting from "../BookingTypography.module.css";
+  margin: var(--space-12) 0 0;
+  text-wrap: balance;
+}
+
+@media (max-width: 639px) {
+  .hero { gap: var(--space-12); padding-bottom: var(--space-24); }
+  .mark { width: var(--space-56); height: var(--space-56); }
+  .notice { margin-top: var(--space-8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero, .mark, .circle, .tick, .copy { opacity: 1 !important; transform: none !important; }
+  .titleSweep { display: none; }
+}
+@media (forced-colors: active) {
+  .mark { color: CanvasText; }
+  .circle { background: Canvas; }
+  .titleSweep { display: none; }
+}

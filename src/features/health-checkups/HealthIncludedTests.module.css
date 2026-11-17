@@ -1,0 +1,6 @@
+.name { margin: 0 0 var(--space-16); font-size: var(--font-size-base); line-height: var(--leading-body); font-weight: 500; color: var(--color-text); }
+.unavailable { font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--color-text-secondary); }
+.footer { display: flex; justify-content: flex-end; margin-top: var(--space-16); }
+.footer button { min-height: calc(var(--space-40) + var(--space-4)); padding: var(--space-8) 0; border: 0; background: transparent; color: var(--color-primary); font-size: var(--font-size-sm); line-height: var(--leading-normal); font-weight: 500; cursor: pointer; transition: color var(--duration-fast); }
+.footer button:hover { color: var(--color-primary-dark); }
+@media (prefers-reduced-motion: reduce) { .footer button { transition: none; } }

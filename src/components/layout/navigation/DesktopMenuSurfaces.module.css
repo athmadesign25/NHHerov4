@@ -1,0 +1,27 @@
+.radialWash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 55%, var(--blue-tint-100) 20%, color-mix(in srgb, var(--blue-tint-100) 90%, transparent) 45%, rgba(var(--white-rgb), 0.35) 70%, transparent 100%);
+}
+.linearWash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--blue-tint-100) 0%, color-mix(in srgb, var(--blue-tint-100) 95%, transparent) 30%, rgba(var(--white-rgb), 0.5) 60%, transparent 100%);
+}
+.arrow {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-12);
+  display: grid;
+  place-items: center;
+  width: var(--space-32);
+  height: var(--space-32);
+  border: var(--space-1) solid rgba(var(--white-rgb), 0.5);
+  border-radius: var(--radius-full);
+  background: rgba(var(--blue-brand-rgb), 0.8);
+  backdrop-filter: blur(var(--blur-sm));
+  color: var(--white);
+  box-shadow: var(--elevation-1), var(--shadow-inset-highlight);
+}
+.arrow svg { width: var(--space-16); height: var(--space-16); }
+@media (max-width: 1280px) { .arrow { top: var(--space-8); right: var(--space-8); width: var(--space-24); height: var(--space-24); } }

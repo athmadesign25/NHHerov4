@@ -1,8 +1,8 @@
 "use client";
 
 import type { SearchCatalogs } from "@/features/search/design3Data";
-import Design20SearchResults from "@/app/search/designs/d20/Design20SearchResults";
+import Design21SearchResults from "@/app/search/designs/d21/Design21SearchResults";
 
 export default function DoctorLandingPreview({ catalogs }: { catalogs: SearchCatalogs }) {
-  return <Design20SearchResults catalogs={catalogs} />;
+  return <Design21SearchResults catalogs={catalogs} />;
 }

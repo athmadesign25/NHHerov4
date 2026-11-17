@@ -1,0 +1,26 @@
+.search { --filter-search-height: calc(var(--sp-5) - var(--sp-1) / 4); display: flex; align-items: center; gap: var(--sp-1); min-width: 0; min-height: var(--filter-search-height); padding-inline: var(--sp-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg-card) 70%, transparent); color: var(--color-text-secondary); transition: border-color var(--transition-fast); }
+.search > svg { flex-shrink: 0; }
+.search:focus-within { border-color: var(--color-primary); outline: 1px solid var(--color-primary); outline-offset: -1px; }
+.search input { width: 100%; min-width: 0; min-height: calc(var(--filter-search-height) - 2px); border: 0; padding: 0; background: transparent; color: var(--color-text); font: inherit; font-size: var(--font-size-sm); outline: none; }
+.search input::placeholder { color: var(--color-text-secondary); }
+.search input::-webkit-search-cancel-button { display: none; }
+.clear { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-4); min-height: calc(var(--filter-search-height) - 2px); padding: 0; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+.clear:hover { color: var(--color-text); }
+.clear:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+.results { position: fixed; inset: auto; margin: 0; padding: var(--sp-1); box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-card); color: var(--color-text); box-shadow: var(--shadow-lg); scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--color-text-secondary) 35%, transparent) transparent; animation: reveal var(--transition-fast) ease-out; }
+.results::backdrop { background: transparent; }
+.results [role="group"] + [role="group"] { margin-top: var(--sp-1); }
+.groupHeading { margin-bottom: calc(var(--sp-1) / 2); padding: var(--sp-1); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--color-text) 5%, var(--color-bg-card)); color: var(--color-text-secondary); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; }
+.option { display: flex; align-items: center; gap: var(--sp-1); min-height: calc(var(--sp-6) - var(--sp-1) / 2); padding: var(--sp-1); border-radius: var(--radius-sm); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; cursor: pointer; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.optionLabel { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.option[aria-selected="true"] { color: var(--color-text); }
+.option[data-active] { outline: 2px solid var(--color-primary); outline-offset: -2px; background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+.check { display: grid; place-items: center; flex: 0 0 var(--font-size-lg); height: var(--font-size-lg); border: 1px solid var(--color-text-muted); border-radius: calc(var(--sp-1) / 2); color: var(--color-text-inverse); }
+.option[aria-selected="true"] .check { background: var(--d3-ui-selection, var(--color-emergency)); border-color: var(--d3-ui-selection, var(--color-emergency)); }
+.empty { margin: 0; padding: var(--sp-1); color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: 1.5; }
+@supports (backdrop-filter: blur(1px)) { .results { background: color-mix(in srgb, var(--color-bg-card) 88%, transparent); backdrop-filter: blur(var(--sp-2)) saturate(120%); -webkit-backdrop-filter: blur(var(--sp-2)) saturate(120%); } }
+@media (hover: hover) { .option:hover { color: var(--color-text); background: color-mix(in srgb, var(--color-text) 4%, transparent); } }
+@keyframes reveal { from { opacity: 0; transform: translateY(calc(var(--sp-1) / -2)); } to { opacity: 1; transform: translateY(0); } }
+@media (pointer: coarse) { .search { --filter-search-height: calc(var(--sp-6) - var(--sp-1) / 2); } .search input { font-size: var(--font-size-base); } }
+@media (prefers-reduced-motion: reduce) { .search, .option { transition: none; } .results { animation: none; } }
+@media (forced-colors: active) { .search, .results { background: Canvas; color: CanvasText; border-color: ButtonText; } .search:focus-within, .option[data-active] { border-color: Highlight; outline-color: Highlight; } .option[aria-selected="true"] .check { background: Highlight; color: HighlightText; border-color: Highlight; } }

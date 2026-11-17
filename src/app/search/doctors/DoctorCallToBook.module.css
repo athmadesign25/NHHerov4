@@ -1,0 +1,128 @@
+.call {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  gap: var(--space-8);
+  min-height: var(--space-48);
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-full);
+  color: var(--d3-ui-text, var(--color-text-secondary));
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.call::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border: var(--space-1) solid var(--color-border);
+  border-radius: inherit;
+  background: var(--journey-paper-icon-bg);
+  pointer-events: none;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.call svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.icon { display: grid; place-items: center; flex-shrink: 0; }
+.call[hidden] { display: none; }
+.mobile {
+  position: fixed;
+  z-index: 30;
+  inset-inline-end: max(var(--space-16), env(safe-area-inset-right));
+  bottom: calc(var(--space-16) + env(safe-area-inset-bottom));
+  color: var(--color-primary);
+  width: max-content;
+  height: var(--space-48);
+  padding: 0 calc((var(--space-48) - var(--space-20)) / 2) 0 var(--space-16);
+  border-radius: var(--radius-full);
+  flex-direction: row-reverse;
+  gap: var(--space-8);
+  /* Reveal a true capsule without scaling its glass, corners, or icon. */
+  clip-path: inset(0 0 0 calc(100% - var(--space-48)) round var(--radius-full));
+  background-image: linear-gradient(to bottom right,
+    rgba(var(--blue-brand-rgb), 0.12),
+    rgba(var(--blue-brand-rgb), 0.08) 45%,
+    rgba(var(--white-rgb), 0.5));
+  background-color: rgba(var(--white-rgb), 0.6);
+  backdrop-filter: blur(var(--space-20)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--space-20)) saturate(150%);
+  transition: clip-path var(--duration-base) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-out);
+}
+.mobile::before,
+.mobile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: var(--space-1) solid rgba(var(--blue-brand-rgb), 0.16);
+  border-radius: var(--radius-full);
+  background: transparent;
+  box-shadow: inset 0 var(--space-1) 0 rgba(var(--white-rgb), 0.7);
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+.mobile::before { opacity: 0; }
+.mobile::after { inset-inline-start: auto; width: var(--space-48); }
+.mobile[data-expanded="true"], .mobile:focus-visible {
+  clip-path: inset(0 round var(--radius-full));
+  transition-duration: var(--duration-moderate), var(--duration-fast);
+}
+.mobile:is([data-expanded="true"], :focus-visible)::before { opacity: 1; }
+.mobile:is([data-expanded="true"], :focus-visible)::after { opacity: 0; }
+.mobile .icon { width: var(--space-20); height: var(--space-48); }
+.mobile .label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+  opacity: 0;
+  transition: opacity var(--duration-instant) var(--ease-standard);
+}
+.mobile[data-expanded="true"] .label, .mobile:focus-visible .label {
+  opacity: 1;
+  transition-duration: var(--duration-fast);
+  transition-delay: var(--duration-instant);
+}
+.mobile svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
+
+@media (min-width: 1024px) {
+  .mobile { display: none; }
+}
+
+
+@media (hover: hover) {
+  .call:not(.mobile):hover::before { background: var(--color-disclosure-hover); }
+  .mobile:hover { background-color: rgba(var(--white-rgb), 0.7); }
+}
+
+.call:not(.mobile):active::before { background: rgba(var(--black-rgb), 0.12); }
+.mobile:active { background-color: rgba(var(--white-rgb), 0.8); }
+.call:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.mobile:focus-visible { outline-offset: calc(var(--space-4) * -1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .call::before, .mobile::after, .mobile, .mobile .label { transition: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mobile { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .mobile, .mobile:is(:hover, :active) { background: var(--white); }
+}
+
+@media (forced-colors: active) {
+  .call { color: LinkText; }
+  .call::before { border-color: ButtonText; background: Canvas; }
+  .call:is(:hover, :active)::before { background: Canvas; border-color: Highlight; }
+  .call:focus-visible { outline-color: Highlight; }
+  .mobile, .mobile:is(:hover, :active) { background: Canvas; }
+  .mobile::before, .mobile::after { background: transparent; border-color: ButtonText; box-shadow: none; }
+  .mobile .label { color: LinkText; }
+}

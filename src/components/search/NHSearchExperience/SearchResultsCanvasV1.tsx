@@ -289,6 +289,7 @@ export default function SearchResultsCanvas({
                 >
                   <PrimaryResults
                     doctors={currentResults.doctors}
+                    totalDoctors={currentResults.totalDoctors}
                     selectedLocation={selectedLocation}
                     proximityMessage={currentResults.proximityMessage}
                     proximityTier={currentResults.proximityTier}
@@ -303,6 +304,7 @@ export default function SearchResultsCanvas({
                   relatedSpecialties={currentResults.relatedSpecialties}
                   onSelectSpecialtyTag={onSelectSpecialtyTag}
                   query={activeQuery}
+                  onClose={onClose}
                 />
               </div>
             )}

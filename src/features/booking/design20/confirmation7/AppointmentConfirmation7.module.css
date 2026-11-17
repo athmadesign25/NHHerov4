@@ -1,0 +1,74 @@
+.patientAvatar.patientAvatar {
+  width: var(--space-40);
+  height: var(--space-40);
+}
+
+.content {
+  display: grid;
+  gap: var(--space-32);
+  padding: var(--space-24) var(--confirmation-inset);
+}
+
+.group { min-width: 0; }
+.groupHeading {
+  composes: emphasis from "../BookingTypography.module.css";
+  margin: 0 0 var(--space-16);
+}
+
+.appointmentRows { display: grid; gap: var(--space-24); }
+.detailRow {
+  display: grid;
+  grid-template-columns: var(--space-40) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-12);
+  min-width: 0;
+}
+
+.dateGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8) var(--space-24);
+  min-width: 0;
+  margin-top: var(--space-4);
+}
+.dateGroup > p { margin: 0; }
+.dateCopy { min-width: 0; }
+.dateCopy time { overflow-wrap: anywhere; }
+
+/* Keep the action centred on the value, not on the label/value block. */
+.calendar.calendar { min-height: var(--space-24); }
+
+@media (min-width: 640px) {
+  .content { padding-block: var(--space-32); }
+}
+
+@media (max-width: 639px) {
+  .dateGroup { align-items: baseline; }
+  .calendar.calendar { min-height: var(--space-48); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt { opacity: 1 !important; transform: none !important; }
+}
+.receipt.receipt {
+  --journey-paper-icon-bg: color-mix(in srgb, var(--journey-paper-success) 8%, var(--color-surface));
+  --confirmation-line: color-mix(in srgb, var(--journey-paper-success) 12%, transparent);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--color-success) 10%, var(--color-surface)),
+    color-mix(in srgb, var(--color-success) 5%, var(--color-surface)) 55%,
+    var(--color-surface));
+  border-color: color-mix(in srgb, var(--journey-paper-success) 16%, var(--color-surface));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+@media (forced-colors: active) {
+  .receipt.receipt {
+    --journey-paper-icon-bg: Canvas;
+    --confirmation-line: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}

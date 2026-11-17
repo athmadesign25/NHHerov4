@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import MemberAvatar from "@/features/booking/design17/MemberAvatar";
 import { User, ChevronDown, Check, Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./MemberSelector.module.css";
@@ -124,11 +124,7 @@ export default function MemberSelector({ selectedMemberId, onSelectMember }: Mem
         aria-expanded={isOpen}
       >
         <div className={styles.triggerLeft}>
-          {activeMember?.img ? (
-            <img src={activeMember.img} alt={activeMember.name} className={styles.avatar} />
-          ) : (
-            <div className={styles.avatar} />
-          )}
+          <MemberAvatar src={activeMember?.img} name={activeMember?.name} size={26} className={styles.avatar} />
           <span className={styles.name}>{activeMember?.name}</span>
           <span className={styles.relationTag}>
             {activeMember?.relation === "self" ? "You" : activeMember?.relation}
@@ -163,11 +159,7 @@ export default function MemberSelector({ selectedMemberId, onSelectMember }: Mem
                   aria-selected={isActive}
                 >
                   <div className={styles.optionLeft}>
-                    {member.img ? (
-                      <img src={member.img} alt={member.name} className={styles.optionAvatar} />
-                    ) : (
-                      <div className={styles.optionAvatar} />
-                    )}
+                    <MemberAvatar src={member.img} name={member.name} size={32} className={styles.optionAvatar} />
                     <div>
                       <div className={styles.optionName}>{member.name}</div>
                       <div className={styles.optionMeta}>

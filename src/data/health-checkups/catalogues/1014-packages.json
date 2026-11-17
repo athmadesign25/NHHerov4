@@ -1,0 +1,99 @@
+{
+  "capturedAt": "2026-11-06T17:03:29+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Mysore",
+  "facility": "Narayana Multispeciality Hospital, Mysore",
+  "facilityId": "1014",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 3,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 3,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 3,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Ehp Copd Health Check Up",
+      "kind": "package",
+      "city": "Mysore",
+      "facility": "Narayana Multispeciality Hospital, Mysore",
+      "facilityId": "1014",
+      "amount": 1500.0,
+      "localId": "snapshot-50c5f144da08fabf",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "Ehp Copd Health Check Up",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/ehp-copd-health-check-up?unitCode=1014&code=PKG023271",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/ehp-copd-health-check-up?unitCode=1014&code=PKG023271"
+      ],
+      "code": "PKG023271",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "1014 Mys Health Heart Package Silver",
+      "kind": "package",
+      "city": "Mysore",
+      "facility": "Narayana Multispeciality Hospital, Mysore",
+      "facilityId": "1014",
+      "amount": 3500.0,
+      "localId": "snapshot-decb6307fdbb5669",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "1014 Mys Health Heart Package Silver",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/1014-mys-health-heart-package-silver?unitCode=1014&code=PKG022222",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/1014-mys-health-heart-package-silver?unitCode=1014&code=PKG022222"
+      ],
+      "code": "PKG022222",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Mysore Well Women Check 2(obg Package )",
+      "kind": "package",
+      "city": "Mysore",
+      "facility": "Narayana Multispeciality Hospital, Mysore",
+      "facilityId": "1014",
+      "amount": 3799.0,
+      "localId": "snapshot-2bcef9ef0051d683",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "Mysore Well Women Check 2(obg Package )",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/mysore-well-women-check-2-obg-package?unitCode=1014&code=PKG022449",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/mysore-well-women-check-2-obg-package?unitCode=1014&code=PKG022449"
+      ],
+      "code": "PKG022449",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/ehp-copd-health-check-up?unitCode=1014&code=PKG023271",
+    "https://www.narayanahealth.org/health-checkups/1014-mys-health-heart-package-silver?unitCode=1014&code=PKG022222",
+    "https://www.narayanahealth.org/health-checkups/mysore-well-women-check-2-obg-package?unitCode=1014&code=PKG022449"
+  ],
+  "unitCode": "1014",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1014-packages.mhtml",
+      "sha256": "323306e3e2acc6c5187c584e0040810508ad1216201cf0dff1c853830dfd946c",
+      "format": "mhtml",
+      "renderedCardCount": 3,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

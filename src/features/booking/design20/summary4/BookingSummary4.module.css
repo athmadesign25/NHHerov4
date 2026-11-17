@@ -1,0 +1,60 @@
+/* Match the confirmation's detail roles without changing the preserved previews. */
+.summary {
+  --color-text: var(--d7-text);
+  --color-text-secondary: var(--d7-muted);
+}
+
+section.summary[data-summary-design="4"] [data-summary-doctor] h3,
+section.summary[data-summary-design="4"] [data-summary-location],
+section.summary[data-summary-design="4"] [data-summary-date] {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-body);
+  font-weight: 500;
+}
+
+section.summary[data-summary-design="4"] [data-summary-date] { font-weight: 600; }
+
+section.summary[data-summary-design="4"] [data-summary-doctor] p,
+section.summary[data-summary-design="4"] [data-summary-label],
+section.summary[data-summary-design="4"] [data-summary-timezone] {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+  font-weight: 400;
+}
+
+section.summary[data-summary-design="4"] [data-summary-day] {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+
+section.summary[data-summary-design="4"] [data-summary-location] a {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-body);
+}
+
+/* Shared rhythm: labels 4px, headings 16px, appointment rows 24px, groups 32px. */
+.intro.intro { margin-bottom: var(--space-32); }
+.intro.intro p { margin-top: var(--space-8); }
+
+section.summary[data-summary-design="4"] { padding: var(--space-32); }
+section.summary[data-summary-design="4"] > [data-summary-content] { gap: var(--space-32); }
+section.summary[data-summary-design="4"] [data-summary-group] + [data-summary-group] { padding-top: var(--space-32); }
+section.summary[data-summary-design="4"] :is([data-summary-group] > h2, [data-summary-heading] h2, [data-summary-payment] h2) { margin-bottom: var(--space-16); }
+section.summary[data-summary-design="4"] [data-summary-doctor-row] { margin-bottom: var(--space-24); }
+section.summary[data-summary-design="4"] [data-summary-appointment] { gap: var(--space-24); }
+section.summary[data-summary-design="4"] [data-summary-payment] { padding-left: var(--space-32); }
+section.summary[data-summary-design="4"] [data-summary-payment-details] { padding-top: var(--space-32); }
+section.summary[data-summary-design="4"] [data-summary-savings] { margin-inline-end: calc(-1 * var(--space-32)); }
+
+@container booking-review (max-width: 767px) {
+  section.summary[data-summary-design="4"] [data-summary-payment] { padding: var(--space-32) 0 0; }
+}
+
+@media (max-width: 639px) {
+  .intro.intro { margin-bottom: var(--space-24); }
+  section.summary[data-summary-design="4"] { padding: var(--space-24) var(--space-20); }
+  section.summary[data-summary-design="4"] [data-summary-savings] { margin-inline-end: calc(-1 * var(--space-20)); }
+}

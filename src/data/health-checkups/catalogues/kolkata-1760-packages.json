@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:51:17+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Kolkata",
+  "facility": "Narayana Multispeciality Hospital, Barasat",
+  "facilityId": "1760",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1760",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-kolkata-1760-packages.mhtml",
+      "sha256": "ded3074fbc24df4a89e3f681de029021494428ac6ba1bdfe9bab96eaba6b1da5",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

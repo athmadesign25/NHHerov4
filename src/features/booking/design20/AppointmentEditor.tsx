@@ -50,7 +50,7 @@ export default function AppointmentEditor({ doctor, selection, now, busy = false
     <h3 id={`${id}-heading`} ref={heading} tabIndex={-1}>Edit appointment</h3>
     <fieldset className={styles.controls} disabled={busy}>
       <legend className={styles.srOnly}>Appointment options</legend>
-      <AppointmentSelector doctor={doctor} selection={draft} now={now} onChange={next => {
+      <AppointmentSelector showHospitalDirections doctor={doctor} selection={draft} now={now} onChange={next => {
         setDraft(next);
         setNotice(next.time ? "" : "Choose a time to confirm your appointment.");
       }} />

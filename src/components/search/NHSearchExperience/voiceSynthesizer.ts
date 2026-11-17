@@ -13,28 +13,7 @@ export function playFemaleEmpatheticVoice(
     return;
   }
 
-  // 1. Play a subtle, reassuring soft acoustic chime via Web Audio API
-  try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (AudioCtx) {
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5 note (soothing, gentle)
-      osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.35); // E5 note
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.65);
-    }
-  } catch {
-    // Ignore audio context autoplay restrictions gracefully
-  }
-
-  // 2. Play Web Speech API Female Voice Utterance
+  // Play Web Speech API Female Voice Utterance (pure natural voice, no preceding chime tone)
   if (!("speechSynthesis" in window)) {
     if (onEnd) setTimeout(onEnd, 1800);
     return;

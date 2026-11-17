@@ -1,0 +1,382 @@
+{
+  "capturedAt": "2026-11-06T16:32:49+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Clinic, HSR Layout",
+  "facilityId": "3012",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 30,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 3,
+    "cardObservations": 90,
+    "duplicateCardObservations": 60,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Total Protein",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 560.0,
+      "localId": "snapshot-36c1d1f31d1eb003",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Weil Felix Test",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1310.0,
+      "localId": "snapshot-f7124789ac6a650f",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ascitic Fluid For Cytology /malignant Cells",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 760.0,
+      "localId": "snapshot-f12274f9c3e4d16a",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Red Cell Distribution Width (rdw )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 150.0,
+      "localId": "snapshot-76909779aea6a4c3",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Sputum Gram Stain",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 520.0,
+      "localId": "snapshot-e24f5141dff27994",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Vldl Cholesterol",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 430.0,
+      "localId": "snapshot-60ead1c9fa8baf67",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Water For Culture",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1850.0,
+      "localId": "snapshot-c8e9c1781afdc3f4",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Blood Urea Nitrogen (bun )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 500.0,
+      "localId": "snapshot-5aeb2b57290242c5",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Immunofluorscence - Biopsy",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 4320.0,
+      "localId": "snapshot-ccb6f9235ada7cd5",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ihc 4 Markers",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 5750.0,
+      "localId": "snapshot-a7b367b4d82e84ff",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Bt /ct Bleeding Time & Clotting Time",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 510.0,
+      "localId": "snapshot-68ce84f0882c1a59",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Crp (c -reactive Protein ) Hs",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 970.0,
+      "localId": "snapshot-a5b96d85a1ba5e8f",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Tpha",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1070.0,
+      "localId": "snapshot-a0a9fcbde328c9a8",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Igf 1(insulin Growth Factor -1)",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 4700.0,
+      "localId": "snapshot-bf6a2306832a4282",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Maternal Serum Screen 2(dual Test )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 2750.0,
+      "localId": "snapshot-0711d760e9a44ba1",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Free Beta Human Chorionic Gonadotropin (hcg )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 850.0,
+      "localId": "snapshot-0dfa5a094d565813",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Aldosterone",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 2600.0,
+      "localId": "snapshot-ede7c9569f120493",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Tibc",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 450.0,
+      "localId": "snapshot-0fac99647a4de59e",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Lithium",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 700.0,
+      "localId": "snapshot-68c03025236c7857",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Globulin",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 310.0,
+      "localId": "snapshot-1b6c04fbdd0938f5",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Immunoglobulin (iga Igm Igg )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 970.0,
+      "localId": "snapshot-8c16c510ea4fbdaa",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Rheumatoid Factor -serum",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 710.0,
+      "localId": "snapshot-d36169a8fc4cb688",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Urine For Reducing Substances",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 300.0,
+      "localId": "snapshot-69463e66c0ce7b4e",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Cortisol Random",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1760.0,
+      "localId": "snapshot-12cdd23eda7323d5",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Albumin",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 500.0,
+      "localId": "snapshot-a4ebf77c28c91dbf",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Mixing Study (pt Or Ptt )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1110.0,
+      "localId": "snapshot-6de9af09a695e85f",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Sputum For Fungal Culture",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1730.0,
+      "localId": "snapshot-bd9e7dbffa2a5edf",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Sputum For Afb (zn Stain )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 620.0,
+      "localId": "snapshot-e8a621d849323fc6",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Sputum For Culture And Sensitivity",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1410.0,
+      "localId": "snapshot-b71e548a9362dcc6",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Varicella Zoster Igm",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, HSR Layout",
+      "facilityId": "3012",
+      "amount": 1900.0,
+      "localId": "snapshot-19fb9bf4ddc9782d",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    }
+  ],
+  "observedDetailUrls": [],
+  "unitCode": "3012",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-3012-tests-p0.mhtml",
+      "sha256": "5e3d26a77aa9208c16821744e0e8beb7b6282a445b74962c3886ff3f0172f983",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    },
+    {
+      "file": "nh-live-3012-tests-p1.mhtml",
+      "sha256": "55eb011bea1fa7c1e1714e596ac578944bd9cee4ac5f5eb370bbb044555462f6",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    },
+    {
+      "file": "nh-live-3012-tests-p2.mhtml",
+      "sha256": "61abca47d00eee14c62ea36f87b4058adf4035864592c7855a326bc6bd469afa",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

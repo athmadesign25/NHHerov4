@@ -1,0 +1,44 @@
+.coachmark {
+  position: fixed;
+  inset: auto;
+  top: var(--hint-top);
+  left: var(--hint-left);
+  width: var(--hint-width);
+  margin: 0;
+  padding: var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  overflow: visible;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-card));
+  border-radius: var(--radius-xl);
+  background: linear-gradient(115deg, var(--color-primary-light), color-mix(in srgb, var(--color-bg-card) 94%, transparent) 78%);
+  backdrop-filter: blur(var(--sp-2));
+  -webkit-backdrop-filter: blur(var(--sp-2));
+  box-shadow: var(--shadow-lg);
+  color: var(--color-text);
+}
+.coachmark::backdrop { background: transparent; }
+.coachmark::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--sp-1) / -2 - 1px);
+  left: var(--hint-pointer);
+  width: var(--sp-1);
+  height: var(--sp-1);
+  background: var(--color-primary-light);
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-card));
+  border-left: 1px solid color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-card));
+  transform: translateX(-50%) rotate(45deg);
+}
+.icon { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-5); height: var(--sp-5); color: var(--color-primary); background: color-mix(in srgb, var(--color-bg-card) 70%, transparent); border-radius: var(--radius-lg); }
+.copy { display: grid; gap: calc(var(--sp-1) / 2); min-width: 0; flex: 1; }
+.copy strong { font-size: var(--font-size-sm); line-height: 1.4; font-weight: 600; }
+.copy span { font-size: var(--font-size-xs); line-height: 1.5; color: var(--color-text-secondary); }
+.dismiss { display: grid; place-items: center; align-self: flex-start; flex-shrink: 0; width: var(--sp-3); height: var(--sp-3); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); cursor: pointer; transition: color var(--transition-fast); }
+.dismiss:hover { color: var(--color-primary); }
+.dismiss:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+@media (pointer: coarse) { .dismiss { width: calc(var(--sp-6) - var(--sp-1) / 2); height: calc(var(--sp-6) - var(--sp-1) / 2); margin: calc(var(--sp-1) / -2); } }
+@media (max-width: 640px) { .icon { width: var(--sp-4); height: var(--sp-4); } }
+@media (prefers-reduced-motion: reduce) { .dismiss { transition: none; } }
+@media (forced-colors: active) { .coachmark { background: Canvas; color: CanvasText; border-color: ButtonText; } .coachmark::before { background: Canvas; border-color: ButtonText; } }

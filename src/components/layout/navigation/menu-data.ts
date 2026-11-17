@@ -1,5 +1,5 @@
 export const DESKTOP_NAV_ITEMS = [
-  { id: "find-a-doctor", label: "Find a Doctor", href: "/search" },
+  { id: "find-a-doctor", label: "Find a Doctor", href: "/search/doctors?design=d21" },
   { id: "hospitals", label: "Find Hospital", href: "/hospitals" },
   { id: "specialities", label: "Services", href: "/specialities" },
   { id: "health-library", label: "Health Library", href: "/health-library" },
@@ -8,7 +8,7 @@ export const DESKTOP_NAV_ITEMS = [
 
 export const OTHER_MENU_GROUPS = {
   "health-library": [{ label: "Health Library", links: [
-    { label: "Health Articles", href: "/health-library" },
+    { label: "Health Articles", href: "/articles" },
     { label: "Patient Stories", href: "/#patient-stories" },
     { label: "Health Videos", href: "/health-library/videos" },
   ] }],

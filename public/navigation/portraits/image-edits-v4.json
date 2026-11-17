@@ -1,0 +1,23 @@
+{
+  "tool": "Built-in image_gen.imagegen",
+  "assets": [
+    {
+      "file": "public/navigation/portraits/specialty-doctor-v4.webp",
+      "prompt": "Use case: photorealistic-natural. Asset type: crisp high-resolution portrait photograph for a hospital website navigation image card. Create a DIFFERENT Indian woman specialist doctor, about 45 years old, with shoulder-length dark hair tied loosely back, no glasses, calm natural friendly expression, white coat over a pale blue blouse, stethoscope. She is photographed in a real ordinary Indian hospital consultation room near a window, simple off-white paint, pale grey equipment shelving subtly defocused, no other people. Authentic editorial healthcare photography, realistic skin pores, fine flyaway hair, normal clothing creases, restrained neutral daylight, no artificial retouching, CGI, plastic skin, overly perfect symmetry, polished luxury corridor or golden/yellow lighting. Three-quarter portrait with face centered, framed from waist upward, only a modest amount of headroom for external UI heading; no excessive blank space. Fine photographic detail, sharp eyes and face, natural lens depth of field. Portrait 2:3 at high resolution. No hospital brand text or badges, no watermark, no UI overlays."
+    },
+    {
+      "file": "public/navigation/portraits/services-experts-v2.webp",
+      "sources": [
+        "/private/tmp/nh-nahid-work-local/public/top-medical-experts.png"
+      ],
+      "prompt": "Use case: identity-preserve. Image 1 is the exact edit target. Restore this soft photograph to a clean high-resolution realistic photograph and HORIZONTALLY FLIP the whole composition: the senior doctor in blue operating cap and glasses must be on the RIGHT, the child and father on the LEFT. Keep the exact people's identity, expressions, face shapes, pose and healthcare interaction from the reference. Recover clear believable skin, hair, glasses, stethoscope, fabric and hospital room detail. Remove the faded/gloomy embedded dark veil and any faint illegible watermark/letter-like artifact on the wall. Natural balanced neutral hospital daylight. No added text or logos, no new people, no illustration or waxy smoothing. Landscape crop and proportions of original approximately 5:3, high resolution enough to show clear detail in a website photo card."
+    },
+    {
+      "file": "public/navigation/portraits/health-library-v4.webp",
+      "sources": [
+        "/private/tmp/nh-nahid-work-local/public/navigation/portraits/health-library-v3.webp"
+      ],
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target. Preserve the ordinary real photograph of the same wooden table, three stacked medical books and open book, blue stethoscope, small pill bottles, plant, portrait 2:3 composition and existing book spine titles Symptoms Guide, Understanding Your Health, Health Technology. Change only these two aspects: (1) The open book right-hand page has a conventional rectangular full-width typeset text area, with the exact heading Understanding Your Heart and normal small serif body paragraphs. The text must print naturally in straight parallel lines ACROSS THE FULL PRINT AREA independently of the stethoscope, never wrapping around or tracking along its curved shape. Place part of the blue stethoscope/metal tubing ON TOP OF this printed right-hand page so it visibly OCCLUDES some printed text. Left page remains blank under the stethoscope. Printed text continues underneath the object; it does not contour around it. (2) Reorient the translucent rectangular glass video-player graphic so its entire plane floats PARALLEL TO THE TOP COVER of the book stack, a shallow horizontal tilted plane hovering above the books with a small visible air gap. Its long front edge must be parallel to the long front edge of the top book spine, side edges share the same vanishing directions as the book cover. It is NOT an upright vertical TV screen. Include a subtle centered play triangle and thin progress line laid in this parallel plane. Same width as book stack, faint glass reflection, no neon glow. Preserve all other objects and natural materials, restrained everyday photographic lighting and detail. No new UI text, no watermark."
+    }
+  ]
+}

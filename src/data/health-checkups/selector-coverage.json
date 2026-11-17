@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 1,
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "completeAllCities": true,
+  "completeServerInventory": false,
+  "scope": "Operator-verified city/facility selector traversal for the selected member/session; distinct from server inventory completeness",
+  "cities": [
+    {
+      "city": "Bangalore",
+      "selectorEnumerationComplete": true,
+      "observedFacilityCount": 18,
+      "status": "both-tabs-captured",
+      "evidence": "Operator confirmed all 18 Bangalore selector choices captured; package and lab-test MHTML parsed for each",
+      "facilityKeys": [
+        "1001",
+        "1002",
+        "1011",
+        "1020",
+        "1029",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "3010",
+        "3011",
+        "3012",
+        "6024",
+        "6028",
+        "6030",
+        "6530",
+        "6538",
+        "centre-bangalore-narayana-clinic-banashankari-bangalore"
+      ],
+      "verifiedAt": "2026-11-06T16:41:09+00:00"
+    },
+    {
+      "city": "Guwahati",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both captured tabs have explicit empty-state DOM messages",
+      "facilityKeys": [
+        "1755"
+      ],
+      "verifiedAt": "2026-11-06T16:44:29+00:00"
+    },
+    {
+      "city": "Dharwad",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both captured tabs have explicit empty-state DOM messages",
+      "facilityKeys": [
+        "1006"
+      ],
+      "verifiedAt": "2026-11-06T16:44:29+00:00"
+    },
+    {
+      "city": "Shimoga",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 2,
+      "observedFacilityCount": 2,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both captured tabs have explicit empty-state DOM messages",
+      "facilityKeys": [
+        "1771",
+        "1009"
+      ],
+      "verifiedAt": "2026-11-06T16:47:00+00:00"
+    },
+    {
+      "city": "Ahmedabad",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both captured tabs have explicit empty-state DOM messages",
+      "facilityKeys": [
+        "1251"
+      ],
+      "verifiedAt": "2026-11-06T16:47:00+00:00"
+    },
+    {
+      "city": "Jaipur",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both captured tabs have explicit empty-state DOM messages",
+      "facilityKeys": [
+        "1501"
+      ],
+      "verifiedAt": "2026-11-06T16:47:00+00:00"
+    },
+    {
+      "city": "Kolar",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 0,
+      "observedFacilityCount": 0,
+      "status": "no-facilities-in-selector",
+      "evidence": "Operator verified empty hospital/clinic choices after city loading; public-directory facility is not assumed available",
+      "sourceSnapshot": "nh-live-city-kolar.mhtml",
+      "snapshotSha256": "6479395891100e7648379878447ef25354be38592d968d275235ac162cdc78c0",
+      "facilityKeys": [],
+      "verifiedAt": "2026-11-06T16:49:22+00:00"
+    },
+    {
+      "city": "Mumbai",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified sole UI centre NH Children's Hospital, Mumbai; no source unit code observed, not equated with directory SRCC1252; both tabs explicitly empty",
+      "facilityKeys": [
+        "centre-mumbai-nh-children-s-hospital-mumbai"
+      ],
+      "verifiedAt": "2026-11-06T16:49:22+00:00"
+    },
+    {
+      "city": "Raipur",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified sole1754centre; both tabs explicitly empty",
+      "facilityKeys": [
+        "1754"
+      ],
+      "verifiedAt": "2026-11-06T16:51:49+00:00"
+    },
+    {
+      "city": "Kolkata",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 4,
+      "observedFacilityCount": 4,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all four city-cluster selector choices; both tabs explicitly empty for1760,1764,1765,1751; city-context snapshots retained separately",
+      "facilityKeys": [
+        "1760",
+        "1764",
+        "1765",
+        "1751"
+      ],
+      "verifiedAt": "2026-11-06T16:54:48+00:00"
+    },
+    {
+      "city": "Davangere",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 0,
+      "observedFacilityCount": 0,
+      "status": "no-facilities-in-selector",
+      "evidence": "Operator verified empty centre dropdown after loading; public directory facility not assumed available",
+      "sourceSnapshot": "nh-live-city-davangere.mhtml",
+      "snapshotSha256": "0db95f1ec08207b2c2858dcb5658521f9c155d856591136a708e68878a3fd20d",
+      "facilityKeys": [],
+      "verifiedAt": "2026-11-06T16:54:48+00:00"
+    },
+    {
+      "city": "Barasat",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified sole city selector centre; both rendered catalogue tabs captured and parsed",
+      "facilityKeys": [
+        "1760"
+      ],
+      "verifiedAt": "2026-11-06T16:58:26+00:00"
+    },
+    {
+      "city": "Jamshedpur",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified sole city selector centre; both rendered catalogue tabs captured and parsed",
+      "facilityKeys": [
+        "1753"
+      ],
+      "verifiedAt": "2026-11-06T16:58:26+00:00"
+    },
+    {
+      "city": "Gurugram",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified sole city selector centre; both rendered catalogue tabs captured and parsed",
+      "facilityKeys": [
+        "1506"
+      ],
+      "verifiedAt": "2026-11-06T16:58:26+00:00"
+    },
+    {
+      "city": "Howrah",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 2,
+      "observedFacilityCount": 2,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both tabs explicitly empty in separately retained city-context snapshots",
+      "facilityKeys": [
+        "1764",
+        "1765"
+      ],
+      "verifiedAt": "2026-11-06T17:01:25+00:00"
+    },
+    {
+      "city": "Delhi",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both tabs explicitly empty in separately retained city-context snapshots",
+      "facilityKeys": [
+        "1505"
+      ],
+      "verifiedAt": "2026-11-06T17:01:25+00:00"
+    },
+    {
+      "city": "Mysore",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 3,
+      "observedFacilityCount": 3,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both rendered catalogue tabs captured and parsed; unknown clinic codes remain null",
+      "facilityKeys": [
+        "1014",
+        "centre-mysore-narayana-multispeciality-clinic-mysore",
+        "centre-mysore-narayana-multispeciality-clinic-vijayanagar-mysore"
+      ],
+      "verifiedAt": "2026-11-06T17:06:08+00:00"
+    },
+    {
+      "city": "Hosur",
+      "selectorEnumerationComplete": true,
+      "selectorFacilityCount": 1,
+      "observedFacilityCount": 1,
+      "status": "both-tabs-captured",
+      "evidence": "Operator verified all city selector choices; both rendered catalogue tabs captured and parsed; unknown clinic codes remain null",
+      "facilityKeys": [
+        "2013"
+      ],
+      "verifiedAt": "2026-11-06T17:06:08+00:00"
+    }
+  ],
+  "uniqueObservedFacilities": 36,
+  "cityFacilityContexts": 40,
+  "verifiedAt": "2026-11-06T17:06:08+00:00"
+}

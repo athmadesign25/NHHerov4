@@ -1,7 +1,7 @@
 .shell {
   min-height: 100dvh;
   background-color: #F8FAFC; /* Light mode base */
-  background-image: 
+  background-image:
     radial-gradient(at 0% 0%, rgba(3, 78, 162, 0.05) 0px, transparent 50%),
     radial-gradient(at 100% 0%, rgba(237, 28, 36, 0.03) 0px, transparent 50%),
     radial-gradient(at 50% 100%, rgba(3, 78, 162, 0.03) 0px, transparent 50%);

@@ -5,14 +5,14 @@
 @keyframes backdropEnter { from { opacity: 0; } to { opacity: 1; } }
 .dialog[open] { display: flex; flex-direction: column; }
 .dialog::backdrop { background: color-mix(in srgb, var(--color-primary-dark) 45%, transparent); backdrop-filter: blur(4px); }
-.header { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); }
+.header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--color-border); }
 .header h2 { font-size: clamp(var(--font-size-lg), 3vw, var(--font-size-xl)); line-height: 1.3; }
-.header button { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-6); height: var(--sp-6); border-radius: var(--radius-full); background: var(--color-bg-alt); color: var(--d3-ui-text, var(--color-text-secondary)); transition: background-color var(--d3-ui-fast, var(--transition-fast)), color var(--d3-ui-fast, var(--transition-fast)); }
-.dialog[data-doctor-preview] .header button { background: transparent; transition: color var(--d3-ui-fast, var(--transition-fast)); }
-@media (hover: hover) { .header button:hover:not(:active) { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-hover, var(--color-bg-alt)); } }
-.header button:active { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-pressed, var(--color-primary-light)); }
-@media (hover: hover) { .dialog[data-doctor-preview] .header button:hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); background: transparent; } }
-.dialog[data-doctor-preview] .header button:active { color: var(--d3-ui-ink-pressed, var(--color-text)); background: transparent; }
+.header > button { display: grid; place-items: center; flex-shrink: 0; width: var(--sp-6); height: var(--sp-6); border-radius: var(--radius-full); background: var(--color-bg-alt); color: var(--d3-ui-text, var(--color-text-secondary)); transition: background-color var(--d3-ui-fast, var(--transition-fast)), color var(--d3-ui-fast, var(--transition-fast)); }
+.dialog[data-doctor-preview] .header > button { background: transparent; transition: color var(--d3-ui-fast, var(--transition-fast)); }
+@media (hover: hover) { .header > button:hover:not(:active) { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-hover, var(--color-bg-alt)); } }
+.header > button:active { color: var(--d3-ui-neutral-ink, var(--color-primary-dark)); background: var(--d3-ui-pressed, var(--color-primary-light)); }
+@media (hover: hover) { .dialog[data-doctor-preview] .header > button:hover:not(:active) { color: var(--d3-ui-ink-hover, var(--color-text)); background: transparent; } }
+.dialog[data-doctor-preview] .header > button:active { color: var(--d3-ui-ink-pressed, var(--color-text)); background: transparent; }
 .content { padding: var(--sp-3); overflow-y: auto; overscroll-behavior: contain; }
 .content[data-filter-scroll-viewport] { padding-block-start: 0; scroll-padding-block-start: calc(var(--sp-6) + var(--sp-1)); }
 /* Preserve the initial spacing without leaving a gap above a pinned category. */
@@ -22,6 +22,10 @@
 .dialog :is(button, a):focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary)); outline-offset: 2px; }
 @media (min-width: 640px) { .dialog { margin: auto; border-radius: var(--radius-xl); } }
 
-@media (prefers-reduced-motion: reduce) { .header button, .dialog[data-doctor-preview] .header button, .dialog[data-doctor-preview]::backdrop { transition: none; } .dialog[data-doctor-preview]::backdrop { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .header > button, .dialog[data-doctor-preview] .header > button, .dialog[data-doctor-preview]::backdrop { transition: none; } .dialog[data-doctor-preview]::backdrop { animation: none; } }
 @media (prefers-reduced-transparency: reduce) { .dialog::backdrop { backdrop-filter: none; } }
 @media (forced-colors: active) { .dialog[data-doctor-preview] :is(button, a):focus-visible { outline-color: Highlight; } }
+
+.headerAction { margin-inline-start: auto; }
+.headerContent { flex: 0 0 100%; min-width: 0; }
+.header:has(.headerContent) { row-gap: var(--sp-1); }

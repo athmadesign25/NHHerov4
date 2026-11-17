@@ -1,0 +1,7 @@
+.collage { background: var(--blue-tint-100); }
+.grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 1fr 1fr; gap: var(--space-4); }
+.cell { position: relative; min-height: 0; overflow: hidden; background: var(--blue-tint-100); }
+.cell:first-child { grid-column: 1 / -1; }
+.cell img { object-fit: cover; object-position: center; }
+.cell:first-child img { object-position: center 35%; }
+@media (max-width: 1099px) { .grid { grid-template-rows: 1fr 1fr; } }

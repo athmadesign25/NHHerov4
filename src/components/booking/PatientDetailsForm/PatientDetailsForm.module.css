@@ -48,7 +48,7 @@
 .pill:hover:not(.pillActive) {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  background: var(--color-primary-tint);
+  background: rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .pill:active {
@@ -131,7 +131,7 @@
 
 .input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-tint);
+  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.08);
 }
 
 .inputError {
@@ -168,7 +168,7 @@
 
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-tint);
+  box-shadow: 0 0 0 3px rgba(var(--blue-brand-rgb), 0.08);
 }
 
 /* ─── ERROR / CHAR COUNT ─────────────────────────────────────────────────── */
@@ -189,7 +189,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: var(--color-primary-tint);
+  background: rgba(var(--blue-brand-rgb), 0.08);
   border: 1px solid rgba(3, 78, 162, 0.15);
   border-radius: var(--radius-md);
   padding: 10px 14px;

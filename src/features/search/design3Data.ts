@@ -33,7 +33,8 @@ export const uniqueValues = (values: string[]) => [...new Set(values.filter(Bool
 export function readSearchLocation(params: URLSearchParams) {
   const byId = NH_CITIES.find((city) => String(city.id) === params.get("cityId"));
   const value = byId?.value ?? params.get("location") ?? params.get("city") ?? "All";
-  return NH_CITIES.find((city) => city.id === getCityId(value))?.value ?? "All";
+  const cities = value.split(",").map(item => NH_CITIES.find(city => city.id === getCityId(item.trim()))?.value).filter((city): city is string => Boolean(city));
+  return [...new Set(cities)].join(",") || "All";
 }
 
 export function readCatalogFilters(params: URLSearchParams, tab: SearchTabId): CatalogFilters {

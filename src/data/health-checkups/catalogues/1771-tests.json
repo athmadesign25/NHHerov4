@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:46:32+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Shimoga",
+  "facility": "Narayana Medical Center, Gopala",
+  "facilityId": "1771",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1771",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1771-tests.mhtml",
+      "sha256": "67bfc49e746155b5ba07a1cda9773e310d3039944331b5abbbb2c7ba5557fbb9",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

@@ -157,7 +157,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-primary-tint);
+  background: rgba(var(--blue-brand-rgb), 0.08);
   border-radius: var(--radius-md);
   padding: 12px 16px;
 }

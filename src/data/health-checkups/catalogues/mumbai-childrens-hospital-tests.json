@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:48:55+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Mumbai",
+  "facility": "NH Children's Hospital, Mumbai",
+  "facilityId": "",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": null,
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-mumbai-childrens-hospital-tests.mhtml",
+      "sha256": "c7f8949d2ab0fec99f072491a1bd35b2b33fd44fb0ab5c01281528f585c0df2b",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

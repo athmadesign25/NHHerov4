@@ -1,0 +1,127 @@
+{
+  "capturedAt": "2026-11-06T16:36:48+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Clinic, Jayanagar",
+  "facilityId": "2015",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 4,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 4,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 4,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Master Health Check up - Male",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Jayanagar",
+      "facilityId": "2015",
+      "amount": 8699.0,
+      "localId": "snapshot-7ab3a221ede33208",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For Male to assess the overall health",
+      "listPrice": 23480.0,
+      "sourceDisplayName": "Nhic Master Healthcheckup - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2015&code=PKG032011",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2015&code=PKG032011"
+      ],
+      "code": "PKG032011",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Male Executive Health Checkup",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Jayanagar",
+      "facilityId": "2015",
+      "amount": 5699.0,
+      "localId": "snapshot-5fd14682487c8f7c",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men to assess the overall health",
+      "listPrice": 10470.0,
+      "sourceDisplayName": "Nhic Executive Healthcheckup - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2015&code=PKG032007",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2015&code=PKG032007"
+      ],
+      "code": "PKG032007",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Male Senior Citizen Health Checkup",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Jayanagar",
+      "facilityId": "2015",
+      "amount": 6699.0,
+      "localId": "snapshot-249f7283b0b0e2aa",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For Male Above 60 years",
+      "listPrice": 12470.0,
+      "sourceDisplayName": "Nhic Senior Citizen - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2015&code=PKG032009",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2015&code=PKG032009"
+      ],
+      "code": "PKG032009",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Ultimate Full Body Health checkup-Male",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Jayanagar",
+      "facilityId": "2015",
+      "amount": 13699.0,
+      "localId": "snapshot-c25f17d54dfaa346",
+      "detailStatus": "public-link-observed",
+      "subtitle": "Ultimate assessment for Overall Health Parameters",
+      "listPrice": 35570.0,
+      "sourceDisplayName": "Nhic Ultimate Full Body Healthcheckup Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/null?unitCode=2015&code=PKG043831",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/null?unitCode=2015&code=PKG043831"
+      ],
+      "code": "PKG043831",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2015&code=PKG032011",
+    "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2015&code=PKG032007",
+    "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2015&code=PKG032009",
+    "https://www.narayanahealth.org/health-checkups/null?unitCode=2015&code=PKG043831"
+  ],
+  "unitCode": "2015",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-2015-packages.mhtml",
+      "sha256": "58a0b4557b11a5d9a18bc147e157051afe9a163a24b10dedada216f448498ad7",
+      "format": "mhtml",
+      "renderedCardCount": 4,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

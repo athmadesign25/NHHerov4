@@ -32,6 +32,15 @@
       "image": "/navigation/hospitals/cardiac-sciences-banner.webp",
       "sourceImage": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/gjdktEVS3ZedbGj9vxIt.png",
       "city": "Bangalore"
+    },
+    {
+      "label": "Narayana Institute of Cardiac Sciences, Bangalore \u2014 original resolution",
+      "href": "https://www.narayanahealth.org/hospitals-clinics/bangalore/narayana-institute-cardiac-sciences-bommasandra",
+      "image": "/navigation/hospitals/cardiac-sciences-original.png",
+      "sourceImage": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/hospital-images/July2026/gjdktEVS3ZedbGj9vxIt.png",
+      "width": 1920,
+      "height": 730,
+      "checked": "2026-11-04"
     }
   ]
 }

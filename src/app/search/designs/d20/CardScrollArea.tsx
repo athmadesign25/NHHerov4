@@ -58,7 +58,7 @@ export default function CardScrollArea({ children, viewportRef }: {
   };
   const end = () => { dragOffset.current = null; setDragging(false); };
 
-  return <div className={`${scrollbar.area} ${styles.scrollArea}`} data-overflow={overflow} data-dragging={dragging}>
+  return <div className={`${scrollbar.area} ${styles.scrollArea}`} data-overflow={overflow} data-dragging={dragging} data-lenis-prevent={overflow ? true : undefined}>
     {children}
     <div ref={railRef} className={scrollbar.rail} data-card-scrollbar aria-hidden="true"
       onPointerDown={event => {

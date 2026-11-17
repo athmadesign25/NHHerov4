@@ -1,13 +1,12 @@
 "use client";
 
 import { type ReactNode } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import DoctorMegaMenu from "./DoctorMegaMenu";
 import ServicesMegaMenu from "./ServicesMegaMenu";
 import HospitalMegaMenu from "./HospitalMegaMenu";
-import { OTHER_MENU_GROUPS } from "./menu-data";
+import EditorialMegaMenu from "./EditorialMegaMenu";
 import styles from "./DesktopMegaMenu.module.css";
 
 function MenuBody({ children }: { children: ReactNode }) {
@@ -17,14 +16,10 @@ function MenuBody({ children }: { children: ReactNode }) {
 
 export default function DesktopMegaMenu({ activeMenu, direction, onNavigate }: { activeMenu: string; direction: number; onNavigate: () => void }) {
   const reduced = useReducedMotion();
-  const otherGroups = activeMenu === "health-library" ? OTHER_MENU_GROUPS["health-library"] : OTHER_MENU_GROUPS["about-us"];
   const content = activeMenu === "find-a-doctor" ? <DoctorMegaMenu onNavigate={onNavigate} />
     : activeMenu === "hospitals" ? <HospitalMegaMenu onNavigate={onNavigate} />
     : activeMenu === "specialities" ? <ServicesMegaMenu onNavigate={onNavigate} />
-    : <div className={styles.linkGroups}>{otherGroups.map((group) => <section key={group.label}>
-      <h2>{group.label}</h2>
-      <ul>{group.links.map((link) => <li key={link.href}><Link href={link.href} onClick={onNavigate}>{link.label}</Link></li>)}</ul>
-    </section>)}</div>;
+    : <EditorialMegaMenu kind={activeMenu === "health-library" ? "health-library" : "about-us"} onNavigate={onNavigate} />;
 
   return (
     <div className={styles.shell} id="desktop-navigation-panel" data-desktop-menu={activeMenu}>

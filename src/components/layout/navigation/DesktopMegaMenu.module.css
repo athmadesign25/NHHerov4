@@ -13,15 +13,13 @@
 }
 .slide { position: relative; height: 100%; min-height: 100%; }
 .body { height: 100%; min-height: 100%; overflow-y: auto; overscroll-behavior: contain; }
-.body:has([data-hospital-menu]) { overflow: visible; }
-.linkGroups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-32); padding: var(--space-32); min-height: 100%; }
-.linkGroups h2 { font-size: var(--font-size-xs); line-height: var(--leading-body); color: var(--color-primary); font-weight: 700; text-transform: uppercase; margin: 0 0 var(--space-12); }
-.linkGroups ul { list-style: none; padding: 0; margin: 0; }
-.linkGroups a { display: block; padding-block: var(--space-8); font-size: var(--font-size-sm); line-height: var(--leading-body); color: var(--color-text-secondary); }
-.linkGroups a:hover { color: var(--color-primary); text-decoration: underline; text-underline-offset: var(--space-4); }
-@media (max-width: 1280px) { .linkGroups { gap: var(--space-20); padding: var(--space-24); } }
+.body:has([data-hospital-menu]), .body:has([data-doctor-availability-menu]) { overflow: visible; }
 @media (max-width: 1099px) { .shell { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .slide { transform: none !important; opacity: 1 !important; }
   .body[inert] { visibility: hidden; }
 }
+
+/* One height for all grouped menus, matching the Services content and footer. */
+.shell:is([data-desktop-menu="specialities"], [data-desktop-menu="health-library"], [data-desktop-menu="about-us"]) { height: min(calc(var(--space-128) * 3 + var(--space-96) + var(--space-8)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
+.shell[data-desktop-menu="about-us"] { left: calc(var(--desktop-menu-inset) + var(--space-16)); right: calc(var(--desktop-menu-inset) + var(--space-16)); }

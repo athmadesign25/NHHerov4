@@ -14,6 +14,8 @@ export default function TextSweepEffect({
   className = "",
   finalColor = "#000000",
   sweepColor = "#034EA2",
+  sweepHighlightColor = "#ED1C24",
+  onSweepComplete,
   active,
 }: {
   words: string[];
@@ -23,23 +25,17 @@ export default function TextSweepEffect({
   className?: string;
   finalColor?: string;
   sweepColor?: string;
+  sweepHighlightColor?: string;
+  onSweepComplete?: () => void;
   active?: boolean;
 }) {
   const word = words?.[0] ?? "";
   const isControlled = typeof active === "boolean";
-  const [sweepDone, setSweepDone] = useState(false);
-
-  useEffect(() => {
-    if (isControlled && !active) {
-      setSweepDone(false);
-    }
-  }, [isControlled, active]);
-
   const gradient = `
     linear-gradient(90deg,
       ${finalColor} 0%, ${finalColor} 40%,
       ${sweepColor} 48%,
-      #ED1C24 56%,
+      ${sweepHighlightColor} 56%,
       transparent 64%, transparent 100%
     )
   `;
@@ -52,34 +48,24 @@ export default function TextSweepEffect({
         style={{ position: "relative", display: "inline" }}
       >
         <motion.span
-          style={
-            sweepDone
-              ? {
-                  display: "inline",
-                  color: finalColor,
-                  WebkitTextFillColor: finalColor,
-                  backgroundImage: "none",
-                  filter: "blur(0px)",
-                }
-              : {
-                  display: "inline",
-                  backgroundOrigin: "padding-box",
-                  backgroundImage: gradient,
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  color: "transparent",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "400% 100%",
-                  willChange: "background-position, filter",
-                  filter: "blur(var(--blur))",
-                }
-          }
+          onAnimationComplete={onSweepComplete}
+          style={{
+            display: "inline",
+            backgroundOrigin: "padding-box",
+            backgroundImage: gradient,
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "400% 100%",
+            willChange: "background-position, filter",
+            filter: "blur(var(--blur))",
+          }}
           initial={{ backgroundPositionX: "100%", "--blur": "4px" } as any}
           animate={isControlled ? (active ? { backgroundPositionX: "0%", "--blur": ["4px", "0.5px", "0px"] } : {}) : undefined}
           whileInView={!isControlled ? { backgroundPositionX: "0%", "--blur": ["4px", "0.5px", "0px"] } as any : undefined}
           viewport={!isControlled ? { once: true, amount: 0.3 } : undefined}
-          onAnimationComplete={() => setSweepDone(true)}
           transition={{
             backgroundPositionX: { duration: sweepMs / 1000, delay: delayMs / 1000, ease: SWEEP_EASE },
             "--blur": { duration: sweepMs / 1000, delay: delayMs / 1000, times: [0, 0.8, 1], ease: "easeOut" },

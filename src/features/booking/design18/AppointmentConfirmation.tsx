@@ -14,7 +14,7 @@ export default function AppointmentConfirmation({ doctor, draft, payableAmount, 
     <header className={styles.confirmationHeading}><div className={styles.confirmed}><Check size={26} aria-hidden /></div><div><h2 id="d18-confirmation-title">Your appointment is confirmed</h2><p className={styles.muted}>You’ll receive a confirmation email and SMS on your registered email address and mobile number.</p></div></header>
     <div className={styles.reviewDoctor}><Image src={doctor.img || "/images/misc/doctor_avatar_male_v2.png"} alt="" width={48} height={48} sizes="48px" /><div><strong>{doctor.name}</strong><p className={styles.muted}>{doctor.speciality}</p></div></div>
     <div className={styles.reviewRecap}>
-      <div className={styles.reviewSlot}><CalendarDays size={17} aria-hidden /><div><span className={styles.slotLabel}>Date & time</span><strong>{formatBookingDate(draft.selection.date)} · {draft.selection.time} <span className={styles.slotTimezone}>IST</span></strong></div></div>
+      <div className={styles.reviewSlot}><CalendarDays size={17} aria-hidden /><div><span className={styles.slotLabel}>Date & time</span><strong>{formatBookingDate(draft.selection.date)} · {draft.selection.time}</strong></div></div>
       {patient && <div className={styles.reviewMember}><UserRound size={17} aria-hidden /><div><span className={styles.slotLabel}>Patient</span><strong>{patient.name} <span className={styles.reviewAge}>· {patient.age} years</span></strong></div></div>}
       <p className={styles.reviewLocation}>{draft.selection.mode === "hospital" ? <MapPin size={17} aria-hidden /> : <Video size={17} aria-hidden />}<span>{draft.selection.mode === "hospital" ? draft.selection.hospital : "Video consultation"}</span></p>
     </div>

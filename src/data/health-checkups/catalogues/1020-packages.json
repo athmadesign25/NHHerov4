@@ -1,0 +1,99 @@
+{
+  "capturedAt": "2026-11-06T16:40:03+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Health City, International Wing",
+  "facilityId": "1020",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 3,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 3,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 3,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Ehp Infosys Platinum Pkg",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Health City, International Wing",
+      "facilityId": "1020",
+      "amount": 2800.0,
+      "localId": "snapshot-7f89dcdd94b0e5fb",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "Ehp Infosys Platinum Pkg",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043130",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043130"
+      ],
+      "code": "PKG043130",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Ehp Infosys Silver Pkg",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Health City, International Wing",
+      "facilityId": "1020",
+      "amount": 1200.0,
+      "localId": "snapshot-0c77be58f8b7ea68",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "Ehp Infosys Silver Pkg",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043128",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043128"
+      ],
+      "code": "PKG043128",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Ehp Infosys Gold Pkg",
+      "kind": "package",
+      "city": "Bangalore",
+      "facility": "Narayana Health City, International Wing",
+      "facilityId": "1020",
+      "amount": 1800.0,
+      "localId": "snapshot-5d971909c182aec8",
+      "detailStatus": "public-link-observed",
+      "sourceDisplayName": "Ehp Infosys Gold Pkg",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043129",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043129"
+      ],
+      "code": "PKG043129",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043130",
+    "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043128",
+    "https://www.narayanahealth.org/health-checkups/null?unitCode=1020&code=PKG043129"
+  ],
+  "unitCode": "1020",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1020-packages.mhtml",
+      "sha256": "29ab0cc1f5982c93577a575fee53c46ba2112e6c56b42d0204d8d35138406189",
+      "format": "mhtml",
+      "renderedCardCount": 3,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}
