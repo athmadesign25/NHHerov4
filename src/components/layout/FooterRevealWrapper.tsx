@@ -6,8 +6,8 @@ import Footer from "./Footer";
 import SeoLinksBand from "./SeoLinksBand";
 
 /**
- * Homepage-only curtain-reveal footer. Inner pages use normal document flow.
- * As on sites like icomat.co.uk: the homepage footer is
+ * Universal curtain-reveal footer across all pages.
+ * As on sites like icomat.co.uk: the footer is
  * `position: fixed` at the bottom of the viewport and never moves at all,
  * while `main` sits above it (z-index) and slides up and off it. Nothing
  * about the footer animates — it's simply uncovered, which is what makes
@@ -75,12 +75,11 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
   const [pinned, setPinned] = useState(false);
 
   const pathname = usePathname();
-  const isHomePage = pathname === "/" || /^\/L[12]banner\/?$/.test(pathname);
-  const revealFooter = isHomePage && pinned;
+  const revealFooter = pinned;
 
   useEffect(() => {
     const footerEl = footerRef.current;
-    if (!footerEl || !isHomePage) return;
+    if (!footerEl) return;
 
     const measure = () => {
       const height = Math.ceil(footerEl.getBoundingClientRect().height);
@@ -99,7 +98,7 @@ export default function FooterRevealWrapper({ children }: { children: React.Reac
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [isHomePage]);
+  }, [pathname]);
 
   return (
     <>
