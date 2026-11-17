@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -50,97 +50,102 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
 
-  // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
-  const { scrollY } = useScroll();
-  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
-  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
+  // Scroll-driven section colour transition referenced to readingSectionRef
+  const readingSectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: readingProgress } = useScroll({
+    target: readingSectionRef,
+    offset: ["start 0.95", "start 0.25"],
+  });
+
+  const v2BgColor = useTransform(readingProgress, [0, 0.35, 0.72, 1], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
+  const v2HeadingColor = useTransform(readingProgress, [0, 0.45, 1], ["#ffffff", "#f1f5f9", "#111827"]);
   const v2BodyColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.88)", "#374151", "#1e293b"]
   );
   const v2MutedColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.62)", "#64748b", "#64748b"]
   );
   const v2TocLinkColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.78)", "#4b5563", "#4b5563"]
   );
-  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
+  const v2TocActiveColor = useTransform(readingProgress, [0, 0.45, 1], ["#38bdf8", "#034EA2", "#034EA2"]);
   const v2TocActiveBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v2BorderColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
   );
   const v2CardBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.06)", "#f8fafc", "#ffffff"]
   );
 
-  // V4: Refined Dynamic BG Change + TextSweepEffect Blend (matching Blog V3: pure #060c18 at scrollY 0..24px -> #0d2142 -> #eef4fb -> #ffffff at 320px)
+  // V4: Refined Dynamic BG Change from #060c18 -> #0d2142 -> #eef4fb -> #ffffff
   const v4BgColor = useTransform(
-    scrollY,
-    [0, 24, 145, 245, 320],
-    ["#060c18", "#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+    readingProgress,
+    [0, 0.35, 0.72, 1],
+    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
   );
   const v4HeadingColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["#ffffff", "#ffffff", "#1e293b", "#0f172a"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["#ffffff", "#1e293b", "#0f172a"]
   );
   const v4EyebrowColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
   );
   const v4BodyColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.86)", "rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.88)", "#334155", "#1e293b"]
   );
   const v4MutedColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.64)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
   );
   const v4TocLinkColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
   );
   const v4TocActiveColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["#38bdf8", "#38bdf8", "#0284c7", "#034EA2"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["#38bdf8", "#0284c7", "#034EA2"]
   );
   const v4TocActiveBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v4BorderColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
   );
   const v4SummaryBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
   );
   const v4BadgeBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
+    readingProgress,
+    [0, 0.45, 1],
+    ["rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
   );
 
   useEffect(() => {
@@ -422,7 +427,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
-      <div
+      <motion.div
+        ref={readingSectionRef}
         className={`${styles.readingExperienceWrapper} ${
           blendVersion === 2
             ? styles.readingExperienceWrapperV2
@@ -432,6 +438,13 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             ? styles.readingExperienceWrapperV4
             : ""
         }`}
+        style={
+          blendVersion === 2
+            ? { backgroundColor: v2BgColor, color: v2BodyColor }
+            : blendVersion === 4
+            ? { backgroundColor: v4BgColor, color: v4BodyColor }
+            : undefined
+        }
       >
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
@@ -539,17 +552,18 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           <article className={styles.articleContent}>
             {/* 1. Overview & Clinical Executive Summary */}
             <section id="overview" className={styles.sectionBlock}>
-              <h2 className={styles.mainSectionTitle}>
-                {blendVersion === 4 ? (
-                  <TextSweepEffect
-                    words={[detail.title]}
-                    sweepMs={1400}
-                    finalColor="var(--v4-heading, #0f172a)"
-                  />
-                ) : (
-                  detail.title
-                )}
-              </h2>
+              <motion.h2
+                className={styles.mainSectionTitle}
+                style={
+                  blendVersion === 4
+                    ? { color: v4HeadingColor }
+                    : blendVersion === 2
+                    ? { color: v2HeadingColor }
+                    : undefined
+                }
+              >
+                {detail.title}
+              </motion.h2>
               <ClinicalSummaryBanner
                 summary={`${detail.leadParagraph} ${detail.whatIsIt.description}`}
                 reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
@@ -872,7 +886,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           </article>
         </div>
       </main>
-      </div>
+      </motion.div>
 
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner

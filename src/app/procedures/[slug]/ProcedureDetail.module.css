@@ -324,6 +324,7 @@
   margin-top: -36px;
   border-radius: 32px 32px 0 0;
   background: linear-gradient(180deg, var(--slate-50) 0px, var(--white) 180px);
+  color: var(--slate-700);
   box-shadow:
     0 -24px 64px rgba(6, 14, 27, 0.45),
     0 -1px 0 rgba(var(--white-rgb), 0.9) inset;
@@ -340,17 +341,16 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
-  background: var(--v2-bg, #0a1128);
 }
 
 .readingExperienceWrapperV2 .mainSectionTitle,
 .readingExperienceWrapperV2 .subSectionTitle {
-  color: var(--v2-heading, #111827);
+  color: inherit;
 }
 
 .readingExperienceWrapperV2 .leadParagraph,
 .readingExperienceWrapperV2 .bodyParagraph {
-  color: var(--v2-body, #374151);
+  color: inherit;
 }
 
 .readingExperienceWrapperV2 .tocEyebrow,
@@ -491,7 +491,6 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
-  background: var(--v4-bg, #060c18);
 }
 
 .v4SectionEyebrow {
@@ -505,12 +504,12 @@
 
 .readingExperienceWrapperV4 .mainSectionTitle,
 .readingExperienceWrapperV4 .subSectionTitle {
-  color: var(--v4-heading, var(--slate-900));
+  color: inherit;
 }
 
 .readingExperienceWrapperV4 .leadParagraph,
 .readingExperienceWrapperV4 .bodyParagraph {
-  color: var(--v4-body, var(--slate-700));
+  color: inherit;
 }
 
 .readingExperienceWrapperV4 .tocEyebrow,
@@ -926,7 +925,7 @@
 
 /* ─── CLINICAL FIGURE MEDIA ─────────────────────────────────────────────── */
 .clinicalFigureContainer {
-  margin: 20px 0 28px;
+  margin: 36px 0 48px;
   border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   border: 1px solid var(--slate-200, var(--slate-200));

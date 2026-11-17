@@ -97,25 +97,43 @@ export default function SearchResultsCanvas({
 
   // Scroll position tracking: Re-appear top search bar ONLY when user scrolls all the way back up to semantic results
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+  const [isDeepScrolled, setIsDeepScrolled] = useState(false);
 
   useEffect(() => {
-    const container = unifiedScrollRef.current;
-    if (!container) return;
+    const leftEl = leftColRef.current;
+    const unifiedEl = unifiedScrollRef.current;
 
-    const handleScroll = () => {
-      // Re-appear when user scrolls all the way up to semantic results (<= 35px from top)
-      const atTop = container.scrollTop <= 35;
-      setIsScrolledToTop(atTop);
+    const checkScroll = () => {
+      const scrollPos = isPulseActive
+        ? (unifiedEl?.scrollTop ?? 0)
+        : (leftEl?.scrollTop ?? 0);
+      setIsDeepScrolled(scrollPos > 45);
+      setIsScrolledToTop(scrollPos <= 35);
     };
 
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+    leftEl?.addEventListener("scroll", checkScroll, { passive: true });
+    unifiedEl?.addEventListener("scroll", checkScroll, { passive: true });
+
+    // Initial check
+    checkScroll();
+
+    return () => {
+      leftEl?.removeEventListener("scroll", checkScroll);
+      unifiedEl?.removeEventListener("scroll", checkScroll);
+    };
+  }, [isPulseActive]);
 
   // Top search bar is visible if:
   // 1. In non-active mode (standard semantic search)
   // 2. In active Pulse mode, ONLY when scrolled up to the end of semantic results
   const showTopSearchBar = !isPulseActive || isScrolledToTop;
+
+  // Floating Pulse bar appears on deep scroll, when empty, or in active mode (like Google follow-up ask)
+  const showFloatingPulseBar =
+    isPulseActive ||
+    isDeepScrolled ||
+    currentResults.status === "empty" ||
+    currentResults.doctors.length === 0;
 
   // Measure primary result column width so the docked Pulse bar matches it exactly in non-active mode
   const [leftColWidth, setLeftColWidth] = useState<number | null>(null);
@@ -1275,93 +1293,100 @@ export default function SearchResultsCanvas({
         <div className={styles.pulseAuroraGlowField} aria-hidden="true" />
       )}
 
-      {/* ── 5. Persistent Docked "Ask Pulse ai" Input Bar at the Bottom ── */}
-      {/* Small in non-active mode over doctor cards, expands smoothly to 100% full width in active mode */}
-      <div 
-        className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
-        style={{ zIndex: 25 }}
-      >
-        <div 
-          className={styles.floatingPulseDockCol}
-          style={{ width: "100%", maxWidth: "100%" }}
-        >
-          {/* Subtle Nudge when in Empty State */}
-          {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
-            <motion.button
-              type="button"
-              className={styles.pulseDockNudgePill}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => {
-                pulseInputRef.current?.focus();
-              }}
-            >
-              <Sparkles size={13} className={styles.pulseDockNudgeIcon} />
-              <span>Can&apos;t find your condition? Describe symptoms to Pulse AI below</span>
-            </motion.button>
-          )}
-
-          <form 
-            className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
-            style={{ width: "100%", maxWidth: "100%" }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSendPulsePrompt();
-            }}
+      {/* ── 5. Docked "Ask Pulse ai" Input Bar (Appears on Deep Scroll like Google Follow-up) ── */}
+      <AnimatePresence>
+        {showFloatingPulseBar && (
+          <motion.div 
+            className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact}`}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            style={{ zIndex: 25 }}
           >
-          {/* Round Blue Plus Button */}
-          <button
-            type="button"
-            className={styles.floatingPulsePlusBtn}
-            onClick={() => pulseInputRef.current?.focus()}
-            aria-label="New Prompt"
-            title="Ask Pulse"
-          >
-            <Plus size={18} strokeWidth={2.4} />
-          </button>
-
-          {/* Input Field */}
-          <input
-            ref={pulseInputRef}
-            type="text"
-            className={styles.floatingPulseInput}
-            placeholder="Ask Pulse ai"
-            value={pulseInput}
-            onChange={(e) => setPulseInput(e.target.value)}
-            aria-label="Ask Pulse AI"
-          />
-
-          {/* Right Action: Send Button (if text entered) or Mic Icon */}
-          {pulseInput.trim().length > 0 ? (
-            <button
-              type="submit"
-              className={styles.floatingPulseSendBtn}
-              aria-label="Send prompt"
-              title="Send to Pulse AI"
+            <div 
+              className={styles.floatingPulseDockCol}
+              style={{ width: "100%", maxWidth: "100%" }}
             >
-              <Send size={15} />
-            </button>
-          ) : (
-            <button
-              type="button"
-              className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-              onClick={() => {
-                setIsListening((prev) => !prev);
-                if (!isListening) {
-                  setPulseInput("Tell me more about Dr Pradeep kumar");
-                  pulseInputRef.current?.focus();
-                }
-              }}
-              aria-label="Voice input"
-              title={isListening ? "Listening..." : "Speak to Pulse AI"}
-            >
-              <Mic size={19} />
-            </button>
-          )}
-        </form>
-      </div>
-    </div>
+              {/* Subtle Nudge when in Empty State */}
+              {!isPulseActive && (currentResults.status === "empty" || currentResults.doctors.length === 0) && (
+                <motion.button
+                  type="button"
+                  className={styles.pulseDockNudgePill}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={() => {
+                    pulseInputRef.current?.focus();
+                  }}
+                >
+                  <Sparkles size={13} className={styles.pulseDockNudgeIcon} />
+                  <span>Can&apos;t find your condition? Describe symptoms to Pulse AI below</span>
+                </motion.button>
+              )}
+
+              <form 
+                className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+                style={{ width: "100%", maxWidth: "100%" }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendPulsePrompt();
+                }}
+              >
+              {/* Round Blue Plus Button */}
+              <button
+                type="button"
+                className={styles.floatingPulsePlusBtn}
+                onClick={() => pulseInputRef.current?.focus()}
+                aria-label="New Prompt"
+                title="Ask Pulse"
+              >
+                <Plus size={18} strokeWidth={2.4} />
+              </button>
+
+              {/* Input Field */}
+              <input
+                ref={pulseInputRef}
+                type="text"
+                className={styles.floatingPulseInput}
+                placeholder="Ask Pulse ai"
+                value={pulseInput}
+                onChange={(e) => setPulseInput(e.target.value)}
+                aria-label="Ask Pulse AI"
+              />
+
+              {/* Right Action: Send Button (if text entered) or Mic Icon */}
+              {pulseInput.trim().length > 0 ? (
+                <button
+                  type="submit"
+                  className={styles.floatingPulseSendBtn}
+                  aria-label="Send prompt"
+                  title="Send to Pulse AI"
+                >
+                  <Send size={15} />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+                  onClick={() => {
+                    setIsListening((prev) => !prev);
+                    if (!isListening) {
+                      setPulseInput("Tell me more about Dr Pradeep kumar");
+                      pulseInputRef.current?.focus();
+                    }
+                  }}
+                  aria-label="Voice input"
+                  title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                >
+                  <Mic size={19} />
+                </button>
+              )}
+            </form>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   </div>
 );
 }
