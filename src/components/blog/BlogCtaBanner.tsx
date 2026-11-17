@@ -200,16 +200,6 @@ export default function BlogCtaBanner({
                   {resolvedSecondaryBtn.icon || <ArrowRight size={15} />}
                 </Link>
               )}
-
-              <a
-                href={phoneHref}
-                className={styles.phoneLink}
-                aria-label="Tap to call Narayana Health 24×7 helpline"
-              >
-                <PhoneCall size={16} />
-                <span className={styles.phoneDesktopLabel}>{resolvedPhoneDesktop}</span>
-                <span className={styles.phoneMobileLabel}>{resolvedPhoneMobile}</span>
-              </a>
             </div>
           </div>
         </div>

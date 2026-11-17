@@ -10,11 +10,12 @@
 
 /* ─── STATIONARY ATMOSPHERIC BACKGROUND CANVAS (FIXED IN VIEWPORT) ───────── */
 .stationaryCanvas {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
-  height: 100vh;
+  height: clamp(600px, 85vh, 920px);
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
