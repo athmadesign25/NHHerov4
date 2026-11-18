@@ -32,7 +32,7 @@ export default function SearchHeader({ query, location, onQuery, onLocation }: P
             <Search size={20} aria-hidden />
             <label className={styles.srOnly} htmlFor="d3-search">Search Narayana Health</label>
             <input id="d3-search" type="search" value={query} autoComplete="off" enterKeyHint="search"
-              placeholder="Search doctors, hospitals, specialities…" onChange={(event) => onQuery(event.target.value)} />
+              placeholder="Search doctors, hospitals, specialties…" onChange={(event) => onQuery(event.target.value)} />
             {query && <button type="button" className={styles.clear} aria-label="Clear search" onClick={() => { onQuery(""); document.getElementById("d3-search")?.focus(); }}><X size={18} aria-hidden /></button>}
           </div>
           <label className={styles.location}><MapPin size={18} aria-hidden /><span className={styles.srOnly}>Search location</span>
