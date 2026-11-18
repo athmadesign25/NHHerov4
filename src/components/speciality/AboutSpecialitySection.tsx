@@ -302,72 +302,109 @@ export default function AboutSpecialitySection({
         }}
       >
         <div className={styles.aboutCard}>
-          {/* AdvanceTechnology Interactive List Style */}
-          <div className={styles.techItemsList} role="tablist" aria-label="About Speciality Topics">
-            {tabs.map((tab, idx) => {
-              const isActive = tab.id === activeTabId;
-              return (
-                <div
-                  key={tab.id}
-                  role="tab"
-                  id={`about-tab-${tab.id}`}
-                  aria-selected={isActive}
-                  aria-controls={`about-panel-${tab.id}`}
-                  tabIndex={0}
-                  className={`${styles.techItemRow} ${isActive ? styles.techItemRowActive : ""}`}
-                  onClick={() => setActiveTabId(tab.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setActiveTabId(tab.id);
-                    }
-                  }}
-                >
-                  <div className={styles.techItemHeader}>
-                    <div className={styles.techItemTitleGroup}>
-                      <span className={styles.techItemNumber}>0{idx + 1}</span>
-                      <h4 className={styles.techItemTitle}>{tab.tabLabel}</h4>
-                    </div>
+          {/* Desktop Interactive 2-Column Bento Card */}
+          <div className={styles.desktopTabbedView}>
+            {/* AdvanceTechnology Interactive List Style */}
+            <div className={styles.techItemsList} role="tablist" aria-label="About Speciality Topics">
+              {tabs.map((tab, idx) => {
+                const isActive = tab.id === activeTabId;
+                return (
+                  <div
+                    key={tab.id}
+                    role="tab"
+                    id={`about-tab-${tab.id}`}
+                    aria-selected={isActive}
+                    aria-controls={`about-panel-${tab.id}`}
+                    tabIndex={0}
+                    className={`${styles.techItemRow} ${isActive ? styles.techItemRowActive : ""}`}
+                    onClick={() => setActiveTabId(tab.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setActiveTabId(tab.id);
+                      }
+                    }}
+                  >
+                    <div className={styles.techItemHeader}>
+                      <div className={styles.techItemTitleGroup}>
+                        <span className={styles.techItemNumber}>0{idx + 1}</span>
+                        <h4 className={styles.techItemTitle}>{tab.tabLabel}</h4>
+                      </div>
 
-                    <div
-                      className={`${styles.techActionBtn} ${isActive ? styles.techActionBtnActive : ""}`}
-                      aria-label={`${tab.tabLabel} - View details`}
-                    >
-                      {isActive ? (
-                        <ArrowRight size={15} />
-                      ) : (
-                        <ArrowUpRight size={15} />
-                      )}
+                      <div
+                        className={`${styles.techActionBtn} ${isActive ? styles.techActionBtnActive : ""}`}
+                        aria-label={`${tab.tabLabel} - View details`}
+                      >
+                        {isActive ? (
+                          <ArrowRight size={15} />
+                        ) : (
+                          <ArrowUpRight size={15} />
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
+            {/* Right Active Content Panel */}
+            <div
+              id={`about-panel-${activeContent.id}`}
+              role="tabpanel"
+              aria-labelledby={`about-tab-${activeContent.id}`}
+              className={styles.contentPane}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeContent.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <h3 className={styles.contentTitle}>{activeContent.title}</h3>
+                  <p className={styles.contentIntro}>{activeContent.intro}</p>
+
+                  {activeContent.image && (
+                    <div className={styles.contentImageBanner}>
+                      <Image
+                        src={activeContent.image}
+                        alt={activeContent.title}
+                        fill
+                        sizes="(max-width: 900px) 100vw, 460px"
+                        className={styles.contentImage}
+                      />
+                    </div>
+                  )}
+
+                  <ul className={styles.bulletList}>
+                    {activeContent.bullets.map((bullet, i) => (
+                      <li key={i} className={styles.bulletItem}>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
 
-          {/* Right Active Content Panel */}
-          <div
-            id={`about-panel-${activeContent.id}`}
-            role="tabpanel"
-            aria-labelledby={`about-tab-${activeContent.id}`}
-            className={styles.contentPane}
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeContent.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <h3 className={styles.contentTitle}>{activeContent.title}</h3>
-                <p className={styles.contentIntro}>{activeContent.intro}</p>
+          {/* Responsive Mobile Continuous Reading View (No side panel / tab list) */}
+          <div className={styles.mobileContinuousView}>
+            {tabs.map((tab, idx) => (
+              <article key={tab.id} className={styles.mobileTopicBlock}>
+                <div className={styles.mobileTopicHeader}>
+                  <span className={styles.mobileTopicNumber}>0{idx + 1}</span>
+                  <h3 className={styles.mobileTopicTitle}>{tab.title}</h3>
+                </div>
 
-                {activeContent.image && (
-                  <div className={styles.contentImageBanner}>
+                <p className={styles.mobileTopicIntro}>{tab.intro}</p>
+
+                {tab.image && (
+                  <div className={styles.mobileImageBanner}>
                     <Image
-                      src={activeContent.image}
-                      alt={activeContent.title}
+                      src={tab.image}
+                      alt={tab.title}
                       fill
                       sizes="(max-width: 900px) 100vw, 460px"
                       className={styles.contentImage}
@@ -376,14 +413,16 @@ export default function AboutSpecialitySection({
                 )}
 
                 <ul className={styles.bulletList}>
-                  {activeContent.bullets.map((bullet, i) => (
+                  {tab.bullets.map((bullet, i) => (
                     <li key={i} className={styles.bulletItem}>
                       {bullet}
                     </li>
                   ))}
                 </ul>
-              </motion.div>
-            </AnimatePresence>
+
+                {idx < tabs.length - 1 && <div className={styles.mobileDivider} />}
+              </article>
+            ))}
           </div>
         </div>
       </motion.div>

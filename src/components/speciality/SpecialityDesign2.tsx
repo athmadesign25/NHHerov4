@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Award, Biohazard as Virus, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
+import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Biohazard as Virus, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -24,7 +24,7 @@ import DoctorOverviewCarousel from "@/components/ui/DoctorOverviewCarousel";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import AboutSpecialitySection from "./AboutSpecialitySection";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
-import { ALL_SPECIALITIES } from "@/data/specialities";
+import { ALL_SPECIALITIES, normalizeSpecialitySlug } from "@/data/specialities";
 import {
   cardiacBannerData,
   cardiacStatsData,
@@ -1121,9 +1121,10 @@ const faqData = [
 
 export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: string; isCoE?: boolean }) {
   const searchParams = useSearchParams();
-  const bookingHref = specialityBookingEntry(slug === "cardiac-sciences" ? "cardiology" : slug, searchParams.get("location"));
-  const isCardiac = slug === "cardiology" || slug === "cardiac-sciences";
-  const currentSpec = ALL_SPECIALITIES.find(s => s.slug === slug || (isCardiac && s.slug === "cardiology"));
+  const resolvedSlug = normalizeSpecialitySlug(slug);
+  const bookingHref = specialityBookingEntry(resolvedSlug, searchParams.get("location"));
+  const isCardiac = resolvedSlug === "cardiology";
+  const currentSpec = ALL_SPECIALITIES.find(s => s.slug === resolvedSlug);
   const isCoE = propIsCoE !== undefined ? propIsCoE : Boolean(currentSpec?.isCoE);
   const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = isCardiac ? "Cardiology & Cardiac Surgery" : (currentSpec?.name || 'Cancer Care');
@@ -1245,6 +1246,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
       tabs.style.removeProperty("--speciality-nav-offset");
     };
   }, [isTabsPinned]);
+
 
 
 
@@ -1509,12 +1511,14 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
           <div className={styles.heroSplitLayout}>
             <div className={styles.heroContent}>
               <motion.div
+                className={styles.heroBreadcrumbs}
                 style={{ marginBottom: "-8px", opacity: 0.6 }}
                 initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
                 animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
                 transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
               >
                 <Breadcrumbs
+                  hideOnMobile
                   items={[
                     { label: "Home", href: "/" },
                     isCoE
@@ -1557,13 +1561,12 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               >
+                {/* Desktop vertical stacked stats (> 1100px) */}
                 <motion.div
                   initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-                  className={styles.metricsRow}
-                  ref={statsTrackRef}
-                  onScroll={handleStatsScroll}
+                  className={`${styles.metricsRow} ${styles.desktopMetricsRow}`}
                 >
                   {(isCardiac
                     ? cardiacStatsData
@@ -1577,49 +1580,29 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                     <div
                       className={styles.metricItem}
                       key={i}
-                      ref={(el) => { statCardRefs.current[i] = el; }}
                     >
-                      <AnimatePresence mode="wait">
-                        <motion.div
-                          key={stat.label}
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -15 }}
-                          transition={{ duration: 0.25, delay: 0.2 + i * 0.05, ease: "easeOut" }}
-                          style={{ display: "flex", flexDirection: "column", minWidth: 0, width: "100%", overflow: "hidden" }}
-                        >
-                          <div className={styles.metricValue}>
-                            <MetricValueReveal value={stat.value} suffix={stat.suffix} />
-                          </div>
-                          <div className={styles.metricLabel}>
-                            {stat.label.split("\n").map((line, idx) => (
-                              <React.Fragment key={idx}>
-                                {line}
-                                {idx !== stat.label.split("\n").length - 1 && (
-                                  <>
-                                    <br className={styles.metricBreak} />
-                                    <span className={styles.metricSpace}> </span>
-                                  </>
-                                )}
-                              </React.Fragment>
-                            ))}
-                          </div>
-                        </motion.div>
-                      </AnimatePresence>
+                      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, width: "100%", overflow: "hidden" }}>
+                        <div className={styles.metricValue}>
+                          <MetricValueReveal value={stat.value} suffix={stat.suffix} />
+                        </div>
+                        <div className={styles.metricLabel}>
+                          {stat.label.split("\n").map((line, idx) => (
+                            <React.Fragment key={idx}>
+                              {line}
+                              {idx !== stat.label.split("\n").length - 1 && (
+                                <>
+                                  <br className={styles.metricBreak} />
+                                  <span className={styles.metricSpace}> </span>
+                                </>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   ))}
 
-                  <motion.div
-                    className={styles.milestoneSection}
-                    ref={(el) => { statCardRefs.current[4] = el as HTMLDivElement | null; }}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
-                  >
-                    <span className={styles.milestoneBadge}>
-                      <Award size={12} aria-hidden="true" />
-                      {isCardiac ? cardiacMilestoneData.badge : "Milestone"}
-                    </span>
+                  <div className={styles.milestoneSection}>
                     <h3 className={styles.milestoneTitle}>
                       {isCardiac ? cardiacMilestoneData.title : "First CAR T-Cell Therapy in South India"}
                     </h3>
@@ -1635,8 +1618,70 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                         </>
                       )}
                     </p>
-                  </motion.div>
+                  </div>
                 </motion.div>
+
+                {/* Responsive mweb continuous auto-scrolling ticker (<= 1100px) */}
+                <div className={styles.mobileTickerContainer}>
+                  <div className={styles.mobileTickerTrack}>
+                    {[1, 2].map((setNum) => (
+                      <div
+                        key={setNum}
+                        className={styles.mobileTickerGroup}
+                        aria-hidden={setNum === 2 ? "true" : undefined}
+                      >
+                        {(isCardiac
+                          ? cardiacStatsData
+                          : [
+                              { value: 300, suffix: "+", label: "Bone marrow transplants yearly,\ndelivered with specialized care." },
+                              { value: 6000, suffix: "+", label: "Cancer surgeries performed every year\nwith precision and care." },
+                              { value: 74000, suffix: "+", label: "Yearly chemotherapies, enabling\ncomplete patient treatment access." },
+                              { value: 100000, suffix: "+", label: "Radiation fractions yearly, enabled by\nadvanced expertise." },
+                            ]
+                        ).map((stat, i) => (
+                          <div className={styles.metricItem} key={`ticker-${setNum}-${i}`}>
+                            <div style={{ display: "flex", flexDirection: "column", minWidth: 0, width: "100%", overflow: "hidden" }}>
+                              <div className={styles.metricValue}>
+                                <MetricValueReveal value={stat.value} suffix={stat.suffix} />
+                              </div>
+                              <div className={styles.metricLabel}>
+                                {stat.label.split("\n").map((line, idx) => (
+                                  <React.Fragment key={idx}>
+                                    {line}
+                                    {idx !== stat.label.split("\n").length - 1 && (
+                                      <>
+                                        <br className={styles.metricBreak} />
+                                        <span className={styles.metricSpace}> </span>
+                                      </>
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className={styles.milestoneSection} key={`ticker-${setNum}-milestone`}>
+                          <h3 className={styles.milestoneTitle}>
+                            {isCardiac ? cardiacMilestoneData.title : "First CAR T-Cell Therapy in South India"}
+                          </h3>
+                          <p className={styles.milestoneDesc}>
+                            {isCardiac ? (
+                              cardiacMilestoneData.desc
+                            ) : (
+                              <>
+                                India&apos;s first CAR T-cell therapy
+                                <br className={styles.metricBreak} />
+                                <span className={styles.metricSpace}> </span>
+                                for relapsed lymphoma.
+                              </>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 {/* Responsive Carousel Controls (< 1100px) */}
                 <div className={styles.statsCarouselControls}>
@@ -1711,335 +1756,282 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                 : "At Narayana Health, we're dedicated to providing advanced cancer care with expert doctors, modern technology, and compassionate support at every step of your journey."}
             </motion.p>
           </div>
+
+          <motion.div
+            className={styles.toggleContainer}
+            initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+          >
+            <div className={styles.toggleGroup}>
+              {(["Adult", "Paediatric"] as const).map((type) => {
+                const isSelected = patientType === type;
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    className={`${styles.toggleBtn} ${isSelected ? styles.active : ""}`}
+                    onClick={() => handlePatientTypeChange(type)}
+                  >
+                    {isSelected && (
+                      <motion.div
+                        layoutId="activeTogglePillMain"
+                        className={styles.toggleActivePill}
+                        transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                      />
+                    )}
+                    <span className={styles.toggleBtnText}>{type}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
         </div>
 
-        {/* Pinned sentinel element */}
-        <div ref={tabsSentinelRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
+        {/* Pinned breadcrumb & dropdown bar (when isTabsPinned is true) */}
+        <AnimatePresence>
+          {isTabsPinned && (
+            <motion.div
+              key="pinned-programme-bar"
+              data-theme={navTheme}
+              ref={pinnedTabsRef}
+          className={`${styles.programmeTabsWrapper} ${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""}`}
+              initial={{ y: -24, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -24, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                transition: "top 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+              }}
+            >
+              <div className={styles.programmeTabsContainerPinned}>
+                <div className={styles.pinnedBreadcrumbRow}>
+                  {/* 0. Parent Directory Link */}
+                  <Link
+                    href={isCoE ? "/centre-of-excellence" : "/specialities"}
+                    className={`${styles.breadcrumbLink} ${styles.desktopOnlyBreadcrumb}`}
+                    title={isCoE ? "Centres of Excellence" : "All Specialities"}
+                    aria-label={isCoE ? "View all centres of excellence" : "View all medical specialities"}
+                  >
+                    {isCoE ? "Centres of Excellence" : "Specialities"}
+                  </Link>
 
-        {/* Placeholder element to preserve layout flow when dropdown becomes pinned */}
-        {isTabsPinned && (
-          <div style={{ height: "66px", width: "100%", pointerEvents: "none" }} aria-hidden="true" />
-        )}
+                  <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
 
-        {/* Pinned Programme Dropdown Bar */}
-        <div
-          ref={pinnedTabsRef}
-          data-theme={isTabsPinned ? navTheme : undefined}
-          className={`${styles.programmeTabsWrapper} ${isTabsPinned ? `${styles.programmeTabsWrapperPinned} ${navTheme === "light" ? styles.programmeTabsWrapperLight : styles.programmeTabsWrapperDark}` : ""} ${isNearFooter ? styles.programmeTabsWrapperHidden : ""}`}
-        >
-          <div className={isTabsPinned ? styles.programmeTabsContainerPinned : styles.programmeTabsContainer}>
-            {isTabsPinned ? (
-              <div className={styles.pinnedBreadcrumbRow}>
-                {/* 0. Parent Directory Link */}
-                <Link
-                  href={isCoE ? "/centre-of-excellence" : "/specialities"}
-                  className={styles.breadcrumbLink}
-                  title={isCoE ? "Centres of Excellence" : "All Specialities"}
-                  aria-label={isCoE ? "View all centres of excellence" : "View all medical specialities"}
-                >
-                  {isCoE ? "Centres of Excellence" : "Specialities"}
-                </Link>
+                  {/* 1. Main Speciality Root */}
+                  <button
+                    type="button"
+                    className={`${styles.breadcrumbSpecialityBtn} ${styles.desktopOnlyBreadcrumb}`}
+                    onClick={() => {
+                      const hero = document.getElementById("overview");
+                      if (hero) hero.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    title={`Scroll to ${title} overview`}
+                    aria-label={`Scroll to ${title} overview`}
+                  >
+                    {title}
+                  </button>
 
-                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                {/* 1. Main Speciality Root */}
-                <button
-                  type="button"
-                  className={styles.breadcrumbSpecialityBtn}
-                  onClick={() => {
-                    const hero = document.getElementById("overview");
-                    if (hero) hero.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  title={`Scroll to ${title} overview`}
-                  aria-label={`Scroll to ${title} overview`}
-                >
-                  {title}
-                </button>
-
-                {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
-                <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
-                  <div className={styles.breadcrumbCombinedDropdown}>
-                    <button
-                      type="button"
-                      className={`${styles.breadcrumbTypeBtn} ${isDropdownOpen ? styles.breadcrumbTypeBtnOpen : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsDropdownOpen((prev) => !prev);
-                      }}
-                      title={`Patient type: ${patientType}. Click to change programme or patient type.`}
-                      aria-haspopup="listbox"
-                      aria-expanded={isDropdownOpen}
-                      aria-label={`Current patient type: ${patientType}. Click to change.`}
-                    >
-                      <span>{patientType}</span>
-                    </button>
-
-                    <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
-
-                    <button
-                      type="button"
-                      className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsDropdownOpen((prev) => !prev);
-                      }}
-                      aria-haspopup="listbox"
-                      aria-expanded={isDropdownOpen}
-                      aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
-                    >
-                      <span className={styles.breadcrumbSelectedTabTitle}>
-                        {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
-                      </span>
-                      <ChevronDown
-                        size={14}
-                        className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </div>
-
-                  <AnimatePresence>
-                    {isDropdownOpen && (
-                      <motion.div
-                        className={styles.programmeDropdownMenu}
-                        role="listbox"
-                        aria-label="Cancer Treatment Programmes Selection"
-                        data-lenis-prevent="true"
-                        onWheel={(e) => e.stopPropagation()}
-                        initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                  {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
+                  <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
+                    <div className={styles.breadcrumbCombinedDropdown}>
+                      <button
+                        type="button"
+                        className={`${styles.breadcrumbTypeBtn} ${isDropdownOpen ? styles.breadcrumbTypeBtnOpen : ""}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsDropdownOpen((prev) => !prev);
+                        }}
+                        title={`Patient type: ${patientType}. Click to change programme or patient type.`}
+                        aria-haspopup="listbox"
+                        aria-expanded={isDropdownOpen}
+                        aria-label={`Current patient type: ${patientType}. Click to change.`}
                       >
-                        {/* Left side: Patient Type Segregated Sidebar */}
-                        <div className={styles.dropdownSidebar} role="tablist" aria-label="Patient Type">
-                          <div className={styles.dropdownSidebarHeader}>
-                            <span className={styles.dropdownSectionLabel}>Patient Type</span>
-                          </div>
-                          <div className={styles.dropdownTypeOptions}>
-                            {(["Adult", "Paediatric"] as const).map((type) => {
-                              const isSelected = patientType === type;
-                              const count = type === "Adult" ? adultCategories.length : paediatricCategories.length;
-                              return (
-                                <button
-                                  key={type}
-                                  type="button"
-                                  role="tab"
-                                  aria-selected={isSelected}
-                                  className={`${styles.dropdownTypeOptionBtn} ${isSelected ? styles.dropdownTypeOptionBtnActive : ""}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handlePatientTypeChange(type, true);
-                                  }}
-                                >
-                                  <span className={styles.dropdownTypeOptionIndicator} aria-hidden="true" />
-                                  <span className={styles.dropdownTypeOptionName}>{type}</span>
-                                  <span className={styles.dropdownTypeOptionCount}>{count}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
+                        <span>{patientType}</span>
+                      </button>
 
-                        {/* Right side: Cancer Programmes List */}
-                        <div className={styles.dropdownListPanel} data-lenis-prevent="true">
-                          <div className={styles.dropdownListHeader}>
-                            <span className={styles.dropdownSectionLabel}>
-                              {patientType} Programmes ({currentCategories.length})
-                            </span>
-                          </div>
-                          <div
-                            className={styles.dropdownScrollList}
-                            data-lenis-prevent="true"
-                            onWheel={(e) => e.stopPropagation()}
-                          >
-                            {currentCategories.map((cat) => {
-                              const isActive = cat.id === activeCategory;
-                              const displayTitle = (cat.title || "").replace(/\s+(Treatment|Programme).*$/, "");
-                              return (
-                                <button
-                                  key={cat.id}
-                                  type="button"
-                                  role="option"
-                                  aria-selected={isActive}
-                                  className={`${styles.programmeDropdownItem} ${isActive ? styles.programmeDropdownItemActive : ""}`}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCategorySelect(cat.id);
-                                    setIsDropdownOpen(false);
-                                  }}
-                                >
-                                  <span className={styles.programmeDropdownItemImageWrap}>
-                                    <img
-                                      src={cat.icon}
-                                      alt={cat.programmeTitle || cat.title}
-                                      className={styles.programmeDropdownItemImage}
-                                      loading="lazy"
-                                      width={26}
-                                      height={26}
-                                    />
-                                  </span>
-                                  <span className={styles.programmeDropdownItemText}>
-                                    <span className={styles.programmeDropdownItemTitle}>
-                                      {displayTitle}
-                                    </span>
-                                  </span>
-                                  {isActive && (
-                                    <Check size={15} className={styles.programmeDropdownCheck} aria-hidden="true" />
-                                  )}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            ) : (
-              /* Dropdown Selection with active programme upfront (Unpinned centered pill) */
-              <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
-                <button
-                  type="button"
-                  className={`${styles.programmeDropdownTrigger} ${isDropdownOpen ? styles.programmeDropdownTriggerOpen : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDropdownOpen((prev) => !prev);
-                  }}
-                  aria-haspopup="listbox"
-                  aria-expanded={isDropdownOpen}
-                  aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
-                >
-                  <div className={styles.programmeDropdownTriggerLeft}>
-                    <span className={styles.programmeDropdownTriggerBadge}>
-                      {patientType}
-                    </span>
-                    <span className={styles.programmeDropdownDivider} aria-hidden="true" />
-                    <span className={styles.programmeDropdownItemImageWrap}>
-                      <img
-                        src={selectedCat?.icon}
-                        alt={selectedCat?.programmeTitle || selectedCat?.title}
-                        className={styles.programmeDropdownItemImage}
-                        loading="lazy"
-                        width={28}
-                        height={28}
-                      />
-                    </span>
-                    <span className={styles.programmeDropdownTriggerText}>
-                      <span className={styles.programmeDropdownTriggerTitle}>
-                        {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
-                      </span>
-                    </span>
-                  </div>
-                  <ChevronDown
-                    size={16}
-                    className={`${styles.programmeDropdownChevron} ${isDropdownOpen ? styles.programmeDropdownChevronOpen : ""}`}
-                    aria-hidden="true"
-                  />
-                </button>
+                      <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
 
-                <AnimatePresence>
-                  {isDropdownOpen && (
-                    <motion.div
-                      className={styles.programmeDropdownMenu}
-                      role="listbox"
-                      aria-label="Cancer Treatment Programmes Selection"
-                      data-lenis-prevent="true"
-                      onWheel={(e) => e.stopPropagation()}
-                      initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      {/* Left side: Patient Type Segregated Sidebar */}
-                      <div className={styles.dropdownSidebar} role="tablist" aria-label="Patient Type">
-                        <div className={styles.dropdownSidebarHeader}>
-                          <span className={styles.dropdownSectionLabel}>Patient Type</span>
-                        </div>
-                        <div className={styles.dropdownTypeOptions}>
-                          {(["Adult", "Paediatric"] as const).map((type) => {
-                            const isSelected = patientType === type;
-                            const count = type === "Adult" ? adultCategories.length : paediatricCategories.length;
-                            return (
-                              <button
-                                key={type}
-                                type="button"
-                                role="tab"
-                                aria-selected={isSelected}
-                                className={`${styles.dropdownTypeOptionBtn} ${isSelected ? styles.dropdownTypeOptionBtnActive : ""}`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handlePatientTypeChange(type, true);
-                                }}
-                              >
-                                <span className={styles.dropdownTypeOptionIndicator} aria-hidden="true" />
-                                <span className={styles.dropdownTypeOptionName}>{type}</span>
-                                <span className={styles.dropdownTypeOptionCount}>{count}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                      <button
+                        type="button"
+                        className={`${styles.breadcrumbSelectedTabTrigger} ${isDropdownOpen ? styles.breadcrumbSelectedTabTriggerOpen : ""}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsDropdownOpen((prev) => !prev);
+                        }}
+                        aria-haspopup="listbox"
+                        aria-expanded={isDropdownOpen}
+                        aria-label={`Selected programme: ${(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")} (${patientType}). Click to change programme.`}
+                      >
+                        <span className={styles.breadcrumbSelectedTabTitle}>
+                          {(selectedCat?.title || "").replace(/\s+(Treatment|Programme).*$/, "")}
+                        </span>
+                        <ChevronDown
+                          size={14}
+                          className={`${styles.breadcrumbChevronDown} ${isDropdownOpen ? styles.breadcrumbChevronDownOpen : ""}`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
 
-                      {/* Right side: Cancer Programmes List */}
-                      <div className={styles.dropdownListPanel} data-lenis-prevent="true">
-                        <div className={styles.dropdownListHeader}>
-                          <span className={styles.dropdownSectionLabel}>
-                            {patientType} Programmes ({currentCategories.length})
-                          </span>
-                        </div>
-                        <div
-                          className={styles.dropdownScrollList}
+                    <AnimatePresence>
+                      {isDropdownOpen && (
+                        <motion.div
+                          className={styles.programmeDropdownMenu}
+                          role="listbox"
+                          aria-label="Cancer Treatment Programmes Selection"
                           data-lenis-prevent="true"
                           onWheel={(e) => e.stopPropagation()}
+                          initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
                         >
-                          {currentCategories.map((cat) => {
-                            const isActive = cat.id === activeCategory;
-                            const displayTitle = (cat.title || "").replace(/\s+(Treatment|Programme).*$/, "");
-                            return (
-                              <button
-                                key={cat.id}
-                                type="button"
-                                role="option"
-                                aria-selected={isActive}
-                                className={`${styles.programmeDropdownItem} ${isActive ? styles.programmeDropdownItemActive : ""}`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCategorySelect(cat.id);
-                                  setIsDropdownOpen(false);
-                                }}
-                              >
-                                <span className={styles.programmeDropdownItemImageWrap}>
-                                  <img
-                                    src={cat.icon}
-                                    alt={cat.programmeTitle || cat.title}
-                                    className={styles.programmeDropdownItemImage}
-                                    loading="lazy"
-                                    width={26}
-                                    height={26}
-                                  />
-                                </span>
-                                <span className={styles.programmeDropdownItemText}>
-                                  <span className={styles.programmeDropdownItemTitle}>
-                                    {displayTitle}
-                                  </span>
-                                </span>
-                                {isActive && (
-                                  <Check size={15} className={styles.programmeDropdownCheck} aria-hidden="true" />
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                          {/* Left side: Patient Type Segregated Sidebar */}
+                          <div className={styles.dropdownSidebar} role="tablist" aria-label="Patient Type">
+                            <div className={styles.dropdownSidebarHeader}>
+                              <span className={styles.dropdownSectionLabel}>Patient Type</span>
+                            </div>
+                            <div className={styles.dropdownTypeOptions}>
+                              {(["Adult", "Paediatric"] as const).map((type) => {
+                                const isSelected = patientType === type;
+                                const count = type === "Adult" ? adultCategories.length : paediatricCategories.length;
+                                return (
+                                  <button
+                                    key={type}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={isSelected}
+                                    className={`${styles.dropdownTypeOptionBtn} ${isSelected ? styles.dropdownTypeOptionBtnActive : ""}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handlePatientTypeChange(type, true);
+                                    }}
+                                  >
+                                    <span className={styles.dropdownTypeOptionIndicator} aria-hidden="true" />
+                                    <span className={styles.dropdownTypeOptionName}>{type}</span>
+                                    <span className={styles.dropdownTypeOptionCount}>{count}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Right side: Cancer Programmes List */}
+                          <div className={styles.dropdownListPanel} data-lenis-prevent="true">
+                            <div className={styles.dropdownListHeader}>
+                              <span className={styles.dropdownSectionLabel}>
+                                {patientType} Programmes ({currentCategories.length})
+                              </span>
+                            </div>
+                            <div
+                              className={styles.dropdownScrollList}
+                              data-lenis-prevent="true"
+                              onWheel={(e) => e.stopPropagation()}
+                            >
+                              {currentCategories.map((cat) => {
+                                const isActive = cat.id === activeCategory;
+                                const displayTitle = (cat.title || "").replace(/\s+(Treatment|Programme).*$/, "");
+                                return (
+                                  <button
+                                    key={cat.id}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={isActive}
+                                    className={`${styles.programmeDropdownItem} ${isActive ? styles.programmeDropdownItemActive : ""}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCategorySelect(cat.id);
+                                      setIsDropdownOpen(false);
+                                    }}
+                                  >
+                                    <span className={styles.programmeDropdownItemImageWrap}>
+                                      <img
+                                        src={cat.icon}
+                                        alt={cat.programmeTitle || cat.title}
+                                        className={styles.programmeDropdownItemImage}
+                                        loading="lazy"
+                                        width={26}
+                                        height={26}
+                                      />
+                                    </span>
+                                    <span className={styles.programmeDropdownItemText}>
+                                      <span className={styles.programmeDropdownItemTitle}>
+                                        {displayTitle}
+                                      </span>
+                                    </span>
+                                    {isActive && (
+                                      <Check size={15} className={styles.programmeDropdownCheck} aria-hidden="true" />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
               </div>
-            )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Circular Programme Navigation Tabs - Visible in page flow; smoothly hides when top bar appears */}
+        <motion.div
+          className={styles.programmeTabsWrapper}
+          animate={{
+            opacity: isTabsPinned ? 0 : 1,
+            pointerEvents: isTabsPinned ? "none" : "auto",
+          }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+        >
+          <div className={styles.programmeTabsScroll} role="tablist" aria-label="Cancer Treatment Programmes">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.div
+                key={patientType}
+                className={styles.programmeTabsRow}
+                initial={{ opacity: 0, x: patientType === "Adult" ? -16 : 16, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: patientType === "Adult" ? 16 : -16, filter: "blur(4px)" }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {currentCategories.map((cat) => {
+                  const isActive = cat.id === activeCategory;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={`${styles.programmeTab} ${isActive ? styles.programmeTabActive : ""}`}
+                      onClick={() => handleCategorySelect(cat.id)}
+                    >
+                      <span className={styles.programmeTabImageWrap}>
+                        <img
+                          src={cat.icon}
+                          alt={cat.programmeTitle || cat.title}
+                          className={styles.programmeTabImage}
+                          loading="lazy"
+                          width={60}
+                          height={60}
+                        />
+                      </span>
+                      <span className={styles.programmeTabTitle}>
+                        {cat.programmeTitle || cat.title}
+                      </span>
+                    </button>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Sentinel placed immediately after circular tabs: triggers pinned top bar smoothly once circular tabs scroll past the navbar */}
+        <div ref={tabsSentinelRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
 
 
         {/* Full-width Selected Programme Showcase Banner */}
@@ -2411,7 +2403,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
               <AdvanceTechnology />
             </div>
           ) : section.id === "tests" || section.id === "related-tests" ? (
-            <div style={{ width: "100%", maxWidth: "100%", overflowX: "clip", overflowY: "visible" }}>
+            <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
               <motion.div
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}

@@ -2007,3 +2007,23 @@ export const COE_SPECIALITIES = [
     stats: { value: "3.5K+", label: "Rheumatology Patients" },
   }
 ];
+
+export function normalizeSpecialitySlug(rawSlug: string): string {
+  const map: Record<string, string> = {
+    "cardiac-sciences": "cardiology",
+    "cardiac": "cardiology",
+    "cancer-care": "oncology",
+    "cancer": "oncology",
+    "neuro-sciences": "neurology",
+    "neuro": "neurology",
+    "gastro-sciences": "gastroenterology",
+    "gastro": "gastroenterology",
+    "renal-sciences": "nephrology",
+    "renal": "nephrology",
+    "kidney": "nephrology",
+    "ortho": "orthopaedics",
+    "bone-marrow-transplant": "haematology-bmt",
+    "solid-organ-bone-marrow-transplant": "organ-transplants",
+  };
+  return map[rawSlug] || rawSlug;
+}
