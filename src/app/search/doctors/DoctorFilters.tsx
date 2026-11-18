@@ -26,7 +26,7 @@ interface Props {
 }
 
 const groups = [
-  { key: "specialties", label: "Speciality", plural: "specialities", Icon: Stethoscope },
+  { key: "specialties", label: "Specialty", plural: "specialties", Icon: Stethoscope },
   { key: "expertise", label: "Expertise", plural: "areas of expertise", Icon: BadgeCheck },
   { key: "hospitals", label: "Hospital", plural: "hospitals", Icon: Building2 },
   { key: "languages", label: "Language", plural: "languages", Icon: Languages },

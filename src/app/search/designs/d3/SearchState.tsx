@@ -8,7 +8,7 @@ export default function SearchState({ error, filtered, onReset, onRetry, recover
   return <div className={styles.state} role={error ? "alert" : undefined} data-d3-ui>
     <span className={styles.icon}><Icon size={28} aria-hidden /></span>
     <h2>{error ? "We couldn’t load these results" : emptyState?.title ?? (filtered ? "No matches with these filters" : "No results found")}</h2>
-    <p>{error ? "Your search has been kept. Please try again." : emptyState?.message ?? (filtered ? "Try removing a filter or choosing another appointment date." : "Try another name or speciality, or broaden your location.")}</p>
+    <p>{error ? "Your search has been kept. Please try again." : emptyState?.message ?? (filtered ? "Try removing a filter or choosing another appointment date." : "Try another name or specialty, or broaden your location.")}</p>
     {!error && recovery && <><p>{recovery.message}</p><button type="button" onClick={recovery.onApply}>{recovery.label}</button></>}
     <button className={!error && recovery ? styles.secondary : undefined} type="button" onClick={error ? onRetry : onReset}>{error ? "Try again" : emptyState?.action ?? (filtered ? "Clear filters" : "Clear search")}</button>
   </div>;

@@ -276,7 +276,7 @@ export default function NHSearchExperience({
       } else if (isElementInView(healthEl)) {
         setDockedPlaceholder(isMobile ? "Checkups & tests..." : "Search health checkups & tests...");
       } else if (isElementInView(coeEl)) {
-        setDockedPlaceholder(isMobile ? "Specialities..." : "Search by speciality...");
+        setDockedPlaceholder(isMobile ? "Specialties..." : "Search by specialty...");
       } else {
         setDockedPlaceholder(isMobile ? "Search doctors, tests..." : "Search doctors, symptoms, packages...");
       }

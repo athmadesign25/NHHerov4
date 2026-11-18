@@ -146,7 +146,7 @@ export default function DoctorProfileSourceSections2({ source, section }: { sour
     {show("expertise") && <section id="profile-expertise" className={styles.chapter} aria-labelledby="profile-expertise-heading">
       <header className={styles.chapterHeading}><h2 id="profile-expertise-heading">Clinical expertise</h2></header>
       <div className={styles.chapterContent}>
-        {!!mainSpecialties.length && <div className={styles.subsection}><h3>Specialities</h3><ul className={styles.expertise}>{mainSpecialties.map((item, index) => <li key={index}>{item}</li>)}</ul></div>}
+        {!!mainSpecialties.length && <div className={styles.subsection}><h3>Specialties</h3><ul className={styles.expertise}>{mainSpecialties.map((item, index) => <li key={index}>{item}</li>)}</ul></div>}
         {!!subSpecialties.length && <div className={styles.subsection}><h3>Areas of expertise</h3><ul className={styles.clinicalList}>{subSpecialties.map((item, index) => <li key={index}>{item}</li>)}</ul></div>}
         {!!treatments.length && <div className={styles.subsection}><h3>{sourceText(source.treatments?.title ?? "") || "Treatments & procedures"}</h3>
           <ul className={styles.clinicalList}>{treatments.slice(0, 6).map((item, index) => <li key={index}>{item}</li>)}</ul>
