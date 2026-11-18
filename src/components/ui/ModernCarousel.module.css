@@ -559,41 +559,14 @@
 
 @media (max-width: 768px) {
   .navigationWrapper {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     gap: var(--space-12);
     align-items: center;
   }
 
   .readingAidContainer {
-    order: -1;
-    flex: 0 0 100%;
-    width: 100%;
-    padding: 0;
-    justify-content: flex-start;
-  }
-
-  .readingAidContent {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-  }
-
-  .activeTitle,
-  .nextTitle {
-    max-width: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  .activeTitle {
-    max-width: 125px;
-    font-size: var(--font-size-xs);
-  }
-
-  .nextTitle {
-    max-width: 115px;
-    font-size: var(--font-size-xs);
+    display: none !important;
   }
 }
 

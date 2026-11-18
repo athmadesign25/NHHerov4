@@ -24,7 +24,7 @@ import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import AboutSpecialitySection from "./AboutSpecialitySection";
 import { getSpecialityRelatedTreatments, RelatedTreatmentItem } from "./SpecialityDesign2";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
-import { ALL_SPECIALITIES } from "@/data/specialities";
+import { ALL_SPECIALITIES, normalizeSpecialitySlug } from "@/data/specialities";
 import {
   cardiacBannerData,
   cardiacStatsData,
@@ -996,8 +996,9 @@ const faqData = [
 ];
 
 export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: string; isCoE?: boolean }) {
-  const isCardiac = slug === "cardiology" || slug === "cardiac-sciences";
-  const currentSpec = ALL_SPECIALITIES.find(s => s.slug === slug || (isCardiac && s.slug === "cardiology"));
+  const resolvedSlug = normalizeSpecialitySlug(slug);
+  const isCardiac = resolvedSlug === "cardiology";
+  const currentSpec = ALL_SPECIALITIES.find(s => s.slug === resolvedSlug);
   const isCoE = propIsCoE !== undefined ? propIsCoE : Boolean(currentSpec?.isCoE);
   const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = isCardiac ? "Cardiology & Cardiac Surgery" : (currentSpec?.name || 'Cancer Care');
@@ -1307,12 +1308,14 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
             <motion.div 
+              className={styles.heroBreadcrumbs}
               style={{ marginBottom: "-8px", opacity: 0.6 }}
               initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
               animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
             >
               <Breadcrumbs 
+                hideOnMobile
                 items={[
                   { label: "Home", href: "/" },
                   isCoE
@@ -1506,19 +1509,19 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   {/* 0. Parent Directory Link */}
                   <Link
                     href={isCoE ? "/centre-of-excellence" : "/specialities"}
-                    className={design2Styles.breadcrumbLink}
+                    className={`${design2Styles.breadcrumbLink} ${design2Styles.desktopOnlyBreadcrumb}`}
                     title={isCoE ? "Centres of Excellence" : "All Specialities"}
                     aria-label={isCoE ? "View all centres of excellence" : "View all medical specialities"}
                   >
                     {isCoE ? "Centres of Excellence" : "Specialities"}
                   </Link>
 
-                  <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
+                  <ChevronRight size={14} className={`${design2Styles.breadcrumbChevron} ${design2Styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
 
                   {/* 1. Main Speciality Root */}
                   <button
                     type="button"
-                    className={design2Styles.breadcrumbSpecialityBtn}
+                    className={`${design2Styles.breadcrumbSpecialityBtn} ${design2Styles.desktopOnlyBreadcrumb}`}
                     onClick={() => {
                       const hero = document.getElementById("overview");
                       if (hero) hero.scrollIntoView({ behavior: "smooth" });
@@ -2106,7 +2109,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               <AdvanceTechnology />
             </div>
           ) : section.id === "tests" || section.id === "related-tests" ? (
-            <div style={{ width: "100%", maxWidth: "100%", overflowX: "clip", overflowY: "visible" }}>
+            <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
               <motion.div
                 initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}

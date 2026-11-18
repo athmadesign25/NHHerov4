@@ -917,11 +917,21 @@
   outline: none;
   border-radius: 9999px;
   transform: translate3d(0, 0, 0);
-  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.55;
+  transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .programmeTab:hover {
   transform: translateY(-2px);
+  opacity: 0.88;
+}
+
+.programmeTabActive {
+  opacity: 1 !important;
+}
+
+.programmeTabActive:hover {
+  opacity: 1 !important;
 }
 
 /* When pinned: horizontal alignment (image left, text right), lesser height, compact width */
@@ -936,18 +946,21 @@
   background: rgba(var(--white-rgb), 0.05);
   border: 1px solid rgba(var(--white-rgb), 0.10);
   text-align: left;
+  opacity: 0.6;
 }
 
 .programmeTabsWrapperPinned .programmeTab:hover {
   background: rgba(var(--white-rgb), 0.10);
   border-color: rgba(var(--white-rgb), 0.22);
   transform: translateY(-1px);
+  opacity: 0.9;
 }
 
 .programmeTabsWrapperPinned .programmeTabActive {
   background: rgba(var(--blue-brand-rgb), 0.45);
   border-color: rgba(var(--sky-400-rgb), 0.45);
   box-shadow: 0 2px 14px rgba(var(--blue-brand-rgb), 0.35);
+  opacity: 1 !important;
 }
 
 .programmeTabImageWrap {
@@ -1270,17 +1283,34 @@
 
 @media (max-width: 768px) {
   .selectedProgrammeHero {
-    min-height: 480px;
-    border-radius: 10px;
+    min-height: 560px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   .selectedProgrammeContent {
-    padding: 32px 20px;
+    min-height: 320px;
+    padding: 36px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   .selectedProgrammeBtn,
   .selectedProgrammeSecondaryBtn {
     width: 100%;
     padding: 12px 20px;
     font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .selectedProgrammeHero {
+    min-height: 580px;
+  }
+  .selectedProgrammeContent {
+    min-height: 340px;
+    padding: 32px 18px 36px;
   }
 }
 
@@ -1502,9 +1532,22 @@
   .subConditionsGrid { grid-template-columns: repeat(2, 1fr); }
 }
 
+.heroBreadcrumbs {
+  margin-bottom: -8px;
+  opacity: 0.6;
+}
+
+.desktopOnlyBreadcrumb {
+  display: inline-flex;
+}
+
 @media (max-width: 768px) {
   .statsBanner { position: relative; transform: none; left: 0; width: 100%; margin-top: -40px; border-radius: var(--radius-lg); }
   .hero { padding-bottom: var(--sp-12); }
+  .heroBreadcrumbs,
+  .desktopOnlyBreadcrumb {
+    display: none !important;
+  }
   .accordionContainer { flex-direction: column; height: auto; }
   .accordionItem { height: 80px; }
   .accordionItem.active { height: 400px; }

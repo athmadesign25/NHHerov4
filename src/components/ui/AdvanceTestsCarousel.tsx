@@ -58,7 +58,8 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
   // Card 1 (2nd card) sits at center slot (slot 2) initially
   const [centerIndex, setCenterIndex] = useState(1);
   const [direction, setDirection] = useState(1);
-  const [mobileActiveIndex, setMobileActiveIndex] = useState(1);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   const goNext = () => {
     setDirection(1);
@@ -68,6 +69,32 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
   const goPrev = () => {
     setDirection(-1);
     setCenterIndex((prev) => (prev - 1 + cardsCount) % cardsCount);
+  };
+
+  const handleMobileScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const firstItem = container.firstElementChild as HTMLElement | null;
+    const itemWidth = firstItem ? firstItem.offsetWidth + 16 : 320;
+    const index = Math.round(scrollLeft / itemWidth);
+    if (index >= 0 && index < cardsCount && index !== mobileActiveIndex) {
+      setMobileActiveIndex(index);
+    }
+  };
+
+  const scrollToMobileCard = (index: number) => {
+    setMobileActiveIndex(index);
+    if (scrollContainerRef.current) {
+      const items = scrollContainerRef.current.children;
+      if (items[index]) {
+        (items[index] as HTMLElement).scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }
   };
 
   // 5 slots centered on slot 2
@@ -150,8 +177,12 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
       </button>
 
       {/* MOBILE / TABLET NATIVE SWIPE LAYOUT */}
-      <div className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}>
-        {tests.map((test, index) => (
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleMobileScroll}
+        className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}
+      >
+        {tests.map((test) => (
           <div key={`mobile-test-${test.id}`} className={styles.mobileCarouselItem}>
             <AdvanceTestCard test={test} />
           </div>
@@ -163,7 +194,10 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
           <div
             key={i}
             className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
-            onClick={() => setMobileActiveIndex(i)}
+            onClick={() => scrollToMobileCard(i)}
+            aria-label={`Go to test ${i + 1}`}
+            role="button"
+            tabIndex={0}
           />
         ))}
       </div>
