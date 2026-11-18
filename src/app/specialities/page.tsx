@@ -28,23 +28,23 @@ import { NH_CITIES } from "@/lib/searchService";
 import {
   SpecialityFilters,
   FilterScrollArea,
-  ActiveSpecialityFilters,
   SidebarSpecialityFilters,
   SpecialityFilterDialog,
 } from "./filters";
-import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
-import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
+import { DoctorSearchTop, chipStyles } from "./toolbar";
+import themeStyles from "./toolbar/DoctorSearchTheme.module.css";
 import styles from "./page.module.css";
+
 
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 // Helper to determine destination URL (Cancer Care -> ?design=2)
-function getSpecialityHref(slug: string): string {
-  if (slug === "oncology") {
-    return "/specialities/oncology?design=2";
-  }
-  return `/specialities/${slug}`;
+function getSpecialityHref(slug: string, city: string): string {
+  const params = new URLSearchParams();
+  if (slug === "oncology") params.set("design", "2");
+  if (city !== "All") params.set("location", city);
+  return `/specialities/${encodeURIComponent(slug)}${params.size ? `?${params}` : ""}`;
 }
 
 function isCoEQuery(cat: string, classification: string, isCoEParam: boolean): boolean {
@@ -85,43 +85,8 @@ function SpecialitiesContent() {
   const [selectedCity, setSelectedCity] = useState(() => searchParams?.get("location") || searchParams?.get("city") || "All");
   const [sortBy, setSortBy] = useState("relevance");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
-  const refinementScrollRef = useRef<HTMLDivElement>(null);
-  const [refinementEdges, setRefinementEdges] = useState<{
-    overflow: boolean;
-    previous: boolean;
-    next: boolean;
-  }>({ overflow: false, previous: false, next: false });
-
-  // Sync scroll edge indicators for DoctorRefinementRow styling
-  useEffect(() => {
-    const el = refinementScrollRef.current;
-    if (!el) return;
-
-    const measureEdges = () => {
-      const overflow = el.scrollWidth > el.clientWidth + 1;
-      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-      const previous = overflow && el.scrollLeft > 2;
-      const next = overflow && el.scrollLeft < maxScroll - 2;
-      setRefinementEdges((prev) =>
-        prev.overflow === overflow && prev.previous === previous && prev.next === next
-          ? prev
-          : { overflow, previous, next }
-      );
-    };
-
-    measureEdges();
-    el.addEventListener("scroll", measureEdges, { passive: true });
-    const ro = new ResizeObserver(measureEdges);
-    ro.observe(el);
-
-    return () => {
-      el.removeEventListener("scroll", measureEdges);
-      ro.disconnect();
-    };
-  }, []);
-
   // Sync query params whenever searchParams changes
+
   useEffect(() => {
     const query = searchParams?.get("search") || searchParams?.get("q") || "";
     const rawCat = searchParams?.get("category") || searchParams?.get("filter") || "";
@@ -141,38 +106,42 @@ function SpecialitiesContent() {
     if (loc) setSelectedCity(loc);
   }, [searchParams]);
 
-  // Navbar visibility synchronized with Navbar's data-nav-visible on <html>
-  const [navVisible, setNavVisible] = useState(true);
+  const pageRef = useRef<HTMLDivElement>(null);
 
+  // Follow our existing navbar's rendered edge without changing its component.
   useEffect(() => {
-    const updateNavVisible = () => {
-      const attr = document.documentElement.getAttribute("data-nav-visible");
-      if (attr !== null) {
-        setNavVisible(attr !== "false");
-      }
+    const page = pageRef.current;
+    const nav = document.querySelector("nav");
+    if (!page || !nav) return;
+    let frame = 0;
+    let until = 0;
+    const follow = () => {
+      page.style.setProperty("--directory-nav-offset", `${Math.max(0, nav.getBoundingClientRect().bottom)}px`);
+      page.style.setProperty("--page-nav-height", `${nav.getBoundingClientRect().height}px`);
+      frame = performance.now() < until ? requestAnimationFrame(follow) : 0;
     };
-    updateNavVisible();
-
-    const observer = new MutationObserver(updateNavVisible);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-nav-visible"],
-    });
-
-    return () => observer.disconnect();
+    const schedule = () => {
+      const seconds = Math.max(...getComputedStyle(nav).transitionDuration.split(",").map(value => parseFloat(value)));
+      until = performance.now() + seconds * 1000;
+      if (!frame) frame = requestAnimationFrame(follow);
+    };
+    follow();
+    const observer = new MutationObserver(schedule);
+    observer.observe(nav, { attributes: true, attributeFilter: ["style", "class"] });
+    const resize = new ResizeObserver(schedule);
+    resize.observe(nav);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      observer.disconnect(); resize.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
-  // Refinement scroll handler
-  const scrollRefinements = (direction: -1 | 1) => {
-    if (refinementScrollRef.current) {
-      refinementScrollRef.current.scrollBy({
-        left: direction * (refinementScrollRef.current.clientWidth * 0.75),
-        behavior: "smooth",
-      });
-    }
-  };
-
   // Categories list with Centres of Excellence
+
   const categories = useMemo(() => {
     return [
       "All",
@@ -367,7 +336,12 @@ function SpecialitiesContent() {
   };
 
   return (
-    <div className={styles.page} data-nav-theme="light">
+    <div
+      ref={pageRef}
+      className={`${styles.page} ${styles.doctorPage} ${themeStyles.theme}`}
+      data-design="d20"
+      data-nav-theme="light"
+    >
       {/* ── 1. HEADER & HERO (Matching DoctorSearchTop from aditya4_work) ── */}
       <header className={`${styles.container} ${styles.titleRow}`}>
         <div className={styles.title}>
@@ -381,183 +355,65 @@ function SpecialitiesContent() {
         </p>
       </header>
 
-      {/* ── 2. STICKY UNIFIED SEARCH & REFINEMENT TOOLBAR ── */}
-      <div className={`${styles.searchToolbarWrapper} ${!navVisible ? styles.navHidden : ""}`} data-d3-search-bar>
-        <div className={styles.searchToolbarInner}>
-          <div className={styles.searchRow}>
-            {/* Unified Search Input (Location + Query) */}
-            <div className={styles.combinedSearch}>
-              {/* Leading City Location dropdown */}
-              <label className={styles.leadingLocation}>
-                <MapPin size={16} aria-hidden="true" />
-                <span className={styles.srOnly}>Select location</span>
-                <select
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  aria-label="Filter specialities by location"
-                >
-                  <option value="All">All Locations</option>
-                  {NH_CITIES.map((c) => (
-                    <option key={c.id} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+      {/* ── 2. STICKY UNIFIED SEARCH & REFINEMENT TOOLBAR (Matching DoctorSearchTop & Design16Refinements) ── */}
+      <DoctorSearchTop
+        search={search}
+        onSearch={setSearch}
+        location={selectedCity}
+        onLocation={setSelectedCity}
+        filterCount={activeFiltersCount}
+        onOpenFilters={() => setMobileFilterOpen(true)}
+      >
+        {/* All Specialities */}
+        <button
+          type="button"
+          className={chipStyles.chip}
+          aria-pressed={selectedCategory === "All" && selectedClassification === "All"}
+          onClick={() => {
+            setSelectedCategory("All");
+            setSelectedClassification("All");
+          }}
+        >
+          All Specialities
+        </button>
 
-              {/* Search Form */}
-              <form
-                className={styles.searchForm}
-                role="search"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <div className={styles.searchField}>
-                  <input
-                    id="speciality-search-input"
-                    type="search"
-                    className={styles.searchFieldInput}
-                    placeholder="Search speciality, condition or treatment (e.g. Heart, Knee, Cancer)..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    autoComplete="off"
-                    aria-label="Search medical specialities"
-                  />
-                  {search && (
-                    <button
-                      type="button"
-                      onClick={() => setSearch("")}
-                      className={styles.searchClearBtn}
-                      aria-label="Clear search query"
-                      title="Clear search"
-                    >
-                      <X size={16} />
-                    </button>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  className={styles.searchSubmitBtn}
-                  aria-label="Search"
-                  title="Search"
-                >
-                  <Search size={18} />
-                </button>
-              </form>
-            </div>
+        {/* Centres of Excellence */}
+        <button
+          type="button"
+          className={chipStyles.chip}
+          aria-pressed={
+            selectedCategory === "Centres of Excellence" ||
+            selectedClassification === "Centres of Excellence Only"
+          }
+          onClick={() => {
+            setSelectedCategory("Centres of Excellence");
+            setSelectedClassification("Centres of Excellence Only");
+          }}
+        >
+          <Star size={13} fill="#f59e0b" color="#f59e0b" aria-hidden="true" />
+          Centres of Excellence
+        </button>
 
-            {/* Mobile Filter Button */}
+        {/* Top Categories */}
+        {SPECIALITY_CATEGORIES.filter((c) => c !== "All").map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
             <button
+              key={cat}
               type="button"
-              className={styles.mobileFilterBtn}
-              data-active={hasActiveFilters}
-              onClick={() => setMobileFilterOpen(true)}
-              aria-label="Open filter sidebar"
+              className={chipStyles.chip}
+              aria-pressed={isActive}
+              onClick={() => {
+                setSelectedCategory(cat);
+                setSelectedClassification("All");
+              }}
             >
-              <Filter size={15} />
-              <span>Filters</span>
-              {activeFiltersCount > 0 && (
-                <span className={styles.mobileFilterBadge}>{activeFiltersCount}</span>
-              )}
+              {cat}
             </button>
-          </div>
+          );
+        })}
+      </DoctorSearchTop>
 
-          {/* Horizontal Refinement Bar (DoctorRefinementRow styling) */}
-          <div
-            className={styles.refinementRow}
-            role="group"
-            aria-label="Category shortcuts"
-            data-overflow={refinementEdges.overflow ? "true" : undefined}
-            data-has-previous={refinementEdges.previous ? "true" : undefined}
-            data-has-next={refinementEdges.next ? "true" : undefined}
-          >
-            <button
-              type="button"
-              className={`${styles.refinementArrow} ${styles.refinementArrowLeft}`}
-              onClick={() => scrollRefinements(-1)}
-              aria-label="Scroll categories left"
-              data-visible={refinementEdges.previous ? "true" : "false"}
-              tabIndex={refinementEdges.previous ? 0 : -1}
-              disabled={!refinementEdges.previous}
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <div ref={refinementScrollRef} className={styles.refinementViewport}>
-              {/* All */}
-              <button
-                type="button"
-                className={`${styles.refinementChip} ${
-                  selectedCategory === "All" && selectedClassification === "All"
-                    ? styles.refinementChipActive
-                    : ""
-                }`}
-                aria-pressed={selectedCategory === "All" && selectedClassification === "All"}
-                onClick={() => {
-                  setSelectedCategory("All");
-                  setSelectedClassification("All");
-                }}
-              >
-                All Specialities
-              </button>
-
-              {/* Centres of Excellence */}
-              <button
-                type="button"
-                className={`${styles.refinementChip} ${
-                  selectedCategory === "Centres of Excellence" ||
-                  selectedClassification === "Centres of Excellence Only"
-                    ? styles.refinementChipActive
-                    : ""
-                }`}
-                aria-pressed={
-                  selectedCategory === "Centres of Excellence" ||
-                  selectedClassification === "Centres of Excellence Only"
-                }
-                onClick={() => {
-                  setSelectedCategory("Centres of Excellence");
-                  setSelectedClassification("Centres of Excellence Only");
-                }}
-              >
-                <Star size={13} fill="#f59e0b" color="#f59e0b" />
-                Centres of Excellence
-              </button>
-
-              {/* Top Categories */}
-              {SPECIALITY_CATEGORIES.filter((c) => c !== "All").map((cat) => {
-                const isActive = selectedCategory === cat;
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    className={`${styles.refinementChip} ${
-                      isActive ? styles.refinementChipActive : ""
-                    }`}
-                    aria-pressed={isActive}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      setSelectedClassification("All");
-                    }}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
-
-            <button
-              type="button"
-              className={`${styles.refinementArrow} ${styles.refinementArrowRight}`}
-              onClick={() => scrollRefinements(1)}
-              aria-label="Scroll categories right"
-              data-visible={refinementEdges.next ? "true" : "false"}
-              tabIndex={refinementEdges.next ? 0 : -1}
-              disabled={!refinementEdges.next}
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* ── 3. MAIN TWO-COLUMN LAYOUT ── */}
       <div className={styles.layout}>
@@ -611,43 +467,6 @@ function SpecialitiesContent() {
 
         {/* Right Main Results Area */}
         <section className={styles.resultsArea} aria-label="Medical specialities results">
-          {/* Applied Filter Chips matching Doctor listing flow */}
-          {appliedChips.length > 0 && (
-            <div style={{ marginBottom: "var(--sp-2, 16px)" }}>
-              <ActiveSpecialityFilters
-                chips={appliedChips}
-                reducedMotion={reducedMotion}
-                focusFallback={() => {
-                  document.getElementById("refinement-all")?.focus({ preventScroll: true });
-                }}
-              />
-            </div>
-          )}
-
-          {/* Results Header: Count & Sort Select */}
-          <div className={styles.resultsHeader}>
-            <div className={styles.resultsCount} id="specialities-results-count">
-              Showing <strong>{filtered.length}</strong> {filtered.length === 1 ? "speciality" : "specialities"}
-              {selectedCity !== "All" ? ` in ${selectedCity}` : ""}
-            </div>
-
-            <div className={styles.sortSelectWrapper}>
-              <select
-                id="speciality-sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className={styles.sortSelect}
-                aria-label="Sort specialities"
-              >
-                <option value="relevance">Sort: Relevance</option>
-                <option value="doctors">Specialists: High to Low</option>
-                <option value="procedures">Procedures: High to Low</option>
-                <option value="name">Name: A to Z</option>
-              </select>
-              <ChevronDown className={styles.sortSelectArrow} size={15} aria-hidden="true" />
-            </div>
-          </div>
-
           {/* Speciality Cards Grid (Exact match to Landing Page Specialty Card) */}
           <AnimatePresence mode="popLayout">
             <motion.div className={styles.cardsGrid} layout>
@@ -660,7 +479,7 @@ function SpecialitiesContent() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ delay: Math.min(i * 0.04, 0.25), duration: 0.35 }}
                 >
-                  <SpecialityCardItem spec={spec} />
+                  <SpecialityCardItem spec={spec} city={selectedCity} />
                 </motion.div>
               ))}
             </motion.div>
@@ -706,10 +525,6 @@ function SpecialitiesContent() {
           onClose={() => setMobileFilterOpen(false)}
         />
       )}
-
-      {/* Unified Page-Aware Pre-Footer CTA & Floating Side Actions */}
-      <BlogCtaBanner bg="transparent" />
-      <ClinicalFloatingSideActions />
     </div>
   );
 }
@@ -728,7 +543,7 @@ export default function SpecialitiesPage() {
   );
 }
 
-function SpecialityCardItem({ spec }: { spec: SpecialityMeta }) {
+function SpecialityCardItem({ spec, city }: { spec: SpecialityMeta; city: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -752,7 +567,7 @@ function SpecialityCardItem({ spec }: { spec: SpecialityMeta }) {
       id={`speciality-card-${spec.slug}`}
       aria-label={spec.name}
       className={styles.specialityCard}
-      href={getSpecialityHref(spec.slug)}
+      href={getSpecialityHref(spec.slug, city)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -776,10 +591,10 @@ function SpecialityCardItem({ spec }: { spec: SpecialityMeta }) {
 
       <div className={styles.cardTopBadges}>
         {spec.isCoE && (
-          <div className={styles.cardCoEBadge}>
-            <Star size={11} fill="#f59e0b" color="#f59e0b" />
+          <span className={styles.cardCoEBadge}>
+            <Star size={13} strokeWidth={2} aria-hidden="true" />
             <span>Centre of Excellence</span>
-          </div>
+          </span>
         )}
       </div>
 
@@ -802,4 +617,3 @@ function SpecialityCardItem({ spec }: { spec: SpecialityMeta }) {
     </Link>
   );
 }
-

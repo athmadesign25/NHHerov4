@@ -1,0 +1,92 @@
+.chip {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--sp-1, 8px) * .75);
+  min-height: var(--sp-6, 48px);
+  padding: var(--sp-1, 8px) calc(var(--sp-1, 8px) * 1.25);
+  border: 0;
+  border-radius: var(--radius-full, 9999px);
+  color: var(--d3-ui-text, var(--color-text-secondary, #64748b));
+  background: transparent;
+  font-size: var(--font-size-sm, 14px);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--d3-ui-fast, var(--transition-fast, 0.15s));
+}
+
+/* A 32px desktop / 36px touch capsule sits inside its 44px / 48px hit area. */
+.chip::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--sp-1, 8px) * .75) 0;
+  border: 1px solid var(--d3-ui-border, var(--color-border, #e2e8f0));
+  border-radius: inherit;
+  background: var(--d3-control-surface, var(--color-bg-card, #ffffff));
+  pointer-events: none;
+  transition: background-color var(--d3-ui-fast, var(--transition-fast, 0.15s)), border-color var(--d3-ui-fast, var(--transition-fast, 0.15s));
+}
+
+.chip svg {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.chip:is([aria-pressed="true"], [data-selected="true"]) {
+  color: var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency, #ED1C24) 78%, var(--color-text, #0f172a)));
+}
+
+.chip:is([aria-pressed="true"], [data-selected="true"])::before {
+  border-color: var(--d3-ui-selection, var(--color-emergency, #ED1C24));
+  background: var(--d3-ui-selection-surface, var(--color-emergency-light, #fef2f2));
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--d3-ui-focus, var(--color-text-secondary, #64748b));
+  outline-offset: 2px;
+}
+
+.chip:disabled:not([aria-hidden="true"]) {
+  color: var(--color-text-muted, #94a3b8);
+  cursor: not-allowed;
+}
+
+.chip:disabled:not([aria-hidden="true"])::before {
+  border-color: var(--d3-ui-border, var(--color-border, #e2e8f0));
+  background: var(--d3-control-muted, var(--color-bg-alt, #f8fafc));
+}
+
+@media (hover: hover) {
+  .chip:not(:disabled):hover {
+    color: var(--d3-ui-ink-hover, var(--color-text, #0f172a));
+  }
+  .chip:is([aria-pressed="true"], [data-selected="true"]):where(:not(:disabled)):hover {
+    color: var(--d3-ui-selection-hover, var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency, #ED1C24) 78%, var(--color-text, #0f172a))));
+  }
+}
+
+.chip:not(:disabled):active {
+  color: var(--d3-ui-ink-pressed, var(--color-text, #0f172a));
+}
+
+.chip:is([aria-pressed="true"], [data-selected="true"]):where(:not(:disabled)):active {
+  color: var(--d3-ui-selection-pressed, var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency, #ED1C24) 78%, var(--color-text, #0f172a))));
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .chip {
+    min-height: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip, .chip::before {
+    transition: none;
+  }
+}

@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import { motion, useIsPresent } from "framer-motion";
 import { X } from "lucide-react";
+import chipStyles from "./DoctorControlChip.module.css";
 import styles from "./AppliedFilterChip.module.css";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   onRemove: (button: HTMLButtonElement) => void;
 }
 
+// Forward the DOM ref so AnimatePresence can position an exiting chip.
 const AppliedFilterChip = forwardRef<HTMLButtonElement, Props>(function AppliedFilterChip(
   { label, reducedMotion, onRemove },
   ref
@@ -20,7 +22,7 @@ const AppliedFilterChip = forwardRef<HTMLButtonElement, Props>(function AppliedF
     <motion.button
       ref={ref}
       type="button"
-      className={styles.chip}
+      className={`${chipStyles.chip} ${styles.chip}`}
       data-selected="true"
       disabled={!present}
       aria-hidden={!present}
@@ -38,7 +40,7 @@ const AppliedFilterChip = forwardRef<HTMLButtonElement, Props>(function AppliedF
       transition={{ duration: reducedMotion ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] }}
     >
       <span>{label}</span>
-      <X size={14} aria-hidden />
+      <X size={16} aria-hidden />
     </motion.button>
   );
 });

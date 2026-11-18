@@ -1,0 +1,113 @@
+.root {
+  --refinement-focus-inset: calc(var(--sp-1, 8px) / 2);
+  position: relative;
+  min-width: 0;
+  margin-inline: calc(var(--refinement-focus-inset) * -1);
+  margin-block: calc(var(--refinement-focus-inset) * -1);
+  overflow-anchor: none;
+}
+
+.viewport {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--refinement-focus-inset);
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--sp-6, 48px);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.viewport::-webkit-scrollbar { display: none; }
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 16px);
+  width: max-content;
+  min-width: max-content;
+  flex-wrap: nowrap;
+}
+
+.content > * { flex-shrink: 0; }
+.endSpace { display: none; }
+.root[data-overflow="true"] .endSpace { display: block; width: calc(var(--sp-6, 48px) - var(--sp-2, 16px)); }
+
+.affordance {
+  position: absolute;
+  z-index: 1;
+  inset-block: 0;
+  display: flex;
+  align-items: center;
+  width: var(--sp-8, 64px);
+  padding-inline: var(--refinement-focus-inset);
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--d3-ui-fast, var(--transition-fast, 0.15s)), visibility var(--d3-ui-fast, var(--transition-fast, 0.15s));
+}
+
+.affordance[data-visible="true"] { visibility: visible; opacity: 1; }
+.previous { inset-inline-start: 0; justify-content: flex-start; }
+.next { inset-inline-end: 0; justify-content: flex-end; }
+/* Hide clipped controls beneath the translucent arrows, without painting a patch. */
+.root:has(.previous[data-visible="true"]) { --refinement-mask-start: transparent; }
+.root:has(.next[data-visible="true"]) { --refinement-mask-end: transparent; }
+.viewport {
+  --refinement-edge: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  mask-image: linear-gradient(to right, var(--refinement-mask-start, var(--color-text-inverse, #000)) var(--refinement-edge), var(--color-text-inverse, #000) var(--sp-6, 48px), var(--color-text-inverse, #000) calc(100% - var(--sp-6, 48px)), var(--refinement-mask-end, var(--color-text-inverse, #000)) calc(100% - var(--refinement-edge)));
+  -webkit-mask-image: linear-gradient(to right, var(--refinement-mask-start, var(--color-text-inverse, #000)) var(--refinement-edge), var(--color-text-inverse, #000) var(--sp-6, 48px), var(--color-text-inverse, #000) calc(100% - var(--sp-6, 48px)), var(--refinement-mask-end, var(--color-text-inverse, #000)) calc(100% - var(--refinement-edge)));
+}
+
+.affordance button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  min-height: calc(var(--sp-6, 48px) - var(--sp-1, 8px) / 2);
+  border: 0;
+  border-radius: var(--radius-full, 9999px);
+  background: transparent;
+  color: var(--color-text-secondary, #64748b);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color var(--d3-ui-fast, var(--transition-fast, 0.15s));
+}
+
+.affordance button::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--sp-1, 8px) / 2);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: inherit;
+  background: var(--d3-control-surface, var(--color-bg-card, #ffffff));
+  pointer-events: none;
+  transition: background-color var(--d3-ui-fast, var(--transition-fast, 0.15s)), border-color var(--d3-ui-fast, var(--transition-fast, 0.15s));
+}
+
+.affordance button svg { position: relative; width: var(--font-size-base, 15px); height: var(--font-size-base, 15px); }
+.affordance button:disabled { pointer-events: none; color: var(--color-text-muted, #94a3b8); }
+.affordance button:disabled::before { border-color: var(--color-border, #e2e8f0); background: var(--d3-control-muted, var(--color-bg-alt, #f8fafc)); }
+.affordance button:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-primary, #034EA2)); outline-offset: 2px; }
+
+@media (hover: hover) {
+  .affordance button:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text, #0f172a)); }
+}
+
+.affordance button:not(:disabled):active { color: var(--d3-ui-ink-pressed, var(--color-text, #0f172a)); }
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .affordance button::before { inset: calc(var(--sp-1, 8px) * .75); }
+}
+
+@media (max-width: 639px) {
+  .content { gap: var(--sp-1, 8px); }
+  .root[data-overflow="true"] .endSpace { width: calc(var(--sp-6, 48px) - var(--sp-1, 8px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .affordance, .affordance button, .affordance button::before { transition: none; }
+}

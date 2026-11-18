@@ -22,9 +22,7 @@ export default function SpecialityFilterDialog({
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
-  useEffect(() => {
-    closeRef.current = onClose;
-  }, [onClose]);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -77,7 +75,7 @@ export default function SpecialityFilterDialog({
       <header className={styles.header}>
         <div>
           <h2 id="speciality-filter-title">Refine Specialities</h2>
-          <p>Choose categories, classification, or browse A–Z.</p>
+          <p>Choose medical specialities by category.</p>
         </div>
         <button
           type="button"

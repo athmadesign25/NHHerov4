@@ -21,17 +21,17 @@
 /* Card Shell containing the landscape video and doctor info */
 .videoCard {
   width: 100%;
-  background: var(--color-surface, var(--white));
+  background: var(--color-surface, #ffffff);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border, var(--slate-200));
-  box-shadow: var(--elevation-3, 0 16px 40px rgba(var(--black-rgb), 0.07));
+  border: 1px solid var(--color-border, #E2E8F0);
+  box-shadow: var(--elevation-3, 0 16px 40px rgba(0, 0, 0, 0.07));
   overflow: hidden;
   box-sizing: border-box;
-  transition: box-shadow var(--duration-base, var(--duration-moderate)) ease, border-color var(--duration-base, var(--duration-moderate)) ease;
+  transition: box-shadow var(--duration-base, 250ms) ease, border-color var(--duration-base, 250ms) ease;
 }
 
 .videoCard:hover {
-  box-shadow: var(--elevation-4, 0 24px 48px rgba(var(--black-rgb), 0.1));
+  box-shadow: var(--elevation-4, 0 24px 48px rgba(0, 0, 0, 0.1));
   border-color: rgba(var(--blue-brand-rgb, 3, 78, 161), 0.2);
 }
 
@@ -40,7 +40,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--navy-900, var(--navy-900));
+  background: var(--navy-900, #031224);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -54,7 +54,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slow, var(--duration-slow)) var(--ease-out, var(--ease-spring));
+  transition: transform var(--duration-slow, 400ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .videoCard:hover .thumbnailImage {
@@ -68,7 +68,7 @@
   left: 0;
   right: 0;
   height: 120px;
-  background: linear-gradient(180deg, rgba(var(--navy-900-rgb), 0.75) 0%, rgba(var(--navy-900-rgb), 0) 100%);
+  background: linear-gradient(180deg, rgba(3, 18, 36, 0.75) 0%, rgba(3, 18, 36, 0) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -79,7 +79,7 @@
   left: 0;
   right: 0;
   height: 140px;
-  background: linear-gradient(0deg, rgba(var(--navy-900-rgb), 0.88) 0%, rgba(var(--navy-900-rgb), 0.45) 60%, rgba(var(--navy-900-rgb), 0) 100%);
+  background: linear-gradient(0deg, rgba(3, 18, 36, 0.88) 0%, rgba(3, 18, 36, 0.45) 60%, rgba(3, 18, 36, 0) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -102,10 +102,10 @@
   gap: var(--space-8, 8px);
   padding: 6px 14px;
   border-radius: var(--radius-full, 9999px);
-  background: rgba(var(--navy-900-rgb), 0.72);
+  background: rgba(3, 18, 36, 0.72);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb, 255, 255, 255), 0.2);
-  color: var(--white, var(--white));
+  color: var(--white, #ffffff);
   font-size: var(--font-size-xs, 12px);
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -116,7 +116,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-emergency, var(--red-emergency));
+  background: var(--color-emergency, #ED1C24);
 }
 
 .ytDurationBadge {
@@ -128,10 +128,10 @@
 .durationPill {
   padding: 5px 12px;
   border-radius: var(--radius-full, 9999px);
-  background: rgba(var(--navy-900-rgb), 0.72);
+  background: rgba(3, 18, 36, 0.72);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb, 255, 255, 255), 0.16);
-  color: var(--white, var(--white));
+  color: var(--white, #ffffff);
   font-size: var(--font-size-xs, 12px);
   font-weight: 600;
 }
@@ -142,12 +142,12 @@
   gap: 6px;
   padding: 5px 12px;
   border-radius: var(--radius-full, 9999px);
-  background: rgba(var(--red-emergency-rgb), 0.9);
+  background: rgba(237, 28, 36, 0.9);
   backdrop-filter: blur(8px);
-  color: var(--white, var(--white));
+  color: var(--white, #ffffff);
   font-size: var(--font-size-xs, 12px);
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(var(--red-emergency-rgb), 0.4);
+  box-shadow: 0 4px 12px rgba(237, 28, 36, 0.4);
 }
 
 /* Center Play Button */
@@ -157,20 +157,20 @@
   width: 76px;
   height: 76px;
   border-radius: 50%;
-  background: var(--color-emergency, var(--red-emergency));
+  background: var(--color-emergency, #ED1C24);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--white, var(--white));
-  box-shadow: 0 8px 30px rgba(var(--red-emergency-rgb), 0.45);
-  transition: transform var(--duration-base, var(--duration-moderate)) var(--ease-out, var(--ease-spring)), box-shadow var(--duration-base, var(--duration-moderate)) ease;
+  color: var(--white, #ffffff);
+  box-shadow: 0 8px 30px rgba(237, 28, 36, 0.45);
+  transition: transform var(--duration-base, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)), box-shadow var(--duration-base, 250ms) ease;
 }
 
 .playButton:hover {
   transform: scale(1.12);
-  box-shadow: 0 12px 36px rgba(var(--red-emergency-rgb), 0.6);
+  box-shadow: 0 12px 36px rgba(237, 28, 36, 0.6);
 }
 
 .playButton:active {
@@ -191,12 +191,12 @@
 }
 
 .videoTitle {
-  color: var(--white, var(--white));
+  color: var(--white, #ffffff);
   font-size: clamp(17px, 2.2vw, 22px);
   font-weight: 700;
   line-height: 1.35;
   margin: 0;
-  text-shadow: 0 2px 8px rgba(var(--black-rgb), 0.65);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
 }
 
 /* Active Iframe / Video Player */
@@ -214,10 +214,10 @@
   top: var(--space-16, 16px);
   right: var(--space-16, 16px);
   z-index: 10;
-  background: rgba(var(--navy-900-rgb), 0.85);
+  background: rgba(3, 18, 36, 0.85);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(var(--white-rgb, 255, 255, 255), 0.2);
-  color: var(--white, var(--white));
+  color: var(--white, #ffffff);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -225,19 +225,19 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background var(--duration-fast, var(--duration-fast)) ease, transform var(--duration-fast, var(--duration-fast)) ease;
+  transition: background var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
 }
 
 .closePlayerBtn:hover {
-  background: var(--color-emergency, var(--red-emergency));
+  background: var(--color-emergency, #ED1C24);
   transform: scale(1.08);
 }
 
 /* ─── Doctor Information Bar (Outside Video Container) ─── */
 .doctorProfileBar {
   padding: var(--space-16, 16px) var(--space-24, 24px);
-  background: var(--color-surface, var(--white));
-  border-top: 1px solid var(--color-border, var(--slate-200));
+  background: var(--color-surface, #ffffff);
+  border-top: 1px solid var(--color-border, #E2E8F0);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -256,10 +256,10 @@
   height: 48px;
   border-radius: var(--radius-full, 9999px);
   object-fit: cover;
-  border: 2px solid var(--color-border-light, var(--blue-tint-50));
-  box-shadow: 0 2px 6px rgba(var(--black-rgb), 0.06);
+  border: 2px solid var(--color-border-light, #EEF2F7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   flex-shrink: 0;
-  background: var(--color-border-light, var(--blue-tint-50));
+  background: var(--color-border-light, #EEF2F7);
 }
 
 .doctorMeta {
@@ -277,7 +277,7 @@
 .doctorName {
   font-size: var(--font-size-base, 16px);
   font-weight: 700;
-  color: var(--color-text, var(--navy-ink));
+  color: var(--color-text, #1A1A2E);
   margin: 0;
   line-height: 1.25;
 }
@@ -286,14 +286,14 @@
 .doctorRole {
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
-  color: var(--color-primary, var(--blue-brand));
+  color: var(--color-primary, #034EA1);
   margin: 0;
   line-height: 1.35;
 }
 
 .doctorHospital {
   font-size: var(--font-size-xs, 12px);
-  color: var(--color-text-secondary, var(--slate-500));
+  color: var(--color-text-secondary, #64748B);
   margin: 0;
   display: flex;
   align-items: center;
@@ -304,7 +304,7 @@
   width: 4px;
   height: 4px;
   border-radius: var(--radius-full, 9999px);
-  background: var(--slate-300, var(--slate-300));
+  background: var(--slate-300, #CBD5E1);
 }
 
 /* Action Area (Consultation & External Link) */
@@ -326,20 +326,20 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(var(--white-rgb), 0.12);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(var(--white-rgb), 0.22);
-  color: var(--white, var(--white));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--white, #ffffff);
   text-decoration: none;
-  transition: all var(--duration-fast, var(--duration-fast)) ease;
+  transition: all var(--duration-fast, 150ms) ease;
 }
 
 .ytExternalBtn:hover {
-  background: var(--color-emergency, var(--red-emergency));
-  border-color: var(--color-emergency, var(--red-emergency));
-  color: var(--white, var(--white));
+  background: var(--color-emergency, #ED1C24);
+  border-color: var(--color-emergency, #ED1C24);
+  color: var(--white, #ffffff);
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(var(--red-emergency-rgb), 0.4);
+  box-shadow: 0 4px 14px rgba(237, 28, 36, 0.4);
 }
 
 /* ─── Navigation Controls (Matching ModernCarousel) ─── */
@@ -360,7 +360,7 @@
 }
 
 .indicatorText {
-  color: var(--color-text, var(--navy-ink));
+  color: var(--color-text, #1A1A2E);
   font-size: var(--font-size-sm, 14px);
   font-weight: 500;
   opacity: 0.7;
@@ -376,17 +376,17 @@
 .indicatorBar {
   width: 24px;
   height: 2px;
-  background-color: var(--color-border, var(--slate-200));
+  background-color: var(--color-border, #E2E8F0);
   cursor: pointer;
-  transition: all var(--duration-emphasis, var(--duration-emphasis)) var(--ease-out, var(--ease-spring));
+  transition: all var(--duration-emphasis, 350ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .indicatorBar:hover {
-  background-color: var(--slate-400, var(--slate-400));
+  background-color: var(--slate-400, #94A3B8);
 }
 
 .indicatorBarActive {
-  background-color: var(--color-primary, var(--blue-brand));
+  background-color: var(--color-primary, #034EA1);
 }
 
 /* ─── Active & Next Video Readability Indication (Pure Text, No Labels) ─── */
@@ -411,7 +411,7 @@
 .activeTitle {
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
-  color: var(--color-text, var(--navy-ink));
+  color: var(--color-text, #1A1A2E);
   max-width: clamp(140px, 20vw, 280px);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -419,7 +419,7 @@
 }
 
 .readingAidDivider {
-  color: var(--slate-300, var(--slate-300));
+  color: var(--slate-300, #CBD5E1);
   font-size: var(--font-size-xs, 12px);
   margin: 0 var(--space-4, 4px);
   user-select: none;
@@ -433,14 +433,14 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: var(--color-text-secondary, var(--slate-500));
+  color: var(--color-text-secondary, #64748B);
   font-size: var(--font-size-sm, 14px);
   min-width: 0;
-  transition: color var(--duration-fast, var(--duration-fast)) ease;
+  transition: color var(--duration-fast, 150ms) ease;
 }
 
 .readingAidNext:hover {
-  color: var(--color-primary, var(--blue-brand));
+  color: var(--color-primary, #034EA1);
 }
 
 .nextTitle {
@@ -455,7 +455,7 @@
 
 .nextArrowIcon {
   flex-shrink: 0;
-  transition: transform var(--duration-fast, var(--duration-fast)) ease;
+  transition: transform var(--duration-fast, 150ms) ease;
 }
 
 .readingAidNext:hover .nextArrowIcon {
@@ -473,18 +473,18 @@
   height: 40px;
   border-radius: var(--radius-full, 9999px);
   background: transparent;
-  border: 1px solid var(--color-border, var(--slate-200));
-  color: var(--color-text, var(--navy-ink));
+  border: 1px solid var(--color-border, #E2E8F0);
+  color: var(--color-text, #1A1A2E);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--duration-emphasis, var(--duration-emphasis)) var(--ease-out, var(--ease-spring));
+  transition: all var(--duration-emphasis, 350ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
 .navBtn:hover:not(:disabled) {
-  background: var(--color-border-light, var(--blue-tint-50));
-  border-color: var(--color-text-muted, var(--color-text-muted));
+  background: var(--color-border-light, #EEF2F7);
+  border-color: var(--color-text-muted, #718096);
 }
 
 .navBtn:disabled,
@@ -512,13 +512,13 @@
   }
 
   .categoryPill {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
     padding: 4px 10px;
   }
 
   .durationPill,
   .ytLogoBadge {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
     padding: 4px 10px;
   }
 
@@ -534,7 +534,7 @@
   }
 
   .videoTitle {
-    font-size: var(--font-size-base);
+    font-size: 15px;
     line-height: 1.3;
   }
 
@@ -552,11 +552,11 @@
   }
 
   .doctorRole {
-    font-size: var(--font-size-xs);
+    font-size: 12px;
   }
 
   .doctorHospital {
-    font-size: var(--font-size-xs);
+    font-size: 11px;
     flex-wrap: wrap;
     gap: var(--space-4, 4px) var(--space-6, 6px);
   }
@@ -574,7 +574,7 @@
     flex: 1;
     justify-content: center;
     padding: 8px 14px;
-    font-size: var(--font-size-sm);
+    font-size: 13px;
   }
 
   .navigationWrapper {

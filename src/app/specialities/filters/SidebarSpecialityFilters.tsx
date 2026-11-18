@@ -2,11 +2,11 @@
 
 import { useRef } from "react";
 import { useReducedMotion } from "framer-motion";
-import ActiveSpecialityFilters, { type ActiveSpecialityFilter } from "./ActiveSpecialityFilters";
+import ActiveDoctorFilters, { type ActiveDoctorFilter } from "./ActiveDoctorFilters";
 import styles from "./SidebarSpecialityFilters.module.css";
 
 export interface SidebarSpecialityFiltersProps {
-  chips: ActiveSpecialityFilter[];
+  chips: ActiveDoctorFilter[];
   onClearAll: () => void;
 }
 
@@ -40,7 +40,7 @@ export default function SidebarSpecialityFilters({
               Clear all
             </button>
           </div>
-          <ActiveSpecialityFilters
+          <ActiveDoctorFilters
             chips={chips}
             wrap
             reducedMotion={reducedMotion}
