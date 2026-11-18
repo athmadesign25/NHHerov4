@@ -3,7 +3,8 @@
 import { useEffect, useId, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
-import { BookingBackdrop, useBookingFocus } from "@/features/booking/shared/BookingFocus";
+import { BookingBackdrop } from "@/features/booking/components/BookingFocus";
+import useBookingFocus from "@/features/booking/components/useBookingFocus";
 import { duration, ease } from "@/lib/motion";
 import { cartTotal, money, type HealthItem } from "./catalog";
 import styles from "./HealthCartDock.module.css";
@@ -59,7 +60,7 @@ export default function HealthCartDock({ items, centre, expanded, addition, onEx
     <BookingBackdrop open={expanded} onDismiss={collapse} />
     <AnimatePresence>
     {(items.length > 0 || expanded) && <motion.aside key="cart-dock" ref={dock} layoutRoot className={styles.dock}
-      initial={false} exit={{ opacity: 0, y: reduced ? 0 : 12 }} transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}
+      initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}
       data-health-selection-dock data-booking-focus data-expanded={expanded}
       role={expanded ? "dialog" : undefined} aria-modal={expanded || undefined}
       aria-labelledby={expanded ? headingId : undefined} aria-label={expanded ? undefined : "Your cart"}

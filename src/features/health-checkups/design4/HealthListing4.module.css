@@ -44,24 +44,23 @@
 .focusRail, .results.results, .chooseCentre.chooseCentre { width: calc(100% - var(--space-48)); max-width: var(--max-width); margin-inline: auto; }
 .toolbar .catalogueHeader { gap: var(--space-16); padding-bottom: 0; }
 .chooseCentre.chooseCentre { margin-top: var(--space-32); background: var(--color-bg-card); box-shadow: var(--elevation-1); }
-.focusRail { margin-top: var(--space-32); margin-bottom: var(--space-24); min-width: 0; }
+.focusRail { margin-top: var(--space-24); margin-bottom: var(--space-24); min-width: 0; }
 .focusRail h2, .resultsHeading h2 { font-size: var(--font-size-xl); line-height: var(--leading-snug); font-weight: 600; }
 /* Categories keep their compact size even when the shared media rail has only two items. */
-.focusRail.focusRail [role="list"][id][aria-labelledby] { grid-auto-columns: var(--space-128); gap: var(--space-16); }
-.focusButton { border: 0; background: transparent; color: var(--color-text-secondary); width: 100%; display: grid; justify-items: center; gap: var(--space-12); padding: var(--space-4); cursor: pointer; font-size: var(--font-size-sm); line-height: var(--leading-snug); font-weight: 500; }
-.focusImage { display: grid; place-items: center; position: relative; width: var(--space-96); aspect-ratio: 1; border-radius: var(--radius-full); background: var(--blue-tint-50); outline: var(--space-2) solid transparent; outline-offset: var(--space-4); transition: outline-color var(--duration-base) var(--ease-standard), background-color var(--duration-base) var(--ease-standard); }
+.focusRail.focusRail [role="list"][id][aria-labelledby] { grid-auto-columns: var(--space-96); gap: var(--space-16); }
+.focusButton { border: 0; background: transparent; color: var(--color-text-secondary); width: 100%; display: grid; justify-items: center; gap: var(--space-8); padding: var(--space-4); cursor: pointer; font-size: var(--font-size-sm); line-height: var(--leading-snug); font-weight: 500; }
+.focusImage { display: grid; place-items: center; position: relative; width: var(--space-64); aspect-ratio: 1; border-radius: var(--radius-full); background: var(--blue-tint-50); outline: var(--space-2) solid transparent; outline-offset: var(--space-4); transition: outline-color var(--duration-base) var(--ease-standard), background-color var(--duration-base) var(--ease-standard); }
 .focusImage > img { object-fit: cover; border-radius: inherit; }
-.focusImage > svg { width: var(--space-32); height: var(--space-32); color: var(--color-primary); }
+.focusImage > svg { width: var(--space-24); height: var(--space-24); color: var(--color-primary); }
 .focusButton[aria-pressed="true"] { color: var(--red-600); }
 .focusButton[aria-pressed="true"] .focusImage { outline-color: var(--red-500); }
-.focusCheck { position: absolute; bottom: 0; right: 0; display: grid; place-items: center; width: var(--space-24); height: var(--space-24); border-radius: var(--radius-full); background: var(--red-500); color: var(--white); border: var(--space-2) solid var(--color-bg-card); }
-.focusCheck svg { width: var(--space-14); height: var(--space-14); }
 .resultsHeading { display: flex; gap: var(--space-16); justify-content: space-between; align-items: center; margin-block: var(--space-24) var(--space-20); }
 .results.results { margin-top: var(--space-24); }
 @media (hover: hover) {
   .focusButton:hover .focusImage { outline-color: var(--color-border); }
   .focusButton[aria-pressed="true"]:hover .focusImage { outline-color: var(--red-500); }
   .focusButton:hover { color: var(--color-text); }
+  .focusButton[aria-pressed="true"]:hover { color: var(--red-600); }
 }
 @media (max-width: 1024px) {
   .toolbar .catalogueHeader { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
@@ -71,8 +70,8 @@
   .heroInner, .focusRail, .results.results, .chooseCentre.chooseCentre { width: calc(100% - var(--space-32)); }
   .heroTitle { font-size: var(--font-size-3xl); }
   .heroSubtext { font-size: var(--font-size-sm); }
-  .focusRail.focusRail [role="list"][id][aria-labelledby] { grid-auto-columns: calc(var(--space-96) + var(--space-16)); gap: var(--space-8); }
-  .focusImage { width: var(--space-80); }
+  .focusRail.focusRail [role="list"][id][aria-labelledby] { grid-auto-columns: var(--space-96); gap: var(--space-8); }
+  .focusImage { width: var(--space-64); }
 }
 @media (max-width: 639px) {
   .heroInner { min-height: calc(var(--nav-height) + var(--space-128) + var(--space-128)); padding-block: calc(var(--nav-height) + var(--space-32)) var(--space-24); align-items: stretch; }
@@ -83,11 +82,11 @@
   .heroTitle { max-width: 19ch; }
   .heroSubtext { margin-top: var(--space-12); }
   .heroInner { gap: var(--space-24); }
-  .focusRail { margin-block: var(--space-32) var(--space-16); }
+  .focusRail { margin-block: var(--space-20) var(--space-16); }
   .focusRail h2, .resultsHeading h2 { font-size: var(--font-size-lg); }
   .focusRail.focusRail [role="list"][id][aria-labelledby] { grid-auto-columns: var(--space-96); }
-  .focusImage { width: var(--space-64); }
-  .focusButton { font-size: var(--font-size-2xs); gap: var(--space-12); }
+  .focusImage { width: var(--space-56); }
+  .focusButton { font-size: var(--font-size-2xs); gap: var(--space-8); }
   .resultsHeading { margin-block: var(--space-16); }
 }
 @media (prefers-reduced-motion: reduce) { .focusImage { transition: none; } }

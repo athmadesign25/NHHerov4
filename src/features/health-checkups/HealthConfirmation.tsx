@@ -11,11 +11,13 @@ import MemberAvatar from "@/features/booking/shared/MemberAvatar";
 import { patientAvatar } from "@/features/booking/shared/patients";
 import { formatBookingDate } from "@/features/booking/shared/dates";
 import { duration, ease } from "@/lib/motion";
-import { cartRequiresSlot, cartTotal, money, type HealthFacility, type HealthItem } from "./catalog";
+import { cartRequiresSlot, money, type HealthFacility, type HealthItem } from "./catalog";
 import styles from "./HealthConfirmation.module.css";
+import HealthPaymentDetails, { type HealthPricing } from "./HealthPaymentDetails";
 
 export interface HealthConfirmationProps {
   items: HealthItem[];
+  pricing: HealthPricing;
   facility: HealthFacility;
   member: SavedPatient;
   date: string;
@@ -23,7 +25,7 @@ export interface HealthConfirmationProps {
   onRestart: () => void;
 }
 
-export default function HealthConfirmation({ items, facility, member, date, time, onRestart }: HealthConfirmationProps) {
+export default function HealthConfirmation({ items, facility, member, date, time, pricing, onRestart }: HealthConfirmationProps) {
   const reduced = useReducedMotion();
   const needsSlot = cartRequiresSlot(items);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -52,7 +54,8 @@ export default function HealthConfirmation({ items, facility, member, date, time
         <section className={styles.order} aria-labelledby="health-booked-items">
           <h2 id="health-booked-items">Booked packages &amp; tests</h2>
           <ul>{items.map(item => <li key={item.id}><span className={styles.itemIcon}><FlaskConical size={18} aria-hidden /></span><div><strong>{item.name}</strong><span>{item.kind === "package" ? (Number.isFinite(item.testCount) && item.testCount > 0 ? `${item.testCount} ${item.testCount === 1 ? "test" : "tests"} & checks` : "Health package") : "Lab test"}</span></div><span className={styles.price}>{money(item.price)}</span></li>)}</ul>
-          <div className={styles.paid}><span><ShieldCheck size={16} aria-hidden />{cartTotal(items) === 0 ? "No payment due" : "Paid online"}</span><strong>{money(cartTotal(items))}</strong></div>
+          <HealthPaymentDetails pricing={pricing} />
+          <div className={styles.paid}><span><ShieldCheck size={16} aria-hidden />{pricing.amounts.total === 0 ? "No payment due" : "Paid online"}</span><strong>{pricing.total}</strong></div>
         </section>
       </div>
       <footer className={styles.footer}><Link className={styles.primary} href="/">Back to home</Link><button className={styles.secondaryButton} type="button" onClick={onRestart}>Explore more checkups</button></footer>

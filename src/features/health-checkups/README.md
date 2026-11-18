@@ -50,3 +50,7 @@ continue without a slot. A mixed selection follows the package scheduling rule.
 See [module ownership and merge handoff](../../../docs/booking-health-module-handoff.md) before changing shared navigation, global styles or shared controls.
 
 The listing uses image-led package and test cards; catalogue comparison is intentionally removed. Selection feedback is a transient accessible success notice. The listing action bar uses the shared booking bar’s 896px maximum width and responsive gutters.
+
+### Entry and member selection
+
+The route-level `HealthEntryGate` handles login for every entry. Member selection appears inline before the catalogue and is retained through details and checkout. Changing the member from the listing clears the previous selection after confirmation. Leaving the module or signing out resets the entry check. This prototype UI gate is not server authentication.

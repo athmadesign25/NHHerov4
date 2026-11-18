@@ -5,20 +5,22 @@ import { ArrowLeft, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, Flask
 import { useReducedMotion } from "framer-motion";
 import JourneyHeading from "@/components/ui/JourneyHeading";
 import BookingActionBar from "@/features/booking/shared/BookingActionBar";
-import BookingMemberPicker from "@/features/booking/shared/BookingMemberPicker";
+import MemberAvatar from "@/features/booking/shared/MemberAvatar";
+import { patientAvatar } from "@/features/booking/shared/patients";
 import type { SavedPatient } from "@/features/booking/shared/types";
 import { formatBookingDate } from "@/features/booking/shared/dates";
 import useMouseDragScroll from "@/components/ui/useMouseDragScroll";
-import { cartRequiresSlot, cartTotal, getHealthSlots, healthDateKey, healthDates, healthEligibilityMessage, money, type HealthFacility, type HealthItem } from "./catalog";
+import { cartRequiresSlot, getHealthSlots, healthDateKey, healthDates, healthEligibilityMessage, money, type HealthFacility, type HealthItem } from "./catalog";
+import bookingHeaderStyles from "@/features/booking/design20/previous/BookingSummary.module.css";
+import bookingSummaryStyles from "@/features/booking/design20/summary4/BookingSummary4.module.css";
 import styles from "./HealthCheckout.module.css";
+import HealthCheckoutBenefits, { type HealthCheckoutBenefitsProps } from "./HealthCheckoutBenefits";
 
-export interface HealthCheckoutProps {
+export interface HealthCheckoutProps extends HealthCheckoutBenefitsProps {
   items: HealthItem[];
   facility: HealthFacility;
   members: SavedPatient[];
   memberId: string | null;
-  onMemberChange: (id: string) => void;
-  onAddMember: () => void;
   date: string;
   time: string;
   onDateChange: (date: string) => void;
@@ -29,7 +31,7 @@ export interface HealthCheckoutProps {
   paymentError?: string;
 }
 
-export default function HealthCheckout({ items, facility, members, memberId, onMemberChange, onAddMember, date, time, onDateChange, onTimeChange, onBack, onRemove, onPay, paymentError }: HealthCheckoutProps) {
+export default function HealthCheckout({ items, facility, members, memberId, date, time, onDateChange, onTimeChange, onBack, onRemove, onPay, paymentError, pricing, benefits, onBenefitsChange, busy }: HealthCheckoutProps) {
   const id = useId();
   const reduced = useReducedMotion();
   const [now] = useState(() => Date.now());
@@ -43,7 +45,7 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
   useMouseDragScroll(dateStrip, needsSlot);
   const months = [...new Set(dates.map(value => value.slice(0, 7)))];
   const monthLabel = (value: string) => new Date(`${value}-01T12:00:00Z`).toLocaleDateString("en-IN", { month: "short", timeZone: "UTC" });
-  const total = cartTotal(items);
+  const total = pricing.amounts.total;
   const selectedMember = members.find(member => member.id === memberId);
   const validMember = !!selectedMember;
   const eligibilityError = selectedMember ? healthEligibilityMessage(items, selectedMember.patient) : null;
@@ -88,17 +90,33 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
   };
 
   return <div className={styles.checkout}>
-    <header className={styles.header}>
-      <button type="button" className={styles.back} onClick={onBack}><ArrowLeft size={18} aria-hidden />Back to packages &amp; tests</button>
-      <JourneyHeading ref={heading} tabIndex={-1}>Complete your booking</JourneyHeading>
-      <p>Choose a member and review your checkup.</p>
+    <header className={`${styles.header} ${bookingHeaderStyles.intro} ${bookingSummaryStyles.intro}`}>
+      <button type="button" className={styles.back} onClick={onBack} aria-label="Back to packages and tests"><ArrowLeft size={20} aria-hidden /></button>
+      <div>
+        <JourneyHeading ref={heading} tabIndex={-1}>Complete your booking</JourneyHeading>
+        <p>Review your checkup and complete your booking.</p>
+      </div>
     </header>
     <div className={styles.layout}>
       <div className={styles.details}>
         <section className={styles.section} aria-labelledby={`${id}-member`}>
           <div className={styles.sectionHeading}><h2 id={`${id}-member`}>Booking for</h2></div>
-          <BookingMemberPicker patients={members} selectedId={memberId} busy={false} onSelect={onMemberChange} onAdd={onAddMember} />
+          <div className={styles.member}>
+            {selectedMember && <>
+              <MemberAvatar src={patientAvatar(selectedMember)} name={selectedMember.patient.name} size={40} className={styles.avatar} />
+              <div className={styles.memberCopy}><strong>{selectedMember.patient.name}</strong><span>{selectedMember.patient.relation === "self" ? "You" : selectedMember.patient.relation.charAt(0).toUpperCase() + selectedMember.patient.relation.slice(1)} · {selectedMember.patient.age} yrs</span></div>
+            </>}
+          </div>
           {eligibilityError && <div id={`${id}-eligibility`} className={styles.memberError} role="alert"><CircleAlert size={18} aria-hidden /><div><p>{eligibilityError}</p><button type="button" className={styles.textButton} onClick={onBack}>Change package</button></div></div>}
+        </section>
+        <section className={styles.section} aria-labelledby={`${id}-order`}>
+        <div className={styles.summaryHeading}><h2 id={`${id}-order`}>Your selection</h2><button type="button" onClick={onBack} className={styles.textButton}>Add more</button></div>
+        <ul className={styles.items}>{items.map(item => <li key={item.id}>
+          <span className={styles.itemIcon}><FlaskConical size={20} aria-hidden /></span>
+          <div className={styles.itemCopy}><strong>{item.name}</strong><span>{item.kind === "package" ? (Number.isFinite(item.testCount) && item.testCount > 0 ? `${item.testCount} ${item.testCount === 1 ? "test" : "tests"} & checks` : "Health package") : "Lab test"}</span><button type="button" className={styles.remove} aria-label={`Remove ${item.name}`} onClick={() => onRemove(item.id)}><Trash2 size={12} aria-hidden />Remove</button></div>
+          <span className={styles.itemPrice}>{money(item.price)}</span>
+        </li>)}</ul>
+        {needsSlot && (date && time && slots.includes(time) ? <div className={styles.selectedTime}><Check size={16} aria-hidden /><span>{formatBookingDate(date, "short")}<span aria-hidden> · </span>{time}</span></div> : <p className={styles.helper} role="status">Choose an available time.</p>)}
         </section>
         <section className={styles.section} aria-labelledby={`${id}-visit`}>
           <div className={styles.sectionHeading}><h2 id={`${id}-visit`}>Your visit</h2></div>
@@ -132,19 +150,13 @@ export default function HealthCheckout({ items, facility, members, memberId, onM
           {preparationNotes.length > 0 && <div className={styles.preparation}><h3>Before your visit</h3>{preparationNotes.map(note => <p key={note}>{note}</p>)}</div>}
         </section>
       </div>
-      <aside className={styles.summary} aria-labelledby={`${id}-order`}>
-        <div className={styles.summaryHeading}><h2 id={`${id}-order`}>Your selection</h2><button type="button" onClick={onBack} className={styles.textButton}>Add more</button></div>
-        <ul className={styles.items}>{items.map(item => <li key={item.id}>
-          <span className={styles.itemIcon}><FlaskConical size={20} aria-hidden /></span>
-          <div className={styles.itemCopy}><strong>{item.name}</strong><span>{item.kind === "package" ? (Number.isFinite(item.testCount) && item.testCount > 0 ? `${item.testCount} ${item.testCount === 1 ? "test" : "tests"} & checks` : "Health package") : "Lab test"}</span><button type="button" className={styles.remove} aria-label={`Remove ${item.name}`} onClick={() => onRemove(item.id)}><Trash2 size={12} aria-hidden />Remove</button></div>
-          <span className={styles.itemPrice}>{money(item.price)}</span>
-        </li>)}</ul>
-        {needsSlot && (date && time && slots.includes(time) ? <div className={styles.selectedTime}><Check size={16} aria-hidden /><span>{formatBookingDate(date, "short")}<span aria-hidden> · </span>{time}</span></div> : <p className={styles.helper} role="status">Choose an available time.</p>)}
-        <section className={styles.paymentSection} aria-labelledby={`${id}-payment`}><h2 id={`${id}-payment`}>Payment details</h2><dl className={styles.paymentDetails}><div><dt>Packages &amp; tests</dt><dd>{money(total)}</dd></div><div className={styles.total}><dt>Total payable</dt><dd>{money(total)}</dd></div></dl></section>
+      <aside className={styles.summary} aria-label="Benefits and payment">
+        <HealthCheckoutBenefits pricing={pricing} benefits={benefits} onBenefitsChange={onBenefitsChange} memberName={selectedMember?.patient.name} busy={busy} />
         {paymentError && <p className={styles.paymentError} role="alert">{paymentError}</p>}
         <p className={styles.secure}><ShieldCheck size={14} aria-hidden />Secure payment</p>
       </aside>
     </div>
-    <BookingActionBar amount={money(total)} actionLabel={total === 0 ? "Confirm booking" : "Pay online"} disabled={!canPay} feedback={!validMember ? "Choose a member to continue." : eligibilityError ? "Choose an eligible member or change your selection." : needsSlot && !slots.includes(time) ? "Choose a date and time to continue." : undefined} onContinue={onPay} />
+    <BookingActionBar amount={pricing.total} actionLabel={total === 0 ? "Confirm booking" : "Pay online"} disabled={!canPay || busy} feedback={!validMember ? "Go back to choose a member and packages." : eligibilityError ? "Change your package selection to continue." : needsSlot && !slots.includes(time) ? "Choose a date and time to continue." : undefined} onContinue={onPay} />
+
   </div>;
 }

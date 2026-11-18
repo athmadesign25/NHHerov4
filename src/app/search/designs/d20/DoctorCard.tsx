@@ -240,7 +240,7 @@ function BookingCard({ doctor, initialSelection, returnTo, onClose, resume, onAu
       <motion.div className={styles.actionSlot} layout={reduced ? false : "position"} layoutId={reduced ? undefined : `d20-action-${doctor.id}`} transition={{ layout: cardLayoutTransition }}><button type="button" className={styles.continue}
         disabled={!flow.loaded || !draft.selection.time || flow.busy || flow.expired}
         onClick={flow.continueBooking}>
-        {flow.busy ? "Continuing…" : "Continue"}
+        {flow.busy ? "Continuing…" : "Book appointment"}
       </button></motion.div>
       </div>
     </motion.footer>
