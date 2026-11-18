@@ -77,8 +77,8 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
       : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary}>
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
-        <div className={styles.actionGroup}>{available ? <button ref={action} type="button" className={styles.primary} onClick={open} aria-expanded={false} aria-controls={id}>Book appointment</button>
-          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}{available && <CallAction />}</div>
+        <div className={styles.actionGroup}>{available && <CallAction />}{available ? <button ref={action} type="button" className={styles.primary} onClick={open} aria-expanded={false} aria-controls={id}>Book appointment</button>
+          : <a href="tel:08067506836" className={styles.primary}>Contact hospital</a>}</div>
       </motion.div>}
     </div>
     </motion.div>

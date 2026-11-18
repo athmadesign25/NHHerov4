@@ -27,7 +27,8 @@
   white-space: nowrap;
 }
 .tag .info { width: var(--space-12); height: var(--space-12); flex: 0 0 auto; color: var(--color-text-secondary); }
-.discovery { min-height: var(--space-32); background: transparent; padding-inline-end: 0; cursor: pointer; transition: opacity var(--duration-base) var(--ease-out); }
+.discovery { position: relative; min-height: 0; background: transparent; padding-block: 0; padding-inline-end: 0; cursor: pointer; transition: opacity var(--duration-base) var(--ease-out); }
+.discovery::before { content: ""; position: absolute; inset-inline: 0; top: 50%; height: calc(var(--space-48) - var(--space-4)); transform: translateY(-50%); }
 .discovery:hover { opacity: 0.8; }
 .tag:focus-visible, .close:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 
@@ -60,7 +61,6 @@
 @media (max-width: 640px) {
   .dialog { width: 100%; max-height: calc(100dvh - var(--space-24)); margin: auto 0 0; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
   .surface { padding: var(--space-24) var(--space-20) calc(var(--space-24) + env(safe-area-inset-bottom)); }
-  .discovery { min-height: calc(var(--space-40) + var(--space-4)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .iconSelected .speedLines path, .shimmer::after, .dialog[open] { animation: none; }

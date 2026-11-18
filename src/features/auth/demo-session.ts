@@ -1,7 +1,8 @@
-// Start each fresh page load at Login; explicit sign-in survives client routing.
+// Restore the preview sign-in across module navigation and page reloads.
 // Storage flags remain compatible with the combined booking/search previews.
 // No phone numbers, OTPs, identities or patient details are persisted here.
 let signedIn = false;
+let restored = false;
 
 function storedSession(): boolean | null {
   let value = false;
@@ -13,9 +14,17 @@ function storedSession(): boolean | null {
   return readable ? value : null;
 }
 
-export function getDemoSession() { return signedIn; }
+export function getDemoSession() {
+  if (typeof window === "undefined") return false;
+  if (!restored) {
+    signedIn = storedSession() ?? signedIn;
+    restored = true;
+  }
+  return signedIn;
+}
 
 export function setDemoSession(next: boolean) {
+  restored = true;
   signedIn = next;
   for (const key of ["localStorage", "sessionStorage"] as const) {
     try {

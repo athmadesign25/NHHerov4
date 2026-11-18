@@ -136,9 +136,10 @@ export default function DoctorCard({ active, onClose, initialSelection, resume, 
   return <LayoutGroup id={`d20-${props.doctor.id}`}>
     <BookingBackdrop inline open={spotlight} suspended={authOpen} onDismiss={onClose ?? (() => undefined)} />
     <div ref={sourceRef} className={styles.frame} data-booking-active={booking || undefined} data-booking-card={expandingPreview && booking ? props.doctor.id : undefined}>
-    {/* Retain natural sizing across resizing, deep links and browser Back.
-        The concealed baseline is neither interactive nor exposed to AT. */}
-    <div className={styles.baseline} data-concealed={booking || undefined} aria-hidden={booking || undefined} inert={booking}>
+    {/* Keep the source card stationary behind Design A's modal so its inner
+        booking container can return without a blank frame or portrait jump.
+        The baseline stays inert and hidden from assistive technology. */}
+    <div className={styles.baseline} data-concealed={booking && !expandingPreview || undefined} aria-hidden={booking || undefined} inert={booking}>
       <Design17DoctorCard {...props} live={live} cardDesign="d20" expandFromSurface={expandingPreview} onBook={openBooking} />
     </div>
     <AnimatePresence initial={false} onExitComplete={finishExpansion}>{bookingDoctor && (expandingPreview ? <ExpandingDoctorBooking key="expanded-booking" sourceRef={sourceRef}

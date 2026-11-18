@@ -16,7 +16,7 @@ import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { mobileMenuLabel } from "./mobile-menu-label";
 import patterns from "./MobileMenuPatterns.module.css";
 import styles from "./MobileMegaMenu.module.css";
-import AccountMenu, { type AccountMember } from "../AccountMenu";
+import BookingMemberMenu from "../BookingMemberMenu";
 
 type Page = "main" | "find-a-doctor" | "hospitals" | "specialities" | "health-library" | "about-us" | "specialty" | "city" | "condition" | "sunday" | "today";
 const titles: Record<Page, string> = {
@@ -36,14 +36,10 @@ interface MobileMegaMenuProps {
   onClose: () => void;
   onLogin: () => void;
   isLoggedIn: boolean;
-  memberId: string;
-  members?: AccountMember[];
-  memberLocked?: boolean;
-  onMemberChange: (id: string) => void;
   onLogout: () => void;
 }
 
-export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId, members, memberLocked, onMemberChange, onLogout }: MobileMegaMenuProps) {
+export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, onLogout }: MobileMegaMenuProps) {
   const [history, setHistory] = useState<Page[]>(["main"]);
   const [query, setQuery] = useState("");
   const [city, setCity] = useState<string | null>(null);
@@ -137,6 +133,6 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId,
         </motion.div>
       </AnimatePresence>
     </div>
-    {isLoggedIn ? <AccountMenu mobile tone="dark" memberId={memberId} members={members} memberLocked={memberLocked} onMemberChange={onMemberChange} onLogout={onLogout} onNavigate={onClose} /> : <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>}
+    {isLoggedIn ? <BookingMemberMenu onLogout={() => { onLogout(); onClose(); }} onNavigate={onClose} /> : <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>}
   </motion.div>;
 }
