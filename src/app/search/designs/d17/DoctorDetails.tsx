@@ -9,7 +9,7 @@ export default function DoctorDetails({ doctor, mode }: Props) {
   const experience = /\b(?:years?|yrs?)\b/i.test(doctor.experience) ? doctor.experience : `${doctor.experience} years`;
   const expertise = [...new Set(doctor.expertise?.filter(Boolean) ?? [])];
   return <dl className={styles.details}>
-    <div><dt>Speciality</dt><dd>{doctor.speciality || "Speciality information unavailable"}</dd></div>
+    <div><dt>Specialty</dt><dd>{doctor.speciality || "Specialty information unavailable"}</dd></div>
     {doctor.designation && <div><dt>Designation</dt><dd>{doctor.designation}</dd></div>}
     {doctor.experience && <div><dt>Experience</dt><dd>{experience}</dd></div>}
     {doctor.degrees && <div><dt>Qualifications</dt><dd>{doctor.degrees}</dd></div>}

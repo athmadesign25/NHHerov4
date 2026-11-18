@@ -100,8 +100,8 @@
 .header > div { flex: 1; min-width: 0; }
 .header h2 { margin: 0; font-size: clamp(var(--font-size-base), 1.5vw, var(--font-size-lg)); font-weight: 600; line-height: 1.4; outline: none; }
 .header p { margin: calc(var(--sp-1) / 2) 0 0; font-size: var(--font-size-sm); line-height: 1.5; color: var(--d7-muted); overflow-wrap: anywhere; }
-.collapse { --disclosure-icon-hover: transparent; display: grid; place-items: center; flex: 0 0 var(--target); width: var(--target); height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-bg-card) 55%, transparent); color: var(--d7-muted); cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out); }
-@media (hover: hover) { .collapse:hover { background-color: color-mix(in srgb, var(--color-bg-card) 92%, var(--black)); } }
+.collapse { --disclosure-icon-hover: transparent; display: grid; place-items: center; flex: 0 0 var(--target); width: var(--target); height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-bg-card) 55%, transparent); color: var(--d7-muted); cursor: pointer; transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
+@media (hover: hover) { .collapse:hover { background-color: color-mix(in srgb, var(--color-bg-card) 88%, var(--color-primary)); color: var(--color-primary); } }
 .options { container: profile-slots / inline-size; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--d7-muted) 28%, transparent) transparent; padding: var(--sp-1) var(--sp-2) var(--sp-2); }
 .summary { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-1) var(--sp-3); align-items: center; padding: calc(var(--sp-1) * 1.5) var(--sp-2); }
 .dock[data-expanded="true"] .summary { border-top: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent); }
@@ -124,7 +124,6 @@
 .primary { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: var(--sp-6); border: 0; border-radius: var(--radius-md); padding: var(--sp-1) var(--sp-2); background: var(--color-primary); color: var(--color-text-inverse); font-size: var(--font-size-sm); font-weight: 600; line-height: 1.5; text-align: center; text-decoration: none; cursor: pointer; transition: background-color var(--transition-fast), opacity var(--transition-fast); }
 .primary:disabled { opacity: .5; cursor: not-allowed; }
 .primary { gap: var(--space-8); }
-.continueArrow { flex-shrink: 0; width: var(--space-16); height: var(--space-16); }
 .notice { margin: 0 0 var(--sp-1); padding: var(--sp-1); border-radius: var(--radius-sm); background: var(--color-primary-light); font-size: var(--font-size-sm); line-height: 1.5; }
 .dock :is(a, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 @container profile-slots (max-width: 320px) { .options fieldset label > span { white-space: normal; font-size: var(--font-size-xs); padding-inline: calc(var(--sp-1) / 2); gap: calc(var(--sp-1) / 2); text-align: center; } }
@@ -144,20 +143,22 @@
 @media (forced-colors: active) { .dock[data-tone="dark"][data-expanded="false"] .surface { color: CanvasText; background: Canvas; } }
 
 .actionGroup { display: grid; min-width: 0; gap: var(--space-4); }
-.actionGroup:has(.callAction) { grid-template-columns: minmax(0, 1fr) var(--space-48); gap: var(--space-8); }
+.actionGroup:has(.callAction) { grid-template-columns: var(--space-48) minmax(0, 1fr); gap: var(--space-8); }
 .callAction { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid rgba(var(--slate-800-rgb), 0.12); border-radius: var(--radius-md); color: var(--color-primary); background: rgba(var(--white-rgb), 0.8); backdrop-filter: blur(var(--space-20)); -webkit-backdrop-filter: blur(var(--space-20)); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
 .callAction svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
 .callAction:active { background: rgba(var(--white-rgb), 0.95); }
+/* Keep the footer anchored while slot controls expand above it. */
+.dock[data-profile-booking] .summary[data-appointment-summary] { padding: var(--space-16); }
 @media (max-width: 639px) {
-  .dock[data-expanded="false"] .summary { padding: var(--space-12); }
+  .dock[data-profile-booking] .summary[data-appointment-summary] { padding: var(--space-12); }
 }
 @media (min-width: 640px) {
-  .summary:has(.callAction) {
-    grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--space-96) * 2 + var(--space-48) + var(--space-8)), auto);
+  .dock[data-profile-booking] .summary:has(.callAction) {
+    grid-template-columns: minmax(0, 1fr) auto calc(var(--space-96) * 2 + var(--space-48) + var(--space-8));
   }
 }
 @media (max-width: 374px) {
-  .dock[data-expanded="false"][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .dock[data-profile-booking][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 }
 @media (hover: hover) { .callAction:hover { background: rgba(var(--white-rgb), 0.9); } }
 @media (prefers-reduced-motion: reduce) { .callAction { transition: none; } }

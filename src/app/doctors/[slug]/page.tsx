@@ -8,7 +8,6 @@ import { design20DoctorRecoveryUrl } from "@/features/search/design20BookingEntr
 import { doctorProfilePath, doctorProfileQuery, doctorProfileSlug } from "@/features/search/doctorProfileUrl";
 import { getDoctorProfileMetadata } from "@/features/search/doctorProfileMetadata";
 import { capturedProfileToDoctor, getCapturedDoctorProfile, getCapturedDoctorProfileBySlug } from "@/features/search/doctorProfileSource";
-import DoctorProfileView from "./DoctorProfileView";
 import DoctorProfileDesign2 from "./design2/DoctorProfileDesign2";
 import styles from "@/features/booking/design17/Booking.module.css";
 
@@ -39,9 +38,8 @@ export default async function DoctorPage({ params, searchParams }: Props) {
     const search = values.toString();
     permanentRedirect(`${doctorProfilePath(doctor)}${search ? `?${search}` : ""}`);
   }
-  const Profile = values.get("profileDesign") === "1" ? DoctorProfileView : DoctorProfileDesign2;
   return <Suspense fallback={<main className={styles.page} role="status">Loading doctor…</main>}>
-    <Profile key={`${doctor.id}-${doctor.hospital}-${values.get("mode")}`} doctor={doctor} source={captured ?? getCapturedDoctorProfile(doctor)}
+    <DoctorProfileDesign2 key={`${doctor.id}-${doctor.hospital}-${values.get("mode")}`} doctor={doctor} source={captured ?? getCapturedDoctorProfile(doctor)}
       returnTo={design20ListingReturnTo(values.get("returnTo") ?? "")}
       initialMode={values.get("mode") === "video" ? "video" : "hospital"} date={values.get("date") ?? ""} />
   </Suspense>;

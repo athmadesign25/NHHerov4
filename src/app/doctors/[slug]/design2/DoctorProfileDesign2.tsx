@@ -9,7 +9,6 @@ import { getDesign20CardContent } from "@/features/search/design20CardContent";
 import { doctorProfilePath } from "@/features/search/doctorProfileUrl";
 import { getDoctorProfilePresentation } from "@/features/search/doctorProfilePresentation";
 import type { CapturedDoctorProfile } from "@/features/search/doctorProfileSource";
-import DoctorProfileDesignSwitch from "../DoctorProfileDesignSwitch";
 import DoctorProfileSectionPicker from "../DoctorProfileSectionPicker";
 import DoctorProfileBooking from "../DoctorProfileBooking";
 import DoctorProfileVideos from "../DoctorProfileVideos";
@@ -81,7 +80,6 @@ export default function DoctorProfileDesign2({ doctor: originalDoctor, returnTo,
         <DoctorProfileHelp2 doctorName={doctor.name} hasEnquiry={source?.hasEnquiry} contact={source?.overview.contact} />
       </article>
     </div>
-    <DoctorProfileDesignSwitch active={2} />
     {!master && <DoctorProfileBooking doctor={doctor} initialMode={initialMode} date={date} returnTo={returnTo} tone="light" bookingRequest={bookingRequest} />}
   </main>;
 }

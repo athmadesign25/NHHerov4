@@ -194,12 +194,9 @@ export function getDesign3BookingDoctor(id: string): BookingDoctorSummary | null
   };
   const doctor = searchDoctorsData.find((item) => item.id === id);
   if (!doctor) return null;
-  const extraHospitals = "hospitals" in doctor && Array.isArray((doctor as { hospitals?: string[] }).hospitals)
-    ? ((doctor as { hospitals?: string[] }).hospitals ?? [])
-    : [];
   return {
     ...fromSearchDoctor(doctor),
-    locations: [...new Set([doctor.hospital, ...extraHospitals])]
+    locations: [...new Set([doctor.hospital, ...("hospitals" in doctor ? doctor.hospitals ?? [] : [])])]
       .filter(Boolean).map((name) => ({ name, city: doctor.city })),
   };
 }
