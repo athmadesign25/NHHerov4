@@ -12,6 +12,7 @@ import HealthIncludedTests from "../HealthIncludedTests";
 import { HEALTH_CATEGORIES, healthCategories } from "../healthCardContent";
 import HealthLocationPicker, { HealthCentreChooser } from "./HealthLocationPicker";
 import HealthDiscoveryCard from "./HealthDiscoveryCard";
+import HealthLandingCard from "../design6/HealthLandingCard";
 import HealthCatalogueTabs from "./HealthCatalogueTabs";
 import HealthTypeToggle from "./HealthTypeToggle";
 import styles from "./HealthListing3.module.css";
@@ -21,7 +22,7 @@ import preview from "../design4/HealthListing4.module.css";
 import compactStyles from "../design5/HealthListing5.module.css";
 
 interface Props {
-  variant?: "3" | "4" | "5";
+  variant?: "3" | "4" | "5" | "6";
   renderHero?: (controls: ReactNode) => ReactNode;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
@@ -51,7 +52,7 @@ export default function HealthListing3(props: Props) {
     catalog, query, onQuery, tab, onTab, category, onCategory, ids, includedIds,
     onAdd, onDetails, bookedIds = [], variant = "3" } = props;
   const immersive = variant === "4";
-  const compact = variant === "5";
+  const compact = variant === "5" || variant === "6";
   const [testsItem, setTestsItem] = useState<HealthItem | null>(null);
   const [navVisible, setNavVisible] = useState(true);
   const results = useRef<HTMLDivElement>(null);
@@ -80,7 +81,8 @@ export default function HealthListing3(props: Props) {
     onQuery(""); onCategory("All"); onTab(next);
   }
   function renderItem(item: HealthItem, index: number) {
-    return <HealthDiscoveryCard key={item.id} item={item} eager={index < 3} selected={ids.includes(item.id)} included={includedIds.includes(item.id)}
+    const Card = variant === "6" ? HealthLandingCard : HealthDiscoveryCard;
+    return <Card key={item.id} item={item} eager={index < 3} selected={ids.includes(item.id)} included={includedIds.includes(item.id)}
       onAdd={() => onAdd(item)} onDetails={() => onDetails(item)} onTests={() => setTestsItem(item)} previouslyBooked={bookedIds.includes(item.id)} />;
   }
 
@@ -120,8 +122,8 @@ export default function HealthListing3(props: Props) {
       <HealthCentreChooser key={initialCity ?? "all-cities"} cities={cities} facilities={facilities} initialCity={initialCity} onSelect={onFacility} />
     </section> : <>
     {immersive && props.renderHero ? props.renderHero(controls) : controls}
-      {compact && focusChips}
-      {immersive && !searching && (categories.length > 0 || hasHistory) && <HealthFocusRail4 id={`${catalogueId}-focus`} categories={categories} active={activeCategory} hasHistory={hasHistory} onChange={onCategory} />}
+      {variant === "5" && focusChips}
+      {(immersive || variant === "6") && !searching && (categories.length > 0 || hasHistory) && <HealthFocusRail4 id={`${catalogueId}-focus`} categories={categories} active={activeCategory} hasHistory={hasHistory} onChange={onCategory} />}
       <div ref={results} id={panelId} className={`${styles.results} ${immersive ? preview.results : ""}`} tabIndex={-1} role="region" aria-label="Health search results">
         {immersive && !searching && <div className={preview.resultsHeading}><h2>{tab === "package" ? "Health packages" : "Lab tests"}{activeCategory !== "All" ? ` · ${activeCategory === "booked" ? "Booked before" : categories.find(entry => entry.id === activeCategory)?.label}` : ""}</h2>{activeCategory !== "All" && <button type="button" className={styles.textAction} onClick={() => onCategory("All")}>Show all<X aria-hidden /></button>}</div>}
         {searching && <div className={styles.resultHeading}><h2>Results for “{query.trim()}”</h2><button type="button" className={styles.textAction} onClick={() => onQuery("")}>Clear search<X aria-hidden /></button></div>}

@@ -5,11 +5,12 @@ export const HEALTH_DESIGNS = [
   { id: "3", label: "Design 3", description: "Browse by centre" },
   { id: "4", label: "Design 4", description: "Discover your checkup" },
   { id: "5", label: "Design 5", description: "Compact discovery" },
+  { id: "6", label: "Design 6", description: "Landing-inspired cards" },
 ] as const;
 
 export type HealthDesign = (typeof HEALTH_DESIGNS)[number]["id"];
 
-export const DEFAULT_HEALTH_DESIGN: HealthDesign = "3";
+export const DEFAULT_HEALTH_DESIGN: HealthDesign = "6";
 
 /** Only explicit preview IDs override the current design, on listing and detail routes. */
 export function resolveHealthDesign(value: string | string[] | null | undefined): HealthDesign {

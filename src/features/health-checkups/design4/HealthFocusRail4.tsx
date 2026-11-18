@@ -5,6 +5,7 @@ import { Check, History, LayoutGrid } from "lucide-react";
 import HorizontalMediaRail from "@/components/ui/HorizontalMediaRail";
 import type { HEALTH_CATEGORIES, HealthCategory } from "../healthCardContent";
 import styles from "./HealthListing4.module.css";
+import listingStyles from "../design3/HealthListing3.module.css";
 
 const images: Record<Exclude<HealthCategory, "all">, string> = {
   general: "/Health Checkup/Basic health.png",
@@ -37,7 +38,7 @@ export default function HealthFocusRail4({ id, categories, active, hasHistory, o
 
   return <section className={styles.focusRail} aria-labelledby={`${id}-heading`}>
     <HorizontalMediaRail id={id} labelledBy={`${id}-heading`} itemLabel="health categories"
-      heading={<h2 id={`${id}-heading`}>Explore by health focus</h2>}>
+      heading={<h2 id={`${id}-heading`} className={listingStyles.srOnly}>Filter by health focus</h2>}>
       {options.map(({ id: value, label, image, Icon }) => <button key={value} type="button" className={styles.focusButton}
         aria-pressed={active === value} onClick={() => onChange(active === value ? "All" : value)}>
         <span className={styles.focusImage}>

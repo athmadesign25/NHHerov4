@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import { useRouter, useSearchParams } from "next/navigation";
 import { useReducedMotion } from "framer-motion";
 import { ArrowRight, Building2, Check, ChevronDown, MapPin, Search, X, HeartPulse, FlaskConical } from "lucide-react";
-import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
 import NewPatient from "@/features/booking/shared/NewPatient";
 import RazorpayDemo from "@/features/booking/shared/RazorpayDemo";
@@ -26,6 +25,9 @@ import HealthSelectionFeedback, { type SelectionNotice } from "./HealthSelection
 import { healthListingHeading, matchesHealthQuery } from "./healthDiscovery";
 import HealthDialog from "./HealthDialog";
 import HealthCheckout from "./HealthCheckout";
+import { defaultSponsorshipForPatient, design20Pricing } from "@/features/booking/design20/pricing";
+import type { HealthBenefitSelection } from "./HealthCheckoutBenefits";
+import type { HealthPricing } from "./HealthPaymentDetails";
 import HealthCartDock from "./HealthCartDock";
 import HealthConfirmation from "./HealthConfirmation";
 import { healthItemDetailHref } from "./healthDetailTypes";
@@ -54,7 +56,7 @@ export default function HealthCheckups() {
   const design = resolveHealthDesign(params.getAll("design").length > 1 ? params.getAll("design") : params.get("design"));
   const legacy = design === "1";
   const reduceMotion = useReducedMotion();
-  const { isUserLoggedIn, setIsUserLoggedIn } = useAuthState();
+  const { isUserLoggedIn } = useAuthState();
   const preference = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
   const members: SavedPatient[] = useMemo(() => preference.members.map(({ id, ...patient }) => ({ id, patient: { ...patient, phone: "", email: ACCOUNT.value } })), [preference.members]);
   const bookingHistory = useSyncExternalStore(subscribeHealthBookingHistory, getHealthBookingHistory, getServerHealthBookingHistory);
@@ -71,20 +73,20 @@ export default function HealthCheckups() {
   const [pendingFacility, setPendingFacility] = useState<FacilityId | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartAddition, setCartAddition] = useState(0);
-  const [loginOpen, setLoginOpen] = useState(false);
   const [newMember, setNewMember] = useState(false);
   const [date, setDate] = useState(firstDate);
   const [time, setTime] = useState(() => getHealthSlots(firstDate())[0] ?? "");
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [paymentError, setPaymentError] = useState("");
+  const [memberBenefits, setMemberBenefits] = useState<Record<string, HealthBenefitSelection>>({});
   const [notice, setNotice] = useState<SelectionNotice | null>(null);
   const noticeSequence = useRef(0);
   function showNotice(text: string, success = false) {
     noticeSequence.current += 1;
     setNotice({ id: noticeSequence.current, text, tone: success ? "success" : "info" });
   }
-  const [receipt, setReceipt] = useState<{ items: HealthItem[]; facilityId: FacilityId; member: SavedPatient; date: string; time: string } | null>(null);
+  const [receipt, setReceipt] = useState<{ items: HealthItem[]; facilityId: FacilityId; member: SavedPatient; date: string; time: string; pricing: HealthPricing } | null>(null);
   const paymentTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const cityPicker = useRef<HTMLSelectElement>(null);
@@ -94,10 +96,17 @@ export default function HealthCheckups() {
   const centreOptions = FACILITIES.filter(entry => healthFacilityServesCity(entry, pickerCity ?? cityKey));
   const cart = getCartItems(ids, facilityId);
   const total = cartTotal(cart);
+  const benefits = (memberId && memberBenefits[memberId]) || { discountCode: "", sponsorshipId: defaultSponsorshipForPatient(members.find(member => member.id === memberId)), useHealthCredits: false };
+  const pricing = design20Pricing(String(total), benefits.discountCode, benefits.sponsorshipId, benefits.useHealthCredits);
+  const changeBenefits = (value: HealthBenefitSelection) => {
+    if (!memberId || busy) return;
+    setMemberBenefits(previous => ({ ...previous, [memberId]: value }));
+    setPaymentError("");
+  };
   const selectedPackage = cart.find(item => item.kind === "package");
   const stage = receipt ? "confirmed" : params.get("step") === "review" && cart.length ? "review" : "browse";
   const immersiveListing = design === "4" && stage === "browse";
-  const compactListing = design === "5" && stage === "browse";
+  const compactListing = (design === "5" || design === "6") && stage === "browse";
   const facilityCatalog = ITEMS.filter(item => item.facilityId === facilityId);
   const catalog = facilityCatalog.filter(item => item.kind === tab);
   const categories = ["All", ...new Set(catalog.map(item => item.category).filter(Boolean))];
@@ -182,6 +191,27 @@ export default function HealthCheckups() {
     }
   }, [contextKey, params, receipt, facilityId, centreChosen, entryCity, ids, cart.length, router, design]);
 
+  // Listen at the shared store boundary so checkout, navbar and new-member
+  // selection all invalidate the previous patient's cart in the same way.
+  useEffect(() => subscribeBookingMembers(() => {
+    const next = getBookingMemberSelection();
+    const nextId = next.selectedId ?? next.members[0]?.id ?? null;
+    if (receipt || !memberId || !next.selectedId || nextId === memberId || !ids.length) return;
+    if (paymentTimer.current) clearTimeout(paymentTimer.current);
+    rememberDetailSelection(null);
+    incomingDetail.current = null; incomingAdd.current = false;
+    setIds([]); setPendingPackage(null); setPendingFacility(null);
+    setCartOpen(false); setPaymentOpen(false); setBusy(false); setPaymentError("");
+    const nextDate = firstDate();
+    setDate(nextDate); setTime(getHealthSlots(nextDate)[0] ?? "");
+    const search = new URLSearchParams(window.location.search);
+    search.delete("step"); search.delete("item"); search.delete("add");
+    window.history.replaceState(null, "", `/health-checkups${search.size ? `?${search}` : ""}`);
+    showNotice("Member changed. Your cart was cleared. Choose packages or tests again.");
+    window.scrollTo({ top: 0, behavior: reduceMotion ? "instant" : "smooth" });
+    requestAnimationFrame(() => heading.current?.focus({ preventScroll: true }));
+  }), [memberId, ids.length, receipt, reduceMotion]);
+
   function go(step: "browse" | "review" | "confirmed") {
     const search = new URLSearchParams(params.toString());
     search.delete("item"); search.delete("add");
@@ -249,14 +279,14 @@ export default function HealthCheckups() {
   }
   function review() {
     setCartOpen(false);
-    if (!isUserLoggedIn) { setLoginOpen(true); return; }
+    if (!isUserLoggedIn) return;
     if (memberId) chooseBookingMember(memberId);
     go("review");
   }
   function changeDate(next: string) { setDate(next); setTime(getHealthSlots(next)[0] ?? ""); setPaymentError(""); }
   function canPay() {
     if (receipt) return false;
-    if (!isUserLoggedIn) { setLoginOpen(true); return false; }
+    if (!isUserLoggedIn) return false;
     if (!members.some(member => member.id === memberId) || !cart.length) { setPaymentError("Choose a member and at least one package or test."); return false; }
     const eligibility = healthEligibilityMessage(cart, members.find(member => member.id === memberId)?.patient);
     if (eligibility) { setPaymentError(eligibility); return false; }
@@ -270,16 +300,16 @@ export default function HealthCheckups() {
     setBusy(true);
     paymentTimer.current = setTimeout(() => {
       rememberHealthBooking(member.id, cart.map(item => item.id));
-      setReceipt({ items: cart, facilityId, member, date: cartRequiresSlot(cart) ? date : "", time: cartRequiresSlot(cart) ? time : "" });
+      setReceipt({ items: cart, facilityId, member, pricing, date: cartRequiresSlot(cart) ? date : "", time: cartRequiresSlot(cart) ? time : "" });
       setBusy(false); setPaymentOpen(false); setPaymentError(""); go("confirmed");
     }, 600);
   }
 
-  return <div className={`${styles.page} ${immersiveListing ? preview4.page : ""}`} data-health-design={design}>
-    <div className={`${styles.container} ${immersiveListing ? preview4.container : ""}`}>
+  return <div className={`${styles.page} ${stage === "review" ? styles.reviewPage : ""} ${immersiveListing ? preview4.page : ""}`} data-health-design={design}>
+    <div className={`${styles.container} ${stage === "review" ? styles.reviewContainer : ""} ${immersiveListing ? preview4.container : ""}`}>
       {stage === "browse" && <>
         {!immersiveListing && <header className={`${styles.intro} ${compactListing ? preview5.intro : ""}`}><div>{legacy ? <h1 ref={heading} tabIndex={-1}>Health checkups &amp; tests</h1> : <JourneyHeading ref={heading} tabIndex={-1}>{listingHeading}</JourneyHeading>}{!compactListing && <p>Find the right checkup, at a centre near you.</p>}</div></header>}
-        {design === "3" || design === "4" || design === "5" ? <HealthListing3 variant={design} renderHero={controls => <HealthHero4 title={listingHeading} headingRef={heading}>{controls}</HealthHero4>} bookedIds={isUserLoggedIn && memberId ? bookingHistory[memberId] ?? [] : []} cities={CITIES} facilities={FACILITIES} initialCity={entryCity} facility={centreChosen ? facility : undefined}
+        {design === "3" || design === "4" || design === "5" || design === "6" ? <HealthListing3 variant={design} renderHero={controls => <HealthHero4 title={listingHeading} headingRef={heading}>{controls}</HealthHero4>} bookedIds={isUserLoggedIn && memberId ? bookingHistory[memberId] ?? [] : []} cities={CITIES} facilities={FACILITIES} initialCity={entryCity} facility={centreChosen ? facility : undefined}
           facilityOpen={facilityOpen} onOpenFacility={() => openFacilityPicker()} onCloseFacility={closeFacilityPicker} onFacility={changeFacility}
           catalog={facilityCatalog} query={query} onQuery={setQuery} tab={tab} onTab={setTab} category={category} onCategory={setCategory}
           ids={ids} includedIds={selectedPackage?.includedTestIds ?? []} onAdd={add} onDetails={openDetails} /> : <>
@@ -312,8 +342,8 @@ export default function HealthCheckups() {
         </>}
 
       </>}
-      {stage === "review" && (isUserLoggedIn ? <HealthCheckout items={cart} facility={facility} members={members} memberId={memberId} onMemberChange={chooseBookingMember} onAddMember={() => setNewMember(true)} date={date} time={time} onDateChange={changeDate} onTimeChange={value => { setTime(value); setPaymentError(""); }} onBack={() => go("browse")} onRemove={remove} onPay={() => { if (canPay()) { setPaymentError(""); if (total === 0) finishPayment(); else setPaymentOpen(true); } }} paymentError={paymentError} /> : <section className={styles.empty}><h1>Continue your booking</h1><p>Your selection is ready. Sign in to choose a member.</p><button type="button" className={styles.primary} onClick={() => setLoginOpen(true)}>Sign in to continue</button><button type="button" className={styles.textButton} onClick={() => go("browse")}>Back to packages</button></section>)}
-      {stage === "confirmed" && receipt && (isUserLoggedIn ? <HealthConfirmation items={receipt.items} facility={FACILITIES.find(entry => entry.id === receipt.facilityId)!} member={receipt.member} date={receipt.date} time={receipt.time} onRestart={() => { setReceipt(null); setIds([]); go("browse"); }} /> : <section className={styles.empty}><h1>Sign in to view your booking</h1><button type="button" className={styles.primary} onClick={() => setLoginOpen(true)}>Sign in</button></section>)}
+      {stage === "review" && <HealthCheckout pricing={pricing} benefits={benefits} onBenefitsChange={changeBenefits} busy={busy} items={cart} facility={facility} members={members} memberId={memberId} date={date} time={time} onDateChange={changeDate} onTimeChange={value => { setTime(value); setPaymentError(""); }} onBack={() => go("browse")} onRemove={remove} onPay={() => { if (canPay()) { setPaymentError(""); if (pricing.amounts.total === 0) finishPayment(); else setPaymentOpen(true); } }} paymentError={paymentError} />}
+      {stage === "confirmed" && receipt && <HealthConfirmation pricing={receipt.pricing} items={receipt.items} facility={FACILITIES.find(entry => entry.id === receipt.facilityId)!} member={receipt.member} date={receipt.date} time={receipt.time} onRestart={() => { setReceipt(null); setIds([]); setMemberBenefits({}); go("browse"); }} />}
     </div>
     {stage === "browse" && <HealthDesignPreview design={design} hasSelection={cart.length > 0} onChange={changeDesign} />}
     <HealthSelectionFeedback notice={notice} onDismiss={() => setNotice(null)} />
@@ -321,12 +351,11 @@ export default function HealthCheckups() {
       onExpandedChange={setCartOpen} onRemove={remove} onContinue={review}
       onBrowse={() => { setCartOpen(false); requestAnimationFrame(() => heading.current?.focus({ preventScroll: true })); }}
       onEmptyClose={() => heading.current?.focus({ preventScroll: true })} />}
-    {facilityOpen && design !== "3" && design !== "4" && design !== "5" && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select ref={cityPicker} value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={() => cityPicker.current?.focus()}>Choose another city</button></div>}</HealthDialog>}
+    {facilityOpen && design !== "3" && design !== "4" && design !== "5" && design !== "6" && <HealthDialog title="Choose a hospital or clinic" onClose={closeFacilityPicker}><label className={styles.cityPicker}>City<select ref={cityPicker} value={pickerCity ?? cityKey} onChange={event => setPickerCity(event.target.value)}>{CITIES.map(city => <option key={city.value} value={city.value}>{city.label}</option>)}</select></label>{centreOptions.length ? <div className={styles.facilities}>{centreOptions.map(entry => <button type="button" key={entry.id} aria-pressed={centreVisible && entry.id === facilityId} onClick={() => changeFacility(entry.id)}><MapPin size={20} aria-hidden /><span><strong>{entry.name}</strong><small>{entry.address}</small></span><span className={styles.radio}>{centreVisible && entry.id === facilityId && <Check size={12} strokeWidth={3} />}</span></button>)}</div> : <div className={styles.empty}><Building2 size={28} aria-hidden /><h3>No health checkup centres available</h3><p>Try another city to explore health packages and tests.</p><button type="button" className={styles.textButton} onClick={() => cityPicker.current?.focus()}>Choose another city</button></div>}</HealthDialog>}
     {pendingPackage && <HealthDialog title="Replace your package?" onClose={() => setPendingPackage(null)}><p className={styles.dialogSub}>Replace {selectedPackage?.name} with {pendingPackage.name}? Your additional tests stay selected unless they’re already included in the new package.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={() => setPendingPackage(null)}>Keep current package</button><button type="button" className={styles.primary} onClick={replacePackage}>Replace package</button></div></HealthDialog>}
     {pendingFacility && <HealthDialog title="Change your centre?" onClose={keepFacility}><p className={styles.dialogSub}>Changing to {resolveHealthFacility(FACILITIES, pendingFacility)?.name} will remove {cart.length} {cart.length === 1 ? "item" : "items"} from your cart. Packages and prices vary by centre.</p><div className={styles.modalActions}><button type="button" className={styles.textButton} onClick={keepFacility}>Keep selection</button><button type="button" className={styles.primary} onClick={() => applyFacility(pendingFacility)}>Change centre</button></div></HealthDialog>}
 
     {newMember && <HealthDialog title="Add new member" onClose={() => setNewMember(false)}><NewPatient identity={ACCOUNT} onCancel={() => setNewMember(false)} onSave={patient => { const id = `health-member-${crypto.randomUUID()}`; rememberBookingMembers([{ id, patient }], id); setNewMember(false); }} /></HealthDialog>}
-    {loginOpen && <LoginModal isOpen manageFocus previewOtp onClose={() => setLoginOpen(false)} onLoginSuccess={() => { setIsUserLoggedIn(true); setLoginOpen(false); if (memberId) chooseBookingMember(memberId); go("review"); }} />}
-    {paymentOpen && <RazorpayDemo fee={money(total)} busy={busy} expired={false} onPay={finishPayment} onClose={() => { setPaymentOpen(false); setPaymentError("Payment cancelled. Your booking isn’t confirmed. Your selection is saved here so you can try again."); }} />}
+    {paymentOpen && <RazorpayDemo fee={pricing.total} busy={busy} expired={false} onPay={finishPayment} onClose={() => { setPaymentOpen(false); setPaymentError("Payment cancelled. Your booking isn’t confirmed. Your selection is saved here so you can try again."); }} />}
   </div>;
 }

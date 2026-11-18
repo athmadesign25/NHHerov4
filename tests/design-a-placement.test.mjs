@@ -33,19 +33,23 @@ test("a revealed desktop card respects the sticky toolbar clearance", () => {
 test("video height is independent of whether it was opened directly or switched from hospital", () => {
   const source = 611;
   const available = 700;
-  assert.equal(bookingPanelHeight(source, 490, available, "hospital"), source);
-  const switchedVideo = bookingPanelHeight(source, 410, available, "video");
-  const reopenedVideo = bookingPanelHeight(source, 410, available, "video");
+  assert.equal(bookingPanelHeight(source, available), source);
+  const switchedVideo = bookingPanelHeight(source, available);
+  const reopenedVideo = bookingPanelHeight(source, available);
   assert.equal(switchedVideo, reopenedVideo);
-  assert.equal(reopenedVideo, 410);
-  assert.equal(bookingPanelHeight(source, 490, available, "hospital"), source);
+  assert.equal(reopenedVideo, source);
+  assert.equal(bookingPanelHeight(source, available), source);
 });
 
-test("long content grows only as far as the available viewport, in either consultation mode", () => {
-  for (const mode of ["hospital", "video"]) {
-    assert.equal(bookingPanelHeight(611, 760, 800, mode), 760);
-    assert.equal(bookingPanelHeight(611, 760, 568, mode), 568);
-    assert.equal(bookingPanelHeight(611, 760, 0, mode), 0);
+test("hospital expansion retains the measured default-card height even when content is taller", () => {
+  assert.equal(bookingPanelHeight(551, 900), 551);
+});
+
+test("long content cannot enlarge the source card and still respects short viewports", () => {
+  {
+    assert.equal(bookingPanelHeight(611, 800), 611);
+    assert.equal(bookingPanelHeight(611, 568), 568);
+    assert.equal(bookingPanelHeight(611, 0), 0);
   }
 });
 

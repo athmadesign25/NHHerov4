@@ -84,7 +84,7 @@
 .dates[data-fade-start="true"] { --month-clear: calc(var(--sp-4) + var(--sp-3)); --month-fade: calc(var(--month-clear) + var(--sp-3)); }
 
 .dates button { display: grid; flex: 0 0 var(--target); justify-items: center; gap: calc(var(--sp-1) / 2); min-width: var(--target); min-height: var(--target); padding: 0; border: 0; border-radius: var(--radius-full); background: transparent; color: var(--d7-muted); font-size: var(--font-size-xs); line-height: 1.5; }
-.dates strong { display: grid; place-items: center; width: calc(var(--sp-5) - var(--sp-1) / 2); height: calc(var(--sp-5) - var(--sp-1) / 2); border-radius: var(--radius-full); color: var(--d7-text); background: color-mix(in srgb, var(--d7-surface) 70%, transparent); font-size: var(--font-size-base); font-weight: 500; }
+.dates strong { display: grid; place-items: center; width: calc(var(--sp-5) - var(--sp-1) / 2); height: calc(var(--sp-5) - var(--sp-1) / 2); border-radius: var(--radius-full); color: inherit; background: color-mix(in srgb, var(--d7-surface) 70%, transparent); font-size: var(--font-size-base); font-weight: 500; }
 .dates button[aria-pressed="true"] { background: transparent; color: var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text))); font-weight: 500; }
 .dates button[aria-pressed="true"] strong { color: inherit; background: var(--d3-ui-selection-surface, var(--color-emergency-light)); font-weight: 500; box-shadow: inset 0 0 0 1px var(--d3-ui-selection, var(--color-emergency)); }
 .monthGroup { display: flex; flex: 0 0 auto; gap: calc(var(--sp-1) / 2); }
@@ -244,3 +244,10 @@
 
 .slotSummaryValue { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-8); }
 .slotSummaryValue strong { margin-top: 0; }
+
+/* Dates and time chips share neutral default and hover text. */
+@media (hover: hover) {
+  .dates button:not(:disabled):not([aria-pressed="true"]):hover {
+    color: var(--d3-ui-ink-hover, var(--color-text));
+  }
+}

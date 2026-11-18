@@ -11,7 +11,16 @@ This feature owns the health-package/test listing, details, selection, checkout 
 
 Reuse member/payment/date behaviour through `src/features/booking/shared/`. Reuse the search surface from `src/components/ui/search-location/` and drag behaviour from `src/components/ui/useMouseDragScroll.ts`. Do not import implementations from `src/app/` or numbered Booking design folders.
 
-Design 3 is the default listing preview. Its components live in `design3/`:
+The route-level `HealthEntryGate` handles every entry, including package/test
+links: sign in when logged out → choose a member → catalogue. Member selection
+is required once per module visit and remains selected through detail navigation
+and checkout. Checkout shows that member with an optional Change action.
+Leaving the module or signing out resets the entry check. This is a prototype
+UI gate, not server-side authentication or authorization.
+
+Design 6 is the default listing preview, with landing-page-style cards in
+`design6/` and the health-focus rail reused from Design 4. The shared listing
+controller and search components live in `design3/`:
 `HealthListing3` composes the shared search surface with `HealthLocationPicker`
 (desktop popover / mobile sheet) and `HealthDiscoveryCard` (package and test
 cards). City selection stays local until a centre is chosen; the shared controller

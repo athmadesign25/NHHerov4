@@ -123,7 +123,7 @@ test("source-backed sections and nested test descriptions render completely with
 
 test("detail navigation retains the chosen listing design for Back and Add", async () => {
   const { healthItemDetailHref } = await import("../src/features/health-checkups/healthDetailTypes.ts");
-  for (const design of ["1", "2", "3"]) {
+  for (const design of ["1", "2", "3", "4", "5", "6"]) {
     const href = healthItemDetailHref({ ...item, unitCode: "6024", code: "T1" }, design);
     const query = new URL(href, "https://preview.example").searchParams;
     assert.equal(query.get("design"), design);
@@ -141,7 +141,7 @@ test("direct detail entries return and add to the current listing preview", () =
   const listingLinks = [...markup.matchAll(/href="(\/health-checkups\?[^\"]*)"/g)].map(match => new URL(match[1].replaceAll("&amp;", "&"), "https://preview.example"));
   assert.ok(listingLinks.length >= 2);
   for (const link of listingLinks) {
-    assert.equal(link.searchParams.get("design"), "3");
+    assert.equal(link.searchParams.get("design"), "6");
     assert.equal(link.searchParams.get("hospital"), facility.id);
     assert.equal(link.searchParams.get("tab"), "tests");
   }

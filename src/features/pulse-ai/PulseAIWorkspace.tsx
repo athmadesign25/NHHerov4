@@ -1,5 +1,7 @@
 "use client";
 
+import LoginModal from "@/features/auth/LoginModal";
+
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1745,104 +1747,6 @@ function RegisterModal({ onClose, onRegister, onLoginInstead }: {
           By continuing, you agree to our{" "}
           <a href="#" className={styles.modalLink}>Terms of Service</a> &amp;{" "}
           <a href="#" className={styles.modalLink}>Privacy Policy</a>
-        </p>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* ─── LOGIN MODAL ─────────────────────────────────────────── */
-function LoginModal({ onClose, onLogin }: { onClose: () => void; onLogin: () => void }) {
-  const [phone, setPhone] = useState("");
-  const [step, setStep]   = useState<"phone" | "otp">("phone");
-  const [otp, setOtp]     = useState(["", "", "", ""]);
-  const [error, setError] = useState<string | null>(null);
-  const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null),
-                   useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
-
-  const handleOtpChange = (i: number, val: string) => {
-    if (!/^\d?$/.test(val)) return;
-    setError(null);
-    const next = [...otp]; next[i] = val; setOtp(next);
-    if (val && i < 3) otpRefs[i + 1].current?.focus();
-  };
-  const handleOtpKey = (i: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !otp[i] && i > 0) otpRefs[i - 1].current?.focus();
-  };
-
-  const handleVerify = () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp !== "9999") {
-      setError("Invalid OTP. Please use code 9999.");
-      return;
-    }
-    setError(null);
-    onLogin();
-  };
-
-  const canProceed = step === "phone" ? phone.length === 10 : otp.every(d => d !== "");
-
-  return (
-    <motion.div className={styles.modalBackdrop}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className={styles.loginModal}
-        initial={{ opacity: 0, scale: 0.9, y: 24 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.9, y: 24 }}
-        transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-        onClick={e => e.stopPropagation()}>
-        <button className={styles.modalCloseBtn} onClick={onClose} aria-label="Close"><X size={18} /></button>
-        <div className={styles.modalBrand}>
-          <div className={styles.modalBrandLogo}><Heart size={22} color="#fff" fill="#fff" /></div>
-          <span className={styles.modalBrandName}>Narayana Health</span>
-        </div>
-        <h2 className={styles.modalTitle}>{step === "phone" ? "Login to continue" : "Verify your number"}</h2>
-        <p className={styles.modalSubtitle}>
-          {step === "phone" ? "Sign in to book appointments, tests & health checkups" : `Enter the 4-digit OTP sent to +91 ${phone}`}
-        </p>
-        {step === "phone" ? (
-          <div className={styles.modalForm}>
-            <div className={styles.phoneInputWrap}>
-              <span className={styles.phonePrefix}><Phone size={14} /> +91</span>
-              <input type="tel" placeholder="Enter 10-digit mobile number" value={phone} maxLength={10}
-                onChange={e => {
-                  const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                  setPhone(val);
-                }}
-                className={styles.phoneInput} autoFocus />
-            </div>
-            <button className={styles.modalCtaBtn} onClick={() => {
-              if (canProceed) {
-                setStep("otp");
-                setError(null);
-                if (phone === "9999999999") {
-                  setOtp(["9", "9", "9", "9"]);
-                }
-              }
-            }} disabled={!canProceed}>
-              Send OTP <ArrowUpRight size={16} />
-            </button>
-          </div>
-        ) : (
-          <div className={styles.modalForm}>
-            <div className={styles.otpRow}>
-              {otp.map((d, i) => (
-                <input key={i} ref={otpRefs[i]} type="text" inputMode="numeric" maxLength={1} value={d}
-                  onChange={e => handleOtpChange(i, e.target.value)} onKeyDown={e => handleOtpKey(i, e)}
-                  className={styles.otpBox} autoFocus={i === 0} />
-              ))}
-            </div>
-            {error && <div className={styles.otpErrorMsg}>{error}</div>}
-            <button className={styles.modalCtaBtn} onClick={handleVerify} disabled={!canProceed}>
-              <CheckCircle size={16} /> Verify & Proceed
-            </button>
-            <button className={styles.modalChangeLink} onClick={() => { setStep("phone"); setOtp(["","","",""]); setError(null); }}>
-              Change number
-            </button>
-          </div>
-        )}
-        <p className={styles.modalDisclaimer}>
-          By continuing, you agree to our <a href="#" className={styles.modalLink}>Terms</a> &amp; <a href="#" className={styles.modalLink}>Privacy Policy</a>
         </p>
       </motion.div>
     </motion.div>
@@ -4673,7 +4577,7 @@ function Workspace({
 
       {/* LOGIN MODAL */}
       <AnimatePresence>
-        {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={handleLogin} />}
+        {showLogin && <LoginModal isOpen manageFocus previewOtp onClose={() => setShowLogin(false)} onLoginSuccess={handleLogin} />}
       </AnimatePresence>
 
       {/* REGISTER MODAL */}

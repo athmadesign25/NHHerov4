@@ -61,7 +61,7 @@ export default function HealthCartDock({ items, centre, expanded, legacy, additi
     <BookingBackdrop open={expanded} onDismiss={collapse} />
     <AnimatePresence>
     {(items.length > 0 || expanded) && <motion.aside key="cart-dock" ref={dock} layoutRoot className={styles.dock}
-      initial={false} exit={{ opacity: 0, y: reduced ? 0 : 12 }} transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}
+      initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : duration.base, ease: ease.out }}
       data-health-selection-dock data-booking-focus data-expanded={expanded}
       role={expanded ? "dialog" : undefined} aria-modal={expanded || undefined}
       aria-labelledby={expanded ? headingId : undefined} aria-label={expanded ? undefined : "Your cart"}
