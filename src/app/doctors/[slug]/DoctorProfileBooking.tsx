@@ -74,7 +74,7 @@ export default function DoctorProfileBooking({ doctor, initialMode, date, return
     {started && bookingDoctor ? <BookingControls doctor={bookingDoctor}
       initialSelection={design20RequestedSelection(bookingDoctor, new URLSearchParams({ mode: bookingRequest?.mode ?? initialMode, hospital: bookingRequest?.hospital ?? doctor.hospital, ...(date ? { date } : {}) }))}
       returnTo={returnTo} bookingRequest={bookingRequest} resume={resume} expanded={expanded} open={open} close={close} action={action} editAction={editAction} panelId={id} onAuthChange={setAuthOpen} />
-      : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary}>
+      : <motion.div layout={reduced ? false : "position"} layoutId={`${id}-summary`} className={styles.summary} data-appointment-summary>
         <div className={styles.doctor}><strong>{doctor.name}</strong><span>Choose a time that works for you</span></div>
         <Price fee={doctor.fee} />
         <div className={styles.actionGroup}>{available && <CallAction />}{available ? <button ref={action} type="button" className={styles.primary} onClick={open} aria-expanded={false} aria-controls={id}>Book appointment</button>
@@ -142,7 +142,7 @@ function BookingControls({ doctor, initialSelection, returnTo, bookingRequest, r
       busy={flow.busy} disabled={!flow.loaded || !selection.time || flow.busy || flow.expired}
       onContinue={continueBooking} onClose={close} onOpen={open} expanded={expanded}
       headingRef={heading} actionRef={action} editActionRef={editAction}
-      collapsedAction={<CallAction />}
+      secondaryAction={<CallAction />}
     />
     <LoginModal previewOtp isOpen={signingIn} onClose={() => { continuationRequested.current = false; flow.setLoginOpen(false); }} onLoginSuccess={() => flow.onSignedIn()} manageFocus />
   </>;

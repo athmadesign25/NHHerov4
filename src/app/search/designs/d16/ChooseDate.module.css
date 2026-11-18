@@ -1,6 +1,8 @@
-.dateChip {
+/* Override the composed chip padding regardless of stylesheet load order. */
+.dateChip[role="group"] {
   gap: 0;
   padding: 0;
+  line-height: var(--leading-normal);
 }
 .dateTrigger, .dateRemove {
   display: inline-flex;

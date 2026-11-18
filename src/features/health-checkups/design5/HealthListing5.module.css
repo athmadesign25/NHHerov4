@@ -1,9 +1,9 @@
 /* Compact discovery uses the booking page background and shared controls.
    Only the search/type row sticks; the heading and categories scroll away. */
-.intro.intro { margin-bottom: var(--space-12); }
+.intro.intro { margin-bottom: var(--space-8); }
 .intro h1 { text-wrap: balance; }
 
-.toolbar.toolbar { padding-block: var(--space-12); }
+.toolbar.toolbar { padding-block: var(--space-8); }
 .catalogueHeader.catalogueHeader {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;

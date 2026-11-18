@@ -147,18 +147,18 @@
 .callAction { display: grid; place-items: center; min-height: var(--space-48); border: var(--space-1) solid rgba(var(--slate-800-rgb), 0.12); border-radius: var(--radius-md); color: var(--color-primary); background: rgba(var(--white-rgb), 0.8); backdrop-filter: blur(var(--space-20)); -webkit-backdrop-filter: blur(var(--space-20)); text-decoration: none; transition: background-color var(--duration-fast) var(--ease-out); }
 .callAction svg { width: var(--space-20); height: var(--space-20); fill: currentColor; stroke-width: 0; }
 .callAction:active { background: rgba(var(--white-rgb), 0.95); }
-/* Match every outer edge of the collapsed booking surface. */
-.dock[data-expanded="false"] .summary { padding: var(--space-16); }
+/* Keep the footer anchored while slot controls expand above it. */
+.dock[data-profile-booking] .summary[data-appointment-summary] { padding: var(--space-16); }
 @media (max-width: 639px) {
-  .dock[data-expanded="false"] .summary { padding: var(--space-12); }
+  .dock[data-profile-booking] .summary[data-appointment-summary] { padding: var(--space-12); }
 }
 @media (min-width: 640px) {
-  .summary:has(.callAction) {
-    grid-template-columns: minmax(0, 1fr) auto minmax(calc(var(--space-96) * 2 + var(--space-48) + var(--space-8)), auto);
+  .dock[data-profile-booking] .summary:has(.callAction) {
+    grid-template-columns: minmax(0, 1fr) auto calc(var(--space-96) * 2 + var(--space-48) + var(--space-8));
   }
 }
 @media (max-width: 374px) {
-  .dock[data-expanded="false"][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .dock[data-profile-booking][data-bookable="true"] .summary { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 }
 @media (hover: hover) { .callAction:hover { background: rgba(var(--white-rgb), 0.9); } }
 @media (prefers-reduced-motion: reduce) { .callAction { transition: none; } }

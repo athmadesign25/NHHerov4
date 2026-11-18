@@ -23,6 +23,7 @@ import compactStyles from "../design5/HealthListing5.module.css";
 
 interface Props {
   variant?: "3" | "4" | "5" | "6";
+  memberControl?: ReactNode;
   renderHero?: (controls: ReactNode) => ReactNode;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
@@ -104,7 +105,10 @@ export default function HealthListing3(props: Props) {
               onDetails={onDetails} onSubmit={() => results.current?.focus({ preventScroll: true })} />
             {immersive && <BookingFocusGlow />}
           </div>
+          <div className={styles.catalogueActions}>
           {compact ? <HealthTypeToggle value={tab} searching={searching} onChange={browse} /> : <HealthCatalogueTabs id={catalogueId} panelId={panelId} value={searching ? null : tab} onChange={browse} />}
+          {props.memberControl}
+          </div>
         </div>
         {!immersive && !compact && focusChips}
       </div>
@@ -116,7 +120,7 @@ export default function HealthListing3(props: Props) {
     {!facility ? <section className={`${styles.chooseCentre} ${immersive ? preview.chooseCentre : ""}`}>
       <div className={styles.centreIntro}>
         <span className={styles.centreMark}><Building2 aria-hidden /></span>
-        <h2>Where would you like to visit?</h2>
+        <div className={styles.centreHeading}><h2>Where would you like to visit?</h2>{props.memberControl}</div>
         <p>Choose a centre to see available packages, tests and prices.</p>
       </div>
       <HealthCentreChooser key={initialCity ?? "all-cities"} cities={cities} facilities={facilities} initialCity={initialCity} onSelect={onFacility} />

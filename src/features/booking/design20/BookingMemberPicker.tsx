@@ -11,6 +11,7 @@ interface BookingMemberPickerProps {
   patients: SavedPatient[];
   selectedId: string | null;
   busy: boolean;
+  showAllMembers?: boolean;
   onSelect: (id: string) => void;
   onAdd: () => void;
 }
@@ -20,14 +21,14 @@ function memberMeta({ patient }: SavedPatient) {
   return `${relation}${patient.age !== "" ? ` · ${patient.age} yrs` : ""}`;
 }
 
-export default function BookingMemberPicker({ patients, selectedId, busy, onSelect, onAdd }: BookingMemberPickerProps) {
+export default function BookingMemberPicker({ patients, selectedId, busy, onSelect, onAdd, showAllMembers = false }: BookingMemberPickerProps) {
   const id = useId();
   const [expanded, setExpanded] = useState(false);
   const selected = patients.find(entry => entry.id === selectedId);
   // A member selected in the navbar must remain visible in the compact list.
   const compact = selected && !patients.slice(0, 3).some(entry => entry.id === selectedId)
     ? [...patients.slice(0, 2), selected] : patients.slice(0, 3);
-  const visible = expanded ? patients : compact;
+  const visible = showAllMembers || expanded ? patients : compact;
 
   return <div className={styles.container}>
     <div id={`${id}-members`} className={styles.members} role="radiogroup" aria-label="Choose a member">
@@ -48,7 +49,7 @@ export default function BookingMemberPicker({ patients, selectedId, busy, onSele
     </div>
     <div className={styles.actions}>
       {patients.length < 10 && <button type="button" className={styles.add} disabled={busy} onClick={onAdd}><span className={styles.addIcon} aria-hidden><Plus size={16} /></span>Add new member</button>}
-      {patients.length > 3 && <button type="button" className={styles.expand} disabled={busy} aria-expanded={expanded} aria-controls={`${id}-members`} onClick={() => setExpanded(value => !value)}>
+      {!showAllMembers && patients.length > 3 && <button type="button" className={styles.expand} disabled={busy} aria-expanded={expanded} aria-controls={`${id}-members`} onClick={() => setExpanded(value => !value)}>
         {expanded ? "Show fewer members" : "View all members"}<ChevronDown size={14} aria-hidden />
       </button>}
     </div>
