@@ -1,4 +1,4 @@
-/** Design 20 is the sole doctor discovery and booking flow in this handoff. */
+/** Design 21 is the sole doctor discovery and booking flow in this handoff. */
 export interface DesignVariant {
   /** Stable id — used in localStorage and `?design=` links. */
   id: string;
@@ -17,13 +17,13 @@ export interface DesignScope {
 }
 
 /** Current public doctor discovery and appointment journey. */
-export const DEFAULT_DOCTOR_DESIGN = "d20";
+export const DEFAULT_DOCTOR_DESIGN = "d21";
 
 export const DESIGN_SCOPES = {
   "search-top": {
     defaultVariant: DEFAULT_DOCTOR_DESIGN,
     variants: [
-      { id: "d20", label: "Design 20", note: "Doctor discovery and appointment booking" },
+      { id: "d21", label: "Design 21", note: "Doctor discovery and appointment booking" },
     ],
   },
 } satisfies Record<string, DesignScope>;
