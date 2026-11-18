@@ -100,3 +100,6 @@
 .page[data-health-design="3"] .intro h1 { font-size: clamp(var(--font-size-xl), 2.2vw, var(--font-size-3xl)); font-weight: 700; }
 .page[data-health-design="3"] .intro p { font-size: var(--font-size-sm); }
 .page[data-health-design="3"] .intro { margin-bottom: var(--space-8); }
+
+.page.reviewPage { padding-top: calc(var(--nav-height) + var(--space-8)); }
+.reviewContainer { max-width: calc(var(--space-128) * 8.5); }

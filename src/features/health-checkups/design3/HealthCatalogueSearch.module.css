@@ -10,3 +10,22 @@
 .allResults { display: block; width: 100%; min-height: var(--space-48); padding: var(--space-12); color: var(--color-primary); background: transparent; border: 0; border-radius: var(--radius-sm); text-align: left; font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
 .allResults:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(var(--space-2) * -1); }
 @media (hover: hover) { .option:hover { background: var(--color-bg-alt); } .allResults:hover { color: var(--color-primary-dark); } }
+
+/* Keep location and query together, including on narrow screens. */
+@media (max-width: 639px) {
+  .root > div:first-child {
+    display: flex;
+    flex-direction: column;
+    border: var(--space-1) solid var(--color-border);
+    border-radius: var(--radius-xl);
+    background: var(--d3-control-surface);
+  }
+  .root > div:first-child:focus-within { border-color: var(--color-primary); }
+  .root form {
+    width: 100%;
+    border: 0;
+    border-top: var(--space-1) solid var(--color-border);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    background: transparent;
+  }
+}

@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { duration, ease } from "@/lib/motion";
 import BookingAmount from "../design20/previous/BookingAmount";
-import bookingStyles from "../design20/previous/BookingPaymentBar.module.css";
+import bookingStyles from "./BookingDockSurface.module.css";
 import styles from "./BookingActionBar.module.css";
 
 interface Props {

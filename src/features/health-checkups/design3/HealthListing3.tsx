@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { Building2, Search, X, History, Heart, Droplets, Sparkles, UserRound, Activity } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { Building2, Search, X } from "lucide-react";
 import HealthCatalogueSearch from "./HealthCatalogueSearch";
 import searchStyles from "@/components/ui/search-location/SearchToolbar.module.css";
 import searchTheme from "@/components/ui/search-location/SearchTheme.module.css";
-import chip from "@/components/ui/search-location/ControlChip.module.css";
 import type { FacilityId, HealthFacility, HealthItem } from "../catalog";
 import { matchesHealthQuery } from "../healthDiscovery";
 import HealthIncludedTests from "../HealthIncludedTests";
@@ -14,8 +13,13 @@ import HealthLocationPicker, { HealthCentreChooser } from "./HealthLocationPicke
 import HealthDiscoveryCard from "./HealthDiscoveryCard";
 import HealthCatalogueTabs from "./HealthCatalogueTabs";
 import styles from "./HealthListing3.module.css";
+import HealthFocusRail4 from "../design4/HealthFocusRail4";
+import { BookingFocusGlow } from "@/features/booking/shared/BookingFocusGlow";
+import preview from "../design4/HealthListing4.module.css";
 
 interface Props {
+  memberControl?: ReactNode;
+  renderHero?: (controls: ReactNode) => ReactNode;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
   facility?: HealthFacility;
@@ -38,7 +42,7 @@ interface Props {
   onDetails: (item: HealthItem) => void;
 }
 
-/** Listing-only preview; selection, login, scheduling and payment stay shared. */
+/** Approved Design 4 listing with shared selection, scheduling and payment. */
 export default function HealthListing3(props: Props) {
   const { cities, facilities, facility, initialCity, facilityOpen, onOpenFacility, onCloseFacility, onFacility,
     catalog, query, onQuery, tab, onTab, category, onCategory, ids, includedIds,
@@ -75,40 +79,35 @@ export default function HealthListing3(props: Props) {
       onAdd={() => onAdd(item)} onDetails={() => onDetails(item)} onTests={() => setTestsItem(item)} previouslyBooked={bookedIds.includes(item.id)} />;
   }
 
+  const controls = <section className={`${searchStyles.searchBar} ${searchTheme.theme} ${styles.discoveryBar} ${preview.toolbar} ${!navVisible ? searchStyles.navHidden : ""}`} aria-label="Find health packages and tests">
+      <div className={searchStyles.toolbarContent}>
+        <div className={`${styles.catalogueHeader} ${preview.catalogueHeader}`}>
+          <div className={`${styles.searchRow} ${preview.searchGlass}`}>
+            <HealthCatalogueSearch locationControl={<HealthLocationPicker initialCity={initialCity} cities={cities} facilities={facilities} selectedFacility={facility} open={facilityOpen}
+                onOpen={onOpenFacility} onClose={onCloseFacility} onSelect={onFacility} />} locationOpen={facilityOpen} catalog={catalog} query={query} onQuery={value => { onQuery(value); onCategory("All"); }}
+              onDetails={onDetails} onSubmit={() => results.current?.focus({ preventScroll: true })} />
+            <BookingFocusGlow />
+          </div>
+          <div className={styles.catalogueActions}><HealthCatalogueTabs id={catalogueId} panelId={panelId} value={searching ? null : tab} onChange={browse} />{props.memberControl}</div>
+        </div>
+      </div>
+    </section>;
+
   return <>
     {testsItem && <HealthIncludedTests item={testsItem} onClose={() => setTestsItem(null)} onDetails={() => { setTestsItem(null); onDetails(testsItem); }} />}
-    {!facility ? <section className={styles.chooseCentre}>
+    {!facility && props.renderHero?.(null)}
+    {!facility ? <section className={`${styles.chooseCentre} ${preview.chooseCentre}`}>
       <div className={styles.centreIntro}>
         <span className={styles.centreMark}><Building2 aria-hidden /></span>
-        <h2>Where would you like to visit?</h2>
+        <div className={styles.centreHeading}><h2>Where would you like to visit?</h2>{props.memberControl}</div>
         <p>Choose a centre to see available packages, tests and prices.</p>
       </div>
       <HealthCentreChooser key={initialCity ?? "all-cities"} cities={cities} facilities={facilities} initialCity={initialCity} onSelect={onFacility} />
     </section> : <>
-    <div className={styles.centreContext}>
-      <HealthLocationPicker compact initialCity={initialCity} cities={cities} facilities={facilities} selectedFacility={facility} open={facilityOpen}
-        onOpen={onOpenFacility} onClose={onCloseFacility} onSelect={onFacility} />
-    </div>
-    <section className={`${searchStyles.searchBar} ${searchTheme.theme} ${styles.discoveryBar} ${!navVisible ? searchStyles.navHidden : ""}`} aria-label="Find health packages and tests">
-      <div className={searchStyles.toolbarContent}>
-        <div className={styles.catalogueHeader}>
-          <div className={styles.searchRow}>
-            <HealthCatalogueSearch catalog={catalog} query={query} onQuery={value => { onQuery(value); onCategory("All"); }}
-              onDetails={onDetails} onSubmit={() => results.current?.focus({ preventScroll: true })} />
-          </div>
-          <HealthCatalogueTabs id={catalogueId} panelId={panelId} value={searching ? null : tab} onChange={browse} />
-        </div>
-        {!searching && (categories.length > 0 || hasHistory) && <div className={styles.categories} role="group" aria-label="Filter by health focus">
-          <button type="button" className={chip.chip} aria-pressed={activeCategory === "All"} onClick={() => onCategory("All")}>All</button>
-          {hasHistory && <button type="button" className={chip.chip} aria-pressed={activeCategory === "booked"} onClick={() => onCategory("booked")}><History aria-hidden />Booked before</button>}
-          {categories.map(value => {
-            const Icon = value.id === "heart" ? Heart : value.id === "diabetes" || value.id === "kidney" ? Droplets : value.id === "vitamins" ? Sparkles : value.id === "general" || value.id === "thyroid" ? Activity : UserRound;
-            return <button type="button" key={value.id} className={`${chip.chip} ${styles.category}`} data-tone={value.tone} aria-pressed={activeCategory === value.id} onClick={() => onCategory(activeCategory === value.id ? "All" : value.id)}><Icon aria-hidden />{value.label}</button>;
-          })}
-        </div>}
-      </div>
-    </section>
-      <div ref={results} id={panelId} className={styles.results} tabIndex={-1} role="region" aria-label="Health search results">
+    {props.renderHero ? props.renderHero(controls) : controls}
+      {!searching && (categories.length > 0 || hasHistory) && <HealthFocusRail4 id={`${catalogueId}-focus`} categories={categories} active={activeCategory} hasHistory={hasHistory} onChange={onCategory} />}
+      <div ref={results} id={panelId} className={`${styles.results} ${preview.results}`} tabIndex={-1} role="region" aria-label="Health search results">
+        {!searching && <div className={preview.resultsHeading}><h2>{tab === "package" ? "Health packages" : "Lab tests"}{activeCategory !== "All" ? ` · ${activeCategory === "booked" ? "Booked before" : categories.find(entry => entry.id === activeCategory)?.label}` : ""}</h2>{activeCategory !== "All" && <button type="button" className={styles.textAction} onClick={() => onCategory("All")}>Show all<X aria-hidden /></button>}</div>}
         {searching && <div className={styles.resultHeading}><h2>Results for “{query.trim()}”</h2><button type="button" className={styles.textAction} onClick={() => onQuery("")}>Clear search<X aria-hidden /></button></div>}
         <p className={styles.srOnly} role="status">{visible.length ? `${visible.length} ${typeLabel} available` : !catalog.length ? "Catalogue unavailable for this centre" : `No matching ${typeLabel}`}</p>
         {visible.length ? searching ? <div className={styles.resultGroups}>{(["package", "test"] as const).map(kind => {

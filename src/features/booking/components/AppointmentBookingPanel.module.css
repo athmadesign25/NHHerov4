@@ -1,0 +1,135 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: inherit;
+}
+
+/* The shared selector uses the same light tokens in either expanded shell. */
+.root[data-expanded="true"] {
+  --appointment-panel-inset: var(--space-16);
+  --target: calc(var(--space-48) - var(--space-4));
+  --d7-surface: var(--journey-paper-surface);
+  --d7-text: var(--d17-lite-ink);
+  --d7-muted: var(--color-text-secondary);
+  --scroll-chevron: var(--color-text-secondary);
+  --scroll-chevron-hover: var(--color-text);
+  --d3-ui-selection: var(--color-emergency);
+  --d3-ui-selection-label: color-mix(in srgb, var(--color-emergency) 78%, var(--color-text));
+  --d3-ui-selection-surface: var(--color-emergency-light);
+  --d3-control-surface: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
+  color: var(--d7-text);
+}
+
+/* One outer inset across the header, form and footer in both booking shells.
+   Keep the header and its controls close; separate form sections consistently. */
+.root[data-expanded="true"] [data-appointment-header] {
+  padding: var(--appointment-panel-inset) var(--appointment-panel-inset) var(--space-4);
+}
+.root[data-expanded="true"] [data-appointment-scroll] {
+  padding: var(--space-4) var(--appointment-panel-inset) var(--space-8);
+}
+.root[data-expanded="true"] [data-appointment-selector] {
+  gap: var(--space-24);
+}
+.root[data-expanded="true"] [data-appointment-summary] {
+  padding: var(--space-12) var(--appointment-panel-inset) var(--appointment-panel-inset);
+}
+
+@media (min-width: 640px) {
+  .root[data-expanded="true"] { --appointment-panel-inset: var(--space-24); }
+}
+
+.panel { min-height: 0; flex: 1 1 auto; }
+.summary { flex-shrink: 0; }
+.slotLine { flex-wrap: wrap; align-items: center; row-gap: var(--space-4); }
+.root[data-expanded="true"] .summary {
+  border-top: var(--space-1) solid color-mix(in srgb, var(--color-border) 55%, transparent);
+}
+.closeIcon { width: var(--space-20); height: var(--space-20); }
+.doctorHeader { align-items: center; }
+.identity { display: flex; align-items: center; gap: var(--space-12); min-width: 0; }
+.portrait {
+  position: relative;
+  flex: 0 0 var(--space-48);
+  width: var(--space-48);
+  height: var(--space-48);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-card);
+}
+.portrait img { object-fit: cover; object-position: center top; }
+.identityText { min-width: 0; }
+.doctorHeader .identityText h2 {
+  font-size: var(--font-size-base);
+  line-height: var(--leading-snug);
+  overflow-wrap: anywhere;
+}
+.doctorHeader .identityText p {
+  margin-top: var(--space-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.root :is(a, button):focus-visible {
+  outline: var(--space-2) solid var(--color-primary);
+  outline-offset: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root :is(a, button) { transition: none; }
+}
+
+/* Retain the hospital row's space beneath the slots in video mode. This keeps
+   the shell and summary steady while the date/time controls move together. */
+.root [data-appointment-hospital][data-reserved="true"] {
+  order: 1;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: clip;
+}
+
+/* Measure spacing from the visible controls, not their invisible touch areas. */
+.root[data-expanded="true"] [data-appointment-field-heading] {
+  margin-bottom: var(--space-8);
+}
+.root[data-expanded="true"] [data-appointment-hospital-control] {
+  position: relative;
+  min-height: var(--space-24);
+  padding-block: 0;
+}
+.root[data-expanded="true"] button[data-appointment-hospital-control]::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--space-10) * -1) 0;
+}
+.root[data-expanded="true"] [data-appointment-directions] {
+  margin-top: 0;
+}
+.root[data-expanded="true"] [data-date-row] > div[id$="-dates"] {
+  padding-block: 0;
+}
+.root[data-expanded="true"] [data-appointment-sticky-month] {
+  inset-block: 0;
+}
+
+/* Two 44px targets retain compact visual pills. The surrounding flow absorbs
+   their invisible 6px hit areas so every heading has the same visible gap. */
+.root[data-expanded="true"] [data-d20-times] {
+  --slot-target: var(--target);
+  padding-block: 0;
+  margin-block: calc(var(--space-6) * -1);
+}
+.root[data-expanded="true"] [data-appointment-time-body] {
+  display: flow-root;
+}
+
+/* Sparse days and executive availability must not move the summary. */
+.root [data-preserve-mode-height] [data-appointment-time-body] {
+  min-height: calc(var(--target) * 2 - var(--space-12));
+}

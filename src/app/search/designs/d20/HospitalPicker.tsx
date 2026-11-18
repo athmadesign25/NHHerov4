@@ -28,7 +28,7 @@ export default function HospitalPicker({ doctorName, locations, value, onChange,
   const travel = getDesign16HospitalPreview(hospital);
   const distance = distanceKm ?? travel?.distanceKm;
   const distanceLabel = distance !== undefined ? `${distance.toLocaleString("en-IN", { maximumFractionDigits: 1 })} km` : "Directions";
-  const directions = showDirections && <a className={styles.directions} href={travel?.directionsUrl ?? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospital)}`} target="_blank" rel="noopener noreferrer" aria-label={`${distanceLabel}. Get directions to ${travel?.directionsDestination ?? hospital} (opens in a new tab)`} title="Get directions">
+  const directions = showDirections && <a className={styles.directions} data-appointment-directions href={travel?.directionsUrl ?? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hospital)}`} target="_blank" rel="noopener noreferrer" aria-label={`${distanceLabel}. Get directions to ${travel?.directionsDestination ?? hospital} (opens in a new tab)`} title="Get directions">
     {distanceLabel}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m10.6 2.6-8 8a2 2 0 0 0 0 2.8l8 8a2 2 0 0 0 2.8 0l8-8a2 2 0 0 0 0-2.8l-8-8a2 2 0 0 0-2.8 0Z" /><path d="M8.5 15v-4h7m-3-3 3 3-3 3" /></svg>
   </a>;
 
@@ -36,7 +36,7 @@ export default function HospitalPicker({ doctorName, locations, value, onChange,
 
   if (names.length <= 1) return (
     <div className={showDirections ? styles.hospitalRow : undefined}>
-      <p className={styles.hospital}><span>{hospital || "Contact NH for hospital details"}</span></p>
+      <p className={styles.hospital} data-appointment-hospital-control><span>{hospital || "Contact NH for hospital details"}</span></p>
       {directions}
     </div>
   );
@@ -46,7 +46,7 @@ export default function HospitalPicker({ doctorName, locations, value, onChange,
       if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
     }}>
       <div className={showDirections ? styles.hospitalRow : undefined}>
-      <button ref={trigger} type="button" className={`${styles.hospital} ${styles.trigger}`}
+      <button ref={trigger} type="button" data-appointment-hospital-control className={`${styles.hospital} ${styles.trigger}`}
         aria-expanded={open} aria-controls={panelId}
         aria-label={`${hospital}. Change hospital for ${doctorName}`}
         onClick={() => setOpen(previous => !previous)}>

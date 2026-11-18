@@ -4,10 +4,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
+import { setDemoSession } from "./demo-session";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
 import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
 import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { acquireInertLease } from "@/lib/inertLease";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -46,8 +48,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     const modal = modalRef.current;
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const background = Array.from(document.body.children).filter((element): element is HTMLElement => element instanceof HTMLElement && !element.contains(modal));
-    const previousInert = background.map((element) => element.inert);
-    background.forEach((element) => { element.inert = true; });
+    const releaseBackground = acquireInertLease(background);
     const focusable = () => Array.from(modal.querySelectorAll<HTMLElement>('button, input, select, a[href], [tabindex]'))
       .filter((element) => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0);
     (modal.querySelector<HTMLInputElement>('input') ?? focusable()[0])?.focus();
@@ -62,7 +63,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     modal.addEventListener('keydown', onKey);
     return () => {
       modal.removeEventListener('keydown', onKey);
-      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      releaseBackground();
       trigger?.focus({ preventScroll: true });
     };
   }, [manageFocus, isOpen, mounted]);
@@ -95,7 +96,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userName", "Aditya");
       } catch { /* The current tab is signed in; persistent storage is optional. */ }
-      window.dispatchEvent(new Event("login-state-changed"));
+      setDemoSession(true);
     }
     verified.current = true;
     if (onLoginSuccess) onLoginSuccess();
@@ -156,7 +157,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       otpRefs.current[pasted.length]?.focus();
     }
   };
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -175,7 +176,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
       setActiveTab("mobile");
     }
   }, [isOpen]);
-  
+
   // Prevent body scroll when modal is open and pause the hero background video.
   // Scoped to #hero-section-search-first only — other sections (e.g. HealthPackages) drive
   // their own video play/pause via scroll position and must not be touched here.
@@ -206,7 +207,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div 
+        <div
           data-lenis-prevent="true"
           style={{
           position: "fixed",
@@ -252,10 +253,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
           >
             {/* Image Column */}
             <div className={styles.imageColumn}>
-              <Image 
-                src="/assets/doctor_team.png" 
-                alt="Narayana Health" 
-                fill 
+              <Image
+                src="/assets/doctor_team.png"
+                alt="Narayana Health"
+                fill
                 style={{ objectFit: "cover", objectPosition: "center" }}
                 priority
               />
@@ -268,19 +269,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
           <div className={styles.formColumn}>
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "24px" }}>
-              <button 
+              <button
                 onClick={onClose}
                 aria-label={manageFocus ? "Close login" : undefined}
-                style={{ 
-                  background: "var(--color-bg-alt, #f8fafc)", 
-                  border: "none", 
-                  width: "36px", 
-                  height: "36px", 
-                  borderRadius: "50%", 
-                  display: "flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  cursor: "pointer", 
+                style={{
+                  background: "var(--color-bg-alt, #f8fafc)",
+                  border: "none",
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
                   color: "var(--color-text-secondary, #475569)",
                   transition: "background 0.2s"
                 }}
@@ -299,7 +300,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                   {purpose === "history" ? "Sign in to see doctors you’ve booked before." : "Sign in to manage appointments, access reports, and stay connected with your doctors."}
                 </p>
               </div>
-              
+
               <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: step === "otp" ? "space-between" : "flex-start" }}>
               {step === "phone" ? (
                 <>
@@ -382,19 +383,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                       {/* Country Code */}
                       <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
                         <select
-                          style={{
-                            width: "100%",
-                            padding: "14px 32px 14px 16px",
-                            borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, #e2e8f0)",
-                            background: "#ffffff",
-                            fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, #0f172a)",
-                            fontWeight: 500,
-                            appearance: "none",
-                            outline: "none",
-                            cursor: "pointer"
-                          }}
+                          className={styles.countrySelect}
+                          aria-label="Country calling code"
                           defaultValue="+91"
                         >
                           <option value="+91">🇮🇳 +91</option>
@@ -404,9 +394,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                           <ChevronDown size={16} />
                         </div>
                       </div>
-                      
+
                       {/* Phone Input */}
-                      <input 
+                      <input
                         type="tel"
                         aria-label={manageFocus ? "Mobile number" : undefined}
                         maxLength={10}
@@ -445,7 +435,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                 ) : (
                   <div>
                     <label style={{ display: "block", fontSize: "var(--font-size-sm, 14px)", fontWeight: 600, color: "var(--color-text, #0f172a)", marginBottom: "8px" }}>Email ID</label>
-                    <input 
+                    <input
                       type="email"
                       aria-label={manageFocus ? "Email address" : undefined}
                       value={email}
@@ -472,7 +462,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
               </div>
 
               {/* Continue Button */}
-              <button 
+              <button
                 onClick={handleContinue}
                 style={{
                   width: "100%",
@@ -521,15 +511,15 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                 onMouseEnter={(e) => e.currentTarget.style.background = "var(--color-bg-alt, #f8fafc)"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "#ffffff"}
               >
-                <img 
-                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
-                  alt="Google" 
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google"
                   style={{ width: "20px", height: "20px" }}
                 />
                 Sign in with Google
               </button>
               </>}
-              
+
               <p style={{ marginTop: "24px", fontSize: "12px", color: "var(--color-text-muted, #94a3b8)", textAlign: "center", lineHeight: 1.5 }}>
                 By continuing, you agree to our <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Terms of Service</a> and <a href="#" style={{ color: "var(--color-primary)", textDecoration: "none" }}>Privacy Policy</a>.
               </p>
@@ -574,7 +564,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                     </div>
                     {codeError && <p className={styles.inputError} role="alert">{codeError}</p>}
                   </div>
-                  <button 
+                  <button
                     onClick={() => handleVerify()}
                     disabled={isVerifying}
                     style={{
@@ -614,7 +604,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
 
             </div>
             </div>
-            
+
             </motion.div>
         </div>
       )}

@@ -65,7 +65,7 @@ export default function ExpertiseSummary({ terms }: { terms: string[] }) {
     };
     const scroll = (event: Event) => {
       if (event.target instanceof Node && popover.contains(event.target)) return;
-      position();
+      setOpen(false);
     };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("keydown", escape);

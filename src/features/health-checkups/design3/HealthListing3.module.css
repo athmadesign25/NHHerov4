@@ -87,3 +87,14 @@
 }
 
 .resultGroups { display: grid; gap: var(--space-32); }
+
+.catalogueActions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-12); min-width: 0; }
+.centreHeading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-12); }
+@media (max-width: 1024px) {
+  .catalogueActions { justify-content: space-between; flex-wrap: wrap; }
+}
+@media (max-width: 640px) {
+  .catalogueActions { gap: var(--space-8); }
+  .catalogueActions > [role="group"] { flex: 1 1 100%; }
+  .catalogueActions > section { margin-left: auto; }
+}
