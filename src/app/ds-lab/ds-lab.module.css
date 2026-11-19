@@ -194,6 +194,51 @@
   font-size: var(--font-size-base);
 }
 
+.weightGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-16);
+  margin-top: var(--space-12);
+}
+
+.weightCell {
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  background: rgba(var(--slate-500-rgb, 100, 116, 139), 0.05);
+  border: 1px solid rgba(var(--slate-500-rgb, 100, 116, 139), 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.weightHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weightName {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.weightSpecimen {
+  font-size: var(--font-size-lg);
+  line-height: var(--leading-snug);
+  margin: var(--space-4) 0;
+  color: var(--color-text);
+}
+
+.dark .weightSpecimen {
+  color: var(--color-text-inverse);
+}
+
+.weightDesc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
 /* ─── elevation ─── */
 .elevGrid {
   display: grid;

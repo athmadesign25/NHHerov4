@@ -82,12 +82,32 @@ export default function DsLab() {
     return /^(#|rgb|hsl)/.test(v);
   };
 
+  const parsePx = (t: Token) => {
+    const v = resolve(t.name) || t.value;
+    const m = v.match(/([\d.]+)px/);
+    return m ? parseFloat(m[1]) : 0;
+  };
+  const parseNum = (t: Token) => {
+    const v = resolve(t.name) || t.value;
+    const n = parseFloat(v);
+    return isNaN(n) ? 0 : n;
+  };
+
   const colours = tokens.filter((t) => isColour(t) && !match(t, /-rgb$/));
   const channels = tokens.filter((t) => match(t, /-rgb$/));
-  const sizes = tokens.filter((t) => match(t, /^--font-size-/));
-  const leading = tokens.filter((t) => match(t, /^--leading-/));
-  const spacing = tokens.filter((t) => match(t, /^--space-/) || match(t, /^--sp-/));
-  const radii = tokens.filter((t) => match(t, /^--radius-/));
+  const sizes = tokens
+    .filter((t) => match(t, /^--font-size-/))
+    .sort((a, b) => parsePx(a) - parsePx(b));
+  const leading = tokens
+    .filter((t) => match(t, /^--leading-/))
+    .sort((a, b) => parseNum(a) - parseNum(b));
+  const spacing = tokens
+    .filter((t) => match(t, /^--space-/))
+    .sort((a, b) => parsePx(a) - parsePx(b));
+  const radii = tokens
+    .filter((t) => match(t, /^--radius-/) && t.name !== "--radius-full")
+    .sort((a, b) => parsePx(a) - parsePx(b))
+    .concat(tokens.filter((t) => t.name === "--radius-full"));
   const blurs = tokens.filter((t) => match(t, /^--blur-/));
   const sectionRhythms = tokens.filter((t) => match(t, /^--section-y/));
   // --shadow-rgb is a channel triplet rather than a shadow, so it would
@@ -188,6 +208,33 @@ export default function DsLab() {
                   Narayana Health provides affordable, high quality care across more than thirty
                   specialities and twenty four cities.
                 </p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={styles.block}>
+          <h3 className={styles.h3}>Font weights</h3>
+          <p className={styles.note}>
+            Typeface: <strong>Inter</strong> (self-hosted via <code>--font-inter</code> / <code>--font-sans</code>).
+            These five weights form our core typographic contrast scale:
+          </p>
+          <div className={styles.weightGrid}>
+            {[
+              { label: "Regular", weight: 400, role: "Body text, descriptions, table contents" },
+              { label: "Medium", weight: 500, role: "Metadata, timestamps, chips, secondary labels" },
+              { label: "SemiBold", weight: 600, role: "Buttons, navigation items, card subtitles" },
+              { label: "Bold", weight: 700, role: "Section headings, doctor names, card titles" },
+              { label: "ExtraBold", weight: 800, role: "Page hero titles, display metrics, statistics" },
+            ].map(({ label, weight, role }) => (
+              <div key={weight} className={styles.weightCell}>
+                <div className={styles.weightHeader}>
+                  <span className={styles.weightName}>{label}</span>
+                  <code className={styles.tokVal}>font-weight: {weight}</code>
+                </div>
+                <p className={styles.weightSpecimen} style={{ fontWeight: weight }}>
+                  Narayana Health — Compassion &amp; Clinical Excellence
+                </p>
+                <span className={styles.weightDesc}>{role}</span>
               </div>
             ))}
           </div>
