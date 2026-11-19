@@ -59,24 +59,17 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-family);
-  font-size: var(--font-size-display, 42px);
+  font-size: 42px;
   font-weight: 800;
-  line-height: var(--leading-tight, 1.15);
-  letter-spacing: -0.025em;
   color: #FFFFFF;
-  margin-bottom: var(--space-12, 12px);
-  text-align: center;
+  margin-bottom: 12px;
 }
 
 .sectionSubtitle {
-  font-family: var(--font-family);
   color: #F1F1F1;
-  font-size: var(--font-size-lg, 18px);
-  line-height: var(--leading-normal, 1.4);
+  font-size: 18px;
   text-align: center;
   max-width: 600px;
-  margin: 0 auto;
 }
 
 /* Outer Container for Track, Navigation Arrows, and CTA */
@@ -545,27 +538,6 @@
 }
 
 @media (max-width: 768px) {
-  .headerContainer {
-    margin-bottom: var(--space-24, 24px);
-    padding-left: var(--space-16, 16px);
-    padding-right: var(--space-16, 16px);
-  }
-  .sectionTitle {
-    font-size: var(--font-size-2xl) !important;
-    line-height: var(--leading-tight) !important;
-    letter-spacing: -0.02em;
-    margin-bottom: var(--space-8, 8px);
-    text-align: center;
-  }
-  .sectionSubtitle {
-    font-size: var(--font-size-sm) !important;
-    line-height: var(--leading-normal) !important;
-    text-align: center;
-    max-width: 100%;
-    margin: 0 auto;
-    padding-left: var(--space-8, 8px);
-    padding-right: var(--space-8, 8px);
-  }
   .card {
     width: 100%;
     height: 480px;
@@ -587,15 +559,13 @@
     height: 34px;
   }
   .overviewText {
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
+    font-size: 14px;
   }
   .ctaWrapper {
     margin-top: 8px;
   }
   .captionBox {
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
+    font-size: 14px;
     padding: 6px 12px;
   }
   .textUnit {
@@ -604,24 +574,10 @@
     bottom: 20px;
   }
   .patientName {
-    font-size: var(--font-size-xl);
-    line-height: var(--leading-snug);
+    font-size: 20px;
   }
   .patientSubtext {
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-  }
-}
-
-@media (max-width: 640px) {
-  .sectionTitle {
-    font-size: var(--font-size-2xl) !important;
-    line-height: var(--leading-tight) !important;
-    letter-spacing: -0.02em;
-  }
-  .sectionSubtitle {
-    font-size: var(--font-size-sm) !important;
-    line-height: var(--leading-normal) !important;
+    font-size: 14px;
   }
 }
 
