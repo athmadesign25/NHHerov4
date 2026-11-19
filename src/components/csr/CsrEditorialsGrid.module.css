@@ -130,16 +130,15 @@
   height: 100%;
   padding: 22px 22px 20px;
   box-sizing: border-box;
-  border: 1px solid rgba(var(--white-rgb), 0.12);
+  border: none !important;
   outline: none !important;
   box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
-  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease, border-color var(--duration-moderate) ease;
+  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease;
 }
 
 .editorialCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
-  border-color: rgba(var(--white-rgb), 0.28);
 }
 
 .cardBgImage {

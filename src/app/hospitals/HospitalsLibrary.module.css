@@ -805,22 +805,21 @@
   background: var(--navy-900);
   border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(var(--white-rgb), 0.12);
+  border: none !important;
+  outline: none !important;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   min-height: 460px;
   height: 100%;
   transition: transform var(--duration-emphasis) var(--ease-spring),
-              box-shadow var(--duration-emphasis) var(--ease-spring),
-              border-color var(--duration-moderate) ease;
+              box-shadow var(--duration-emphasis) var(--ease-spring);
   box-shadow: 0 6px 20px rgba(var(--black-rgb), 0.32);
 }
 
 .procedureCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.52);
-  border-color: rgba(var(--white-rgb), 0.28);
 }
 
 /* Full-height background image layer extending behind the gradient & text */
@@ -1388,7 +1387,8 @@
     border-radius: 20px;
     padding: 0;
     overflow: hidden;
-    border: 1px solid rgba(var(--white-rgb), 0.16);
+    border: none !important;
+    outline: none !important;
     box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.30);
     background: #090d16;
     transition: transform var(--duration-moderate) ease, box-shadow var(--duration-moderate) ease;

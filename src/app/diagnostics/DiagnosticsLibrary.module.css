@@ -233,8 +233,8 @@
 .searchInput {
   flex: 1;
   background: none;
-  border: none;
-  outline: none;
+  border: none !important;
+  outline: none !important;
   font-family: inherit;
   font-size: var(--font-size-sm);
   color: var(--white);
@@ -806,18 +806,17 @@
   min-height: 440px;
   height: 100%;
   box-sizing: border-box;
-  border: 1px solid rgba(var(--white-rgb), 0.12);
-  outline: none;
+  border: none !important;
+  outline: none !important;
   background-color: var(--navy-900);
   box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
-  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease, border-color var(--duration-moderate) ease;
+  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease;
   text-decoration: none;
 }
 
 .procedureCard:hover {
   transform: translateY(-5px);
   box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
-  border-color: rgba(var(--white-rgb), 0.28);
 }
 
 /* Full-bleed background image with crystal clarity */
@@ -1396,7 +1395,7 @@
     border-radius: 20px;
     padding: 0;
     overflow: hidden;
-    border: 1px solid rgba(var(--white-rgb), 0.12);
+    border: none !important;
     outline: none !important;
     box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35);
     background: #090d16;
