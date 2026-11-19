@@ -125,7 +125,7 @@
   border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
-  background-color: transparent;
+  background-color: #060e1b;
   height: 330px;
   min-height: 330px;
   padding: 22px;
@@ -147,12 +147,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slower) var(--ease-spring);
+  object-position: center 20%;
+  filter: brightness(0.96) saturate(1.08) contrast(1.02);
+  transition: transform var(--duration-slower) var(--ease-spring), filter var(--duration-moderate) ease;
   z-index: 1;
 }
 
 .editorialCard:hover .cardBgImage {
   transform: scale(1.05);
+  filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
 /* ── Subtle Top Gradient Scrim (Guarantees 100% legibility on bright white backgrounds) ── */
@@ -161,11 +164,11 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 80px;
+  height: 60px;
   background: linear-gradient(
     180deg,
-    rgba(6, 12, 24, 0.70) 0%,
-    rgba(6, 12, 24, 0.35) 45%,
+    rgba(6, 14, 27, 0.60) 0%,
+    rgba(6, 14, 27, 0.18) 50%,
     transparent 100%
   );
   z-index: 2;
@@ -188,17 +191,19 @@
   pointer-events: none;
 }
 
-/* Enhanced High-Contrast Scrim: Top 40% luminous, bottom 60% rich dark gradient for effortless readability */
+/* Signature Deep Atmospheric Gradient Scrim (Standardized across Treatments, Articles & CSR) */
 .cardScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(6, 12, 24, 0.98) 0%,
-    rgba(6, 12, 24, 0.90) 36%,
-    rgba(6, 12, 24, 0.65) 58%,
-    rgba(6, 12, 24, 0.20) 78%,
-    transparent 92%
+    180deg,
+    rgba(6, 14, 27, 0) 0%,
+    rgba(6, 14, 27, 0) 24%,
+    rgba(6, 14, 27, 0.22) 38%,
+    rgba(6, 14, 27, 0.68) 54%,
+    rgba(6, 14, 27, 0.90) 72%,
+    rgba(6, 14, 27, 0.98) 86%,
+    #060e1b 100%
   );
   z-index: 2;
   transition: opacity var(--duration-emphasis) ease;
