@@ -414,6 +414,34 @@ Applies across **all card libraries, catalogues, and editorial grids**: Treatmen
      ```
    - **Mobile Fallback**: On mobile touch screens where `:hover` is unavailable, the solid white action button remains permanently visible (`opacity: 1; transform: translateY(0);`).
 
+#### E. Universal Container Width & Edge Margin Standard (The 1320px Alignment Contract)
+To prevent visual misalignment, stepped gutters, or cards appearing smaller than the page margin, all major page sections across **both library pages and detail pages** (Card Grids, Editorials, Bento sections, Featured Carousels, and the Pre-Footer CTA Banner `<BlogCtaBanner />`) **MUST** strictly adhere to the universal 1320px container geometry:
+
+1. **Mandatory Container Architecture**:
+   ```css
+   .container {
+     width: calc(100% - max(4vw, 40px) * 2);
+     max-width: 1320px;
+     margin-inline: auto;
+     box-sizing: border-box;
+   }
+
+   @media (max-width: 768px) {
+     .container {
+       width: calc(100% - 32px);
+     }
+   }
+   ```
+
+2. **Fixed Edge Margins & Gutter Guarantees**:
+   - **Large Desktop (> 1400px)**: Content is perfectly centered with `max-width: 1320px`.
+   - **Desktop & Tablet (768px – 1400px)**: The left and right margins from the viewport width edges are strictly fixed via `max(4vw, 40px)` on both sides.
+   - **Mobile (<= 768px)**: The left and right margins from screen edges are strictly fixed to `16px` (`calc(100% - 32px)`).
+
+3. **Pre-Footer CTA Banner Edge Alignment Rule**:
+   - The pre-footer CTA card (`.ctaCard` in `<BlogCtaBanner />`) is `width: 100%` inside this exact container.
+   - ❌ **STRICTLY FORBIDDEN**: Never nest `padding-inline: 48px` or constrain the container to `1240px` on the CTA banner. The CTA card's outer left and right edges must align 1:1 with the outer edges of the card grids and bento sections above it.
+
 ---
 
 ### 3. Motion & Animation Design Tokens

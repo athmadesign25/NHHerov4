@@ -140,6 +140,27 @@ For all card libraries, catalogues, and editorial grids (Treatments, Diagnostics
 - **Strict line clamps**: Title is 20px bold clamped to 2 lines (`-webkit-line-clamp: 2`); description is 13–14px clamped to 2 lines.
 - **Dual-slot bottom CTA (38px height)**: Resting state shows metadata / author / subtle icon (`opacity: 1`). Hover state smoothly reveals the full-width solid white CTA button with brand blue text (`#034EA2`), `border-radius: 8px` (square with rounded corners, never pill/capsule), matching the Doctor Card Book button (`.refBookBtnWhite`).
 
+### Container Width & Edge Margins (1320px Alignment)
+
+All full-width content blocks (Library card grids, editorials, Bento sections, featured carousels, and the pre-footer CTA banner `<BlogCtaBanner />`) share one unified container definition:
+
+```css
+.container {
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: calc(100% - 32px);
+  }
+}
+```
+
+- **Why it matters**: In web viewports, if a pre-footer CTA banner has `max-width: 1240px` and extra side padding while card sections above it have `1320px`, the banner looks shrunken and indented. Setting `max-width: 1320px` with `width: calc(100% - max(4vw, 40px) * 2)` guarantees pixel-perfect edge alignment between card grids and banners.
+
 ---
 
 ## Traps specific to this codebase
