@@ -1,12 +1,10 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { ChevronRight, ChevronDown, Check, Shield, Award, Biohazard as Virus, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
+import { ChevronRight, ChevronDown, Check, Shield, Award, Virus, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -76,7 +74,7 @@ export interface SpecialityCategoryItem {
 }
 
 // Add specific images manually (using generic assets or Next.js Image fallbacks)
-const heroImage = "/assets/hero_modern.png"; // Placeholder
+const heroImage = "/assets/hero_bg.png"; // Placeholder
 const gastroImage = "/assets/doctor_1.png"; // Placeholder
 const breastImage = "/assets/doctor_2.png"; // Placeholder
 const neuroImage = "/assets/doctor_3.png"; // Placeholder
@@ -180,7 +178,7 @@ const paediatricCancerCategories: SpecialityCategoryItem[] = [
     id: "paed-blood-disorders",
     title: "Paediatric Blood Disorders",
     programmeTitle: "Paediatric Blood Disorders Programme",
-    icon: "/speciality-media/2v70sJfGlQ4DODbvIqdV.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/2v70sJfGlQ4DODbvIqdV.webp",
     bg: "/assets/hero_modern.png",
     desc: "Comprehensive diagnostic and therapeutic care for children with benign blood conditions, including thalassaemia, sickle cell disease, haemophilia, and aplastic anaemia.",
     subConditions: [
@@ -194,7 +192,7 @@ const paediatricCancerCategories: SpecialityCategoryItem[] = [
     id: "paed-blood-cancers",
     title: "Paediatric Blood Cancers",
     programmeTitle: "Paediatric Blood Cancers Programme",
-    icon: "/speciality-media/gFWCGpcgxgt6RRgpP1QS.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/gFWCGpcgxgt6RRgpP1QS.webp",
     bg: "/assets/patient_in_1.png",
     desc: "Dedicated childhood leukaemia and lymphoma programmes delivering advanced multi-agent chemotherapy, immunotherapy, and bone marrow transplants with world-class survival rates.",
     subConditions: [
@@ -207,7 +205,7 @@ const paediatricCancerCategories: SpecialityCategoryItem[] = [
     id: "paed-brain-tumours",
     title: "Paediatric Brain Tumours",
     programmeTitle: "Paediatric Brain Tumours Programme",
-    icon: "/speciality-media/3DRjQiYG4tICdZ8nuWJ9.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/3DRjQiYG4tICdZ8nuWJ9.webp",
     bg: "/assets/neuro_cancer.png",
     desc: "Multidisciplinary neuro-oncology care combining paediatric neurosurgeons, radiation oncologists, and oncologists utilizing neuronavigation, proton therapy, and targeted treatment.",
     subConditions: [
@@ -221,7 +219,7 @@ const paediatricCancerCategories: SpecialityCategoryItem[] = [
     id: "paed-solid-tumours",
     title: "Paediatric Solid Tumours",
     programmeTitle: "Paediatric Solid Tumours Programme",
-    icon: "/speciality-media/4iPN1V0pzmJ9qb0Rvxth.webp",
+    icon: "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/symptoms/January2026/4iPN1V0pzmJ9qb0Rvxth.webp",
     bg: "/assets/patient_in_2.png",
     desc: "Specialized treatment protocols for kidney, liver, bone, muscle, and nerve tumours in children with limb preservation and organ-sparing surgical focus.",
     subConditions: [
@@ -998,16 +996,14 @@ const faqData = [
 ];
 
 export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: string; isCoE?: boolean }) {
-  const searchParams = useSearchParams();
   const resolvedSlug = normalizeSpecialitySlug(slug);
-  const bookingHref = specialityBookingEntry(resolvedSlug, searchParams.get("location"));
   const isCardiac = resolvedSlug === "cardiology";
   const currentSpec = ALL_SPECIALITIES.find(s => s.slug === resolvedSlug);
   const isCoE = propIsCoE !== undefined ? propIsCoE : Boolean(currentSpec?.isCoE);
   const tocItems = isCoE ? COE_TOC_ITEMS : NON_COE_TOC_ITEMS;
   const title = isCardiac ? "Cardiology & Cardiac Surgery" : (currentSpec?.name || 'Cancer Care');
   const videoSrc = isCardiac ? "/Specialities icons/Cardiology.mp4" : (currentSpec?.detailVideo || currentSpec?.video || "/videos/Hero-Video-New.mp4");
-
+  
   const adultCategories: SpecialityCategoryItem[] = isCardiac ? cardiacAdultCategories : adultCancerCategories;
   const paediatricCategories: SpecialityCategoryItem[] = isCardiac ? cardiacPaediatricCategories : paediatricCancerCategories;
 
@@ -1207,7 +1203,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
 
   const handoffRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: bgHandoffProgress } = useScroll({
-    target: isCoE ? handoffRef : undefined,
+    target: handoffRef,
     offset: ["start end", "start 60%"]
   });
   const pageBgColor = useTransform(bgHandoffProgress, [0, 1], ["#031224", "#ffffff"]);
@@ -1300,7 +1296,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
           }}
         >
         <div className={styles.heroBg}>
-          <video
+          <video 
             src={videoSrc}
             autoPlay
             loop
@@ -1308,17 +1304,17 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             playsInline
           />
         </div>
-
+        
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <motion.div
+            <motion.div 
               className={styles.heroBreadcrumbs}
               style={{ marginBottom: "-8px", opacity: 0.6 }}
               initial={{ opacity: 0, y: -16, filter: "blur(12px)" }}
               animate={{ opacity: 0.6, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
             >
-              <Breadcrumbs
+              <Breadcrumbs 
                 hideOnMobile
                 items={[
                   { label: "Home", href: "/" },
@@ -1326,7 +1322,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                     ? { label: "Centres of Excellence", href: "/centre-of-excellence" }
                     : { label: "Specialities", href: "/specialities" },
                   { label: title }
-                ]}
+                ]} 
               />
             </motion.div>
             <h1 className={styles.heroTitle}>
@@ -1347,7 +1343,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ delay: 0.6, duration: 0.5, ease: "easeOut" }}
             >
-              <Link href={bookingHref} className={styles.heroButton}>
+              <Link href="/doctors" className={styles.heroButton}>
                 Find a specialist
               </Link>
             </motion.div>
@@ -1407,7 +1403,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
 
             <div className={styles.statsDivider} />
 
-            <motion.div
+            <motion.div 
               className={styles.milestoneSection}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1439,7 +1435,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         <section id="treatments" className={styles.treatmentsSection} data-nav-theme="dark">
         <div className="container">
           <div className={styles.sectionHeader}>
-            <motion.h2
+            <motion.h2 
               className={styles.sectionTitle}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1448,7 +1444,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             >
               <TextSweepEffect words={[isCardiac ? "Conditions & Heart Care Programmes" : "Cancer We Treat"]} sweepMs={2600} delayMs={80} finalColor="#FFFFFF" />
             </motion.h2>
-            <motion.p
+            <motion.p 
               className={styles.sectionDesc}
               initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1461,7 +1457,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             </motion.p>
           </div>
 
-          <motion.div
+          <motion.div 
             className={styles.toggleContainer}
             initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1496,7 +1492,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         {/* Pinned breadcrumb & dropdown bar from Design 2 (when isTabsPinned is true) */}
         <AnimatePresence>
           {isTabsPinned && (
-            <motion.div
+            <motion.div 
               key="pinned-programme-bar"
               data-theme={navTheme}
               className={`${design2Styles.programmeTabsWrapper} ${design2Styles.programmeTabsWrapperPinned} ${navTheme === "light" ? design2Styles.programmeTabsWrapperLight : design2Styles.programmeTabsWrapperDark} ${isNearFooter ? design2Styles.programmeTabsWrapperHidden : ""}`}
@@ -1683,7 +1679,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         </AnimatePresence>
 
         {/* Circular Programme Navigation Tabs - Visible in page flow; smoothly hides when top bar appears */}
-        <motion.div
+        <motion.div 
           className={styles.programmeTabsWrapper}
           animate={{
             opacity: isTabsPinned ? 0 : 1,
@@ -1713,9 +1709,9 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                       onClick={() => handleCategorySelect(cat.id)}
                     >
                       <span className={styles.programmeTabImageWrap}>
-                        <img
-                          src={cat.icon}
-                          alt={cat.programmeTitle || cat.title}
+                        <img 
+                          src={cat.icon} 
+                          alt={cat.programmeTitle || cat.title} 
                           className={styles.programmeTabImage}
                           loading="lazy"
                           width={60}
@@ -1741,7 +1737,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
           const selectedCat = currentCategories.find(c => c.id === activeCategory) || currentCategories[0];
           const prevCat = currentCategories.find(c => c.id === prevCategory) || selectedCat;
           return (
-            <motion.div
+            <motion.div 
               className={styles.accordionContainerFullWidth}
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1750,7 +1746,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             >
               <div className={styles.selectedProgrammeHero}>
                 {/* HeroWipeSlideshow mask-wipe transition between background images */}
-                <div
+                <div 
                   className={styles.selectedProgrammeBgImage}
                   style={{ backgroundImage: `url("${prevCat.bg}")`, zIndex: 1 }}
                 />
@@ -1758,7 +1754,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   <motion.div
                     key={`${prevCategory}->${activeCategory}`}
                     className={styles.selectedProgrammeBgImage}
-                    style={{
+                    style={{ 
                       backgroundImage: `url("${selectedCat.bg}")`,
                       zIndex: 2,
                       transformOrigin: "50% 50%",
@@ -1766,8 +1762,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                       backfaceVisibility: "hidden"
                     }}
                     initial={{
-                      clipPath: wipeDirection === "rightToLeft"
-                        ? "inset(0% 0% 0% 100%)"
+                      clipPath: wipeDirection === "rightToLeft" 
+                        ? "inset(0% 0% 0% 100%)" 
                         : "inset(0% 100% 0% 0%)",
                       scale: 1.025
                     }}
@@ -1789,7 +1785,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 <div className={styles.selectedProgrammeOverlay} />
 
                 <AnimatePresence initial={false}>
-                  <motion.div
+                  <motion.div 
                     key={selectedCat.id}
                     className={styles.selectedProgrammeContent}
                     initial={{ opacity: 0, y: 10 }}
@@ -1809,7 +1805,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                         {selectedCat.desc}
                       </p>
                       <div className={styles.selectedProgrammeActions}>
-                        <Link href={bookingHref} className={styles.heroButton}>
+                        <Link href="/doctors" className={styles.heroButton}>
                           Find a specialist
                         </Link>
                       </div>
@@ -1824,7 +1820,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         <div className={styles.subConditionsContainer} data-nav-theme="light">
           <AnimatePresence mode="wait">
             {currentCategories.find(c => c.id === activeCategory)?.subConditions?.length ? (
-              <motion.div
+              <motion.div 
                 key={activeCategory}
                 className={styles.subConditionsGrid}
                 initial="hidden"
@@ -1843,8 +1839,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 exit={{ opacity: 0, y: -16, filter: "blur(6px)", transition: { duration: 0.25 } }}
               >
                 {currentCategories.find(c => c.id === activeCategory)?.subConditions?.map((cond, i) => (
-                  <motion.div
-                    key={i}
+                  <motion.div 
+                    key={i} 
                     className={styles.subConditionCard}
                     style={{
                       backgroundColor: subCardBg,
@@ -1907,9 +1903,9 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   />
                 </h2>
                 <AnimatePresence mode="wait">
-                  <motion.p
+                  <motion.p 
                     key={activeCategory}
-                    className={styles.sectionDesc}
+                    className={styles.sectionDesc} 
                     style={{ color: "var(--color-text-secondary)" }}
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -1921,7 +1917,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 </AnimatePresence>
               </div>
             </div>
-
+              
             <motion.div
               style={{
                 width: proceduresWidth,
@@ -1935,7 +1931,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 justifyContent: "center",
               }}
             >
-              <ModernCarousel
+              <ModernCarousel 
                 items={(isCardiac ? cardiacProceduresData : proceduresData).map(proc => ({
                   id: proc.id,
                   title: proc.title,
@@ -1960,18 +1956,18 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             { id: "hospitals", title: activeHospitalsInfo.title, desc: activeHospitalsInfo.desc },
           ]
         : [
-            {
-              id: "related-treatments",
-              title: "Related Treatments",
-              desc: `Specialized treatment procedures, medical therapies, and targeted interventions available for ${title.toLowerCase()}.`
+            { 
+              id: "related-treatments", 
+              title: "Related Treatments", 
+              desc: `Specialized treatment procedures, medical therapies, and targeted interventions available for ${title.toLowerCase()}.` 
             },
             { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
             { id: "doctors", title: `Our Doctors & Specialists for ${title}`, desc: `Consult our multidisciplinary team of senior specialists delivering advanced, personalized care for ${title.toLowerCase()}.` },
             { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
-            {
-              id: "related-tests",
-              title: `Related Tests for ${title}`,
-              desc: `Comprehensive diagnostic evaluations, specialized laboratory assays, and advanced imaging protocols for accurate assessment and targeted management of ${title.toLowerCase()}.`
+            { 
+              id: "related-tests", 
+              title: `Related Tests for ${title}`, 
+              desc: `Comprehensive diagnostic evaluations, specialized laboratory assays, and advanced imaging protocols for accurate assessment and targeted management of ${title.toLowerCase()}.` 
             },
             { id: "why-us", title: activeWhyUsInfo.title, desc: activeWhyUsInfo.desc },
             { id: "patient-stories", title: activePatientStoriesInfo.title, desc: activePatientStoriesInfo.desc },
@@ -1994,7 +1990,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
         const isHospitals = section.id === "hospitals";
         const isFaqs = section.id === "faqs";
         const isDarkTheme = isWhyUs || section.id === "patient-stories" || isHospitals || isFaqs;
-
+        
         let sectionBg = "var(--white)";
         if (section.id === "about-speciality") {
           sectionBg = "transparent";
@@ -2005,19 +2001,19 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
           // Seamless continuous blend: starts from deep navy (#072242) and smoothly deepens into #061120
           sectionBg = "linear-gradient(180deg, #072242 0%, #051b36 30%, #04162c 60%, #051325 80%, #061120 100%)";
         }
-
+        
         const isDarkSection = isHospitals || isFaqs;
         const titleColor = isDarkSection ? "var(--white)" : "var(--color-text)";
         const descColor = isDarkSection ? "rgba(var(--white-rgb), 0.75)" : "var(--color-text-secondary)";
 
         return (
-        <section
-          key={idx}
-          id={section.id}
-          className={styles.doctorsSection}
-          data-nav-theme={isDarkTheme ? "dark" : "light"}
-          style={{
-            background: sectionBg,
+        <section 
+          key={idx} 
+          id={section.id} 
+          className={styles.doctorsSection} 
+          data-nav-theme={isDarkTheme ? "dark" : "light"} 
+          style={{ 
+            background: sectionBg, 
             marginTop: (isHospitals || isFaqs) ? "-2px" : undefined,
             marginBottom: isFaqs ? "-4px" : undefined,
             position: "relative",
@@ -2041,9 +2037,9 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               </h2>
               {section.id === "technology" || section.id === "tests" || section.id === "doctor-overview" || section.id === "why-us" || section.id === "hospitals" ? (
                 <AnimatePresence mode="wait">
-                  <motion.p
+                  <motion.p 
                     key={activeCategory}
-                    className={styles.sectionDesc}
+                    className={styles.sectionDesc} 
                     style={{ color: descColor }}
                     initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -2054,8 +2050,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   </motion.p>
                 </AnimatePresence>
               ) : (
-                <motion.p
-                  className={styles.sectionDesc}
+                <motion.p 
+                  className={styles.sectionDesc} 
                   style={{ color: descColor }}
                   initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
                   whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -2135,23 +2131,23 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               <div className={styles.doctorsGridWrapper}>
                 <div className={styles.refDoctorsGrid}>
                   {(isCardiac ? cardiacDoctorsData : doctors).map((doc, i) => (
-                    <motion.div
-                      key={i}
+                    <motion.div 
+                      key={i} 
                       className={styles.refDoctorCard}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-50px" }}
                       transition={{ duration: 0.5, delay: i * 0.1 }}
                     >
-                      <Image
-                        src={doc.img}
-                        alt={doc.name}
-                        fill
+                      <Image 
+                        src={doc.img} 
+                        alt={doc.name} 
+                        fill 
                         className={styles.refDocFullImage}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"
                       />
                       <div className={styles.refDocFullGradient} />
-
+                      
                       <div className={styles.refDocOverlayContent}>
                         <div className={styles.refDocBottomFlex}>
                           <div className={styles.refDocTextCol}>
@@ -2169,8 +2165,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                               {doc.loc}
                             </div>
                           </div>
-
-                          <Link href={bookingHref} className={styles.refBookBtnWhite}>
+                          
+                          <Link href={`/doctors/${doc.id}`} className={styles.refBookBtnWhite}>
                             Book
                           </Link>
                         </div>
@@ -2180,7 +2176,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 </div>
               </div>
 
-              <motion.div
+              <motion.div 
                 style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-8)" }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -2188,7 +2184,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Link href={bookingHref} className={styles.secondaryButton}>
+                  <Link href="/doctors" className={styles.secondaryButton}>
                     View more
                   </Link>
                 </motion.div>
@@ -2224,15 +2220,15 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             </div>
           ) : (
             <div className="container">
-              <motion.div
-                style={{
-                  width: "100%",
-                  height: "280px",
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--color-border-light)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+              <motion.div 
+                style={{ 
+                  width: "100%", 
+                  height: "280px", 
+                  borderRadius: "var(--radius-xl)", 
+                  background: "var(--color-border-light)", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
                   color: "var(--color-text-muted)",
                   fontSize: "var(--font-size-lg)",
                   fontWeight: 500,

@@ -547,7 +547,7 @@ export const ALL_SPECIALITIES: SpecialityMeta[] = [
     shortName: "Clinical Genetics",
     category: "Immunology & Joints",
     tagline: "Comprehensive expert care, advanced clinical diagnostics, and personalized treatment for clinical genetics",
-    icon: "/Specialities icons/Orthopaedics.svg",
+    icon: "/Specialities icons/Rheumatology.svg",
     image: "/Specialities icons/Rheumatology.jpeg",
     stat: {"value":"10K+","label":"Patients Treated"},
     keyConditions: ["Clinical Genetics","Advanced Diagnosis","Specialist Consultation","Interventional Care"],
@@ -571,7 +571,7 @@ export const ALL_SPECIALITIES: SpecialityMeta[] = [
     shortName: "Clinical Immunology",
     category: "Immunology & Joints",
     tagline: "Comprehensive expert care, advanced clinical diagnostics, and personalized treatment for clinical immunology & rheumatology",
-    icon: "/Specialities icons/Orthopaedics.svg",
+    icon: "/Specialities icons/Rheumatology.svg",
     image: "/Specialities icons/Rheumatology.jpeg",
     stat: {"value":"10K+","label":"Patients Treated"},
     keyConditions: ["Clinical Immunology & Rheumatology","Advanced Diagnosis","Specialist Consultation","Interventional Care"],
@@ -1820,89 +1820,89 @@ export function getSpecialityMeta(slug: string): SpecialityMeta | null {
 
 
 export const specialitiesData = [
-  {
-    name: "Cardiology",
+  { 
+    name: "Cardiology", 
     slug: "cardiology",
     image: "/Specialities icons/Cardiology.svg",
-    keywords: ["heart", "chest pain", "valve", "cardiac", "bypass", "bp", "hypertension", "angioplasty", "artery", "cardio", "palpitation", "cardiologist", "cardiac surgeon", "cardio specialists"]
+    keywords: ["heart", "chest pain", "valve", "cardiac", "bypass", "bp", "hypertension", "angioplasty", "artery", "cardio", "palpitation", "cardiologist", "cardiac surgeon", "cardio specialists"] 
   },
-  {
-    name: "Neurology",
+  { 
+    name: "Neurology", 
     slug: "neurology",
     image: "/Specialities icons/Neurology.svg",
-    keywords: ["brain", "nerve", "stroke", "migraine", "headache", "spine", "seizure", "epilepsy", "paralysis", "neuro", "back pain", "neurologist", "neuro surgeon", "neuro specialists"]
+    keywords: ["brain", "nerve", "stroke", "migraine", "headache", "spine", "seizure", "epilepsy", "paralysis", "neuro", "back pain", "neurologist", "neuro surgeon", "neuro specialists"] 
   },
-  {
-    name: "Oncology",
+  { 
+    name: "Oncology", 
     slug: "oncology",
-    image: "/Specialities icons/Cancercare.svg",
-    keywords: ["cancer", "tumor", "chemotherapy", "radiation", "lump", "biopsy", "oncologist", "cancer specialist", "carcinoma"]
+    image: "/Specialities icons/Oncology.svg",
+    keywords: ["cancer", "tumor", "chemotherapy", "radiation", "lump", "biopsy", "oncologist", "cancer specialist", "carcinoma"] 
   },
-  {
-    name: "Orthopaedics",
+  { 
+    name: "Orthopaedics", 
     slug: "orthopaedics",
     image: "/Specialities icons/Orthopaedics.svg",
-    keywords: ["bone", "joint", "fracture", "knee", "hip", "arthritis", "spine", "ortho", "back pain", "orthopedist", "orthopedic surgeon"]
+    keywords: ["bone", "joint", "fracture", "knee", "hip", "arthritis", "spine", "ortho", "back pain", "orthopedist", "orthopedic surgeon"] 
   },
-  {
-    name: "Gastroenterology",
+  { 
+    name: "Gastroenterology", 
     slug: "gastroenterology",
     image: "/Specialities icons/Gastro.svg",
-    keywords: ["stomach", "digestion", "liver", "acid", "ulcer", "intestine", "gallbladder", "piles", "fistula", "gastro", "gastric", "gastroenterologist"]
+    keywords: ["stomach", "digestion", "liver", "acid", "ulcer", "intestine", "gallbladder", "piles", "fistula", "gastro", "gastric", "gastroenterologist"] 
   },
-  {
-    name: "Urology",
+  { 
+    name: "Urology", 
     slug: "urology",
     image: "/Specialities icons/Urology.svg",
-    keywords: ["kidney stone", "urine", "bladder", "prostate", "uti", "urologist", "urine infection", "dialysis"]
+    keywords: ["kidney stone", "urine", "bladder", "prostate", "uti", "urologist", "urine infection", "dialysis"] 
   },
-  {
-    name: "Pulmonology",
+  { 
+    name: "Pulmonology", 
     slug: "pulmonology",
     image: "/Specialities icons/Pulmonology.svg",
-    keywords: ["lung", "breathing", "asthma", "tb", "cough", "respiratory", "pulmonologist", "chest specialist"]
+    keywords: ["lung", "breathing", "asthma", "tb", "cough", "respiratory", "pulmonologist", "chest specialist"] 
   },
-  {
-    name: "Endocrinology",
+  { 
+    name: "Endocrinology", 
     slug: "endocrinology",
     image: "/Specialities icons/Diabetology.svg",
-    keywords: ["diabetes", "thyroid", "sugar", "hormone", "pcos", "obesity", "endocrinologist", "sugar specialist"]
+    keywords: ["diabetes", "thyroid", "sugar", "hormone", "pcos", "obesity", "endocrinologist", "sugar specialist"] 
   },
-  {
-    name: "Gynecology",
+  { 
+    name: "Gynecology", 
     slug: "gynecology",
     image: "/Specialities icons/Gynaecology.svg",
-    keywords: ["pregnancy", "period", "uterus", "pcos", "women", "maternity", "delivery", "gynecologist", "obgyn"]
+    keywords: ["pregnancy", "period", "uterus", "pcos", "women", "maternity", "delivery", "gynecologist", "obgyn"] 
   },
-  {
-    name: "Pediatrics",
+  { 
+    name: "Pediatrics", 
     slug: "pediatrics",
     image: "/Specialities icons/Paedratic.svg",
-    keywords: ["child", "baby", "vaccination", "infant", "kids", "pediatrician", "child specialist"]
+    keywords: ["child", "baby", "vaccination", "infant", "kids", "pediatrician", "child specialist"] 
   },
-  {
-    name: "Dermatology",
+  { 
+    name: "Dermatology", 
     slug: "dermatology",
     image: "/Specialities icons/Orthopaedics.svg",
-    keywords: ["skin", "hair", "acne", "rash", "allergy", "pimples", "dermatologist", "skin specialist"]
+    keywords: ["skin", "hair", "acne", "rash", "allergy", "pimples", "dermatologist", "skin specialist"] 
   },
-  {
-    name: "Ophthalmology",
+  { 
+    name: "Ophthalmology", 
     slug: "ophthalmology",
     image: "/Specialities icons/Neurology.svg",
-    keywords: ["eye", "vision", "cataract", "glaucoma", "lasik", "ophthalmologist", "eye specialist"]
+    keywords: ["eye", "vision", "cataract", "glaucoma", "lasik", "ophthalmologist", "eye specialist"] 
   },
-  {
-    name: "ENT",
+  { 
+    name: "ENT", 
     slug: "ent",
     image: "/Specialities icons/Pulmonology.svg",
-    keywords: ["ear", "nose", "throat", "sinus", "tonsils", "hearing", "ent specialist"]
+    keywords: ["ear", "nose", "throat", "sinus", "tonsils", "hearing", "ent specialist"] 
   },
-  {
-    name: "Psychiatry",
+  { 
+    name: "Psychiatry", 
     slug: "psychiatry",
     image: "/Specialities icons/Neurology.svg",
-    keywords: ["mental", "depression", "anxiety", "stress", "sleep", "psychiatrist", "psychologist"]
+    keywords: ["mental", "depression", "anxiety", "stress", "sleep", "psychiatrist", "psychologist"] 
   }
 ];
 
@@ -2027,3 +2027,4 @@ export function normalizeSpecialitySlug(rawSlug: string): string {
   };
   return map[rawSlug] || rawSlug;
 }
+

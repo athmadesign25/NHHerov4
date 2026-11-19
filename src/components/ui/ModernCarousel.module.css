@@ -284,20 +284,20 @@
     height: 505px;
     gap: var(--space-8);
   }
-
+  
   .content {
     padding: var(--space-20);
   }
-
+  
   .title {
     font-size: var(--font-size-3xl);
   }
-
+  
   .desc {
     font-size: var(--font-size-sm);
     margin-bottom: var(--space-16);
   }
-
+  
   .verticalTitle {
     font-size: var(--font-size-sm);
   }
@@ -569,3 +569,5 @@
     display: none !important;
   }
 }
+
+

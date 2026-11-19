@@ -22,9 +22,9 @@ export default function Breadcrumbs({
   hideOnMobile = false,
 }: BreadcrumbsProps) {
   const isDark = theme === "dark";
-  const inactiveColor = isDark ? "rgba(var(--white-rgb), 0.7)" : "var(--color-text-muted)";
+  const inactiveColor = isDark ? "rgba(255, 255, 255, 0.7)" : "var(--color-text-muted)";
   const activeColor = isDark ? "#ffffff" : "var(--color-text)";
-  const arrowColor = isDark ? "rgba(var(--white-rgb), 0.4)" : "var(--color-border)";
+  const arrowColor = isDark ? "rgba(255, 255, 255, 0.4)" : "var(--color-border)";
 
   return (
     <nav
@@ -34,12 +34,12 @@ export default function Breadcrumbs({
       <ol className={styles.list}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-
+          
           return (
             <li key={index} className={styles.item}>
               {item.href && !isLast ? (
-                <Link
-                  href={item.href}
+                <Link 
+                  href={item.href} 
                   style={{ color: inactiveColor, textDecoration: "none", transition: "color 0.2s" }}
                   onMouseEnter={(e) => e.currentTarget.style.color = activeColor}
                   onMouseLeave={(e) => e.currentTarget.style.color = inactiveColor}
@@ -51,7 +51,7 @@ export default function Breadcrumbs({
                   {item.label}
                 </span>
               )}
-
+              
               {!isLast && (
                 <ChevronRight size={14} style={{ marginLeft: 8, color: arrowColor }} />
               )}

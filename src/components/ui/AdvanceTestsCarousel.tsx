@@ -195,12 +195,6 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
             key={i}
             className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
             onClick={() => scrollToMobileCard(i)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                scrollToMobileCard(i);
-              }
-            }}
             aria-label={`Go to test ${i + 1}`}
             role="button"
             tabIndex={0}
