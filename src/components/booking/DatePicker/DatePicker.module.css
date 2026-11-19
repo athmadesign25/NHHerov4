@@ -90,7 +90,7 @@
 }
 
 .monthText {
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 700;
   color: var(--color-text-secondary);
   letter-spacing: 0.08em;
@@ -129,11 +129,11 @@
   width: 54px;
   min-height: 60px;
   padding: 8px 0;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(var(--black-rgb), 0.05);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  background: rgba(var(--white-rgb), 0.6);
+  backdrop-filter: blur(var(--blur-sm));
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.02);
   cursor: pointer;
   flex-shrink: 0;
   scroll-snap-align: start;
@@ -154,8 +154,8 @@
 
 .dateChipSelected {
   border-color: var(--color-primary);
-  background: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(3, 78, 162, 0.15);
+  background: var(--white);
+  box-shadow: 0 4px 12px rgba(var(--blue-brand-rgb), 0.15);
 }
 
 .dateChipUnavailable {
@@ -189,7 +189,7 @@
 .dayLabel {
   position: relative;
   z-index: 1;
-  font-size: 10px;
+  font-size: var(--font-size-2xs);
   font-weight: 600;
   color: var(--color-text-muted);
   text-transform: uppercase;
@@ -230,7 +230,7 @@
   .monthText {
     writing-mode: initial;
     transform: none;
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
   }
 
   .dateChip {

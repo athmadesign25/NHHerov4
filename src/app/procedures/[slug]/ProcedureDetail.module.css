@@ -437,17 +437,17 @@
   margin-top: -1px;
   border-radius: 0;
   box-shadow: none;
-  background: linear-gradient(180deg, #f0f4f9 0px, #f8fafc 90px, var(--white) 180px);
+  background: linear-gradient(180deg, #f0f4f9 0px, var(--slate-50) 90px, var(--white) 180px);
 }
 
 .readingExperienceWrapperV3 .mainSectionTitle,
 .readingExperienceWrapperV3 .subSectionTitle {
-  color: var(--slate-900, #0f172a);
+  color: var(--slate-900);
 }
 
 .readingExperienceWrapperV3 .leadParagraph,
 .readingExperienceWrapperV3 .bodyParagraph {
-  color: var(--slate-700, #334155);
+  color: var(--slate-700);
 }
 
 /* ─── V4: REFINED DYNAMIC BG CHANGE + TEXT SWEEP BLEND (MATCHING BLOG V3) ─── */
@@ -1026,7 +1026,7 @@
 /* ─── INDICATIONS: STRUCTURED CLINICAL CONDITION DOSSIER ─────────────────── */
 .conditionDossierContainer {
   background: var(--slate-50);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
   border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   margin-top: 18px;
@@ -1094,7 +1094,7 @@
 
 .eligibilityCol {
   background: var(--slate-50);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 22px;
   box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
@@ -1149,7 +1149,7 @@
   grid-template-columns: 44px 1fr;
   gap: 16px;
   background: var(--slate-50);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   box-shadow: 0 2px 8px -2px rgba(var(--slate-900-rgb), 0.03);
@@ -1299,7 +1299,7 @@
 /* ─── COST & INSURANCE (HARMONIOUS LIGHT THEME) ──────────────────────────── */
 .costCard {
   background: var(--slate-50);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  border: 1px solid rgba(var(--slate-200-rgb), 0.9);
   border-radius: var(--radius-lg, 12px);
   padding: 28px 30px;
   margin-top: 20px;
@@ -1662,7 +1662,7 @@
   justify-content: center;
   flex-shrink: 0;
   border-radius: 12px;
-  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(var(--blue-900-rgb), 0.98) 100%);
   color: var(--white);
   box-shadow:
     0 4px 14px rgba(var(--blue-brand-rgb), 0.28),
@@ -1681,11 +1681,11 @@
 
 /* Contact Support and Pulse inherit the same cohesive royal styling */
 .boxIconSupport {
-  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(var(--blue-900-rgb), 0.98) 100%);
 }
 
 .boxIconPulse {
-  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
+  background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(var(--blue-900-rgb), 0.98) 100%);
 }
 
 /* Live Pulse Lottie Animation Frame */

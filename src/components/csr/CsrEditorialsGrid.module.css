@@ -48,7 +48,7 @@
   color: var(--csr-eyebrow, var(--color-primary, var(--blue-brand)));
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) var(--ease-out);
 }
 
 @keyframes titleGradientShimmer {
@@ -92,7 +92,7 @@
   line-height: 1.55;
   color: var(--csr-subtitle, var(--slate-500));
   margin: 0;
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) var(--ease-out);
 }
 
 /* ── 3-Column / 2-Column Responsive Card Grid ── */
