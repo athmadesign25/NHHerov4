@@ -120,6 +120,26 @@ transition: opacity var(--duration-base) var(--ease-out);
 Duration scales with distance travelled: small/local is fast, large/entrance
 is slow.
 
+### Universal Library Cards
+
+For all card libraries, catalogues, and editorial grids (Treatments, Diagnostics, CSR Editorials, Health Blogs, Articles, Symptoms, Diseases, Hospitals):
+
+- **No borders or strokes**: `border: none !important; outline: none !important;`
+- **No drop shadows**: `box-shadow: none !important;` (neither at rest nor on hover). Elevation is carried purely by photographic depth, contrast, and subtle hover lift (`transform: translateY(-5px)`)
+- **Atmospheric scrim (Figma Node 468:385)**: Bottom 281px gradient:
+  ```css
+  background: linear-gradient(
+    180deg,
+    rgba(7, 19, 34, 0) 7.95%,
+    rgba(7, 19, 34, 0.677) 46.73%,
+    rgba(7, 19, 34, 0.859) 73.41%,
+    rgba(7, 19, 34, 0.94) 100%
+  );
+  ```
+  Keeps the top half of the photo crisp and warm while guaranteeing 100% WCAG contrast for typography below.
+- **Strict line clamps**: Title is 20px bold clamped to 2 lines (`-webkit-line-clamp: 2`); description is 13–14px clamped to 2 lines.
+- **Dual-slot bottom CTA (38px height)**: Resting state shows metadata / author / subtle icon (`opacity: 1`). Hover state smoothly reveals the full-width solid white CTA button with brand blue text (`#034EA2`), `border-radius: 8px` (square with rounded corners, never pill/capsule), matching the Doctor Card Book button (`.refBookBtnWhite`).
+
 ---
 
 ## Traps specific to this codebase

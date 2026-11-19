@@ -300,15 +300,15 @@ Across all dark mode heroes (Diagnostics, Symptoms, Diseases, Treatments, Hospit
 
 #### A. Full Photography Editorial Cards (CSR, Articles, Impact Bulletins)
 - **Background**: Image with `object-fit: cover` and smooth hover zoom (`transform: scale(1.05)`).
-- **Dual-Scrim System**:
-  - **Bottom Scrim**: `linear-gradient(to top, rgba(6, 12, 24, 0.98) 0%, rgba(6, 12, 24, 0.70) 50%, transparent 100%)`.
-  - **Top Scrim**: `linear-gradient(180deg, rgba(6, 12, 24, 0.70) 0%, transparent 100%)` for 70–80px height.
+- **Atmospheric Scrim System (Figma Node 468:385)**:
+  - Anchored at bottom with `height: 281px; max-height: 100%;` using exact 4-stop gradient: `linear-gradient(180deg, rgba(7, 19, 34, 0) 7.95%, rgba(7, 19, 34, 0.677) 46.73%, rgba(7, 19, 34, 0.859) 73.41%, rgba(7, 19, 34, 0.94) 100%)`.
 - **Category Tag Rules**:
   - Category must be **clean uppercase text** (`font-size: 11.5px`, `font-weight: 700`, `letter-spacing: 0.08em`, `#ffffff`, text-shadow) positioned at top-left (`.cardTopCategoryText`).
   - ❌ **STRICTLY FORBIDDEN**: Bulky dark pill containers, button-like badges, or thick borders around category tags.
-- **Card Borders & Contrast Rules**:
-  - **On White / Light Background**: ❌ **NO outlines or borders**. Use subtle elevation (`box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)`), 16px–24px rounded corners (`--radius-xl`), and hover lift (`translateY(-4px)`).
-  - **On Dark Background**: Subtle translucent border (`1px solid rgba(255, 255, 255, 0.12)`).
+- **Card Borders & Shadow Rules**:
+  - ❌ **STRICTLY FORBIDDEN**: No borders, strokes, or outlines (`border: none !important; outline: none !important;`).
+  - ❌ **STRICTLY FORBIDDEN**: Zero drop shadows (`box-shadow: none !important;` at rest and on hover).
+  - Geometry: 20px rounded corners (`--radius-xl`), minimum height 440px, and smooth hover lift (`transform: translateY(-5px)`).
 
 #### B. Doctor & Specialist Cards (Clinical Consultations)
 - **Desktop**: Grid of doctor cards showing portrait, name, clinical speciality, years of experience, hospital location, and a clean "Book" action button.
@@ -324,6 +324,95 @@ Across all dark mode heroes (Diagnostics, Symptoms, Diseases, Treatments, Hospit
   - Card Action CTAs (Opd Book, Read More, Test Book, Download PDF): `border-radius: 8px`.
   - Banner & Modal CTAs (`BlogCtaBanner`, Hero CTAs, Drawer Buttons): `border-radius: 8px` or `10px`.
   - Micro-interactions: Subtle hover lift (`transform: translateY(-1px)` to `translateY(-2px)`) with crisp typography and high contrast.
+
+#### D. Universal Library Card Component Standard (Mandatory Rule for All Card Libraries)
+Applies across **all card libraries, catalogues, and editorial grids**: Treatments (`/treatments`), Diagnostics (`/diagnostics`), CSR Impact Editorials (`/csr`), Health Blogs & Articles (`/blog`, `/articles`), Symptoms (`/symptoms`), Diseases (`/diseases`), Hospitals Directory (`/hospitals`), and featured blog carousels.
+
+1. **Card Container Architecture**:
+   - **Zero Borders / Strokes**: `border: none !important; outline: none !important;` (❌ **NEVER** add outlines or border strokes around cards).
+   - **Zero Drop Shadows**: `box-shadow: none !important;` at rest and on hover (❌ **NEVER** add drop shadows or glows).
+   - **Geometry**: `min-height: 440px; height: 100%; border-radius: 20px; overflow: hidden; background-color: var(--navy-900);` (or `#071322` fallback backdrop).
+   - **Hover Physics**: Clean subtle lift `transform: translateY(-5px);` paired with smooth duration and spring easing (`var(--duration-emphasis) var(--ease-spring)`).
+
+2. **Full Photography & Precision Scrim (Figma Node 468:385 Standard)**:
+   - **Background Image**: `position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.96) saturate(1.08) contrast(1.02); transition: transform var(--duration-slow) var(--ease-out);`. On card hover: `transform: scale(1.05);`.
+   - **Atmospheric Scrim (Load-Bearing)**:
+     ```css
+     .cardAtmosphericScrim {
+       position: absolute;
+       left: 0;
+       right: 0;
+       bottom: 0;
+       height: 281px;
+       max-height: 100%;
+       pointer-events: none;
+       z-index: 2;
+       background: linear-gradient(
+         180deg,
+         rgba(7, 19, 34, 0) 7.95%,
+         rgba(7, 19, 34, 0.677) 46.73%,
+         rgba(7, 19, 34, 0.859) 73.41%,
+         rgba(7, 19, 34, 0.94) 100%
+       );
+     }
+     ```
+     *Rule*: Top half remains crystal clear for photo visibility; bottom 281px anchors 100% WCAG AAA text contrast.
+
+3. **Top Badge Elements (Optional / Contextual)**:
+   - **Category Eyebrow (Top-Left)**: Clean uppercase text (`font-size: 11.6px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.4);`). ❌ **NEVER** wrap in dark pill containers or button badges.
+   - **Glassmorphic Date / Meta Badge (Top-Right, Blog & Articles)**:
+     `background: rgba(43, 37, 37, 0.42); backdrop-filter: blur(6.65px); -webkit-backdrop-filter: blur(6.65px); border: 0.25px solid rgba(183, 183, 183, 0.18); border-radius: 9px; padding: 4px 8px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.9); display: inline-flex; align-items: center; gap: 5px;`.
+
+4. **Typography & Line Clamping**:
+   - **Card Title**: `font-size: 20px; font-weight: 700; line-height: 26px; color: #ffffff;` with **strict 2-line clamp**:
+     ```css
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     -webkit-box-orient: vertical;
+     overflow: hidden;
+     ```
+   - **Card Description**: `font-size: 13.5px–14px; line-height: 19px–21px; color: #c9ccd1;` (or `rgba(255, 255, 255, 0.82)`) with **strict 2-line clamp**:
+     ```css
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     -webkit-box-orient: vertical;
+     overflow: hidden;
+     ```
+
+5. **Dual-Slot Resting vs. Hover Interaction (Figma Nodes 468:624 & 468:683)**:
+   - The card bottom houses a dedicated `38px` interaction slot (`position: relative; height: 38px; margin-top: auto;`).
+   - **Resting State (Non-Hover)**:
+     Displays metadata (e.g., author avatar 24×24 + author name + right arrow `ArrowUpRight`, or read time / hospital count).
+     `opacity: 1; transition: opacity 0.25s ease, transform 0.25s ease;`
+   - **Hover State (Active Card Hover)**:
+     Resting metadata fades/slides away (`opacity: 0; transform: translateY(-4px); pointer-events: none;`), while the **Full-Width White Action Button** animates into view:
+     ```css
+     .hoverCtaButton {
+       position: absolute;
+       inset: 0;
+       width: 100%;
+       height: 38px;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       gap: 6px;
+       background: #ffffff;
+       color: #034EA2;
+       font-size: 13px;
+       font-weight: 600;
+       border-radius: 8px; /* Strict rounded rectangle, NOT a pill */
+       border: none;
+       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+       opacity: 0;
+       transform: translateY(4px);
+       transition: opacity 0.25s ease, transform 0.25s ease;
+     }
+     .card:hover .hoverCtaButton {
+       opacity: 1;
+       transform: translateY(0);
+     }
+     ```
+   - **Mobile Fallback**: On mobile touch screens where `:hover` is unavailable, the solid white action button remains permanently visible (`opacity: 1; transform: translateY(0);`).
 
 ---
 
