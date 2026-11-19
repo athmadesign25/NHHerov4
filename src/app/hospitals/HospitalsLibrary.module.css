@@ -1050,7 +1050,7 @@
   transform: translateY(-1px);
 }
 
-/* Decision Button 2 (Primary / Main CTA): Read more ↗ - High-Hierarchy NH Brand Blue */
+/* Decision Button 2 (Primary / Main CTA): Read more ↗ - Exact Doctor Card White CTA Style */
 .cardDetailBtn {
   display: inline-flex;
   align-items: center;
@@ -1064,19 +1064,20 @@
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
-  border: 1px solid var(--blue-brand);
-  color: var(--white);
-  background: var(--blue-brand);
-  box-shadow: 0 2px 10px rgba(3, 78, 162, 0.40);
+  border: 1px solid var(--white);
+  color: var(--color-primary, var(--blue-brand));
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.20);
   transition: all var(--duration-base) var(--ease-spring);
   white-space: nowrap;
   box-sizing: border-box;
 }
 
 .cardDetailBtn:hover {
-  background: var(--blue-dark, #023a78);
-  border-color: var(--blue-dark, #023a78);
-  box-shadow: 0 4px 14px rgba(3, 78, 162, 0.60);
+  background: var(--slate-100);
+  border-color: var(--slate-100);
+  color: #023877;
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.28);
   transform: translateY(-1px);
 }
 

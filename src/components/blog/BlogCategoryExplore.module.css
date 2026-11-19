@@ -593,24 +593,29 @@
   height: 38px;
   padding: 0 16px;
   border-radius: 8px;
-  background: var(--color-primary, var(--blue-brand));
-  border: 1px solid var(--color-primary, var(--blue-brand));
-  color: var(--white);
+  background: var(--white);
+  border: 1px solid var(--white);
+  color: var(--color-primary, var(--blue-brand));
   font-size: var(--font-size-xs);
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.20);
   transition: all var(--duration-fast) ease;
 }
 
 .cardDetailBtn:hover {
-  background: var(--blue-600, #023d80);
-  border-color: var(--blue-600, #023d80);
+  background: var(--slate-100);
+  border-color: var(--slate-100);
+  color: #023877;
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.28);
   transform: translateY(-1px);
 }
 
 .pillBtnArrow {
   transition: transform var(--duration-moderate) var(--ease-spring);
+  color: inherit;
 }
 
 .cardDetailBtn:hover .pillBtnArrow {

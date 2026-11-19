@@ -340,21 +340,22 @@
   height: 38px;
   padding: 0 16px;
   border-radius: 8px;
-  background: rgba(var(--white-rgb), 0.14);
-  border: 1px solid rgba(var(--white-rgb), 0.28);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--white);
+  background: var(--white);
+  border: 1px solid var(--white);
+  color: var(--color-primary, var(--blue-brand));
   font-size: var(--font-size-xs);
   font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.20);
   transition: all var(--duration-fast) ease;
 }
 
 .downloadBtn:hover {
-  background: var(--white);
-  color: var(--blue-brand);
-  border-color: var(--white);
+  background: var(--slate-100);
+  border-color: var(--slate-100);
+  color: #023877;
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.28);
   transform: translateY(-1px);
 }
