@@ -4,7 +4,8 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { ChevronRight, ChevronDown, Check, Shield, Award, Virus, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
+import { ChevronRight, ChevronDown, Check, Shield, Award, Star, Clock, MapPin, ArrowUpRight } from "lucide-react";
+import { VirusIcon } from "@/components/ui/icons/VirusIcon";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -1864,7 +1865,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className={styles.subConditionIcon}>
-                      <Virus size={14} stroke="#FEF5F5" />
+                      <VirusIcon size={14} stroke="#FEF5F5" />
                     </div>
                     <div className={styles.subConditionContent}>
                       <motion.div className={styles.subConditionTitle} style={{ color: subTitleColor }}>
@@ -2087,7 +2088,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                     }}
                   >
                     <div className={styles.subConditionIcon}>
-                      <Virus size={14} color="#FEF5F5" />
+                      <VirusIcon size={14} color="#FEF5F5" />
                     </div>
                     <div className={styles.subConditionContent}>
                       <div className={styles.subConditionTitle} style={{ color: "rgb(63, 63, 73)" }}>
