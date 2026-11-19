@@ -17,6 +17,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { CsrProgramItem } from "@/data/csrData";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import CsrProgramModal from "./CsrProgramModal";
 import styles from "./CsrProgramsFlow.module.css";
 
@@ -178,10 +179,15 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
   return (
     <section id="initiatives" className={styles.sectionWrapper} data-nav-theme="light">
       <div className={styles.container}>
-        {/* Section Header */}
+        {/* Section Header (Centered with TextSweepEffect Settling to Light Stage) */}
         <div className={styles.headerBlock}>
-          <span className={styles.eyebrow}>FLAGSHIP CSR PROGRAMS</span>
-          <h2 className={styles.sectionTitle}>Pioneering Grassroots Change</h2>
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect
+              words={["Pioneering Grassroots Change"]}
+              sweepMs={1400}
+              finalColor="#0f172a"
+            />
+          </h2>
           <p className={styles.sectionSubtitle}>
             Four foundational initiatives driving measurable preventive health, educational upliftment, and community dialogue across rural India.
           </p>

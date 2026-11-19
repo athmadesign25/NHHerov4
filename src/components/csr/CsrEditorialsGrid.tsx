@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Download, Calendar, FileText } from "lucide-react";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CsrEditorialItem } from "@/data/csrData";
 import styles from "./CsrEditorialsGrid.module.css";
 
@@ -18,12 +19,17 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
   };
 
   return (
-    <section className={styles.sectionWrapper} data-nav-theme="light">
+    <section className={styles.sectionWrapper} data-nav-theme="dark">
       <div className={styles.container}>
-        {/* Section Header */}
+        {/* Section Header (Centered with TextSweepEffect Settling to Dark Stage) */}
         <div className={styles.headerBlock}>
-          <span className={styles.eyebrow}>PUBLICATIONS &amp; IMPACT BULLETINS</span>
-          <h2 className={styles.sectionTitle}>Downloadable CSR Editorials</h2>
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect
+              words={["Downloadable CSR Editorials"]}
+              sweepMs={1400}
+              finalColor="#FFFFFF"
+            />
+          </h2>
           <p className={styles.sectionSubtitle}>
             Access our quarterly community impact newsletters, pandemic clinical advisories, and certified statutory governance charters.
           </p>

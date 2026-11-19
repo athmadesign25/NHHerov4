@@ -171,14 +171,8 @@ export default function MoreFromOurBlogCarousel({
       data-nav-theme="light"
     >
       <div className={styles.container}>
-        {/* Section Header (Dynamic TextSweepEffect + Scroll-Driven Color) */}
+        {/* Section Header (Dynamic TextSweepEffect Settles to Stage) */}
         <div className={styles.header}>
-          <motion.div
-            className={styles.cleanEyebrow}
-            style={{ color: eyebrowColor }}
-          >
-            CURATED CLINICAL HIGHLIGHTS
-          </motion.div>
           <motion.h2
             className={styles.title}
             style={{
@@ -189,7 +183,7 @@ export default function MoreFromOurBlogCarousel({
             <TextSweepEffect
               words={[title]}
               sweepMs={1400}
-              finalColor="var(--featured-title-color, #0f172a)"
+              finalColor={seamless ? "#FFFFFF" : "#0f172a"}
             />
           </motion.h2>
           {subtitle && (

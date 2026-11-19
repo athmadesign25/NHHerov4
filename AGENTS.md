@@ -434,36 +434,28 @@ When a section features sequential card stacking as the user scrolls (e.g. `CsrP
 - **Mobile Fallback**:
   - On mobile screens (`< 768px`), automatically degrade to a clean vertical stacked list or horizontal swipeable cards with 60fps native scrolling.
 
-#### B. Signature NH Gradient Shimmer Titles
-Section titles across major editorial sections use the signature animated gradient shimmer:
-```css
-.sectionTitle {
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(28px, 3.4vw, 42px);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.18;
-  display: inline-block;
-  background: linear-gradient(
-    90deg,
-    #034EA2 0%,
-    #0284c7 25%,
-    #ED1C24 50%,
-    #0284c7 75%,
-    #034EA2 100%
-  );
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: titleGradientShimmer 4.5s ease infinite;
-}
-
-@keyframes titleGradientShimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+#### B. Universal Section Title Sweep & Settle-to-Stage Standard (<TextSweepEffect />)
+Section titles across major editorial sections (CSR, Blog, Treatments, Diagnostics, Specialities, Home) **MUST** use the signature `<TextSweepEffect />` that sweeps and settles to stage:
+1. **Sweep & Settle Behavior**:
+   - A smooth, branded gradient sweep (`sweepColor: "#034EA2"`, `sweepHighlightColor: "#ED1C24"`, `sweepMs: 1400`) runs on viewport entry.
+   - The sweep **settles completely to the stage**:
+     - **On Dark Stage** (`#060c18` / `#060e1b` dark navy): `finalColor="#FFFFFF"` (crisp solid white).
+     - **On Light Stage** (`#ffffff` / `#f8fafc` light surfaces): `finalColor="#0f172a"` (or `#000000`).
+   - ❌ **STRICTLY FORBIDDEN**: Endless looping rainbow gradient animations (`titleGradientShimmer`, cycling blue/red/sky endlessly) that never settle to stage.
+2. **No Tag Text / Eyebrows Over Section Titles**:
+   - ❌ **STRICTLY FORBIDDEN**: Do NOT add redundant uppercase tag texts or eyebrow badges (e.g., "CURATED CLINICAL HIGHLIGHTS", "PUBLICATIONS & IMPACT BULLETINS", "FLAGSHIP CSR PROGRAMS", "CLINICAL EXCELLENCE IN HEALTH KNOWLEDGE") above section titles. Keep section headers clean and uncluttered: H2 title + clean subtitle.
+3. **Usage Pattern**:
+```tsx
+<h2 className={styles.sectionTitle}>
+  <TextSweepEffect
+    words={["Downloadable CSR Editorials"]}
+    sweepMs={1400}
+    finalColor="#FFFFFF" /* or "#0f172a" on light stage */
+  />
+</h2>
+<p className={styles.sectionSubtitle}>
+  Access our quarterly community impact newsletters and clinical advisories.
+</p>
 ```
 
 #### C. Universal Page-to-Detail Transition & Hero Entrance Contract

@@ -44,47 +44,14 @@
   gap: 12px;
 }
 
-.eyebrow {
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  color: var(--color-primary, var(--blue-brand));
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-@keyframes titleGradientShimmer {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 .sectionTitle {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(28px, 3.4vw, 42px);
+  font-size: clamp(30px, 3.4vw, 44px);
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.18;
   margin: 0;
-  display: inline-block;
-  background: linear-gradient(
-    90deg,
-    var(--blue-brand) 0%,
-    var(--sky-600) 25%,
-    var(--red-emergency) 50%,
-    var(--sky-600) 75%,
-    var(--blue-brand) 100%
-  );
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: titleGradientShimmer 4.5s ease infinite;
+  color: #0f172a;
 }
 
 .sectionSubtitle {
@@ -93,6 +60,7 @@
   line-height: 1.55;
   color: var(--slate-500);
   margin: 0;
+  max-width: 680px;
 }
 
 /* ── Desktop Pinned Stacking Track (Zero empty void at end, 100% complete stacking) ── */
