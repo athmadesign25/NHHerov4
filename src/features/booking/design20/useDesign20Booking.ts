@@ -1,5 +1,6 @@
 "use client";
 
+import { getAppointmentFee } from "@/features/booking/executiveSlots";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
@@ -61,7 +62,10 @@ export default function useDesign20Booking(doctor: BookingDoctorSummary, options
   const [paymentOutcome, setPaymentOutcome] = useState<"success" | "failure">("success");
   const [recoveryUnavailable, setRecoveryUnavailable] = useState(false);
   const [missingReceipt, setMissingReceipt] = useState(false);
-  const currentFee = (value: Design20Draft) => getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: value.selection.hospital }))?.fee ?? doctor.fee;
+  const currentFee = (value: Design20Draft) => getAppointmentFee(
+    getDesign20ProfileDoctor(doctor.id, new URLSearchParams({ hospital: value.selection.hospital }))?.fee ?? doctor.fee,
+    value.selection,
+  );
   const reconcileCoupon = (value: Design20Draft): Design20Draft => value.discountCode && !isDesign20CouponEligible(currentFee(value), value.discountCode, value.sponsorshipId)
     ? { ...value, discountCode: undefined } : value;
   const update = (next: Design20Draft) => { latest.current = next; rememberDesign20Draft(next); setDraft(next); };

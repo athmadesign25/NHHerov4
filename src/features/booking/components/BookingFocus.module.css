@@ -13,6 +13,11 @@
 
 .scrollLocked { overflow: hidden; scrollbar-gutter: stable; }
 
+/* Once root overflow is locked, body's global overflow-x:hidden would become
+   a separate scroll container. Sticky search/filters then anchor to body and
+   jump. Clip horizontally without introducing a new scrolling ancestor. */
+.scrollLocked > :global(body) { overflow-x: clip; overflow-y: visible; }
+
 /* Inline booking remains below sticky search. Split the dimming at the
    toolbar's measured edge so the navbar stays dimmed without covering the card.
    FilterScrollArea updates this edge during scrolling, resizing and nav motion. */

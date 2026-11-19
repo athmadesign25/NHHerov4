@@ -1,5 +1,7 @@
 "use client";
 
+import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +9,8 @@ import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion
 import { ArrowRight, Award } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import styles from "./BlogMedicalExperts.module.css";
+
+const MotionLink = motion.create(Link);
 
 interface ExpertDoctor {
   name: string;
@@ -148,7 +152,7 @@ export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExper
                     </div>
                   </div>
 
-                  <Link href="/doctors" className={styles.refBookBtnWhite}>
+                  <Link href={procedureDoctorBookingHref(doc.name)} className={styles.refBookBtnWhite}>
                     Consult
                   </Link>
                 </div>
@@ -159,8 +163,8 @@ export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExper
 
         {/* Centered Clickable Text CTA (Clean Text Only, No Button Frame) */}
         <div className={styles.centerActionWrap}>
-          <motion.a
-            href="/doctors"
+          <MotionLink
+            href={defaultDoctorListingUrl(new URLSearchParams())}
             className={styles.viewAllTextLink}
             style={{
               color: linkTextColor,
@@ -175,10 +179,9 @@ export default function BlogMedicalExperts({ scrollYProgress }: BlogMedicalExper
             >
               <ArrowRight size={16} className={styles.textLinkArrow} />
             </motion.span>
-          </motion.a>
+          </MotionLink>
         </div>
       </div>
     </section>
   );
 }
-

@@ -1,5 +1,6 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import type Lenis from "lenis";
@@ -122,7 +123,7 @@ export default function BookingSummary({ doctor, flow, onEditingChange, doctorPl
                 <div>
                   <span className={styles.label} data-summary-label>{consistentDetails ? "Slot date & time" : "Date & time"}</span>
                   <div className={doctorPlacement === "appointment" ? styles.slotDetails : undefined}>
-                    <strong className={styles.selectedSlot} data-summary-date>{selection.time ? consistentDetails ? <><span data-summary-day><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.slotSeparator} aria-hidden>·</span></span><span className={styles.slotTime}>{selection.time}</span></> : <><span>{formatBookingDate(selection.date, "short")}</span><span className={styles.slotTime}><span className={styles.slotSeparator} aria-hidden>·</span>{selection.time}</span></> : "Choose a time"}</strong>
+                    <SlotSelectionValue selection={selection}><strong className={styles.selectedSlot} data-summary-date>{selection.time ? consistentDetails ? <><span data-summary-day><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.slotSeparator} aria-hidden>·</span></span><span className={styles.slotTime}>{selection.time}</span></> : <><span>{formatBookingDate(selection.date, "short")}</span><span className={styles.slotTime}><span className={styles.slotSeparator} aria-hidden>·</span>{selection.time}</span></> : "Choose a time"}</strong></SlotSelectionValue>
                     {doctorPlacement === "appointment" && <button id={`${id}-appointment-edit`} type="button" className={styles.edit} aria-label={selection.mode === "hospital" ? "Edit slot and location" : "Edit slot"} disabled={busy} onClick={() => { setAppointmentUpdated(0); setEditor(true); }}>Edit</button>}
                   </div>
                   <div className={styles.updateFeedback} aria-hidden="true">

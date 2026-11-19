@@ -13,11 +13,19 @@ a second copy of state or change the booking flow.
 | `memberSelection.ts` | Shared selected member, subscriptions and confirmation protection | Client |
 | `MemberAvatar.tsx` | Member image with initials fallback | Client component |
 | `BookingMemberPicker.tsx` | Existing member selection | Client component |
+| `BookingFocus.tsx` | Existing backdrop and focus management for expanded booking/cart surfaces | Client |
+| `BookingFocusGlow.tsx` | Shared opening glow for booking/cart surfaces | Client component |
+| `BookingSupportContact.tsx` | Shared booking support contact control | Client component |
 | `NewPatient.tsx` | New member form | Client component |
 | `RazorpayDemo.tsx` | Frontend demo payment gateway | Client component |
 | `BookingActionBar.tsx` | Existing booking FAB surface and animated amount with neutral action labels | Client component |
 | `BookingOutcomeActions.tsx` | Persistent confirmation/reservation FAB with contextual message or payable amount; reserves space below page content | Client component |
 | `SuccessMark.tsx` | Existing confirmation tick and success microinteraction | Client component |
+
+`BookingDockSurface.module.css` owns the common payment/action dock surface.
+Booking payment, Health checkout and outcome actions reuse it; adjust this shared
+surface here instead of adding overrides in a numbered screen folder. The move
+preserves the existing styling and responsive rules.
 
 Import the specific entry needed. Keep pure utilities and types separate from
 client components; do not add a combined barrel that pulls browser code into

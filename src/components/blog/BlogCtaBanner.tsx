@@ -1,5 +1,6 @@
 "use client";
 
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import React from "react";
 import Link from "next/link";
 import { Calendar, PhoneCall, ArrowRight, ShieldCheck } from "lucide-react";
@@ -72,14 +73,14 @@ export default function BlogCtaBanner({
 
             <div className={styles.actionsRow}>
               {primaryBtn && (
-                <Link href={primaryBtn.href} className={styles.primaryBtn}>
+                <Link href={primaryBtn.href === "/doctors" ? defaultDoctorListingUrl(new URLSearchParams()) : primaryBtn.href} className={styles.primaryBtn}>
                   {primaryBtn.icon || <Calendar size={17} />}
                   <span>{primaryBtn.text}</span>
                 </Link>
               )}
 
               {secondaryBtn && (
-                <Link href={secondaryBtn.href} className={styles.secondaryBtn}>
+                <Link href={secondaryBtn.href === "/health-packages" ? "/health-checkups" : secondaryBtn.href} className={styles.secondaryBtn}>
                   <span>{secondaryBtn.text}</span>
                   {secondaryBtn.icon || <ArrowRight size={15} />}
                 </Link>
@@ -98,4 +99,3 @@ export default function BlogCtaBanner({
     </section>
   );
 }
-

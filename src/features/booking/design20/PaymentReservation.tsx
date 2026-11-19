@@ -1,5 +1,6 @@
 "use client";
 
+import SlotSelectionValue from "@/features/booking/components/SlotSelectionValue";
 import { useEffect, useId, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { CalendarDays, Clock3, MapPin, Video } from "lucide-react";
@@ -20,10 +21,12 @@ type Props = {
   member?: SavedPatient;
   selection: AppointmentSelection;
   total: string;
+  busy: boolean;
+  onRetry: () => void;
   onChooseSlot: () => void;
 };
 
-export default function PaymentReservation({ seconds, expired, doctor, member, selection, total, onChooseSlot }: Props) {
+export default function PaymentReservation({ seconds, expired, doctor, member, selection, total, busy, onRetry, onChooseSlot }: Props) {
   const titleId = useId();
   const heading = useRef<HTMLHeadingElement>(null);
   const reduced = useReducedMotion();
@@ -49,7 +52,7 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
       <h1 ref={heading} tabIndex={-1} id={titleId}>{expired ? "Your slot reservation has expired" : "Your slot is reserved"}</h1>
       <p className={styles.description}>{expired
         ? "The slot has been released. Choose another available time to complete your booking."
-        : "Complete payment in your patient portal before the timer ends to confirm your appointment."}</p>
+        : "Retry payment before the timer ends to confirm your appointment."}</p>
       {!expired && <div className={styles.timerGroup}>
         <span className={styles.timer} role="timer" aria-live="off" aria-label={`${minutes} minutes ${remaining % 60} seconds remaining`}>{minutes}:{secondsPart}</span>
         <span className={styles.timerLabel}>remaining</span>
@@ -78,7 +81,7 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
           </div>
           <div className={styles.detail}>
             <span className={styles.detailIcon} aria-hidden><CalendarDays size={18} /></span>
-            <div><p className={styles.label}>Slot date &amp; time</p><p className={styles.value}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden> · </span><span className={styles.time}>{selection.time}</span></p></div>
+            <div><p className={styles.label}>Slot date &amp; time</p><div className={styles.slotLine}><SlotSelectionValue selection={selection}><p className={styles.value}><time dateTime={selection.date}>{formatBookingDate(selection.date)}</time><span className={styles.dot} aria-hidden> · </span><span className={styles.time}>{selection.time}</span></p></SlotSelectionValue></div></div>
           </div>
         </div>
       </section>
@@ -88,8 +91,8 @@ export default function PaymentReservation({ seconds, expired, doctor, member, s
       label={expired ? "Expired reservation actions" : "Reserved appointment actions"}
       amount={expired ? undefined : { label: "Amount to pay", value: total }}
       primary={expired
-        ? { label: "Choose another slot", onClick: onChooseSlot }
-        : { label: "Open patient portal", href: "https://narayana.health/phrportal", external: true }}
+        ? { label: "Choose another slot", onClick: onChooseSlot, disabled: busy }
+        : { label: busy ? "Opening payment…" : "Retry payment", onClick: onRetry, disabled: busy }}
       secondary={{ label: "Back to home", href: "/" }}
     />
   </>;

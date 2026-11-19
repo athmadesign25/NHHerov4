@@ -47,7 +47,7 @@
 .scrimOverlay {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     /* Horizontal gradient: dark on left for clean text readability, transparent on right to showcase festive blog photo */
     linear-gradient(
       90deg,

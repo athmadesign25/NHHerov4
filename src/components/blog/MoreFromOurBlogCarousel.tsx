@@ -124,7 +124,7 @@ export default function MoreFromOurBlogCarousel({
         </div>
 
         {/* Carousel Scroll Track (Pauses on Hover / Touch) */}
-        <div 
+        <div
           className={styles.carouselWrapper}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
@@ -226,4 +226,3 @@ export default function MoreFromOurBlogCarousel({
     </section>
   );
 }
-

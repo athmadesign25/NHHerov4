@@ -42,8 +42,8 @@ export default function DoctorFAQ({ doctorName, faqs }: DoctorFAQProps) {
         {displayFaqs.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={[styles.faqItem, isOpen ? styles.faqItemOpen : ""].join(" ")}
             >
               <button
@@ -52,9 +52,9 @@ export default function DoctorFAQ({ doctorName, faqs }: DoctorFAQProps) {
                 aria-expanded={isOpen}
               >
                 <span className={styles.questionText}>{faq.question}</span>
-                <ChevronDown 
-                  size={18} 
-                  className={[styles.icon, isOpen ? styles.iconOpen : ""].join(" ")} 
+                <ChevronDown
+                  size={18}
+                  className={[styles.icon, isOpen ? styles.iconOpen : ""].join(" ")}
                 />
               </button>
               <AnimatePresence initial={false}>
@@ -76,7 +76,7 @@ export default function DoctorFAQ({ doctorName, faqs }: DoctorFAQProps) {
           );
         })}
       </div>
-      
+
       {/* Hidden JSON-LD for Schema.org AEO optimization */}
       <script
         type="application/ld+json"
