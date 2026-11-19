@@ -163,17 +163,20 @@
   filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
-/* Atmospheric Gradient Scrim (Exact Figma "Image fade": Top 36% transparent, feathers to 0.94 at 66%) */
+/* Atmospheric Gradient Scrim (Exact Figma Node 468:385 / 486:770 Specification) */
 .cardOverlay {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 281px;
+  max-height: 100%;
   background: linear-gradient(
     180deg,
-    rgba(var(--navy-900-rgb), 0) 0%,
-    rgba(var(--navy-900-rgb), 0) 36%,
-    rgba(var(--navy-900-rgb), 0.45) 52%,
-    rgba(var(--navy-900-rgb), 0.94) 66%,
-    rgba(var(--navy-900-rgb), 0.94) 100%
+    rgba(7, 19, 34, 0) 7.95%,
+    rgba(7, 19, 34, 0.677) 46.73%,
+    rgba(7, 19, 34, 0.859) 73.41%,
+    rgba(7, 19, 34, 0.94) 100%
   );
   pointer-events: none;
   z-index: 2;

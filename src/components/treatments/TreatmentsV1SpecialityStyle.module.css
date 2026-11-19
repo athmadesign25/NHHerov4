@@ -809,13 +809,17 @@
 
 .cardOverlay {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 281px;
+  max-height: 100%;
   background: linear-gradient(
     180deg,
-    rgba(var(--navy-900-rgb), 0.15) 0%,
-    rgba(var(--navy-900-rgb), 0.35) 45%,
-    rgba(var(--navy-900-rgb), 0.92) 85%,
-    rgba(var(--navy-900-rgb), 0.98) 100%
+    rgba(7, 19, 34, 0) 7.95%,
+    rgba(7, 19, 34, 0.677) 46.73%,
+    rgba(7, 19, 34, 0.859) 73.41%,
+    rgba(7, 19, 34, 0.94) 100%
   );
   z-index: 2;
   transition: opacity var(--duration-emphasis) ease;
