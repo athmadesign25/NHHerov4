@@ -195,6 +195,12 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                   className={styles.blogCard}
                 >
                   <div className={styles.cardLink}>
+                    {/* Top Right Date Badge from Figma 468:624 */}
+                    <div className={styles.dateBadge}>
+                      <Calendar size={12} className={styles.dateIcon} />
+                      <span>{article.publishedDate}</span>
+                    </div>
+
                     {/* Full Card Image Background */}
                     <Image
                       src={article.image || "/images/articles/blog_heart_health.png"}
@@ -225,23 +231,31 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                         </p>
                       </div>
 
-                      {/* Card Bottom Slot: Resting Meta vs Hover Read More Action */}
+                      {/* Card Bottom Slot: Resting (Author + Arrow) vs Hover Full CTA ("Read more") */}
                       <div className={styles.cardBottomSlot}>
-                        <div className={styles.cardRestingMeta}>
-                          <span className={styles.metaBadge}>
-                            <Calendar size={13} className={styles.metaIcon} />
-                            <span>{article.publishedDate}</span>
-                          </span>
-                          <span className={styles.metaDivider} aria-hidden="true" />
-                          <span className={styles.metaBadge}>
-                            <Clock size={13} className={styles.metaIcon} />
-                            <span>{article.readTime}</span>
-                          </span>
+                        <div className={styles.cardRestingBottom}>
+                          <div className={styles.authorGroup}>
+                            <div className={styles.authorBadge}>
+                              {article.authorAvatar ? (
+                                <Image
+                                  src={article.authorAvatar}
+                                  alt={article.author}
+                                  width={24}
+                                  height={24}
+                                  className={styles.authorImg}
+                                />
+                              ) : (
+                                <span className={styles.authorInitials}>{initials}</span>
+                              )}
+                            </div>
+                            <span className={styles.authorName}>{article.author}</span>
+                          </div>
+                          <ArrowUpRight size={18} className={styles.restingArrow} />
                         </div>
 
                         <div className={styles.cardActions}>
                           <Link href={`/blog/${article.slug}`} className={styles.cardDetailBtn}>
-                            <span>Read Article</span>
+                            <span>Read more</span>
                             <ArrowUpRight size={13} className={styles.pillBtnArrow} />
                           </Link>
                         </div>

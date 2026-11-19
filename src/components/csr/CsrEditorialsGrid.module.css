@@ -132,13 +132,13 @@
   box-sizing: border-box;
   border: none !important;
   outline: none !important;
-  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
-  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease;
+  box-shadow: none !important;
+  transition: transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .editorialCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
+  box-shadow: none !important;
 }
 
 .cardBgImage {

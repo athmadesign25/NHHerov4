@@ -383,13 +383,13 @@
   box-sizing: border-box;
   border: none !important;
   outline: none !important;
-  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
-  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease;
+  box-shadow: none !important;
+  transition: transform var(--duration-emphasis) var(--ease-spring);
 }
 
 .cardLink:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
+  box-shadow: none !important;
 }
 
 .cardBgImage {
@@ -492,7 +492,34 @@
   text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
 }
 
-/* ─── CARD BOTTOM SLOT: RESTING META VS HOVER ACTION BUTTONS ─────── */
+/* Top Right Date Badge from Figma 468:624 */
+.dateBadge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6.2px;
+  padding: 4px 8px;
+  border-radius: 9px;
+  background: rgba(43, 37, 37, 0.42);
+  backdrop-filter: blur(6.65px);
+  -webkit-backdrop-filter: blur(6.65px);
+  border: 0.25px solid rgba(183, 183, 183, 0.18);
+  color: rgba(var(--white-rgb), 0.82);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  pointer-events: none;
+}
+
+.dateIcon {
+  color: rgba(var(--white-rgb), 0.82);
+  flex-shrink: 0;
+}
+
+/* ─── CARD BOTTOM SLOT: RESTING (AUTHOR + ARROW) VS HOVER FULL CTA ─────── */
 .cardBottomSlot {
   position: relative;
   width: 100%;
@@ -502,40 +529,70 @@
   box-sizing: border-box;
 }
 
-/* Resting State: Date & Read Time */
-.cardRestingMeta {
+/* Resting State: Author Avatar + Name on Left, Arrow Up-Right on Right (Figma 468:624) */
+.cardRestingBottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   height: 38px;
   padding-top: 6px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.12);
   transition: opacity var(--duration-moderate) var(--ease-spring),
               transform var(--duration-moderate) var(--ease-spring);
 }
 
-.metaBadge {
+.authorGroup {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.88);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
+  gap: 7px;
+  min-width: 0;
 }
 
-.metaIcon {
-  color: var(--cyan-bright);
+.authorBadge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
   flex-shrink: 0;
-}
-
-.metaDivider {
-  width: 1px;
-  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(var(--white-rgb), 0.18);
+}
+
+.authorImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.authorInitials {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.authorName {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.restingArrow {
+  color: rgba(var(--white-rgb), 0.8);
   flex-shrink: 0;
+  transition: transform var(--duration-base) var(--ease-spring),
+              color var(--duration-base) ease;
+}
+
+.cardLink:hover .restingArrow {
+  transform: translate(2px, -2px);
+  color: var(--white);
 }
 
 /* Action Buttons Container: Slides in smoothly on desktop hover */
@@ -557,13 +614,15 @@
                 transform var(--duration-moderate) var(--ease-spring);
   }
 
-  .cardLink:hover .cardRestingMeta {
+  .cardLink:hover .cardRestingBottom,
+  .cardLink:focus-within .cardRestingBottom {
     opacity: 0;
     transform: translateY(-4px);
     pointer-events: none;
   }
 
-  .cardLink:hover .cardActions {
+  .cardLink:hover .cardActions,
+  .cardLink:focus-within .cardActions {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -571,7 +630,7 @@
 }
 
 @media (max-width: 1024px), (hover: none) {
-  .cardRestingMeta {
+  .cardRestingBottom {
     display: none;
   }
 
@@ -595,7 +654,7 @@
   background: var(--white);
   border: 1px solid var(--white);
   color: var(--color-primary, var(--blue-brand));
-  font-size: var(--font-size-xs);
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;

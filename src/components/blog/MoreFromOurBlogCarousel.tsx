@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useTransform, useMotionValue, MotionValue } from "framer-motion";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight, ArrowUpRight, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import styles from "./MoreFromOurBlogCarousel.module.css";
@@ -215,7 +215,13 @@ export default function MoreFromOurBlogCarousel({
 
               return (
                 <div key={item.id} className={styles.cardItem}>
-                  <Link href={`/blog/${item.slug}`} className={styles.blogCard}>
+                  <div className={styles.blogCard}>
+                    {/* Top Right Date Badge from Figma 468:624 */}
+                    <div className={styles.dateBadge}>
+                      <Calendar size={12} className={styles.dateIcon} />
+                      <span>{item.publishedDate}</span>
+                    </div>
+
                     {/* Full Background Image */}
                     <Image
                       src={item.image || "/images/articles/blog_heart_health.png"}
@@ -225,36 +231,56 @@ export default function MoreFromOurBlogCarousel({
                       className={styles.cardBgImage}
                     />
 
-                    {/* Signature Multi-Stop Gradient Scrim */}
+                    {/* Signature Multi-Stop Gradient Scrim (Exact Figma "Image fade") */}
                     <div className={styles.cardOverlay} />
 
-                    {/* Text On Scrim Content (Category, Title, Date, Author) */}
+                    {/* Bottom Card Content Layered On Gradient */}
                     <div className={styles.cardContent}>
-                      <div className={styles.cardMetaRow}>
-                        <span className={styles.cardCategory}>{item.category}</span>
-                        <span className={styles.cardMetaDot}>•</span>
-                        <span className={styles.cardDate}>{item.publishedDate}</span>
+                      <div className={styles.cardTextGroup}>
+                        <div className={styles.cardCategory}>{item.category}</div>
+
+                        <Link href={`/blog/${item.slug}`} className={styles.cardTitleLink}>
+                          <h3 className={styles.cardTitle} title={item.title}>
+                            {item.title}
+                          </h3>
+                        </Link>
+
+                        <p className={styles.cardSub}>
+                          {item.summary}
+                        </p>
                       </div>
 
-                      <div className={styles.cardTitleRow}>
-                        <h3 className={styles.cardTitle} title={item.title}>
-                          {item.title}
-                        </h3>
-                        <ArrowRight size={16} className={styles.cardArrow} />
-                      </div>
-
-                      <div className={styles.cardAuthorRow}>
-                        <div
-                          className={`${styles.authorAvatar} ${
-                            isNH ? styles.authorAvatarNH : styles.authorAvatarDoc
-                          }`}
-                        >
-                          {initials}
+                      {/* Card Bottom Slot: Resting (Author + Arrow) vs Hover Full CTA ("Read more") */}
+                      <div className={styles.cardBottomSlot}>
+                        <div className={styles.cardRestingBottom}>
+                          <div className={styles.authorGroup}>
+                            <div className={styles.authorBadge}>
+                              {item.authorAvatar ? (
+                                <Image
+                                  src={item.authorAvatar}
+                                  alt={item.author}
+                                  width={24}
+                                  height={24}
+                                  className={styles.authorImg}
+                                />
+                              ) : (
+                                <span className={styles.authorInitials}>{initials}</span>
+                              )}
+                            </div>
+                            <span className={styles.authorName}>{item.author}</span>
+                          </div>
+                          <ArrowUpRight size={18} className={styles.restingArrow} />
                         </div>
-                        <span className={styles.authorName}>{item.author}</span>
+
+                        <div className={styles.cardActions}>
+                          <Link href={`/blog/${item.slug}`} className={styles.cardDetailBtn}>
+                            <span>Read more</span>
+                            <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               );
             })}

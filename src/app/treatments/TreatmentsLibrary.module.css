@@ -813,14 +813,13 @@
   justify-content: flex-end;
   min-height: 440px;
   height: 100%;
-  transition: transform var(--duration-emphasis) var(--ease-spring),
-              box-shadow var(--duration-emphasis) var(--ease-spring);
-  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
+  transition: transform var(--duration-emphasis) var(--ease-spring);
+  box-shadow: none !important;
 }
 
 .procedureCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
+  box-shadow: none !important;
 }
 
 /* Full-height background image layer extending behind the gradient & text */
@@ -1396,7 +1395,7 @@
     overflow: hidden;
     border: none !important;
     outline: none !important;
-    box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.30);
+    box-shadow: none !important;
     background: #090d16;
     transition: transform var(--duration-moderate) ease, box-shadow var(--duration-moderate) ease;
     text-decoration: none;
