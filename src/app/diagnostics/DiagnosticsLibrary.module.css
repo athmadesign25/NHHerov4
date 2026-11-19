@@ -803,21 +803,21 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 400px;
+  min-height: 440px;
   height: 100%;
   box-sizing: border-box;
   border: 1px solid rgba(var(--white-rgb), 0.12);
   outline: none;
-  background-color: #090d16;
-  box-shadow: 0 6px 24px rgba(var(--black-rgb), 0.36);
+  background-color: var(--navy-900);
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
   transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease, border-color var(--duration-moderate) ease;
   text-decoration: none;
 }
 
 .procedureCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.55);
-  border-color: rgba(var(--white-rgb), 0.25);
+  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
+  border-color: rgba(var(--white-rgb), 0.28);
 }
 
 /* Full-bleed background image with crystal clarity */
@@ -827,77 +827,42 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 25%;
-  transition: transform var(--duration-slower) var(--ease-spring);
+  object-position: center 20%;
+  filter: brightness(0.96) saturate(1.08) contrast(1.02);
+  transition: transform var(--duration-slower) var(--ease-spring), filter var(--duration-moderate) ease;
   z-index: 1;
 }
 
 .procedureCard:hover .cardBgImage {
   transform: scale(1.05);
+  filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
-/* Top Vignette Scrim (Protects Top-Left Category Text) */
-.cardTopScrim {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: linear-gradient(
-    180deg,
-    rgba(6, 12, 24, 0.72) 0%,
-    rgba(6, 12, 24, 0.35) 45%,
-    transparent 100%
-  );
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* Pure Top-Left Category Text (NO bulky pill container) */
-.cardTopCategoryText {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  z-index: 3;
-  font-family: Inter, var(--font-sans), sans-serif;
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.85);
-  pointer-events: none;
-}
-
-/* Rich Photography Bottom Gradient Scrim */
-.cardBottomScrim {
+/* Atmospheric Gradient Scrim (Exact Figma "Image fade": Top 36% transparent, feathers to 0.94 at 66%) */
+.cardGradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(6, 12, 24, 0.98) 0%,
-    rgba(6, 12, 24, 0.92) 36%,
-    rgba(6, 12, 24, 0.65) 62%,
-    rgba(6, 12, 24, 0.18) 82%,
-    transparent 95%
+    180deg,
+    rgba(var(--navy-900-rgb), 0) 0%,
+    rgba(var(--navy-900-rgb), 0) 36%,
+    rgba(var(--navy-900-rgb), 0.45) 52%,
+    rgba(var(--navy-900-rgb), 0.94) 66%,
+    rgba(var(--navy-900-rgb), 0.94) 100%
   );
-  z-index: 2;
-  transition: opacity var(--duration-emphasis) ease;
   pointer-events: none;
-}
-
-.procedureCard:hover .cardBottomScrim {
-  opacity: 0.96;
+  z-index: 2;
 }
 
 /* Content block overlaid on bottom gradient scrim */
 .cardContent {
   position: relative;
   z-index: 3;
-  padding: 22px 20px;
+  padding: 22px 22px 20px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: flex-end;
+  height: 100%;
   box-sizing: border-box;
   width: 100%;
   margin-top: auto;
@@ -907,7 +872,18 @@
 .cardTextGroup {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  margin-top: auto;
+}
+
+.cardEyebrow {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  margin-bottom: 8px;
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.75);
 }
 
 .cardTitleLink {
@@ -917,19 +893,19 @@
 
 .cardTitle {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  line-height: 1.32;
+  line-height: var(--leading-snug);
   letter-spacing: -0.015em;
   color: var(--white);
-  margin: 0;
+  margin: 0 0 8px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 44px;
-  text-shadow: 0 2px 4px rgba(var(--black-rgb), 0.85);
-  transition: color var(--duration-base) ease;
+  min-height: 52px;
+  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.80);
 }
 
 .cardTitleLink:hover .cardTitle {
@@ -937,23 +913,26 @@
 }
 
 .cardSub {
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: rgba(var(--white-rgb), 0.85);
-  margin: 0 0 2px 0;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: rgba(var(--white-rgb), 0.78);
+  margin: 0 0 16px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 36px;
-  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.75);
+  min-height: 38px;
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
 }
 
 /* ─── CARD BOTTOM SLOT: RESTING META & ACTION BUTTONS ─────── */
 .cardBottomSlot {
   position: relative;
-  margin-top: 4px;
-  height: 36px;
+  width: 100%;
+  height: 38px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -963,34 +942,31 @@
 .cardRestingMeta {
   display: flex;
   align-items: center;
-  gap: 7px;
-  flex-wrap: nowrap;
-  overflow: hidden;
+  justify-content: space-between;
   width: 100%;
-  height: 32px;
-  transition: opacity var(--duration-base) var(--ease-spring),
-              transform var(--duration-base) var(--ease-spring);
+  height: 38px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(var(--white-rgb), 0.12);
+  transition: opacity var(--duration-moderate) var(--ease-spring),
+              transform var(--duration-moderate) var(--ease-spring);
 }
 
 .metaBadge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 10px;
-  border-radius: var(--radius-full, 9999px);
-  background: rgba(var(--white-rgb), 0.12);
-  border: 1px solid rgba(var(--white-rgb), 0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  gap: 6px;
   font-size: var(--font-size-xs);
-  font-weight: 600;
-  color: var(--white);
+  color: rgba(var(--white-rgb), 0.88);
+  font-weight: 500;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.6);
+}
+
+.metaDivider {
+  width: 1px;
+  height: 16px;
+  background: rgba(var(--white-rgb), 0.18);
+  flex-shrink: 0;
 }
 
 .metaIcon {

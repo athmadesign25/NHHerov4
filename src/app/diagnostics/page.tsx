@@ -425,20 +425,16 @@ export default function DiagnosticsLibraryPage() {
                         className={styles.cardBgImage}
                       />
 
-                      {/* 2. Soft Top Gradient Scrim for Top Category Text */}
-                      <div className={styles.cardTopScrim} />
+                      {/* 2. Atmospheric Gradient Scrim (Exact Figma "Image fade") */}
+                      <div className={styles.cardGradient} />
 
-                      {/* 3. Pure Top-Left Category Text (NO bulky pill container) */}
-                      <span className={styles.cardTopCategoryText}>
-                        {item.modality}
-                      </span>
-
-                      {/* 4. Rich Photography Bottom Gradient Scrim */}
-                      <div className={styles.cardBottomScrim} />
-
-                      {/* 5. Content Overlaid on Scrim */}
+                      {/* 3. Content Overlaid on Scrim */}
                       <div className={styles.cardContent}>
                         <div className={styles.cardTextGroup}>
+                          <div className={styles.cardEyebrow}>
+                            {item.modality}
+                          </div>
+
                           <Link href={detailUrl} className={styles.cardTitleLink}>
                             <h2 className={styles.cardTitle}>
                               {item.title}
@@ -453,12 +449,13 @@ export default function DiagnosticsLibraryPage() {
                         <div className={styles.cardBottomSlot}>
                           <div className={styles.cardRestingMeta}>
                             <span className={styles.metaBadge}>
-                              <Clock size={11} className={styles.metaIcon} />
-                              <span>{item.turnaroundTime}</span>
+                              <Clock size={13} className={styles.metaIcon} />
+                              <span>{item.turnaroundTime || "Within 30 Minutes"}</span>
                             </span>
+                            <span className={styles.metaDivider} aria-hidden="true" />
                             <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
-                              <span>{item.preparation}</span>
+                              <Activity size={13} className={styles.metaIcon} />
+                              <span>{item.preparation || "No Fasting Required"}</span>
                             </span>
                           </div>
 

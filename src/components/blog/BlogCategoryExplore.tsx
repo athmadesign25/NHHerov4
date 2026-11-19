@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight } from "lucide-react";
+import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight, Clock, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
@@ -194,7 +194,7 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                   transition={{ duration: 0.4, delay: Math.min(idx * 0.05, 0.4) }}
                   className={styles.blogCard}
                 >
-                  <Link href={`/blog/${article.slug}`} className={styles.cardLink}>
+                  <div className={styles.cardLink}>
                     {/* Full Card Image Background */}
                     <Image
                       src={article.image || "/images/articles/blog_heart_health.png"}
@@ -204,37 +204,50 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
                       className={styles.cardBgImage}
                     />
 
-                    {/* Gradient Scrim Overlay */}
-                    <div className={styles.cardOverlay} />
+                    {/* Atmospheric Gradient Scrim (Exact Figma "Image fade") */}
+                    <div className={styles.cardGradient} />
 
                     {/* Bottom Card Content Layered On Gradient */}
-                    <div className={styles.cardTextContent}>
-                      <div className={styles.cardMetaRow}>
-                        <span className={styles.cardCategory}>{article.category}</span>
-                        <span className={styles.cardMetaDot}>•</span>
-                        <span className={styles.cardDate}>{article.publishedDate}</span>
-                      </div>
-
-                      <div className={styles.cardTitleRow}>
-                        <h3 className={styles.cardTitle} title={article.title}>
-                          {article.title}
-                        </h3>
-                        <ArrowRight size={17} strokeWidth={2.5} className={styles.cardArrow} />
-                      </div>
-
-                      {/* Author Row */}
-                      <div className={styles.cardAuthorRow}>
-                        <div
-                          className={`${styles.authorAvatarBadge} ${
-                            isNH ? styles.authorAvatarNH : styles.authorAvatarDoc
-                          }`}
-                        >
-                          {initials}
+                    <div className={styles.cardContent}>
+                      <div className={styles.cardTextGroup}>
+                        <div className={styles.cardEyebrow}>
+                          {article.category}
                         </div>
-                        <span className={styles.authorName}>{article.author}</span>
+
+                        <Link href={`/blog/${article.slug}`} className={styles.cardTitleLink}>
+                          <h3 className={styles.cardTitle} title={article.title}>
+                            {article.title}
+                          </h3>
+                        </Link>
+
+                        <p className={styles.cardSub}>
+                          {article.summary}
+                        </p>
+                      </div>
+
+                      {/* Card Bottom Slot: Resting Meta vs Hover Read More Action */}
+                      <div className={styles.cardBottomSlot}>
+                        <div className={styles.cardRestingMeta}>
+                          <span className={styles.metaBadge}>
+                            <Calendar size={13} className={styles.metaIcon} />
+                            <span>{article.publishedDate}</span>
+                          </span>
+                          <span className={styles.metaDivider} aria-hidden="true" />
+                          <span className={styles.metaBadge}>
+                            <Clock size={13} className={styles.metaIcon} />
+                            <span>{article.readTime}</span>
+                          </span>
+                        </div>
+
+                        <div className={styles.cardActions}>
+                          <Link href={`/blog/${article.slug}`} className={styles.cardDetailBtn}>
+                            <span>Read Article</span>
+                            <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </motion.article>
               );
             })}

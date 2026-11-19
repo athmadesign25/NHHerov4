@@ -538,11 +538,12 @@ export default function TreatmentsV2Library({
                           {/* Non-hover Resting State: Clinical Procedure Facts (Fades away smoothly on hover on desktop) */}
                           <div className={styles.cardRestingMeta}>
                             <span className={styles.metaBadge}>
-                              <Clock size={11} className={styles.metaIcon} />
+                              <Clock size={13} className={styles.metaIcon} />
                               <span>{item.hospitalStay ? `Stay: ${item.hospitalStay}` : "Minimal Stay"}</span>
                             </span>
+                            <span className={styles.metaDivider} aria-hidden="true" />
                             <span className={styles.metaBadge}>
-                              <Activity size={11} className={styles.metaIcon} />
+                              <Activity size={13} className={styles.metaIcon} />
                               <span>{item.recoveryTime ? `Recovery: ${item.recoveryTime}` : "Fast Recovery"}</span>
                             </span>
                           </div>

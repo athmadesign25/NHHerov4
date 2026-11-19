@@ -352,12 +352,12 @@
   }
 
   .cardLink {
-    aspect-ratio: 1 / 0.88;
-    padding: 16px;
+    min-height: 400px;
+    padding: 18px;
   }
 
   .cardTitle {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-lg);
   }
 }
 
@@ -365,31 +365,32 @@
   height: 100%;
 }
 
-/* Card on White Background: Clean, No Outline/Border, Luminous Photography */
+/* Card on White Background: Exact Figma Design Specification */
 .cardLink {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-radius: 14px;
+  border-radius: 20px;
   overflow: hidden;
   text-decoration: none;
-  background-color: transparent;
-  aspect-ratio: 1 / 1;
+  background-color: var(--navy-900);
+  min-height: 440px;
+  height: 100%;
   width: 100%;
   cursor: pointer;
-  padding: 22px;
+  padding: 22px 22px 20px;
   box-sizing: border-box;
-  border: none !important;
+  border: 1px solid rgba(var(--white-rgb), 0.12);
   outline: none !important;
-  box-shadow: 0 2px 10px rgba(var(--black-rgb), 0.05);
-  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease;
+  box-shadow: 0 4px 16px rgba(var(--black-rgb), 0.20);
+  transition: transform var(--duration-emphasis) var(--ease-spring), box-shadow var(--duration-emphasis) ease, border-color var(--duration-moderate) ease;
 }
 
 .cardLink:hover {
-  transform: translateY(-4px);
-  border: none !important;
-  box-shadow: 0 10px 24px rgba(var(--black-rgb), 0.10);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(var(--black-rgb), 0.45);
+  border-color: rgba(var(--white-rgb), 0.28);
 }
 
 .cardBgImage {
@@ -398,152 +399,222 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-slower) var(--ease-spring);
+  object-position: center 20%;
+  filter: brightness(0.96) saturate(1.08) contrast(1.02);
+  transition: transform var(--duration-slower) var(--ease-spring), filter var(--duration-moderate) ease;
   z-index: 1;
 }
 
 .cardLink:hover .cardBgImage {
   transform: scale(1.05);
+  filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
-/* Appropriate Scrim on White Background: Upper 50% 100% transparent, soft gradient only on bottom text area */
-.cardOverlay {
+/* Atmospheric Gradient Scrim (Exact Figma "Image fade": Top 36% transparent, feathers to 0.94 at 66%) */
+.cardGradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top,
-    rgba(6, 11, 20, 0.85) 0%,
-    rgba(6, 11, 20, 0.52) 26%,
-    rgba(6, 11, 20, 0.12) 46%,
-    transparent 66%
+    180deg,
+    rgba(var(--navy-900-rgb), 0) 0%,
+    rgba(var(--navy-900-rgb), 0) 36%,
+    rgba(var(--navy-900-rgb), 0.45) 52%,
+    rgba(var(--navy-900-rgb), 0.94) 66%,
+    rgba(var(--navy-900-rgb), 0.94) 100%
   );
-  z-index: 2;
-  transition: opacity var(--duration-emphasis) ease;
   pointer-events: none;
+  z-index: 2;
 }
 
-.cardLink:hover .cardOverlay {
-  opacity: 0.92;
-}
-
-.cardTextContent {
+.cardContent {
   position: relative;
   z-index: 3;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: flex-end;
+  height: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: auto;
 }
 
-.cardMetaRow {
+.cardTextGroup {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--font-size-xs);
+  flex-direction: column;
+  margin-top: auto;
 }
 
-.cardCategory {
+.cardEyebrow {
+  font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs);
   font-weight: 600;
-  color: rgba(var(--white-rgb), 0.92);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.5);
+  letter-spacing: 0.08em;
+  color: var(--white);
+  margin-bottom: 8px;
+  text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.75);
 }
 
-.cardMetaDot {
-  color: rgba(var(--white-rgb), 0.5);
-  font-size: var(--font-size-2xs);
-}
-
-.cardDate {
-  font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.72);
-  font-weight: 400;
-  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.4);
-}
-
-.cardTitleRow {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
+.cardTitleLink {
+  text-decoration: none;
+  color: inherit;
 }
 
 .cardTitle {
-  font-size: var(--font-size-base);
-  font-weight: 600;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
   color: var(--white);
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  margin: 0;
+  line-height: var(--leading-snug);
+  letter-spacing: -0.015em;
+  margin: 0 0 8px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  flex: 1;
+  min-height: 52px;
+  text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.80);
+}
+
+.cardSub {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: rgba(var(--white-rgb), 0.78);
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
   text-shadow: 0 1px 3px rgba(var(--black-rgb), 0.65);
-  transition: color var(--transition-fast, var(--duration-fast) ease);
 }
 
-.cardLink:hover .cardTitle {
-  color: var(--white);
-}
-
-.cardArrow {
-  flex-shrink: 0;
-  color: var(--white);
-  opacity: 0.85;
-  margin-top: 2px;
-  transition: transform var(--duration-moderate) var(--ease-spring), opacity var(--duration-moderate) ease, color var(--duration-base) ease;
-}
-
-.cardLink:hover .cardArrow {
-  transform: translateX(4px);
-  opacity: 1;
-  color: var(--sky-400);
-}
-
-.cardAuthorRow {
+/* ─── CARD BOTTOM SLOT: RESTING META VS HOVER ACTION BUTTONS ─────── */
+.cardBottomSlot {
+  position: relative;
+  width: 100%;
+  height: 38px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(var(--white-rgb), 0.15);
+  box-sizing: border-box;
 }
 
-.authorAvatarBadge {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+/* Resting State: Date & Read Time */
+.cardRestingMeta {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 38px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(var(--white-rgb), 0.12);
+  transition: opacity var(--duration-moderate) var(--ease-spring),
+              transform var(--duration-moderate) var(--ease-spring);
+}
+
+.metaBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  color: rgba(var(--white-rgb), 0.88);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.metaIcon {
+  color: var(--cyan-bright);
+  flex-shrink: 0;
+}
+
+.metaDivider {
+  width: 1px;
+  height: 16px;
+  background: rgba(var(--white-rgb), 0.18);
+  flex-shrink: 0;
+}
+
+/* Action Buttons Container: Slides in smoothly on desktop hover */
+.cardActions {
+  display: flex;
+  width: 100%;
+  height: 38px;
+  align-items: center;
+}
+
+@media (min-width: 1025px) and (hover: hover) {
+  .cardActions {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity var(--duration-moderate) var(--ease-spring),
+                transform var(--duration-moderate) var(--ease-spring);
+  }
+
+  .cardLink:hover .cardRestingMeta {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+  }
+
+  .cardLink:hover .cardActions {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 1024px), (hover: none) {
+  .cardRestingMeta {
+    display: none;
+  }
+
+  .cardActions {
+    position: relative;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+.cardDetailBtn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-2xs);
-  font-weight: 700;
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(var(--black-rgb), 0.3);
-}
-
-.authorAvatarNH {
-  background: rgba(var(--blue-brand-rgb), 0.92);
+  gap: 7px;
+  width: 100%;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--color-primary, var(--blue-brand));
+  border: 1px solid var(--color-primary, var(--blue-brand));
   color: var(--white);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
 }
 
-.authorAvatarDoc {
-  background: rgba(var(--white-rgb), 0.22);
-  color: var(--white);
+.cardDetailBtn:hover {
+  background: var(--blue-600, #023d80);
+  border-color: var(--blue-600, #023d80);
+  transform: translateY(-1px);
 }
 
-.authorName {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: rgba(var(--white-rgb), 0.9);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.4);
+.pillBtnArrow {
+  transition: transform var(--duration-moderate) var(--ease-spring);
+}
+
+.cardDetailBtn:hover .pillBtnArrow {
+  transform: translate(2px, -2px);
 }
 
 /* ── No Results State ── */

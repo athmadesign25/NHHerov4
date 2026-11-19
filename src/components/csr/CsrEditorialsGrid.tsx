@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Download } from "lucide-react";
+import { Download, Calendar, FileText } from "lucide-react";
 import { CsrEditorialItem } from "@/data/csrData";
 import styles from "./CsrEditorialsGrid.module.css";
 
@@ -42,44 +42,50 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
                 className={styles.cardBgImage}
               />
 
-              {/* Subtle Top Gradient Scrim for effortless readability without a bulky pill */}
-              <div className={styles.cardTopScrim} />
-
-              {/* Pure Editorial Category Text (No bulky pill container, no visual noise) */}
-              <span className={styles.cardTopCategoryText}>
-                {item.category}
-              </span>
-
-              {/* Luminous Photography Bottom Gradient Scrim */}
-              <div className={styles.cardScrim} />
+              {/* Atmospheric Gradient Scrim (Exact Figma "Image fade") */}
+              <div className={styles.cardGradient} />
 
               {/* Content Overlaid on Scrim */}
               <div className={styles.cardContent}>
-                <div className={styles.cardMetaRow}>
-                  <span className={styles.cardDate}>{item.date}</span>
+                <div className={styles.cardTextGroup}>
+                  <div className={styles.cardEyebrow}>
+                    {item.category}
+                  </div>
+
+                  <h3 className={styles.cardTitle} title={item.title}>
+                    {item.title}
+                  </h3>
+
+                  <p className={styles.cardDesc}>
+                    {item.description}
+                  </p>
                 </div>
 
-                <h3 className={styles.cardTitle} title={item.title}>
-                  {item.title}
-                </h3>
+                {/* Card Bottom Slot: Resting Meta vs Hover Download CTA */}
+                <div className={styles.cardBottomSlot}>
+                  <div className={styles.cardRestingMeta}>
+                    <span className={styles.metaBadge}>
+                      <Calendar size={13} className={styles.metaIcon} />
+                      <span>{item.date}</span>
+                    </span>
+                    <span className={styles.metaDivider} aria-hidden="true" />
+                    <span className={styles.metaBadge}>
+                      <FileText size={13} className={styles.metaIcon} />
+                      <span>{item.fileSize} (PDF)</span>
+                    </span>
+                  </div>
 
-                <p className={styles.cardDesc}>
-                  {item.description}
-                </p>
-
-                {/* Secondary Level Download CTA */}
-                <div className={styles.ctaRow}>
-                  <a
-                    href={item.downloadUrl}
-                    onClick={(e) => handleDownload(e, item.title)}
-                    className={styles.downloadBtn}
-                    aria-label={`Download ${item.title}`}
-                  >
-                    <Download size={13} />
-                    <span>Download PDF</span>
-                  </a>
-
-                  <span className={styles.fileSizeTag}>{item.fileSize}</span>
+                  <div className={styles.cardActions}>
+                    <a
+                      href={item.downloadUrl}
+                      onClick={(e) => handleDownload(e, item.title)}
+                      className={styles.downloadBtn}
+                      aria-label={`Download ${item.title}`}
+                    >
+                      <Download size={13} />
+                      <span>Download PDF</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </article>
