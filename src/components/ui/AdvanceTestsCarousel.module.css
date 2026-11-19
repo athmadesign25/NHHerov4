@@ -30,7 +30,7 @@
 
 /* Mobile Native Swipe Carousel */
 .mobileCarouselContainer {
-  display: flex !important;
+  display: none;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: var(--space-16);
@@ -56,7 +56,7 @@
 }
 
 .mobileNavigator {
-  display: flex !important;
+  display: none;
   justify-content: center;
   align-items: center;
   gap: var(--space-8);
@@ -84,7 +84,7 @@
 }
 
 .mobileOnly {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 768px) {
@@ -92,6 +92,12 @@
     display: none !important;
   }
   .mobileOnly {
+    display: flex !important;
+  }
+  .mobileCarouselContainer {
+    display: flex !important;
+  }
+  .mobileNavigator {
     display: flex !important;
   }
 }
