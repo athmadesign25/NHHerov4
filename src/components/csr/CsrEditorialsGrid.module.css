@@ -158,17 +158,17 @@
   filter: brightness(1.00) saturate(1.12) contrast(1.03);
 }
 
-/* ── Subtle Top Gradient Scrim (Guarantees 100% legibility on bright white backgrounds) ── */
+/* ── Subtle Top Gradient Scrim (Standardized Dual-Scrim System: Top 76px) ── */
 .cardTopScrim {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 76px;
   background: linear-gradient(
     180deg,
-    rgba(6, 14, 27, 0.60) 0%,
-    rgba(6, 14, 27, 0.18) 50%,
+    rgba(6, 14, 27, 0.70) 0%,
+    rgba(6, 14, 27, 0.20) 50%,
     transparent 100%
   );
   z-index: 2;
@@ -191,19 +191,17 @@
   pointer-events: none;
 }
 
-/* Signature Deep Atmospheric Gradient Scrim (Standardized across Treatments, Articles & CSR) */
+/* ── Signature Atmospheric Bottom-Up Gradient Scrim (Top 45% stays bright & visible) ── */
 .cardScrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    180deg,
-    rgba(6, 14, 27, 0) 0%,
-    rgba(6, 14, 27, 0) 24%,
-    rgba(6, 14, 27, 0.22) 38%,
-    rgba(6, 14, 27, 0.68) 54%,
-    rgba(6, 14, 27, 0.90) 72%,
-    rgba(6, 14, 27, 0.98) 86%,
-    #060e1b 100%
+    to top,
+    rgba(6, 14, 27, 0.98) 0%,
+    rgba(6, 14, 27, 0.88) 36%,
+    rgba(6, 14, 27, 0.40) 62%,
+    rgba(6, 14, 27, 0.08) 80%,
+    transparent 100%
   );
   z-index: 2;
   transition: opacity var(--duration-emphasis) ease;
