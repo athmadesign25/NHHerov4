@@ -83,67 +83,6 @@
   z-index: 1;
 }
 
-@media (max-width: 768px) {
-  .hero {
-    min-height: calc(100dvh - 44px);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 0;
-    padding-bottom: 20px;
-    box-sizing: border-box;
-  }
-
-  .heroBgOverlay {
-    background: linear-gradient(180deg,
-        rgba(6, 14, 27, 0.40) 0%,
-        rgba(6, 14, 27, 0.10) 12%,
-        transparent 22%,
-        transparent 36%,
-        rgba(6, 14, 27, 0.65) 44%,
-        rgba(6, 14, 27, 0.94) 58%,
-        #060e1b 78%,
-        #060e1b 100%);
-  }
-
-  .heroBgImage {
-    object-position: center 8%;
-    filter: brightness(0.98) saturate(1.10) contrast(1.02);
-  }
-
-  .breadcrumbsContainer {
-    margin-top: calc(var(--nav-height, 72px) + 8px);
-    margin-bottom: 0;
-  }
-
-  .heroControlsRow {
-    display: none !important;
-  }
-
-  .heroTitle {
-    font-size: clamp(24px, 6.8vw, 30px);
-    line-height: 1.15;
-    margin-top: calc(40dvh - 96px);
-    margin-bottom: 8px;
-  }
-
-  .heroSubtitle {
-    font-size: 13.5px;
-    line-height: 1.45;
-    margin: 0 0 14px 0;
-    max-width: 100%;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .compactStatsWrap,
-  .metricsBottomWrap {
-    display: none !important;
-  }
-}
-
 .heroInner {
   position: relative;
   z-index: 2;
@@ -2074,4 +2013,127 @@
 
 .sheetApplyBtn:hover {
   background: var(--color-primary-dark, var(--blue-900));
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MOBILE WEB (MWEB) HERO & DIRECTORY OPTIMIZATION (< 768px)
+   Placed at the bottom of the cascade to override all base desktop rules
+   ═════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Hero Container: Title starts at precisely 50% of screen height */
+  .hero {
+    position: relative;
+    min-height: auto !important;
+    padding-top: 50dvh !important;
+    padding-bottom: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Clear transparent window in upper photo where specialist & patient live */
+  .heroBgOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(6, 14, 27, 0.45) 0%,
+      rgba(6, 14, 27, 0.12) 14%,
+      transparent 22%,
+      transparent 38%,
+      rgba(6, 14, 27, 0.70) 48%,
+      rgba(6, 14, 27, 0.96) 62%,
+      #060e1b 80%,
+      #060e1b 100%
+    ) !important;
+  }
+
+  .heroBgImage {
+    object-position: center 8% !important;
+    filter: brightness(0.98) saturate(1.10) contrast(1.02) !important;
+  }
+
+  .heroInner {
+    width: calc(100% - 32px) !important;
+    position: static !important;
+    gap: 0 !important;
+  }
+
+  .heroLeftCol {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  /* Breadcrumbs anchored cleanly at top below navbar */
+  .breadcrumbsContainer {
+    position: absolute !important;
+    top: calc(var(--nav-height, 72px) + 10px) !important;
+    left: max(16px, 4vw) !important;
+    right: max(16px, 4vw) !important;
+    width: auto !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+  }
+
+  .heroControlsRow {
+    display: none !important;
+  }
+
+  /* Title starts from 50% height of screen */
+  .heroTitle {
+    font-size: clamp(25px, 7.2vw, 30px) !important;
+    line-height: 1.15 !important;
+    margin: 0 0 8px 0 !important;
+    color: #ffffff !important;
+  }
+
+  /* 2-line optimized subtitle */
+  .heroSubtitle {
+    font-size: 13.5px !important;
+    line-height: 1.45 !important;
+    margin: 0 0 14px 0 !important;
+    max-width: 100% !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    color: rgba(var(--white-rgb), 0.82) !important;
+  }
+
+  .heroSearchContainer {
+    max-width: 100% !important;
+    margin-bottom: 2px !important;
+  }
+
+  .searchBoxWrap {
+    height: 42px !important;
+  }
+
+  .mobileFilterBtn {
+    height: 42px !important;
+    padding: 0 14px !important;
+  }
+
+  /* Hide desktop multi-column stats on mobile */
+  .compactStatsWrap,
+  .metricsBottomWrap {
+    display: none !important;
+  }
+
+  /* Directory controls (filters & 2-row ABCD rail) directly below hero */
+  .directoryControlsWrap {
+    width: calc(100% - 32px) !important;
+    height: auto !important;
+    opacity: 1 !important;
+    margin-top: 14px !important;
+    margin-bottom: 12px !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  .directoryTopBar {
+    margin-bottom: 6px !important;
+  }
+
+  .feedbackTextRow {
+    width: calc(100% - 32px) !important;
+    margin: 4px auto 10px !important;
+  }
 }
