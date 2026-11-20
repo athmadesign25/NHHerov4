@@ -1,15 +1,26 @@
-/* ─── MINIMAL CLINICAL ACTION STRIP (DYNAMIC & WHITE THEME SUPPORT) ───────── */
+/* ─── MINIMAL CLINICAL ACTION STRIP (MATCHING PRE-FOOTER CTA GRADIENT) ─────── */
 .actionStripContainer {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0b1a33 0%, var(--blue-brand) 55%, #022d61 100%);
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 8px 24px rgba(var(--blue-brand-rgb), 0.20), 0 2px 6px rgba(var(--black-rgb), 0.12);
   box-sizing: border-box;
-  margin: 0 0 20px 0;
-  transition: border-color var(--duration-fast, 0.15s) ease, background var(--duration-fast, 0.15s) ease;
+  margin: 0 0 22px 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--duration-fast, 0.15s) ease, box-shadow var(--duration-fast, 0.15s) ease;
+}
+
+.actionStripContainer:hover {
+  box-shadow: 0 10px 28px rgba(var(--blue-brand-rgb), 0.28), 0 4px 10px rgba(var(--black-rgb), 0.16);
+  transform: translateY(-1px);
 }
 
 .labelGroup {
@@ -23,24 +34,26 @@
 .stripBadge {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-2xs, 10px);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 2px 7px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
   border-radius: 4px;
   flex-shrink: 0;
-  transition: background var(--duration-fast, 0.15s) ease, color var(--duration-fast, 0.15s) ease;
+  background: rgba(var(--white-rgb), 0.16);
+  color: #ffffff;
 }
 
 .stripText {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
+  font-weight: 500;
+  color: rgba(var(--white-rgb), 0.92);
   line-height: 1.4;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--duration-fast, 0.15s) ease;
 }
 
 .buttonGroup {
@@ -54,19 +67,21 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 13px;
+  padding: 6px 14px;
   border-radius: 6px;
-  background: var(--blue-brand);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--blue-brand);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  transition: transform var(--duration-fast, 0.15s) ease, background var(--duration-fast, 0.15s) ease;
+  box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.15);
+  transition: transform var(--duration-fast, 0.15s) ease, background var(--duration-fast, 0.15s) ease, color var(--duration-fast, 0.15s) ease;
 }
 
 .bookBtn:hover {
-  background: var(--blue-600, #0463cc);
+  background: var(--slate-100, #f1f5f9);
+  color: var(--blue-700, #023a7b);
   transform: translateY(-1px);
 }
 
@@ -81,106 +96,25 @@
 .opinionBtn {
   display: inline-flex;
   align-items: center;
-  padding: 6px 11px;
+  padding: 6px 12px;
   border-radius: 6px;
+  background: rgba(var(--white-rgb), 0.12);
+  border: 1px solid rgba(var(--white-rgb), 0.25);
+  color: #ffffff;
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
   font-weight: 500;
   text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: all var(--duration-fast, 0.15s) ease;
 }
 
-/* ─── 1. WHITE BACKGROUND THEME (STATIONARY WHITE CANVASES & V1/V3) ──────── */
-.actionStripWhite {
-  background: rgba(var(--blue-brand-rgb), 0.035);
-  border: 1px solid rgba(var(--blue-brand-rgb), 0.14);
-}
-
-.actionStripWhite:hover {
-  border-color: rgba(var(--blue-brand-rgb), 0.28);
-}
-
-.actionStripWhite .stripBadge {
-  color: var(--blue-brand);
-  background: rgba(var(--blue-brand-rgb), 0.10);
-}
-
-.actionStripWhite .stripText {
-  color: var(--slate-700, #334155);
-  font-weight: 500;
-}
-
-.actionStripWhite .opinionBtn {
-  background: var(--white);
-  border: 1px solid rgba(var(--slate-900-rgb), 0.16);
-  color: var(--slate-700, #334155);
-}
-
-.actionStripWhite .opinionBtn:hover {
-  background: rgba(var(--blue-brand-rgb), 0.06);
-  border-color: var(--blue-brand);
-  color: var(--blue-brand);
-}
-
-/* ─── 2. DYNAMIC MODE (V2 & V4 SCROLL-DRIVEN DARK -> WHITE BLEND) ────────── */
-.actionStripDynamic {
-  background: var(--v2-card-bg, var(--v4-summary-bg, rgba(var(--white-rgb), 0.05)));
-  border: 1px solid var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.12)));
-}
-
-.actionStripDynamic:hover {
-  border-color: var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.24)));
-}
-
-.actionStripDynamic .stripBadge {
-  color: var(--v2-toc-active, var(--v4-eyebrow, var(--sky-400)));
-  background: var(--v2-toc-active-bg, var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.18)));
-}
-
-.actionStripDynamic .stripText {
-  color: var(--v2-body, var(--v4-body, var(--slate-700)));
-}
-
-.actionStripDynamic .opinionBtn {
-  background: var(--v2-card-bg, var(--v4-badge-bg, rgba(var(--white-rgb), 0.06)));
-  border: 1px solid var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.18)));
-  color: var(--v2-body, var(--v4-body, rgba(var(--white-rgb), 0.88)));
-}
-
-.actionStripDynamic .opinionBtn:hover {
-  border-color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
-  color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
-}
-
-/* ─── 3. STATIONARY DARK THEME (PURE DARK HERO SURFACES) ─────────────────── */
-.actionStripDark {
-  background: rgba(var(--white-rgb), 0.04);
-  border: 1px solid rgba(var(--white-rgb), 0.10);
-}
-
-.actionStripDark:hover {
-  border-color: rgba(var(--white-rgb), 0.20);
-}
-
-.actionStripDark .stripBadge {
-  color: var(--sky-400);
-  background: rgba(var(--blue-brand-rgb), 0.20);
-}
-
-.actionStripDark .stripText {
-  color: rgba(var(--white-rgb), 0.78);
-}
-
-.actionStripDark .opinionBtn {
-  background: rgba(var(--white-rgb), 0.06);
-  border: 1px solid rgba(var(--white-rgb), 0.16);
-  color: rgba(var(--white-rgb), 0.85);
-}
-
-.actionStripDark .opinionBtn:hover {
-  background: rgba(var(--white-rgb), 0.12);
+.opinionBtn:hover {
+  background: rgba(var(--white-rgb), 0.22);
+  border-color: rgba(var(--white-rgb), 0.40);
   color: #ffffff;
-  border-color: rgba(var(--white-rgb), 0.30);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 900px) {
@@ -194,7 +128,8 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
   }
   .labelGroup {
     flex-direction: column;
@@ -206,7 +141,7 @@
   }
   .buttonGroup {
     width: 100%;
-    gap: 6px;
+    gap: 8px;
   }
   .bookBtn,
   .opinionBtn {
