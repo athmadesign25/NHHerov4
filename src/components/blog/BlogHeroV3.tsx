@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import { ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import styles from "./BlogHeroV3.module.css";
@@ -127,19 +128,27 @@ export default function BlogHeroV3() {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>400+</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="400+" />
+                </span>
                 <span className={styles.statLabel}>Clinical Guides</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>40+</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="40+" />
+                </span>
                 <span className={styles.statLabel}>Medical Specialities</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>100%</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="100%" />
+                </span>
                 <span className={styles.statLabel}>Doctor Reviewed</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>24×7</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="24×7" />
+                </span>
                 <span className={styles.statLabel}>Health Advisory</span>
               </div>
             </div>

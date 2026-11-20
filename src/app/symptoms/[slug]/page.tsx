@@ -20,6 +20,7 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getSymptomDetailData, SymptomDetailData } from "@/data/symptomsData";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
@@ -180,19 +181,27 @@ export default function SymptomDetailPage({ params }: PageProps) {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.urgency}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.urgency} />
+                </span>
                 <span className={styles.statLabel}>Clinical Urgency</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.specialist}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.specialist} />
+                </span>
                 <span className={styles.statLabel}>Recommended Specialist</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.diagnosticTurnaround}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.diagnosticTurnaround} />
+                </span>
                 <span className={styles.statLabel}>Triaging Speed</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.hospitalNetwork}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.hospitalNetwork} />
+                </span>
                 <span className={styles.statLabel}>Emergency Centers</span>
               </div>
             </div>

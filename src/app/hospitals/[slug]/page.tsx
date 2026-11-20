@@ -21,6 +21,7 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
@@ -174,19 +175,27 @@ export default function HospitalDetailPage({ params }: PageProps) {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.beds}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.beds} />
+                </span>
                 <span className={styles.statLabel}>Total Bed Capacity</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.icu}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.icu} />
+                </span>
                 <span className={styles.statLabel}>ICU / Critical Care</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.emergency}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.emergency} />
+                </span>
                 <span className={styles.statLabel}>Emergency Triage</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.accreditation}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.accreditation} />
+                </span>
                 <span className={styles.statLabel}>Accreditation</span>
               </div>
             </div>

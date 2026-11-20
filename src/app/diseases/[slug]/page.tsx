@@ -20,6 +20,7 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getDiseaseDetailData, DiseaseDetailData } from "@/data/diseasesData";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
@@ -180,19 +181,27 @@ export default function DiseaseDetailPage({ params }: PageProps) {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.stage}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.stage} />
+                </span>
                 <span className={styles.statLabel}>Clinical Staging</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.clinicalSafety}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.clinicalSafety} />
+                </span>
                 <span className={styles.statLabel}>Clinical Safety</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.treatmentApproach}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.treatmentApproach} />
+                </span>
                 <span className={styles.statLabel}>Care Model</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>Top Tier</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="Top Tier" />
+                </span>
                 <span className={styles.statLabel}>Institutional Center</span>
               </div>
             </div>

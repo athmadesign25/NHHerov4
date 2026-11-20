@@ -17,6 +17,7 @@ import {
   HeartPulse
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getArticleDetailData, ArticleDetailData, ArticleItem, ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
@@ -225,19 +226,27 @@ export default function ArticleDetailPage({ params }: PageProps) {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>100%</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="100%" />
+                </span>
                 <span className={styles.statLabel}>Doctor Authored</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>Peer Reviewed</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="Peer Reviewed" />
+                </span>
                 <span className={styles.statLabel}>Medical Advisory</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.readTime}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.readTime} />
+                </span>
                 <span className={styles.statLabel}>Estimated Reading</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.publishedDate}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.publishedDate} />
+                </span>
                 <span className={styles.statLabel}>Last Medical Review</span>
               </div>
             </div>

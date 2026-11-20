@@ -20,6 +20,7 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getDiagnosticDetailData, DiagnosticDetailData } from "@/data/diagnosticsData";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
 import carouselStyles from "@/components/ui/HospitalCarousel.module.css";
@@ -180,19 +181,27 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
           >
             <div className={styles.statsGrid}>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.turnaround}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.turnaround} />
+                </span>
                 <span className={styles.statLabel}>Report Turnaround</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.preparation}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.preparation} />
+                </span>
                 <span className={styles.statLabel}>Preparation Requirement</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.sampleType}</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value={detail.metrics.sampleType} />
+                </span>
                 <span className={styles.statLabel}>Modality / Sample</span>
               </div>
               <div className={styles.statBlock}>
-                <span className={styles.statNumber}>NABL &amp; NABH</span>
+                <span className={styles.statNumber}>
+                  <RollingNumber value="NABL & NABH" />
+                </span>
                 <span className={styles.statLabel}>Quality Accreditation</span>
               </div>
             </div>

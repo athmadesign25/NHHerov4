@@ -2,6 +2,7 @@
 
 import React from "react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { Award, ArrowRight } from "lucide-react";
 import { CsrHeroData } from "@/data/csrData";
 import styles from "./CsrHero.module.css";
@@ -52,7 +53,9 @@ export default function CsrHero({ data }: CsrHeroProps) {
           <div className={styles.statsGrid}>
             {data.stats.map((stat, idx) => (
               <div key={idx} className={styles.statItem}>
-                <span className={styles.statValue}>{stat.value}</span>
+                <span className={styles.statValue}>
+                  <RollingNumber value={stat.value} />
+                </span>
                 <p className={styles.statDesc}>{stat.description}</p>
               </div>
             ))}

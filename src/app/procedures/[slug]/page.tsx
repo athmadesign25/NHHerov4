@@ -18,6 +18,7 @@ import {
   Share2
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { getProcedureDetailData, ProcedureDetailData } from "@/data/procedureDetailGenerator";
 import { HospitalCard } from "@/components/ui/HospitalCarousel";
@@ -397,25 +398,33 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             <div className={styles.statsGrid}>
               {detail.metrics.successRate && (
                 <div className={styles.statBlock}>
-                  <span className={styles.statNumber}>{detail.metrics.successRate}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={detail.metrics.successRate} />
+                  </span>
                   <span className={styles.statLabel}>Success Rate</span>
                 </div>
               )}
               {detail.metrics.duration && (
                 <div className={styles.statBlock}>
-                  <span className={styles.statNumber}>{detail.metrics.duration}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={detail.metrics.duration} />
+                  </span>
                   <span className={styles.statLabel}>Duration</span>
                 </div>
               )}
               {detail.metrics.hospitalStay && (
                 <div className={styles.statBlock}>
-                  <span className={styles.statNumber}>{detail.metrics.hospitalStay}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={detail.metrics.hospitalStay} />
+                  </span>
                   <span className={styles.statLabel}>Typical Stay</span>
                 </div>
               )}
               {detail.metrics.recoveryTime && (
                 <div className={styles.statBlock}>
-                  <span className={styles.statNumber}>{detail.metrics.recoveryTime}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={detail.metrics.recoveryTime} />
+                  </span>
                   <span className={styles.statLabel}>Recovery Period</span>
                 </div>
               )}

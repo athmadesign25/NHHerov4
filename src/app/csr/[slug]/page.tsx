@@ -25,6 +25,7 @@ import {
   Users
 } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
+import RollingNumber from "@/components/ui/RollingNumber";
 import { getCsrProgramBySlug, CSR_PROGRAMS_DATA, CsrProgramItem } from "@/data/csrData";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
@@ -200,13 +201,17 @@ export default function CsrDetailPage({ params }: PageProps) {
             <div className={styles.statsGrid}>
               {program.statBadge && (
                 <div className={styles.statBlock}>
-                  <span className={styles.statNumber}>{program.statBadge.number}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={program.statBadge.number} />
+                  </span>
                   <span className={styles.statLabel}>{program.statBadge.label}</span>
                 </div>
               )}
               {program.modalContent.metrics.slice(0, 3).map((m, idx) => (
                 <div key={idx} className={styles.statBlock}>
-                  <span className={styles.statNumber}>{m.value}</span>
+                  <span className={styles.statNumber}>
+                    <RollingNumber value={m.value} />
+                  </span>
                   <span className={styles.statLabel}>{m.label}</span>
                 </div>
               ))}

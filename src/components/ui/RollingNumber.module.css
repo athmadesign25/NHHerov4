@@ -1,0 +1,36 @@
+.rollingWrapper {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.digitSlot {
+  position: relative;
+  display: inline-block;
+  height: 1.15em;
+  line-height: 1.15em;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+
+.digitTrack {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.digitItem {
+  display: block;
+  height: 1.15em;
+  line-height: 1.15em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.nonDigit {
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 1.15em;
+  white-space: pre;
+}
