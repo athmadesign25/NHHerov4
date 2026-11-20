@@ -51,18 +51,18 @@
 .heroBgImage {
   object-fit: cover;
   object-position: center 25%;
-  filter: brightness(0.78) saturate(1.08);
+  filter: brightness(0.92) saturate(1.06) contrast(1.02);
   opacity: 1;
 }
 
-/* Multi-stop atmospheric dark gradient overlays (slight refined scrim, seamless blending) */
+/* Atmospheric clean neutral black gradient scrim (crystal clear photo visibility on right) */
 .heroBgOverlay {
   position: absolute;
   inset: 0;
   background: 
-    linear-gradient(90deg, rgba(6, 14, 27, 0.95) 0%, rgba(6, 14, 27, 0.78) 42%, rgba(6, 14, 27, 0.28) 72%, transparent 100%),
-    linear-gradient(0deg, #060e1b 0%, rgba(6, 14, 27, 0.65) 18%, transparent 45%),
-    linear-gradient(180deg, rgba(6, 14, 27, 0.75) 0%, transparent 30%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.80) 28%, rgba(0, 0, 0, 0.40) 42%, rgba(0, 0, 0, 0.08) 54%, transparent 64%, transparent 100%),
+    linear-gradient(0deg, #060e1b 0%, rgba(0, 0, 0, 0.55) 6%, rgba(0, 0, 0, 0.12) 14%, transparent 22%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.10) 14%, transparent 24%);
   pointer-events: none;
   z-index: 1;
 }
@@ -71,9 +71,9 @@
   .heroBgOverlay {
     background: linear-gradient(
       180deg,
-      rgba(6, 14, 27, 0.92) 0%,
-      rgba(6, 14, 27, 0.78) 40%,
-      rgba(6, 14, 27, 0.90) 85%,
+      rgba(0, 0, 0, 0.86) 0%,
+      rgba(0, 0, 0, 0.68) 40%,
+      rgba(0, 0, 0, 0.82) 85%,
       #060e1b 100%
     );
   }
