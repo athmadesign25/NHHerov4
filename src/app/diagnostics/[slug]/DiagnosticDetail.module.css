@@ -44,14 +44,24 @@
 .detailHero {
   position: relative;
   z-index: 1;
-  min-height: 54vh;
+  min-height: clamp(680px, 84vh, 940px);
   display: flex;
-  align-items: center;
-  padding-top: calc(var(--nav-height, 72px) + 36px);
-  padding-bottom: clamp(92px, 12vh, 128px);
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: clamp(240px, 36vh, 380px);
+  padding-bottom: clamp(28px, 4.5vh, 48px);
   overflow: hidden;
   background: transparent;
   color: var(--white);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .detailHero {
+    min-height: auto;
+    padding-top: calc(var(--nav-height, 72px) + clamp(36px, 10vh, 72px));
+    padding-bottom: 32px;
+  }
 }
 
 .detailHero::after {
@@ -101,14 +111,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 40px;
+  flex: 1;
+  gap: clamp(28px, 4vh, 44px);
   box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   .heroInner {
     width: calc(100% - 32px);
-    gap: 28px;
+    gap: 24px;
   }
 }
 
