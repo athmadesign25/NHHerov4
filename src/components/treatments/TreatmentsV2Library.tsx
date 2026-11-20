@@ -25,6 +25,7 @@ import OrganSystemChipsCarousel, {
 } from "@/components/ui/OrganSystemChipsCarousel";
 import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
 import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import {
   TREATMENTS_PROCEDURES_DATA,
@@ -271,9 +272,9 @@ export default function TreatmentsV2Library({
     const pediatricCount = items.filter(isPediatricItem).length;
     const adultCount = items.length - pediatricCount;
     return [
-      { id: "all", label: "All Treatments", count: items.length },
-      { id: "adult", label: "Adult Care", count: adultCount },
-      { id: "pediatric", label: "Pediatric Care", count: pediatricCount },
+      { id: "all", label: "All Treatments", shortLabel: "All", count: items.length },
+      { id: "adult", label: "Adult Care", shortLabel: "Adult", count: adultCount },
+      { id: "pediatric", label: "Pediatric Care", shortLabel: "Pediatric", count: pediatricCount },
     ];
   }, [items, isPediatricItem]);
 
@@ -478,6 +479,9 @@ export default function TreatmentsV2Library({
                 </div>
               )}
             </motion.div>
+
+            {/* Mobile Web Rolling Single-Row Credential Ticker (One by one in same space on mobile) */}
+            <MobileRollingStats items={HERO_ANALYTICS_PARAMETERS} />
 
             {/* C2: Compact Left-Aligned Metrics Row (Directly below Pulse search) */}
             {statsLayout === "c2" && (

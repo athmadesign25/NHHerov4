@@ -24,6 +24,7 @@ import OrganSystemChipsCarousel, {
 } from "@/components/ui/OrganSystemChipsCarousel";
 import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
 import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
+import MobileRollingStats from "@/components/ui/MobileRollingStats";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { DIAGNOSTICS_DATA, DiagnosticItem } from "@/data/diagnosticsData";
 import styles from "./DiagnosticsLibrary.module.css";
@@ -239,9 +240,9 @@ export default function DiagnosticsLibraryPage() {
     const labCount = items.filter(isLabItem).length;
     const imagingCount = items.filter(isImagingItem).length;
     return [
-      { id: "all", label: "All Investigations", count: items.length },
-      { id: "lab", label: "Laboratory & Pathology", count: labCount },
-      { id: "imaging", label: "Imaging & Radiology", count: imagingCount },
+      { id: "all", label: "All Investigations", shortLabel: "All", count: items.length },
+      { id: "lab", label: "Laboratory & Pathology", shortLabel: "Lab", count: labCount },
+      { id: "imaging", label: "Imaging & Radiology", shortLabel: "Imaging", count: imagingCount },
     ];
   }, [items, isLabItem, isImagingItem]);
 
@@ -414,6 +415,9 @@ export default function DiagnosticsLibraryPage() {
                 </div>
               )}
             </motion.div>
+
+            {/* Mobile Web Rolling Single-Row Credential Ticker (One by one in same space on mobile) */}
+            <MobileRollingStats items={HERO_ANALYTICS_PARAMETERS} />
 
             {/* C2: Compact Left-Aligned Metrics Row (Directly below Search) */}
             {statsLayout === "c2" && (

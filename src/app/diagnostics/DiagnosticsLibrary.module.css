@@ -85,17 +85,53 @@
 
 @media (max-width: 768px) {
   .hero {
-    min-height: calc(100dvh - 50px);
-    padding-top: calc(var(--nav-height, 72px) + 24px);
-    padding-bottom: 28px;
+    min-height: auto;
+    padding-top: 0;
+    padding-bottom: 12px;
   }
 
   .heroBgOverlay {
     background: linear-gradient(180deg,
-        rgba(0, 0, 0, 0.86) 0%,
-        rgba(0, 0, 0, 0.65) 40%,
-        rgba(6, 14, 27, 0.85) 80%,
+        rgba(6, 14, 27, 0.50) 0%,
+        rgba(6, 14, 27, 0.15) 12%,
+        transparent 22%,
+        transparent 38%,
+        rgba(6, 14, 27, 0.65) 48%,
+        rgba(6, 14, 27, 0.94) 62%,
+        #060e1b 82%,
         #060e1b 100%);
+  }
+
+  .heroBgImage {
+    object-position: center 10%;
+    filter: brightness(0.98) saturate(1.10) contrast(1.02);
+  }
+
+  .breadcrumbsContainer {
+    margin-top: calc(var(--nav-height, 72px) + 8px);
+    margin-bottom: 0;
+  }
+
+  .heroControlsRow {
+    display: none !important;
+  }
+
+  .heroTitle {
+    font-size: clamp(24px, 6.8vw, 29px);
+    line-height: 1.15;
+    margin: clamp(170px, 40vh, 320px) 0 8px 0;
+  }
+
+  .heroSubtitle {
+    font-size: 13.5px;
+    line-height: 1.45;
+    margin: 0 0 12px 0;
+    max-width: 100%;
+  }
+
+  .compactStatsWrap,
+  .metricsBottomWrap {
+    display: none !important;
   }
 }
 
@@ -726,6 +762,11 @@
 @media (max-width: 768px) {
   .directoryControlsWrap {
     width: calc(100% - 32px);
+    height: auto !important;
+    opacity: 1 !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+    pointer-events: auto !important;
   }
 }
 

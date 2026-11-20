@@ -5,6 +5,8 @@ import { X } from "lucide-react";
 import styles from "./AlphabeticalFilterRail.module.css";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const ROW_1_LETTERS = "ABCDEFGHIJKLM".split("");
+const ROW_2_LETTERS = "NOPQRSTUVWXYZ".split("");
 
 interface AlphabeticalFilterRailProps {
   availableLetters?: Set<string>;
@@ -21,41 +23,56 @@ export default function AlphabeticalFilterRail({
   className = "",
   resultCount,
 }: AlphabeticalFilterRailProps) {
+  const renderLetterBtn = (char: string) => {
+    const isAvailable = availableLetters ? availableLetters.has(char) : true;
+    const isSelected = selectedLetter === char;
+
+    return (
+      <button
+        key={char}
+        type="button"
+        className={`${styles.letterBtn} ${
+          isSelected ? styles.letterBtnActive : ""
+        } ${!isAvailable ? styles.letterBtnDisabled : ""}`}
+        disabled={!isAvailable}
+        onClick={() => onSelectLetter(isSelected ? null : char)}
+        aria-pressed={isSelected}
+        aria-label={`Filter by letter ${char}`}
+      >
+        {char}
+      </button>
+    );
+  };
+
+  const renderAllBtn = () => (
+    <button
+      type="button"
+      className={`${styles.allBtn} ${selectedLetter === null ? styles.allBtnActive : ""}`}
+      onClick={() => onSelectLetter(null)}
+      aria-pressed={selectedLetter === null}
+      aria-label="Show all letters"
+    >
+      All
+    </button>
+  );
+
   return (
     <div className={`${styles.alphabetRailSection} ${className}`} aria-label="Alphabetical Filter">
-      <div className={styles.alphabetRailContainer} role="toolbar" aria-label="A to Z alphabetical filter">
-        {/* ALL Button */}
-        <button
-          type="button"
-          className={`${styles.allBtn} ${selectedLetter === null ? styles.allBtnActive : ""}`}
-          onClick={() => onSelectLetter(null)}
-          aria-pressed={selectedLetter === null}
-          aria-label="Show all letters"
-        >
-          All
-        </button>
+      {/* Desktop View: Single Flat Horizontal Rail (Unchanged) */}
+      <div className={`${styles.alphabetRailContainer} ${styles.desktopRail}`} role="toolbar" aria-label="A to Z alphabetical filter">
+        {renderAllBtn()}
+        {ALPHABET.map(renderLetterBtn)}
+      </div>
 
-        {/* Letters A to Z */}
-        {ALPHABET.map((char) => {
-          const isAvailable = availableLetters ? availableLetters.has(char) : true;
-          const isSelected = selectedLetter === char;
-
-          return (
-            <button
-              key={char}
-              type="button"
-              className={`${styles.letterBtn} ${
-                isSelected ? styles.letterBtnActive : ""
-              } ${!isAvailable ? styles.letterBtnDisabled : ""}`}
-              disabled={!isAvailable}
-              onClick={() => onSelectLetter(isSelected ? null : char)}
-              aria-pressed={isSelected}
-              aria-label={`Filter by letter ${char}`}
-            >
-              {char}
-            </button>
-          );
-        })}
+      {/* Mobile Web View: Two-Row Stacked Rail */}
+      <div className={`${styles.alphabetRailContainer} ${styles.mobileStackedRail}`} role="toolbar" aria-label="A to Z alphabetical filter (mobile 2-row)">
+        <div className={styles.mobileRailRow}>
+          {renderAllBtn()}
+          {ROW_1_LETTERS.map(renderLetterBtn)}
+        </div>
+        <div className={styles.mobileRailRow}>
+          {ROW_2_LETTERS.map(renderLetterBtn)}
+        </div>
       </div>
 
       {selectedLetter && (

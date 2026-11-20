@@ -1,0 +1,104 @@
+.container {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 36px;
+    border-radius: var(--radius-full, 9999px);
+    background: rgba(var(--white-rgb), 0.05);
+    border: 1px solid rgba(var(--white-rgb), 0.12);
+    padding: 0 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    margin-top: 10px;
+    cursor: pointer;
+    user-select: none;
+    box-sizing: border-box;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .container:active {
+    background: rgba(var(--white-rgb), 0.09);
+    border-color: rgba(var(--white-rgb), 0.22);
+  }
+
+  .statTrack {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .liveBadge {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan-bright, #00d4ff);
+    box-shadow: 0 0 6px var(--cyan-bright, #00d4ff);
+    flex-shrink: 0;
+  }
+
+  .statItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .statValue {
+    font-family: Inter, var(--font-sans), sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+
+  .statDivider {
+    color: rgba(var(--white-rgb), 0.35);
+    font-size: 10px;
+  }
+
+  .statLabel {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(var(--white-rgb), 0.65);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dotsContainer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(var(--white-rgb), 0.25);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .dotActive {
+    width: 12px;
+    border-radius: 4px;
+    background: rgba(var(--white-rgb), 0.85);
+  }
+}

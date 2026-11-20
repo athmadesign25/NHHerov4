@@ -7,6 +7,7 @@ import styles from "./LibrarySubFilterTabs.module.css";
 export interface SubFilterTabOption {
   id: string;
   label: string;
+  shortLabel?: string;
   count?: number;
   icon?: React.ReactNode;
 }
@@ -72,7 +73,16 @@ export default function LibrarySubFilterTabs({
             onClick={() => handleTabClick(tab.id)}
           >
             {tab.icon && <span className={styles.tabIcon}>{tab.icon}</span>}
-            <span className={styles.tabLabel}>{tab.label}</span>
+            <span className={styles.tabLabel}>
+              {tab.shortLabel ? (
+                <>
+                  <span className={styles.tabLabelFull}>{tab.label}</span>
+                  <span className={styles.tabLabelShort}>{tab.shortLabel}</span>
+                </>
+              ) : (
+                tab.label
+              )}
+            </span>
             {typeof tab.count === "number" && (
               <span className={styles.tabCount}>{tab.count}</span>
             )}
