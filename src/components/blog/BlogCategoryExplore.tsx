@@ -191,6 +191,7 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
             activeTab={sortBy}
             onTabChange={(t) => setSortBy(t as any)}
             ariaLabel="Sort blog articles"
+            allowDeselect={false}
           />
 
           <div className={styles.countBadge}>

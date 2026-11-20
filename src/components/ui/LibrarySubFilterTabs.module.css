@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   background: transparent;
-  gap: 6px;
+  gap: var(--space-8, 8px);
   max-width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
@@ -13,43 +13,125 @@
   display: none;
 }
 
+/* Quick Filter Capsule Pill — matching Book Appointment Doctor Library chips */
+.chip,
 .tabBtn {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(var(--white-rgb), 0.10);
-  background: rgba(var(--white-rgb), 0.03);
-  color: rgba(var(--white-rgb), 0.65);
+  min-height: 32px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.04);
+  color: rgba(var(--white-rgb), 0.70);
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: 13px;
+  font-size: var(--font-size-xs, 12px);
   font-weight: 500;
-  cursor: pointer;
+  line-height: 1.25;
   white-space: nowrap;
-  transition: all var(--duration-fast) ease;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast, 150ms) ease,
+    border-color var(--duration-fast, 150ms) ease,
+    color var(--duration-fast, 150ms) ease,
+    transform var(--duration-fast, 150ms) ease;
 }
 
+.chip:hover,
 .tabBtn:hover {
-  color: var(--white);
   background: rgba(var(--white-rgb), 0.08);
-  border-color: rgba(var(--white-rgb), 0.20);
+  border-color: rgba(var(--white-rgb), 0.22);
+  color: #ffffff;
 }
 
-.tabBtnActive {
+.chip:active,
+.tabBtn:active {
+  transform: scale(0.98);
+}
+
+.chip:focus-visible,
+.tabBtn:focus-visible {
+  outline: 2px solid rgba(var(--white-rgb), 0.35);
+  outline-offset: 2px;
+}
+
+/* Active / Pressed state */
+.chipActive,
+.tabBtnActive,
+.chip[aria-pressed="true"] {
   background: rgba(var(--white-rgb), 0.14) !important;
   border-color: rgba(var(--white-rgb), 0.35) !important;
-  color: var(--white) !important;
-  font-weight: 600;
+  color: #ffffff !important;
+  font-weight: 500;
 }
 
+.chipActive:hover,
+.tabBtnActive:hover,
+.chip[aria-pressed="true"]:hover {
+  background: rgba(var(--white-rgb), 0.18) !important;
+  border-color: rgba(var(--white-rgb), 0.45) !important;
+}
+
+/* Numeric Count Badge */
 .tabCount {
-  display: inline-block;
-  font-size: 11.5px;
-  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
   color: rgba(var(--white-rgb), 0.42);
+  margin-inline-start: 1px;
+  transition: color var(--duration-fast, 150ms) ease;
 }
 
-.tabBtnActive .tabCount {
-  color: rgba(var(--white-rgb), 0.72);
+.chip:hover .tabCount,
+.tabBtn:hover .tabCount {
+  color: rgba(var(--white-rgb), 0.65);
+}
+
+.chipActive .tabCount,
+.tabBtnActive .tabCount,
+.chip[aria-pressed="true"] .tabCount {
+  color: rgba(var(--white-rgb), 0.75);
+}
+
+/* Dismiss / Clear affordance ('X' icon) matching Doctor quick filters */
+.selectionClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-inline-start: 2px;
+  color: rgba(var(--white-rgb), 0.75);
+  border-radius: var(--radius-full, 9999px);
+  transition: color var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
+}
+
+.chip:hover .selectionClear,
+.tabBtn:hover .selectionClear {
+  color: #ffffff;
+}
+
+.selectionClear:hover {
+  transform: scale(1.15);
+}
+
+.tabIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.tabLabel {
+  display: inline-block;
+  line-height: inherit;
 }
