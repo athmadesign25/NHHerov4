@@ -196,7 +196,7 @@
 .statItem {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   position: relative;
 }
 
@@ -220,11 +220,11 @@
 .statValue {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(26px, 2.4vw, 30px);
-  font-weight: 700;
-  color: var(--white);
+  font-weight: 500;
+  color: rgba(var(--white-rgb), 0.95);
   letter-spacing: -0.02em;
   line-height: 1.1;
-  margin-bottom: 2px;
+  margin-bottom: 0;
 }
 
 /* Clean Stat Description (Exact 2-line layout like Image 2) */

@@ -195,7 +195,7 @@
 .statBlock {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 8px;
   position: relative;
 }
 
@@ -218,20 +218,20 @@
 .statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(22px, 2vw, 28px);
-  font-weight: 700;
-  color: var(--white);
+  font-weight: 500;
+  color: rgba(var(--white-rgb), 0.95);
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.72);
+  color: rgba(var(--white-rgb), 0.68);
   font-weight: 500;
-  margin-top: 3px;
   line-height: 1.35;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  margin: 0;
 }
 
 .featuredCarouselWrapper {

@@ -49,7 +49,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding-top: clamp(240px, 36vh, 380px);
-  padding-bottom: clamp(28px, 4.5vh, 48px);
+  padding-bottom: clamp(36px, 5.5vh, 60px);
   overflow: hidden;
   background: transparent;
   color: var(--white);
@@ -293,7 +293,7 @@
 .statBlock {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 8px;
   position: relative;
 }
 
@@ -316,20 +316,20 @@
 .statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(22px, 2vw, 28px);
-  font-weight: 700;
-  color: var(--white);
+  font-weight: 500;
+  color: rgba(var(--white-rgb), 0.95);
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.72);
+  color: rgba(var(--white-rgb), 0.68);
   font-weight: 500;
-  margin-top: 3px;
   line-height: 1.35;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  margin: 0;
 }
 
 
@@ -1981,20 +1981,20 @@
 
   .statNumber {
     font-size: var(--font-size-lg) !important;
-    font-weight: 600 !important;
-    color: rgba(var(--white-rgb), 0.92) !important;
+    font-weight: 500 !important;
+    color: rgba(var(--white-rgb), 0.95) !important;
     line-height: 1.15 !important;
     letter-spacing: -0.01em !important;
   }
 
   .statLabel {
-    font-size: var(--font-size-2xs) !important;
-    color: rgba(var(--white-rgb), 0.50) !important;
-    font-weight: 400 !important;
-    margin-top: 2px !important;
+    font-size: 11px !important;
+    color: rgba(var(--white-rgb), 0.65) !important;
+    font-weight: 500 !important;
+    margin-top: 5px !important;
     line-height: 1.25 !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
   }
 
   /* Horizontal swipeable rail for hospital & doctor cards on mobile */
