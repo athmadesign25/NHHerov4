@@ -4,10 +4,10 @@ import React, { useState, useMemo, useEffect, useTransition, useCallback } from 
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  X, 
-  ArrowUpRight, 
+import {
+  Search,
+  X,
+  ArrowUpRight,
   PhoneCall,
   Calendar,
   Clock,
@@ -324,11 +324,11 @@ export default function DiagnosticsLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect 
-                words={["Diagnostics & Lab Tests"]} 
-                sweepMs={2400} 
-                delayMs={80} 
-                finalColor="#FFFFFF" 
+              <TextSweepEffect
+                words={["Diagnostics & Lab Tests"]}
+                sweepMs={2400}
+                delayMs={80}
+                finalColor="#FFFFFF"
               />
             </motion.h1>
 
@@ -541,9 +541,9 @@ export default function DiagnosticsLibraryPage() {
             </p>
 
             {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
-              <button 
-                type="button" 
-                className={styles.clearFilterChip} 
+              <button
+                type="button"
+                className={styles.clearFilterChip}
                 onClick={handleResetFilters}
                 aria-label="Clear active filters"
               >
