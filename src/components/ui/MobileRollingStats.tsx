@@ -53,19 +53,18 @@ export default function MobileRollingStats({
       onTouchEnd={() => setIsPaused(false)}
       role="region"
       aria-live="polite"
-      aria-label="Clinical credential parameters ticker"
+      aria-label="Clinical credential parameters reel"
       title="Tap to view next credential"
     >
       <div className={styles.statTrack}>
-        <span className={styles.liveBadge} aria-hidden />
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
             className={styles.statItem}
-            initial={{ opacity: 0, y: 7 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -7 }}
-            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className={styles.statValue}>{displayValue}</span>
             <span className={styles.statDivider}>•</span>
