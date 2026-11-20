@@ -1,0 +1,61 @@
+.subFilterContainer {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(var(--white-rgb), 0.05);
+  border: 1px solid rgba(var(--white-rgb), 0.12);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.subFilterContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.tabBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(var(--white-rgb), 0.72);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast) ease;
+}
+
+.tabBtn:hover {
+  color: var(--white);
+  background: rgba(var(--white-rgb), 0.08);
+}
+
+.tabBtnActive {
+  background: var(--blue-brand) !important;
+  color: var(--white) !important;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.45);
+}
+
+.tabCount {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(var(--white-rgb), 0.14);
+  color: rgba(var(--white-rgb), 0.9);
+}
+
+.tabBtnActive .tabCount {
+  background: rgba(var(--white-rgb), 0.25);
+  color: var(--white);
+}

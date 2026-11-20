@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight, Clock, Calendar } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
+import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
 
@@ -36,7 +38,8 @@ interface BlogCategoryExploreProps {
 export default function BlogCategoryExplore({ articles }: BlogCategoryExploreProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+  const [sortBy, setSortBy] = useState<"latest" | "visited" | "relevant">("latest");
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
 
   // Filtered articles
   const filteredArticles = useMemo(() => {
@@ -69,13 +72,37 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
       });
     }
 
-    // Sort
-    if (sortBy === "popular") {
+    // Filter by Alphabetical Letter
+    if (selectedLetter) {
+      list = list.filter((art) => art.title.toUpperCase().startsWith(selectedLetter));
+    }
+
+    // Sort: Latest, Most Visited, Most Relevant
+    if (sortBy === "visited") {
       list = list.sort((a, b) => (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0));
+    } else if (sortBy === "relevant") {
+      list = list.sort((a, b) => b.keyTakeaways.length - a.keyTakeaways.length);
     }
 
     return list;
-  }, [articles, selectedCategory, searchQuery, sortBy]);
+  }, [articles, selectedCategory, searchQuery, sortBy, selectedLetter]);
+
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    articles.forEach((art) => {
+      const char = art.title[0]?.toUpperCase();
+      if (char >= "A" && char <= "Z") {
+        set.add(char);
+      }
+    });
+    return set;
+  }, [articles]);
+
+  const sortTabs = [
+    { id: "latest", label: "Latest" },
+    { id: "visited", label: "Most Visited" },
+    { id: "relevant", label: "Most Relevant" },
+  ];
 
   // Generate Author badge text
   const getAuthorInitials = (author: string) => {
@@ -159,25 +186,25 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
 
         {/* Metadata & Sort Row */}
         <div className={styles.toolbarRow}>
+          <LibrarySubFilterTabs
+            tabs={sortTabs}
+            activeTab={sortBy}
+            onTabChange={(t) => setSortBy(t as any)}
+            ariaLabel="Sort blog articles"
+          />
+
           <div className={styles.countBadge}>
             <strong>{filteredArticles.length}</strong> articles found
           </div>
-
-          <div className={styles.sortWrapper}>
-            <label htmlFor="blog-sort" className={styles.srOnly}>
-              Sort articles
-            </label>
-            <select
-              id="blog-sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "latest" | "popular")}
-              className={styles.sortSelect}
-            >
-              <option value="latest">Sort: Latest Published</option>
-              <option value="popular">Sort: Most Popular</option>
-            </select>
-          </div>
         </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={filteredArticles.length}
+        />
 
         {/* 3-Column Card Grid (Matching Our Standard Card Structure) */}
         {filteredArticles.length > 0 ? (

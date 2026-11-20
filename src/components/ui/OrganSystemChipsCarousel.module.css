@@ -33,7 +33,46 @@
 .controlsRightGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+.viewAllToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(var(--white-rgb), 0.85);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+
+.viewAllToggleBtn:hover {
+  background: rgba(var(--white-rgb), 0.12);
+  border-color: rgba(var(--white-rgb), 0.3);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.viewAllToggleBtnActive {
+  background: rgba(var(--blue-brand-rgb), 0.3) !important;
+  border-color: var(--sky-400) !important;
+  color: var(--white) !important;
+  box-shadow: 0 0 0 1px rgba(var(--sky-400-rgb), 0.35);
+}
+
+.chevronIcon {
+  transition: transform var(--duration-moderate) var(--ease-spring);
+}
+
+.chevronRotated {
+  transform: rotate(180deg);
+  transition: transform var(--duration-moderate) var(--ease-spring);
 }
 
 .arrowGroup {
@@ -89,10 +128,83 @@
   padding: 6px 4px 14px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  transition: all var(--duration-moderate) ease;
 }
 
 .bubblesRow::-webkit-scrollbar {
   display: none;
+}
+
+/* Double stack mode: wraps into 2 neat rows in front of user */
+.bubblesDoubleStack {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 16px clamp(12px, 1.8vw, 20px) !important;
+  overflow: visible !important;
+  padding: 8px 4px 18px !important;
+  justify-content: flex-start;
+}
+
+/* Decent "View All" button with distinctive rounded rectangle shape */
+.viewAllDecentBtn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  width: 88px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  outline: none;
+  transition: transform var(--duration-moderate) var(--ease-spring);
+}
+
+.viewAllDecentBtn:hover {
+  transform: translateY(-3px);
+}
+
+.viewAllDecentImgWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(var(--blue-brand-rgb), 0.55);
+  background: linear-gradient(135deg, rgba(var(--blue-brand-rgb), 0.35) 0%, rgba(var(--slate-900-rgb), 0.85) 100%);
+  box-shadow: 0 4px 14px rgba(var(--black-rgb), 0.35);
+  color: var(--white);
+  transition: all var(--duration-moderate) ease;
+}
+
+.viewAllDecentBtn:hover .viewAllDecentImgWrap {
+  border-color: var(--sky-400);
+  background: linear-gradient(135deg, rgba(var(--blue-brand-rgb), 0.55) 0%, rgba(var(--slate-900-rgb), 0.95) 100%);
+  box-shadow: 0 0 0 2px rgba(var(--sky-400-rgb), 0.35), 0 4px 16px rgba(var(--black-rgb), 0.45);
+  transform: scale(1.06);
+}
+
+.viewAllDecentActive .viewAllDecentImgWrap {
+  border-color: var(--sky-400);
+  background: linear-gradient(135deg, var(--blue-brand) 0%, var(--sky-600) 100%);
+  box-shadow: 0 0 0 2px rgba(var(--sky-400-rgb), 0.5), 0 4px 18px rgba(var(--black-rgb), 0.55);
+  color: var(--white);
+}
+
+.viewAllDecentBadge {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(var(--white-rgb), 0.88);
+  background: rgba(var(--white-rgb), 0.16);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-top: 1px;
 }
 
 .bubbleBtn {

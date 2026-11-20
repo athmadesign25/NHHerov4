@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useTransition } from "react";
+import React, { useState, useMemo, useEffect, useTransition, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +23,8 @@ import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideAct
 import OrganSystemChipsCarousel, {
   DEFAULT_ORGAN_FILTER_OPTIONS,
 } from "@/components/ui/OrganSystemChipsCarousel";
+import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
+import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import {
   TREATMENTS_PROCEDURES_DATA,
@@ -52,6 +54,8 @@ export default function TreatmentsV2Library({
 }: TreatmentsV2Props) {
   const [items, setItems] = useState<TreatmentProcedureItem[]>(TREATMENTS_PROCEDURES_DATA);
   const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
+  const [selectedSubFilter, setSelectedSubFilter] = useState<string>("all");
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
@@ -142,9 +146,69 @@ export default function TreatmentsV2Library({
     setSelectedOrgan((prev) => (prev === val ? null : val));
   };
 
+  const isPediatricItem = useCallback((item: TreatmentProcedureItem) => {
+    const text = `${item.title} ${item.shortTitle} ${item.summary} ${item.overview} ${item.speciality} ${item.specialitySlug} ${item.slug}`.toLowerCase();
+    return (
+      text.includes("pediatric") ||
+      text.includes("paediatric") ||
+      text.includes("child") ||
+      text.includes("infant") ||
+      text.includes("neonatal") ||
+      text.includes("congenital") ||
+      item.specialitySlug === "paediatric"
+    );
+  }, []);
+
+  const displayedItems = useMemo(() => {
+    return items.filter((item) => {
+      // 1. Audience / Sub-filter (All, Adult, Pediatric)
+      if (selectedSubFilter === "pediatric" && !isPediatricItem(item)) {
+        return false;
+      }
+      if (selectedSubFilter === "adult" && isPediatricItem(item)) {
+        return false;
+      }
+
+      // 2. Alphabetical Letter filter
+      if (selectedLetter) {
+        const firstChar = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+        if (firstChar !== selectedLetter) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [items, selectedSubFilter, selectedLetter, isPediatricItem]);
+
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    items.forEach((item) => {
+      if (selectedSubFilter === "pediatric" && !isPediatricItem(item)) return;
+      if (selectedSubFilter === "adult" && isPediatricItem(item)) return;
+      const char = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+      if (char >= "A" && char <= "Z") {
+        set.add(char);
+      }
+    });
+    return set;
+  }, [items, selectedSubFilter, isPediatricItem]);
+
+  const subFilterTabs = useMemo(() => {
+    const pediatricCount = items.filter(isPediatricItem).length;
+    const adultCount = items.length - pediatricCount;
+    return [
+      { id: "all", label: "All Treatments", count: items.length },
+      { id: "adult", label: "Adult Care", count: adultCount },
+      { id: "pediatric", label: "Pediatric Care", count: pediatricCount },
+    ];
+  }, [items, isPediatricItem]);
+
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    setSelectedSubFilter("all");
+    setSelectedLetter(null);
     setItems(TREATMENTS_PROCEDURES_DATA);
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
@@ -388,43 +452,69 @@ export default function TreatmentsV2Library({
         eyebrow="Explore Treatments by Organ System & Speciality"
       />
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW (MINIMAL TYPOGRAPHY, NO CHIPS/BADGES) ─ */}
+      {/* ─── DIRECTORY CONTROLS: SUB-FILTER TABS (ADULT/PEDIATRIC) & A–Z INDEX ─── */}
       <motion.div
         id="procedures-directory"
-        className={styles.feedbackTextRow}
+        className={styles.directoryControlsWrap}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.45, delay: 0.76 }}
       >
-        <div className={styles.feedbackTextWrapper}>
-          <p className={styles.feedbackText}>
-            {searchQuery.trim() ? (
-              <>
-                Search results for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
-              </>
-            ) : selectedOrgan ? (
-              <>
-                Filtered by <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} found</span>
-              </>
-            ) : (
-              <>
-                Showing all clinical treatments &amp; procedures &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "procedure" : "procedures"} available</span>
-              </>
-            )}
-          </p>
+        <div className={styles.directoryTopBar}>
+          <LibrarySubFilterTabs
+            tabs={subFilterTabs}
+            activeTab={selectedSubFilter}
+            onTabChange={(tab) => {
+              setSelectedSubFilter(tab);
+              setSelectedLetter(null);
+            }}
+            ariaLabel="Filter treatments by patient group"
+          />
 
-          {(selectedOrgan || searchQuery.trim()) && (
-            <button
-              type="button"
-              className={styles.clearFilterChip}
-              onClick={handleResetFilters}
-              aria-label="Clear active filter"
-            >
-              <RotateCcw size={12} />
-              <span>Reset filter</span>
-            </button>
-          )}
+          <div className={styles.feedbackTextWrapper}>
+            <p className={styles.feedbackText}>
+              {searchQuery.trim() ? (
+                <>
+                  Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                  </span>
+                </>
+              ) : selectedOrgan ? (
+                <>
+                  Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                  </span>
+                </>
+              ) : (
+                <span className={styles.feedbackCount}>
+                  Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
+                </span>
+              )}
+            </p>
+
+            {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+              <button
+                type="button"
+                className={styles.clearFilterChip}
+                onClick={handleResetFilters}
+                aria-label="Clear active filters"
+              >
+                <RotateCcw size={12} />
+                <span>Reset all</span>
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={displayedItems.length}
+        />
 
         {isApiLoading && (
           <div className={styles.apiPulseBar}>
@@ -477,14 +567,14 @@ export default function TreatmentsV2Library({
             animate={{ opacity: isApiLoading ? 0.78 : 1, y: 0 }}
             transition={{ duration: 0.35 }}
           >
-            {items.length === 0 ? (
+            {displayedItems.length === 0 ? (
               <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
                 <div className={styles.emptyIconWrapper}>
                   <Search size={26} />
                 </div>
                 <h3 className={styles.emptyTitle}>No matching procedures found</h3>
                 <p className={styles.emptyDesc}>
-                  We couldn't find any results matching your search or active organ filter. Try clearing your query or exploring another organ.
+                  We couldn&apos;t find any results matching your search, age group, or active filter. Try clearing your filters or exploring another category.
                 </p>
                 <button className={styles.resetFiltersBtn} onClick={handleResetFilters}>
                   Reset Filters
@@ -492,7 +582,7 @@ export default function TreatmentsV2Library({
               </div>
             ) : (
               <AnimatePresence mode="popLayout">
-                {items.map((item, idx) => {
+                {displayedItems.map((item, idx) => {
                   const detailUrl = `/procedures/${item.slug}`;
                   const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
 

@@ -562,6 +562,28 @@
 }
 
 /* ─── DYNAMIC FEEDBACK TEXT ROW (HIGHLIGHTING ORGAN & COUNT) ─────────────── */
+.directoryControlsWrap {
+  width: calc(100% - max(4vw, 40px) * 2);
+  max-width: 1320px;
+  margin: 18px auto 20px;
+}
+
+@media (max-width: 768px) {
+  .directoryControlsWrap {
+    width: calc(100% - 32px);
+    margin: 12px auto 16px;
+  }
+}
+
+.directoryTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
 .feedbackTextRow {
   width: calc(100% - max(4vw, 40px) * 2);
   max-width: 1320px;

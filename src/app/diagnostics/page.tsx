@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useTransition } from "react";
+import React, { useState, useMemo, useEffect, useTransition, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,6 +22,8 @@ import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideAct
 import OrganSystemChipsCarousel, {
   DEFAULT_ORGAN_FILTER_OPTIONS,
 } from "@/components/ui/OrganSystemChipsCarousel";
+import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
+import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
 import { DIAGNOSTICS_DATA, DiagnosticItem } from "@/data/diagnosticsData";
 import styles from "./DiagnosticsLibrary.module.css";
@@ -40,6 +42,8 @@ const HERO_ANALYTICS_PARAMETERS = [
 export default function DiagnosticsLibraryPage() {
   const [items, setItems] = useState<DiagnosticItem[]>(DIAGNOSTICS_DATA);
   const [selectedOrgan, setSelectedOrgan] = useState<string | null>(null);
+  const [selectedSubFilter, setSelectedSubFilter] = useState<string>("all");
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
@@ -119,9 +123,60 @@ export default function DiagnosticsLibraryPage() {
     setSelectedOrgan((prev) => (prev === val ? null : val));
   };
 
+  const isLabItem = useCallback((item: DiagnosticItem) => {
+    const mod = item.modality.toLowerCase();
+    return mod.includes("laboratory") || mod.includes("pathology") || mod.includes("genomics") || mod.includes("molecular");
+  }, []);
+
+  const isImagingItem = useCallback((item: DiagnosticItem) => {
+    const mod = item.modality.toLowerCase();
+    return mod.includes("radiology") || mod.includes("imaging") || mod.includes("cardio") || mod.includes("endoscopy");
+  }, []);
+
+  const displayedItems = useMemo(() => {
+    return items.filter((item) => {
+      // 1. Modality / Sub-filter
+      if (selectedSubFilter === "lab" && !isLabItem(item)) return false;
+      if (selectedSubFilter === "imaging" && !isImagingItem(item)) return false;
+
+      // 2. Alphabetical Letter filter
+      if (selectedLetter) {
+        const firstChar = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+        if (firstChar !== selectedLetter) return false;
+      }
+
+      return true;
+    });
+  }, [items, selectedSubFilter, selectedLetter, isLabItem, isImagingItem]);
+
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    items.forEach((item) => {
+      if (selectedSubFilter === "lab" && !isLabItem(item)) return;
+      if (selectedSubFilter === "imaging" && !isImagingItem(item)) return;
+      const char = (item.letter || item.shortTitle[0] || item.title[0]).toUpperCase();
+      if (char >= "A" && char <= "Z") {
+        set.add(char);
+      }
+    });
+    return set;
+  }, [items, selectedSubFilter, isLabItem, isImagingItem]);
+
+  const subFilterTabs = useMemo(() => {
+    const labCount = items.filter(isLabItem).length;
+    const imagingCount = items.filter(isImagingItem).length;
+    return [
+      { id: "all", label: "All Investigations", count: items.length },
+      { id: "lab", label: "Laboratory & Pathology", count: labCount },
+      { id: "imaging", label: "Imaging & Radiology", count: imagingCount },
+    ];
+  }, [items, isLabItem, isImagingItem]);
+
   const handleResetFilters = () => {
     setSelectedOrgan(null);
     setSearchQuery("");
+    setSelectedSubFilter("all");
+    setSelectedLetter(null);
   };
 
   return (
@@ -302,42 +357,68 @@ export default function DiagnosticsLibraryPage() {
         eyebrow="Explore Diagnostics & Lab Tests by Organ System"
       />
 
-      {/* ─── DYNAMIC FEEDBACK TEXT ROW ─────────────────────────────────────── */}
+      {/* ─── DIRECTORY CONTROLS: SUB-FILTER TABS (LAB/IMAGING) & A–Z INDEX ─── */}
       <motion.div
-        className={styles.feedbackTextRow}
+        className={styles.directoryControlsWrap}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.45, delay: 0.55 }}
       >
-        <div className={styles.feedbackTextWrapper}>
-          <p className={styles.feedbackText}>
-            {searchQuery.trim() ? (
-              <>
-                Here based on your search for <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} found</span>
-              </>
-            ) : selectedOrgan ? (
-              <>
-                Here based on your selection for tests under <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} found</span>
-              </>
-            ) : (
-              <>
-                Here based on our diagnostic investigations directory &mdash; <span className={styles.feedbackCount}>{items.length} {items.length === 1 ? "test" : "tests"} available</span>
-              </>
-            )}
-          </p>
+        <div className={styles.directoryTopBar}>
+          <LibrarySubFilterTabs
+            tabs={subFilterTabs}
+            activeTab={selectedSubFilter}
+            onTabChange={(tab) => {
+              setSelectedSubFilter(tab);
+              setSelectedLetter(null);
+            }}
+            ariaLabel="Filter investigations by modality"
+          />
 
-          {(selectedOrgan || searchQuery.trim()) && (
-            <button 
-              type="button" 
-              className={styles.clearFilterChip} 
-              onClick={handleResetFilters}
-              aria-label="Clear active filter"
-            >
-              <RotateCcw size={12} />
-              <span>Reset filter</span>
-            </button>
-          )}
+          <div className={styles.feedbackTextWrapper}>
+            <p className={styles.feedbackText}>
+              {searchQuery.trim() ? (
+                <>
+                  Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"} found
+                  </span>
+                </>
+              ) : selectedOrgan ? (
+                <>
+                  Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"} found
+                  </span>
+                </>
+              ) : (
+                <span className={styles.feedbackCount}>
+                  Showing {displayedItems.length} {displayedItems.length === 1 ? "test" : "tests"}
+                </span>
+              )}
+            </p>
+
+            {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+              <button 
+                type="button" 
+                className={styles.clearFilterChip} 
+                onClick={handleResetFilters}
+                aria-label="Clear active filters"
+              >
+                <RotateCcw size={12} />
+                <span>Reset all</span>
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={displayedItems.length}
+        />
 
         {isApiLoading && (
           <div className={styles.apiPulseBar}>
@@ -390,7 +471,7 @@ export default function DiagnosticsLibraryPage() {
             animate={{ opacity: isApiLoading ? 0.78 : 1, y: 0 }}
             transition={{ duration: 0.35 }}
           >
-            {items.length === 0 ? (
+            {displayedItems.length === 0 ? (
               <div className={styles.emptyState} style={{ gridColumn: "1 / -1" }}>
                 <div className={styles.emptyIconWrapper}>
                   <Search size={26} />
@@ -405,7 +486,7 @@ export default function DiagnosticsLibraryPage() {
               </div>
             ) : (
               <AnimatePresence mode="popLayout">
-                {items.map((item, idx) => {
+                {displayedItems.map((item, idx) => {
                   const detailUrl = `/diagnostics/${item.slug}`;
                   const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
 
