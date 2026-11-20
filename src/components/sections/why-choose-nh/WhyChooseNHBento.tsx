@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import styles from "./WhyChooseNH.module.css";
+import styles from "./WhyChooseNHBento.module.css";
 
 const STATS = [
   { value: "8,000+", label: "Cancer surgeries performed annually" },

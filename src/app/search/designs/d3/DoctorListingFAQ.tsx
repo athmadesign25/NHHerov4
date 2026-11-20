@@ -1,5 +1,5 @@
-import { ChevronDown } from "lucide-react";
-import styles from "./DoctorListingFAQ.module.css";
+import DoctorFAQAccordion from "@/components/ui/DoctorFAQAccordion";
+import styles from "@/components/ui/DoctorFAQAccordion.module.css";
 
 interface Props {
   speciality?: string;
@@ -12,7 +12,7 @@ export default function DoctorListingFAQ({ speciality, city }: Props) {
   const questions = [
     {
       question: `How can I find and compare doctors${location}?`,
-      answer: "Search by doctor name, speciality or hospital, then use the filters to narrow the list. Review each doctor’s speciality, qualifications and hospital affiliation. Open their profile or details to learn more before choosing.",
+      answer: "Search by doctor name, specialty or hospital, then use the filters to narrow the list. Review each doctor’s specialty, qualifications and hospital affiliation. Open their profile or details to learn more before choosing.",
     },
     {
       question: "How do I choose the hospital for my visit?",
@@ -37,14 +37,6 @@ export default function DoctorListingFAQ({ speciality, city }: Props) {
       <h2 id="doctor-listing-faq-heading">Before you book</h2>
       <p>{speciality ? `${speciality} appointments` : "Doctor appointments"}{location}: consultation options, locations and fees.</p>
     </header>
-    <div className={styles.questions}>
-      {questions.map(({ question, answer }) => <details className={styles.item} key={question}>
-        <summary className={styles.question}>
-          <span>{question}</span>
-          <ChevronDown size={18} strokeWidth={1.75} className={styles.chevron} aria-hidden />
-        </summary>
-        <div className={styles.answer}><p>{answer}</p></div>
-      </details>)}
-    </div>
+    <DoctorFAQAccordion items={questions} idPrefix="doctor-listing-faq" />
   </section>;
 }

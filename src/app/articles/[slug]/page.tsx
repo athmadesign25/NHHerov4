@@ -1,15 +1,17 @@
 "use client";
 
+import { procedureDoctorBookingHref } from "@/app/procedures/bookingLinks";
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
+import {
   BookOpen,
-  CheckCircle2, 
-  Link as LinkIcon, 
-  ArrowUpRight, 
-  Calendar, 
+  CheckCircle2,
+  Link as LinkIcon,
+  ArrowUpRight,
+  Calendar,
   Check,
   UserCheck,
   Share2,
@@ -193,8 +195,8 @@ export default function ArticleDetailPage({ params }: PageProps) {
             </div>
 
             <div className={styles.heroActionsRow}>
-              <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`} 
+              <Link
+                href={specialityBookingEntry(detail.categorySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -318,7 +320,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
                   Connect directly with our senior clinical specialists for a dedicated consultation.
                 </p>
                 <Link
-                  href={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
+                  href={specialityBookingEntry(detail.categorySlug)}
                   className={styles.helpCardPhoneBtn}
                 >
                   <span>Book Consultation &rarr;</span>
@@ -424,8 +426,8 @@ export default function ArticleDetailPage({ params }: PageProps) {
                             </div>
                           </div>
 
-                          <Link 
-                            href={`/doctors?search=${encodeURIComponent(doc.name)}`} 
+                          <Link
+                            href={procedureDoctorBookingHref(doc.name)}
                             className={styles.refBookBtnWhite}
                           >
                             Book
@@ -493,7 +495,7 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.categorySlug)}`}
+        consultHref={specialityBookingEntry(detail.categorySlug)}
         consultLabel={"Book\nOPD"}
         conditionTitle={detail.title}
         pulseQuery={`I want to learn more about "${detail.title}": clinical advice, diagnosis, and treatment options.`}

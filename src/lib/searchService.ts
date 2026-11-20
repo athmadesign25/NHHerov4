@@ -33,8 +33,6 @@ export interface RawApiResponse {
   treatments?: ApiEntity[];
   blogs?: ApiEntity[];
   skills?: ApiEntity[];
-  nearbyCityUsed?: boolean;
-  nearbyCityName?: string;
 }
 
 // --- Normalized types used by the UI ---
@@ -97,8 +95,6 @@ export interface NormalizedResults {
   procedures: NormalizedProcedure[];
   treatments: NormalizedTreatment[];
   blogs: NormalizedBlog[];
-  nearbyCityUsed?: boolean;
-  nearbyCityName?: string;
 }
 
 // --- City ID mapping (confirmed from production city select) ---
@@ -139,44 +135,6 @@ const CITY_ID_MAP: Record<string, number> = Object.fromEntries([
 
 export function getCityId(cityName: string): number | null {
   if (!cityName || cityName === "All Locations" || cityName === "All") return null;
-  return CITY_ID_MAP[cityName] ?? null;
-}
-
-// --- Dynamic Cities Fetching ---
-let cachedCities: { id: number; name: string }[] | null = null;
-
-export async function fetchCities(): Promise<{ id: number; name: string }[]> {
-  if (cachedCities) return cachedCities;
-  if (typeof window === "undefined") return []; // SSR fallback
-  
-  try {
-    const res = await fetch(new URL("/api/cities", window.location.origin).toString());
-    if (res.ok) {
-      cachedCities = await res.json();
-      return cachedCities || [];
-    }
-  } catch (err) {
-    console.error("Failed to fetch cities", err);
-  }
-  return [];
-}
-
-export async function getCityIdAsync(cityName: string): Promise<number | null> {
-  if (!cityName || cityName === "All Locations" || cityName === "All") return null;
-  
-  // Try dynamic fetch first
-  const dynamicCities = await fetchCities();
-  if (dynamicCities && dynamicCities.length > 0) {
-    const match = dynamicCities.find(c => c.name.toLowerCase() === cityName.toLowerCase());
-    if (match) return match.id;
-    // Check aliases
-    if (cityName.toLowerCase() === "bengaluru") {
-      const blr = dynamicCities.find(c => c.name.toLowerCase() === "bangalore");
-      if (blr) return blr.id;
-    }
-  }
-  
-  // Fallback to hardcoded map if API failed
   return CITY_ID_MAP[cityName] ?? null;
 }
 
@@ -318,16 +276,22 @@ const SPECIALITY_JPEG_MAP: Record<string, string> = {
   "Surgical Gastroenterology": "/Specialities icons/Gastroenterology.jpeg",
 };
 
-// Deterministic pool of male/female doctor photos keyed by entityId
+// Deterministic pool of real male/female doctor photos (No cartoon avatars)
 const MALE_DOCTOR_PHOTOS = [
-  "/assets/doctor_1.png",
-  "/assets/doctor_2.png",
+  "/assets/hero_doctor.png",
+  "/doctors/doc_devi_shetty.jpg",
   "/assets/doctor_3.png",
-  "/images/misc/doctor_avatar_male_v2.png",
+  "/doctors/doc_bagirath.jpg",
+  "/assets/doctor_1.png",
+  "/doctors/doc_vivek.jpg",
+  "/doc2.png",
+  "/doc4.png",
 ];
 const FEMALE_DOCTOR_PHOTOS = [
-  "/images/misc/doctor_avatar_female_v2.png",
-  "/assets/doctor_1.png",
+  "/doctors/doc_ananya.jpg",
+  "/assets/doctor_2.png",
+  "/doc1.png",
+  "/doc3.png",
 ];
 
 function getDoctorPhotoById(doctorName: string, entityId: number): string {
@@ -475,16 +439,7 @@ function cleanEntityName(name: string | null | undefined): string {
     image: BLOG_IMAGES[i % BLOG_IMAGES.length],
   }));
 
-  return {
-    doctors,
-    specialities,
-    subSpecialities,
-    procedures,
-    treatments,
-    blogs,
-    nearbyCityUsed: raw.nearbyCityUsed,
-    nearbyCityName: raw.nearbyCityName,
-  };
+  return { doctors, specialities, subSpecialities, procedures, treatments, blogs };
 }
 
 // --- API caller (calls internal Next.js proxy to avoid browser CORS/SSL issues) ---
@@ -509,7 +464,9 @@ export async function searchHealthcare(
     return cached.data;
   }
 
-  const existing = inFlightCache.get(cacheKey);
+  // Requests with a caller-owned signal must not share another caller's
+  // cancellation (including a previous, now-aborted search for the same text).
+  const existing = signal ? undefined : inFlightCache.get(cacheKey);
   if (existing) return existing;
 
   const url = new URL("/api/search", window.location.origin);
@@ -522,14 +479,14 @@ export async function searchHealthcare(
 
     const raw: RawApiResponse = await res.json();
     const normalized = normalizeSearchResponse(raw);
-    resultCache.set(cacheKey, { data: normalized, expiresAt: Date.now() + RESULT_CACHE_TTL_MS });
+    if (!signal?.aborted) resultCache.set(cacheKey, { data: normalized, expiresAt: Date.now() + RESULT_CACHE_TTL_MS });
     return normalized;
   })();
 
-  inFlightCache.set(cacheKey, request);
+  if (!signal) inFlightCache.set(cacheKey, request);
   try {
     return await request;
   } finally {
-    inFlightCache.delete(cacheKey);
+    if (inFlightCache.get(cacheKey) === request) inFlightCache.delete(cacheKey);
   }
 }

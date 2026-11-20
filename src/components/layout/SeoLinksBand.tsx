@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import styles from "./SeoLinksBand.module.css";
 import { SEO_LINK_SECTIONS } from "@/data/seo-links";
+import { seoDoctorHref } from "./seoDoctorHref";
 
 const FIRST_SECTION = SEO_LINK_SECTIONS[0]?.id ?? null;
 
@@ -211,7 +212,7 @@ export default function SeoLinksBand() {
                           <li key={`${section.id}-${i}`}>
                             {external ? (
                               <a
-                                href={link.href}
+                                href={seoDoctorHref(link.href)}
                                 className={styles.link}
                                 tabIndex={tab}
                                 rel="noopener noreferrer"
@@ -220,7 +221,7 @@ export default function SeoLinksBand() {
                               </a>
                             ) : (
                               <Link
-                                href={link.href}
+                                href={seoDoctorHref(link.href)}
                                 className={styles.link}
                                 tabIndex={tab}
                               >

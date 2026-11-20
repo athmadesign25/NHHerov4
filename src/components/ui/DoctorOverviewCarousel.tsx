@@ -279,8 +279,8 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
           </span>
           <div className={styles.indicatorBars}>
             {videoList.map((item, idx) => (
-              <div 
-                key={item.id} 
+              <div
+                key={item.id}
                 className={`${styles.indicatorBar} ${idx === currentIndex ? styles.indicatorBarActive : ""}`}
                 onClick={() => goToIndex(idx)}
                 role="button"
@@ -294,19 +294,19 @@ const EASE_CURVE = [0.16, 1, 0.3, 1] as const;
 
 
         <div className={styles.navButtons}>
-          <button 
+          <button
             type="button"
-            className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`} 
-            onClick={goToPrev} 
+            className={`${styles.navBtn} ${isPrevDisabled ? styles.navBtnDisabled : ""}`}
+            onClick={goToPrev}
             disabled={isPrevDisabled}
             aria-label="Previous item"
           >
             <ArrowLeft size={16} />
           </button>
-          <button 
+          <button
             type="button"
-            className={`${styles.navBtn} ${isNextDisabled ? styles.navBtnDisabled : ""}`} 
-            onClick={goToNext} 
+            className={`${styles.navBtn} ${isNextDisabled ? styles.navBtnDisabled : ""}`}
+            onClick={goToNext}
             disabled={isNextDisabled}
             aria-label="Next item"
           >

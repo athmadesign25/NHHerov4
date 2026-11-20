@@ -31,27 +31,12 @@
   -webkit-backdrop-filter: blur(var(--space-16)) saturate(110%);
   backdrop-filter: blur(var(--space-16)) saturate(110%);
   box-shadow: var(--elevation-3);
-  transform-origin: left center;
-  animation: cartSurfaceReveal var(--duration-slow) var(--ease-out) var(--duration-instant) both;
 }
-.selectionText, .total, .primary { animation: cartContentReveal var(--duration-base) var(--ease-out) var(--duration-emphasis) both; }
-.bag { position: relative; animation: cartIconAppear var(--duration-base) var(--ease-out) both; }
+.bag { position: relative; }
 .cartGlyph, .cartReceive { display: flex; align-items: center; justify-content: center; }
 .cartReceive { animation: cartReceive var(--duration-slowest) var(--ease-standard) both; }
 .healthPlus { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; color: var(--color-primary); animation: healthPlusArrive var(--duration-slowest) var(--ease-out) both; }
 .healthPlus svg { animation: healthPlusDrop var(--duration-slowest) var(--ease-standard) both; }
-@keyframes cartSurfaceReveal {
-  from { transform: scaleX(.05); opacity: 0; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-@keyframes cartIconAppear {
-  from { transform: scale(.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-@keyframes cartContentReveal {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 @keyframes healthPlusArrive {
   from { transform: translateX(var(--space-24)); }
   to { transform: translateX(0); }

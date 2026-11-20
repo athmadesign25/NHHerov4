@@ -280,7 +280,7 @@
 
   .mobileTopicIntro {
     font-family: var(--font-family);
-    font-size: var(--font-size-sm, 14px);
+    font-size: var(--font-size-base, 16px);
     color: var(--color-text-secondary, #64748b);
     line-height: var(--leading-relaxed, 1.6);
     margin: 0 0 var(--space-16, 16px) 0;

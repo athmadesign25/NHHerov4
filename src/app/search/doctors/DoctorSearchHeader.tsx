@@ -25,7 +25,7 @@ export default function DoctorSearchHeader({ query, location, onQueryChange, onL
         <div className={styles.search}>
           <Search size={20} aria-hidden />
           <input ref={inputRef} type="search" value={query} onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="Doctor, speciality or condition" aria-label="Search doctors by name, speciality or condition" enterKeyHint="search" autoComplete="off" />
+            placeholder="Doctor, specialty or condition" aria-label="Search doctors by name, specialty or condition" enterKeyHint="search" autoComplete="off" />
           {query && <button type="button" className={styles.clear} aria-label="Clear search" onClick={() => { onQueryChange(""); inputRef.current?.focus(); }}><X size={18} /></button>}
           <button type="submit" className={styles.submit}>Search<Arrow /></button>
         </div>

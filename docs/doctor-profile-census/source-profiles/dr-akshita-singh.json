@@ -1,0 +1,155 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/April2024/wpNlC8ccmq6vSKw8eXOt.webp",
+    "name": "Dr. Akshita Singh",
+    "id": 1744,
+    "doctorCode": "109077",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "DNB (General Surgery)",
+        "FEBS (Breast Surgery)",
+        "Fellowship (Breast Oncology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Breast Oncology & Oncoplastic Surgery"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 32,
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "code": "1011",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "10th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Akshitha did her MBBS from the esteemed B.J Medical College, Pune. After completing her DNB General Surgery, she did 2 years HBNI fellowship in Breast Surgical Oncology from Tata Memorial Hospital, Mumbai. She has done MRCS (Ed) from prestigious The Royal College of Surgeons of Edinburgh. Apart from this, she is also actively involved in Basic & Translational Research Laboratory & Clinician Scientist Laboratory over the few years.She has presented and published several research articles and abstracts at various...",
+    "full_description": "Dr. Akshitha did her MBBS from the esteemed B.J Medical College, Pune. After completing her DNB General Surgery, she did 2 years HBNI fellowship in Breast Surgical Oncology from Tata Memorial Hospital, Mumbai. She has done MRCS (Ed) from prestigious The Royal College of Surgeons of Edinburgh. Apart from this, she is also actively involved in Basic & Translational Research Laboratory & Clinician Scientist Laboratory over the few years.She has presented and published several research articles and abstracts at various national and international conferences and journals."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Expertise in the handling of both the outpatient services as well as operation theatres, thorough assessment of patients in both pre & post operative phase of treatment. Ability in handling all postoperative complications. Associated with three institutio",
+      "Women Oncology   Breast Cancer & Breast Reconstruction using myocutaneous flaps and oncoplastic procedures.",
+      "Breast Surgery",
+      "Oncoplastic Surgery",
+      "Breast & Oncoplastic Oncology",
+      "Oncoplastic Oncology",
+      "Breast Oncology",
+      "Breast Cancer",
+      "Surgical Oncology",
+      "Cancer Care",
+      "Cancer",
+      "Oncology/Cancer Care",
+      "BREAST ONCOLOGY & ONCOPLASTIC SURGERY",
+      "Breast Oncology & Oncoplastic Surgery"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Awards & Recognition\n\nPublished research articles and abstracts in various national and international journals.\nPresented posters, abstracts and cases in various International and National conferences.",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "Surgery in Breast Cancer | Dr. Akshita Singh",
+        "name": "Dr. Akshita Singh",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/ZA0N1jkqLQA"
+      },
+      {
+        "subtitle": "Benign Breast Diseases | Dr. Akshita Singh",
+        "name": "Dr. Akshita Singh",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/uZ0wIDrTiFA"
+      },
+      {
+        "subtitle": "Patient Success Story | Breast Cancer | Dr. Akshita Singh",
+        "name": "Dr. Akshita Singh",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/d-y3cvD5wC8"
+      },
+      {
+        "subtitle": "Breast Cancer Awareness | Dr. Akshita Singh and Dr. Heeba",
+        "name": "Dr. Akshita Singh",
+        "location": "Mazumdar Shaw Medical Centre, Bangalore",
+        "vdo_link": "https://www.youtube.com/embed/P0mcNlZ2x_k"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Can breast cancer develop while breast feeding?",
+        "date": "March 03, 2025",
+        "slug": "can-breast-cancer-develop-while-breast-feeding",
+        "image": "",
+        "imgAlt": "Can breast cancer develop while breast feeding?",
+        "authorInitial": "AS",
+        "author": "Dr. Akshita Singh",
+        "category": "Breast Cancer"
+      },
+      {
+        "title": "Breast Cancer Awareness: Myths vs Facts",
+        "date": "November 06, 2024",
+        "slug": "breast-cancer-awareness-myths-vs-facts",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/November2024/cGxkkPeNUu0TeNSquiLs.webp",
+        "imgAlt": "Breast Cancer Awareness: Myths vs Facts",
+        "authorInitial": "AS",
+        "author": "Dr. Akshita Singh",
+        "category": "Breast Cancer"
+      },
+      {
+        "title": "Breast Cancer: Genomic Testing and Personalised Treatments",
+        "date": "October 11, 2024",
+        "slug": "breast-cancer-genomic-testing-and-personalised-treatments",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/October2024/FuPpXdPmZ6Hd87lmo4G2.webp",
+        "imgAlt": "Breast Cancer: Genomic Testing and Personalised Treatments",
+        "authorInitial": "AS",
+        "author": "Dr. Akshita Singh",
+        "category": "Oncology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

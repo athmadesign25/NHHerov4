@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Keep the framework badge clear of the bottom-left design preview controls.
+  devIndicators: false,
   images: {
     remotePatterns: [
       {
@@ -14,7 +16,20 @@ const nextConfig: NextConfig = {
     ],
     // Allow local assets served from /public
   },
-  devIndicators: false,
+  async redirects() {
+    return [
+      {
+        source: '/find-a-doctor',
+        destination: '/search/doctors',
+        permanent: false,
+      },
+      {
+        source: '/book',
+        destination: '/search/doctors',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

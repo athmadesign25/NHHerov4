@@ -1287,7 +1287,7 @@
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(3, 78, 162, 0.14);
   border-radius: 20px;
-  box-shadow: 
+  box-shadow:
     0 16px 40px rgba(3, 78, 162, 0.14),
     0 4px 12px rgba(15, 23, 42, 0.05),
     inset 0 1px 1px rgba(255, 255, 255, 0.95);
@@ -1296,7 +1296,7 @@
 }
 
 .floatingSideBoxes:hover {
-  box-shadow: 
+  box-shadow:
     0 22px 48px rgba(3, 78, 162, 0.20),
     0 6px 16px rgba(15, 23, 42, 0.08),
     inset 0 1px 1px rgba(255, 255, 255, 1);
@@ -1338,7 +1338,7 @@
   border-radius: 12px;
   background: linear-gradient(149deg, rgba(3, 78, 162, 0.92) 0%, rgba(2, 48, 112, 0.98) 100%);
   color: #ffffff;
-  box-shadow: 
+  box-shadow:
     0 4px 14px rgba(3, 78, 162, 0.28),
     inset 0 1px 1px rgba(255, 255, 255, 0.5),
     inset 0 -1px 2px rgba(255, 255, 255, 0.15);
@@ -1348,7 +1348,7 @@
 
 .floatingBoxItem:hover .boxIconWrap {
   transform: scale(1.08);
-  box-shadow: 
+  box-shadow:
     0 6px 18px rgba(3, 78, 162, 0.45),
     inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
@@ -2435,5 +2435,3 @@
   white-space: nowrap;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
-
-

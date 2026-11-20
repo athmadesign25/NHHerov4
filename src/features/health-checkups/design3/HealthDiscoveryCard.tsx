@@ -2,11 +2,14 @@
 
 import { useId } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Building2, CalendarDays, Check, ChevronRight, History, ShoppingCart } from "lucide-react";
 import { duration, ease } from "@/lib/motion";
 import { money, type HealthItem } from "../catalog";
 import { healthCardContent } from "../healthCardContent";
+import { DEFAULT_HEALTH_DESIGN } from "../healthDesigns";
+import { healthItemDetailHref } from "../healthDetailTypes";
 import styles from "./HealthDiscoveryCard.module.css";
 
 interface Props {
@@ -46,7 +49,12 @@ export default function HealthDiscoveryCard({ item, eager = false, selected, inc
       {previouslyBooked && <span className={styles.history}><History aria-hidden />Booked before</span>}
       <div className={styles.intro}>
         <div className={styles.identity}>
-          <h3 id={titleId} className={styles.title}><button type="button" onClick={onDetails}>{item.name}</button></h3>
+          <h3 id={titleId} className={styles.title}>
+            <Link href={healthItemDetailHref(item, DEFAULT_HEALTH_DESIGN)} onNavigate={(event) => {
+              event.preventDefault();
+              onDetails();
+            }}>{item.name}</Link>
+          </h3>
           {testCount ? <button type="button" className={styles.includes} onClick={onTests} aria-haspopup="dialog" aria-label={`View included tests for ${item.name}`}>
             Includes {testCount} {testCount === 1 ? "test" : "tests"}<ChevronRight aria-hidden />
           </button> : <button type="button" className={styles.includes} onClick={onDetails} aria-label={`View details for ${item.name}`}>

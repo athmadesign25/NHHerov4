@@ -156,6 +156,18 @@
   transform: translateY(-2px);
 }
 
+.doctorsViewMoreWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-8);
+}
+
+@media (max-width: 768px) {
+  .doctorsViewMoreWrapper {
+    display: none !important;
+  }
+}
+
 .metricsBottomWrap {
   position: relative;
   margin-top: 40px;
@@ -1542,8 +1554,17 @@
 }
 
 @media (max-width: 768px) {
+  .sectionTitle {
+    font-size: var(--font-size-3xl, 30px);
+    line-height: var(--leading-tight);
+    margin-bottom: 12px;
+  }
+  .sectionDesc {
+    font-size: var(--font-size-base, 16px);
+    line-height: var(--leading-normal);
+  }
   .statsBanner { position: relative; transform: none; left: 0; width: 100%; margin-top: -40px; border-radius: var(--radius-lg); }
-  .hero { padding-bottom: var(--sp-12); }
+  .hero { padding-bottom: var(--space-32, 32px); }
   .heroBreadcrumbs,
   .desktopOnlyBreadcrumb {
     display: none !important;

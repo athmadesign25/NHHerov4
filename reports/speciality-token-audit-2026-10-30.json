@@ -1,0 +1,345 @@
+{
+  "method": "Declaration-level static estimate; shared tokens and aliases count; hard-coded fallbacks ignored when token resolves; breakpoints, layout ratios, SVG assets and non-style animation geometry excluded. Mixed raw/token declarations count as remaining.",
+  "results": {
+    "directory": {
+      "adopted": 226,
+      "remaining": 206,
+      "categories": {
+        "spacing": {
+          "adopted": 35,
+          "remaining": 77
+        },
+        "colour": {
+          "adopted": 108,
+          "remaining": 49
+        },
+        "typography": {
+          "adopted": 26,
+          "remaining": 42
+        },
+        "effects": {
+          "adopted": 0,
+          "remaining": 17
+        },
+        "motion": {
+          "adopted": 27,
+          "remaining": 15
+        },
+        "radius": {
+          "adopted": 30,
+          "remaining": 6
+        }
+      },
+      "examples": [
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 44,
+          "prop": "margin-inline",
+          "value": "var(--d3-gutter-start) var(--d3-gutter-end)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 62,
+          "prop": "font-size",
+          "value": "clamp(28px, 3.2vw, 38px)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 65,
+          "prop": "letter-spacing",
+          "value": "-0.025em"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 66,
+          "prop": "line-height",
+          "value": "1.2"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 80,
+          "prop": "line-height",
+          "value": "1.5"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 102,
+          "prop": "background",
+          "value": "#ffffff"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 104,
+          "prop": "box-shadow",
+          "value": "0 1px 3px rgba(0, 0, 0, 0.03)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 110,
+          "prop": "background",
+          "value": "rgba(255, 255, 255, 0.96)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 111,
+          "prop": "backdrop-filter",
+          "value": "blur(16px)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 123,
+          "prop": "margin-inline",
+          "value": "var(--d3-gutter-start) var(--d3-gutter-end)"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 204,
+          "prop": "padding",
+          "value": "1px"
+        },
+        {
+          "file": "src/app/specialities/page.module.css",
+          "line": 316,
+          "prop": "color",
+          "value": "#ffffff"
+        }
+      ],
+      "percent": 52
+    },
+    "about": {
+      "adopted": 71,
+      "remaining": 9,
+      "categories": {
+        "typography": {
+          "adopted": 18,
+          "remaining": 3
+        },
+        "spacing": {
+          "adopted": 18,
+          "remaining": 1
+        },
+        "colour": {
+          "adopted": 26,
+          "remaining": 0
+        },
+        "radius": {
+          "adopted": 5,
+          "remaining": 0
+        },
+        "effects": {
+          "adopted": 0,
+          "remaining": 3
+        },
+        "motion": {
+          "adopted": 4,
+          "remaining": 2
+        }
+      },
+      "examples": [
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 27,
+          "prop": "box-shadow",
+          "value": "0 4px 24px rgba(var(--slate-900-rgb, 15, 23, 42), 0.05)"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 53,
+          "prop": "padding",
+          "value": "var(--space-14, 14px) var(--space-18, 18px)"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 70,
+          "prop": "box-shadow",
+          "value": "0 2px 10px rgba(var(--slate-900-rgb, 15, 23, 42), 0.04)"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 94,
+          "prop": "letter-spacing",
+          "value": "0.04em"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 111,
+          "prop": "letter-spacing",
+          "value": "-0.01em"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 166,
+          "prop": "letter-spacing",
+          "value": "-0.02em"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.module.css",
+          "line": 187,
+          "prop": "box-shadow",
+          "value": "0 4px 16px rgba(var(--slate-900-rgb, 15, 23, 42), 0.04)"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.tsx",
+          "line": 361,
+          "prop": "duration",
+          "value": "0.22"
+        },
+        {
+          "file": "src/components/speciality/AboutSpecialitySection.tsx",
+          "line": 361,
+          "prop": "ease",
+          "value": "[0.16, 1, 0.3, 1]"
+        }
+      ],
+      "percent": 89
+    },
+    "details": {
+      "adopted": 476,
+      "remaining": 600,
+      "categories": {
+        "colour": {
+          "adopted": 315,
+          "remaining": 17
+        },
+        "spacing": {
+          "adopted": 31,
+          "remaining": 247
+        },
+        "effects": {
+          "adopted": 3,
+          "remaining": 97
+        },
+        "typography": {
+          "adopted": 92,
+          "remaining": 74
+        },
+        "radius": {
+          "adopted": 35,
+          "remaining": 20
+        },
+        "motion": {
+          "adopted": 0,
+          "remaining": 145
+        }
+      },
+      "examples": [
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 38,
+          "prop": "backdrop-filter",
+          "value": "blur(12px)"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 54,
+          "prop": "backdrop-filter",
+          "value": "blur(8px)"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 70,
+          "prop": "padding-left",
+          "value": "calc(max(4vw, 40px) + 184px)"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 71,
+          "prop": "padding-right",
+          "value": "calc(max(4vw, 40px) + 184px)"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 80,
+          "prop": "margin-top",
+          "value": "300px"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 84,
+          "prop": "font-size",
+          "value": "clamp(28px, 3.2vw, 44px)"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 87,
+          "prop": "line-height",
+          "value": "1.18"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 88,
+          "prop": "letter-spacing",
+          "value": "-0.025em"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 89,
+          "prop": "margin-bottom",
+          "value": "16px"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 95,
+          "prop": "line-height",
+          "value": "1.4"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 97,
+          "prop": "margin-bottom",
+          "value": "36px"
+        },
+        {
+          "file": "src/app/specialities/[slug]/Speciality.module.css",
+          "line": 106,
+          "prop": "gap",
+          "value": "8px"
+        }
+      ],
+      "percent": 44
+    }
+  },
+  "total": {
+    "adopted": 773,
+    "remaining": 815,
+    "categories": {
+      "spacing": {
+        "adopted": 84,
+        "remaining": 325,
+        "percent": 21
+      },
+      "colour": {
+        "adopted": 449,
+        "remaining": 66,
+        "percent": 87
+      },
+      "typography": {
+        "adopted": 136,
+        "remaining": 119,
+        "percent": 53
+      },
+      "effects": {
+        "adopted": 3,
+        "remaining": 117,
+        "percent": 3
+      },
+      "motion": {
+        "adopted": 31,
+        "remaining": 162,
+        "percent": 16
+      },
+      "radius": {
+        "adopted": 70,
+        "remaining": 26,
+        "percent": 73
+      }
+    },
+    "percent": 49
+  },
+  "date": "2026-10-30",
+  "sourceBranch": "toshib_work",
+  "sourceCommit": "96053f82f3e3f747dd75dc44b613330ba2d85e01",
+  "scope": "Specialities directory, About Speciality, and both detail-page designs. Excludes navbar, homepage, booking and global token definitions.",
+  "planningNote": "Coverage measures styling declarations, not percentage of implementation time. Legacy --sp-* aliases count as shared-token references but still require naming cleanup.",
+  "command": "node scripts/audit-speciality-tokens.cjs"
+}

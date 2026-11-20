@@ -23,7 +23,6 @@
 # misc
 .DS_Store
 *.pem
-/*.png
 
 # debug
 npm-debug.log*
@@ -49,6 +48,3 @@ clean_push_with_identity/
 clean_push_with_identity/
 /NH-Redesign-website-Final-Draft/
 /NHHerovideo/
-
-*storybook.log
-storybook-static

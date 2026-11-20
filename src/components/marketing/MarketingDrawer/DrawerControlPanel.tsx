@@ -9,7 +9,7 @@
  * controls once and are not any more, because each one was a way for two
  * banners to stop looking like the same brand.
  *
- * DEV ONLY. Renders nothing in a production build.
+ * Available on the desktop L1 prototype route, including deployed previews.
  */
 
 import { motion, useDragControls } from "framer-motion";
@@ -31,8 +31,13 @@ type Props = {
   onChange: (next: BannerConfig) => void;
 };
 
-const ORIENTATIONS: Orientation[] = ["vertical", "horizontal"];
+const ORIENTATIONS: Orientation[] = ["horizontal", "vertical"];
 const COLLAPSE: CollapseMode[] = ["none", "toast", "island"];
+const COLLAPSE_LABELS: Record<CollapseMode, string> = {
+  none: "none",
+  toast: "L3 (sm banner)",
+  island: "L4 (icon)",
+};
 const KINDS: FieldKind[] = ["text", "phone"];
 
 function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
@@ -52,7 +57,6 @@ function Switch({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 export default function DrawerControlPanel({ config, onChange }: Props) {
   const controls = useDragControls();
   const isMobile = useIsMobile();
-  if (process.env.NODE_ENV === "production") return null;
   // There is no room for it beside a 92vw panel, and mobile is a preview
   // of what desktop produced rather than its own thing to configure.
   if (isMobile) return null;
@@ -79,6 +83,7 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
       // The banner is always centred, so the panel no longer has an edge
       // to dodge — it sits in the corner furthest from it.
       className={`${styles.panel} ${styles.atBottomRight}`}
+      data-banner-controls
       drag
       // Drag starts from the header ONLY. On the whole panel, framer captures
       // the pointer and the scrollable body never receives it.
@@ -107,6 +112,14 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
         {/* The only spatial choice left. Position (four edges) and overlay
             tone (dark/light) were both controls; each one let two banners
             stop looking like the same brand without buying any range. */}
+        <section className={styles.row}>
+          <label className={styles.label} htmlFor="banner-duration">Auto-close duration (seconds)</label>
+          <input id="banner-duration" type="number" min={3} max={30} step={1} className={styles.input} value={config.autoCloseSeconds}
+            onChange={event => {
+              const seconds = Number(event.target.value);
+              if (Number.isFinite(seconds) && seconds >= 3 && seconds <= 30) set({ autoCloseSeconds: seconds });
+            }} />
+        </section>
         <section className={styles.row}>
           <label className={styles.label}>Orientation</label>
           <div className={styles.seg}>
@@ -223,7 +236,7 @@ export default function DrawerControlPanel({ config, onChange }: Props) {
                 onClick={() => set({ collapse: c })}
                 className={c === config.collapse ? styles.segOn : styles.segOff}
               >
-                {c}
+                {COLLAPSE_LABELS[c]}
               </button>
             ))}
           </div>

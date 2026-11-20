@@ -1,0 +1,327 @@
+{
+  "capturedAt": "2026-11-05",
+  "profileCount": 20,
+  "provenance": "Public NH HTTP profile responses; names/IDs verified against live speciality listings. Full source strings and ordering retained. Raw HTML remains outside repository in /private/tmp/nh-profile-census/raw. Browser-click verification is separate.",
+  "profiles": [
+    {
+      "name": "Dr. Aditi Singhvi",
+      "slug": "dr-aditi-singhvi",
+      "category": "Cardiology",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-aditi-singhvi",
+      "fetchedAt": "2026-11-05T05:56:33Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cardiology",
+        "nameMatched": true,
+        "listingId": 1909
+      },
+      "sourceFile": "source-profiles/dr-aditi-singhvi.json",
+      "sourceSha256": "233e0b36066ba4780cda536e1da4f94a1c71d4af8f5653c72f9b6049a18f9f13",
+      "rawHtmlSha256": "92d0832c0d39fde7712eaa282579d5b5a030a2151dd1293a7ffb450e641635b6"
+    },
+    {
+      "name": "Dr. Arun B S",
+      "slug": "dr-arun-b-s",
+      "category": "Cardiology",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiac-sciences-cardiology-adult/dr-arun-b-s",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cardiology",
+        "nameMatched": true,
+        "listingId": 2362
+      },
+      "sourceFile": "source-profiles/dr-arun-b-s.json",
+      "sourceSha256": "4eb022467b575601b6a89c52db5042cdf12d14c9eb59317cf6561c1f847d27dc",
+      "rawHtmlSha256": "efd6656ef32d0ad7de0530711d76ebe0a9a390cc01dcd24bddad19d07c14a648"
+    },
+    {
+      "name": "Dr. Arunkumar Ullegaddi",
+      "slug": "dr-arunkumar-ullegaddi",
+      "category": "Cardiology",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-arunkumar-ullegaddi",
+      "fetchedAt": "2026-11-05T05:56:33Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cardiology",
+        "nameMatched": true,
+        "listingId": 3076
+      },
+      "sourceFile": "source-profiles/dr-arunkumar-ullegaddi.json",
+      "sourceSha256": "f3b5799649af1916dc7b62b79ecbcd00a78649c1dda82f8ba9158776694e52d9",
+      "rawHtmlSha256": "0da9ec9697c02e5892c8af10cc2f5cedd721725e187909d45a4c2eef180e5351"
+    },
+    {
+      "name": "Dr. Bagirath Raghuraman",
+      "slug": "dr-bagirath-raghuraman",
+      "category": "Cardiology",
+      "url": "https://www.narayanahealth.org/c/bangalore/cardiology-adult/dr-bagirath-raghuraman",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cardiology",
+        "nameMatched": true,
+        "listingId": 115
+      },
+      "sourceFile": "source-profiles/dr-bagirath-raghuraman.json",
+      "sourceSha256": "ca2359680724c14dd39f40b0fc8e32266630a24e4d44b7ba4bcc7d784509eb8c",
+      "rawHtmlSha256": "a49476822f2ab64cf9d47b669285fd54877e3fc9d24530be6b0bc0a601673df7"
+    },
+    {
+      "name": "Dr. Abhinandan S Punit",
+      "slug": "dr-abhinandan-s-punit",
+      "category": "Orthopaedics",
+      "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-abhinandan-s-punit",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/orthopaedics-joint-replacement",
+        "nameMatched": true,
+        "listingId": 2164
+      },
+      "sourceFile": "source-profiles/dr-abhinandan-s-punit.json",
+      "sourceSha256": "e901041eb8ad7f22da34f134e34a87953272f2afbfa2fda1d234d4ae8a1256dd",
+      "rawHtmlSha256": "3704e504f312262e5facceacab5bcef62db4d1848c21ffa54a522aedffde57e2"
+    },
+    {
+      "name": "Dr. Aditya H Kumar",
+      "slug": "dr-aditya-h-kumar",
+      "category": "Orthopaedics",
+      "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-joint-replacement/dr-aditya-h-kumar",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/orthopaedics-joint-replacement",
+        "nameMatched": true,
+        "listingId": 101964
+      },
+      "sourceFile": "source-profiles/dr-aditya-h-kumar.json",
+      "sourceSha256": "42b2e0c8fd15f60505480ee2245d14056e7a5cbc2ac45aeef62f63ec99e3d646",
+      "rawHtmlSha256": "cb499fd3dbff2b1c7ab57c0a7cf72c1875fdd74d0e0ecb2dbaa842c16c0d2e75"
+    },
+    {
+      "name": "Dr. Akshay Shetty T",
+      "slug": "dr-akshay-shetty-t",
+      "category": "Orthopaedics",
+      "url": "https://www.narayanahealth.org/c/bangalore/orthopaedic-surgery/dr-akshay-shetty-t",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/orthopaedics-joint-replacement",
+        "nameMatched": true,
+        "listingId": 3687
+      },
+      "sourceFile": "source-profiles/dr-akshay-shetty-t.json",
+      "sourceSha256": "09f65070037e991c525227ab23f65b5b918b36e56184645186132ce40777efea",
+      "rawHtmlSha256": "e4b7f1aadfd5a00953c5de8890fef2a5f399f8651997bb09a1bb9bc05e8dd4de"
+    },
+    {
+      "name": "Dr. Amarnath Reddy",
+      "slug": "dr-amarnath-reddy",
+      "category": "Orthopaedics",
+      "url": "https://www.narayanahealth.org/c/bangalore/orthopaedics-and-joint-replacement/dr-amarnath-reddy",
+      "fetchedAt": "2026-11-05T05:56:34Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/orthopaedics-joint-replacement",
+        "nameMatched": true,
+        "listingId": 575
+      },
+      "sourceFile": "source-profiles/dr-amarnath-reddy.json",
+      "sourceSha256": "6f4d3e83620e65099a44e3c7095ef2f03dd4d0573663348bb926c68ca3b90191",
+      "rawHtmlSha256": "d36979db454185f624e6cecb1d52f822b6c1261eda60aca8b826de3d0a2efb78"
+    },
+    {
+      "name": "Dr. Akash J",
+      "slug": "dr-akash-j",
+      "category": "Neurology",
+      "url": "https://www.narayanahealth.org/c/bangalore/interventional-neurology-neurology/dr-akash-j",
+      "fetchedAt": "2026-11-05T05:56:35Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/neurology",
+        "nameMatched": true,
+        "listingId": 101783
+      },
+      "sourceFile": "source-profiles/dr-akash-j.json",
+      "sourceSha256": "c866b929034d6d76f8d6c885cf6d7e788938a6a34d26a8ffd4200512cb3b3a8f",
+      "rawHtmlSha256": "7cc1f863932ca272ba3b50277fb2d0c1d63d7b9589285130278464456a7becda"
+    },
+    {
+      "name": "Dr. Gopal Krishna Dash",
+      "slug": "dr-gopal-krishna-dash",
+      "category": "Neurology",
+      "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-gopal-krishna-dash",
+      "fetchedAt": "2026-11-05T05:56:35Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/neurology",
+        "nameMatched": true,
+        "listingId": 61
+      },
+      "sourceFile": "source-profiles/dr-gopal-krishna-dash.json",
+      "sourceSha256": "0a10dfa247024d0a5c6df2d1ed81e6c5ab8c366399ccd89ca5de79606c8fb884",
+      "rawHtmlSha256": "9112e481c6fccb0a3026f31e1c4c4da8b843a1348dd7db08a80a5a59e0dacd8d"
+    },
+    {
+      "name": "Dr. Kuldeep Shetty",
+      "slug": "dr-kuldeep-shetty",
+      "category": "Neurology",
+      "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-kuldeep-shetty",
+      "fetchedAt": "2026-11-05T05:56:35Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/neurology",
+        "nameMatched": true,
+        "listingId": 67
+      },
+      "sourceFile": "source-profiles/dr-kuldeep-shetty.json",
+      "sourceSha256": "0a592a20966c95e3d9e46a165bf776a27d57098c0ebb54800866e812f360f319",
+      "rawHtmlSha256": "b03d2c7941fb389f52a06d892a6ca408e2ef59e3ea3bb63046895584df745b9f"
+    },
+    {
+      "name": "Dr. Praveen Kumar S",
+      "slug": "dr-praveen-kumar-s",
+      "category": "Neurology",
+      "url": "https://www.narayanahealth.org/c/bangalore/neurology/dr-praveen-kumar-s",
+      "fetchedAt": "2026-11-05T05:56:35Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/neurology",
+        "nameMatched": true,
+        "listingId": 101793
+      },
+      "sourceFile": "source-profiles/dr-praveen-kumar-s.json",
+      "sourceSha256": "3753f6f5edef41ff69974940d9ba4d85b4372dfa40b97d3945e35af3f35c3d97",
+      "rawHtmlSha256": "f824b3d213138eabf4841d185ea254378abf9d3013910fb8168a5b37624d745e"
+    },
+    {
+      "name": "Dr. Aditi Rao",
+      "slug": "dr-aditi-rao",
+      "category": "Gastro Sciences",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-gastroenterology/dr-aditi-rao",
+      "fetchedAt": "2026-11-05T05:56:36Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/gastro-sciences",
+        "nameMatched": true,
+        "listingId": 2815
+      },
+      "sourceFile": "source-profiles/dr-aditi-rao.json",
+      "sourceSha256": "bcf3e8d7c106eedcb96d2e0442bbdeb39504440266848d37dfb96a8c8c938468",
+      "rawHtmlSha256": "3ba4cd21d9b9f64d6eb0cce29e53742f03ef9f523487d3d483e6d8da3c901822"
+    },
+    {
+      "name": "Dr. Gayathri Gopalakrishnan",
+      "slug": "dr-gayathri-gopalakrishnan",
+      "category": "Gastro Sciences",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-gastroenterology/dr-gayathri-gopalakrishnan",
+      "fetchedAt": "2026-11-05T05:56:36Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/gastro-sciences",
+        "nameMatched": true,
+        "listingId": 784
+      },
+      "sourceFile": "source-profiles/dr-gayathri-gopalakrishnan.json",
+      "sourceSha256": "391076149377db850465776c9ecc9d573a533d939de750f726e1b3fb2f08fe2b",
+      "rawHtmlSha256": "df25c24226069b2ff5c95cb438f612572557259232cd72d8f2f1279401f2437b"
+    },
+    {
+      "name": "Dr. Kiran R",
+      "slug": "dr-kiran-r",
+      "category": "Gastro Sciences",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-gastroenterology/dr-kiran-r",
+      "fetchedAt": "2026-11-05T05:56:36Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/gastro-sciences",
+        "nameMatched": true,
+        "listingId": 671
+      },
+      "sourceFile": "source-profiles/dr-kiran-r.json",
+      "sourceSha256": "2a0d801530f84c2bf6ee8e942f74f638c2fe7e218e2c87e8466ee86b109ec3f8",
+      "rawHtmlSha256": "bafa624b401964840ae538a18e3709ad1675a34ef482b295d935b8eb9d487eec"
+    },
+    {
+      "name": "Dr. Nandish H K",
+      "slug": "dr-nandish-h-k",
+      "category": "Gastro Sciences",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-gastroenterology/dr-nandish-h-k",
+      "fetchedAt": "2026-11-05T05:56:36Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/gastro-sciences",
+        "nameMatched": true,
+        "listingId": 1053
+      },
+      "sourceFile": "source-profiles/dr-nandish-h-k.json",
+      "sourceSha256": "06795bbaba0095a80b50ce1e8a2abbf44001fe454c0e0009ec78cf14eaa0f73f",
+      "rawHtmlSha256": "73483e2b6f3e27b1e0658746482cbbcf4c5561748cd32966ac19e454e4b1d3f4"
+    },
+    {
+      "name": "Dr. Akshita Singh",
+      "slug": "dr-akshita-singh",
+      "category": "Cancer Care",
+      "url": "https://www.narayanahealth.org/c/bangalore/breast-oncology-and-oncoplastic-surgery/dr-akshita-singh",
+      "fetchedAt": "2026-11-05T05:56:36Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cancer-care",
+        "nameMatched": true,
+        "listingId": 1744
+      },
+      "sourceFile": "source-profiles/dr-akshita-singh.json",
+      "sourceSha256": "48bbf6e2c405eabd5cb483d2a56934d1bc9e2716b6524c5b33ba96d48189d755",
+      "rawHtmlSha256": "0842db796178af13de1ffce1a54c1d2a00330c8a51839436eb93c2617dafff3b"
+    },
+    {
+      "name": "Dr. Hashmath Khanum B N",
+      "slug": "dr-hashmath-khanum-b-n",
+      "category": "Cancer Care",
+      "url": "https://www.narayanahealth.org/c/bangalore/radiation-oncology/dr-hashmath-khanum-b-n",
+      "fetchedAt": "2026-11-05T05:56:37Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cancer-care",
+        "nameMatched": true,
+        "listingId": 2522
+      },
+      "sourceFile": "source-profiles/dr-hashmath-khanum-b-n.json",
+      "sourceSha256": "c1e83635a0b2b610ece3fabd6a3a04f4a74dfccead3061f3239d0706b4c85a17",
+      "rawHtmlSha256": "09c4b32877d1caf12ebdc6debd07ed7ab238bd9b1f4c16031a598fc55173830d"
+    },
+    {
+      "name": "Dr. Naveen B S",
+      "slug": "dr-naveen-b-s",
+      "category": "Cancer Care",
+      "url": "https://www.narayanahealth.org/c/bangalore/head-and-neck-oncology/dr-naveen-b-s",
+      "fetchedAt": "2026-11-05T05:56:37Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cancer-care",
+        "nameMatched": true,
+        "listingId": 101996
+      },
+      "sourceFile": "source-profiles/dr-naveen-b-s.json",
+      "sourceSha256": "71f02f73dd91638cbd2482f7965292b09f73632686cf0492fc9dcdc62ca8428c",
+      "rawHtmlSha256": "eda9d04361a0f63c8946a3f77150d94ea12d374814bdde674b03d55b8a705106"
+    },
+    {
+      "name": "Dr. Nidhi Tandon",
+      "slug": "dr-nidhi-tandon",
+      "category": "Cancer Care",
+      "url": "https://www.narayanahealth.org/c/bangalore/medical-oncology/dr-nidhi-tandon",
+      "fetchedAt": "2026-11-05T05:56:37Z",
+      "status": 200,
+      "listingVerification": {
+        "url": "https://www.narayanahealth.org/ocaapp/doctors/bangalore/cancer-care",
+        "nameMatched": true,
+        "listingId": 56
+      },
+      "sourceFile": "source-profiles/dr-nidhi-tandon.json",
+      "sourceSha256": "38d4c76cabbbdec3079897812dc0d8e5792aad86fe3a0a8f50e63e6c3ad760a9",
+      "rawHtmlSha256": "0fd5b9e6e1b99237e8e66f67cf333c40939204d87b7374a90c445a325e320f9a"
+    }
+  ]
+}

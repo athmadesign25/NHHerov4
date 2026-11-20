@@ -371,7 +371,7 @@ export default function MobileAppDownloadBanner() {
           {/* Centered copy: eyebrow, then title a beat later, sequentially */}
           <div className={styles.topTextBlock} ref={topTextBlockRef}>
             <motion.div
-              className={styles.eyebrow}
+              className={`mobile-section-eyebrow ${styles.eyebrow}`}
               initial={{ opacity: 0, scale: 0.92, filter: "blur(10px)" }}
               whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.3 }}
@@ -386,7 +386,7 @@ export default function MobileAppDownloadBanner() {
                 beat after the other — replaces the old per-word reveal for
                 this title specifically. Shimmer + red highlight on line 2
                 are unchanged. */}
-            <h2 id="mobile-app-download-title-unit" className={styles.title}>
+            <h2 id="mobile-app-download-title-unit" className={`mobile-section-title ${styles.title}`}>
               <span className={styles.titleLine}>
                 <TextSweepEffect words={["Your Health,"]} sweepMs={1500} />
               </span>

@@ -51,7 +51,8 @@ export default function DoctorSearchTop({
               <select
                 data-doctor-location="true"
                 aria-busy="false"
-                aria-describedby="d3-location-status d3-refinement-help"
+                aria-label="Filter specialities by location"
+                aria-describedby="d3-location-status"
                 value={location}
                 onChange={(e) => onLocation(e.target.value)}
               >
@@ -66,13 +67,13 @@ export default function DoctorSearchTop({
 
             <form
               role="search"
-              aria-label="Find a doctor"
+              aria-label="Find a speciality"
               className={styles.form}
               onSubmit={submit}
             >
               <div className={styles.searchField}>
                 <label className={styles.srOnly} htmlFor="d3-search">
-                  Search doctors by name, speciality or hospital
+                  Search medical specialities
                 </label>
                 <input
                   id="d3-search"
@@ -103,7 +104,7 @@ export default function DoctorSearchTop({
               <button
                 type="submit"
                 className={styles.submit}
-                aria-label="Search and show doctor results"
+                aria-label="Search and show speciality results"
                 title="Search"
               >
                 <Search size={20} aria-hidden="true" />

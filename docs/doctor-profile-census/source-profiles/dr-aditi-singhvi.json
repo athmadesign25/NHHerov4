@@ -1,0 +1,255 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/February2026/JzMZh9yE4Nsmy6rwvFoD.webp",
+    "name": "Dr. Aditi Singhvi",
+    "id": 1909,
+    "doctorCode": "109371",
+    "designation": "Consultant, Clinical Lead - Adult Heart Failure and Transplant, Heart Failure & Transplantation Medicine",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "Fellowship (Cardiology)",
+        "Fellowship (Advanced Heart Failure Transplant Cardiology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Heart Failure & Transplantation Medicine"
+      ],
+      "subSpecialties": [
+        "Advanced Cardio-Pulmonary Therapeutics",
+        "Heart Failure & Transplant Cardiology"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 121,
+          "name": "Narayana Institute of Cardiac Sciences, Bangalore",
+          "code": "1001",
+          "checked": true
+        },
+        {
+          "id": 1413,
+          "name": "Narayana Clinic, HSR Layout",
+          "code": "3012",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "14th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Singhvi completed her residency in Internal Medicine from Wayne State University, USA, after which she completed her fellowship in Cardiology from the University of Connecticut, USA. She has also completed a fellowship in Advanced Heart Failure and Transplant Cardiology from Houston Methodist DeBakey Heart & Vascular Center, Houston, TX, which is one of the largest transplant centers in the USA. She worked as an Advanced Heart Failure and Transplant Cardiologist at Mount Sinai Hospital, New York, USA, and was r...",
+    "full_description": "Dr. Singhvi completed her residency in Internal Medicine from Wayne State University, USA, after which she completed her fellowship in Cardiology from the University of Connecticut, USA. She has also completed a fellowship in Advanced Heart Failure and Transplant Cardiology from Houston Methodist DeBakey Heart & Vascular Center, Houston, TX, which is one of the largest transplant centers in the USA. She worked as an Advanced Heart Failure and Transplant Cardiologist at Mount Sinai Hospital, New York, USA, and was recognized for her dedication to patient care by the Heart Failure Division there.\r\nShe is passionate about clinical research and has authored several peer-reviewed scientific publications and feels fortunate to serve on committees devoted to advanced heart disease and medical training. Her research interests include examining heart failure and post-heart transplant outcomes. She is determined to promote awareness of cardiovascular health, eliminate cardiovascular healthcare disparities, and improve the access of all patients to advanced heart failure therapies- including mechanical heart devices and cardiac transplantation.\r\nShe is currently working as a Consultant in the department of Adult Cardiology & Heart Transplantation at Narayana Institute of Cardiac Sciences, Bangalore, and has helped build the NH Heart Failure, LVAD, and Heart Transplant Care Center.\r\nPost held in past\r\n \r\n\r\nAssistant Professor at Mount Sinai Hospital"
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Acute and chronic heart failure",
+      "Cardiogenic shock",
+      "Non-ischaemic/ dilated and ischaemic cardiomyopathy",
+      "Peripartum cardiomyopathy",
+      "Genetic or familial cardiomyopathy",
+      "Cardio-oncology (cancer-related cardiac disease)",
+      "Hypertrophic cardiomyopathy",
+      "Cardiac amyloidosis",
+      "Cardiac sarcoidosis",
+      "Heart failure with preserved ejection fraction (HFpEF)",
+      "Valvular heart diseases",
+      "Pericardial diseases",
+      "Myocarditis",
+      "Pulmonary hypertension due to heart disease",
+      "Invasive haemodynamic monitoring",
+      "Advanced/ End-stage heart failure",
+      "Advanced HF therapy evaluation",
+      "Temporary mechanical circulatory support devices and ECMO management",
+      "Durable left ventricular assist devices (LVAD) management",
+      "Management of heart transplant wait-listed patients",
+      "Post-heart transplant care",
+      "Immunosuppression and rejection recognition and treatment",
+      "Right Heart Catheterization",
+      "Endomyocardial Biopsy",
+      "Complex Haemodynamics",
+      "Cardiopulmonary exercise testing",
+      "Durable LVAD management",
+      "Comprehensive care of post-heart transplant patients, including monitoring, preventive health care, and immunosuppression",
+      "Remote monitoring for heart failure patients and Telehealth",
+      "CardioMEMS systemic implantation and management (remote pulmonary arterial pressure monitoring device)",
+      "Cardiology - Adult",
+      "Heart Failure",
+      "Cardiac Sciences",
+      "Cardiac",
+      "heart",
+      "Transplant Medicine",
+      "Cardiology",
+      "Advanced Cardio-Pulmonary Therapeutics",
+      "Cardio-Pulmonary Therapeutics",
+      "Cardio-Pulmonary",
+      "Heart Failure & Transplantation Medicine",
+      "CARDIOLOGY - ADULT"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Awards & Recognition",
+        "items": [
+          {
+            "text": "Recognition for “Top 10 publications of 2020 in Journal of Heart and Lung Transplantation”",
+            "link": ""
+          },
+          {
+            "text": "Top 10% Nationally in In-Training Exam in Internal Medicine -2014",
+            "link": ""
+          },
+          {
+            "text": "Senior Resident of the Month, Henry Ford Hospital - 7/2014",
+            "link": ""
+          },
+          {
+            "text": "ICU Resident of the Month, Henry Ford Hospital - 10/2013",
+            "link": ""
+          },
+          {
+            "text": "Certificate of Merit for Excellent Academic Performance, Kasturba Medical College -2011",
+            "link": ""
+          },
+          {
+            "text": "Certificate of Merit for Excellent Academic Performance, Kasturba Medical College - 2006",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Professional Memberships & Certifications",
+        "items": [
+          {
+            "text": "Fellow of the American College of Cardiology",
+            "link": ""
+          },
+          {
+            "text": "Member, International Society of Heart and Lung Transplantation",
+            "link": ""
+          },
+          {
+            "text": "Member, Heart Failure Society of America",
+            "link": ""
+          },
+          {
+            "text": "Member, American Society of Transplantation",
+            "link": ""
+          }
+        ]
+      },
+      {
+        "title": "Publications",
+        "items": [
+          {
+            "text": "Singhvi A, Barghash M, Lala A, Mitter SS, Parikh A, Oliveros E, Rollins BM, Brunjes DL, Alvarez-Garcia J, Johnston E, Ryan K, Itagaki S, Moss N, Pinney SP, Anyanwu A, Mancini D. Challenges in Heart Transplantation during COVID19: A Single-Center Experience. J Heart",
+            "link": ""
+          },
+          {
+            "text": "Singhvi A, Trachtenberg B. Left Ventricular Assist Devices 101: Shared Care for General Cardiologists and Primary Care. J Clin Med. 2019 Oct 18;8(10). PII: E1720. DOI: \n10.3390/jcm8101720. PubMed PMID: 31635239.",
+            "link": ""
+          },
+          {
+            "text": "Singhvi A, Saucier S, Verma I, Felpel K, Gabriel A, Tandon T, Tushak Z, Mather J, McMahon S, Duvall WL. Impact of Gd-153 scanning line source attenuation correction on downstream \ninvasive testing. J Nucl Cardiol. 2021 Apr 6. doi: 10.1007/s12350-021-02565-2. Epub ahead \nof print. PMID: 33825139.",
+            "link": ""
+          },
+          {
+            "text": "Al-Damluji MS, Singhvi A, Snuckel M, Zaghloul A, Kluger J. Do ICD diagnostics predict \nfailure of ventricular tachycardia response to antitachycardia pacing and need for \na shock? Pacing clinical electrophysiology. doi:10.1111/pace.14002",
+            "link": ""
+          },
+          {
+            "text": "Duvall WL, Singhvi A, Tripathi N, Henzlova MJ. SPECT Myocardial Perfusion Imaging in \nLiver Transplantation Candidates. J Nucl Cardiol. 2018 Aug 23. DOI: 10.1007/s12350-018- \n1388-3. PubMed PMID: 30141170.",
+            "link": ""
+          },
+          {
+            "text": "Baker WL, Darsaklis K, Singhvi A, Salerno EL. Selexipag, an Oral Prostacyclin-Receptor \nAgonist for Pulmonary Arterial Hypertension. Ann Pharmacother. 2017 Jun;51(6):488-495. \nPubMed PMID: 28478717.",
+            "link": ""
+          },
+          {
+            "text": "Gupta S, Gupta RC, Gupta AB, Eskiocak S, Prakasa Rao EVS, Puttanna K, Singhvi A. \nPathophysiology of Nitrate Toxicity in Human and its Mitigation Measures. In: Raghuram N, ed.ING. Bulletins on Regional Assessment of Reactive Nitrogen. Bulletin no. 20. New Delhi: \nSCON-ING; 2010:1-78.",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Cardiac Cirrhosis: Meaning, Causes, Symptoms and Treatment",
+        "date": "March 26, 2026",
+        "slug": "cardiac-cirrhosis-meaning-causes-symptoms-treatment",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/March2026/pzvNss4XxVCWMDX00SEY.webp",
+        "imgAlt": "Cardiac Cirrhosis: Meaning, Causes, Symptoms and Treatment",
+        "authorInitial": "AS",
+        "author": "Dr. Aditi Singhvi",
+        "category": "Cardiology"
+      },
+      {
+        "title": "Heart Health and Winter Weight Gain: Tips to Stay on Track",
+        "date": "December 19, 2024",
+        "slug": "heart-health-and-winter-weight-gain-tips-to-stay-on-track",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/December2024/fzM8ZtxDP6qtzSiel4Fu.webp",
+        "imgAlt": "Heart Health and Winter Weight Gain: Tips to Stay on Track",
+        "authorInitial": "AS",
+        "author": "Dr. Aditi Singhvi",
+        "category": "Cardiology"
+      },
+      {
+        "title": "Impact of Sleep on Heart Health",
+        "date": "August 13, 2024",
+        "slug": "impact-of-sleep-on-heart-health",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/August2024/BUnJvQsW4ZjYY57FFJxo.webp",
+        "imgAlt": "Impact of Sleep on Heart Health",
+        "authorInitial": "AS",
+        "author": "Dr. Aditi Singhvi",
+        "category": "General Health"
+      },
+      {
+        "title": "Heart Conditions and Pregnancy: Evaluating the Risks",
+        "date": "July 29, 2024",
+        "slug": "heart-conditions-pregnancy-evaluating-risks",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/July2024/6Fypupvb5lWWI2urFwfb.webp",
+        "imgAlt": "Heart Conditions and Pregnancy: Evaluating the Risks",
+        "authorInitial": "AS",
+        "author": "Dr. Aditi Singhvi",
+        "category": "Narayana Health"
+      },
+      {
+        "title": "Heart Failure: Understanding Risks, Symptoms, Diagnosis and Treatment",
+        "date": "April 03, 2024",
+        "slug": "heart-failure-understanding-risks-symptoms-diagnosis-and-treatment",
+        "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/blogs/April2024/Bbr5m5tculoLiq7u7vhq.webp",
+        "imgAlt": "Heart Failure: Understanding Risks, Symptoms, Diagnosis and Treatment",
+        "authorInitial": "AS",
+        "author": "Dr. Aditi Singhvi",
+        "category": "Cardiology"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

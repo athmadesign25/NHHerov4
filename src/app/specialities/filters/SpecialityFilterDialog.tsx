@@ -22,7 +22,7 @@ export default function SpecialityFilterDialog({
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     const dialog = dialogRef.current;

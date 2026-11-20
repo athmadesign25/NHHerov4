@@ -9,4 +9,3 @@ export type { ActiveSpecialityFilter } from "./ActiveSpecialityFilters";
 export { default as SidebarSpecialityFilters } from "./SidebarSpecialityFilters";
 export { default as SpecialityFilterDialog } from "./SpecialityFilterDialog";
 export { keepFilterHeadingVisible, prepareFilterListToggle } from "./filterScrolling";
-

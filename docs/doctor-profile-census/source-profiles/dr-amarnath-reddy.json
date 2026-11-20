@@ -1,0 +1,122 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/September2024/KXxwIGm0gPbMLyXWArKA.jpg",
+    "name": "Dr. Amarnath Reddy",
+    "id": 575,
+    "doctorCode": "106002",
+    "designation": "Senior Consultant",
+    "rating": "4.0",
+    "experience": "13",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MS (Orthopaedics)",
+        "FNB (Spine Surgery)",
+        "FRCS (Orthopaedics)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Orthopaedic Surgery"
+      ],
+      "subSpecialties": [
+        "Joint Replacement"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 32,
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "code": "1011",
+          "checked": true
+        },
+        {
+          "id": 1134,
+          "name": "Narayana Clinic, Electronic City",
+          "code": "3010",
+          "checked": false
+        },
+        {
+          "id": 1413,
+          "name": "Narayana Clinic, HSR Layout",
+          "code": "3012",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "5th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr Amarnath Reddy is a Consultant in Orthopaedics at Narayana Multi speciality Hospital, HSR Bangalore. He finished his MBBS from Jawaharlal Nehru Medical College, Belgaum. After that he went on to complete his MS in Orthopaedics Sri Devraj Urs Medical College, Rajiv Gandhi University of Health Sciences, Bangalore. Later, he pursued a fellowship in Joint Replacement from Sunshine & St Joseph Hospital respectively. Along with that he also pursued a fellowship in Spine Surgery from Kamineni Hospital.",
+    "full_description": "Dr Amarnath Reddy is a Consultant in Orthopaedics at Narayana Multi speciality Hospital, HSR Bangalore. He finished his MBBS from Jawaharlal Nehru Medical College, Belgaum. After that he went on to complete his MS in Orthopaedics Sri Devraj Urs Medical College, Rajiv Gandhi University of Health Sciences, Bangalore. Later, he pursued a fellowship in Joint Replacement from Sunshine & St Joseph Hospital respectively. Along with that he also pursued a fellowship in Spine Surgery from Kamineni Hospital."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Primary and Revision Joint Replacements.",
+      "Trauma Care & Polytrauma.",
+      "Spine Surgery.",
+      "Orthopaedics Surgery.",
+      "ORTHOPAEDICS & JOINT REPLACEMENT",
+      "Orthopaedics & Joint Replacement",
+      "Orthopaedic Surgery"
+    ]
+  },
+  "doctorAchivements": {
+    "title": "Achievements",
+    "list": [
+      {
+        "title": "Professional Memberships and Certifications",
+        "items": [
+          {
+            "text": "Karnataka Medical Council",
+            "link": ""
+          },
+          {
+            "text": "Bangalore Orthopaedic Society",
+            "link": ""
+          }
+        ]
+      }
+    ]
+  },
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": [
+      {
+        "subtitle": "What is Total Knee Replacement? | Dr. Amarnath Reddy",
+        "name": "Dr. Amarnath Reddy",
+        "location": "Narayana Clinic, HSR Layout",
+        "vdo_link": "https://www.youtube.com/embed/SYdLmuv1jfc"
+      }
+    ]
+  },
+  "doctorBlogs": {
+    "title": "Blogs",
+    "items": [
+      {
+        "title": "Cellphones cause a threat to your Posture",
+        "date": "March 06, 2025",
+        "slug": "cellphones-cause-a-threat-to-your-posture",
+        "image": "",
+        "imgAlt": "Cellphones cause a threat to your Posture",
+        "authorInitial": "AR",
+        "author": "Dr. Amarnath Reddy",
+        "category": "Orthopaedics"
+      }
+    ]
+  },
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

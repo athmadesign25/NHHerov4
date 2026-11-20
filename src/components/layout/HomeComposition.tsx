@@ -189,9 +189,8 @@ function WhyNHToFooterBackground() {
 /**
  * The landing page itself, with the marketing surface left open as a slot.
  *
- * Two routes render this: `/` carries the L1 drawer prototype and
- * `/L2banner` carries the top band. Extracting it is what keeps the two
- * comparable — a copy would start drifting the moment either page changed.
+ * `/` has no banner, `/L1banner` adds the modal/L3/L4 demo, and
+ * `/L2banner` adds the top band. All three share the same homepage.
  */
 export default function HomeComposition({ children }: { children?: React.ReactNode }) {
   return (

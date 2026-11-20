@@ -1,3 +1,4 @@
+import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
 import { TREATMENTS_PROCEDURES_DATA, TreatmentProcedureItem } from "./treatmentsProceduresData";
 import { HEART_TRANSPLANT_TOC, HEART_TRANSPLANT_DETAIL } from "./heartTransplantDetailData";
 import { HospitalItem, HOSPITALS_DATA } from "./hospitalsData";
@@ -109,6 +110,9 @@ export interface ProcedureDetailData {
   toc: TOCItem[];
 }
 
+// Reuse the established preview portrait instead of referencing an absent asset.
+const ashleyPortrait = getDesign20DirectoryDoctor("dr-ashley")?.img ?? "/assets/doctor_1.png";
+
 // Curated specialist doctors by medical discipline
 const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
   cardiology: [
@@ -143,7 +147,7 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Senior Consultant Urologist & Renal Transplant Surgeon",
       experience: "32+ Years Experience",
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-      image: "/doctors/doc_ashley.jpg",
+      image: ashleyPortrait,
       speciality: "Urology & Renal Transplant",
     },
     {
@@ -187,7 +191,7 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Director - Paediatric Surgery & Organ Transplant",
       experience: "34+ Years Experience",
       hospital: "Narayana Health City, Bangalore",
-      image: "/doctors/doc_ashley.jpg",
+      image: ashleyPortrait,
       speciality: "Paediatric Surgery",
     },
     {

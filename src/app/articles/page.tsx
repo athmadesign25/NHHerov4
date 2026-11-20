@@ -1,5 +1,6 @@
 "use client";
 
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, useTransform, useMotionValue } from "framer-motion";
@@ -134,7 +135,7 @@ function ArticlesLibraryInner() {
 
       {/* ── FLOATING CLINICAL SIDE ACTIONS (Book Consultation, Call, Ask Pulse AI) ── */}
       <ClinicalFloatingSideActions
-        consultHref="/doctors"
+        consultHref={defaultDoctorListingUrl(new URLSearchParams())}
         consultLabel={"Book\nConsultation"}
         conditionTitle="Health Guides"
         pulseQuery="I have questions about a recent symptom or want to know more about Narayana Health clinical guides."

@@ -1,18 +1,21 @@
 "use client";
 
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
+import { buildSearchUrl } from "@/features/search/searchTabs";
+import { procedureDoctorBookingHref } from "../bookingLinks";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Check, 
-  CheckCircle2, 
-  X, 
-  Link as LinkIcon, 
-  PhoneCall, 
-  ArrowUpRight, 
-  Calendar, 
-  Activity, 
+import {
+  Check,
+  CheckCircle2,
+  X,
+  Link as LinkIcon,
+  PhoneCall,
+  ArrowUpRight,
+  Calendar,
+  Activity,
   Plus,
   Minus,
   Share2
@@ -32,7 +35,7 @@ interface PageProps {
 
 export default function ProcedureDetailPage({ params }: PageProps) {
   const { slug } = React.use(params);
-  
+
   // Dynamically resolve clinical procedure data tailored to this exact procedure
   const detail: ProcedureDetailData = getProcedureDetailData(slug);
 
@@ -157,8 +160,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
             {/* Actions Row: Primary CTA (NH Blue) + Call Helpline Text */}
             <div className={styles.heroActionsRow}>
-              <Link 
-                href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`} 
+              <Link
+                href={specialityBookingEntry(detail.specialitySlug)}
                 className={styles.heroPrimaryBtn}
               >
                 <Calendar size={15} />
@@ -382,7 +385,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                 {detail.symptoms.items.map((sym, i) => (
                   <Link
                     key={i}
-                    href={`/search?q=${encodeURIComponent(sym.name)}`}
+                    href={buildSearchUrl({ q: sym.name })}
                     className={styles.symptomTriageItem}
                     title={`Explore clinical guidance for ${sym.name}`}
                   >
@@ -578,7 +581,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                       International Patients: {detail.cost.internationalRange}
                     </div>
                   </div>
-                  <Link href="/doctors" className={styles.heroPrimaryBtn}>
+                  <Link href={specialityBookingEntry(detail.specialitySlug)} className={styles.heroPrimaryBtn}>
                     <span>Request Detailed Estimate</span>
                     <ArrowUpRight size={15} />
                   </Link>
@@ -635,7 +638,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                           </div>
                         </div>
 
-                        <Link href="/doctors" className={styles.refBookBtnWhite}>
+                        <Link href={procedureDoctorBookingHref(doc.name)} className={styles.refBookBtnWhite}>
                           Book
                         </Link>
                       </div>
@@ -692,7 +695,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
       {/* Unified Clinical FAB (Book Consultation, Contact Support, Ask Pulse) */}
       <ClinicalFloatingSideActions
-        consultHref={`/doctors?speciality=${encodeURIComponent(detail.speciality)}`}
+        consultHref={specialityBookingEntry(detail.specialitySlug)}
         consultLabel={"Book\nConsultation"}
         conditionTitle={detail.shortTitle}
         pulseQuery={`I want to know about ${detail.title}: procedure details, eligibility, and expected recovery.`}

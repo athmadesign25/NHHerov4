@@ -1,13 +1,15 @@
 "use client";
 
+import { specialityBookingEntry } from "@/features/search/specialityBookingEntry";
+import { buildSearchUrl } from "@/features/search/searchTabs";
 import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  X, 
-  ArrowUpRight, 
+import {
+  Search,
+  X,
+  ArrowUpRight,
   PhoneCall,
   Calendar,
   Clock,
@@ -20,9 +22,9 @@ import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
-import { 
-  TREATMENTS_PROCEDURES_DATA, 
-  TreatmentProcedureItem 
+import {
+  TREATMENTS_PROCEDURES_DATA,
+  TreatmentProcedureItem
 } from "@/data/treatmentsProceduresData";
 import styles from "@/app/treatments/TreatmentsLibrary.module.css";
 
@@ -103,7 +105,7 @@ export default function TreatmentsV2Library({
   // Dynamic API fetching whenever selectedOrgan or searchQuery changes
   useEffect(() => {
     const controller = new AbortController();
-    
+
     // Quick debounce so typing feels natural without overloading network
     const timer = setTimeout(async () => {
       setIsApiLoading(true);
@@ -249,11 +251,11 @@ export default function TreatmentsV2Library({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect 
-                words={["Treatments & Procedures"]} 
-                sweepMs={2400} 
-                delayMs={80} 
-                finalColor="#FFFFFF" 
+              <TextSweepEffect
+                words={["Treatments & Procedures"]}
+                sweepMs={2400}
+                delayMs={80}
+                finalColor="#FFFFFF"
               />
             </motion.h1>
 
@@ -425,9 +427,9 @@ export default function TreatmentsV2Library({
           </p>
 
           {(selectedOrgan || searchQuery.trim()) && (
-            <button 
-              type="button" 
-              className={styles.clearFilterChip} 
+            <button
+              type="button"
+              className={styles.clearFilterChip}
               onClick={handleResetFilters}
               aria-label="Clear active filter"
             >
@@ -505,7 +507,7 @@ export default function TreatmentsV2Library({
               <AnimatePresence mode="popLayout">
                 {items.map((item, idx) => {
                   const detailUrl = `/procedures/${item.slug}`;
-                  const doctorsUrl = `/doctors?speciality=${encodeURIComponent(item.specialitySlug)}`;
+                  const doctorsUrl = specialityBookingEntry(item.specialitySlug);
 
                   return (
                     <motion.article

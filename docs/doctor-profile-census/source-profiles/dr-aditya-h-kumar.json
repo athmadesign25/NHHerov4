@@ -1,0 +1,73 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/September2026/bBccoIOLfhqsNmXjxE26.webp",
+    "name": "Dr. Aditya H Kumar",
+    "id": 101964,
+    "doctorCode": "120923",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MS (Orthopaedic Surgery)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Orthopaedic Surgery"
+      ],
+      "subSpecialties": [
+        "Trauma & Limb Reconstruction"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 1139,
+          "name": "Narayana Clinic, Jayanagar",
+          "code": "2015",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "",
+    "contact": "18003090309"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Aditya H Kumar is an accomplished Orthopaedic & Joint Replacement Specialist with expertise in trauma care, arthroscopy, sports medicine, and limb reconstruction. He completed his MBBS from JSS Medical College, Mysore, and MS in Orthopaedics from KS Hegde Medical Academy, Mangalore, where he was awarded a Gold Medal. He holds fellowships in Trauma & Limb Reconstruction (Ganga Hospital, Coimbatore) and Sports Medicine (Manipal Hospital, Bengaluru). Dr. Aditya specializes in knee and hip replacements, minimally i...",
+    "full_description": "Dr. Aditya H Kumar is an accomplished Orthopaedic & Joint Replacement Specialist with expertise in trauma care, arthroscopy, sports medicine, and limb reconstruction. He completed his MBBS from JSS Medical College, Mysore, and MS in Orthopaedics from KS Hegde Medical Academy, Mangalore, where he was awarded a Gold Medal. He holds fellowships in Trauma & Limb Reconstruction (Ganga Hospital, Coimbatore) and Sports Medicine (Manipal Hospital, Bengaluru). Dr. Aditya specializes in knee and hip replacements, minimally invasive arthroscopy, complex fracture management, deformity correction, and sports injury care. Known for his patient-centric, evidence-based approach, he focuses on faster recovery and long-term functional outcomes. He communicates fluently in English, Kannada, Hindi, and Tamil, ensuring compassionate and clear care for patients from diverse backgrounds."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Joint Replacement Surgery (Knee & Hip)",
+      "Arthroscopic Surgeries",
+      "Sports Injury Management & Rehabilitation",
+      "Advanced Trauma Care",
+      "Limb Reconstruction & Deformity Correction",
+      "Complex Fracture Management",
+      "Minimally Invasive Orthopaedic Procedures",
+      "Joint Preservation Techniques",
+      "Orthopaedics & Joint Replacement",
+      "Orthopaedic Surgery"
+    ]
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

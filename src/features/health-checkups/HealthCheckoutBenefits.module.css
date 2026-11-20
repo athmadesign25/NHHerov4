@@ -1,0 +1,5 @@
+.root { min-width: 0; }
+.typography h2 { margin: 0 0 var(--space-12); color: var(--color-text-primary); font-size: var(--font-size-base); font-weight: 600; line-height: var(--leading-body); }
+.payment { padding-top: var(--space-32); }
+.root button:focus-visible { outline: none; box-shadow: var(--shadow-focus-ring); }
+.root button:disabled { cursor: not-allowed; opacity: .5; }

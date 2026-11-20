@@ -565,6 +565,28 @@
     align-items: center;
   }
 
+  .indicatorBars {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .indicatorBar {
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: rgba(var(--black-rgb), 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .indicatorBarActive {
+    width: 18px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: var(--color-primary);
+  }
+
   .readingAidContainer {
     display: none !important;
   }

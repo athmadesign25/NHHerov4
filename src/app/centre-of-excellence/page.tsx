@@ -193,7 +193,7 @@ function CentreOfExcellenceContent() {
       </section>
 
       {/* ── 2. FULL-WIDTH CENTRES OF EXCELLENCE GRID ── */}
-      <main className={heroStyles.coeContainer} aria-label="Centres of Excellence directory">
+      <section className={heroStyles.coeContainer} aria-label="Centres of Excellence directory">
         <AnimatePresence mode="popLayout">
           <motion.div className={heroStyles.coeGrid} layout>
             {filtered.map((spec, i) => (
@@ -229,7 +229,7 @@ function CentreOfExcellenceContent() {
             </button>
           </div>
         )}
-      </main>
+      </section>
     </div>
   );
 }

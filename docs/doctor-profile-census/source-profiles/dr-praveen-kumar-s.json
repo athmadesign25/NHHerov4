@@ -1,0 +1,70 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/September2026/W0nLB4STo25NjowfIoq2.webp",
+    "name": "Dr. Praveen Kumar S",
+    "id": 101793,
+    "doctorCode": "107113",
+    "designation": "Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (Neurology)",
+        "DM (Neurology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Neurology"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 1139,
+          "name": "Narayana Clinic, Jayanagar",
+          "code": "2015",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "7th Nov",
+    "contact": "08067506838"
+  },
+  "doctorAbout": {
+    "title": "About",
+    "short_description": "Dr. Praveen Kumar S is a Consultant Neurologist with qualifications including MBBS, MD in Neurology and DM in Neurology. His clinical expertise includes the evaluation and management of neurological conditions such as headaches, Parkinson’s disease, cerebral stroke, sleep disorders and vertigo. With extensive experience in neurology, he focuses on accurate diagnosis, personalised treatment planning and comprehensive patient-centred neurological care.",
+    "full_description": "Dr. Praveen Kumar S is a Consultant Neurologist with qualifications including MBBS, MD in Neurology and DM in Neurology. His clinical expertise includes the evaluation and management of neurological conditions such as headaches, Parkinson’s disease, cerebral stroke, sleep disorders and vertigo. With extensive experience in neurology, he focuses on accurate diagnosis, personalised treatment planning and comprehensive patient-centred neurological care."
+  },
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "Neurology",
+      "Stroke & Cerebrovascular Disorders",
+      "Headache & Migraine Management",
+      "Parkinson’s Disease & Movement Disorders",
+      "Sleep Disorders",
+      "Vertigo & Giddiness",
+      "General Neurological Disorders",
+      "Neurological Evaluation & Management"
+    ]
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

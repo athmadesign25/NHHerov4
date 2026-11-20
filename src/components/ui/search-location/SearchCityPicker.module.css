@@ -1,5 +1,6 @@
 .location { position: relative; }
 .trigger {
+  --disclosure-icon-hover: transparent;
   display: flex;
   align-items: center;
   flex: 1;
@@ -28,13 +29,13 @@
 /* Compact menu with the same selection treatment as the doctor filters. */
 .panel {
   --city-heading-height: calc(var(--space-32) + var(--space-12));
-  --city-glass-surface: color-mix(in srgb, var(--color-text) 5%, var(--color-bg-card));
+  --city-glass-surface: var(--color-bg-card);
   padding: 0;
   margin: 0;
   border: var(--space-1) solid var(--color-border);
   color: var(--color-text);
   color-scheme: light;
-  background: color-mix(in srgb, var(--journey-paper-surface) 95%, transparent);
+  background: var(--color-menu-surface);
   backdrop-filter: blur(var(--blur-md));
   -webkit-backdrop-filter: blur(var(--blur-md));
   box-shadow: var(--elevation-4);
@@ -95,12 +96,14 @@
 .trigger:focus-visible, .panel :focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
 .search input:focus-visible { outline: none; }
 @media (hover: hover) {
-  .trigger:hover .chevron, .iconButton:hover, .option:hover { background: var(--color-disclosure-hover); }
+  .trigger:hover .chevron, .iconButton:hover { background: var(--color-disclosure-hover); }
+  .option:hover { background: var(--color-menu-hover); }
 
   .empty button:hover { color: var(--color-primary-dark); }
 }
 @media (max-width: 639px) {
-  .trigger { gap: var(--space-4); }
+  .trigger {
+  --disclosure-icon-hover: transparent; gap: var(--space-4); }
   .chevron { padding: var(--space-2); }
   .sheet { position: fixed; inset: auto 0 0; width: 100%; max-width: 100%; max-height: calc(100dvh - var(--space-24)); border-radius: var(--radius-xl) var(--radius-xl) 0 0; border-bottom: 0; animation: sheetReveal var(--duration-moderate) var(--ease-out); }
   .sheet::backdrop { background: var(--scrim); }

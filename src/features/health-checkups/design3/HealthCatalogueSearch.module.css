@@ -1,0 +1,31 @@
+.root { position: relative; width: 100%; min-width: 0; }
+/* The shared search form supplies the focus ring around the complete field. */
+.root form input:focus-visible { outline: none; }
+.dropdown { position: absolute; z-index: 5; inset-inline: 0; top: calc(100% + var(--space-8)); max-height: min(calc(var(--space-128) * 3), 60dvh); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--color-border) transparent; border: var(--space-1) solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg-card); box-shadow: var(--elevation-3); padding: var(--space-8); }
+.heading { padding: var(--space-8) var(--space-12); border-radius: var(--radius-sm); background: var(--color-bg-alt); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; }
+.option { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); min-height: var(--space-48); padding: var(--space-12); border-radius: var(--radius-sm); color: var(--color-text); font-size: var(--font-size-sm); line-height: var(--leading-body); cursor: pointer; }
+.option > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.price { flex-shrink: 0; color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); }
+.option[aria-selected="true"] { background: var(--color-primary-light); }
+.allResults { display: block; width: 100%; min-height: var(--space-48); padding: var(--space-12); color: var(--color-primary); background: transparent; border: 0; border-radius: var(--radius-sm); text-align: left; font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 500; cursor: pointer; }
+.allResults:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: calc(var(--space-2) * -1); }
+@media (hover: hover) { .option:hover { background: var(--color-bg-alt); } .allResults:hover { color: var(--color-primary-dark); } }
+
+/* Keep location and query together, including on narrow screens. */
+@media (max-width: 639px) {
+  .root > div:first-child {
+    display: flex;
+    flex-direction: column;
+    border: var(--space-1) solid var(--color-border);
+    border-radius: var(--radius-xl);
+    background: var(--d3-control-surface);
+  }
+  .root > div:first-child:focus-within { border-color: var(--color-primary); }
+  .root form {
+    width: 100%;
+    border: 0;
+    border-top: var(--space-1) solid var(--color-border);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    background: transparent;
+  }
+}

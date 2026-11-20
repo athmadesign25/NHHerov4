@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { bannerCollapse } from "@/components/marketing/MarketingDrawer/bannerCollapse";
-import AnnouncementIcon from "@/components/marketing/MarketingDrawer/AnnouncementIcon";
-import { duration, ease } from "@/lib/motion";
+import AnnouncementCenter from "@/components/marketing/AnnouncementCenter/AnnouncementCenter";
+import { announcementStore } from "@/components/marketing/AnnouncementCenter/announcementStore";
 import { searchDockProgress } from "./dockProgress";
 import { createPortal } from "react-dom";
-import { animate, motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
 import { Search, X, CalendarCheck, Activity, HeartPulse, Mic, Sparkles } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../../public/assets/pulse animation.json";
@@ -40,6 +40,8 @@ import { playFemaleEmpatheticVoice } from "./voiceSynthesizer";
  * - 'results': Full search results canvas with doctors, treatments, articles, and tags
  * - 'pulse': Attached Pulse AI window with navigation back to search results
  */
+const ISLAND_READY_PROGRESS = 0.34;
+
 export type SearchState = "landing" | "active" | "skeleton" | "results" | "pulse";
 
 export interface AnchorRect {
@@ -100,18 +102,15 @@ export default function NHSearchExperience({
 
   const isMobile = winSize.w <= 900;
   const router = useRouter();
-  const pathname = usePathname();
 
   // Floating search / Pulse AI modal state (when triggered from docked control in fold 2+)
   const [isDocked, setIsDocked] = useState(false);
+  const [isIslandReady, setIsIslandReady] = useState(false);
   const [isPulseWorkspaceOpen, setIsPulseWorkspaceOpen] = useState(false);
   const [pulseInitialQuery, setPulseInitialQuery] = useState("");
-  const bannerBubble =
-    useSyncExternalStore(
-      bannerCollapse.subscribe,
-      bannerCollapse.get,
-      bannerCollapse.getServerSnapshot,
-    ) === "island" && pathname === "/L1banner";
+  const collapseMode = useSyncExternalStore(bannerCollapse.subscribe, bannerCollapse.get, bannerCollapse.getServerSnapshot);
+  const announcements = useSyncExternalStore(announcementStore.subscribe, announcementStore.get, announcementStore.getServerSnapshot);
+  const bannerBubble = announcements.length > 0;
 
   // Motion values for continuous morphing
   const hasScroll = Boolean(scrollProgress);
@@ -121,17 +120,11 @@ export default function NHSearchExperience({
   // Accelerate the scroll animation on mobile so it completes in 40% of the normal distance
   // This makes the transition to bottom island feel much cleaner and more responsive
   const fastMobileProgress = useTransform(baseProgress, [0, 0.4], [0, 1]);
-  const naturalProgress = isMobile ? fastMobileProgress : baseProgress;
-  const announcementDockProgress = useMotionValue(0);
-  // An announcement closes into the real island even at the top of the hero.
-  // Scroll resumes control when L3 is restored.
+  // Announcements wait for the existing search morph to finish.
+  const activeProgress = isMobile ? fastMobileProgress : baseProgress;
   useEffect(() => {
-    const animation = animate(announcementDockProgress, bannerBubble ? 1 : 0, {
-      duration: prefersReducedMotion ? 0 : duration.slowest, ease: ease.out,
-    });
-    return () => animation.stop();
-  }, [announcementDockProgress, bannerBubble, prefersReducedMotion]);
-  const activeProgress = useTransform([naturalProgress, announcementDockProgress], ([scroll, announcement]) => Math.max(Number(scroll), Number(announcement)));
+    setIsIslandReady(activeProgress.get() >= ISLAND_READY_PROGRESS);
+  }, [activeProgress]);
 
   // Starting dimensions (Hero anchor)
   const isPhone = winSize.w <= 640;
@@ -183,6 +176,7 @@ export default function NHSearchExperience({
   const [isMorphing, setIsMorphing] = useState(false);
 
   useMotionValueEvent(activeProgress, "change", (latest) => {
+    setIsIslandReady(latest >= ISLAND_READY_PROGRESS);
     searchDockProgress.set(latest);
     setIsMorphing(latest > 0.02 && latest < 0.35);
     const docked = latest >= 0.22;
@@ -282,7 +276,7 @@ export default function NHSearchExperience({
       } else if (isElementInView(healthEl)) {
         setDockedPlaceholder(isMobile ? "Checkups & tests..." : "Search health checkups & tests...");
       } else if (isElementInView(coeEl)) {
-        setDockedPlaceholder(isMobile ? "Specialities..." : "Search by speciality...");
+        setDockedPlaceholder(isMobile ? "Specialties..." : "Search by specialty...");
       } else {
         setDockedPlaceholder(isMobile ? "Search doctors, tests..." : "Search doctors, symptoms, packages...");
       }
@@ -733,6 +727,7 @@ export default function NHSearchExperience({
     <div
       className={`${styles.searchExperienceWrapper} ${searchTheme === "white" ? styles.themeWhite : styles.themeDark}`}
       data-search-theme={searchTheme}
+      data-search-island={isIslandReady}
       ref={containerRef}
       style={
         hasScroll
@@ -976,40 +971,9 @@ export default function NHSearchExperience({
             )}
           </motion.button>
 
-          {/* Water-Bubble 4: a collapsed marketing banner. Present only
-              while a banner has something to come back to, so the dock is
-              three bubbles wide the rest of the time. It re-opens the
-              banner through the same global hook the bar used. */}
-          {bannerBubble && (
-            <motion.button
-              type="button"
-              data-banner-bubble
-              className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""}`}
-              style={{
-                position: "fixed",
-                top: targetTop,
-                left: dockBtn3Left,
-                width: bubbleWidth3,
-                height: spotlightHeight,
-                borderRadius: 9999,
-                opacity: 1,
-                scale: 1,
-                pointerEvents: "auto",
-                zIndex: 9990,
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                (window as unknown as { __reopenBanner?: () => void }).__reopenBanner?.();
-              }}
-              aria-label="Announcements, 3 unread"
-            >
-              <motion.div className={styles.morphingActionIcon} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slow, duration: prefersReducedMotion ? 0 : duration.slow, ease: ease.out }}>
-                <AnnouncementIcon size={19} />
-              </motion.div>
-              <motion.span className={styles.announcementCount} initial={{ opacity: prefersReducedMotion ? 1 : 0, scale: prefersReducedMotion ? 1 : 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: prefersReducedMotion ? 0 : duration.slowest, duration: prefersReducedMotion ? 0 : duration.base, ease: ease.spring }} aria-hidden="true">3</motion.span>
-              <span className={styles.bubbleTooltip}>3 announcements</span>
-            </motion.button>
-          )}
+          {bannerBubble && isIslandReady && <AnnouncementCenter entries={announcements} top={targetTop} left={dockBtn3Left} size={bubbleWidth3} mobile={isMobile} docked={isDocked} emphasized={collapseMode === "island"}
+            className={`${styles.morphingActionBtn} ${styles.waterBubblePill} ${isDocked ? styles.morphingActionBtnDocked : ""} ${isDocked ? (isDockOverDark ? styles.dockBtnDark : styles.dockBtnLight) : ""}`} />}
+
         </>
       )}
 
@@ -1058,20 +1022,31 @@ export default function NHSearchExperience({
         <AnimatePresence>
           {searchState !== "landing" && (() => {
             const isPhone = winSize.w <= 640;
+            const isShortViewport = !isPhone && winSize.h <= 820;
             const isCompactModal = searchState === "results" || searchState === "skeleton" || searchState === "pulse";
             const modalTargetTop = typeof window !== "undefined"
               ? (isPhone
                   ? (isCompactModal ? 10 : 16)
+                  : isShortViewport
+                  ? (isCompactModal ? 8 : Math.max(24, window.innerHeight * 0.06))
                   : (isCompactModal ? Math.max(16, window.innerHeight * 0.02) : Math.max(60, window.innerHeight * 0.12)))
               : 100;
             const modalTargetWidth = typeof window !== "undefined"
               ? (isPhone
                   ? Math.min(600, winSize.w - 16)
                   : Math.min(
-                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? 1120 : 880,
+                      searchState === "pulse" ? 1040 : (searchState === "results" || searchState === "skeleton") ? (isShortViewport ? 1140 : 1120) : 880,
                       winSize.w - 32
                     ))
               : 880;
+            const expandedModalHeight = isPhone
+              ? "calc(100dvh - 20px)"
+              : isShortViewport
+              ? "calc(100dvh - 16px)"
+              : "min(920px, 94vh)";
+            const expandedModalMaxHeight = isCompactModal
+              ? (isPhone || isShortViewport ? "calc(100dvh - 16px)" : "95vh")
+              : (isPhone ? "calc(100dvh - 24px)" : "90vh");
 
             const originDeltaY = originRect ? Math.round(originRect.top - modalTargetTop) : 0;
             const originScale = originRect && modalTargetWidth > 0
@@ -1092,8 +1067,10 @@ export default function NHSearchExperience({
                   justifyContent: "center",
                   paddingTop: isPhone
                     ? (isCompactModal ? "8px" : "16px")
+                    : isShortViewport
+                    ? (isCompactModal ? "8px" : "max(24px, 6vh)")
                     : (isCompactModal ? "max(14px, 2vh)" : "max(60px, 12vh)"),
-                  paddingBottom: isPhone ? "8px" : "18px",
+                  paddingBottom: isPhone || isShortViewport ? "8px" : "18px",
                   paddingLeft: isPhone ? "8px" : "16px",
                   paddingRight: isPhone ? "8px" : "16px",
                   boxSizing: "border-box",
@@ -1162,12 +1139,8 @@ export default function NHSearchExperience({
                     display: "flex",
                     justifyContent: "center",
                     width: modalTargetWidth,
-                    height: (searchState === "results" || searchState === "skeleton")
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                      : searchState === "pulse"
-                      ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                      : undefined,
-                    maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
+                    height: isCompactModal ? expandedModalHeight : undefined,
+                    maxHeight: expandedModalMaxHeight,
                     zIndex: 3,
                   }}
                 >
@@ -1211,13 +1184,9 @@ export default function NHSearchExperience({
                       position: "relative",
                       zIndex: 2,
                       width: "100%",
-                      height: (searchState === "results" || searchState === "skeleton")
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                        : searchState === "pulse"
-                        ? (isPhone ? "calc(100dvh - 20px)" : "min(920px, 94vh)")
-                        : undefined,
-                      maxHeight: isCompactModal ? (isPhone ? "calc(100dvh - 16px)" : "95vh") : (isPhone ? "calc(100dvh - 24px)" : "90vh"),
-                      display: (searchState === "results" || searchState === "skeleton" || searchState === "pulse") ? "flex" : undefined,
+                      height: isCompactModal ? expandedModalHeight : undefined,
+                      maxHeight: expandedModalMaxHeight,
+                      display: isCompactModal ? "flex" : undefined,
                       flexDirection: "column",
                       overflow: "hidden",
                       overscrollBehavior: "contain",

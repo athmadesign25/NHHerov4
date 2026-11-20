@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Calendar, PhoneCall } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
+import { buildSearchUrl } from "@/features/search/searchTabs";
 import styles from "./ClinicalFloatingSideActions.module.css";
 
 interface ClinicalFloatingSideActionsProps {
@@ -19,13 +20,14 @@ interface ClinicalFloatingSideActionsProps {
 }
 
 export default function ClinicalFloatingSideActions({
-  consultHref = "/doctors",
+  consultHref = buildSearchUrl(),
   consultLabel = "Book\nConsultation",
   conditionTitle = "your condition",
   pulseQuery,
   supportPhone = "18003090309",
   isScrolled: propIsScrolled,
 }: ClinicalFloatingSideActionsProps) {
+  const reduced = useReducedMotion();
   const [internalScrolled, setInternalScrolled] = useState(false);
   const [isPulseOpen, setIsPulseOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -82,7 +84,7 @@ export default function ClinicalFloatingSideActions({
             initial={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
             animate={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, x: 0, y: "-50%", scale: 1 }}
             exit={isMobile ? { opacity: 0, y: 30 } : { opacity: 0, x: 45, y: "-50%", scale: 0.94 }}
-            transition={{ type: "spring", stiffness: 380, damping: 28 }}
+            transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 28 }}
             role="region"
             aria-label="Quick clinical actions"
           >
@@ -97,7 +99,7 @@ export default function ClinicalFloatingSideActions({
                 <Calendar size={18} />
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "Book OPD" : renderLabel(consultLabel)}
+                {renderLabel(consultLabel)}
               </span>
             </Link>
 
@@ -130,7 +132,7 @@ export default function ClinicalFloatingSideActions({
             >
               <div className={`${styles.boxIconWrap} ${styles.boxIconPulse}`}>
                 <div className={styles.pulseLottieBox}>
-                  <Lottie animationData={pulseAnimation} loop={true} />
+                  <Lottie animationData={pulseAnimation} loop={!reduced} autoplay={!reduced} />
                 </div>
               </div>
               <span className={styles.boxLabel}>

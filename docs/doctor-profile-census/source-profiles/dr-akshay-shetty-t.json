@@ -1,0 +1,59 @@
+{
+  "doctorOverview": {
+    "image": null,
+    "name": "Dr. Akshay Shetty T",
+    "id": 3687,
+    "doctorCode": "119425",
+    "designation": "Visiting Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MS (Orthopaedics)",
+        "DNB (Orthopaedics)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Orthopaedic Surgery"
+      ],
+      "subSpecialties": [
+        "Joint Replacement"
+      ]
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 32,
+          "name": "Narayana Multispeciality Hospital, HSR Bangalore",
+          "code": "1011",
+          "checked": true
+        }
+      ]
+    },
+    "availability": "",
+    "contact": "18003090309"
+  },
+  "doctorAbout": [],
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": []
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

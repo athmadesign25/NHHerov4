@@ -1,5 +1,6 @@
 "use client";
 
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
 import React from "react";
 import CsrHero from "@/components/csr/CsrHero";
 import CsrEditorialsGrid from "@/components/csr/CsrEditorialsGrid";
@@ -25,7 +26,7 @@ export default function CsrPage() {
 
       {/* ── UNIFIED CLINICAL SIDE ACTIONS ── */}
       <ClinicalFloatingSideActions
-        consultHref="/doctors"
+        consultHref={defaultDoctorListingUrl(new URLSearchParams())}
         consultLabel={"Book\nOPD"}
         conditionTitle="Corporate Social Responsibility"
         pulseQuery="Tell me more about Narayana Health's CSR initiatives, free pediatric heart surgeries, and community health camps."
@@ -33,4 +34,3 @@ export default function CsrPage() {
     </main>
   );
 }
-

@@ -1193,7 +1193,7 @@
 .trustGradientOverlay {
   position: absolute;
   inset: 0;
-  background: 
+  background:
     linear-gradient(90deg, #07152b 0%, #07152b 16%, rgba(7, 21, 43, 0.85) 45%, rgba(7, 21, 43, 0.35) 75%, transparent 100%),
     linear-gradient(0deg, rgba(7, 21, 43, 0.6) 0%, transparent 40%);
   pointer-events: none;

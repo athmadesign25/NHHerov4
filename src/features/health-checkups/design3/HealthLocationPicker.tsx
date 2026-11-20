@@ -2,8 +2,9 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore, type KeyboardEvent, type RefObject } from "react";
 import { createPortal } from "react-dom";
-import { ArrowLeft, ChevronDown, ChevronRight, MapPin, Search, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronRight, MapPin, Search, X, LocateFixed } from "lucide-react";
 import type Lenis from "lenis";
+import { requestDoctorCity } from "@/features/search/doctorLocation";
 import { getDesign16HospitalPreview } from "@/features/search/design16HospitalPreview";
 import type { FacilityId, HealthFacility } from "../catalog";
 import { healthCityKey, healthFacilityServesCity } from "../healthFacilitySelection";
@@ -12,9 +13,11 @@ import pickerStyles from "@/components/ui/search-location/SearchCityPicker.modul
 import CityPickerScrollbar from "@/components/ui/search-location/CityPickerScrollbar";
 
 interface Props {
+  compact?: boolean;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
   selectedFacility?: HealthFacility;
+  initialCity?: string;
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -32,34 +35,49 @@ function serverSnapshot() { return false; }
 
 /** City and centre are one committed location; changing the city alone never clears a selection. */
 export default function HealthLocationPicker(props: Props) {
-  const { selectedFacility, open, onOpen, onClose } = props;
+  const { selectedFacility, open, onOpen, onClose, compact = false } = props;
   const mobile = useSyncExternalStore(subscribeViewport, mobileSnapshot, serverSnapshot);
   const trigger = useRef<HTMLButtonElement>(null);
   const root = useRef<HTMLDivElement>(null);
   const id = useId();
   const panel = open ? <LocationPanel {...props} key={mobile ? "sheet" : "popover"} mobile={mobile} id={id} trigger={trigger} root={root} /> : null;
 
-  return <div className={styles.location} ref={root} data-health-location>
+  return <div className={`${styles.location} ${compact ? styles.compact : ""}`} ref={root} data-health-location>
     <button ref={trigger} type="button" className={styles.trigger} aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined}
       aria-label={selectedFacility ? `Change location: ${selectedFacility.city}, ${selectedFacility.name}` : "Choose city and centre"}
       title={selectedFacility ? `${selectedFacility.city} · ${selectedFacility.name}` : undefined}
       onClick={open ? onClose : onOpen}>
       <MapPin className={styles.pin} aria-hidden />
-      <span className={styles.triggerText}><strong>{selectedFacility?.city ?? "Choose city"}</strong><span>{selectedFacility?.name ?? "Hospital or clinic"}</span></span>
+      <span className={styles.triggerText}><strong>{selectedFacility?.city ?? "Choose city"}</strong>{compact && <span className={styles.contextDot} aria-hidden>·</span>}<span>{selectedFacility?.name ?? "Hospital or clinic"}</span></span>
       <ChevronDown className={styles.chevron} aria-hidden />
     </button>
     {mobile && panel ? createPortal(panel, document.body) : panel}
   </div>;
 }
 
-function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect, mobile, id, trigger, root }: Props & {
+/** The first visit uses the same picker inline, without a modal or an extra CTA. */
+export function HealthCentreChooser(props: Pick<Props, "cities" | "facilities" | "onSelect" | "initialCity">) {
+  const trigger = useRef<HTMLButtonElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const id = useId();
+  return <div ref={root} className={styles.inlineRoot}>
+    <LocationPanel {...props} open onOpen={() => {}} onClose={() => {}} inline mobile={false} id={id} trigger={trigger} root={root} />
+  </div>;
+}
+
+function LocationPanel({ cities, facilities, selectedFacility, initialCity, onClose, onSelect, mobile, inline = false, id, trigger, root }: Props & {
+  inline?: boolean;
   mobile: boolean;
   id: string;
   trigger: RefObject<HTMLButtonElement | null>;
   root: RefObject<HTMLDivElement | null>;
 }) {
-  const [city, setCity] = useState<string | null>(() => selectedFacility ? healthCityKey(selectedFacility.city) : null);
+  const [city, setCity] = useState<string | null>(() => selectedFacility ? healthCityKey(selectedFacility.city) : initialCity ?? null);
   const [query, setQuery] = useState("");
+  const [locating, setLocating] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+  const locationRequest = useRef(0);
+  useEffect(() => () => { locationRequest.current += 1; }, []);
   const input = useRef<HTMLInputElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const options = useRef<HTMLUListElement>(null);
@@ -74,6 +92,7 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
   const visibleCentres = city ? facilities.filter(entry => healthFacilityServesCity(entry, city) && matches(`${entry.name} ${entry.address}`)) : [];
 
   useEffect(() => {
+    if (inline) return;
     const panel = dialog.current;
     const returnTo = trigger.current;
     const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
@@ -94,10 +113,10 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       }
       if (restoreFocus.current && returnTo?.isConnected) returnTo.focus({ preventScroll: true });
     };
-  }, [mobile, trigger]);
+  }, [inline, mobile, trigger]);
 
   useEffect(() => {
-    if (mobile) return;
+    if (mobile || inline) return;
     const keepInViewport = () => {
       const panel = dialog.current;
       if (!panel) return;
@@ -121,19 +140,35 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       window.removeEventListener("resize", keepInViewport);
       window.removeEventListener("scroll", keepInViewport);
     };
-  }, [mobile, onClose, root]);
+  }, [inline, mobile, onClose, root]);
+
+  async function locateCity() {
+    const request = ++locationRequest.current;
+    setLocating(true); setLocationMessage("");
+    const result = await requestDoctorCity(() => locationRequest.current === request);
+    if (locationRequest.current !== request) return;
+    setLocating(false);
+    if (result.error) { setLocationMessage(result.error); return; }
+    const match = cities.find(entry => entry.value === healthCityKey(result.city ?? ""));
+    if (!match) { setLocationMessage("No nearby health checkup city found. Please choose a city."); return; }
+    changeCity(match.value);
+    setLocationMessage(`Showing centres near ${match.label}.`);
+  }
 
   function changeCity(value: string | null) {
+    locationRequest.current += 1; setLocating(false); setLocationMessage("");
+    const centres = value ? facilities.filter(entry => healthFacilityServesCity(entry, value)) : [];
+    if (centres.length === 1) { onSelect(centres[0].id); return; }
     setCity(value);
     setQuery("");
     requestAnimationFrame(() => {
       scrollViewport.current?.scrollTo({ top: 0, behavior: "instant" });
-      dialog.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
+      (inline ? root.current : dialog.current)?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true });
     });
   }
 
   function navigateOptions(event: KeyboardEvent<HTMLElement>) {
-    if (event.key === "Escape" && !mobile) { event.preventDefault(); onClose(); return; }
+    if (event.key === "Escape" && !mobile && !inline) { event.preventDefault(); onClose(); return; }
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     const buttons = [...options.current?.querySelectorAll<HTMLButtonElement>("button") ?? []];
     if (!buttons.length) return;
@@ -145,17 +180,17 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
     buttons[next]?.focus();
   }
 
-  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${pickerStyles.panel} ${mobile ? pickerStyles.sheet : `${pickerStyles.popover} ${styles.popover}`}`}
-    aria-labelledby={titleId} aria-modal={mobile || undefined} data-lenis-prevent onKeyDown={navigateOptions}
-    onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (mobile && event.target === event.currentTarget) onClose(); }}>
+  const content = <>
       <header className={pickerStyles.header}>
         <div className={styles.titleGroup}>
           {city && <button type="button" className={pickerStyles.iconButton} aria-label="Choose another city" onClick={() => changeCity(null)}><ArrowLeft aria-hidden /></button>}
           <h2 id={titleId} tabIndex={-1}>{city ? "Choose a centre" : "Choose a city"}</h2>
         </div>
-        <button type="button" className={pickerStyles.iconButton} aria-label="Close location picker" onClick={onClose}><X aria-hidden /></button>
+        {!inline && <button type="button" className={pickerStyles.iconButton} aria-label="Close location picker" onClick={onClose}><X aria-hidden /></button>}
       </header>
     <div ref={scrollViewport} className={pickerStyles.panelBody}>
+      {!city && <button type="button" className={styles.locateAction} onClick={locateCity} disabled={locating}><LocateFixed aria-hidden />{locating ? "Finding your city…" : "Use my location"}</button>}
+      {locationMessage && <p className={styles.locationMessage} role="status">{locationMessage}</p>}
       {city && <button type="button" className={styles.cityContext} onClick={() => changeCity(null)} aria-label={`Change city, currently ${cityLabel}`}><MapPin aria-hidden /><span>{cityLabel}</span><ChevronDown aria-hidden /></button>}
       <div className={pickerStyles.search}>
         <Search aria-hidden />
@@ -185,5 +220,10 @@ function LocationPanel({ cities, facilities, selectedFacility, onClose, onSelect
       </div>
     </div>
     <CityPickerScrollbar viewport={scrollViewport} />
-  </dialog>;
+  </>;
+  if (inline) return <section id={id} className={`${pickerStyles.panel} ${styles.inlinePanel}`} aria-labelledby={titleId} onKeyDown={navigateOptions} data-lenis-prevent>{content}</section>;
+  return <dialog ref={dialog} id={id} open={mobile ? undefined : true} className={`${pickerStyles.panel} ${mobile ? pickerStyles.sheet : `${pickerStyles.popover} ${styles.popover}`}`}
+    aria-labelledby={titleId} aria-modal={mobile || undefined} data-lenis-prevent onKeyDown={navigateOptions}
+    onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (mobile && event.target === event.currentTarget) onClose(); }}>
+{content}</dialog>;
 }

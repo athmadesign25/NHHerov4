@@ -107,13 +107,13 @@
 .contentTall {
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: var(--space-40);
 }
 
 .contentWide {
   left: 0;
   top: 0;
-  bottom: 0;
+  bottom: var(--space-40);
   width: min(56%, 560px);
   justify-content: center;
   padding-left: var(--space-48);
@@ -251,9 +251,13 @@
   position: relative;
 }
 
-/* The label IS the placeholder at rest, then shrinks into the corner
-   once the field is focused or holds anything. One piece of text doing
-   both jobs, so nothing is lost on focus the way a real placeholder is. */
+/* Reserve a separate label line only while focused or populated. */
+.field:has(.input:focus),
+.field:has(.input:not(:placeholder-shown)) {
+  padding-top: calc(var(--font-size-xs) * var(--leading-normal) + var(--space-8));
+}
+
+/* At rest the label acts as the placeholder; active labels sit above the box. */
 .fieldLabel {
   position: absolute;
   left: var(--space-14);
@@ -263,7 +267,7 @@
   pointer-events: none;
   font-size: var(--font-size-base);
   font-weight: 400;
-  line-height: 1;
+  line-height: var(--leading-normal);
   color: var(--slate-400);
   transition:
     translate var(--duration-fast) var(--ease-out),
@@ -275,8 +279,10 @@
    together mean "focused, or holding something". */
 .input:focus + .fieldLabel,
 .input:not(:placeholder-shown) + .fieldLabel {
-  translate: 0 -168%;
-  scale: 0.78;
+  top: 0;
+  left: 0;
+  translate: 0 0;
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
   font-weight: 600;
 }
@@ -286,8 +292,8 @@
   /* Medium: comfortably over the 44px touch minimum without the airiness
      of a 56px form field, which on a banner reads as a different page. */
   min-height: 48px;
-  /* Room above the text for the label to move into. */
-  padding: var(--space-16) var(--space-14) var(--space-4);
+  padding: var(--space-12) var(--space-14);
+  line-height: var(--leading-normal);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: rgba(var(--white-rgb), 0.92);
@@ -322,15 +328,13 @@
 /* A link, not a pill. The underline is the affordance, so there is no
    plate to position — just type sitting against the scrim. */
 .close {
+  composes: iconButton from "../CloseButton.module.css";
   position: fixed;
   z-index: 2147482200;
-  display: inline-flex;
-  align-items: center;
   gap: var(--space-8);
+  /* The shared class zeroes padding for L2's bare icon; this one has a
+     label beside it and wants the vertical room back. */
   padding: var(--space-8) 0;
-  border: none;
-  background: none;
-  color: var(--color-text-inverse);
   font-family: var(--font-family);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -366,13 +370,16 @@
 /* Tall: beside the panel on the right, level with its top edge. */
 .closeTall {
   left: calc(50% + var(--tall-w) / 2 + var(--space-20));
-  top: calc(50% - var(--tall-h) / 2);
+  top: 50%;
+  translate: 0 -50%;
 }
 
-/* Wide: above the panel, right edges aligned. Positioned with `right`
-   rather than a translate, because Framer owns this element's transform. */
+/* Wide: centred above the panel. Independent translate preserves Framer's
+   entrance transform. */
 .closeWide {
-  right: calc(50% - var(--wide-w) / 2);
+  left: 50%;
+  right: auto;
+  translate: -50% 0;
   top: calc(50% - var(--wide-h) / 2 - var(--space-40));
 }
 
@@ -547,4 +554,37 @@
 
 @media (prefers-reduced-motion: reduce) {
   .glowFrame { display: none; }
+}
+
+/* Quiet blue lattice rising from the panel foot, below live content. */
+.panel::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--space-96);
+  background: linear-gradient(to top, rgba(var(--blue-500-rgb), 0.12), transparent);
+  mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
+  -webkit-mask: url("/brand-tessellation-tile.svg") center bottom / var(--space-96) var(--space-96) repeat;
+  pointer-events: none;
+}
+
+/* The countdown has its own row; content and sticky CTAs end above it. */
+.content { min-height: 0; max-height: calc(100% - var(--space-40)); overflow-y: auto; }
+.progressSlot {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  height: var(--space-40);
+  padding-inline: var(--space-24);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .contentTall, .contentWide { max-height: none; }
+  .content > * { flex-shrink: 0; }
+  .progressSlot { position: relative; inset: auto; flex: 0 0 var(--space-40); width: 100%; padding-inline: var(--space-16); }
 }

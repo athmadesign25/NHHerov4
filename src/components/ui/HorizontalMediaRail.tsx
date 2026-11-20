@@ -12,10 +12,11 @@ interface HorizontalMediaRailProps {
   itemLabel: string;
   heading: ReactNode;
   children: ReactNode;
+  variant?: "default" | "gallery" | "circles";
 }
 
 /** Native swipe scrolling, with drag and keyboard alternatives. Never remaps vertical wheel input. */
-export default function HorizontalMediaRail({ id, labelledBy, itemLabel, heading, children }: HorizontalMediaRailProps) {
+export default function HorizontalMediaRail({ id, labelledBy, itemLabel, heading, children, variant = "default" }: HorizontalMediaRailProps) {
   const items = Children.toArray(children);
   const rail = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
@@ -51,7 +52,7 @@ export default function HorizontalMediaRail({ id, labelledBy, itemLabel, heading
     element.scrollBy({ left: direction * step * visible, behavior: reducedMotion ? "auto" : "smooth" });
   }
 
-  return <div className={styles.root}>
+  return <div className={`${styles.root} ${variant === "gallery" ? styles.gallery : variant === "circles" ? styles.circles : ""}`}>
     <header className={styles.header}>
       <div className={styles.heading}>{heading}</div>
       {edges.overflow && <div className={styles.controls}>

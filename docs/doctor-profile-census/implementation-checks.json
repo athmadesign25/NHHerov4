@@ -1,0 +1,29 @@
+{
+  "branch": "aditya4_work",
+  "masterPreview": "http://localhost:3007/doctors/master-profile",
+  "sourceProfileCount": 20,
+  "specialityCategories": 5,
+  "profilesPerCategory": 4,
+  "liveBrowserClickVerified": [
+    "Dr. Aditi Singhvi",
+    "Dr. Arun B S"
+  ],
+  "sourceInspection": "All20 official profiles fetched and fully decoded; names and source IDs checked against live listings.",
+  "browserLimitation": "Chrome was actively used during the remaining click-through checks; native UI verification is partial. No claim that all20 were clicked.",
+  "sourceCoverage": "All populated doctor-specific sections in the reviewed20 profiles retained. This is not an exhaustive census of every NH doctor.",
+  "master": "Fictional all-section design fixture, not listed or bookable. Actual media authorship retained.",
+  "visibility": "Regular profiles hide absent content and navigation; no missing clinical facts invented.",
+  "marketingAdditions": [
+    "Factual doctor-specific FAQs",
+    "Related speciality video fallback",
+    "Request a Callback"
+  ],
+  "validation": {
+    "profileAndDirectoryTests": 51,
+    "localRoutesVerified": 20,
+    "targetedLint": "passed",
+    "repositoryLint": "15 pre-existing errors and4 warnings outside changed profile files"
+  },
+  "visualVerification": "Responsive visual review not completed because Chrome was in use; source rendering, navigation targets and local HTTP routes verified.",
+  "integration": "Static captured source snapshots and reusable models; live doctor-profile API integration remains future work."
+}

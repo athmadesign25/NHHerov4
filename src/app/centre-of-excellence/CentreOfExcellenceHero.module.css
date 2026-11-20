@@ -95,7 +95,7 @@
   position: absolute;
   inset: 0;
   opacity: 0.60;
-  background: 
+  background:
     linear-gradient(0deg, rgba(6, 14, 27, 0.90) 0%, rgba(6, 14, 27, 0.45) 20%, transparent 45%),
     linear-gradient(180deg, rgba(6, 14, 27, 0.65) 0%, transparent 32%);
   pointer-events: none;
@@ -172,7 +172,7 @@
 
 @media (max-width: 700px) {
   .heroTitle {
-    font-size: clamp(24px, 6.5vw, 32px);
+    font-size: var(--font-size-3xl, 30px);
     margin: 0 0 10px 0;
     line-height: 1.2;
   }
@@ -189,7 +189,7 @@
 
 @media (max-width: 700px) {
   .heroSubtitle {
-    font-size: 13.5px;
+    font-size: var(--font-size-base, 16px);
     line-height: 1.45;
     margin: 0 0 16px 0;
     display: -webkit-box;
@@ -485,4 +485,3 @@
     gap: 24px;
   }
 }
-

@@ -1,6 +1,6 @@
 import type { HealthDesign } from "./healthDesigns";
 
-/** Source-authored content only. Empty sections are omitted by the master page. */
+/** Master detail schema. Captured source content and labelled demo enrichment stay separate. */
 export interface HealthTestGroup {
   name: string;
   parameters: string[];
@@ -16,6 +16,15 @@ export interface HealthDetailSection {
 }
 
 export interface HealthItemDetails {
+  contentType?: "imaging" | "service";
+  /** Internal editorial provenance; demo routes remain noindex until approval. */
+  editorial?: {
+    status: "researched-demo";
+    reviewedAt: string;
+    profile: string;
+    sources: string[];
+    draftFields: string[];
+  };
   about: string[];
   sampleRequired: string[];
   testGroups: HealthTestGroup[];

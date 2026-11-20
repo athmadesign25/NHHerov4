@@ -1,115 +1,137 @@
 "use client";
 
-/**
- * The banner's collapsed form: a small persistent alert at the bottom
- * left. No scrim, no lock — it just sits there until dismissed.
- *
- * It does not simply appear. It grows out of the corner the panel shrank
- * toward, so the two read as one movement rather than a disappearance
- * followed by an arrival.
- *
- * The copy is the banner's own headline, one part per line and in each
- * part's own colour. The parts are where the writer already decided the
- * line breaks, so the toast inherits them rather than guessing at a
- * wrap — which is what keeps it inside its 274px without a hyphen in a
- * bad place.
- */
-
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
+import { X } from "lucide-react";
+import { duration, ease } from "@/lib/motion";
 import { useIsMobile } from "./useIsMobile";
-import { ease } from "@/lib/motion";
-import AnnouncementIcon from "./AnnouncementIcon";
+import { type HeadlinePart, COLLAPSED_LABEL } from "./types";
 import styles from "./CollapsedToast.module.css";
-import { type HeadlinePart, COLLAPSED_LABEL, resolve } from "./types";
 
 type Props = {
   parts: HeadlinePart[];
+  ctaLabel: string;
   onExpand: () => void;
+  onDismiss: () => void;
+  onDock: () => void;
 };
 
-export default function CollapsedToast({ parts, onExpand }: Props) {
-  // The phone gets a different object, not a smaller one: a 126px chip
-  // top-right under the nav, with the mark on a lit plate. At 274px the
-  // desktop toast took a third of a phone's width.
+/** L3: a compact image banner; the full campaign opens only on request. */
+export default function CollapsedToast({ parts, ctaLabel, onExpand, onDismiss, onDock }: Props) {
   const isMobile = useIsMobile();
-  const ref = useRef<HTMLButtonElement>(null);
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const tiltFrame = useRef(0);
+  const tiltBounds = useRef<DOMRect | null>(null);
+  const controls = useAnimationControls();
+  const [ready, setReady] = useState(false);
+  const [phase, setPhase] = useState<"image" | "wash" | "title" | "cta">("image");
+  const [closing, setClosing] = useState(false);
 
-  /**
-   * The chip rides under the navbar, including while the navbar is
-   * leaving.
-   *
-   * It follows the navbar's measured bottom edge rather than repeating
-   * its show/hide rule. That rule is specifically tuned — always visible
-   * under 120px, a 12px dead zone for Lenis momentum — and a second copy
-   * of it here would drift the first time anyone touched the original.
-   *
-   * The nav takes 600ms to slide, so a scroll handler alone would jump
-   * the chip to the final position and let the nav catch up. The frame
-   * loop runs for the length of that transition after the last scroll,
-   * then stops; it is not a permanent rAF.
-   */
+  const resetTilt = () => {
+    cancelAnimationFrame(tiltFrame.current);
+    tiltFrame.current = 0;
+    tiltBounds.current = null;
+    if (tiltRef.current) tiltRef.current.style.removeProperty("transform");
+  };
+
   useEffect(() => {
-    if (!isMobile) return;
-    const nav = document.querySelector("nav");
-    if (!nav) return;
+    if (isMobile || reduced || closing) {
+      cancelAnimationFrame(tiltFrame.current);
+      tiltFrame.current = 0;
+      tiltBounds.current = null;
+      tiltRef.current?.style.removeProperty("transform");
+    }
+    return () => cancelAnimationFrame(tiltFrame.current);
+  }, [isMobile, reduced, closing]);
 
-    let raf = 0;
-    let until = 0;
-    const follow = () => {
-      const el = ref.current;
-      if (el) el.style.top = `${Math.max(8, nav.getBoundingClientRect().bottom + 12)}px`;
-      raf = performance.now() < until ? requestAnimationFrame(follow) : 0;
+  useEffect(() => {
+    if (!ready) return;
+    let cancelled = false;
+    const timers: number[] = [];
+    const enter = async () => {
+      await controls.start({ opacity: 1, scale: 1, x: 0, y: 0, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.out } });
+      if (cancelled) return;
+      if (reduced) { setPhase("cta"); return; }
+      const imageHold = duration.slow;
+      const washTime = duration.slowest * 2;
+      const titleTime = duration.slowest + duration.fast * 2;
+      timers.push(window.setTimeout(() => setPhase("wash"), imageHold * 1000));
+      timers.push(window.setTimeout(() => setPhase("title"), (imageHold + washTime) * 1000));
+      timers.push(window.setTimeout(() => setPhase("cta"), (imageHold + washTime + titleTime) * 1000));
     };
-    const onScroll = () => {
-      until = performance.now() + 800;
-      if (!raf) raf = requestAnimationFrame(follow);
-    };
+    void enter();
+    return () => { cancelled = true; timers.forEach(window.clearTimeout); };
+  }, [controls, ready, reduced]);
 
-    follow();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [isMobile]);
-  // A banner whose artwork carries its own type has no headline to lend
-  // the toast, so the toast falls back to the generic label rather than
-  // collapsing to an icon with nothing beside it.
-  const lines = parts.length
-    ? parts
-    : [{ id: "fallback", text: COLLAPSED_LABEL, colorId: "black" }];
+  const dock = async () => {
+    if (closing) return;
+    resetTilt();
+    setClosing(true);
+    onDock();
+    // Wait for the island to reserve its new slot before measuring it.
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    const source = ref.current?.getBoundingClientRect();
+    const destination = document.querySelector<HTMLElement>("[data-banner-bubble]");
+    const target = destination?.getBoundingClientRect();
+    if (source && target && !reduced) {
+      await controls.start({
+        x: target.left + target.width / 2 - (source.left + source.width / 2),
+        y: target.top + target.height / 2 - (source.top + source.height / 2),
+        scale: target.width / source.width,
+        opacity: [1, 1, 0],
+        transition: { duration: duration.slowest, ease: ease.out },
+      });
+    } else if (!reduced) {
+      // At the hero there is no island target yet. Preserve the announcement
+      // for the eventual dock, and dismiss L3 in place.
+      await controls.start({ opacity: 0, scale: 0.96, transition: { duration: duration.slow, ease: ease.out } });
+    }
+    onDismiss();
+    destination?.focus({ preventScroll: true });
+  };
+
+  // Three short campaign lines at most; extra content belongs in L1.
+  const headline = parts.length ? parts.slice(0, 3) : [{ id: "fallback", text: COLLAPSED_LABEL, colorId: "black" }];
 
   return (
-    <motion.button
-      ref={ref}
-      type="button"
-      className={styles.toast}
-      onClick={onExpand}
-      // Arrives from its own corner: up from the bottom-left on desktop,
-      // down from under the nav on a phone.
-      initial={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.6, y: isMobile ? -18 : 24 }}
-      transition={{ duration: 0.5, ease: ease.spring }}
-    >
-      <span className={styles.iconWrap}>
-        <AnnouncementIcon size={isMobile ? 20 : 28} gradient={isMobile} />
-      </span>
-      <span className={styles.copy}>
-        {isMobile ? (
-          /* Fixed copy on the phone. A campaign headline written for a
-             548px panel does not survive a 200px chip, and clamping it
-             mid-phrase reads worse than a line written for the space. */
-          <span className={styles.line}>New NH Hospital in Banashankari!</span>
-        ) : (
-          lines.map((p) => (
-            <span key={p.id} className={styles.line} style={{ color: resolve(p.colorId) }}>
-              {p.text}
-            </span>
-          ))
-        )}
-      </span>
-    </motion.button>
+    <motion.div ref={ref} className={styles.toast} data-ready={ready} data-phase={phase} data-closing={closing} role="region" aria-label="Hospital announcement"
+      initial={{ opacity: 0, scale: reduced ? 1 : 0.96, x: reduced ? 0 : 24 }}
+      animate={controls}
+      exit={{ opacity: 0, transition: { duration: 0 } }}
+      transition={{ duration: reduced ? 0 : duration.slow, ease: ease.out }}>
+      <div ref={tiltRef} className={styles.card}
+        onPointerEnter={event => {
+          if (!isMobile && !reduced && phase === "cta" && !closing && event.pointerType === "mouse") tiltBounds.current = ref.current?.getBoundingClientRect() ?? null;
+        }}
+        onPointerMove={event => {
+          const bounds = tiltBounds.current;
+          if (!bounds || closing || tiltFrame.current) return;
+          const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left - bounds.width / 2) / (bounds.width / 2)));
+          const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top - bounds.height / 2) / (bounds.height / 2)));
+          tiltFrame.current = requestAnimationFrame(() => {
+            tiltFrame.current = 0;
+            if (tiltRef.current) tiltRef.current.style.transform = `rotateX(${-y * 4}deg) rotateY(${x * 4}deg) scale(1.015)`;
+          });
+        }}
+        onPointerLeave={resetTilt}>
+      <div className={styles.photo}>
+        <Image src="/navigation/hospitals/l3-hospital.webp" alt="Narayana Health hospital campus" fill sizes="(max-width: 768px) 160px, 304px" onLoad={() => setReady(true)} />
+      </div>
+      <span className={styles.overlay} aria-hidden="true" />
+      <button type="button" disabled={closing} className={styles.openToast} onClick={onExpand} aria-label={`Read announcement: ${headline.map(part => part.text).join(" ")}`}>
+        <span className={styles.media} aria-hidden="true" />
+        <span className={styles.copy}>
+          {headline.map(part => <span key={part.id} className={styles.line}><span className={`${styles.lineText} ${part.colorId === "red" ? styles.accent : ""}`}>{part.text}</span></span>)}
+        </span>
+      </button>
+      <div className={styles.ctaRow}>
+        <button type="button" className={styles.cta} disabled={closing} onClick={onExpand}>{ctaLabel || "Learn more"}</button>
+      </div>
+      <button type="button" className={styles.dismiss} onClick={() => void dock()} disabled={closing} aria-label="Dismiss announcement toast"><X aria-hidden="true" /></button>
+      </div>
+    </motion.div>
   );
 }

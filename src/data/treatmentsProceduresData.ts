@@ -556,6 +556,6 @@ export const SPECIALITY_FILTER_OPTIONS: SpecialityBubbleOption[] = [
 ];
 
 export const ALPHABET_LIST = [
-  "#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+  "#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
   "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 ];

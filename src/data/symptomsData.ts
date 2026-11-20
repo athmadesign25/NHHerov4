@@ -515,7 +515,7 @@ export interface SymptomDetailData {
 export function getSymptomDetailData(slug: string): SymptomDetailData {
   const match = SYMPTOMS_DATA.find((s) => s.slug === slug) || SYMPTOMS_DATA[0];
 
-  const matched = doctorsData.filter((d: DoctorData) => 
+  const matched = doctorsData.filter((d: DoctorData) =>
     d.speciality.toLowerCase().includes(match.specialitySlug) ||
     d.keywords.some((k) => k.toLowerCase().includes(match.organ) || k.toLowerCase().includes(match.specialitySlug))
   ).slice(0, 3);

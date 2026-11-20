@@ -4,10 +4,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
+import { setDemoSession } from "./demo-session";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
 import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
 import { DESIGN_PREVIEW_ENABLED } from "@/features/design-preview/designVariants";
+import { acquireInertLease } from "@/lib/inertLease";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -46,8 +48,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     const modal = modalRef.current;
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const background = Array.from(document.body.children).filter((element): element is HTMLElement => element instanceof HTMLElement && !element.contains(modal));
-    const previousInert = background.map((element) => element.inert);
-    background.forEach((element) => { element.inert = true; });
+    const releaseBackground = acquireInertLease(background);
     const focusable = () => Array.from(modal.querySelectorAll<HTMLElement>('button, input, select, a[href], [tabindex]'))
       .filter((element) => element.tabIndex >= 0 && !element.matches(':disabled') && element.getClientRects().length > 0);
     (modal.querySelector<HTMLInputElement>('input') ?? focusable()[0])?.focus();
@@ -62,7 +63,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
     modal.addEventListener('keydown', onKey);
     return () => {
       modal.removeEventListener('keydown', onKey);
-      background.forEach((element, index) => { element.inert = previousInert[index]; });
+      releaseBackground();
       trigger?.focus({ preventScroll: true });
     };
   }, [manageFocus, isOpen, mounted]);
@@ -95,7 +96,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userName", "Aditya");
       } catch { /* The current tab is signed in; persistent storage is optional. */ }
-      window.dispatchEvent(new Event("login-state-changed"));
+      setDemoSession(true);
     }
     verified.current = true;
     if (onLoginSuccess) onLoginSuccess();
@@ -382,19 +383,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
                       {/* Country Code */}
                       <div style={{ position: "relative", width: "100px", flexShrink: 0 }}>
                         <select
-                          style={{
-                            width: "100%",
-                            padding: "14px 32px 14px 16px",
-                            borderRadius: "100px",
-                            border: "1.5px solid var(--color-border, #e2e8f0)",
-                            background: "#ffffff",
-                            fontSize: "var(--font-size-base, 16px)",
-                            color: "var(--color-text, #0f172a)",
-                            fontWeight: 500,
-                            appearance: "none",
-                            outline: "none",
-                            cursor: "pointer"
-                          }}
+                          className={styles.countrySelect}
+                          aria-label="Country calling code"
                           defaultValue="+91"
                         >
                           <option value="+91">🇮🇳 +91</option>

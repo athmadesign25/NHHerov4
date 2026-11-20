@@ -1,0 +1,73 @@
+{
+  "doctorOverview": {
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/doctors/April2026/veHQwH0s6IR2hweXeFWj.webp",
+    "name": "Dr. Akash J",
+    "id": 101783,
+    "doctorCode": "120507",
+    "designation": "Junior Consultant",
+    "rating": "4.0",
+    "experience": "",
+    "qualification": {
+      "label": "Qualifications",
+      "value": [
+        "MBBS",
+        "MD (General Medicine)",
+        "DM (Neurology)",
+        "Fellowship (Interventional Neurology)"
+      ]
+    },
+    "specialties": {
+      "label": "Areas of Expertise",
+      "mainSpecialtiy": [
+        "Interventional Neurology"
+      ],
+      "subSpecialties": []
+    },
+    "locations": {
+      "label": "Hospitals & Clinics",
+      "value": [
+        {
+          "id": 38,
+          "name": "Mazumdar Shaw Medical Centre, Bangalore",
+          "code": "1002",
+          "checked": true
+        },
+        {
+          "id": 1518,
+          "name": "Narayana Clinic, Chandapura",
+          "code": "6530",
+          "checked": false
+        },
+        {
+          "id": 1134,
+          "name": "Narayana Clinic, Electronic City",
+          "code": "3010",
+          "checked": false
+        }
+      ]
+    },
+    "availability": "6th Nov",
+    "contact": "08067506836"
+  },
+  "doctorAbout": [],
+  "doctorTreatments": {
+    "title": "Treatments",
+    "list": [
+      "INTERVENTIONAL NEUROLOGY",
+      "Neurology"
+    ]
+  },
+  "doctorAchivements": [],
+  "doctorVideos": {
+    "title": "Real Stories. Real Healing.",
+    "tabs": [],
+    "list": []
+  },
+  "doctorBlogs": [],
+  "enquirySectionData": {
+    "title": "Make an Enquiry",
+    "image": "https://stgaccinwbsprdlrs02.blob.core.windows.net/corporatewebsite/settings/January2026/aZuh1j28OnK3jG4T49xn.webp",
+    "alt": ""
+  },
+  "doctorFaqData": {}
+}

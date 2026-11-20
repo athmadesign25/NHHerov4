@@ -26,7 +26,7 @@ This is a **Narayana Health (NH) hospital website redesign** built with Next.js 
 | Smooth Scroll | Lenis | 1.3.x |
 | Icons | Lucide React | 1.14.x |
 | Styling | CSS Modules (Vanilla CSS) | — |
-| Typography | Google Fonts (Inter) | — |
+| Typography | Inter, self-hosted via `next/font` | — |
 | Language | TypeScript | 5.x |
 
 ## Node.js Runtime
@@ -43,15 +43,47 @@ Always prefix commands with this PATH export before running `npm`, `node`, or `n
 
 ## Design Tokens & System
 
-All design values live in `src/app/globals.css` as CSS custom properties. **Always use tokens, never hard-code values.**
+All design values live in `src/app/globals.css` as CSS custom properties.
+**Never write a raw value in a component** — no hex, no `rgba()`, no `16px`,
+no `0.3s`, no `cubic-bezier(...)`.
 
-- **Colors**: `--color-primary`, `--color-emergency`, `--color-text`, etc.
-- **Spacing**: 8px scale — `--sp-1` (8px) through `--sp-16` (128px)
-- **Typography**: `--font-size-xs` (12px) through `--font-size-7xl` (72px)
+**Read [`DESIGN-SYSTEM.md`](./DESIGN-SYSTEM.md) before writing CSS.** It carries
+the full rules, the patterns, and a Traps section covering things that have each
+already caused a real bug here. Open `/ds-lab` in the running app to see every
+token rendered with its live value.
+
+Reach for a **semantic** token first (`--color-text-secondary` — says what it is
+*for*), then a **primitive** (`--slate-500` — says what it *is*), then nothing.
+
+- **Colour**: `--color-*` semantic; `--slate-50…900`, `--blue-brand`, `--navy-*` primitives
+- **Colour at opacity**: compose it — `rgba(var(--white-rgb), 0.08)`. Alphas come from a fixed 20-step scale; do not invent `0.07`
+- **Emergency red**: `--red-emergency`, `--red-emergency-dark`. **RESERVED** for genuine emergency affordances. On an ordinary tab or icon it stops meaning anything
+- **Accent red**: `--red-50 / 400 / 500 / 600` — destructive actions, alerts, error states, a red tab or icon
+- **Spacing inside a section**: `--space-2 … --space-128`. Named by pixel value, so `--space-12` is 12px
+- **Spacing between sections**: `--section-y-lg` (160px), `--section-y` (120px, the default), `--section-y-sm` (60px). These step down responsively on their own — do not write a media query for them
+- **Typography**: `--font-size-2xs … --font-size-4xl`, plus `--font-size-display` (42px). Pair every size with a `--leading-*`
+- **Leading**: `--leading-none / tight / snug / normal / body / relaxed`
 - **Radii**: `--radius-sm` through `--radius-full`
-- **Shadows**: `--shadow-sm` through `--shadow-xl`
-- **Transitions**: `--transition-fast` (150ms), `--transition-base` (250ms), `--transition-slow` (400ms)
+- **Elevation**: `--elevation-1 … --elevation-5`, `--shadow-focus-ring`, `--shadow-inset-highlight`. Hover **steps the ramp**; it does not brighten a glow
+- **Motion**: `--duration-instant … --duration-slowest`, `--ease-out / spring / standard`
 - **Layout**: `--max-width: 1240px`, `--nav-height: 72px`
+
+**Deprecated — do not use in new code:** `--sp-1 … --sp-16`. Those counted
+eights rather than pixels, so `--sp-16` was 128px and not 16px. They still
+resolve as aliases onto `--space-*`, so existing uses keep working.
+
+**Three things that will bite you** (full list in `DESIGN-SYSTEM.md`):
+
+1. **Framer Motion cannot read CSS variables.** It interpolates numerically, so
+   `var(--duration-base)` arrives as an uninterpolatable string and the
+   animation breaks. Import from `src/lib/motion.ts` instead.
+2. **The `*` rule defining `--elevation-*` in `globals.css` is load-bearing.**
+   Moving it to `:root` silently breaks every per-component shadow retint —
+   nothing errors, the shadows just all go navy.
+3. **`var()` resolves in CSS only.** It will not work in WebGL shader props
+   (`NeatGradient`, `LiquidMetalEdge`), SVG presentation attributes (`stroke=`,
+   `stopColor=`) or Framer `animate`/`whileHover` props. A literal is correct
+   in those places.
 
 ---
 
@@ -72,19 +104,19 @@ All design values live in `src/app/globals.css` as CSS custom properties. **Alwa
 ### Responsive Design
 - **DO** design mobile-first, then layer on tablet and desktop styles
 - **DO** use these breakpoints consistently: `640px` (mobile), `768px` (tablet), `1024px` (laptop), `1100px` (desktop nav)
-- **DO** use `clamp()` for fluid font sizes: e.g., `font-size: clamp(24px, 4.5vw, 38px)`
+- **DO** use the `--font-size-*` scale paired with a `--leading-*`. `clamp()` is still right for display type that must scale fluidly, but not for ordinary UI text
 - **DO** use `minmax()` in grids for responsive columns without media queries where possible
 - **DO** use `aspect-ratio` for maintaining image/video proportions
 - **DO** test all layouts at 320px, 375px, 768px, 1024px, 1440px widths
 - **DO** use `max-width: 100%` and `height: auto` on images by default
-- **DO** use `padding` in `vw` or `clamp()` for responsive section spacing
+- **DO** use `var(--section-y)` for vertical section padding — it already steps down at 1024px and 768px, so no media query is needed. Use `clamp()` only for horizontal gutters
 - **DO** hide non-essential UI on mobile (e.g., phone links, desktop nav items)
 - **DO** stack grid columns to `1fr` on mobile, `repeat(2, 1fr)` on tablet
 
 ### Animation & Interaction
 - **DO** use Framer Motion for entrance animations, hover effects, and scroll-driven transitions
 - **DO** use `whileInView` with `viewport={{ once: true }}` for reveal-on-scroll animations
-- **DO** use smooth easing curves: `[0.22, 1, 0.36, 1]` (ease-out) or `[0.16, 1, 0.3, 1]` (spring)
+- **DO** take easing and duration from `src/lib/motion.ts` (`ease.out`, `ease.spring`, `duration.base`) rather than writing the curve inline — those mirror the CSS `--ease-*` / `--duration-*` tokens, which Framer itself cannot read
 - **DO** add hover micro-animations (translateY, scale, box-shadow transitions)
 - **DO** use `will-change: transform` sparingly on animated elements
 - **DO** respect `prefers-reduced-motion` media query
@@ -143,7 +175,7 @@ All design values live in `src/app/globals.css` as CSS custom properties. **Alwa
 - **DON'T** use browser-default fonts — always use Inter from the design system
 - **DON'T** use placeholder images — generate real assets with the image generation tool
 - **DON'T** create simple/basic looking UIs — every component should feel premium
-- **DON'T** ignore spacing consistency — always use the 8px spacing scale tokens
+- **DON'T** ignore spacing consistency — use the `--space-*` ramp inside a section and `--section-y-*` between sections. `--sp-1 … --sp-16` are deprecated aliases
 
 ---
 

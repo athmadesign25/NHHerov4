@@ -29,7 +29,7 @@ export default function SpecialityResultCard({ spec, searchQuery = "", onClick }
           <HighlightMatch text={spec.name} query={searchQuery} />
         </div>
         {spec.matchingKeyword && (
-          <div style={{ fontSize: "10.5px", color: "#64748B", fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: "10.5px", color: "var(--slate-500)", fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             Relates to: <HighlightMatch text={spec.matchingKeyword} query={searchQuery} />
           </div>
         )}
