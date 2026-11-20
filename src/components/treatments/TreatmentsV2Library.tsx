@@ -102,6 +102,19 @@ export default function TreatmentsV2Library({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [statsLayout, handleStatsLayoutChange]);
 
+  // Scroll listener to smoothly reveal sticky directory filter bar when scrolling past hero
+  const [isFilterSticky, setIsFilterSticky] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPos = window.scrollY;
+      setIsFilterSticky(scrollPos > 180);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Prevent background scroll when mobile filter sheet is open
   useEffect(() => {
     if (isFilterSheetOpen) {
@@ -520,76 +533,76 @@ export default function TreatmentsV2Library({
         eyebrow="Explore Treatments by Organ System & Speciality"
       />
 
-      {/* ─── DIRECTORY CONTROLS: SUB-FILTER TABS (ADULT/PEDIATRIC) & A–Z INDEX ─── */}
-      <motion.div
+      {/* ─── SCROLL-REVEAL STICKY DIRECTORY CONTROLS (SUB-FILTERS & A–Z INDEX) ─── */}
+      <div
         id="procedures-directory"
-        className={styles.directoryControlsWrap}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.45, delay: 0.76 }}
+        className={`${styles.stickyDirectoryBar} ${isFilterSticky ? styles.stickyDirectoryBarVisible : ""}`}
+        aria-hidden={!isFilterSticky}
       >
-        <div className={styles.directoryTopBar}>
-          <LibrarySubFilterTabs
-            tabs={subFilterTabs}
-            activeTab={selectedSubFilter}
-            onTabChange={(tab) => {
-              setSelectedSubFilter(tab);
-              setSelectedLetter(null);
-            }}
-            ariaLabel="Filter treatments by patient group"
+        <div className={styles.stickyDirectoryInner}>
+          <div className={styles.directoryTopBar}>
+            <LibrarySubFilterTabs
+              tabs={subFilterTabs}
+              activeTab={selectedSubFilter}
+              onTabChange={(tab) => {
+                setSelectedSubFilter(tab);
+                setSelectedLetter(null);
+              }}
+              ariaLabel="Filter treatments by patient group"
+            />
+
+            <div className={styles.feedbackTextWrapper}>
+              <p className={styles.feedbackText}>
+                {searchQuery.trim() ? (
+                  <>
+                    Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
+                    <span className={styles.feedbackCount}>
+                      {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                    </span>
+                  </>
+                ) : selectedOrgan ? (
+                  <>
+                    Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
+                    <span className={styles.feedbackCount}>
+                      {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                    </span>
+                  </>
+                ) : (
+                  <span className={styles.feedbackCount}>
+                    Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
+                  </span>
+                )}
+              </p>
+
+              {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+                <button
+                  type="button"
+                  className={styles.clearFilterChip}
+                  onClick={handleResetFilters}
+                  aria-label="Clear active filters"
+                >
+                  <RotateCcw size={12} />
+                  <span>Reset all</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Alphabetical A–Z Filter Rail */}
+          <AlphabeticalFilterRail
+            availableLetters={availableLetters}
+            selectedLetter={selectedLetter}
+            onSelectLetter={setSelectedLetter}
+            resultCount={displayedItems.length}
           />
 
-          <div className={styles.feedbackTextWrapper}>
-            <p className={styles.feedbackText}>
-              {searchQuery.trim() ? (
-                <>
-                  Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
-                  <span className={styles.feedbackCount}>
-                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
-                  </span>
-                </>
-              ) : selectedOrgan ? (
-                <>
-                  Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
-                  <span className={styles.feedbackCount}>
-                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
-                  </span>
-                </>
-              ) : (
-                <span className={styles.feedbackCount}>
-                  Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
-                </span>
-              )}
-            </p>
-
-            {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
-              <button
-                type="button"
-                className={styles.clearFilterChip}
-                onClick={handleResetFilters}
-                aria-label="Clear active filters"
-              >
-                <RotateCcw size={12} />
-                <span>Reset all</span>
-              </button>
-            )}
-          </div>
+          {isApiLoading && (
+            <div className={styles.apiPulseBar}>
+              <div className={styles.apiPulseIndicator} />
+            </div>
+          )}
         </div>
-
-        {/* Alphabetical A–Z Filter Rail */}
-        <AlphabeticalFilterRail
-          availableLetters={availableLetters}
-          selectedLetter={selectedLetter}
-          onSelectLetter={setSelectedLetter}
-          resultCount={displayedItems.length}
-        />
-
-        {isApiLoading && (
-          <div className={styles.apiPulseBar}>
-            <div className={styles.apiPulseIndicator} />
-          </div>
-        )}
-      </motion.div>
+      </div>
 
       {/* ─── 3-COLUMN CARDS GRID (ORCHESTRATED WITH ENTRANCE SKELETON) ─────── */}
       <AnimatePresence mode="wait">
