@@ -35,6 +35,8 @@ import {
   NearbyCareCentresCarousel,
 } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import ClinicalAtAGlanceCard from "@/components/ui/ClinicalAtAGlanceCard";
 import styles from "./ProcedureDetail.module.css";
 
 interface PageProps {
@@ -498,10 +500,22 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
               {/* Standardized Share Widget with Twitter, LinkedIn, Facebook, Copy Link */}
               <ShareWidget shareTitle={detail.title} />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard />
             </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
+            {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+            <ClinicalAtAGlanceCard
+              title={detail.title}
+              speciality={detail.speciality || "Quaternary Surgical Care"}
+              bookingHref="/book-an-appointment"
+              secondOpinionHref="/book-an-appointment?flow=second-opinion"
+              insuranceHref="#costs-insurance"
+            />
+
             {/* 1. Overview & Clinical Executive Summary */}
             <section id="overview" className={styles.sectionBlock}>
               <h2 className={styles.mainSectionTitle}>

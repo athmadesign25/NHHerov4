@@ -36,6 +36,8 @@ import {
   NearbyCareCentresCarousel,
 } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import ClinicalAtAGlanceCard from "@/components/ui/ClinicalAtAGlanceCard";
 import styles from "./DiseaseDetail.module.css";
 
 interface PageProps {
@@ -264,10 +266,22 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
               {/* Standardized Share widget */}
               <ShareWidget shareTitle={detail.title} title="Share this guide" />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard subtitle="Direct assistance for condition management, treatment protocols & second opinions." />
             </aside>
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
+              {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+              <ClinicalAtAGlanceCard
+                title={detail.title}
+                speciality={`${detail.speciality} · Condition Management`}
+                bookingHref="/book-an-appointment"
+                secondOpinionHref="/book-an-appointment?flow=second-opinion"
+                insuranceHref="#treatment"
+              />
+
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Disease Overview</h2>

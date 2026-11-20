@@ -36,6 +36,8 @@ import {
   NearbyCareCentresCarousel,
 } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import ClinicalAtAGlanceCard from "@/components/ui/ClinicalAtAGlanceCard";
 import styles from "./DiagnosticDetail.module.css";
 
 interface PageProps {
@@ -264,10 +266,22 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
 
               {/* Standardized Share widget */}
               <ShareWidget shareTitle={detail.title} title="Share this test guide" />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard subtitle="Immediate assistance for lab test bookings, home collection & doctor consultations." />
             </aside>
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
+              {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+              <ClinicalAtAGlanceCard
+                title={detail.title}
+                speciality={`${detail.modality} · Clinical Diagnostics`}
+                bookingHref="/diagnostics"
+                secondOpinionHref="/book-an-appointment?flow=second-opinion"
+                insuranceHref="#preparation"
+              />
+
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Investigation Overview</h2>

@@ -29,6 +29,7 @@ import ClinicalReviewedBySection, {
 } from "@/components/ui/ClinicalReviewedBySection";
 import { NearbySpecialistsCarousel } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
 import styles from "./ArticleDetail.module.css";
 
 interface PageProps {
@@ -309,6 +310,11 @@ export default function ArticleDetailPage({ params }: PageProps) {
 
               {/* Standardized Share widget */}
               <ShareWidget shareTitle={detail.title} title="Share this Article" />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard 
+                subtitle={`Have questions on ${detail.category}? Speak to our clinical coordinators for specialist consultations.`}
+              />
             </aside>
 
             {/* Reading Content Focus Canvas */}

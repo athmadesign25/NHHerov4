@@ -80,8 +80,9 @@
     inset 0 1px 1px rgba(var(--white-rgb), 0.6);
 }
 
-/* Contact Support and Pulse inherit the same cohesive royal styling */
-.boxIconSupport {
+/* Second Opinion and Pulse inherit the same cohesive royal styling */
+.boxIconSupport,
+.boxIconSecondOpinion {
   background: linear-gradient(149deg, rgba(var(--blue-brand-rgb), 0.92) 0%, rgba(var(--blue-900-rgb), 0.98) 100%);
 }
 

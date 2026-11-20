@@ -36,6 +36,8 @@ import {
   NearbyCareCentresCarousel,
 } from "@/components/ui/NearbyClinicalCarousels";
 import ShareWidget from "@/components/ui/ShareWidget";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
+import ClinicalAtAGlanceCard from "@/components/ui/ClinicalAtAGlanceCard";
 import styles from "./SymptomDetail.module.css";
 
 interface PageProps {
@@ -264,10 +266,22 @@ export default function SymptomDetailPage({ params }: PageProps) {
 
               {/* Standardized Share widget */}
               <ShareWidget shareTitle={detail.title} title="Share this guide" />
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard subtitle="Immediate guidance on warning signs, emergency triage & specialist consultations." />
             </aside>
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
+              {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+              <ClinicalAtAGlanceCard
+                title={detail.title}
+                speciality={`${detail.speciality} · Triage Care`}
+                bookingHref="/book-an-appointment"
+                secondOpinionHref="/book-an-appointment?flow=second-opinion"
+                insuranceHref="#evaluation"
+              />
+
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}
               <section id="overview" className={styles.contentSection}>
                 <h2 className={styles.sectionHeading}>Clinical Overview</h2>

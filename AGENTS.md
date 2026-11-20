@@ -279,7 +279,15 @@ Every detail and landing page follows this universal hierarchy from top to botto
 | **4** | **Flagship Programs / Flow** | Pinned folder card stack or alternating features | Follows the **Folder Stacking Contract** (see Section 3 below). |
 | **5** | **Pre-Footer CTA Card Banner** | `<BlogCtaBanner />` | **MANDATORY UNIVERSAL BANNER**: Dark blue gradient card (`linear-gradient(135deg, #0b1a33 0%, #034EA2 55%, #022d61 100%)`). *"Connect with a Narayana Health Specialist Today"*. Buttons: Book Doctor Appointment, Explore Health Packages, Call 24×7 (`1800 309 0309`). Never use custom light/gray banners above the footer. |
 | **6** | **Global Footer** | `<Footer />` (in `layout.tsx`) | Global dark footer with 4-column directory, helpline, accreditations. |
-| **Overlay** | **Clinical Floating Actions** | `<ClinicalFloatingSideActions />` | Fixed right on desktop. Quick Book OPD, Call Support, Ask Pulse AI. |
+| **Overlay** | **Clinical Floating Actions** | `<ClinicalFloatingSideActions />` | Fixed right on desktop. Dedicated Conversion CTA Floater: Quick Book Consultation, Second Opinion, Ask Pulse AI. (24×7 phone assistance is anchored on the left index sidebar below share). |
+
+---
+
+### 1.C Detail Page Early Conversion Architecture & Sticky Helpline
+To prevent patients from having to scroll through long reading material before seeing next steps:
+- **Top Care Pathway & Action Card (`<ClinicalAtAGlanceCard />`)**: Positioned at the top of the reading focus canvas directly above the clinical overview. Presents priority OPD scheduling, insurance/TPA coverage, transparent pricing, and instant CTA buttons (Book Consultation, Get Second Opinion, Check Insurance) using crisp 8px rounded rectangles and atmospheric midnight glass.
+- **Sticky Index Companion Helpline (`<ContactCareSidebarCard />`)**: Anchored inside `<aside className={styles.stickySidebar}>` directly below `<ShareWidget />`. Stays gracefully in view throughout reading, offering the toll-free `1800 309 0309` helpline with live triage status.
+- **Right Mid-Screen CTA Floater (`<ClinicalFloatingSideActions />`)**: Dedicated to clinical conversion (`Book Consultation`, `Second Opinion`, `Ask Pulse AI`). Tap-to-call 24×7 is omitted here to prevent redundancy with the left sticky index companion.
 
 ---
 

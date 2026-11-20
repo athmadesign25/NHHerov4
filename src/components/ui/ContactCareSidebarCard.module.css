@@ -1,0 +1,167 @@
+/* ─── CONTACT CARE SIDEBAR CARD (STICKY SIDEBAR COMPANION) ─────────────── */
+.careCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 14px;
+  border-radius: 14px;
+  background: rgba(var(--white-rgb), 0.05);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(var(--blue-brand-rgb), 0.20);
+  box-shadow: 0 4px 18px rgba(var(--black-rgb), 0.18);
+  box-sizing: border-box;
+  margin-top: 14px;
+  transition: border-color var(--duration-fast, 0.15s) ease, box-shadow var(--duration-fast, 0.15s) ease;
+}
+
+.careCardContainer:hover {
+  border-color: rgba(var(--blue-brand-rgb), 0.38);
+  box-shadow: 0 6px 24px rgba(var(--black-rgb), 0.25);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pulseIndicatorWrap {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.pulsePing {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.45);
+  animation: pingAnimation 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pingAnimation {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.eyebrowText {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sky-400);
+}
+
+.phoneNumberLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  transition: color var(--duration-fast, 0.15s) ease;
+}
+
+.phoneNumberLink:hover {
+  color: var(--sky-300);
+}
+
+.phoneIcon {
+  color: var(--sky-400);
+}
+
+.careSubtitle {
+  font-size: 12px;
+  line-height: 1.42;
+  color: rgba(var(--white-rgb), 0.68);
+  margin: 0;
+}
+
+.buttonActionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.callNowBtn {
+  flex: 1;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px;
+  background: var(--blue-brand);
+  color: #ffffff;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform var(--duration-fast, 0.15s) ease, background var(--duration-fast, 0.15s) ease;
+}
+
+.callNowBtn:hover {
+  background: var(--blue-600, #0463cc);
+  transform: translateY(-1px);
+}
+
+.bookOpdLink {
+  height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 8px;
+  background: rgba(var(--white-rgb), 0.08);
+  border: 1px solid rgba(var(--white-rgb), 0.18);
+  color: rgba(var(--white-rgb), 0.88);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all var(--duration-fast, 0.15s) ease;
+}
+
+.bookOpdLink:hover {
+  background: rgba(var(--white-rgb), 0.15);
+  color: #ffffff;
+  border-color: rgba(var(--white-rgb), 0.35);
+}
+
+.footerNote {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: rgba(var(--white-rgb), 0.45);
+  margin-top: 2px;
+}
+
+.clockIcon {
+  color: rgba(var(--white-rgb), 0.45);
+  flex-shrink: 0;
+}

@@ -26,6 +26,7 @@ import { getHospitalDetailData, HospitalDetailData } from "@/data/hospitalsDirec
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
 import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
+import ContactCareSidebarCard from "@/components/ui/ContactCareSidebarCard";
 import styles from "./HospitalDetail.module.css";
 
 interface PageProps {
@@ -272,6 +273,12 @@ export default function HospitalDetailPage({ params }: PageProps) {
                 </div>
                 {copyToast && <span className={styles.copyToastText}>Link copied to clipboard</span>}
               </div>
+
+              {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
+              <ContactCareSidebarCard 
+                title={`${detail.city} Care Helpline`}
+                subtitle="Direct contact with unit patient coordinators for OPD slots, admissions & emergency transfers."
+              />
             </aside>
 
             {/* Reading Content Focus Canvas */}

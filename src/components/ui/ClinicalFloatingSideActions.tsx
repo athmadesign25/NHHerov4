@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, PhoneCall, Stethoscope, FlaskConical } from "lucide-react";
+import { Calendar, Stethoscope, FlaskConical, FileCheck2 } from "lucide-react";
 import Lottie from "lottie-react";
 import pulseAnimation from "../../../public/assets/pulse animation.json";
 import PulseAIWorkspace from "@/features/pulse-ai/PulseAIWorkspace";
@@ -16,6 +16,7 @@ interface ClinicalFloatingSideActionsProps {
   conditionTitle?: string;
   pulseQuery?: string;
   supportPhone?: string;
+  secondOpinionHref?: string;
   isScrolled?: boolean;
 }
 
@@ -25,6 +26,7 @@ export default function ClinicalFloatingSideActions({
   conditionTitle,
   pulseQuery,
   supportPhone = "18003090309",
+  secondOpinionHref = "/book-an-appointment?flow=second-opinion",
   isScrolled: propIsScrolled,
 }: ClinicalFloatingSideActionsProps) {
   const pathname = usePathname() || "/";
@@ -220,20 +222,20 @@ export default function ClinicalFloatingSideActions({
 
             <div className={styles.boxDivider} aria-hidden="true" />
 
-            {/* Box 2: Tap-to-Call Button */}
-            <a
-              href={`tel:${supportPhone}`}
+            {/* Box 2: Second Opinion CTA Floater */}
+            <Link
+              href={secondOpinionHref}
               className={styles.floatingBoxItem}
-              title="Tap to Call 24×7 Helpline"
-              aria-label="Call 24×7 Helpline"
+              title={`Request a Second Opinion — ${resolvedConditionTitle}`}
+              aria-label="Request a Second Opinion"
             >
-              <div className={`${styles.boxIconWrap} ${styles.boxIconSupport}`}>
-                <PhoneCall size={17} />
+              <div className={`${styles.boxIconWrap} ${styles.boxIconSecondOpinion}`}>
+                <FileCheck2 size={17} />
               </div>
               <span className={styles.boxLabel}>
-                {isMobile ? "Call 24×7" : <>Call<br />24×7</>}
+                {isMobile ? "2nd Opinion" : <>Second<br />Opinion</>}
               </span>
-            </a>
+            </Link>
 
             <div className={styles.boxDivider} aria-hidden="true" />
 
