@@ -270,25 +270,27 @@ export default function SymptomsLibraryPage() {
             </motion.div>
           </div>
 
-          {/* Right Column: Secondary Credential Numbers */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-              <div key={index} className={styles.statBlock}>
-                <span className={styles.statNumber}>
-                  {item.staticValue ? (
-                    item.staticValue
-                  ) : (
-                    <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                  )}
-                </span>
-                <span className={styles.statLabel}>{item.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                <div key={index} className={styles.statBlock}>
+                  <span className={styles.statNumber}>
+                    {item.staticValue ? (
+                      item.staticValue
+                    ) : (
+                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                    )}
+                  </span>
+                  <span className={styles.statLabel}>{item.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>

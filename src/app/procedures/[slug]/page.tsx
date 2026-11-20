@@ -387,37 +387,39 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Right Column: Secondary Credential Metrics matching Treatments Library */}
+          {/* Bottom Metrics Row (Below Title, Subtext & CTA - Matching CSR Hero) */}
           <motion.div 
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
           >
-            {detail.metrics.successRate && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.successRate}</span>
-                <span className={styles.statLabel}>Success Rate</span>
-              </div>
-            )}
-            {detail.metrics.duration && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.duration}</span>
-                <span className={styles.statLabel}>Duration</span>
-              </div>
-            )}
-            {detail.metrics.hospitalStay && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.hospitalStay}</span>
-                <span className={styles.statLabel}>Typical Stay</span>
-              </div>
-            )}
-            {detail.metrics.recoveryTime && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{detail.metrics.recoveryTime}</span>
-                <span className={styles.statLabel}>Recovery Period</span>
-              </div>
-            )}
+            <div className={styles.statsGrid}>
+              {detail.metrics.successRate && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>{detail.metrics.successRate}</span>
+                  <span className={styles.statLabel}>Success Rate</span>
+                </div>
+              )}
+              {detail.metrics.duration && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>{detail.metrics.duration}</span>
+                  <span className={styles.statLabel}>Duration</span>
+                </div>
+              )}
+              {detail.metrics.hospitalStay && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>{detail.metrics.hospitalStay}</span>
+                  <span className={styles.statLabel}>Typical Stay</span>
+                </div>
+              )}
+              {detail.metrics.recoveryTime && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>{detail.metrics.recoveryTime}</span>
+                  <span className={styles.statLabel}>Recovery Period</span>
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>

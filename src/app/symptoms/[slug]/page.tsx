@@ -171,28 +171,30 @@ export default function SymptomDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Right Hero Analytics */}
+          {/* Bottom Hero Metrics (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.urgency}</span>
-              <span className={styles.statLabel}>Clinical Urgency</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.specialist}</span>
-              <span className={styles.statLabel}>Recommended Specialist</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.diagnosticTurnaround}</span>
-              <span className={styles.statLabel}>Triaging Speed</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.hospitalNetwork}</span>
-              <span className={styles.statLabel}>Emergency Centers</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.urgency}</span>
+                <span className={styles.statLabel}>Clinical Urgency</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.specialist}</span>
+                <span className={styles.statLabel}>Recommended Specialist</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.diagnosticTurnaround}</span>
+                <span className={styles.statLabel}>Triaging Speed</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.hospitalNetwork}</span>
+                <span className={styles.statLabel}>Emergency Centers</span>
+              </div>
             </div>
           </motion.div>
         </div>

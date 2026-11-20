@@ -171,28 +171,30 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Right Hero Analytics */}
+          {/* Bottom Metrics Row (Below Title, Subtext & CTA - Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.turnaround}</span>
-              <span className={styles.statLabel}>Report Turnaround</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.preparation}</span>
-              <span className={styles.statLabel}>Preparation Requirement</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.sampleType}</span>
-              <span className={styles.statLabel}>Modality / Sample</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>NABL &amp; NABH</span>
-              <span className={styles.statLabel}>Quality Accreditation</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.turnaround}</span>
+                <span className={styles.statLabel}>Report Turnaround</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.preparation}</span>
+                <span className={styles.statLabel}>Preparation Requirement</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.sampleType}</span>
+                <span className={styles.statLabel}>Modality / Sample</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>NABL &amp; NABH</span>
+                <span className={styles.statLabel}>Quality Accreditation</span>
+              </div>
             </div>
           </motion.div>
         </div>

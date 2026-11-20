@@ -190,25 +190,27 @@ export default function CsrDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Right Column: Sweet Spot Floating Credential Metrics */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            {program.statBadge && (
-              <div className={styles.statBlock}>
-                <span className={styles.statNumber}>{program.statBadge.number}</span>
-                <span className={styles.statLabel}>{program.statBadge.label}</span>
-              </div>
-            )}
-            {program.modalContent.metrics.slice(0, 3).map((m, idx) => (
-              <div key={idx} className={styles.statBlock}>
-                <span className={styles.statNumber}>{m.value}</span>
-                <span className={styles.statLabel}>{m.label}</span>
-              </div>
-            ))}
+            <div className={styles.statsGrid}>
+              {program.statBadge && (
+                <div className={styles.statBlock}>
+                  <span className={styles.statNumber}>{program.statBadge.number}</span>
+                  <span className={styles.statLabel}>{program.statBadge.label}</span>
+                </div>
+              )}
+              {program.modalContent.metrics.slice(0, 3).map((m, idx) => (
+                <div key={idx} className={styles.statBlock}>
+                  <span className={styles.statNumber}>{m.value}</span>
+                  <span className={styles.statLabel}>{m.label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>

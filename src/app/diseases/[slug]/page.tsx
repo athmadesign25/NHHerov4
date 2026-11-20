@@ -171,28 +171,30 @@ export default function DiseaseDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Right Hero Analytics */}
+          {/* Bottom Hero Metrics (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.stage}</span>
-              <span className={styles.statLabel}>Clinical Staging</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.clinicalSafety}</span>
-              <span className={styles.statLabel}>Clinical Safety</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>{detail.metrics.treatmentApproach}</span>
-              <span className={styles.statLabel}>Care Model</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>Top Tier</span>
-              <span className={styles.statLabel}>Institutional Center</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.stage}</span>
+                <span className={styles.statLabel}>Clinical Staging</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.clinicalSafety}</span>
+                <span className={styles.statLabel}>Clinical Safety</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>{detail.metrics.treatmentApproach}</span>
+                <span className={styles.statLabel}>Care Model</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>Top Tier</span>
+                <span className={styles.statLabel}>Institutional Center</span>
+              </div>
             </div>
           </motion.div>
         </div>

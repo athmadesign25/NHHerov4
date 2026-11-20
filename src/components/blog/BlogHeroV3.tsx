@@ -118,28 +118,30 @@ export default function BlogHeroV3() {
             </div>
           </motion.div>
 
-          {/* Right Column: Sweet-Spot Floating Credential Stats */}
+          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
           <motion.div
-            className={styles.heroRightCol}
-            initial={{ opacity: 0, scale: 0.97, x: 14 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            className={styles.metricsBottomWrap}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>400+</span>
-              <span className={styles.statLabel}>Clinical Guides</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>40+</span>
-              <span className={styles.statLabel}>Medical Specialities</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>100%</span>
-              <span className={styles.statLabel}>Doctor Reviewed</span>
-            </div>
-            <div className={styles.statBlock}>
-              <span className={styles.statNumber}>24×7</span>
-              <span className={styles.statLabel}>Health Advisory</span>
+            <div className={styles.statsGrid}>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>400+</span>
+                <span className={styles.statLabel}>Clinical Guides</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>40+</span>
+                <span className={styles.statLabel}>Medical Specialities</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>100%</span>
+                <span className={styles.statLabel}>Doctor Reviewed</span>
+              </div>
+              <div className={styles.statBlock}>
+                <span className={styles.statNumber}>24×7</span>
+                <span className={styles.statLabel}>Health Advisory</span>
+              </div>
             </div>
           </motion.div>
         </div>
