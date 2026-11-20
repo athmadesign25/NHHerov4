@@ -425,6 +425,37 @@
   border-top-color: var(--v2-border, rgba(var(--blue-brand-rgb), 0.1));
 }
 
+.readingExperienceWrapperV2 .helplineSection {
+  border-top-color: var(--v2-border, rgba(var(--blue-brand-rgb), 0.1));
+}
+
+.readingExperienceWrapperV2 .helplineEyebrow {
+  color: var(--v2-muted, var(--slate-400));
+}
+
+.readingExperienceWrapperV2 .helplinePhoneLink {
+  color: var(--v2-heading, var(--slate-800));
+}
+
+.readingExperienceWrapperV2 .helplineSubtext {
+  color: var(--v2-muted, var(--slate-500));
+}
+
+.readingExperienceWrapperV2 .actionStripContainer {
+  background: var(--v2-card-bg, rgba(var(--white-rgb), 0.05));
+  border-color: var(--v2-border, rgba(var(--white-rgb), 0.12));
+}
+
+.readingExperienceWrapperV2 .stripText {
+  color: var(--v2-body, var(--slate-700));
+}
+
+.readingExperienceWrapperV2 .opinionBtn {
+  background: var(--v2-card-bg, rgba(var(--white-rgb), 0.06));
+  border-color: var(--v2-border, rgba(var(--white-rgb), 0.18));
+  color: var(--v2-body, var(--slate-800));
+}
+
 .readingExperienceWrapperV2 .sidebarHelpCallout,
 .readingExperienceWrapperV2 .keyPointsCard {
   background: var(--v2-card-bg, var(--slate-50));
@@ -565,6 +596,37 @@
 
 .readingExperienceWrapperV4 .shareWidgetBorderless {
   border-top-color: var(--v4-border, rgba(var(--blue-brand-rgb), 0.1));
+}
+
+.readingExperienceWrapperV4 .helplineSection {
+  border-top-color: var(--v4-border, rgba(var(--blue-brand-rgb), 0.1));
+}
+
+.readingExperienceWrapperV4 .helplineEyebrow {
+  color: var(--v4-muted, var(--slate-400));
+}
+
+.readingExperienceWrapperV4 .helplinePhoneLink {
+  color: var(--v4-heading, var(--slate-800));
+}
+
+.readingExperienceWrapperV4 .helplineSubtext {
+  color: var(--v4-muted, var(--slate-500));
+}
+
+.readingExperienceWrapperV4 .actionStripContainer {
+  background: var(--v4-summary-bg, rgba(var(--white-rgb), 0.05));
+  border-color: var(--v4-border, rgba(var(--white-rgb), 0.12));
+}
+
+.readingExperienceWrapperV4 .stripText {
+  color: var(--v4-body, var(--slate-700));
+}
+
+.readingExperienceWrapperV4 .opinionBtn {
+  background: var(--v4-badge-bg, rgba(var(--white-rgb), 0.06));
+  border-color: var(--v4-border, rgba(var(--white-rgb), 0.18));
+  color: var(--v4-body, var(--slate-800));
 }
 
 /* ─── COMPACT V1 / V2 BLEND VARIATION TOGGLE PILL ─────────────────────────── */

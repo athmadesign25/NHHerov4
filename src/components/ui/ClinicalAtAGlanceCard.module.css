@@ -1,4 +1,4 @@
-/* ─── MINIMAL CLINICAL ACTION STRIP (NON-INTRUSIVE EARLY CONVERSION) ────── */
+/* ─── MINIMAL CLINICAL ACTION STRIP (DYNAMIC & WHITE THEME SUPPORT) ───────── */
 .actionStripContainer {
   width: 100%;
   display: flex;
@@ -7,15 +7,9 @@
   gap: 16px;
   padding: 8px 14px;
   border-radius: 8px;
-  background: rgba(var(--white-rgb), 0.04);
-  border: 1px solid rgba(var(--white-rgb), 0.10);
   box-sizing: border-box;
   margin: 0 0 20px 0;
-  transition: border-color var(--duration-fast, 0.15s) ease;
-}
-
-.actionStripContainer:hover {
-  border-color: rgba(var(--white-rgb), 0.18);
+  transition: border-color var(--duration-fast, 0.15s) ease, background var(--duration-fast, 0.15s) ease;
 }
 
 .labelGroup {
@@ -32,22 +26,21 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--sky-400);
-  background: rgba(var(--blue-brand-rgb), 0.20);
   padding: 2px 7px;
   border-radius: 4px;
   flex-shrink: 0;
+  transition: background var(--duration-fast, 0.15s) ease, color var(--duration-fast, 0.15s) ease;
 }
 
 .stripText {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.72);
   line-height: 1.4;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color var(--duration-fast, 0.15s) ease;
 }
 
 .buttonGroup {
@@ -90,9 +83,6 @@
   align-items: center;
   padding: 6px 11px;
   border-radius: 6px;
-  background: rgba(var(--white-rgb), 0.06);
-  border: 1px solid rgba(var(--white-rgb), 0.16);
-  color: rgba(var(--white-rgb), 0.82);
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: var(--font-size-xs, 12px);
   font-weight: 500;
@@ -100,10 +90,97 @@
   transition: all var(--duration-fast, 0.15s) ease;
 }
 
-.opinionBtn:hover {
+/* ─── 1. WHITE BACKGROUND THEME (STATIONARY WHITE CANVASES & V1/V3) ──────── */
+.actionStripWhite {
+  background: rgba(var(--blue-brand-rgb), 0.035);
+  border: 1px solid rgba(var(--blue-brand-rgb), 0.14);
+}
+
+.actionStripWhite:hover {
+  border-color: rgba(var(--blue-brand-rgb), 0.28);
+}
+
+.actionStripWhite .stripBadge {
+  color: var(--blue-brand);
+  background: rgba(var(--blue-brand-rgb), 0.10);
+}
+
+.actionStripWhite .stripText {
+  color: var(--slate-700, #334155);
+  font-weight: 500;
+}
+
+.actionStripWhite .opinionBtn {
+  background: var(--white);
+  border: 1px solid rgba(var(--slate-900-rgb), 0.16);
+  color: var(--slate-700, #334155);
+}
+
+.actionStripWhite .opinionBtn:hover {
+  background: rgba(var(--blue-brand-rgb), 0.06);
+  border-color: var(--blue-brand);
+  color: var(--blue-brand);
+}
+
+/* ─── 2. DYNAMIC MODE (V2 & V4 SCROLL-DRIVEN DARK -> WHITE BLEND) ────────── */
+.actionStripDynamic {
+  background: var(--v2-card-bg, var(--v4-summary-bg, rgba(var(--white-rgb), 0.05)));
+  border: 1px solid var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.12)));
+}
+
+.actionStripDynamic:hover {
+  border-color: var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.24)));
+}
+
+.actionStripDynamic .stripBadge {
+  color: var(--v2-toc-active, var(--v4-eyebrow, var(--sky-400)));
+  background: var(--v2-toc-active-bg, var(--v4-toc-active-bg, rgba(var(--blue-brand-rgb), 0.18)));
+}
+
+.actionStripDynamic .stripText {
+  color: var(--v2-body, var(--v4-body, var(--slate-700)));
+}
+
+.actionStripDynamic .opinionBtn {
+  background: var(--v2-card-bg, var(--v4-badge-bg, rgba(var(--white-rgb), 0.06)));
+  border: 1px solid var(--v2-border, var(--v4-border, rgba(var(--white-rgb), 0.18)));
+  color: var(--v2-body, var(--v4-body, rgba(var(--white-rgb), 0.88)));
+}
+
+.actionStripDynamic .opinionBtn:hover {
+  border-color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
+  color: var(--v2-toc-active, var(--v4-eyebrow, var(--blue-brand)));
+}
+
+/* ─── 3. STATIONARY DARK THEME (PURE DARK HERO SURFACES) ─────────────────── */
+.actionStripDark {
+  background: rgba(var(--white-rgb), 0.04);
+  border: 1px solid rgba(var(--white-rgb), 0.10);
+}
+
+.actionStripDark:hover {
+  border-color: rgba(var(--white-rgb), 0.20);
+}
+
+.actionStripDark .stripBadge {
+  color: var(--sky-400);
+  background: rgba(var(--blue-brand-rgb), 0.20);
+}
+
+.actionStripDark .stripText {
+  color: rgba(var(--white-rgb), 0.78);
+}
+
+.actionStripDark .opinionBtn {
+  background: rgba(var(--white-rgb), 0.06);
+  border: 1px solid rgba(var(--white-rgb), 0.16);
+  color: rgba(var(--white-rgb), 0.85);
+}
+
+.actionStripDark .opinionBtn:hover {
   background: rgba(var(--white-rgb), 0.12);
-  border-color: rgba(var(--white-rgb), 0.30);
   color: #ffffff;
+  border-color: rgba(var(--white-rgb), 0.30);
 }
 
 @media (max-width: 900px) {

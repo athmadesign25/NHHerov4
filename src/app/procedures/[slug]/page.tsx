@@ -502,7 +502,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <ShareWidget shareTitle={detail.title} />
 
               {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
-              <ContactCareSidebarCard />
+              <ContactCareSidebarCard theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"} />
             </aside>
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
@@ -511,6 +511,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             <ClinicalAtAGlanceCard
               bookingHref="/book-an-appointment"
               secondOpinionHref="/book-an-appointment?flow=second-opinion"
+              theme={blendVersion === 2 || blendVersion === 4 ? "dynamic" : "white"}
             />
 
             {/* 1. Overview & Clinical Executive Summary */}

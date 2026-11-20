@@ -9,6 +9,7 @@ interface ContactCareSidebarCardProps {
   displayPhone?: string;
   title?: string;
   subtitle?: string;
+  theme?: "white" | "dark" | "dynamic";
 }
 
 export default function ContactCareSidebarCard({
@@ -16,9 +17,17 @@ export default function ContactCareSidebarCard({
   displayPhone = "1800 309 0309",
   title = "24×7 Care Helpline",
   subtitle = "Toll-free doctor appointment & triage",
+  theme = "white",
 }: ContactCareSidebarCardProps) {
+  const themeClass =
+    theme === "dynamic"
+      ? styles.helplineDynamic
+      : theme === "dark"
+      ? styles.helplineDark
+      : styles.helplineWhite;
+
   return (
-    <div className={styles.helplineSection} role="complementary" aria-label="Narayana Health Care Helpline">
+    <div className={`${styles.helplineSection} ${themeClass}`} role="complementary" aria-label="Narayana Health Care Helpline">
       <span className={styles.helplineEyebrow}>{title}</span>
       <a
         href={`tel:${phone}`}
