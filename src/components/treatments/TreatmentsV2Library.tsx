@@ -102,19 +102,6 @@ export default function TreatmentsV2Library({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [statsLayout, handleStatsLayoutChange]);
 
-  // Scroll listener to smoothly reveal sticky directory filter bar when scrolling past hero
-  const [isFilterSticky, setIsFilterSticky] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY;
-      setIsFilterSticky(scrollPos > 180);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // Prevent background scroll when mobile filter sheet is open
   useEffect(() => {
     if (isFilterSheetOpen) {
@@ -126,6 +113,38 @@ export default function TreatmentsV2Library({
       document.body.style.overflow = "";
     };
   }, [isFilterSheetOpen]);
+
+  // Progressive scroll reveal for directory sub-filters & A–Z rail
+  const [isFilterRevealed, setIsFilterRevealed] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      if (window.scrollY > 30) return true;
+      const params = new URLSearchParams(window.location.search);
+      if (
+        params.get("search") ||
+        params.get("q") ||
+        params.get("organ") ||
+        params.get("letter") ||
+        params.get("filter")
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  // Reveal on scroll (one-way latch: once revealed, stays in position until page refresh)
+  useEffect(() => {
+    if (isFilterRevealed) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setIsFilterRevealed(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFilterRevealed]);
 
   // Initial page entrance animation sequence orchestration (image -> overlay -> title/subtext -> search -> skeleton -> real cards)
   useEffect(() => {
@@ -195,6 +214,7 @@ export default function TreatmentsV2Library({
   }, [selectedOrgan]);
 
   const handleToggleOrgan = (val: string) => {
+    setIsFilterRevealed(true);
     // Clicking active organ toggles it off, clicking another selects it
     setSelectedOrgan((prev) => (prev === val ? null : val));
   };
@@ -400,6 +420,7 @@ export default function TreatmentsV2Library({
                       value={searchQuery}
                       onChange={(e) => {
                         const val = e.target.value;
+                        setIsFilterRevealed(true);
                         startTransition(() => setSearchQuery(val));
                       }}
                       aria-label="Search treatments, surgery or condition"
@@ -533,76 +554,88 @@ export default function TreatmentsV2Library({
         eyebrow="Explore Treatments by Organ System & Speciality"
       />
 
-      {/* ─── SCROLL-REVEAL STICKY DIRECTORY CONTROLS (SUB-FILTERS & A–Z INDEX) ─── */}
-      <div
+      {/* ─── DIRECTORY CONTROLS: SUB-FILTER TABS (ADULT/PEDIATRIC) & A–Z INDEX (PROGRESSIVE SCROLL REVEAL) ─── */}
+      <motion.div
         id="procedures-directory"
-        className={`${styles.stickyDirectoryBar} ${isFilterSticky ? styles.stickyDirectoryBarVisible : ""}`}
-        aria-hidden={!isFilterSticky}
+        className={styles.directoryControlsWrap}
+        initial={false}
+        animate={{
+          height: isFilterRevealed ? "auto" : 0,
+          opacity: isFilterRevealed ? 1 : 0,
+          marginTop: isFilterRevealed ? 14 : 0,
+          marginBottom: isFilterRevealed ? 20 : 0,
+        }}
+        transition={{
+          duration: 0.48,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        style={{
+          overflow: "hidden",
+          pointerEvents: isFilterRevealed ? "auto" : "none",
+        }}
       >
-        <div className={styles.stickyDirectoryInner}>
-          <div className={styles.directoryTopBar}>
-            <LibrarySubFilterTabs
-              tabs={subFilterTabs}
-              activeTab={selectedSubFilter}
-              onTabChange={(tab) => {
-                setSelectedSubFilter(tab);
-                setSelectedLetter(null);
-              }}
-              ariaLabel="Filter treatments by patient group"
-            />
-
-            <div className={styles.feedbackTextWrapper}>
-              <p className={styles.feedbackText}>
-                {searchQuery.trim() ? (
-                  <>
-                    Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
-                    <span className={styles.feedbackCount}>
-                      {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
-                    </span>
-                  </>
-                ) : selectedOrgan ? (
-                  <>
-                    Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
-                    <span className={styles.feedbackCount}>
-                      {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
-                    </span>
-                  </>
-                ) : (
-                  <span className={styles.feedbackCount}>
-                    Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
-                  </span>
-                )}
-              </p>
-
-              {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
-                <button
-                  type="button"
-                  className={styles.clearFilterChip}
-                  onClick={handleResetFilters}
-                  aria-label="Clear active filters"
-                >
-                  <RotateCcw size={12} />
-                  <span>Reset all</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Alphabetical A–Z Filter Rail */}
-          <AlphabeticalFilterRail
-            availableLetters={availableLetters}
-            selectedLetter={selectedLetter}
-            onSelectLetter={setSelectedLetter}
-            resultCount={displayedItems.length}
+        <div className={styles.directoryTopBar}>
+          <LibrarySubFilterTabs
+            tabs={subFilterTabs}
+            activeTab={selectedSubFilter}
+            onTabChange={(tab) => {
+              setSelectedSubFilter(tab);
+              setSelectedLetter(null);
+            }}
+            ariaLabel="Filter treatments by patient group"
           />
 
-          {isApiLoading && (
-            <div className={styles.apiPulseBar}>
-              <div className={styles.apiPulseIndicator} />
-            </div>
-          )}
+          <div className={styles.feedbackTextWrapper}>
+            <p className={styles.feedbackText}>
+              {searchQuery.trim() ? (
+                <>
+                  Search: <strong className={styles.feedbackHighlight}>&ldquo;{searchQuery}&rdquo;</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                  </span>
+                </>
+              ) : selectedOrgan ? (
+                <>
+                  Organ: <strong className={styles.feedbackHighlight}>{currentOrganLabel}</strong> &mdash;{" "}
+                  <span className={styles.feedbackCount}>
+                    {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"} found
+                  </span>
+                </>
+              ) : (
+                <span className={styles.feedbackCount}>
+                  Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
+                </span>
+              )}
+            </p>
+
+            {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+              <button
+                type="button"
+                className={styles.clearFilterChip}
+                onClick={handleResetFilters}
+                aria-label="Clear active filters"
+              >
+                <RotateCcw size={12} />
+                <span>Reset all</span>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={displayedItems.length}
+        />
+
+        {isApiLoading && (
+          <div className={styles.apiPulseBar}>
+            <div className={styles.apiPulseIndicator} />
+          </div>
+        )}
+      </motion.div>
 
       {/* ─── 3-COLUMN CARDS GRID (ORCHESTRATED WITH ENTRANCE SKELETON) ─────── */}
       <AnimatePresence mode="wait">
