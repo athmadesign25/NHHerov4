@@ -451,6 +451,148 @@
   margin: 0;
 }
 
+/* ─── HERO HEADER CONTROLS & REVIEW SWITCHER (C1 SPREAD VS C2 COMPACT) ─── */
+.heroControlsRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.reviewSwitcherGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reviewSwitcherLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(var(--white-rgb), 0.50);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.reviewPill,
+.versionPillWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(var(--white-rgb), 0.10);
+  padding: 3px 4px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid rgba(var(--white-rgb), 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.reviewOptionBtn,
+.versionBtnInactive {
+  border: none;
+  background: transparent;
+  color: rgba(var(--white-rgb), 0.72);
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-fast, 150ms) ease;
+}
+
+.reviewOptionBtn:hover,
+.versionBtnInactive:hover {
+  color: var(--white);
+  background: rgba(var(--white-rgb), 0.08);
+}
+
+.reviewOptionBtnActive,
+.versionBtnActive {
+  border: none;
+  background: #ffffff !important;
+  color: var(--blue-brand, #034EA2) !important;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: all var(--duration-fast, 150ms) ease;
+}
+
+/* ─── C2: COMPACT LEFT-ALIGNED METRICS ROW (DIRECTLY BELOW SEARCH BAR) ─── */
+.compactStatsWrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 620px;
+  margin-top: 32px;
+  box-sizing: border-box;
+}
+
+.compactStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.compactStatBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.compactStatBlock:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 8%;
+  height: 80%;
+  width: 1px;
+  background: rgba(var(--white-rgb), 0.12);
+}
+
+.compactStatNumber {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 500;
+  color: rgba(var(--white-rgb), 0.78);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.compactStatLabel {
+  font-size: 11px;
+  color: rgba(var(--white-rgb), 0.44);
+  font-weight: 500;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .compactStatsWrap {
+    margin-top: 24px;
+    max-width: 100%;
+  }
+
+  .compactStatsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .compactStatBlock:not(:last-child)::after {
+    display: none;
+  }
+}
+
 /* ─── CATEGORY CIRCLE BUBBLE FILTERS (ALIGNED LEFT TO TITLE/CARDS) ───────── */
 .categorySection {
   padding: 36px 0 16px 0;

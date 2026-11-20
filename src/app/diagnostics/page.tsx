@@ -50,6 +50,46 @@ export default function DiagnosticsLibraryPage() {
   const [isPageOpening, setIsPageOpening] = useState<boolean>(true);
   const [, startTransition] = useTransition();
 
+  // Stats layout variation: 'c1' (spread across bottom) vs 'c2' (compact left-aligned below search)
+  const [statsLayout, setStatsLayout] = useState<"c1" | "c2">(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const val = params.get("stats")?.toLowerCase();
+      if (val === "c1") return "c1";
+      if (val === "c2") return "c2";
+    }
+    return "c2";
+  });
+
+  const handleStatsLayoutChange = useCallback((layout: "c1" | "c2") => {
+    setStatsLayout(layout);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("stats", layout);
+      window.history.replaceState(null, "", url.toString());
+    }
+  }, []);
+
+  // Keyboard shortcut 'c' or 'C' to quickly toggle between C1 and C2 for review
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (e.key === "c" || e.key === "C") {
+        handleStatsLayoutChange(statsLayout === "c1" ? "c2" : "c1");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [statsLayout, handleStatsLayoutChange]);
+
   useEffect(() => {
     if (isFilterSheetOpen) {
       document.body.style.overflow = "hidden";
@@ -210,6 +250,7 @@ export default function DiagnosticsLibraryPage() {
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.08 }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}
             >
               <Breadcrumbs
                 items={[
@@ -218,6 +259,30 @@ export default function DiagnosticsLibraryPage() {
                 ]}
                 theme="dark"
               />
+
+              <div className={styles.heroControlsRow}>
+                <div className={styles.reviewSwitcherGroup}>
+                  <span className={styles.reviewSwitcherLabel}>Stats:</span>
+                  <div className={styles.reviewPill}>
+                    <button
+                      type="button"
+                      className={`${styles.reviewOptionBtn} ${statsLayout === "c1" ? styles.reviewOptionBtnActive : ""}`}
+                      onClick={() => handleStatsLayoutChange("c1")}
+                      title="C1 Current: 4 numerical stats spread across bottom"
+                    >
+                      C1 Spread
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.reviewOptionBtn} ${statsLayout === "c2" ? styles.reviewOptionBtnActive : ""}`}
+                      onClick={() => handleStatsLayoutChange("c2")}
+                      title="C2 New: 4 numerical stats compact left-aligned below search bar"
+                    >
+                      C2 Compact
+                    </button>
+                  </div>
+                </div>
+              </div>
             </motion.div>
 
             <motion.h1
@@ -315,30 +380,61 @@ export default function DiagnosticsLibraryPage() {
                 </div>
               )}
             </motion.div>
+
+            {/* C2: Compact Left-Aligned Metrics Row (Directly below Search) */}
+            {statsLayout === "c2" && (
+              <motion.div
+                key="stats-c2"
+                className={styles.compactStatsWrap}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className={styles.compactStatsGrid}>
+                  {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                    <div key={index} className={styles.compactStatBlock}>
+                      <span className={styles.compactStatNumber}>
+                        {item.staticValue ? (
+                          item.staticValue
+                        ) : (
+                          <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                        )}
+                      </span>
+                      <span className={styles.compactStatLabel}>{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </div>
 
-          {/* Bottom Column: Horizontal Metrics Row (Matching CSR Hero) */}
-          <motion.div
-            className={styles.metricsBottomWrap}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className={styles.statsGrid}>
-              {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
-                <div key={index} className={styles.statBlock}>
-                  <span className={styles.statNumber}>
-                    {item.staticValue ? (
-                      item.staticValue
-                    ) : (
-                      <MetricValueReveal value={item.value!} suffix={item.suffix} />
-                    )}
-                  </span>
-                  <span className={styles.statLabel}>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          {/* C1: Full-Width Spread Metrics Row across bottom */}
+          {statsLayout === "c1" && (
+            <motion.div
+              key="stats-c1"
+              className={styles.metricsBottomWrap}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className={styles.statsGrid}>
+                {HERO_ANALYTICS_PARAMETERS.map((item, index) => (
+                  <div key={index} className={styles.statBlock}>
+                    <span className={styles.statNumber}>
+                      {item.staticValue ? (
+                        item.staticValue
+                      ) : (
+                        <MetricValueReveal value={item.value!} suffix={item.suffix} />
+                      )}
+                    </span>
+                    <span className={styles.statLabel}>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 
