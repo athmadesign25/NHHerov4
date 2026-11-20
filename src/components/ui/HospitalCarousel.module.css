@@ -50,26 +50,45 @@
 }
 
 .mobileNavigator {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-8);
-  margin-top: var(--space-16);
-  margin-bottom: var(--space-24);
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 16px !important;
+  margin-bottom: 24px !important;
+  width: 100% !important;
 }
 
 .navDot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: rgba(var(--white-rgb), 0.25);
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: rgba(var(--black-rgb), 0.2) !important;
   cursor: pointer;
-  transition: all var(--duration-emphasis) var(--ease-out);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+  border: none !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
 }
 
-.navDotActive {
-  background: var(--white);
-  width: 24px;
-  border-radius: var(--radius-sm);
+.navDotActive,
+.navDot.navDotActive {
+  background: var(--color-primary, #034EA2) !important;
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+}
+
+.navDotDark {
+  background: rgba(var(--white-rgb), 0.25) !important;
+}
+
+.navDotActiveDark,
+.navDot.navDotActiveDark {
+  background: rgba(var(--white-rgb), 0.9) !important;
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
 }
 
 /* Dark edge fades matching the section background */
@@ -236,6 +255,66 @@
   background: var(--white);
   width: 28px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* One Health Clinic Tag Badge */
+.oneHealthTag {
+  position: absolute;
+  top: var(--space-16, 16px);
+  right: var(--space-20, 20px);
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px 5px 8px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(3, 78, 162, 0.16);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(3, 78, 162, 0.08);
+  pointer-events: none;
+  transition: transform var(--duration-fast, 150ms) ease, box-shadow var(--duration-fast, 150ms) ease;
+}
+
+.card:hover .oneHealthTag {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(3, 78, 162, 0.12);
+}
+
+.oneHealthLogo {
+  width: auto;
+  height: 20px;
+  max-width: 26px;
+  object-fit: contain;
+  display: block;
+}
+
+.oneHealthText {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 700;
+  color: var(--color-primary, #034EA2);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .oneHealthTag {
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px 4px 6px;
+    gap: 5px;
+  }
+
+  .oneHealthLogo {
+    height: 17px;
+    max-width: 22px;
+  }
+
+  .oneHealthText {
+    font-size: 11px;
+  }
 }
 
 /* Subtle dark gradient all over for contrast + dense blur glassmorphism over bottom 65% */
@@ -471,15 +550,7 @@
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12) !important;
 }
 
-.carouselContainerLight .navDot,
-.navDotLight {
-  background: rgba(var(--black-rgb), 0.2) !important;
-}
 
-.carouselContainerLight .navDotActive,
-.navDotActiveLight {
-  background: var(--color-primary) !important;
-}
 
 
 

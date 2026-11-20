@@ -86,11 +86,20 @@ export const design20SearchableIds = new Set(design20Directory.map(doctor => doc
 const doctorNameKey = (name: string) => name.toLowerCase().replace(/^dr[.\s-]*/i, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const featuredLegacySlugs = new Set(["dr-rajiv-menon", "dr-priya-sharma", "dr-arun-krishnan"]);
 
+const DOCTOR_ID_ALIASES: Record<string, string> = {
+  "dr-devi-shetty": "dr-devi-prasad-shetty",
+  "devi-shetty": "dr-devi-prasad-shetty",
+  "dr-ashley-dsouza": "dr-ashley-d-souza",
+  "dr-ashley": "dr-ashley-d-souza",
+  "ashley-dsouza": "dr-ashley-d-souza",
+};
+
 /** Older public profile URLs keep their clinician identity when entering the current journey. */
 export function getDesign20DirectoryDoctor(id: string, requestedName?: string | null): DoctorListingItem | null {
-  const slugMatch = design20Directory.find(doctor => doctor.profileSlug === id);
+  const resolvedId = DOCTOR_ID_ALIASES[id] ?? id;
+  const slugMatch = design20Directory.find(doctor => doctor.profileSlug === resolvedId || doctor.profileSlug === id);
   if (slugMatch && (!requestedName || doctorNameKey(slugMatch.name) === doctorNameKey(requestedName))) return slugMatch;
-  const direct = design20Directory.find(doctor => doctor.id === id);
+  const direct = design20Directory.find(doctor => doctor.id === resolvedId || doctor.id === id);
   if (requestedName) {
     const requestedKey = doctorNameKey(requestedName);
     const byName = design20Directory.find(doctor => doctorNameKey(doctor.name) === requestedKey);

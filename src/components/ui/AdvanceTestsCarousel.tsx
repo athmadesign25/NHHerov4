@@ -191,13 +191,12 @@ export default function AdvanceTestsCarousel({ tests = ADVANCE_TESTS_DATA }: Adv
 
       <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
         {tests.map((_, i) => (
-          <div
+          <button
             key={i}
+            type="button"
             className={`${styles.navDot} ${i === mobileActiveIndex ? styles.navDotActive : ""}`}
             onClick={() => scrollToMobileCard(i)}
             aria-label={`Go to test ${i + 1}`}
-            role="button"
-            tabIndex={0}
           />
         ))}
       </div>

@@ -1,0 +1,5 @@
+.preview { composes: root from "../design-preview/DesignPreview.module.css"; z-index: 85; }
+.preview[data-docked] { --preview-bottom: calc(var(--health-preview-clearance, var(--space-128)) + var(--space-12)); }
+.trigger { composes: trigger from "../design-preview/DesignPreview.module.css"; }
+.expanded { composes: expanded from "../design-preview/DesignPreview.module.css"; }
+.options { composes: options from "../design-preview/DesignPreview.module.css"; }

@@ -587,6 +587,46 @@
     flex-wrap: wrap;
     gap: var(--space-12, 12px);
     align-items: center;
+    justify-content: center;
+  }
+
+  .navButtons {
+    display: none !important;
+  }
+
+  .indicatorText {
+    display: none !important;
+  }
+
+  .indicatorContainer {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .indicatorBars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .indicatorBar {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 6px !important;
+    background-color: rgba(var(--black-rgb), 0.2) !important;
+    cursor: pointer;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease !important;
+    flex-shrink: 0 !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .indicatorBarActive {
+    width: 18px !important;
+    height: 6px !important;
+    border-radius: 6px !important;
+    background-color: var(--color-primary, #034EA1) !important;
   }
 
   .readingAidContainer {

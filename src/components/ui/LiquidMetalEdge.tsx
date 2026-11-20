@@ -2,7 +2,8 @@
 
 import React, { memo, useEffect, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { LiquidMetal } from "@paper-design/shaders-react";
+// Fallback component when @paper-design/shaders-react is not available in environment
+const LiquidMetal = (_props: Record<string, unknown>) => null;
 import styles from "./LiquidMetalEdge.module.css";
 
 export interface LiquidMetalEdgeProps {

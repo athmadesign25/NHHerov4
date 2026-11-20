@@ -465,13 +465,12 @@ export default function SpecialityPatientStories({
         className={`${styles.section} ${isLight ? styles.sectionLight : ""}`}
         style={{
           width: "100%",
-          paddingTop: "80px",
         }}
       >
         {/* Header Container */}
         <div className={`container ${styles.headerContainer}`}>
           <div id="patient-stories-title-unit" className={styles.header}>
-            <h2 className={`section-title ${styles.sectionTitle} ${isLight ? styles.sectionTitleLight : ""}`}>
+            <h2 className={`${styles.sectionTitle} ${isLight ? styles.sectionTitleLight : ""}`}>
               <TextSweepEffect
                 key={activeCategory ? `patient-stories-title-${activeCategory}` : title}
                 words={[title]}
@@ -615,7 +614,12 @@ export default function SpecialityPatientStories({
 
           <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
             {initialCards.map((_, i) => (
-              <div key={i} className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${i === mobileActiveIndex ? (isLight ? styles.navDotActiveLight : styles.navDotActive) : ''}`} />
+              <div
+                key={i}
+                className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${
+                  i === mobileActiveIndex ? `${styles.navDotActive} ${isLight ? styles.navDotActiveLight : ""}` : ""
+                }`}
+              />
             ))}
           </div>
         </motion.div>

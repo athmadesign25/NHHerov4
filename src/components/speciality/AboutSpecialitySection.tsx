@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
@@ -279,15 +279,26 @@ export default function AboutSpecialitySection({
   const tabs = getSpecialityTabs(specialitySlug, specialityTitle);
   const [activeTabId, setActiveTabId] = useState<string>(tabs[0]?.id || "when-needed");
 
-  // Scroll-linked expansion to fill full screen width like Advance Technology & Why Choose Us
+  const [isMounted, setIsMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const mq = window.matchMedia("(min-width: 901px)");
+    const sync = () => setIsDesktop(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  // Scroll-linked expansion to fill full screen width on desktop (without blur to ensure text readability)
   const { scrollYProgress: enterProgress } = useScroll({
     target: containerRef,
     offset: ["start 92%", "start 25%"],
   });
 
-  const gridScale = useTransform(enterProgress, [0, 1], [0.92, 1.0]);
-  const gridWidth = useTransform(enterProgress, [0, 1], ["92%", "100%"]);
-  const gridBlur = useTransform(enterProgress, [0, 0.4], ["blur(12px)", "blur(0px)"]);
+  const gridScale = useTransform(enterProgress, [0, 1], [0.94, 1.0]);
+  const gridWidth = useTransform(enterProgress, [0, 1], ["94%", "100%"]);
 
   const activeContent = tabs.find((t) => t.id === activeTabId) || tabs[0];
 
@@ -295,11 +306,17 @@ export default function AboutSpecialitySection({
     <div className={styles.sectionWrapper} ref={containerRef}>
       <motion.div
         className={styles.bentoExpandWrapper}
-        style={{
-          scale: gridScale,
-          width: gridWidth,
-          filter: gridBlur,
-        }}
+        style={
+          isDesktop
+            ? {
+                scale: gridScale,
+                width: gridWidth,
+              }
+            : {
+                scale: 1,
+                width: "100%",
+              }
+        }
       >
         <div className={styles.aboutCard}>
           {/* Desktop Interactive 2-Column Bento Card */}

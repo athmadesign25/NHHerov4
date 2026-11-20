@@ -23,6 +23,7 @@ import AdvanceTestsCarousel from "@/components/ui/AdvanceTestsCarousel";
 import DoctorOverviewCarousel from "@/components/ui/DoctorOverviewCarousel";
 import MedicallyReviewedBand from "@/components/ui/MedicallyReviewedBand";
 import AboutSpecialitySection from "./AboutSpecialitySection";
+import SpecialityMobileBookingFAB from "./SpecialityMobileBookingFAB";
 import { getSpecialityRelatedTreatments, RelatedTreatmentItem } from "./SpecialityDesign2";
 import { HOSPITALS_DATA } from "@/data/hospitalsData";
 import { ALL_SPECIALITIES, normalizeSpecialitySlug } from "@/data/specialities";
@@ -54,8 +55,8 @@ const COE_TOC_ITEMS: TOCItem[] = [
 const NON_COE_TOC_ITEMS: TOCItem[] = [
   { id: "overview", label: "Overview" },
   { id: "related-treatments", label: "Related Treatments" },
-  { id: "about-speciality", label: "About Speciality" },
   { id: "doctors", label: "Our Doctors" },
+  { id: "about-speciality", label: "About Speciality" },
   { id: "doctor-overview", label: "Doctor Video Insights" },
   { id: "related-tests", label: "Related Tests" },
   { id: "why-us", label: "Why Choose Us" },
@@ -916,39 +917,7 @@ function getCategoryHospitalsInfo(cat?: { id: string; title: string; programmeTi
 
 const doctors = [
   {
-    id: "dr-1",
-    name: "Dr. Anthony Pais",
-    spec: "Surgical Oncology",
-    exp: "28+ years of experience",
-    loc: "Mazumdar Shaw Cancer Centre, Bengaluru",
-    img: "/doctors/doc_vivek.jpg"
-  },
-  {
-    id: "dr-2",
-    name: "Dr. Ananya Rao",
-    spec: "Medical Oncology",
-    exp: "16 years of experience",
-    loc: "Narayana Multispeciality Hospital, HSR Layout, Bengaluru",
-    img: "/assets/doctor_1.png"
-  },
-  {
-    id: "dr-3",
-    name: "Dr. Rajiv Menon",
-    spec: "Gastrointestinal Oncology",
-    exp: "22 years of experience",
-    loc: "Narayana Health City, Bommasandra, Bengaluru",
-    img: "/assets/doctor_2.png"
-  },
-  {
-    id: "dr-4",
-    name: "Dr. Priya Sharma",
-    spec: "Radiation Oncology",
-    exp: "15 years of experience",
-    loc: "Narayana Multispeciality Hospital, Whitefield, Bengaluru",
-    img: "/assets/doctor_3.png"
-  },
-  {
-    id: "dr-5",
+    id: "dr-arun-krishnan",
     name: "Dr. Arun Krishnan",
     spec: "Haemato-Oncology & BMT",
     exp: "20 years of experience",
@@ -956,10 +925,42 @@ const doctors = [
     img: "/assets/hero_doctor.png"
   },
   {
-    id: "dr-6",
-    name: "Dr. Vivek Shetty",
-    spec: "Head & Neck Surgical Oncology",
-    exp: "18 years of experience",
+    id: "dr-akshita-singh",
+    name: "Dr. Akshita Singh",
+    spec: "Breast Oncology & Oncoplastic Surgery",
+    exp: "16 years of experience",
+    loc: "Narayana Multispeciality Hospital, HSR Layout, Bengaluru",
+    img: "/assets/doctor_1.png"
+  },
+  {
+    id: "dr-rajiv-menon",
+    name: "Dr. Rajiv Menon",
+    spec: "Gastrointestinal Oncology",
+    exp: "22 years of experience",
+    loc: "Narayana Health City, Bommasandra, Bengaluru",
+    img: "/assets/doctor_2.png"
+  },
+  {
+    id: "dr-priya-sharma",
+    name: "Dr. Priya Sharma",
+    spec: "Radiation Oncology",
+    exp: "15 years of experience",
+    loc: "Narayana Multispeciality Hospital, Whitefield, Bengaluru",
+    img: "/assets/doctor_3.png"
+  },
+  {
+    id: "dr-abhinandan-s-punit",
+    name: "Dr. Abhinandan S. Punit",
+    spec: "Surgical Oncology & Reconstruction",
+    exp: "28+ years of experience",
+    loc: "Mazumdar Shaw Cancer Centre, Bengaluru",
+    img: "/doctors/doc_vivek.jpg"
+  },
+  {
+    id: "dr-bagirath-raghuraman",
+    name: "Dr. Bagirath Raghuraman",
+    spec: "Senior Consultant Medical Services",
+    exp: "24 years of experience",
     loc: "Narayana Health City, Bengaluru",
     img: "/assets/doctor_2.png"
   }
@@ -1187,6 +1188,36 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
     return () => observer.disconnect();
   }, []);
 
+  const [isPastHeroAndSecondSection, setIsPastHeroAndSecondSection] = useState(false);
+  const treatmentsEndRef = useRef<HTMLDivElement>(null);
+  const nonCoeTriggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkTrigger = () => {
+      const activeTrigger = isCoE ? treatmentsEndRef.current : nonCoeTriggerRef.current;
+      if (!activeTrigger) return;
+      const rect = activeTrigger.getBoundingClientRect();
+      setIsPastHeroAndSecondSection(rect.top <= 100);
+    };
+
+    checkTrigger();
+
+    window.addEventListener("scroll", checkTrigger, { passive: true });
+    const lenis = (window as unknown as { lenis?: { on?: (evt: string, fn: () => void) => void; off?: (evt: string, fn: () => void) => void } }).lenis;
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", checkTrigger);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", checkTrigger);
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", checkTrigger);
+      }
+    };
+  }, [isCoE]);
+
+  const isFabVisible = isPastHeroAndSecondSection && !isNearFooter;
+
   const [proceduresNode, setProceduresNode] = useState<HTMLDivElement | null>(null);
   const proceduresTrackRef = useRef<HTMLDivElement | null>(null);
   const setProceduresRef = (node: HTMLDivElement | null) => {
@@ -1200,12 +1231,11 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
 
   const proceduresScale = useTransform(proceduresEnterProgress, [0, 1], [0.90, 1.0]);
   const proceduresWidth = useTransform(proceduresEnterProgress, [0, 1], ["90%", "100%"]);
-  const proceduresBlur = useTransform(proceduresEnterProgress, [0, 0.4], ["blur(12px)", "blur(0px)"]);
 
-  const handoffRef = useRef<HTMLDivElement>(null);
+  const bgHandoffRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: bgHandoffProgress } = useScroll({
-    target: handoffRef,
-    offset: ["start end", "start 60%"]
+    target: bgHandoffRef,
+    offset: ["start end", "start 65%"]
   });
   const pageBgColor = useTransform(bgHandoffProgress, [0, 1], ["#031224", "#ffffff"]);
   const pageTextColor = useTransform(bgHandoffProgress, [0, 1], ["#ffffff", "#0f172a"]);
@@ -1818,6 +1848,9 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
           );
         })()}
 
+        {/* Sentinel for seamless dark navy to white background transition as sub-conditions come into view */}
+        <div ref={bgHandoffRef} style={{ position: "relative", height: "1px", width: "100%", pointerEvents: "none" }} />
+
         <div className={styles.subConditionsContainer} data-nav-theme="light">
           <AnimatePresence mode="wait">
             {currentCategories.find(c => c.id === activeCategory)?.subConditions?.length ? (
@@ -1884,7 +1917,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             ) : null}
           </AnimatePresence>
         </div>
-        <div ref={handoffRef} style={{ position: "relative", height: "1px", width: "100%", pointerEvents: "none" }} />
+        <div ref={treatmentsEndRef} style={{ position: "relative", height: "1px", width: "100%", pointerEvents: "none" }} />
       </section>
       )}
 
@@ -1923,7 +1956,6 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               style={{
                 width: proceduresWidth,
                 scale: proceduresScale,
-                filter: proceduresBlur,
                 transformOrigin: "center center",
                 margin: "0 auto",
                 padding: "0 16px",
@@ -1962,8 +1994,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               title: "Related Treatments", 
               desc: `Specialized treatment procedures, medical therapies, and targeted interventions available for ${title.toLowerCase()}.` 
             },
-            { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
             { id: "doctors", title: `Our Doctors & Specialists for ${title}`, desc: `Consult our multidisciplinary team of senior specialists delivering advanced, personalized care for ${title.toLowerCase()}.` },
+            { id: "about-speciality", title: "About Speciality", desc: `Comprehensive guide to clinical conditions, modern treatment indications, and patient pathways for ${title}.` },
             { id: "doctor-overview", title: activeDoctorVideosInfo.title, desc: activeDoctorVideosInfo.desc },
             { 
               id: "related-tests", 
@@ -2104,6 +2136,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   </motion.div>
                 ))}
               </div>
+              <div ref={nonCoeTriggerRef} style={{ height: "1px", width: "100%", pointerEvents: "none" }} />
             </div>
           ) : section.id === "technology" ? (
             <div style={{ width: "100%", maxWidth: "100%", overflow: "hidden" }}>
@@ -2178,7 +2211,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               </div>
 
               <motion.div 
-                style={{ display: "flex", justifyContent: "center", marginTop: "var(--sp-8)" }}
+                className={styles.doctorsViewMoreWrapper}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -2254,6 +2287,15 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
       {/* Footer Sentinel to detect when bottom of page content reaches footer */}
       <div ref={footerSentinelRef} style={{ height: "0px", width: "100%", pointerEvents: "none", opacity: 0 }} />
       </motion.div>
+
+      {/* Mobile / MWeb Floating Action Dock */}
+      <SpecialityMobileBookingFAB
+        title={title}
+        subtitle="Expert clinical care"
+        phone="08067506836"
+        findSpecialistHref="/doctors"
+        isVisible={isFabVisible}
+      />
     </div>
   );
 }
