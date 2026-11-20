@@ -507,13 +507,10 @@ export default function ProcedureDetailPage({ params }: PageProps) {
 
           {/* ─── RIGHT COLUMN: ARTICLE DETAILS (UNIFIED EDITORIAL LAYOUT) ─── */}
           <article className={styles.articleContent}>
-            {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+            {/* Minimal Non-Intrusive Clinical Action Pathway Strip */}
             <ClinicalAtAGlanceCard
-              title={detail.title}
-              speciality={detail.speciality || "Quaternary Surgical Care"}
               bookingHref="/book-an-appointment"
               secondOpinionHref="/book-an-appointment?flow=second-opinion"
-              insuranceHref="#costs-insurance"
             />
 
             {/* 1. Overview & Clinical Executive Summary */}

@@ -273,13 +273,10 @@ export default function DiagnosticDetailPage({ params }: PageProps) {
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+              {/* Minimal Non-Intrusive Clinical Action Pathway Strip */}
               <ClinicalAtAGlanceCard
-                title={detail.title}
-                speciality={`${detail.modality} · Clinical Diagnostics`}
                 bookingHref="/diagnostics"
                 secondOpinionHref="/book-an-appointment?flow=second-opinion"
-                insuranceHref="#preparation"
               />
 
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}

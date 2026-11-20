@@ -273,13 +273,10 @@ export default function DiseaseDetailPage({ params }: PageProps) {
 
             {/* Reading Content Focus Canvas */}
             <div className={styles.contentFocusCanvas}>
-              {/* Top Clinical Care Pathway & Action Card (Early Conversion Before Long Reading) */}
+              {/* Minimal Non-Intrusive Clinical Action Pathway Strip */}
               <ClinicalAtAGlanceCard
-                title={detail.title}
-                speciality={`${detail.speciality} · Condition Management`}
                 bookingHref="/book-an-appointment"
                 secondOpinionHref="/book-an-appointment?flow=second-opinion"
-                insuranceHref="#treatment"
               />
 
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}

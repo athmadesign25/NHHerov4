@@ -284,9 +284,9 @@ Every detail and landing page follows this universal hierarchy from top to botto
 ---
 
 ### 1.C Detail Page Early Conversion Architecture & Sticky Helpline
-To prevent patients from having to scroll through long reading material before seeing next steps:
-- **Top Care Pathway & Action Card (`<ClinicalAtAGlanceCard />`)**: Positioned at the top of the reading focus canvas directly above the clinical overview. Presents priority OPD scheduling, insurance/TPA coverage, transparent pricing, and instant CTA buttons (Book Consultation, Get Second Opinion, Check Insurance) using crisp 8px rounded rectangles and atmospheric midnight glass.
-- **Sticky Index Companion Helpline (`<ContactCareSidebarCard />`)**: Anchored inside `<aside className={styles.stickySidebar}>` directly below `<ShareWidget />`. Stays gracefully in view throughout reading, offering the toll-free `1800 309 0309` helpline with live triage status.
+To prevent patients from having to scroll through long reading material before seeing next steps, while keeping the UI understated, calm, and free of advertising clutter:
+- **Minimal Clinical Pathway Strip (`<ClinicalAtAGlanceCard />`)**: Positioned at the top of the reading focus canvas directly above the clinical overview. Uses a slim, non-intrusive horizontal strip (only ~36–42px tall; `background: rgba(var(--white-rgb), 0.04); border: 1px solid rgba(var(--white-rgb), 0.10); border-radius: 8px`) presenting a clean clinical note (`Priority OPD consultation, multidisciplinary second opinions & cashless insurance accepted`) and two restrained action buttons (`Book Consultation →`, `Second Opinion`). ❌ **NEVER** build huge 300px promotional marketing cards, nested pillar boxes, sparkles, or multi-paragraph sales copy here.
+- **Unboxed Sticky Index Helpline (`<ContactCareSidebarCard />`)**: Anchored inside `<aside className={styles.stickySidebar}>` directly below `<ShareWidget />`. Uses simple, unboxed text and phone number (`24×7 CARE HELPLINE` and clickable `1800 309 0309`). ❌ **NEVER** wrap this in a bulky white container card, drop shadow, or heavy button box.
 - **Right Mid-Screen CTA Floater (`<ClinicalFloatingSideActions />`)**: Dedicated to clinical conversion (`Book Consultation`, `Second Opinion`, `Ask Pulse AI`). Tap-to-call 24×7 is omitted here to prevent redundancy with the left sticky index companion.
 
 ---
