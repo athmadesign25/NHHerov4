@@ -415,15 +415,15 @@
 
   .statNumber {
     font-size: var(--font-size-lg) !important;
-    font-weight: 600 !important;
-    color: rgba(var(--white-rgb), 0.92) !important;
+    font-weight: 500 !important;
+    color: rgba(var(--white-rgb), 0.76) !important;
     line-height: 1.15;
     text-shadow: none;
   }
 
   .statLabel {
     font-size: 10.5px !important;
-    color: rgba(var(--white-rgb), 0.50) !important;
+    color: rgba(var(--white-rgb), 0.46) !important;
     margin-top: 2px !important;
     line-height: 1.25;
     text-shadow: none;
@@ -438,7 +438,7 @@
 .statNumber {
   font-size: clamp(22px, 2vw, 28px);
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.85);
+  color: rgba(var(--white-rgb), 0.76);
   line-height: 1.15;
   letter-spacing: -0.01em;
   text-shadow: none;
@@ -446,7 +446,7 @@
 
 .statLabel {
   font-size: var(--font-size-xs);
-  color: rgba(var(--white-rgb), 0.52);
+  color: rgba(var(--white-rgb), 0.46);
   font-weight: 400;
   margin-top: 3px;
   line-height: 1.35;

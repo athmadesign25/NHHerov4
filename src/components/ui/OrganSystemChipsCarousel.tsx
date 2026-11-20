@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ChevronDown, LayoutGrid } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./OrganSystemChipsCarousel.module.css";
 
 export interface OrganFilterOption {
@@ -45,7 +45,6 @@ export default function OrganSystemChipsCarousel({
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isDoubleStacked, setIsDoubleStacked] = useState(false);
 
   const updateScrollButtons = useCallback(() => {
     const el = trackRef.current;
@@ -65,21 +64,13 @@ export default function OrganSystemChipsCarousel({
       el.removeEventListener("scroll", updateScrollButtons);
       window.removeEventListener("resize", updateScrollButtons);
     };
-  }, [updateScrollButtons, isDoubleStacked]);
+  }, [updateScrollButtons]);
 
   const handleScrollBy = (direction: "left" | "right") => {
     const el = trackRef.current;
     if (!el) return;
     const delta = direction === "left" ? -340 : 340;
     el.scrollBy({ left: delta, behavior: "smooth" });
-  };
-
-  const handleViewAllClick = () => {
-    onSelectOrgan(null);
-    setIsDoubleStacked((prev) => !prev);
-    if (trackRef.current && !isDoubleStacked) {
-      trackRef.current.scrollTo({ left: 0, behavior: "smooth" });
-    }
   };
 
   return (
@@ -94,68 +85,34 @@ export default function OrganSystemChipsCarousel({
         <span className={styles.eyebrowLabel}>{eyebrow}</span>
 
         <div className={styles.controlsRightGroup}>
-          {/* Top Bar "View All / Double Stack" Action Button */}
-          <button
-            type="button"
-            className={`${styles.viewAllToggleBtn} ${isDoubleStacked ? styles.viewAllToggleBtnActive : ""}`}
-            onClick={() => setIsDoubleStacked((prev) => !prev)}
-            aria-label={isDoubleStacked ? "Switch to single row" : "Expand all filters in double stack"}
-          >
-            <LayoutGrid size={13} />
-            <span>{isDoubleStacked ? "Single Row" : `View All (${options.length})`}</span>
-            <ChevronDown size={13} className={isDoubleStacked ? styles.chevronRotated : styles.chevronIcon} />
-          </button>
-
-          {!isDoubleStacked && (
-            <div className={styles.arrowGroup}>
-              <button
-                type="button"
-                className={styles.carouselArrowBtn}
-                onClick={() => handleScrollBy("left")}
-                disabled={!canScrollLeft}
-                aria-label="Scroll organ systems left"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                type="button"
-                className={styles.carouselArrowBtn}
-                onClick={() => handleScrollBy("right")}
-                disabled={!canScrollRight}
-                aria-label="Scroll organ systems right"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          )}
+          <div className={styles.arrowGroup}>
+            <button
+              type="button"
+              className={styles.carouselArrowBtn}
+              onClick={() => handleScrollBy("left")}
+              disabled={!canScrollLeft}
+              aria-label="Scroll organ systems left"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              className={styles.carouselArrowBtn}
+              onClick={() => handleScrollBy("right")}
+              disabled={!canScrollRight}
+              aria-label="Scroll organ systems right"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
       <div className={styles.trackContainer}>
         <div
           ref={trackRef}
-          className={`${styles.bubblesRow} ${isDoubleStacked ? styles.bubblesDoubleStack : ""}`}
+          className={styles.bubblesRow}
         >
-          {/* 1. Decent "View All" Button with 16px geometry & Double Stack toggle */}
-          <button
-            type="button"
-            className={`${styles.viewAllDecentBtn} ${selectedOrgan === null ? styles.viewAllDecentActive : ""}`}
-            onClick={handleViewAllClick}
-            aria-pressed={selectedOrgan === null}
-            aria-label="View all procedures and toggle double stack view"
-          >
-            <div className={styles.viewAllDecentImgWrap}>
-              <LayoutGrid size={22} />
-              <span className={styles.viewAllDecentBadge}>
-                {isDoubleStacked ? "2 Rows" : `${options.length}`}
-              </span>
-            </div>
-            <span className={styles.bubbleLabel}>
-              {selectedOrgan === null ? "All Systems" : "View All"}
-            </span>
-          </button>
-
-          {/* 2. Organ-System Chips */}
           {options.map((opt) => {
             const isActive = selectedOrgan === opt.value;
             return (

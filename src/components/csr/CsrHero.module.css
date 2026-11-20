@@ -221,7 +221,7 @@
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(26px, 2.4vw, 30px);
   font-weight: 500;
-  color: rgba(var(--white-rgb), 0.95);
+  color: rgba(var(--white-rgb), 0.76);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-bottom: 0;
@@ -231,7 +231,7 @@
 .statDesc {
   font-size: var(--font-size-sm);
   line-height: 1.4;
-  color: rgba(var(--white-rgb), 0.85);
+  color: rgba(var(--white-rgb), 0.52);
   margin: 0;
 }
 
