@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { Activity, ArrowUpRight, Award, Brain, CalendarCheck, ChevronDown, Clock3, Download, HeartPulse, MapPin, Play, Plus, ShieldCheck, Stethoscope, Users, X } from "lucide-react";
+import { Activity, ArrowUpRight, Award, Brain, ChevronDown, Clock3, Download, HeartPulse, MapPin, Play, Plus, ShieldCheck, Stethoscope, Users, X } from "lucide-react";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import EmergencyCareExplorer from "./EmergencyCareExplorer";
+import EmergencyGuideCarousel from "./EmergencyGuideCarousel";
+import SpecialityFAQ from "@/components/ui/SpecialityFAQ";
+import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import EmergencyHospitalCard from "./EmergencyHospitalCard";
 import HorizontalMediaRail from "@/components/ui/HorizontalMediaRail";
 import { ChevronDown as AnimatedChevronDown } from "@/components/animate-ui/icons/lucide/chevron-down";
@@ -58,10 +60,14 @@ export default function EmergencyPage() {
   const [tabsPinned, setTabsPinned] = useState(false);
   const [city, setCity] = useState("Bangalore");
   const [videoOpen, setVideoOpen] = useState(false);
+  const [videoInline, setVideoInline] = useState(false);
+  const videoPoster = useRef<HTMLButtonElement>(null);
   const [showCall, setShowCall] = useState(false);
   const videoTrigger = useRef<HTMLElement | null>(null);
   const videoDialog = useRef<HTMLDialogElement>(null);
   const hospitals = content.cities.find(item => item.label === city)?.hospitals ?? [];
+  const appear = { initial: { opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.96 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.spring } };
+  const cardBlur = (index: number) => ({ initial: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 16, filter: reduced ? "blur(0px)" : "blur(12px)" }, whileInView: { opacity: 1, y: 0, filter: "blur(0px)" }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slower, delay: reduced ? 0 : Math.min(index * 0.08, 0.4), ease: ease.out } });
   const reveal = { initial: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.1 }, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.out } };
 
   useEffect(() => {
@@ -101,6 +107,18 @@ export default function EmergencyPage() {
     measure();
     return () => { observer.disconnect(); resize.disconnect(); cancelAnimationFrame(frame); window.removeEventListener("scroll", schedule); window.removeEventListener("resize", schedule); };
   }, []);
+
+  useEffect(() => {
+    const node = videoPoster.current;
+    if (!node || reduced || videoInline) return;
+    let timer = 0;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) timer = window.setTimeout(() => setVideoInline(true), 3000);
+      else window.clearTimeout(timer);
+    }, { threshold: 0.5 });
+    observer.observe(node);
+    return () => { observer.disconnect(); window.clearTimeout(timer); };
+  }, [reduced, videoInline]);
 
   useEffect(() => {
     if (!videoOpen) { videoDialog.current?.close(); return; }
@@ -211,34 +229,49 @@ export default function EmergencyPage() {
 
     {/* Shared content remains mounted and unchanged when the care tab changes. */}
     <div ref={sharedJourney} className={styles.sharedJourney} data-nav-theme="light" data-emergency-shared>
-      <section className={`${styles.section} ${styles.container} ${styles.certificationIntro}`} aria-labelledby="stroke-centre-title">
-        <div className={styles.certificationImage}><Image src="/emergency/mazumdar-shaw.webp" alt="Mazumdar Shaw Medical Centre, Bangalore" fill sizes="(max-width: 768px) 90vw, 45vw" /></div>
-        <motion.div {...reveal} className={styles.certificationText}>
-          <span className={styles.certificationSeal}><Award aria-hidden="true" /></span>
-
-          <h2 id="stroke-centre-title" className={styles.sectionTitle}>{content.certification.title}</h2>
-          <p className={styles.subtitle}>{content.certification.subtitle}</p>
-          <span className={styles.centreLocation}><MapPin aria-hidden="true" />{content.certification.image_text}</span>
+      <section className={`${styles.section} ${styles.container}`} aria-labelledby="stroke-centre-title">
+        <motion.div {...appear} className={styles.certificationIntro}>
+          <div className={styles.certificationImage}><Image src="/emergency/mazumdar-shaw.webp" alt="Mazumdar Shaw Medical Centre, Bangalore" fill sizes="(max-width: 900px) 100vw, 600px" /></div>
+          <div className={styles.certificationText}>
+            <span className={styles.certificationSeal}><Award aria-hidden="true" /></span>
+            <h2 id="stroke-centre-title" className={styles.sectionTitle}>{content.certification.title}</h2>
+            <p className={styles.subtitle}>{content.certification.subtitle}</p>
+            <span className={styles.centreLocation}><MapPin aria-hidden="true" />{content.certification.image_text}</span>
+          </div>
         </motion.div>
       </section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="why-emergency-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="why-emergency-title" className={styles.sectionTitle}>{content.benefits.title}</h2><p className={styles.subtitle}>{content.benefits.subtitle}</p></motion.div>
-      <motion.div {...reveal} className={styles.careGrid}>{content.benefits.items.map((item, index) => <article key={item.title} className={styles.careCard} data-card={index} data-nav-theme="dark"><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></article>)}</motion.div>
+      <motion.div {...appear} className={styles.careGrid}>{content.benefits.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={styles.careCard} data-card={index} data-nav-theme="dark"><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></motion.article>)}</motion.div>
     </div></section>
 
-<section className={styles.section} data-nav-theme="light" aria-labelledby="inside-er-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="inside-er-title" className={styles.sectionTitle}>{content.video.title}</h2><p className={styles.subtitle}>{content.video.subtitle}</p></motion.div><button type="button" className={styles.videoPoster} onClick={openVideo} aria-label="Play Inside the Emergency Room"><Image src="/emergency/er-video.webp" alt="Inside ER: real emergency cases from Narayana Health" fill sizes="100vw" /><span className={styles.play}><Play aria-hidden="true" /></span><span className={styles.videoCaption}>Inside the Emergency Room <ArrowUpRight aria-hidden="true" /></span></button></section>
+<section className={styles.section} data-nav-theme="light" aria-labelledby="inside-er-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="inside-er-title" className={styles.sectionTitle}>{content.video.title}</h2><p className={styles.subtitle}>{content.video.subtitle}</p></motion.div>
+      <motion.button ref={videoPoster} type="button" className={styles.videoPoster} onClick={openVideo} aria-label="Play Inside the Emergency Room"
+        initial={{ opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.94 }} whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-40px" }} transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.spring }}>
+        {videoInline
+          ? <iframe className={styles.videoInline} src="https://www.youtube-nocookie.com/embed/PXX79R0w6Cc?autoplay=1&mute=1&controls=0&loop=1&playlist=PXX79R0w6Cc&playsinline=1" title="Inside the Emergency Room — Narayana Health" allow="autoplay; encrypted-media; picture-in-picture" tabIndex={-1} aria-hidden="true" />
+          : <Image src="/emergency/er-video.webp" alt="Inside ER: real emergency cases from Narayana Health" fill sizes="100vw" />}
+        <span className={styles.play}><Play aria-hidden="true" /></span>
+      </motion.button></section>
 
 <section className={styles.section} aria-labelledby="guide-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="guide-title" className={styles.sectionTitle}>{content.articles.title}</h2><p className={styles.subtitle}>{content.articles.subtitle}</p></motion.div>
-      <HorizontalMediaRail id="emergency-guides" labelledBy="guide-title" itemLabel="emergency guides" heading={null} variant="gallery">{content.articles.items.map(item => <motion.article {...reveal} key={item.link} className={styles.photoCard}><a href={item.href} className={styles.fullCardLink}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 85vw, 512px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><span className={styles.cardMeta}>{item.category} · {item.date}</span><h3>{item.title}</h3><p>{item.author}</p><span className={styles.cardLink}>Read article <ArrowUpRight aria-hidden="true" /></span></div></a></motion.article>)}</HorizontalMediaRail>
+      <motion.div {...appear} className={styles.container}><EmergencyGuideCarousel items={content.articles.items} labelledBy="guide-title" /></motion.div>
     </section>
 
 <section className={styles.section} aria-labelledby="newsletter-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="newsletter-title" className={styles.sectionTitle}>{content.newsletters.title}</h2><p className={styles.subtitle}>{content.newsletters.subtitle}</p></motion.div>
-      <HorizontalMediaRail id="emergency-newsletters" labelledBy="newsletter-title" itemLabel="emergency newsletters" heading={null} variant="gallery">{content.newsletters.items.map(item => <motion.article {...reveal} key={item.title} className={`${styles.photoCard} ${styles.newsletterCard}`}><a href={item.cta_link} target="_blank" rel="noopener noreferrer" className={styles.fullCardLink}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 85vw, 512px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><h3>{item.title}</h3><span className={styles.cardLink}>{item.cta_name}<Download aria-hidden="true" /></span></div></a></motion.article>)}</HorizontalMediaRail>
+      <motion.div {...appear} className={`${styles.container} ${styles.editorialGrid}`}>{content.newsletters.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={`${styles.photoCard} ${styles.newsletterCard}`}><a href={item.cta_link} target="_blank" rel="noopener noreferrer" className={styles.fullCardLink}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 90vw, 420px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><h3>{item.title}</h3><span className={styles.cardLink}>{item.cta_name}<Download aria-hidden="true" /></span></div></a></motion.article>)}</motion.div>
     </section>
 
-<section className={styles.section} data-nav-theme="light" aria-labelledby="faq-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="faq-title" className={styles.sectionTitle}>{content.faqs.title}</h2><p className={styles.subtitle}>{content.faqs.subtitle}</p></motion.div><div className={`${styles.accordion} ${styles.faqList}`}>{content.faqs.items.map(item => <details key={item.question} name="emergency-faqs"><summary><span>{item.question}</span><Plus aria-hidden="true" /></summary><div className={styles.answer}><p>{item.answer}</p></div></details>)}</div></div></section>
+<section className={styles.section} data-nav-theme="light" aria-labelledby="faq-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="faq-title" className={styles.sectionTitle}>{content.faqs.title}</h2><p className={styles.subtitle}>{content.faqs.subtitle}</p></motion.div><SpecialityFAQ faqs={content.faqs.items} theme="light" defaultOpenIndex={null} /></div></section>
 
-<section className={`${styles.section} ${styles.container}`} aria-labelledby="closing-title"><div className={styles.closingCard}><h2 id="closing-title" className={styles.sectionTitle}>Looking for Expert Medical Care?</h2><p className={styles.subtitle}>Your health matters. That’s why we make finding and booking the right doctor easy.</p><div className={styles.closingActions}><Link href="/doctors" className={styles.primaryButton}><CalendarCheck aria-hidden="true" />Book Appointment</Link><a href="#hospitals" className={styles.glassButton} onClick={event => { event.preventDefault(); changeTab("hospitals"); }}>Find Our Hospital<ArrowUpRight aria-hidden="true" /></a><a href={CALL} className={styles.textLink}><PhoneCall />{PHONE}</a></div></div></section>
+<BlogCtaBanner bg="transparent"
+      eyebrow="24×7 EMERGENCY CARE ACROSS INDIA"
+      title="Looking for Expert Medical Care?"
+      subtitle="Your health matters. That’s why we make finding and booking the right doctor easy."
+      primaryBtn={{ href: "/doctors", text: "Book Appointment" }}
+      secondaryBtn={{ href: "#hospitals", text: "Find Our Hospital" }}
+      phoneText={`Call 24×7: ${PHONE}`} phoneHref={CALL} />
 
     </div>
 
