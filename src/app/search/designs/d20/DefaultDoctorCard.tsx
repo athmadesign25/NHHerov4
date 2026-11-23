@@ -111,11 +111,6 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
   return <motion.article aria-labelledby={nameId} className={styles.card} data-doctor-card data-locations-open={locOpen || undefined} data-expanding-preview={expandFromSurface || undefined}
     layoutId={cardDesign === "d20" && !reduced && !expandFromSurface ? `d20-card-${doc.id}` : undefined}
     initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25, ease: [.22, 1, .36, 1] }}>
-    {/* Morph only the surface. The portrait stays at its natural size beneath
-        the returning panel instead of inheriting the panel's scale/translation. */}
-    {expandFromSurface && <motion.div className={styles.morphSurface} aria-hidden
-      layoutId={reduced ? undefined : `d20-card-${doc.id}`}
-      transition={{ layout: { duration: reduced ? 0 : duration.emphasis, ease: ease.standard } }} />}
     <div className={`${styles.portrait} ${officialPortrait ? styles.officialPortrait : ""} ${thumbnailPortrait ? styles.thumbnailPortrait : ""}`}>
       {doc.img && failedImage !== doc.img
         ? <><div className={styles.photoFrame}><Image src={doc.img} alt="" fill sizes="(max-width: 639px) calc(100vw - 32px), (max-width: 1199px) 48vw, (max-width: 1519px) 36vw, 408px" loading={priority ? "eager" : "lazy"} className={styles.photo} onError={() => setFailedImage(doc.img)} /></div>
@@ -146,7 +141,12 @@ export default function DoctorCard({ doctor, mode, live, priority = false, cardD
         <Link href={profileUrl} className={styles.profileLink} aria-label={`View profile of ${doc.name}`}>View profile <ArrowRight size={14} aria-hidden /></Link>
       </div>
     </header>
-    <motion.div className={styles.body} layoutId={cardDesign === "d20" && !reduced ? `d20-summary-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }}>
+    <motion.div className={styles.body} layoutId={cardDesign === "d20" && !reduced && !expandFromSurface ? `d20-summary-${doc.id}` : undefined} transition={{ layout: cardLayoutTransition }}>
+      {/* The booking container grows into the slot panel; the portrait and
+          identity stay stationary beneath the backdrop throughout the morph. */}
+      {expandFromSurface && <motion.div className={styles.morphSurface} aria-hidden data-booking-source-surface
+        layoutId={reduced ? undefined : `d20-booking-surface-${doc.id}`}
+        transition={{ layout: { duration: reduced ? 0 : duration.slow, ease: ease.standard } }} />}
       <div className={styles.location} ref={locationRef} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setLocOpen(false); }}>
         <div className={styles.hospitalRow}>
           {locations.length > 1 ? <button ref={locationButtonRef} type="button" className={`${styles.hospital} ${styles.hospitalSelector}`}

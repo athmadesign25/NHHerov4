@@ -8,7 +8,14 @@ import MemberAvatar from "@/features/booking/design17/MemberAvatar";
 import MemberSwitchCoachmark from "./MemberSwitchCoachmark";
 import styles from "./BookingMemberMenu.module.css";
 
-export default function BookingMemberMenu({ onLogout, confirmed: confirmationRoute = false }: { onLogout: () => void; confirmed?: boolean }) {
+interface BookingMemberMenuProps {
+  onLogout: () => void;
+  confirmed?: boolean;
+  onOpen?: () => void;
+  onNavigate?: () => void;
+}
+
+export default function BookingMemberMenu({ onLogout, confirmed: confirmationRoute = false, onOpen, onNavigate }: BookingMemberMenuProps) {
   const selection = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
   const confirmed = confirmationRoute || Boolean(selection.confirmed);
   const member = selection.members.find(entry => entry.id === selection.selectedId) ?? selection.members[0];
@@ -18,6 +25,7 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
   const trigger = useRef<HTMLButtonElement>(null);
   const popup = useRef<HTMLDivElement>(null);
   const id = useId();
+  const openMenu = () => { onOpen?.(); setOpen(true); };
   const close = (restore = false) => { setOpen(false); if (restore) trigger.current?.focus({ preventScroll: true }); };
 
   useLayoutEffect(() => {
@@ -45,7 +53,7 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
   }, [open]);
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); close(true); return; }
-    if (!open && ["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); setOpen(true); return; }
+    if (!open && ["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); openMenu(); return; }
     if (!open || !["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
     const options = Array.from(popup.current?.querySelectorAll<HTMLElement>('[role="menuitemradio"]:not(:disabled), [role="menuitem"]') ?? []);
@@ -59,14 +67,14 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
     if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) close();
   }}>
     <button ref={trigger} type="button" className={styles.trigger} aria-label={`${confirmed ? "Booked" : "Booking"} for ${member.name}. ${confirmed ? "Your account" : "Change patient"}`}
-      aria-haspopup="menu" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => open ? close() : setOpen(true)}>
+      aria-haspopup="menu" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => open ? close() : openMenu()}>
       <MemberAvatar src={bookingMemberAvatar(member)} name={member.name} className={styles.triggerAvatar} />
       <span className={styles.triggerCopy}><strong>{member.name}</strong></span>
       <ChevronDown size={14} className={styles.chevron} aria-hidden />
     </button>
     {open && <div ref={popup} id={id} popover="manual" role="menu" aria-label="Booking member and account" className={styles.popup} data-lenis-prevent>
       <div role="group" aria-labelledby={`${id}-heading`}>
-        <p id={`${id}-heading`} className={styles.heading}>{confirmed ? "Booked for" : "Booking for"}</p>
+        <p id={`${id}-heading`} className={styles.heading}>{confirmed ? "Booked for" : "Switch member"}</p>
         {selection.members.filter(entry => !confirmed || entry.id === member.id).map(entry => <button key={entry.id} type="button" role="menuitemradio" tabIndex={-1} disabled={confirmed} aria-checked={entry.id === member.id} className={styles.member}
           onClick={() => { chooseBookingMember(entry.id); setAnnouncement(`Booking for ${entry.name}`); close(true); }}>
           <MemberAvatar src={bookingMemberAvatar(entry)} name={entry.name} className={styles.avatar} />
@@ -75,8 +83,9 @@ export default function BookingMemberMenu({ onLogout, confirmed: confirmationRou
         </button>)}
       </div>
       <div className={styles.account} role="group" aria-label="Your account">
-        <Link role="menuitem" tabIndex={-1} href="/bookings" onClick={() => close()}>My Consultations</Link>
-        <Link role="menuitem" tabIndex={-1} href="/records" onClick={() => close()}>My Tests</Link>
+        <Link role="menuitem" tabIndex={-1} href="/profile" onClick={() => { close(); onNavigate?.(); }}>My account</Link>
+        <Link role="menuitem" tabIndex={-1} href="/bookings" onClick={() => { close(); onNavigate?.(); }}>My bookings</Link>
+        <Link role="menuitem" tabIndex={-1} href="/records" onClick={() => { close(); onNavigate?.(); }}>Health records</Link>
         <button role="menuitem" tabIndex={-1} type="button" className={styles.logout} onClick={() => { close(); onLogout(); }}>Logout</button>
       </div>
     </div>}

@@ -19,12 +19,13 @@ import ExecutiveIcon from "@/features/booking/components/ExecutiveIcon";
 import ExecutiveSlotTag from "@/features/booking/components/ExecutiveSlotTag";
 import executiveStyles from "@/features/booking/components/ExecutiveSlotTag.module.css";
 
-export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false, showHospitalDirections = false }: {
+export default function AppointmentSelector({ doctor, selection, now, onChange, autoSelectFirst = false, showHospitalDirections = false, preserveModeHeight = false }: {
   doctor: BookingDoctorSummary;
   selection: AppointmentSelection;
   now: number;
   autoSelectFirst?: boolean;
   showHospitalDirections?: boolean;
+  preserveModeHeight?: boolean;
   onChange: (selection: AppointmentSelection) => void;
 }) {
   const dates = appointmentDates(now, DESIGN16_BOOKING_DAYS);
@@ -113,12 +114,12 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
     if (mode === selection.mode && hospital === selection.hospital) return;
     onChange({ ...selection, mode, hospital, time: "" });
   };
-  return <div className={styles.picker} data-appointment-selector>
+  return <div className={styles.picker} data-appointment-selector data-preserve-mode-height={preserveModeHeight || undefined}>
     {availableModes.length > 1 && <div className={styles.consultationControl}><DoctorConsultationToggle mode={selection.mode} availableModes={availableModes} iconVariant="availability" onModeChange={mode => setContext(mode, selection.hospital)} /></div>}
-    <AnimatePresence initial={false} mode="popLayout">{selection.mode === "hospital" && <motion.section key="hospital" className={styles.fieldset} data-appointment-hospital initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .16 }} aria-labelledby={`${id}-hospital-title`}><h3 className={styles.fieldTitle} id={`${id}-hospital-title`}>Hospital</h3>
-      <HospitalPicker showDirections={showHospitalDirections} distanceKm={profile?.practiceLocations?.find(location => location.hospital === selection.hospital)?.distanceKm} doctorName={doctor.name} locations={locations} value={selection.hospital} onChange={hospital => setContext(selection.mode, hospital)} />
+    <AnimatePresence initial={false} mode="popLayout">{(selection.mode === "hospital" || (preserveModeHeight && availableModes.includes("hospital"))) && <motion.section key="hospital" className={styles.fieldset} data-appointment-hospital data-reserved={preserveModeHeight && selection.mode === "video" || undefined} aria-hidden={selection.mode === "video" || undefined} inert={selection.mode === "video" || undefined} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .16 }} aria-labelledby={`${id}-hospital-title`}><h3 className={styles.fieldTitle} data-appointment-field-heading id={`${id}-hospital-title`}>Hospital</h3>
+      <HospitalPicker key={selection.mode} showDirections={showHospitalDirections} distanceKm={profile?.practiceLocations?.find(location => location.hospital === selection.hospital)?.distanceKm} doctorName={doctor.name} locations={locations} value={selection.hospital} onChange={hospital => setContext(selection.mode, hospital)} />
     </motion.section>}</AnimatePresence>
-    <motion.section layout={reduced ? false : "position"} layoutDependency={`${selection.mode}:${selection.hospital}`} transition={{ layout: cardLayoutTransition }} className={styles.fieldset} aria-labelledby={`${id}-date-title`}><div className={styles.timeHeading}><h3 id={`${id}-date-title`}>Select date</h3></div><div className={styles.scrollRow} data-date-row data-fade-start={dateEdges.start} data-lenis-prevent-horizontal><div className={styles.dates} id={`${id}-dates`} ref={dateStrip} onScroll={updateDateEdges} data-fade-start={dateEdges.start} data-fade-end={dateEdges.end} data-lenis-prevent-horizontal>{months.map(month => <div key={month.key} className={styles.monthGroup}>
+    <motion.section layout={reduced ? false : "position"} layoutDependency={`${selection.mode}:${selection.hospital}`} transition={{ layout: cardLayoutTransition }} className={styles.fieldset} aria-labelledby={`${id}-date-title`}><div className={styles.timeHeading} data-appointment-field-heading><h3 id={`${id}-date-title`}>Select date</h3></div><div className={styles.scrollRow} data-date-row data-fade-start={dateEdges.start} data-lenis-prevent-horizontal><div className={styles.dates} id={`${id}-dates`} ref={dateStrip} onScroll={updateDateEdges} data-fade-start={dateEdges.start} data-fade-end={dateEdges.end} data-lenis-prevent-horizontal>{months.map(month => <div key={month.key} className={styles.monthGroup}>
       <span className={styles.monthPill} data-month-pill data-month-label={month.label} aria-hidden><span>{month.label}</span></span>{month.dates.map(date => {
       const available = availableSlots(date).length > 0;
       const value = new Date(`${date}T12:00:00Z`);
@@ -126,10 +127,10 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
         aria-label={`${formatBookingDate(date)}${available ? "" : ", no available times"}`} onClick={() => { if (date !== selection.date) onChange({ ...selection, date, time: "" }); }}>
         <span>{value.toLocaleDateString("en-IN", { weekday: "short", timeZone: "UTC" })}</span><strong>{value.getUTCDate()}</strong>
       </button>;
-    })}</div>)}</div><span className={styles.stickyMonth} aria-hidden><span>{activeMonth}</span></span>{scrollControls("dates", dateEdges)}</div></motion.section>
+    })}</div>)}</div><span className={styles.stickyMonth} data-appointment-sticky-month aria-hidden><span>{activeMonth}</span></span>{scrollControls("dates", dateEdges)}</div></motion.section>
     <motion.section layout={reduced ? false : "position"} layoutDependency={`${selection.mode}:${selection.hospital}`} transition={{ layout: cardLayoutTransition }} className={styles.fieldset} aria-labelledby={`${id}-time-title`}>
-      <div className={styles.timeHeading}><h3 id={`${id}-time-title`}>Select time</h3>{firstExecutiveTime && <ExecutiveSlotTag discovery selection={{ ...selection, time: firstExecutiveTime }} />}</div>
-      {slots.length ? <div className={styles.scrollRow} data-lenis-prevent-horizontal>
+      <div className={styles.timeHeading} data-appointment-field-heading><h3 id={`${id}-time-title`}>Select time</h3>{firstExecutiveTime && <ExecutiveSlotTag discovery selection={{ ...selection, time: firstExecutiveTime }} />}</div>
+      {slots.length ? <div className={styles.scrollRow} data-appointment-time-body data-lenis-prevent-horizontal>
         <div className={styles.times} ref={times} id={`${id}-times`} data-d20-times data-rows={slots.length > 4 ? 2 : 1} data-fade-start={timeEdges.start} data-fade-end={timeEdges.end} onScroll={updateTimeEdges} data-lenis-prevent-horizontal role="group" aria-labelledby={`${id}-time-title`}>
           {slots.map(slot => {
             const selected = selection.time === slot.time;
@@ -142,7 +143,7 @@ export default function AppointmentSelector({ doctor, selection, now, onChange, 
         </div>
         {scrollControls("times", timeEdges)}
       </div>
-        : <p className={styles.hint}>No times available. Choose another date.</p>}
+        : <p className={styles.hint} data-appointment-time-body>No times available. Choose another date.</p>}
     </motion.section>
   </div>;
 }

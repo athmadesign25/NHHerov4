@@ -17,9 +17,10 @@ interface BenefitsDialogProps {
   onSponsorship: (id: SponsorshipId | null) => boolean;
   onClose: () => void;
   busy?: boolean;
+  context?: "appointment" | "checkup";
 }
 
-export default function BenefitsDialog({ kind, fee, discountCode, sponsorshipId, memberName, onCoupon, onSponsorship, onClose, busy = false }: BenefitsDialogProps) {
+export default function BenefitsDialog({ kind, fee, discountCode, sponsorshipId, memberName, onCoupon, onSponsorship, onClose, busy = false, context = "appointment" }: BenefitsDialogProps) {
   const id = useId();
   const dialog = useRef<HTMLDialogElement>(null);
   const startedOnBackdrop = useRef(false);
@@ -80,7 +81,7 @@ export default function BenefitsDialog({ kind, fee, discountCode, sponsorshipId,
       <span className={styles.handle} aria-hidden />
       <header className={styles.header}>
         <span className={styles.headingIcon} aria-hidden><BenefitIcon kind={coupons ? "coupon" : "sponsorship"} /></span>
-        <div><h2 id={`${id}-heading`}>{coupons ? "Coupons for you" : "Sponsorship benefits"}</h2><p id={`${id}-description`}>{coupons ? "Savings for your appointment" : memberName ? `Available for ${memberName}` : "Available for your appointment"}</p></div>
+        <div><h2 id={`${id}-heading`}>{coupons ? "Coupons for you" : "Sponsorship benefits"}</h2><p id={`${id}-description`}>{coupons ? `Savings for your ${context}` : memberName ? `Available for ${memberName}` : `Available for your ${context}`}</p></div>
         <button type="button" className={styles.close} aria-label="Close benefits" disabled={busy} onClick={onClose}><X size={20} aria-hidden /></button>
       </header>
 
@@ -96,7 +97,7 @@ export default function BenefitsDialog({ kind, fee, discountCode, sponsorshipId,
             const selected = pricing.coupon?.code === coupon.code && pricing.hasCoupon;
             const saving = design20Pricing(fee, coupon.code, sponsorshipId).couponDiscount;
             return <li key={coupon.code} className={`${styles.offer} ${selected ? styles.selected : ""}`}>
-              <div className={styles.offerCopy}><span className={styles.code}>{coupon.code}</span><h3>{eligible ? `Save ${saving}` : coupon.title}</h3><p>{coupon.description}</p>{!eligible && <small>Not eligible for this payable amount</small>}</div>
+              <div className={styles.offerCopy}><span className={styles.code}>{coupon.code}</span><h3>{eligible ? `Save ${saving}` : coupon.title}</h3><p>{context === "checkup" ? coupon.description.replace("consultation", "checkup") : coupon.description}</p>{!eligible && <small>Not eligible for this payable amount</small>}</div>
               <div className={styles.offerAction}>{selected ? <span className={styles.applied}><Check className={styles.check} size={16} strokeWidth={2.5} aria-hidden />Applied</span> : <button className={styles.apply} type="button" disabled={busy || !eligible} aria-label={`Apply ${coupon.code}`} onClick={() => applyCoupon(coupon.code)}>Apply</button>}</div>
             </li>;
           })}
@@ -109,7 +110,7 @@ export default function BenefitsDialog({ kind, fee, discountCode, sponsorshipId,
             const saving = design20Pricing(fee, undefined, plan.id).sponsorshipDiscount;
             return <li className={`${styles.offer} ${styles.planOffer} ${selected ? styles.selected : ""}`} key={plan.id}>
               <SponsorMark id={plan.id} />
-              <div className={styles.offerCopy}><strong className={styles.planName}>{plan.label}</strong><h3>Save {saving}</h3><p>{plan.description}</p></div>
+              <div className={styles.offerCopy}><strong className={styles.planName}>{plan.label}</strong><h3>Save {saving}</h3><p>{context === "checkup" ? plan.description.replace("consultation", "checkup") : plan.description}</p></div>
               <div className={styles.offerAction}>{selected ? <span className={styles.applied}><Check className={styles.check} size={16} strokeWidth={2.5} aria-hidden />Applied</span> : <button className={styles.apply} type="button" disabled={busy} aria-label={`Apply ${plan.label}`} onClick={() => applySponsorship(plan.id)}>Apply</button>}</div>
             </li>;
           })}

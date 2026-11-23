@@ -10,6 +10,7 @@ export interface HospitalItem {
   href: string;
   appointmentHref: string;
   phone: string;
+  isOneHealth?: boolean;
 }
 
 const bangaloreHospitals: HospitalItem[] = [
@@ -54,6 +55,7 @@ const bangaloreHospitals: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinicchandapura",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1518",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-4",
@@ -110,6 +112,7 @@ const bangaloreHospitals: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinic-hsr-layout",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1413",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-8",
@@ -124,6 +127,7 @@ const bangaloreHospitals: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-electronic-city-niladri-road",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1134",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-9",
@@ -152,6 +156,7 @@ const bangaloreHospitals: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinic-jp-nagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1729",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-11",
@@ -180,6 +185,7 @@ const bangaloreHospitals: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-jayanagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1139",
     phone: "08069266140",
+    isOneHealth: true,
   },
 ];
 

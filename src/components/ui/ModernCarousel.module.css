@@ -284,20 +284,20 @@
     height: 505px;
     gap: var(--space-8);
   }
-
+  
   .content {
     padding: var(--space-20);
   }
-
+  
   .title {
     font-size: var(--font-size-3xl);
   }
-
+  
   .desc {
     font-size: var(--font-size-sm);
     margin-bottom: var(--space-16);
   }
-
+  
   .verticalTitle {
     font-size: var(--font-size-sm);
   }
@@ -559,41 +559,36 @@
 
 @media (max-width: 768px) {
   .navigationWrapper {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     gap: var(--space-12);
     align-items: center;
   }
 
-  .readingAidContainer {
-    order: -1;
-    flex: 0 0 100%;
-    width: 100%;
-    padding: 0;
-    justify-content: flex-start;
-  }
-
-  .readingAidContent {
-    width: 100%;
+  .indicatorBars {
     display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
+    align-items: center;
+    gap: 6px;
   }
 
-  .activeTitle,
-  .nextTitle {
-    max-width: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  .activeTitle {
-    max-width: 125px;
-    font-size: var(--font-size-xs);
+  .indicatorBar {
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: rgba(var(--black-rgb), 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 
-  .nextTitle {
-    max-width: 115px;
-    font-size: var(--font-size-xs);
+  .indicatorBarActive {
+    width: 18px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: var(--color-primary);
+  }
+
+  .readingAidContainer {
+    display: none !important;
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -93,6 +93,20 @@ export function HospitalCard({ hosp, cardIndex = 0, priority = false, isLight = 
         </div>
       )}
 
+      {/* One Health clinic tag */}
+      {hosp.isOneHealth && (
+        <div className={styles.oneHealthTag} aria-label="Narayana One Health Clinic">
+          <Image
+            src="/assets/One Health.svg"
+            alt="One Health"
+            width={26}
+            height={21}
+            className={styles.oneHealthLogo}
+          />
+          <span className={styles.oneHealthText}>One Health</span>
+        </div>
+      )}
+
       {/* Gradient & Glass Blur Overlay over the bottom half */}
       <div className={styles.bottomOverlay} />
 
@@ -144,7 +158,30 @@ export default function HospitalCarousel({ hospitals, theme = "dark" }: Hospital
   // By default, card 1 (2nd card) sits at center slot (slot 2)
   const [centerIndex, setCenterIndex] = useState(1);
   const [direction, setDirection] = useState(1);
-  const [mobileActiveIndex, setMobileActiveIndex] = useState(1);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleMobileScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const scrollLeft = container.scrollLeft;
+    const firstItem = container.firstElementChild as HTMLElement | null;
+    const itemWidth = firstItem ? firstItem.offsetWidth + 16 : 320;
+    const index = Math.round(scrollLeft / itemWidth);
+    if (index >= 0 && index < cardsCount && index !== mobileActiveIndex) {
+      setMobileActiveIndex(index);
+    }
+  };
+
+  const scrollToMobileCard = (idx: number) => {
+    setMobileActiveIndex(idx);
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const card = container.children[idx] as HTMLElement;
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  };
 
   const goNext = () => {
     setDirection(1);
@@ -243,7 +280,11 @@ export default function HospitalCarousel({ hospitals, theme = "dark" }: Hospital
       </button>
 
       {/* MOBILE / TABLET NATIVE SWIPE LAYOUT */}
-      <div className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}>
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleMobileScroll}
+        className={`${styles.mobileCarouselContainer} ${styles.mobileOnly}`}
+      >
         {hospitals.map((hosp, index) => (
           <div key={`mobile-hosp-${hosp.id}`} className={styles.mobileCarouselItem}>
             <HospitalCard hosp={hosp} cardIndex={index} isLight={isLight} />
@@ -253,12 +294,14 @@ export default function HospitalCarousel({ hospitals, theme = "dark" }: Hospital
 
       <div className={`${styles.mobileNavigator} ${styles.mobileOnly}`}>
         {hospitals.map((_, i) => (
-          <div
+          <button
             key={i}
-            className={`${styles.navDot} ${isLight ? styles.navDotLight : ""} ${
-              i === mobileActiveIndex ? (isLight ? styles.navDotActiveLight : styles.navDotActive) : ""
+            type="button"
+            className={`${styles.navDot} ${!isLight ? styles.navDotDark : ""} ${
+              i === mobileActiveIndex ? `${styles.navDotActive} ${!isLight ? styles.navDotActiveDark : ""}` : ""
             }`}
-            onClick={() => setMobileActiveIndex(i)}
+            onClick={() => scrollToMobileCard(i)}
+            aria-label={`Go to hospital ${i + 1}`}
           />
         ))}
       </div>

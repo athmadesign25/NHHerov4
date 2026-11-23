@@ -23,17 +23,13 @@ import {
   Check,
 } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { ALL_SPECIALITIES, SPECIALITY_CATEGORIES, type SpecialityMeta } from "@/data/specialities";
 import { NH_CITIES } from "@/lib/searchService";
-import {
-  SpecialityFilters,
-  FilterScrollArea,
-  SidebarSpecialityFilters,
-  SpecialityFilterDialog,
-} from "./filters";
-import { DoctorSearchTop, chipStyles } from "./toolbar";
+import { SpecialityFilterDialog } from "./filters";
 import themeStyles from "./toolbar/DoctorSearchTheme.module.css";
 import styles from "./page.module.css";
+import heroStyles from "../centre-of-excellence/CentreOfExcellenceHero.module.css";
 
 
 
@@ -272,57 +268,6 @@ function SpecialitiesContent() {
 
   const hasActiveFilters = activeFiltersCount > 0;
 
-  const appliedChips = useMemo(() => {
-    const list: { key: string; label: string; remove: () => void }[] = [];
-    if (search.trim()) {
-      list.push({
-        key: "search",
-        label: `"${search.trim()}"`,
-        remove: () => setSearch(""),
-      });
-    }
-    if (selectedCategory !== "All") {
-      list.push({
-        key: "category",
-        label: selectedCategory,
-        remove: () => {
-          setSelectedCategory("All");
-          if (selectedClassification === "Centres of Excellence Only") {
-            setSelectedClassification("All");
-          }
-        },
-      });
-    }
-    if (
-      selectedClassification !== "All" &&
-      !(
-        selectedCategory === "Centres of Excellence" &&
-        selectedClassification === "Centres of Excellence Only"
-      )
-    ) {
-      list.push({
-        key: "classification",
-        label: selectedClassification,
-        remove: () => setSelectedClassification("All"),
-      });
-    }
-    if (selectedLetter !== "All") {
-      list.push({
-        key: "letter",
-        label: `Letter: ${selectedLetter}`,
-        remove: () => setSelectedLetter("All"),
-      });
-    }
-    if (selectedCity !== "All") {
-      list.push({
-        key: "city",
-        label: selectedCity,
-        remove: () => setSelectedCity("All"),
-      });
-    }
-    return list;
-  }, [search, selectedCategory, selectedClassification, selectedLetter, selectedCity]);
-
   const handleResetFilters = () => {
     setSearch("");
     setSelectedCategory("All");
@@ -342,169 +287,207 @@ function SpecialitiesContent() {
       data-design="d20"
       data-nav-theme="light"
     >
-      {/* ── 1. HEADER & HERO (Matching DoctorSearchTop from aditya4_work) ── */}
-      <header className={`${styles.container} ${styles.titleRow}`}>
-        <div className={styles.title}>
-          <h1 id="specialities-title" tabIndex={-1} className={styles.titleHeading}>
-            Our Medical Specialities
-          </h1>
+      {/* ── 1. HERO SECTION (TREATMENTS LIBRARY STYLE WITH DOCTOR_PATIENT BG) ── */}
+      <section className={heroStyles.hero} data-nav-theme="dark">
+        <div className={heroStyles.heroBg}>
+          <motion.div
+            className={heroStyles.heroBgMotion}
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Image
+              src="/doctor_patient.png"
+              alt="Doctor examining patient with stethoscope"
+              fill
+              priority
+              sizes="100vw"
+              className={heroStyles.heroBgImage}
+            />
+            {/* Left Glass Blur & Targeted Text Highlight Scrim */}
+            <div className={heroStyles.heroGlassOverlay} />
+            <div className={heroStyles.heroLeftScrim} />
+            <div className={heroStyles.heroBgOverlay} />
+          </motion.div>
         </div>
-        <p className={styles.pageSummary}>
-          From complex cardiac surgeries to advanced oncology and robotic orthopaedics — Narayana
-          Health covers every dimension of your health across 25+ hospitals.
-        </p>
-      </header>
 
-      {/* ── 2. STICKY UNIFIED SEARCH & REFINEMENT TOOLBAR (Matching DoctorSearchTop & Design16Refinements) ── */}
-      <DoctorSearchTop
-        search={search}
-        onSearch={setSearch}
-        location={selectedCity}
-        onLocation={setSelectedCity}
-        filterCount={activeFiltersCount}
-        onOpenFilters={() => setMobileFilterOpen(true)}
-      >
-        {/* All Specialities */}
-        <button
-          type="button"
-          className={chipStyles.chip}
-          aria-pressed={selectedCategory === "All" && selectedClassification === "All"}
-          onClick={() => {
-            setSelectedCategory("All");
-            setSelectedClassification("All");
-          }}
-        >
-          All Specialities
-        </button>
-
-        {/* Centres of Excellence */}
-        <button
-          type="button"
-          className={chipStyles.chip}
-          aria-pressed={
-            selectedCategory === "Centres of Excellence" ||
-            selectedClassification === "Centres of Excellence Only"
-          }
-          onClick={() => {
-            setSelectedCategory("Centres of Excellence");
-            setSelectedClassification("Centres of Excellence Only");
-          }}
-        >
-          <Star size={13} fill="#f59e0b" color="#f59e0b" aria-hidden="true" />
-          Centres of Excellence
-        </button>
-
-        {/* Top Categories */}
-        {SPECIALITY_CATEGORIES.filter((c) => c !== "All").map((cat) => {
-          const isActive = selectedCategory === cat;
-          return (
-            <button
-              key={cat}
-              type="button"
-              className={chipStyles.chip}
-              aria-pressed={isActive}
-              onClick={() => {
-                setSelectedCategory(cat);
-                setSelectedClassification("All");
-              }}
+        <div className={heroStyles.heroInner}>
+          {/* Left Column: Breadcrumb, Title, Subtitle, Pulse Search & Full-Width A-Z Filter */}
+          <div className={heroStyles.heroLeftCol} style={{ width: "100%", maxWidth: "100%" }}>
+            <motion.div
+              className={heroStyles.breadcrumbsContainer}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.08 }}
             >
-              {cat}
-            </button>
-          );
-        })}
-      </DoctorSearchTop>
-
-
-      {/* ── 3. MAIN TWO-COLUMN LAYOUT ── */}
-      <div className={styles.layout}>
-        {/* Sticky Sidebar Filters */}
-        <aside
-          className={styles.sidebar}
-          aria-label="Speciality filters"
-          aria-describedby="d3-refinement-help"
-          data-lenis-prevent="true"
-          data-d3-ui="true"
-        >
-          <div className={styles.filterHeading}>
-            <h2>
-              <Filter size={16} aria-hidden />
-              Filters
-            </h2>
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                aria-label="Clear all filters"
-                title="Clear all filters"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-
-          <FilterScrollArea>
-            <SidebarSpecialityFilters
-              chips={appliedChips}
-              onClearAll={handleResetFilters}
-            />
-            <SpecialityFilters
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              selectedClassification={selectedClassification}
-              onSelectClassification={setSelectedClassification}
-              selectedLetter={selectedLetter}
-              onSelectLetter={setSelectedLetter}
-              selectedCity={selectedCity}
-              onSelectCity={setSelectedCity}
-              categories={categories}
-              categoryCounts={categoryCounts}
-              classificationCounts={classificationCounts}
-              availableLetters={availableLetters}
-            />
-          </FilterScrollArea>
-        </aside>
-
-
-        {/* Right Main Results Area */}
-        <section className={styles.resultsArea} aria-label="Medical specialities results">
-          {/* Speciality Cards Grid (Exact match to Landing Page Specialty Card) */}
-          <AnimatePresence mode="popLayout">
-            <motion.div className={styles.cardsGrid} layout>
-              {filtered.map((spec, i) => (
-                <motion.div
-                  key={spec.slug}
-                  layout
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ delay: Math.min(i * 0.04, 0.25), duration: 0.35 }}
-                >
-                  <SpecialityCardItem spec={spec} city={selectedCity} />
-                </motion.div>
-              ))}
+              <Breadcrumbs
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Medical Specialities" },
+                ]}
+                theme="dark"
+              />
             </motion.div>
-          </AnimatePresence>
 
-          {/* Empty State */}
-          {filtered.length === 0 && (
-            <div className={styles.emptyState}>
-              <Search size={40} style={{ margin: "0 auto 16px", opacity: 0.3 }} />
-              <div className={styles.emptyTitle}>No specialities found</div>
-              <div className={styles.emptyDesc}>
-                Try adjusting your search query, location or reset your filters
+            <motion.h1
+              id="specialities-title"
+              tabIndex={-1}
+              className={heroStyles.heroTitle}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <TextSweepEffect
+                words={["Our Medical Specialities"]}
+                sweepMs={2400}
+                delayMs={80}
+                finalColor="#FFFFFF"
+              />
+            </motion.h1>
+
+            <motion.p
+              className={heroStyles.heroSubtitle}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              From complex cardiac surgeries to advanced oncology and robotic orthopaedics &mdash; Narayana Health covers every dimension of your health across 25+ hospitals and specialized clinics nationwide.
+            </motion.p>
+
+            {/* Pulse Search Input */}
+            <motion.div
+              className={heroStyles.heroSearchContainer}
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className={heroStyles.heroSearchRow}>
+                <div className={heroStyles.searchBoxWrap}>
+                  <div className={heroStyles.searchBox}>
+                    <Search size={16} strokeWidth={2.0} className={heroStyles.searchIcon} />
+                    <input
+                      type="text"
+                      placeholder="Search medical specialities, treatments, or conditions..."
+                      className={heroStyles.searchInput}
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      aria-label="Search medical specialities"
+                    />
+                    {search && (
+                      <button
+                        className={heroStyles.clearSearchBtn}
+                        onClick={() => setSearch("")}
+                        aria-label="Clear search input"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={heroStyles.mobileFilterBtn}
+                  onClick={() => setMobileFilterOpen(true)}
+                  aria-label="Open filters"
+                >
+                  <Filter size={15} />
+                  <span>Filters</span>
+                  {activeFiltersCount > 0 && (
+                    <span className={heroStyles.mobileFilterDot} />
+                  )}
+                </button>
               </div>
+            </motion.div>
+
+            {/* A to Z Alphabet Filter Row (Only in Specialities) - Full Width across left & right margins */}
+            <motion.div
+              className={styles.heroAlphabetWrap}
+              role="group"
+              aria-label="Filter specialities by alphabetical letter"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            >
               <button
                 type="button"
-                onClick={handleResetFilters}
-                className={styles.emptyResetBtn}
-                id="empty-reset-filters-btn"
+                className={`${styles.heroAlphabetBtn} ${styles.heroAlphabetBtnAll} ${
+                  selectedLetter === "All" ? styles.heroAlphabetBtnActive : ""
+                }`}
+                onClick={() => setSelectedLetter("All")}
+                aria-pressed={selectedLetter === "All"}
+                aria-label="Show all specialities"
               >
-                <RotateCcw size={14} /> Reset Filters
+                All
               </button>
+              {ALPHABET.map((letter) => {
+                const isAvailable = availableLetters.has(letter);
+                const isSelected = selectedLetter === letter;
+                return (
+                  <button
+                    key={letter}
+                    type="button"
+                    disabled={!isAvailable}
+                    className={`${styles.heroAlphabetBtn} ${
+                      isSelected ? styles.heroAlphabetBtnActive : ""
+                    } ${!isAvailable ? styles.heroAlphabetBtnDisabled : ""}`}
+                    onClick={() => setSelectedLetter(isSelected ? "All" : letter)}
+                    aria-pressed={isSelected}
+                    aria-label={`Filter specialities starting with ${letter}`}
+                    title={
+                      isAvailable
+                        ? `Filter specialities starting with ${letter}`
+                        : `No specialities starting with ${letter}`
+                    }
+                  >
+                    {letter}
+                  </button>
+                );
+              })}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 2. SPECIALITIES DIRECTORY GRID (Matching COE left/right margins & card sizing) ── */}
+      <section className={heroStyles.coeContainer} aria-label="Medical specialities results">
+        {/* Speciality Cards Grid (Exact match to Landing Page Specialty Card & COE card sizes) */}
+        <AnimatePresence mode="popLayout">
+          <motion.div className={heroStyles.coeGrid} layout>
+            {filtered.map((spec, i) => (
+              <motion.div
+                key={spec.slug}
+                layout
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: Math.min(i * 0.04, 0.25), duration: 0.35 }}
+              >
+                <SpecialityCardItem spec={spec} city={selectedCity} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Empty State */}
+        {filtered.length === 0 && (
+          <div className={styles.emptyState}>
+            <Search size={40} style={{ margin: "0 auto 16px", opacity: 0.3 }} />
+            <div className={styles.emptyTitle}>No specialities found</div>
+            <div className={styles.emptyDesc}>
+              Try adjusting your search query, location or reset your filters
             </div>
-          )}
-        </section>
-      </div>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className={styles.emptyResetBtn}
+              id="empty-reset-filters-btn"
+            >
+              <RotateCcw size={14} /> Reset Filters
+            </button>
+          </div>
+        )}
+      </section>
 
       {/* ── 10. MOBILE FILTER MODAL / DRAWER (Matching DoctorFilterDialog from aditya4_work) ── */}
       {mobileFilterOpen && (
@@ -588,15 +571,6 @@ function SpecialityCardItem({ spec, city }: { spec: SpecialityMeta; city: string
         />
       )}
       <div className={styles.cardOverlay} />
-
-      <div className={styles.cardTopBadges}>
-        {spec.isCoE && (
-          <span className={styles.cardCoEBadge}>
-            <Star size={13} strokeWidth={2} aria-hidden="true" />
-            <span>Centre of Excellence</span>
-          </span>
-        )}
-      </div>
 
       <div className={styles.cardTextWrap}>
         {spec.stat && (

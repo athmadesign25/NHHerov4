@@ -130,8 +130,7 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
     return () => observer.disconnect();
   }, [present, draft.selection.mode, draft.selection.hospital, flow.notice, flow.loaded, placement?.width]);
 
-  const height = placement ? bookingPanelHeight(placement.height, contentSize?.natural ?? placement.height,
-    placement.availableHeight, draft.selection.mode) : 0;
+  const height = placement ? bookingPanelHeight(placement.height, placement.availableHeight) : 0;
   // Text never scales with the FLIP surface. During the brief morph, clip it
   // to that surface's actual transformed bounds so controls cannot float
   // outside the expanding card. Stop sampling at rest; native popovers remain
@@ -163,7 +162,7 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
 
   // At extreme zoom/landscape sizes even the fixed controls may exceed the
   // viewport. Fall back to one scroll surface instead of trapping controls.
-  const compact = Boolean(placement && contentSize && contentSize.fixed >= placement.availableHeight);
+  const compact = Boolean(placement && contentSize && contentSize.fixed >= height);
   const shellStyle = placement ? {
     "--expanded-booking-left": `${placement.left}px`,
     "--expanded-booking-top": `${placement.top}px`,
@@ -185,13 +184,13 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
     <div className={styles.layer} data-design-a-booking-layer>
       <BookingBackdrop open={present} suspended={signingIn} onDismiss={onClose} />
       <motion.div ref={positioner} className={styles.positioner} style={shellStyle} layoutRoot>
-        {/* Only this empty surface morphs from the source card. Portraits and
-            text remain unscaled, with their own short fade/position motion. */}
+        {/* Grow the source card's inner booking container into this surface.
+            Portraits and text remain unscaled throughout the transition. */}
         <motion.div ref={morphSurface} className={styles.surface} aria-hidden="true"
           onLayoutAnimationComplete={() => setOpeningComplete(true)}
-          layoutId={reduced ? undefined : `d20-card-${doctor.id}`} layout
+          layoutId={reduced ? undefined : `d20-booking-surface-${doctor.id}`} layout
           initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={{ layout: { duration: reduced ? 0 : present && !openingComplete ? duration.slow : duration.emphasis, ease: present && openingComplete ? ease.out : ease.standard }, opacity: { duration: reduced ? 0 : duration.emphasis, ease: ease.standard } }}>
+          transition={{ layout: { duration: reduced ? 0 : !present || !openingComplete ? duration.slow : duration.emphasis, ease: present && openingComplete ? ease.out : ease.standard }, opacity: { duration: reduced ? 0 : duration.emphasis, ease: ease.standard } }}>
           <BookingFocusGlow />
         </motion.div>
         <motion.article ref={surface} className={styles.content} data-booking-focus data-design-a-booking={doctor.id}
@@ -199,7 +198,7 @@ function ExpandedBooking({ doctor, initialSelection, returnTo, resume, sourceRef
           role="dialog" aria-modal="true" aria-labelledby={`${id}-heading`} tabIndex={-1}
           layout={reduced ? false : "position"}
           initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: reduced ? 0 : present ? duration.moderate : duration.fast, delay: reduced || !present ? 0 : duration.instant, ease: ease.out }, layout: { duration: reduced ? 0 : present && !openingComplete ? duration.slow : duration.emphasis, ease: present && openingComplete ? ease.out : ease.standard } }}
+          transition={{ opacity: { duration: reduced ? 0 : present ? duration.moderate : duration.fast, delay: reduced || !present ? 0 : duration.instant, ease: ease.out }, layout: { duration: reduced ? 0 : !present || !openingComplete ? duration.slow : duration.emphasis, ease: present && openingComplete ? ease.out : ease.standard } }}
           onKeyDown={event => {
             if (event.key === "Escape" && !event.defaultPrevented && !document.querySelector(':popover-open, dialog[open], [role="dialog"][aria-modal="true"]:not([data-booking-focus])')) {
               event.preventDefault(); onClose();

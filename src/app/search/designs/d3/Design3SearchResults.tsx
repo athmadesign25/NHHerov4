@@ -45,7 +45,7 @@ import SearchHeader from "./SearchHeader";
 import SearchState,{ ResultSkeletons } from "./SearchState";
 import SidebarDoctorFilters from "./SidebarDoctorFilters";
 const titles: Record<SearchTabId, string> = {
-    doctors: "Find the right doctor", hospitals: "Find a hospital or clinic", specialties: "Explore our specialities",
+    doctors: "Find the right doctor", hospitals: "Find a hospital or clinic", specialties: "Explore our specialties",
     treatments: "Explore treatments & procedures", packages_tests: "Health packages & tests", articles: "Health articles & insights",
 };
 interface Props {

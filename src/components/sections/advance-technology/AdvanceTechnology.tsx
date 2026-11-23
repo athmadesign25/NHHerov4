@@ -96,9 +96,8 @@ export default function AdvanceTechnology({
     offset: ["start 92%", "start 25%"],
   });
 
-  const gridScale = useTransform(enterProgress, [0, 1], [0.92, 1.0]);
-  const gridWidth = useTransform(enterProgress, [0, 1], ["92%", "100%"]);
-  const gridBlur = useTransform(enterProgress, [0, 0.4], ["blur(12px)", "blur(0px)"]);
+  const gridScale = useTransform(enterProgress, [0, 1], [0.94, 1.0]);
+  const gridWidth = useTransform(enterProgress, [0, 1], ["94%", "100%"]);
 
   const activeTech = technologies[activeIndex] || technologies[0];
 
@@ -114,7 +113,6 @@ export default function AdvanceTechnology({
         style={{
           scale: gridScale,
           width: gridWidth,
-          filter: gridBlur,
         }}
       >
         {/* Outer Card Shell with soft rounded corners */}

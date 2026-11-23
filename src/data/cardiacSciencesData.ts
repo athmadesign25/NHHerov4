@@ -588,7 +588,7 @@ export const cardiacDoctorVideosList: DoctorVideoItem[] = [
 
 export const cardiacDoctorsData = [
   {
-    id: "dr-devi-shetty",
+    id: "dr-devi-prasad-shetty",
     name: "Dr. Devi Prasad Shetty",
     spec: "Chairman & Senior Consultant Cardiac Surgeon",
     exp: "35+ years of experience",
@@ -612,16 +612,16 @@ export const cardiacDoctorsData = [
     img: "/assets/doctor_2.png",
   },
   {
-    id: "dr-subhashis-dey",
-    name: "Dr. Subhashis Dey",
+    id: "dr-vivek-menon",
+    name: "Dr. Vivek Menon",
     spec: "Senior Consultant Interventional Cardiologist",
     exp: "20+ years of experience",
-    loc: "Narayana Health, Barasat",
+    loc: "Narayana Institute of Cardiac Sciences, Bengaluru",
     img: "/assets/doctor_3.png",
   },
   {
-    id: "dr-ashley-dsouza",
-    name: "Dr. Ashley D'Souza",
+    id: "dr-ashley-d-souza",
+    name: "Dr. Ashley D'Cruz",
     spec: "Consultant Cardiothoracic & Vascular Surgery",
     exp: "18+ years of experience",
     loc: "Narayana Multispeciality Hospital, HSR Layout, Bengaluru",

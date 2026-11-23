@@ -18,6 +18,7 @@ import { BookingFocusGlow } from "@/features/booking/shared/BookingFocusGlow";
 import preview from "../design4/HealthListing4.module.css";
 
 interface Props {
+  memberControl?: ReactNode;
   renderHero?: (controls: ReactNode) => ReactNode;
   cities: readonly { value: string; label: string }[];
   facilities: readonly HealthFacility[];
@@ -87,7 +88,7 @@ export default function HealthListing3(props: Props) {
               onDetails={onDetails} onSubmit={() => results.current?.focus({ preventScroll: true })} />
             <BookingFocusGlow />
           </div>
-          <HealthCatalogueTabs id={catalogueId} panelId={panelId} value={searching ? null : tab} onChange={browse} />
+          <div className={styles.catalogueActions}><HealthCatalogueTabs id={catalogueId} panelId={panelId} value={searching ? null : tab} onChange={browse} />{props.memberControl}</div>
         </div>
       </div>
     </section>;
@@ -98,7 +99,7 @@ export default function HealthListing3(props: Props) {
     {!facility ? <section className={`${styles.chooseCentre} ${preview.chooseCentre}`}>
       <div className={styles.centreIntro}>
         <span className={styles.centreMark}><Building2 aria-hidden /></span>
-        <h2>Where would you like to visit?</h2>
+        <div className={styles.centreHeading}><h2>Where would you like to visit?</h2>{props.memberControl}</div>
         <p>Choose a centre to see available packages, tests and prices.</p>
       </div>
       <HealthCentreChooser key={initialCity ?? "all-cities"} cities={cities} facilities={facilities} initialCity={initialCity} onSelect={onFacility} />

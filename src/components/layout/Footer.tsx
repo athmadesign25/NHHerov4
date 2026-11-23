@@ -29,7 +29,7 @@ export default function Footer() {
                 </div>
                 <p className={styles.brandDesc}>
                   Delivering affordable, world-class healthcare to every corner of India and beyond. 
-                  Trusted by 2.5M+ patients across 30+ specialities.
+                  Trusted by 2.5M+ patients across 30+ specialties.
                 </p>
                 <div className={styles.contact}>
                   <a href="tel:18003090309" className={styles.contactItem} id="footer-phone">

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, Mail, Smartphone, ArrowLeft } from "lucide-react";
+import { setDemoSession } from "./demo-session";
 import styles from "./LoginModal.module.css";
 import Image from "next/image";
 import { normalizeAuthIdentity, isValidVerificationCode } from "@/features/booking/design15/auth";
@@ -95,7 +96,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, manageFocu
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("userName", "Aditya");
       } catch { /* The current tab is signed in; persistent storage is optional. */ }
-      window.dispatchEvent(new Event("login-state-changed"));
+      setDemoSession(true);
     }
     verified.current = true;
     if (onLoginSuccess) onLoginSuccess();

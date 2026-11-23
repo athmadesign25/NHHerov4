@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import LoginModal from "@/features/auth/NavbarLoginModal";
+import LoginModal from "@/features/auth/LoginModal";
 import { useAuthState } from "@/features/auth/hooks/useAuthState";
-import AccountMenu from "./AccountMenu";
-import { chooseBookingMember, getBookingMemberSelection, getServerBookingMemberSelection, resetBookingMemberSelection, subscribeBookingMembers } from "@/features/booking/shared/memberSelection";
+import BookingMemberMenu from "./BookingMemberMenu";
+import { resetBookingMemberSelection } from "@/features/booking/shared/memberSelection";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Search, Menu, X } from "lucide-react";
@@ -83,8 +83,6 @@ export default function Navbar() {
 
 
   const { isUserLoggedIn: isLoggedIn, setIsUserLoggedIn: setIsLoggedIn } = useAuthState();
-  const bookingMembers = useSyncExternalStore(subscribeBookingMembers, getBookingMemberSelection, getServerBookingMemberSelection);
-  const activeUserId = bookingMembers.selectedId ?? bookingMembers.members[0]?.id ?? "existing-self";
   const signOut = () => {
     setIsLoggedIn(false);
     resetBookingMemberSelection();
@@ -127,6 +125,11 @@ export default function Navbar() {
       if (isLight !== isOverLightRef.current) {
         isOverLightRef.current = isLight;
         setIsOverLightBackground(isLight);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
+        }
+      } else if (typeof document !== "undefined" && !document.documentElement.hasAttribute("data-nav-theme-active")) {
+        document.documentElement.setAttribute("data-nav-theme-active", isLight ? "light" : "dark");
       }
     };
 
@@ -144,6 +147,9 @@ export default function Navbar() {
       // Always show navbar near the top
       if (currentScrollY < 120) {
         setIsVisible(true);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
         lastScrollY.current = currentScrollY;
         return;
       }
@@ -158,9 +164,15 @@ export default function Navbar() {
       if (delta > 0) {
         // Sustained downward scroll
         setIsVisible(false);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "false");
+        }
       } else {
         // Sustained upward scroll
         setIsVisible(true);
+        if (typeof document !== "undefined") {
+          document.documentElement.setAttribute("data-nav-visible", "true");
+        }
       }
 
       // Update baseline after a meaningful scroll distance
@@ -168,13 +180,38 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    const lenis = (window as unknown as { lenis?: { on?: (evt: string, fn: () => void) => void; off?: (evt: string, fn: () => void) => void } }).lenis;
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", handleScroll);
+    }
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", handleScroll);
+      }
+    };
   }, []);
+
+  // Sync navbar visibility to <html> so child elements (like pinned breadcrumb bars)
+  // know whether to dock directly below the navbar (top: 56px / 68px) on scroll-up
+  // or at the top of the viewport (top: 0) on scroll-down.
+  const isNavActuallyVisible = isVisible || activeDropdown !== null || isMobileMenuOpen;
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-nav-visible", isNavActuallyVisible ? "true" : "false");
+    }
+  }, [isNavActuallyVisible]);
 
   // Every route uses the same scroll, section-theme and menu behavior.
   const isNavbarActive = scrolled || isMobileMenuOpen || activeDropdown !== null;
   const isNavbarLight = isOverLightBackground || activeDropdown !== null;
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("data-nav-theme-active", isNavbarLight ? "light" : "dark");
+    }
+  }, [isNavbarLight]);
 
   return (
     <nav
@@ -283,8 +320,7 @@ export default function Navbar() {
           </MotionLink>
 
           {isLoggedIn ? (
-            <AccountMenu memberId={activeUserId} onMemberChange={chooseBookingMember} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onLogout={signOut}
-              tone={isNavbarLight ? "light" : "dark"} onOpen={() => setActiveDropdown(null)} />
+            <BookingMemberMenu onLogout={signOut} onOpen={() => setActiveDropdown(null)} />
           ) : (
             <button type="button" className={`${styles.loginBtnResponsive} ${styles.desktopLogin}`}
               onClick={() => { setActiveDropdown(null); setIsLoginModalOpen(true); }}>Login</button>
@@ -358,7 +394,7 @@ export default function Navbar() {
       <AnimatePresence onExitComplete={() => {
         if (loginAfterMobileClose) { setLoginAfterMobileClose(false); setIsLoginModalOpen(true); }
       }}>
-        {isMobileMenuOpen && <MobileMegaMenu isLoggedIn={isLoggedIn} memberId={activeUserId} members={bookingMembers.members} memberLocked={!!bookingMembers.confirmed} onMemberChange={chooseBookingMember} onLogout={signOut} onClose={closeMobileMenu} onLogin={() => { setLoginAfterMobileClose(true); closeMobileMenu(); }} />}
+        {isMobileMenuOpen && <MobileMegaMenu isLoggedIn={isLoggedIn} onLogout={signOut} onClose={closeMobileMenu} onLogin={() => { setLoginAfterMobileClose(true); closeMobileMenu(); }} />}
       </AnimatePresence>
 
       {isSearchOpen && (
@@ -370,10 +406,10 @@ export default function Navbar() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "12px", alignItems: "end" }}>
               <div style={{ position: "relative" }}>
-                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "var(--grey-500)", marginBottom: "6px", letterSpacing: "0.05em", textTransform: "uppercase" }}>Search Doctors, Specialities or Hospitals</label>
+                <label style={{ display: "block", fontSize: "12px", fontWeight: 600, color: "var(--grey-500)", marginBottom: "6px", letterSpacing: "0.05em", textTransform: "uppercase" }}>Search Doctors, Specialties or Hospitals</label>
                 <div style={{ position: "relative" }}>
                   <Search size={18} strokeWidth={2} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "#888" }} />
-                  <input placeholder="Search for doctors, treatments and specialities, conditions or procedures" style={{ width: "100%", padding: "16px 16px 16px 44px", border: "1px solid #ddd", borderRadius: "9999px", background: "#f8f9fa", fontSize: "15px", outline: "none", transition: "border 0.15s" }} />
+                  <input placeholder="Search for doctors, treatments and specialties, conditions or procedures" style={{ width: "100%", padding: "16px 16px 16px 44px", border: "1px solid #ddd", borderRadius: "9999px", background: "#f8f9fa", fontSize: "15px", outline: "none", transition: "border 0.15s" }} />
                 </div>
               </div>
               <button style={{ backgroundColor: "var(--blue-brand)", color: "var(--color-text-inverse)", border: "none", borderRadius: "9999px", padding: "16px 32px", fontWeight: 700, fontSize: "15px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", whiteSpace: "nowrap" }}>
@@ -400,7 +436,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => setIsLoggedIn(true)} />
+      <LoginModal manageFocus previewOtp isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={() => setIsLoggedIn(true)} />
     </nav>
   );
 }

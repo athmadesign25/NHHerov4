@@ -1,0 +1,251 @@
+/* ─── Responsive MWeb Floating Action Dock (Speciality & COE) ────────── */
+/* Exactly matching DoctorProfileBooking fill, opacity, tokens & border animation */
+@property --profile-booking-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.dock {
+  --profile-booking-lap: 3.5s;
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .dock {
+    display: block;
+    position: fixed;
+    z-index: 1000;
+    bottom: calc(var(--sp-2, 16px) + env(safe-area-inset-bottom, 0px));
+    left: var(--booking-dock-gutter, 16px);
+    right: var(--booking-dock-gutter, 16px);
+    width: var(--booking-dock-width);
+    max-width: var(--booking-dock-max-width);
+    margin-inline: auto;
+    pointer-events: none;
+  }
+
+  .animatedSurface {
+    position: relative;
+    border-radius: var(--radius-xl);
+    will-change: transform, opacity;
+  }
+
+  /* One-time rotating gradient border animation on appearance */
+  .bookingAccent {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    animation: bookingAccentIntro var(--profile-booking-lap) linear both;
+  }
+
+  .accentStroke,
+  .accentGlow,
+  .accentTrack {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .accentTrack {
+    padding: var(--space-1);
+    -webkit-mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+    mask: linear-gradient(var(--white) 0 0) content-box, linear-gradient(var(--white) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    background: conic-gradient(
+      from var(--profile-booking-angle),
+      var(--color-primary), var(--cyan-bright) 24%, var(--blue-600) 48%,
+      var(--violet-400) 68%, var(--pink-500) 82%, var(--red-400) 90%, var(--color-primary)
+    );
+    animation: bookingAccentLap var(--profile-booking-lap) linear both;
+  }
+
+  /* The glow shares the stroke's rotation and fade, keeping the halo in sync. */
+  .accentGlow {
+    filter: blur(var(--space-8));
+    opacity: 0.5;
+  }
+
+  .accentGlow .accentTrack {
+    padding: var(--space-4);
+  }
+
+  @keyframes bookingAccentLap {
+    from {
+      --profile-booking-angle: 0deg;
+    }
+    to {
+      --profile-booking-angle: 360deg;
+    }
+  }
+
+  @keyframes bookingAccentIntro {
+    0%, 100% {
+      opacity: 0;
+    }
+    10%, 85% {
+      opacity: 0.9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    .dock .bookingAccent {
+      display: none;
+      animation: none;
+    }
+    .dock .accentTrack {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .accentGlow {
+      display: none;
+    }
+  }
+
+  /* Solid surface fill - completely opaque so scrolling background text never shows through */
+  .surface {
+    pointer-events: auto;
+    position: relative;
+    overflow: clip;
+    border: 1px solid color-mix(in srgb, var(--color-primary) 14%, var(--color-border, #e2e8f0));
+    border-radius: var(--radius-xl);
+    background: var(--color-surface, #ffffff);
+    box-shadow: 0 12px 32px -4px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08);
+  }
+
+  .summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-12);
+    padding: var(--space-16);
+    box-sizing: border-box;
+  }
+
+  .infoCol {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .infoCol strong {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    line-height: var(--leading-body);
+    color: var(--color-text);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .infoCol span {
+    display: block;
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-body);
+    color: var(--color-text-secondary);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .actionGroup {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-8);
+    grid-template-columns: var(--space-48) minmax(0, 1fr);
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  .callAction {
+    display: grid;
+    place-items: center;
+    min-height: var(--space-48);
+    height: var(--space-48);
+    width: var(--space-48);
+    border: var(--space-1) solid rgba(var(--slate-800-rgb), 0.12);
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
+    background: #ffffff;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .callAction svg {
+    width: var(--space-20);
+    height: var(--space-20);
+    fill: currentColor;
+    stroke-width: 0;
+  }
+
+  .callAction:active {
+    background: var(--color-bg-alt, #f8fafc);
+  }
+
+  @media (hover: hover) {
+    .callAction:hover {
+      background: var(--color-bg-alt, #f8fafc);
+    }
+  }
+
+  .primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: var(--sp-6);
+    height: var(--space-48);
+    border: 0;
+    border-radius: var(--radius-md);
+    padding: var(--sp-1) var(--sp-2);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), opacity var(--transition-fast);
+    gap: var(--space-8);
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .primary:not(:disabled):hover {
+      background: var(--color-primary-dark);
+    }
+  }
+
+  .primary:active {
+    background: var(--color-primary-dark);
+  }
+}
+
+@media (max-width: 639px) {
+  .summary {
+    padding: var(--space-12);
+  }
+}
+
+@media (max-width: 374px) {
+  .summary {
+    padding: var(--space-10) var(--space-12);
+    gap: var(--space-8);
+  }
+
+  .primary {
+    padding: var(--sp-1) var(--space-8);
+    font-size: var(--font-size-xs);
+  }
+}

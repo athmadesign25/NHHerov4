@@ -37,7 +37,7 @@ export interface AppointmentBookingPanelProps {
   editActionRef?: RefObject<HTMLButtonElement | null>;
   expanded?: boolean;
   onOpen?: () => void;
-  collapsedAction?: ReactNode;
+  secondaryAction?: ReactNode;
 }
 
 /** Shared presentation; availability, persistence, login and navigation stay in its owner. */
@@ -47,7 +47,7 @@ export default function AppointmentBookingPanel({
   closeLabel = "Minimise appointment options",
   showDoctorImage = false,
   id, headingRef, actionRef, editActionRef, expanded = true, onOpen,
-  collapsedAction,
+  secondaryAction,
 }: AppointmentBookingPanelProps) {
   const generatedId = useId();
   const panelId = id ?? generatedId;
@@ -76,7 +76,7 @@ export default function AppointmentBookingPanel({
           <div data-appointment-intrinsic>
             {notice && <p className={presentation.notice} role="status">{notice}</p>}
             <div inert={!loaded || undefined}>
-            <AppointmentSelector showHospitalDirections doctor={doctor} selection={selection}
+            <AppointmentSelector preserveModeHeight showHospitalDirections doctor={doctor} selection={selection}
               now={now} onChange={onChange} autoSelectFirst={loaded && autoSelectFirst} />
             </div>
           </div>
@@ -102,12 +102,12 @@ export default function AppointmentBookingPanel({
       </div>}
       <div className={presentation.price}><strong>{price}</strong>{showOnwards && <span>onwards</span>}</div>
       <div className={presentation.actionGroup}>
+        {secondaryAction}
         <button ref={actionRef} type="button" className={presentation.primary}
           aria-expanded={showContinue ? undefined : false} aria-controls={showContinue ? undefined : panelId}
           disabled={showContinue && disabled} onClick={showContinue ? onContinue : onOpen}>
-          <span>{showContinue ? busy ? "Continuing…" : "Continue" : "Book appointment"}</span>
+          <span>{showContinue && busy ? "Continuing…" : "Book appointment"}</span>
         </button>
-        {!expanded && collapsedAction}
       </div>
     </motion.div>
   </div>;
