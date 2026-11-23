@@ -1,6 +1,6 @@
 export const DESKTOP_NAV_ITEMS = [
   { id: "find-a-doctor", label: "Find a Doctor", href: "/search/doctors?design=d21" },
-  { id: "hospitals", label: "Find Hospital", href: "/hospitals" },
+  { id: "hospitals", label: "Hospitals & Clinics", href: "/hospitals" },
   { id: "specialities", label: "Services", href: "/specialities" },
   { id: "health-library", label: "Health Library", href: "/health-library" },
   { id: "about-us", label: "About Us", href: "/about-us" },
