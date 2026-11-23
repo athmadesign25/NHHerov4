@@ -20,18 +20,12 @@ export interface SpecialityFAQProps {
   defaultOpenIndex?: number | null;
 }
 
-export function SpecialityFAQ({
-  faqs,
-  theme = "dark",
-  fluid = false,
-  className = "",
-  defaultOpenIndex = 0,
-}: SpecialityFAQProps) {
+export function SpecialityFAQ({ faqs, theme = "dark", fluid = false, className = "", defaultOpenIndex = 0 }: SpecialityFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenIndex);
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
-  if (!faqs || faqs.length === 0) return null;
+  if (!faqs.length) return null;
 
   return (
     <motion.div
@@ -53,22 +47,19 @@ export function SpecialityFAQ({
     >
       {faqs.map((faq, i) => {
         const isOpen = openIndex === i;
-        const qText = faq.question || faq.q || "";
-        const aText = faq.answer || faq.a || "";
-
         return (
           <motion.div
             key={i}
             className={`${styles.faqItem} ${isOpen ? styles.faqItemOpen : ""}`}
             role="listitem"
             variants={{
-              hidden: { opacity: 0, y: 20, filter: "blur(6px)" },
+              hidden: { opacity: 0, y: 24, filter: "blur(8px)" },
               visible: {
                 opacity: 1,
                 y: 0,
                 filter: "blur(0px)",
                 transition: {
-                  duration: 0.45,
+                  duration: 0.5,
                   ease: [0.22, 1, 0.36, 1],
                 },
               },
@@ -82,10 +73,10 @@ export function SpecialityFAQ({
               aria-controls={`faq-answer-${i}`}
               id={`faq-question-${i}`}
             >
-              <span className={styles.questionText}>{qText}</span>
+              <span className={styles.questionText}>{faq.question || faq.q}</span>
               <motion.span
                 className={styles.icon}
-                animate={{ scale: [0.92, 1] }}
+                animate={{ scale: [0.9, 1] }}
                 transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 aria-hidden="true"
               >
@@ -107,10 +98,10 @@ export function SpecialityFAQ({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   style={{ overflow: "hidden" }}
                 >
-                  <p className={styles.answerText}>{aText}</p>
+                  <p className={styles.answerText}>{faq.answer || faq.a}</p>
                 </motion.div>
               )}
             </AnimatePresence>

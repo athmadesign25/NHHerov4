@@ -1,3 +1,6 @@
+import { HOSPITALS_DIRECTORY_DATA } from "./hospitalsDirectoryData";
+import { defaultDoctorListingUrl } from "@/features/design-preview/doctorJourney";
+
 export interface HospitalItem {
   id: string;
   name: string;
@@ -7,9 +10,10 @@ export interface HospitalItem {
   href: string;
   appointmentHref: string;
   phone: string;
+  isOneHealth?: boolean;
 }
 
-export const HOSPITALS_DATA: HospitalItem[] = [
+const bangaloreHospitals: HospitalItem[] = [
   {
     id: "hosp-1",
     name: "Mazumdar Shaw Medical Centre, Bangalore",
@@ -51,6 +55,7 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinicchandapura",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1518",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-4",
@@ -107,6 +112,7 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinic-hsr-layout",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1413",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-8",
@@ -121,6 +127,7 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-electronic-city-niladri-road",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1134",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-9",
@@ -149,6 +156,7 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-clinic-jp-nagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1729",
     phone: "08069266140",
+    isOneHealth: true,
   },
   {
     id: "hosp-11",
@@ -177,5 +185,22 @@ export const HOSPITALS_DATA: HospitalItem[] = [
     href: "/hospitals-clinics/bangalore/narayana-multispeciality-clinic-jayanagar",
     appointmentHref: "/ocaapp/doctors/bangalore?hospital=1139",
     phone: "08069266140",
+    isOneHealth: true,
   },
 ];
+
+/** Keep the curated media while linking only to profiles available in this build. */
+export const HOSPITALS_DATA: HospitalItem[] = bangaloreHospitals.map((hospital) => {
+  const directoryHospital = HOSPITALS_DIRECTORY_DATA.find((entry) => entry.name === hospital.name);
+  const city = directoryHospital?.city ?? "Bangalore";
+  return {
+    ...hospital,
+    href: directoryHospital
+      ? `/hospitals/${encodeURIComponent(directoryHospital.slug)}`
+      : `/hospitals?${new URLSearchParams({ city })}`,
+    appointmentHref: defaultDoctorListingUrl(new URLSearchParams({
+      hospitals: hospital.name,
+      location: city,
+    })),
+  };
+});

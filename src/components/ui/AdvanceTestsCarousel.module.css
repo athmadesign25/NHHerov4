@@ -7,12 +7,15 @@
   overflow: visible;
 }
 
-/* Viewport for Card Track: explicit height = card height (676px) + 20px top + 20px bottom padding */
+/* Viewport for Card Track: generous height so card drop shadows naturally feather out without clipping */
 .trackViewport {
   position: relative;
   width: 100%;
-  height: 716px;
+  height: 790px;
   overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
+  margin-bottom: -50px;
 }
 
 /* Fixed Track: cards sit at absolute slot positions (slot * 572px) */
@@ -22,12 +25,12 @@
   height: 676px;
   left: 50%;
   transform: translateX(-1408px);
-  top: 20px;
+  top: 24px;
 }
 
 /* Mobile Native Swipe Carousel */
 .mobileCarouselContainer {
-  display: flex;
+  display: none;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   gap: var(--space-16);
@@ -37,6 +40,7 @@
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
   margin-bottom: var(--space-24);
+  box-sizing: border-box;
 }
 
 .mobileCarouselContainer::-webkit-scrollbar {
@@ -44,33 +48,52 @@
 }
 
 .mobileCarouselItem {
-  flex: 0 0 85%;
+  flex: 0 0 82%;
   max-width: 400px;
   scroll-snap-align: center;
   position: relative;
+  box-sizing: border-box;
 }
 
 .mobileNavigator {
-  display: flex;
+  display: none;
   justify-content: center;
-  gap: var(--space-8);
-  margin-top: var(--space-16);
-  margin-bottom: var(--space-24);
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .mobileNavigator {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+    width: 100% !important;
+  }
 }
 
 .navDot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background: rgba(var(--black-rgb), 0.2);
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
+  background: rgba(var(--black-rgb), 0.2) !important;
   cursor: pointer;
-  transition: all var(--duration-emphasis) var(--ease-out);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+  border: none !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
 }
 
-.navDotActive {
-  background: var(--color-primary);
-  width: 24px;
-  border-radius: var(--radius-sm);
+.navDotActive,
+.navDot.navDotActive {
+  background: var(--color-primary, #034EA2) !important;
+  width: 18px !important;
+  height: 6px !important;
+  border-radius: 6px !important;
 }
 
 .desktopOnly {
@@ -78,7 +101,7 @@
 }
 
 .mobileOnly {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 768px) {
@@ -86,7 +109,13 @@
     display: none !important;
   }
   .mobileOnly {
-    display: block !important;
+    display: flex !important;
+  }
+  .mobileCarouselContainer {
+    display: flex !important;
+  }
+  .mobileNavigator {
+    display: flex !important;
   }
 }
 
@@ -159,15 +188,15 @@
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(var(--navy-900-rgb), 0) 0%,
-    rgba(var(--navy-900-rgb), 0.3) 25%,
-    rgba(var(--navy-900-rgb), 0.62) 70%,
-    rgba(var(--navy-900-rgb), 0.78) 100%
+    rgba(3, 18, 36, 0) 0%,
+    rgba(3, 18, 36, 0.3) 25%,
+    rgba(3, 18, 36, 0.62) 70%,
+    rgba(3, 18, 36, 0.78) 100%
   );
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(var(--black-rgb), 0.6) 25%, black 50%, black 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(var(--black-rgb), 0.6) 25%, black 50%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 25%, black 50%, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 25%, black 50%, black 100%);
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
 }
@@ -181,7 +210,7 @@
   justify-content: flex-end;
   width: 100%;
   height: 100%;
-  padding: 24px 26px 26px;
+  padding: 24px 28px 28px;
   box-sizing: border-box;
 }
 
@@ -278,23 +307,23 @@
 /* Navigation arrows matching Speciality Patient Stories */
 .arrowBtn {
   position: absolute;
-  top: 50%;
+  top: 362px;
   transform: translateY(-50%);
   z-index: 30;
   border-radius: 50%;
-  border: 1px solid rgba(var(--white-rgb), 0.35);
-  background: rgba(var(--navy-900-rgb), 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(3, 18, 36, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  color: var(--white);
+  color: #ffffff;
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background var(--duration-moderate) ease, border-color var(--duration-moderate) ease, box-shadow var(--duration-moderate) ease, transform var(--duration-moderate) ease;
-  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.45);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
 }
 
@@ -307,10 +336,10 @@
 }
 
 .arrowBtn:hover {
-  background: rgba(var(--navy-900-rgb), 0.72);
-  border-color: rgba(var(--white-rgb), 0.6);
+  background: rgba(3, 18, 36, 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
   transform: translateY(-50%) scale(1.08);
-  box-shadow: 0 10px 28px rgba(var(--black-rgb), 0.5);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
 }
 
 /* Light Mode Variant (Design 2) matching Speciality Patient Stories */
@@ -355,16 +384,6 @@
 }
 
 @media (max-width: 1024px) {
-  .scrollTrack {
-    padding: 16px 16px 56px 16px;
-    scroll-padding-left: 16px;
-  }
-
-  .cardItem {
-    flex: 0 0 460px;
-    width: 460px;
-  }
-
   .card {
     width: 460px;
     height: 590px;
@@ -380,21 +399,12 @@
     padding: 0;
   }
 
-  .scrollTrack {
-    gap: 16px;
-    padding: 16px 16px 56px 16px;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 16px;
-    margin-bottom: 0;
-  }
-
-  .cardItem {
-    flex: 0 0 84vw;
-    width: 84vw;
+  .mobileCarouselItem {
+    flex: 0 0 82%;
     max-width: 400px;
     scroll-snap-align: center;
+    position: relative;
+    box-sizing: border-box;
   }
 
   .card {
@@ -402,15 +412,24 @@
     max-width: 400px;
     height: 480px;
     border-radius: var(--radius-md);
+    box-shadow: 0 10px 28px 0 rgba(var(--black-rgb), 0.14);
   }
 
   .cardBody {
-    padding: 20px 18px 22px;
+    padding: 24px 28px 28px;
+  }
+
+  .cardAction {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--space-8);
   }
 
   .testTitle {
-    font-size: var(--font-size-2xl);
-    margin-bottom: 10px;
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-8);
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .testDesc {
@@ -423,14 +442,22 @@
   /* On mobile/tablet, arrows and edge fades hide to encourage natural touch swipe */
   .arrowBtn,
   .edgeFade {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
+  .mobileCarouselItem {
+    flex: 0 0 85%;
+  }
+
+  .card {
+    height: 440px;
+  }
+
   .testTitle {
-    font-size: var(--font-size-xl);
-    margin-bottom: 8px;
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-6);
   }
 
   .testDesc {
