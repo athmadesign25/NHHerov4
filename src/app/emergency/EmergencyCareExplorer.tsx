@@ -38,7 +38,7 @@ export default function EmergencyCareExplorer({ areas, headingId, expanded = fal
       <div key={area.slug} id={`${id}-details`} role="region" aria-labelledby={`${id}-${area.slug}`} className={`${styles.accordion} ${styles.compactAccordion}`}>
         {area.items.map((item, index) => expanded
           ? <article key={item.title} className={styles.procedureDetail}><h3>{item.title}</h3>{paragraphs(item.text).map((part, i) => <p key={i}>{part}</p>)}</article>
-          : <details key={item.title} open={index === 0 || undefined}><summary><span>{item.title}</span><Plus aria-hidden="true" /></summary><div className={styles.answer}>{paragraphs(item.text).map((part, i) => <p key={i}>{part}</p>)}</div></details>)}
+          : <details key={item.title} name={`${id}-condition-accordion`} open={index === 0 || undefined}><summary><span>{item.title}</span><Plus aria-hidden="true" /></summary><div className={styles.answer}>{paragraphs(item.text).map((part, i) => <p key={i}>{part}</p>)}</div></details>)}
       </div>
     </div>
   </>;
