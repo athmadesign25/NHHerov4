@@ -30,7 +30,7 @@ function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
       <li key={item.href}>
         <Link href={item.href} onClick={onNavigate} className={`${styles.link} ${mobile ? mobilePatterns.link : ""} ${tiles ? styles.ecosystemTile : ""}`}>
           {tiles ? (
-            item.visual?.kind === "logo" ? <span className={`${styles.ecosystemVisual} ${item.label === "Athma" ? styles.ecosystemAthma : styles.ecosystemMedha}`}>
+            item.visual?.kind === "logo" ? <span className={styles.ecosystemVisual}>
               <Image src={item.visual.src} alt={item.label} fill sizes="160px" className={styles.ecosystemLogo} />
             </span> : <span className={styles.ecosystemAcademicMark}>
               <span>Academics &amp;<br />Research</span>
