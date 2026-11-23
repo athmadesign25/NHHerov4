@@ -12,19 +12,21 @@ import { HOSPITAL_LOCALITIES as HOSPITAL_CITIES } from "./hospital-data";
 import { DOCTOR_CONDITIONS } from "./doctor-conditions";
 import { DOCTOR_SPECIALTIES } from "./doctor-specialties";
 import ServicesMegaMenu from "./ServicesMegaMenu";
+import HospitalMegaMenu from "./HospitalMegaMenu";
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { mobileMenuLabel } from "./mobile-menu-label";
 import patterns from "./MobileMenuPatterns.module.css";
 import styles from "./MobileMegaMenu.module.css";
-import AccountMenu from "../AccountMenu";
+import AccountMenu, { type AccountMember } from "../AccountMenu";
 
 type Page = "main" | "find-a-doctor" | "hospitals" | "specialities" | "health-library" | "about-us" | "specialty" | "city" | "condition" | "sunday" | "today";
 const titles: Record<Page, string> = {
-  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Find hospital", specialities: "Services",
+  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Hospitals & clinics", specialities: "Services",
   "health-library": "Health library", "about-us": "About us",
   specialty: "Find a doctor by specialty", city: "Find a doctor by location", condition: "Find a doctor by disease / condition",
   sunday: "Find a doctor available on Sunday", today: "Find a doctor available today",
 };
-const descriptions = ["By specialty, city or condition", "Explore our hospitals by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
+const descriptions = ["By specialty, city or condition", "Explore hospitals and clinics by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
 const doctorChoices: { page: Page; label: string }[] = [
   { page: "specialty", label: "By specialty" }, { page: "city", label: "By location" },
   { page: "condition", label: "By disease / condition" }, { page: "sunday", label: "Doctors available on Sunday" },
@@ -36,11 +38,13 @@ interface MobileMegaMenuProps {
   onLogin: () => void;
   isLoggedIn: boolean;
   memberId: string;
+  members?: AccountMember[];
+  memberLocked?: boolean;
   onMemberChange: (id: string) => void;
   onLogout: () => void;
 }
 
-export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId, onMemberChange, onLogout }: MobileMegaMenuProps) {
+export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId, members, memberLocked, onMemberChange, onLogout }: MobileMegaMenuProps) {
   const [history, setHistory] = useState<Page[]>(["main"]);
   const [query, setQuery] = useState("");
   const [city, setCity] = useState<string | null>(null);
@@ -72,14 +76,18 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId,
   useEffect(() => { title.current?.focus({ preventScroll: true }); panel.current?.scrollTo(0, 0); }, [page]);
 
   const availability = page === "sunday" || page === "today";
-  const directory = page === "hospitals" || availability;
+  const directory = availability;
   const searchable = page === "specialty" || page === "city" || page === "condition" || directory;
   const labels = page === "specialty" ? DOCTOR_SPECIALTIES.flat().sort() : page === "condition" ? DOCTOR_CONDITIONS : HOSPITAL_CITIES.map(c => c.city);
   const matches = (text: string) => text.toLowerCase().includes(query.trim().toLowerCase());
   const cities = HOSPITAL_CITIES.filter(c => matches(c.city) || c.hospitals.some(h => matches(h.label)));
   const availabilityQuery = page === "sunday" ? "Doctors available on Sunday" : "Doctors available today";
-  // Match the desktop availability destinations, retaining city + locality context.
-  const availabilityHref = (cityName?: string, locality?: string) => `/search?q=${encodeURIComponent(`${availabilityQuery}${cityName ? ` in ${cityName}` : ""}${locality ? `, ${locality}` : ""}`)}`;
+  // Keep the demo's booking filters, matching the desktop availability links.
+  const availabilityHref = (cityName?: string) => {
+    const target = new URL(doctorNavUrl(page === "sunday" ? "sunday" : "today"), "https://nh.local");
+    if (cityName) target.searchParams.set("location", cityName);
+    return `${target.pathname}?${target.searchParams}`;
+  };
   const searchPlaceholder = directory ? "Search city or locality" : `Search ${page === "specialty" ? "specialties" : page === "condition" ? "conditions" : "cities"}`;
 
   return <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : duration.emphasis, ease: ease.out }} className={styles.menu} inert={!present} id="mobile-navigation-menu" data-lenis-prevent>
@@ -106,9 +114,9 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId,
           </ul>}
           {(page === "specialty" || page === "city" || page === "condition") && <>
             {labels.some(matches) ? <ul className={patterns.surface}>
-              {labels.filter(matches).map(label => <li key={label}><Link className={patterns.link} href={`/search?q=${encodeURIComponent(label)}`} onClick={onClose}>{page === "city" ? label : mobileMenuLabel(label)}</Link></li>)}
+              {labels.filter(matches).map(label => <li key={label}><Link className={patterns.link} href={doctorNavUrl(page === "specialty" ? "specialty" : page === "city" ? "location" : "condition", label)} onClick={onClose}>{page === "city" ? label : mobileMenuLabel(label)}</Link></li>)}
             </ul> : <p className={styles.empty}>No matches. Try another name.</p>}
-            <Link href={page === "specialty" ? "/specialities" : "/search"} onClick={onClose} className={styles.viewAll}>View all {page === "specialty" ? "specialties" : "doctors"}</Link>
+            <Link href={doctorNavUrl()} onClick={onClose} className={styles.viewAll}>View all {page === "specialty" ? "specialties" : "doctors"}</Link>
           </>}
           {directory && <>
             <ul className={styles.list} aria-label={availability ? `${availabilityQuery} by city and locality` : "Hospitals by city and locality"}>
@@ -117,7 +125,7 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId,
                 return <li key={c.slug}>
                   <button className={styles.row} aria-expanded={expanded} aria-controls={`mobile-${page}-${c.slug}`} onClick={() => setCity(city === c.slug ? null : c.slug)}>{c.city}<ChevronDown className={expanded ? styles.rotated : undefined} aria-hidden="true" /></button>
                   {expanded && <ul className={patterns.surface} id={`mobile-${page}-${c.slug}`}>
-                    {c.hospitals.filter(h => matches(c.city) || matches(h.label)).map(h => <li key={h.label}><Link className={patterns.link} href={availability ? availabilityHref(c.city, h.label) : h.href} onClick={onClose}>{h.label}</Link></li>)}
+                    {c.hospitals.filter(h => matches(c.city) || matches(h.label)).map(h => <li key={h.label}><Link className={patterns.link} href={availability ? availabilityHref(c.city) : h.href} onClick={onClose}>{h.label}</Link></li>)}
                   </ul>}
                 </li>;
               })}
@@ -125,11 +133,12 @@ export default function MobileMegaMenu({ onClose, onLogin, isLoggedIn, memberId,
             {!cities.length && <p className={styles.empty}>No matches. Try another city or locality.</p>}
             <Link className={styles.viewAll} href={availability ? availabilityHref() : "https://www.narayanahealth.org/hospitals-clinics"} onClick={onClose}>{availability ? (page === "sunday" ? "View all doctors available on Sunday" : "View all doctors available today") : "View all hospitals & clinics"}</Link>
           </>}
+          {page === "hospitals" && <HospitalMegaMenu onNavigate={onClose} mobile />}
           {page === "specialities" && <ServicesMegaMenu onNavigate={onClose} mobile />}
           {(page === "health-library" || page === "about-us") && <EditorialMegaMenu kind={page} onNavigate={onClose} mobile />}
         </motion.div>
       </AnimatePresence>
     </div>
-    {isLoggedIn ? <AccountMenu mobile tone="dark" memberId={memberId} onMemberChange={onMemberChange} onLogout={onLogout} onNavigate={onClose} /> : <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>}
+    {isLoggedIn ? <AccountMenu mobile tone="dark" memberId={memberId} members={members} memberLocked={memberLocked} onMemberChange={onMemberChange} onLogout={onLogout} onNavigate={onClose} /> : <button type="button" onClick={onLogin} className={styles.login}><User aria-hidden="true" />Login</button>}
   </motion.div>;
 }

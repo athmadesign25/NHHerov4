@@ -1,40 +1,61 @@
-.body { min-width: 0; min-height: 0; }
-.panel { grid-template-rows: minmax(0, 1fr) auto; row-gap: var(--space-12); }
-.imageCard { grid-column: 1; grid-row: 1 / span 2; }
-.groups { grid-column: 2; grid-row: 1; min-width: 0; }
-.groups > section + section { margin-top: var(--space-32); }
-.panel .eyebrow { display: block; width: 100%; margin: 0 0 var(--space-16); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 600; text-align: left; }
-.panel .eyebrow::after { display: none; }
-.links { column-count: 2; column-width: calc(var(--space-128) + var(--space-64)); column-fill: auto; column-gap: var(--space-16); height: 100%; min-height: 0; margin: 0; padding: 0; list-style: none; }
-.links li { min-width: 0; break-inside: avoid; }
-.link { display: flex; align-items: center; min-height: var(--space-40); padding: var(--space-8); border-radius: var(--radius-sm); color: var(--color-text); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 400; text-decoration: none; transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out); }
-.link:hover { background: var(--blue-tint-100); color: var(--color-primary); }
-.link:focus-visible, .toggle:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); border-radius: var(--radius-sm); }
-.footer { grid-column: 2; grid-row: 2; display: flex; justify-content: flex-end; }
-.notice { margin: var(--space-16) 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); line-height: var(--leading-body); }
-.mobileGroup { border: 0; }
-.mobile .notice { color: var(--slate-300); }
-.mobileGroup > h3 { margin: 0; }
-.toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: var(--space-56); padding: var(--space-12) 0; border: 0; background: transparent; color: var(--white); font-family: inherit; font-size: var(--font-size-sm); line-height: var(--leading-body); text-align: left; cursor: pointer; }
-.toggle svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
-.toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-.panel.mobilePanel { display: flex; flex-direction: column; gap: var(--space-20); padding: 0 0 var(--space-20); height: auto; background: transparent; }
-.mobilePanel .imageCard { order: 1; }
-.mobilePanel .links { column-count: 1; height: auto; }
-.mobilePanel .eyebrow { color: var(--slate-300); margin-top: var(--space-16); }
-.mobilePanel .link { color: var(--white); min-height: var(--space-48); }
-.mobilePanel .link:hover { background: rgba(var(--white-rgb), 0.08); color: var(--sky-400); }
-.mobilePanel .notice { color: var(--slate-300); }
-.mobilePanel .footer { order: 2; }
-.mobilePanel .footer a { color: var(--sky-400); }
-.mobile .link:focus-visible, .mobile .toggle:focus-visible { outline-color: var(--sky-400); }
-@media (max-width: 1280px) { .links { column-gap: var(--space-8); } }
-@media (prefers-reduced-motion: reduce) { .link { transition: none; } }
-
-.serviceGroup { display: flex; flex-direction: column; min-height: 0; }
-.serviceLabel { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.servicesMenu[data-service-menu] { height: 100%; padding: 0; gap: 0; }
+.servicesMenu .servicesContent {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-24);
+  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 1.35fr);
+  gap: var(--space-24);
+}
+.column { display: flex; flex-direction: column; gap: var(--space-32); min-width: 0; min-height: 0; }
+.serviceGroup, .sectionContent { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.textLinks, .brandTiles { margin: 0; padding: 0; list-style: none; }
+.textLinks li { min-width: 0; }
+.textLink {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--space-24) + var(--space-4));
+  padding-block: var(--space-4);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.textLink:hover, .textLink:focus-visible { color: var(--color-primary); }
+.brandTiles { display: grid; gap: var(--space-24); width: 100%; margin-top: 0; padding-top: var(--space-8); }
+.brandTiles li { display: flex; min-width: 0; }
+.brandTile { display: flex; align-items: center; justify-content: flex-start; gap: var(--space-12); width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; text-decoration: none; }
+.checkupLabel { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; min-height: var(--space-48); color: var(--color-text); font-size: var(--font-size-base); line-height: var(--leading-snug); font-weight: 600; transition: color var(--duration-fast) var(--ease-out); }
+.checkupTile:hover .checkupLabel, .checkupTile:focus-visible .checkupLabel { color: var(--color-primary); }
+/* Shared logo box with the About Us ecosystem marks, so Aarogyam, One Health,
+   Medha and Athma all read at one size. */
+.brandLogo { position: relative; display: block; flex-shrink: 0; width: min(100%, calc(var(--space-96) + var(--space-16))); height: var(--space-48); }
+.portraitLogo { width: calc(var(--space-56) + var(--space-2)); height: var(--space-64); }
+.brandLogo img { object-fit: contain; object-position: left center; }
+/* Same chip as the Hospitals & Clinics type tag, centred at the right end. */
+.brandTag { flex-shrink: 0; display: inline-flex; align-items: center; padding: var(--space-1) var(--space-6); border-radius: var(--radius-sm); border: var(--space-1) solid rgba(var(--slate-900-rgb), 0.08); background: var(--grey-100); color: var(--grey-500); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
+.insuranceGroup { margin-top: var(--space-16); }
+.subheading { margin: 0 0 var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
 .groupFooter { padding-top: var(--space-8); }
-
-.servicesMenu { height: 100%; padding: 0; gap: 0; }
-.servicesContent { flex: 1; min-height: 0; padding: var(--space-24); }
-@media (min-width: 1100px) and (max-width: 1280px) { .servicesContent { padding: var(--space-20); } }
+.textLink:focus-visible, .brandTile:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.mobileGroup { border: 0; }
+.mobileGroup > h3 { margin: 0; }
+.mobileFeature { margin-top: var(--space-24); }
+.mobile .textLink { min-height: var(--space-48); padding-block: var(--space-12); color: var(--slate-200); }
+.mobile .textLink:hover, .mobile .textLink:focus-visible { color: var(--sky-400); }
+.mobile .subheading { color: var(--slate-300); }
+.mobile .checkupLabel { color: var(--slate-200); }
+.mobile .brandTile:hover .checkupLabel, .mobile .brandTile:focus-visible .checkupLabel { color: var(--sky-400); }
+.mobile .textLink:focus-visible, .mobile .brandTile:focus-visible { outline-color: var(--sky-400); }
+.mobile .groupFooter a { color: var(--sky-400); }
+@media (min-width: 1100px) and (max-width: 1280px) {
+  .servicesMenu .servicesContent { padding: var(--space-20); gap: var(--space-16); }
+  .brandLogo { width: min(100%, var(--space-96)); height: var(--space-40); }
+  .portraitLogo { width: var(--space-48); height: var(--space-56); }
+  .checkupLabel { min-height: var(--space-40); }
+}
+@media (max-width: 1099px) { .servicesMenu .servicesContent { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .textLink, .checkupLabel { transition: none; } }

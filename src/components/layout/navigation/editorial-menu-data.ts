@@ -29,9 +29,9 @@ export const EDITORIAL_MENU_GROUPS: Record<EditorialMenuKind, EditorialGroup[]> 
     {
       id: "understand-health", label: "Understand your health",
       links: [
-        { label: "Symptoms Guide", href: "/health-library/symptoms", description: "Check what your symptoms could mean", icon: BookCheck },
-        { label: "Diseases & Conditions", href: "/health-library/diseases-and-conditions", description: "Causes, signs and treatment options", icon: GermIcon },
-        { label: "Treatments & Procedures", href: "/health-library/treatments-and-procedures", description: "What to expect before and after", icon: Stethoscope },
+        { label: "Symptoms Guide", href: "/symptoms", description: "Check what your symptoms could mean", icon: BookCheck },
+        { label: "Diseases & Conditions", href: "/diseases", description: "Causes, signs and treatment options", icon: GermIcon },
+        { label: "Treatments & Procedures", href: "/treatments", description: "What to expect before and after", icon: Stethoscope },
         { label: "Health Calculators", href: "/health-library/health-calculators", description: "BMI, risk scores and more", icon: Gauge },
       ],
     },
@@ -40,7 +40,7 @@ export const EDITORIAL_MENU_GROUPS: Record<EditorialMenuKind, EditorialGroup[]> 
       links: [
         { label: "Patient Stories", href: "/#patient-stories", description: "Real journeys from our patients", icon: HeartHandshake },
         { label: "Video Library", href: "/health-library/videos", description: "Explainers from our specialists", icon: Play },
-        { label: "Health Articles", href: "/health-library", description: "Tips and guides for everyday health", icon: BookOpen },
+        { label: "Health Articles", href: "/articles", description: "Tips and guides for everyday health", icon: BookOpen },
       ],
     },
     {
@@ -58,7 +58,7 @@ export const EDITORIAL_MENU_GROUPS: Record<EditorialMenuKind, EditorialGroup[]> 
       links: [
         { label: "Narayana Health Story", href: "/about-us", description: "How we started and where we're going", icon: ScrollText },
         { label: "Leadership", href: "/about-us/leadership", description: "The people behind Narayana Health", icon: Users },
-        { label: "CSR & Sustainability", href: "https://www.narayanahealth.org/csr", description: "Our commitment to communities", icon: HeartHandshake },
+        { label: "CSR & Sustainability", href: "/csr", description: "Our commitment to communities", icon: HeartHandshake },
       ],
     },
     {
@@ -84,7 +84,7 @@ export const EDITORIAL_FEATURES = {
   "health-library": {
     image: healthLibraryImage, alt: "Medical reference books, a blue stethoscope and a subtle video player on a wooden table",
     title: "Not sure what's wrong?", description: "Start with our Symptoms Guide.",
-    cta: "Explore Symptoms Guide", href: "/health-library/symptoms",
+    cta: "Explore Symptoms Guide", href: "/symptoms",
     // TODO: replace this permitted fallback with the Pulse entry point once it
     // opens the workspace directly; openPulseAI currently only updates the hero.
   },

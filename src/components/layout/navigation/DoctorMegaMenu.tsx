@@ -2,6 +2,8 @@
 
 import { useState, type KeyboardEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import { Search } from "lucide-react";
 import styles from "./DoctorMegaMenu.module.css";
 import DoctorLocations from "./DoctorLocations";
@@ -25,6 +27,7 @@ const sections = [
 ];
 
 export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void }) {
+  const router = useRouter();
   const [selected, setSelected] = useState(0);
   const section = sections[selected];
   const handleKeys = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -37,12 +40,16 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
     const tabs = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
     tabs?.[next]?.focus();
   };
-  const itemHref = (label: string) => `/search?q=${encodeURIComponent(label)}`;
+  const itemHref = (label: string) => doctorNavUrl(section.id === "speciality" ? "specialty" : "condition", label);
   const isAvailability = section.id === "sunday" || section.id === "today";
   const isLocation = section.id === "location";
   const isCondition = section.id === "condition";
   const openConditionSearch = () => {
     onNavigate();
+    if (!/^\/(?:L[12]banner)?\/?$/.test(window.location.pathname)) {
+      router.push(doctorNavUrl("condition"));
+      return;
+    }
     requestAnimationFrame(() => window.dispatchEvent(new CustomEvent("nh:open-search", { detail: { scrollY: window.scrollY } })));
   };
 
@@ -69,7 +76,7 @@ export default function DoctorMegaMenu({ onNavigate }: { onNavigate: () => void 
           <div className={styles.footer}>
             {isCondition
               ? <MenuAction label={section.viewAll} context={section.viewAll} icon={<Search aria-hidden="true" />} onClick={openConditionSearch} />
-              : <MenuAction label={section.viewAll} href={section.href} context={section.viewAll} onClick={onNavigate} />}
+              : <MenuAction label={section.viewAll} href={doctorNavUrl()} context={section.viewAll} onClick={onNavigate} />}
           </div>
         </>}
       </div>

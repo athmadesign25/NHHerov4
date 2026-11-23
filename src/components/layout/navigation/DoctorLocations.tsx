@@ -1,5 +1,6 @@
 "use client";
 
+import { doctorNavUrl } from "@/features/search/navigationEntries";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./DoctorLocations.module.css";
@@ -29,7 +30,7 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
       <ul className={styles.grid} aria-label="Find doctors by city">
         {cities.map((city) => (
           <li key={city.slug}>
-            <Link href={`/search?q=${encodeURIComponent(city.name)}`} onClick={onNavigate} className={styles.tile}>
+            <Link href={doctorNavUrl("location", city.name)} onClick={onNavigate} className={styles.tile}>
               <Image src={`/navigation/cities/${city.slug}.webp`} alt="" fill sizes="(min-width: 1600px) 18vw, 16vw" className={styles.image} />
               <span className={styles.wash} aria-hidden="true" />
               <span className={styles.caption}>
@@ -42,7 +43,7 @@ export default function DoctorLocations({ onNavigate }: { onNavigate: () => void
       </ul>
       <div className={styles.footer}>
         <a className={styles.credits} href="/navigation/cities/credits.json" target="_blank" rel="noopener noreferrer">Photo credits</a>
-        <MenuAction label="View All Locations" href="/doctors" context="View all doctor locations" onClick={onNavigate} />
+        <MenuAction label="View All Locations" href={doctorNavUrl()} context="View all doctor locations" onClick={onNavigate} />
       </div>
     </div>
   );

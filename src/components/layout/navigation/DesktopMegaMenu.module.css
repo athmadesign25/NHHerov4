@@ -13,7 +13,8 @@
 }
 .slide { position: relative; height: 100%; min-height: 100%; }
 .body { height: 100%; min-height: 100%; overflow-y: auto; overscroll-behavior: contain; }
-.body:has([data-hospital-menu]), .body:has([data-doctor-availability-menu]) { overflow: visible; }
+.body:has([data-doctor-availability-menu]) { overflow: visible; }
+.body:has([data-hospital-menu]) { overflow: hidden; }
 @media (max-width: 1099px) { .shell { display: none; } }
 @media (prefers-reduced-motion: reduce) {
   .slide { transform: none !important; opacity: 1 !important; }
@@ -23,3 +24,12 @@
 /* One height for all grouped menus, matching the Services content and footer. */
 .shell:is([data-desktop-menu="specialities"], [data-desktop-menu="health-library"], [data-desktop-menu="about-us"]) { height: min(calc(var(--space-128) * 3 + var(--space-96) + var(--space-8)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
 .shell[data-desktop-menu="about-us"] { left: calc(var(--desktop-menu-inset) + var(--space-16)); right: calc(var(--desktop-menu-inset) + var(--space-16)); }
+
+/* Keep grouped city blocks together when laptop widths need fewer columns. */
+.shell[data-desktop-menu="hospitals"] { height: min(calc(var(--space-128) * 4 + var(--space-80) + var(--space-4)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .shell[data-desktop-menu="hospitals"] { height: min(calc(var(--space-128) * 5 + var(--space-24)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
+}
+@media (min-width: 1100px) and (max-width: 1279px) {
+  .shell[data-desktop-menu="hospitals"] { height: min(calc(var(--space-128) * 5 + var(--space-64)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
+}

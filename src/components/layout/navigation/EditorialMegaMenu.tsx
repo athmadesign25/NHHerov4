@@ -33,9 +33,9 @@ function MenuGroup({ group, id, mobile, initiallyOpen, onNavigate }: {
             item.visual?.kind === "logo" ? <span className={styles.ecosystemVisual}>
               <Image src={item.visual.src} alt={item.label} fill sizes="160px" className={styles.ecosystemLogo} />
             </span> : <span className={styles.ecosystemAcademicMark}>
-              <Icon aria-hidden="true" /><span>Academics &amp;<br />Research</span>
+              <span>Academics &amp;<br />Research</span>
             </span>
-          ) : <span className={styles.itemCopy}><Icon className={styles.itemIcon} aria-hidden="true" /><span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
+          ) : <span className={styles.itemCopy}>{item.label !== "Academics & Research" && <Icon className={styles.itemIcon} aria-hidden="true" />}<span className={styles.label}>{mobile ? mobileMenuLabel(item.label) : item.label}</span></span>}
         </Link>
       </li>
     ))}

@@ -26,36 +26,42 @@ interface ServiceMenuSection {
   image: string;
   imageSizes?: string;
   alt: string;
-  groups: { title: string; links: { label: string; href: string }[] }[];
+  groups: { title: string; links: { label: string; href: string; lines?: string[] }[] }[];
+  brands?: { label: string; href: string; logo: string; background: string; logoShape?: "wide" | "portrait"; descriptor?: string; tag?: string }[];
   notice?: string;
   footer?: { label: string; href: string };
 }
 
 export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
   {
-    id: "centres", label: "Centres of Excellence",
-    image: "/navigation/hospitals/cardiac-sciences-original.png", imageSizes: "(min-width: 1100px) 1400px, 100vw", alt: "Narayana Health hospital campus",
-    groups: [{ title: "Specialist care", links: SERVICE_CENTRES }],
-  },
-  {
-    id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "A specialist supporting a patient's health checkup",
+    id: "preventive", label: "Preventive Health",
+    image: "/health-checkup-consultation.jpg", alt: "Preventive care at Narayana Health",
     groups: [
-      { title: "Care and services", links: [
-        { label: "Book Health Checkup", href: SERVICE_TILES[1].href },
-        { label: "Diagnostics", href: SERVICE_TILES[2].href },
-        { label: "Clinical Specialties", href: SERVICE_TILES[4].href },
-        { label: "Narayana One Health", href: "/search?q=One%20Health" },
-      ] },
-      { title: "More care options", links: [SERVICE_TILES[3], SERVICE_TILES[0]] },
+      { title: "Health checkups", links: [{ label: "Book Health Checkup", href: SERVICE_TILES[1].href, lines: SERVICE_TILES[1].lines }] },
+    ],
+    brands: [
+      { label: "Aarogyam", href: SERVICE_TILES[3].href, logo: "/navigation/services/aarogyam-logo.svg", background: "/navigation/services/aarogyam-clinic.webp", logoShape: "wide", tag: "Clinic" },
+      { label: "Narayana One Health", href: "/search?q=One%20Health", logo: "/navigation/services/one-health-logo.svg", background: "/navigation/services/one-health-clinic.webp", logoShape: "portrait", tag: "Clinic" },
     ],
   },
   {
-    id: "insurance", label: "Health Insurance", image: "/doctor_patient.png", alt: "A doctor listening to a patient",
-    // Real current product names, used as provisional menu content.
-    // https://www.narayanahealth.insurance/product
-    groups: [{ title: "Individual plans", links: [
+    id: "insurance", label: "Insurance", image: "/doctor_patient.png", alt: "Narayana Health insurance",
+    groups: [{ title: "Insurance plans", links: [
       { label: "Narayana Aditi", href: "https://www.narayanahealth.insurance/aditi-lp1" },
       { label: "Arya Health Insurance", href: "https://www.narayanahealth.insurance/arya-health-insurance" },
     ] }],
+  },
+  {
+    id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "Narayana Health services",
+    groups: [{ title: "Care and services", links: [
+      { label: "Diagnostics", href: SERVICE_TILES[2].href },
+      { label: "Ambulance & Emergency", href: SERVICE_TILES[0].href },
+    ] }],
+  },
+  {
+    id: "centres", label: "Centres of Excellence",
+    image: "/navigation/hospitals/cardiac-sciences-original.png", imageSizes: "(min-width: 1100px) 1400px, 100vw", alt: "Narayana Health hospital campus",
+    groups: [{ title: "Specialist care", links: SERVICE_CENTRES }],
+    footer: { label: "View all", href: "/specialities?category=Centres+of+Excellence" },
   },
 ];
