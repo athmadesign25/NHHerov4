@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image, { getImageProps } from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { Activity, ArrowUpRight, Award, Brain, ChevronDown, Clock3, Download, HeartPulse, MapPin, Play, Plus, ShieldCheck, Stethoscope, Users, X } from "lucide-react";
+import { Activity, ArrowUpRight, Award, Brain, ChevronDown, Clock3, Download, HeartPulse, MapPin, Moon, Play, ShieldCheck, Stethoscope, Sun, Users, X } from "lucide-react";
 import { PhoneCall } from "@/components/animate-ui/icons/hugeicons/phone-call";
 import EmergencyCareExplorer from "./EmergencyCareExplorer";
 import EmergencyGuideCarousel from "./EmergencyGuideCarousel";
@@ -50,12 +50,26 @@ const conditionCategories = [
 ];
 const teamIcons = [ShieldCheck, Clock3, Activity, HeartPulse, Brain, Stethoscope, Users, HeartPulse, Clock3];
 
+const compactQuery = "(max-width: 768px)";
+function subscribeCompact(onChange: () => void) {
+  const media = window.matchMedia(compactQuery);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+const compactSnapshot = () => window.matchMedia(compactQuery).matches;
+// Match the existing desktop entrance on the server; mobile settles without motion.
+const serverCompactSnapshot = () => false;
+
 export default function EmergencyPage() {
   const reduced = useReducedMotion();
+  const compact = useSyncExternalStore(subscribeCompact, compactSnapshot, serverCompactSnapshot);
+  const calm = Boolean(reduced) || compact;
   const root = useRef<HTMLDivElement>(null);
   const hero = useRef<HTMLElement>(null);
   const [active, setActive] = useState("overview");
+  const [appearance, setAppearance] = useState<"light" | "dark">("dark");
   const tabs = useRef<HTMLDivElement>(null);
+  const chapter = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const sharedJourney = useRef<HTMLDivElement>(null);
   const [tabsPinned, setTabsPinned] = useState(false);
@@ -65,28 +79,44 @@ export default function EmergencyPage() {
   const videoClose = useRef<HTMLButtonElement>(null);
   const [showCall, setShowCall] = useState(false);
   const hospitals = content.cities.find(item => item.label === city)?.hospitals ?? [];
-  const appear = { initial: { opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.96 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.spring } };
-  const cardBlur = (index: number) => ({ initial: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 16, filter: reduced ? "blur(0px)" : "blur(12px)" }, whileInView: { opacity: 1, y: 0, filter: "blur(0px)" }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slower, delay: reduced ? 0 : Math.min(index * 0.08, 0.4), ease: ease.out } });
-  const reveal = { initial: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.1 }, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.out } };
+  const appear = { initial: { opacity: calm ? 1 : 0, scale: calm ? 1 : 0.96 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, margin: "-40px" }, transition: { duration: calm ? 0 : duration.slowest, ease: ease.spring } };
+  const cardBlur = (index: number) => ({ initial: { opacity: calm ? 1 : 0, y: calm ? 0 : 16, filter: calm ? "blur(0px)" : "blur(12px)" }, whileInView: { opacity: 1, y: 0, filter: "blur(0px)" }, viewport: { once: true, margin: "-40px" }, transition: { duration: calm ? 0 : duration.slower, delay: calm ? 0 : Math.min(index * 0.08, 0.4), ease: ease.out } });
+  const reveal = { initial: { opacity: calm ? 1 : 0, y: calm ? 0 : 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.1 }, transition: { duration: calm ? 0 : duration.slowest, ease: ease.out } };
+
+  useEffect(() => {
+    // The reused CTA declares its own nav theme. Keep this page-only variation
+    // aligned without changing that component for the rest of the site.
+    root.current?.querySelector<HTMLElement>(`.${styles.closingCta}`)?.setAttribute("data-nav-theme", appearance);
+    // Navbar samples the section under it on scroll; refresh after a theme
+    // change without moving the reader or changing the shared navigation.
+    const frame = requestAnimationFrame(() => window.dispatchEvent(new Event("scroll")));
+    return () => cancelAnimationFrame(frame);
+  }, [appearance]);
 
   useEffect(() => {
     let frame = 0;
     let followUntil = 0;
     let previousOffset = -1;
+    let previousHeight = -1;
     const nav = document.querySelector("nav");
     const measure = () => {
       frame = 0;
       const offset = Math.max(0, nav?.getBoundingClientRect().bottom ?? 0);
+      const height = chapter.current?.offsetHeight ?? 0;
+      const barHeight = tabs.current?.offsetHeight ?? 0;
+      if (height !== previousHeight) {
+        root.current?.style.setProperty("--emergency-chapter-height", `${height}px`);
+        previousHeight = height;
+      }
       if (Math.abs(offset - previousOffset) > 0.1) {
         root.current?.style.setProperty("--emergency-nav-offset", `${offset}px`);
         previousOffset = offset;
       }
-      const barHeight = parseFloat(getComputedStyle(root.current!).getPropertyValue("--space-48"));
       // The rail belongs only to the changing dark content. Hide it before
       // the shared light chapter reaches the main navigation, and restore
       // it when the reader scrolls back into the tab content.
       setTabsPinned(
-        (tabs.current?.getBoundingClientRect().bottom ?? Infinity) <= offset &&
+        (tabs.current?.getBoundingClientRect().top ?? Infinity) <= offset &&
         (sharedJourney.current?.getBoundingClientRect().top ?? Infinity) > offset + barHeight
       );
       // The site footer is fixed behind the page; its viewport position cannot
@@ -101,6 +131,8 @@ export default function EmergencyPage() {
     if (nav) observer.observe(nav, { attributes: true, attributeFilter: ["style"] });
     const resize = new ResizeObserver(schedule);
     if (panel.current) resize.observe(panel.current);
+    if (chapter.current) resize.observe(chapter.current);
+    if (tabs.current) resize.observe(tabs.current);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
     measure();
@@ -121,11 +153,29 @@ export default function EmergencyPage() {
   }, [active, tabsPinned, reduced]);
 
   useEffect(() => {
-    const sync = () => { const next = sections.find(item => `#${item.id}` === location.hash); if (next) setActive(next.id); };
+    let scrollFrame = 0;
+    const sync = () => {
+      const next = sections.find(item => `#${item.id}` === location.hash);
+      if (!next) return;
+      setActive(next.id);
+      cancelAnimationFrame(scrollFrame);
+      // The destination can be unmounted until the tab changes, so reveal
+      // the tab content before scrolling a deep link or the closing CTA.
+      scrollFrame = requestAnimationFrame(() => {
+        const navHeight = document.querySelector("nav")?.getBoundingClientRect().height ?? 0;
+        // Hero stays in normal flow while the dark chapter is pinned. Scrolling
+        // down hides the nav; scrolling back up reveals its full height.
+        const edge = hero.current?.getBoundingClientRect().bottom;
+        if (edge !== undefined) {
+          const start = scrollY + edge;
+          window.scrollTo({ top: scrollY < start - navHeight ? start : start - navHeight, behavior: reduced ? "instant" : "smooth" });
+        }
+      });
+    };
     const frame = requestAnimationFrame(sync);
     window.addEventListener("hashchange", sync);
-    return () => { cancelAnimationFrame(frame); window.removeEventListener("hashchange", sync); };
-  }, []);
+    return () => { cancelAnimationFrame(frame); cancelAnimationFrame(scrollFrame); window.removeEventListener("hashchange", sync); };
+  }, [reduced]);
 
   const closeVideo = () => {
     setVideoOpen(false);
@@ -138,35 +188,54 @@ export default function EmergencyPage() {
     setActive(next.id);
     history.replaceState(null, "", `#${next.id}`);
     requestAnimationFrame(() => {
-      const navBottom = Math.max(0, document.querySelector("nav")?.getBoundingClientRect().bottom ?? 0);
-      const rect = tabs.current?.getBoundingClientRect();
-      if (rect) window.scrollTo({ top: scrollY + rect.top - navBottom, behavior: reduced ? "instant" : "smooth" });
+      const navHeight = document.querySelector("nav")?.getBoundingClientRect().height ?? 0;
+      const edge = hero.current?.getBoundingClientRect().bottom;
+      if (edge !== undefined) {
+        const start = scrollY + edge;
+        window.scrollTo({ top: scrollY < start - navHeight ? start : start - navHeight, behavior: reduced ? "instant" : "smooth" });
+      }
     });
   };
 
-  const renderTabs = (compact: boolean) => <div role="tablist" aria-label={compact ? "Emergency care sections, compact" : "Emergency care sections"} className={styles.tabList}>{sections.map((item, index) => <button key={item.id} id={`${compact ? "compact-emergency-tab" : "emergency-tab"}-${item.id}`} type="button" role="tab" aria-selected={active === item.id} aria-controls="emergency-tab-panel" tabIndex={active === item.id ? 0 : -1} onClick={() => changeTab(item.id)} onKeyDown={event => { const next = event.key === "ArrowRight" ? (index + 1) % sections.length : event.key === "ArrowLeft" ? (index - 1 + sections.length) % sections.length : event.key === "Home" ? 0 : event.key === "End" ? sections.length - 1 : null; if (next !== null) { event.preventDefault(); changeTab(sections[next].id); document.getElementById(`${compact ? "compact-emergency-tab" : "emergency-tab"}-${sections[next].id}`)?.focus({ preventScroll: true }); } }}><span className={styles.tabLabel}>{item.label}</span></button>)}</div>;
+  const renderTabs = (compact: boolean) => <><div role="tablist" aria-label={compact ? "Emergency care sections, compact" : "Emergency care sections"} className={`${styles.tabList} ${styles.desktopTabs}`}>{sections.map((item, index) => <button key={item.id} id={`${compact ? "compact-emergency-tab" : "emergency-tab"}-${item.id}`} type="button" role="tab" aria-selected={active === item.id} aria-controls="emergency-tab-panel" tabIndex={active === item.id ? 0 : -1} onClick={() => changeTab(item.id)} onKeyDown={event => { const next = event.key === "ArrowRight" ? (index + 1) % sections.length : event.key === "ArrowLeft" ? (index - 1 + sections.length) % sections.length : event.key === "Home" ? 0 : event.key === "End" ? sections.length - 1 : null; if (next !== null) { event.preventDefault(); changeTab(sections[next].id); document.getElementById(`${compact ? "compact-emergency-tab" : "emergency-tab"}-${sections[next].id}`)?.focus({ preventScroll: true }); } }}><span className={styles.tabLabel}>{item.label}</span></button>)}</div>
+    <div className={styles.mobileTabs}>
+      <label className={styles.srOnly} htmlFor={`${compact ? "compact-" : ""}emergency-section`}>Emergency care section</label>
+      <div className={styles.sectionPicker}>
+        <select id={`${compact ? "compact-" : ""}emergency-section`} value={active} aria-controls="emergency-tab-panel" onChange={event => changeTab(event.target.value)}>
+          {sections.map(item => <option key={item.id} value={item.id}>{item.id === "hospitals" ? "24/7 emergency hospitals" : item.label}</option>)}
+        </select>
+        <ChevronDown aria-hidden="true" />
+      </div>
+    </div>
+  </>;
 
-  return <div ref={root} className={styles.page} data-emergency-page>
-    <section ref={hero} className={styles.hero} data-nav-theme="dark" aria-labelledby="emergency-title">
+  return <div ref={root} className={`${styles.page} ${appearance === "light" ? styles.pageLight : ""}`} data-emergency-page data-emergency-appearance={appearance}>
+    <section ref={hero} className={styles.hero} data-nav-theme={appearance} aria-labelledby="emergency-title">
       <picture><source media="(max-width: 768px)" srcSet={mobileHero.srcSet} sizes="100vw" /><Image src="/emergency/nh-ambulance-night-v2.webp" alt="A Narayana Health ambulance on a night road with emergency lights and traffic light trails" fill sizes="100vw" loading="eager" fetchPriority="high" className={styles.heroPhoto} /></picture>
       <div className={styles.heroShade} aria-hidden="true" />
-      <div className={`${styles.container} ${styles.heroInner}`}><motion.div className={styles.nearLockup} initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.out }}>
+      <div className={`${styles.container} ${styles.heroInner}`}><motion.div className={styles.nearLockup} initial={{ opacity: calm ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: calm ? 0 : duration.slowest, ease: ease.out }}>
         <h1 id="emergency-title" className={styles.nearTitle}><Image src="/emergency/near-campaign-v2.webp" alt="With you. NEAR you. Narayana Emergency Ambulance Response." fill sizes="(max-width: 768px) 384px, 576px" preload className={styles.nearArtwork} /></h1>
         <div className={styles.heroPhone}><p>One number for every medical need</p><a className={styles.phoneNumber} href={CALL} aria-label={`Call ${PHONE}`}>{PHONE}</a><motion.a href={CALL} className={`${navStyles.emergencyBtn} ${navStyles.emergencyBtnSolid} ${styles.callButton}`} initial="initial" whileHover="animate" whileFocus="animate"><PhoneCall animateOnHover aria-hidden="true" /><span>Call Now</span><ArrowUpRight aria-hidden="true" /></motion.a></div>
       </motion.div></div>
       <a className={styles.scrollCue} href="#overview" onClick={event => { event.preventDefault(); changeTab("overview"); }}><span>Explore our emergency care</span><AnimatedChevronDown /></a>
+      <div className={styles.appearanceSwitch} role="group" aria-label="Emergency page appearance">
+        <button type="button" aria-pressed={appearance === "light"} onClick={() => setAppearance("light")}><Sun aria-hidden="true" /><span>Light</span></button>
+        <button type="button" aria-pressed={appearance === "dark"} onClick={() => setAppearance("dark")}><Moon aria-hidden="true" /><span>Dark</span></button>
+      </div>
     </section>
 
-    <div className={styles.tabExperience} data-nav-theme="dark">
-    <div ref={tabs} className={styles.mainTabs} data-emergency-tabs data-nav-theme="dark" inert={tabsPinned}>{renderTabs(false)}</div>
-    <div className={`${styles.compactTabs} ${styles.compactTabsDark}`} data-emergency-tabs data-nav-theme="dark" hidden={!tabsPinned}>{renderTabs(true)}</div>
-    <div ref={panel} id="emergency-tab-panel" role="tabpanel" aria-labelledby={`${tabsPinned ? "compact-emergency-tab" : "emergency-tab"}-${active}`} tabIndex={-1}>
-    {active === "overview" && <section id="overview" className={styles.overviewHero} data-nav-theme="dark" aria-labelledby="overview-title">
-      <Image src="/assets/doctor_team.png" alt="Narayana Health's multidisciplinary emergency care team" fill sizes="100vw" className={styles.overviewPhoto} />
-      <div className={styles.overviewShade} aria-hidden="true" />
+    <div ref={chapter} className={styles.tabExperience} data-nav-theme={appearance}>
+    <div ref={tabs} className={styles.mainTabs} data-emergency-tabs data-nav-theme={appearance} inert={tabsPinned}>{renderTabs(false)}</div>
+    <div className={`${styles.compactTabs} ${styles.compactTabsDark}`} data-emergency-tabs data-nav-theme={appearance} hidden={!tabsPinned}>{renderTabs(true)}</div>
+    <div ref={panel} id="emergency-tab-panel" role={compact ? "region" : "tabpanel"} aria-label={compact ? sections.find(item => item.id === active)?.label : undefined} aria-labelledby={compact ? undefined : `${tabsPinned ? "compact-emergency-tab" : "emergency-tab"}-${active}`} tabIndex={-1}>
+    {active === "overview" && <section id="overview" className={styles.overviewHero} data-nav-theme={appearance} aria-labelledby="overview-title">
+      <div className={styles.overviewMedia}>
+        <Image src="/assets/doctor_team.png" alt="Narayana Health's multidisciplinary emergency care team" fill sizes="100vw" preload className={styles.overviewPhoto} />
+        <div className={styles.overviewShade} aria-hidden="true" />
+      </div>
       <div className={`${styles.container} ${styles.overviewLayout}`}>
         <motion.div {...reveal} className={styles.overviewCopy}><h2 id="overview-title" className={styles.sectionTitle}>{content.overview.title}</h2><p>{content.overview.subtitle}</p></motion.div>
-        <motion.aside {...reveal} className={styles.overviewMetrics} aria-labelledby="network-title"><h3 id="network-title">India’s Most Comprehensive Emergency Care Network</h3><dl>{content.response.items.map(item => <div key={item.title}><dt>{item.title}</dt><dd>{item.description}</dd></div>)}</dl></motion.aside>
+        <motion.div {...reveal} className={styles.overviewMetrics} aria-labelledby="network-title"><h3 id="network-title">India’s Most Comprehensive Emergency Care Network</h3><dl>{content.response.items.map(item => <div key={item.title}><dt>{item.title}</dt><dd>{item.description}</dd></div>)}</dl></motion.div>
       </div>
     </section>}
 
@@ -177,22 +246,21 @@ export default function EmergencyPage() {
 
     {(active === "overview" || active === "expertise") && <section id="expertise" className={`${styles.section} ${styles.container}`} aria-labelledby="expertise-title">
       <motion.div {...reveal} className={styles.sectionHeader}><h2 id="expertise-title" className={styles.sectionTitle}>{content.team.title}</h2><p className={styles.subtitle}>{content.team.subtitle}</p></motion.div>
-      <div className={styles.teamGrid}>{content.team.items.slice(0, 6).map((item, index) => { const Icon = teamIcons[index]; return <motion.article {...reveal} key={item.title} className={styles.teamCard}><span className={styles.iconBox}><Icon aria-hidden="true" /></span><div><h3>{item.title}</h3><p>{item.subtitle}</p></div></motion.article>; })}</div>
-      {active === "expertise" && <div className={`${styles.accordion} ${styles.additionalTeam}`}><details><summary><span>Support across every age and stage of life</span><Plus aria-hidden="true" /></summary><div className={styles.supportGrid}>{content.team.items.slice(6).map(item => <div key={item.title}><h3>{item.title}</h3><p>{item.subtitle}</p></div>)}</div></details></div>}
+      <div className={styles.teamGrid}>{content.team.items.slice(0, active === "expertise" ? content.team.items.length : 6).map((item, index) => { const Icon = teamIcons[index]; return <motion.article {...reveal} key={item.title} className={styles.teamCard}><span className={styles.iconBox}><Icon aria-hidden="true" /></span><div><h3>{item.title}</h3><p>{item.subtitle}</p></div></motion.article>; })}</div>
       {active === "overview" && <div className={styles.centerAction}><MenuAction label="Explore our expertise" context="View the full emergency team and protocols" onClick={() => changeTab("expertise")} /></div>}
     </section>}
 
     {active === "expertise" && <>
       <section className={styles.section} aria-labelledby="protocol-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="protocol-title" className={styles.sectionTitle}>{content.protocols.title}</h2><p className={styles.subtitle}>{content.protocols.subtitle}</p></motion.div>
-        <HorizontalMediaRail id="emergency-protocols" labelledBy="protocol-title" itemLabel="emergency protocols" heading={null} variant="gallery">
+        <div className={styles.photoRail}><HorizontalMediaRail id="emergency-protocols" labelledBy="protocol-title" itemLabel="emergency protocols" heading={null} variant="gallery">
           {content.protocols.items.map((item, index) => <motion.article {...reveal} key={item.title} className={styles.photoCard}><Image src={`/emergency/protocol-${index}.webp`} alt="" fill sizes="(max-width: 768px) 85vw, 512px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><h3>{item.title}</h3><p className={styles.protocolHeading}>{item.heading}</p><p>{item.description}</p></div></motion.article>)}
-        </HorizontalMediaRail>
+        </HorizontalMediaRail></div>
       </section>
       <section className={styles.performanceSection} aria-labelledby="performance-title"><div className={styles.performance}>
-        <motion.div className={styles.performanceBackground} initial={{ opacity: reduced ? 1 : 0, filter: reduced ? "blur(0px)" : "blur(16px)" }} whileInView={{ opacity: 1, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.out }}><Image src="/bento-advanced-technology.jpg" alt="" fill sizes="100vw" className={styles.performancePhoto} /></motion.div><div className={styles.performanceShade} aria-hidden="true" />
+        <motion.div className={styles.performanceBackground} initial={{ opacity: calm ? 1 : 0, filter: calm ? "blur(0px)" : "blur(16px)" }} whileInView={{ opacity: 1, filter: "blur(0px)" }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: calm ? 0 : duration.slowest, ease: ease.out }}><Image src="/bento-advanced-technology.jpg" alt="" fill sizes="100vw" className={styles.performancePhoto} /></motion.div><div className={styles.performanceShade} aria-hidden="true" />
         <div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="performance-title" className={styles.sectionTitle}>{content.performance.title}</h2><p className={styles.subtitle}>{content.performance.subtitle}</p></motion.div>
-          <motion.dl className={styles.performanceGrid} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={{ hidden: {}, visible: { transition: { staggerChildren: reduced ? 0 : duration.fast } } }}>
-            {content.performance.items.map(item => <motion.div key={item.title} variants={{ hidden: { opacity: reduced ? 1 : 0, filter: reduced ? "blur(0px)" : "blur(8px)" }, visible: { opacity: 1, filter: "blur(0px)", transition: { duration: reduced ? 0 : duration.slowest, ease: ease.out } } }}><dt>{item.title}</dt><dd>{item.subtitle}</dd><dd className={styles.benchmark}>{item.head.replace("Benchmark1-", "Benchmark¹ · ")}</dd></motion.div>)}
+          <motion.dl className={styles.performanceGrid} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={{ hidden: {}, visible: { transition: { staggerChildren: calm ? 0 : duration.fast } } }}>
+            {content.performance.items.map(item => <motion.div key={item.title} variants={{ hidden: { opacity: calm ? 1 : 0, filter: calm ? "blur(0px)" : "blur(8px)" }, visible: { opacity: 1, filter: "blur(0px)", transition: { duration: calm ? 0 : duration.slowest, ease: ease.out } } }}><dt>{item.title}</dt><dd>{item.subtitle}</dd><dd className={styles.benchmark}>{item.head.replace("Benchmark1-", "Benchmark¹ · ")}</dd></motion.div>)}
           </motion.dl><p className={styles.sourceNote}>{content.performance.note}</p>
         </div>
       </div></section>
@@ -204,16 +272,25 @@ export default function EmergencyPage() {
 
     {active === "hospitals" && <section id="hospitals" className={styles.section} aria-labelledby="hospitals-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="hospitals-title" className={styles.sectionTitle}>Hospitals with 24x7 Emergency</h2><p className={styles.subtitle}>Round-the-Clock Emergency Care Across All Our Hospitals</p><div className={styles.citySwitcher}><label className={styles.srOnly} htmlFor="emergency-city">Choose your location</label><div className={styles.selectWrap}><MapPin aria-hidden="true" /><select id="emergency-city" value={city} onChange={event => setCity(event.target.value)}>{content.cities.map(item => <option value={item.label} key={item.label}>{item.label}</option>)}</select><ChevronDown aria-hidden="true" /></div></div></motion.div>
       <p className={styles.resultCount} role="status">{hospitals.length} {hospitals.length === 1 ? "location" : "locations"} in {city}</p>
-      <HorizontalMediaRail key={city} id="emergency-hospitals" labelledBy="hospitals-title" itemLabel="emergency hospitals" heading={null} variant="gallery">{hospitals.map(hospital => <motion.div {...reveal} key={hospital.id}><EmergencyHospitalCard hospital={hospital} /></motion.div>)}</HorizontalMediaRail>
+      <div className={styles.photoRail}><HorizontalMediaRail key={city} id="emergency-hospitals" labelledBy="hospitals-title" itemLabel="emergency hospitals" heading={null} variant="gallery">{hospitals.map(hospital => <motion.div {...reveal} key={hospital.id}><EmergencyHospitalCard hospital={hospital} /></motion.div>)}</HorizontalMediaRail></div>
       {hospitals.length === 0 && <p className={styles.empty}>No locations are listed for this city on the current directory. <a href={CALL}>Call {PHONE}</a> for assistance.</p>}
     </section>}
     </div>
     </div>
 
+    {/* Extra flow distance lets the final dark screen settle before the white card arrives. */}
+    <div className={styles.tabDwell} aria-hidden="true" />
+
     {/* Shared content remains mounted and unchanged when the care tab changes. */}
     <div ref={sharedJourney} className={styles.sharedJourney} data-nav-theme="light" data-emergency-shared>
       <section className={`${styles.section} ${styles.container}`} aria-labelledby="stroke-centre-title">
-        <motion.div {...appear} className={styles.certificationIntro}>
+        <motion.div
+          initial={{ opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.94, filter: reduced ? "blur(0px)" : "blur(8px)" }}
+          whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.out }}
+          className={styles.certificationIntro}
+        >
           <div className={styles.certificationImage}><Image src="/emergency/mazumdar-shaw.webp" alt="Mazumdar Shaw Medical Centre, Bangalore" fill sizes="(max-width: 900px) 100vw, 600px" /></div>
           <div className={styles.certificationText}>
             <span className={styles.certificationSeal}><Award aria-hidden="true" /></span>
@@ -225,7 +302,7 @@ export default function EmergencyPage() {
       </section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="why-emergency-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="why-emergency-title" className={styles.sectionTitle}>{content.benefits.title}</h2><p className={styles.subtitle}>{content.benefits.subtitle}</p></motion.div>
-      <motion.div {...appear} className={styles.careGrid}>{content.benefits.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={styles.careCard} data-card={index} data-nav-theme="dark"><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></motion.article>)}</motion.div>
+      <motion.div {...appear} className={styles.careGrid}>{content.benefits.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={styles.careCard} data-card={index} data-nav-theme={appearance}><Image src={["/navigation/services-ambulance.webp", "/emergency/care-1.webp", "/assets/doctor_team.png"][index]} alt={item.title} fill sizes="(max-width: 768px) 90vw, 40vw" className={styles.coverPhoto} /><div className={styles.cardWash} /><div className={styles.careCopy}><h3>{item.title}</h3><p>{item.description}</p></div></motion.article>)}</motion.div>
     </div></section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="inside-er-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="inside-er-title" className={styles.sectionTitle}>{content.video.title}</h2><p className={styles.subtitle}>{content.video.subtitle}</p></motion.div>
@@ -254,26 +331,31 @@ export default function EmergencyPage() {
       </motion.div></section>
 
 <section className={styles.section} aria-labelledby="guide-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="guide-title" className={styles.sectionTitle}>{content.articles.title}</h2><p className={styles.subtitle}>{content.articles.subtitle}</p></motion.div>
-      <motion.div {...appear} className={styles.container}><EmergencyGuideCarousel items={content.articles.items} labelledBy="guide-title" /></motion.div>
+      <motion.div {...appear} className={styles.container}><EmergencyGuideCarousel items={content.articles.items} labelledBy="guide-title" staticMotion={calm} /></motion.div>
     </section>
 
 <section className={styles.section} aria-labelledby="newsletter-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="newsletter-title" className={styles.sectionTitle}>{content.newsletters.title}</h2><p className={styles.subtitle}>{content.newsletters.subtitle}</p></motion.div>
-      <motion.div {...appear} className={`${styles.container} ${styles.editorialGrid}`}>{content.newsletters.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={`${styles.photoCard} ${styles.newsletterCard}`}><a href={item.cta_link} target="_blank" rel="noopener noreferrer" className={styles.fullCardLink}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 90vw, 420px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><h3>{item.title}</h3><span className={styles.cardLink}>{item.cta_name}<Download aria-hidden="true" /></span></div></a></motion.article>)}</motion.div>
+      <motion.div {...appear} className={`${styles.container} ${styles.editorialGrid}`} role="list" aria-label="Emergency newsletters" tabIndex={compact ? 0 : undefined}>{content.newsletters.items.map((item, index) => <motion.article {...cardBlur(index)} key={item.title} className={`${styles.photoCard} ${styles.newsletterCard}`} role="listitem"><a href={item.cta_link} target="_blank" rel="noopener noreferrer" className={styles.fullCardLink}><Image src={item.image} alt="" fill sizes="(max-width: 768px) 90vw, 420px" /><div className={styles.photoCardShade} aria-hidden="true" /><div className={styles.photoCardCopy}><h3>{item.title}</h3><span className={styles.cardLink}>{item.cta_name}<Download aria-hidden="true" /></span></div></a></motion.article>)}</motion.div>
     </section>
 
-<section className={styles.section} data-nav-theme="light" aria-labelledby="faq-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="faq-title" className={styles.sectionTitle}>{content.faqs.title}</h2><p className={styles.subtitle}>{content.faqs.subtitle}</p></motion.div><SpecialityFAQ faqs={content.faqs.items} theme="light" defaultOpenIndex={null} /></div></section>
+<section className={styles.section} data-nav-theme="light" aria-labelledby="faq-title"><div className={styles.container}><motion.div {...reveal} className={styles.sectionHeader}><h2 id="faq-title" className={styles.sectionTitle}>{content.faqs.title}</h2><p className={styles.subtitle}>{content.faqs.subtitle}</p></motion.div><SpecialityFAQ className={styles.mobileFaq} faqs={content.faqs.items} theme="light" defaultOpenIndex={null} /></div></section>
 
-<BlogCtaBanner bg="transparent"
+<div onClickCapture={event => {
+      if (event.target instanceof Element && event.target.closest('a[href="#hospitals"]')) {
+        event.preventDefault();
+        changeTab("hospitals");
+      }
+    }}><BlogCtaBanner bg="transparent" className={styles.closingCta}
       eyebrow="24×7 EMERGENCY CARE ACROSS INDIA"
       title="Looking for Expert Medical Care?"
       subtitle="Your health matters. That’s why we make finding and booking the right doctor easy."
       primaryBtn={{ href: "/doctors", text: "Book Appointment" }}
       secondaryBtn={{ href: "#hospitals", text: "Find Our Hospital" }}
-      phoneText={`Call 24×7: ${PHONE}`} phoneHref={CALL} />
+      phoneText={`Call 24×7: ${PHONE}`} phoneHref={CALL} /></div>
 
     </div>
 
-    {showCall && <aside className={styles.mobileCall} aria-label="Emergency call shortcut"><span><strong>24/7 Emergency</strong><small>No appointment needed</small></span><a href={CALL}><PhoneCall aria-hidden="true" /><span>Call now</span></a></aside>}
+    {showCall && <aside className={styles.mobileCall} aria-label="Emergency call shortcut"><span><strong>24/7 Emergency</strong><small>{PHONE}</small></span><a href={CALL} aria-label={`Call emergency care on ${PHONE}`}><PhoneCall aria-hidden="true" /><span>Call now</span></a></aside>}
 
   </div>;
 }

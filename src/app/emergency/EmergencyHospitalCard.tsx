@@ -17,7 +17,7 @@ interface Hospital {
 /** Specialty HospitalCard composition, using the emergency directory's own data. */
 export default function EmergencyHospitalCard({ hospital }: { hospital: Hospital }) {
   const image = hospital.id === 38 ? "/emergency/mazumdar-shaw.webp" : hospital.id === 32 ? "/emergency/hsr-hospital.webp" : `/emergency/hospital-${hospital.id}.webp`;
-  return <article className={styles.photoCard}>
+  return <article className={`${styles.photoCard} ${styles.hospitalCard}`}>
     <Image src={image} alt={hospital.name} fill sizes="(max-width: 768px) 85vw, 512px" />
     <div className={styles.photoCardShade} aria-hidden="true" />
     <div className={styles.photoCardCopy}>

@@ -17,10 +17,11 @@ export interface GuideItem {
   href: string;
 }
 
-export default function EmergencyGuideCarousel({ items, labelledBy }: {
-  items: GuideItem[]; labelledBy: string;
+export default function EmergencyGuideCarousel({ items, labelledBy, staticMotion = false }: {
+  items: GuideItem[]; labelledBy: string; staticMotion?: boolean;
 }) {
-  const reduced = useReducedMotion();
+  const prefersReduced = useReducedMotion();
+  const reduced = Boolean(prefersReduced) || staticMotion;
   const track = useRef<HTMLUListElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
