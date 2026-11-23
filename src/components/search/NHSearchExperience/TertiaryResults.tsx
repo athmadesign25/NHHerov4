@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { 
   Heart, Activity, ChevronRight, BookOpen, AlertCircle, Shield, ArrowRight 
 } from "lucide-react";
 import styles from "./NHSearchExperience.module.css";
 import { TreatmentItemData, ArticleItemData } from "./searchData";
+
+import { TREATMENTS_PROCEDURES_DATA } from "@/data/treatmentsProceduresData";
 
 import PulseAIAvatar from "./PulseAIAvatar";
 
@@ -19,6 +22,8 @@ interface TertiaryResultsProps {
   pulseRowRef?: React.RefObject<HTMLDivElement | null>;
   pulseRecommendationText?: string;
   query?: string;
+  onClose?: () => void;
+  onNavigateOut?: (targetHref: string) => void;
 }
 
 export default function TertiaryResults({
@@ -27,7 +32,54 @@ export default function TertiaryResults({
   relatedSpecialties = [],
   onSelectSpecialtyTag,
   query = "",
+  onClose,
+  onNavigateOut,
 }: TertiaryResultsProps) {
+  const router = useRouter();
+  const [expandingId, setExpandingId] = useState<string | null>(null);
+
+  // Helper to reliably resolve clean procedure slug matching our procedures library & detail page
+  const getProcedureSlug = (t: TreatmentItemData): string => {
+    if (t.slug) return t.slug;
+    const titleLower = t.title.toLowerCase();
+    if (titleLower.includes("angiography")) return "coronary-angiography";
+    if (titleLower.includes("ecg") || titleLower.includes("electrocardiogram")) return "ecg-electrocardiogram";
+    if (titleLower.includes("echo") || titleLower.includes("echocardiography")) return "echocardiography";
+    if (titleLower.includes("cardiac consultation") || titleLower.includes("heart consultation")) return "cardiac-consultation";
+    if (titleLower.includes("bypass") || titleLower.includes("cabg")) return "coronary-artery-bypass-graft-cabg";
+    if (titleLower.includes("heart transplant")) return "heart-transplant";
+    if (titleLower.includes("aneurysm")) return "abdominal-aortic-aneurysm-repair";
+    if (titleLower.includes("knee replacement")) return "knee-replacement-surgery";
+    if (titleLower.includes("knee pain") || titleLower.includes("arthroscopy")) return "knee-arthroscopy";
+    if (titleLower.includes("mri") || titleLower.includes("x-ray") || titleLower.includes("xray")) return "knee-mri-imaging";
+    return t.title
+      .toLowerCase()
+      .replace(/[·()]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  };
+
+  // Smooth, delightful expanding transition from Pulse search modal into the target page
+  const handleSmoothNavigate = (e: React.MouseEvent, targetHref: string, id: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      return; // allow opening in new tab
+    }
+    e.preventDefault();
+
+    // Trigger point expansion on the exact clicked item
+    setExpandingId(id);
+
+    if (onNavigateOut) {
+      onNavigateOut(targetHref);
+    } else {
+      if (onClose) {
+        onClose();
+      }
+      setTimeout(() => {
+        router.push(targetHref);
+      }, 180);
+    }
+  };
   // Show 4 items per category and up to 3 rows of specialties
   const displayedTreatments = treatments.slice(0, 4);
   const displayedArticles = articles.slice(0, 4);
@@ -90,7 +142,7 @@ export default function TertiaryResults({
     ? displayedSpecialties 
     : ["Cardiology", "Orthopaedics", "Neurology", "Pediatrics", "Oncology", "Gastroenterology"];
 
-  const treatmentsViewAllHref = `/search?tab=treatments${query ? `&q=${encodeURIComponent(query)}` : ""}`;
+  const treatmentsViewAllHref = `/treatments${query ? `?search=${encodeURIComponent(query)}` : ""}`;
   const articlesViewAllHref = `/search?tab=articles${query ? `&q=${encodeURIComponent(query)}` : ""}`;
 
   return (
@@ -100,31 +152,42 @@ export default function TertiaryResults({
         <div className={styles.editorialSection}>
           <div className={styles.editorialHeadingRow}>
             <span className={styles.sectionEyebrowTitle}>TREATMENTS &amp; PROCEDURES</span>
-            <Link href={treatmentsViewAllHref} className={styles.editorialHeaderViewAll}>
+            <Link
+              href={treatmentsViewAllHref}
+              className={`${styles.editorialHeaderViewAll} ${expandingId === "treatments-all" ? styles.viewAllExpanding : ""}`}
+              onClick={(e) => handleSmoothNavigate(e, treatmentsViewAllHref, "treatments-all")}
+            >
               <span>View all</span>
               <ArrowRight size={11} />
             </Link>
           </div>
 
           <div className={styles.editorialList}>
-            {displayedTreatments.map((t) => (
-              <Link
-                key={t.id}
-                href={`/search?tab=treatments&q=${encodeURIComponent(t.title)}`}
-                className={styles.editorialItem}
-              >
-                <div className={styles.editorialItemLeft}>
-                  <span className={styles.editorialIconBox}>
-                    {renderTreatmentIcon(t.iconType)}
-                  </span>
-                  <div className={styles.editorialMeta}>
-                    <div className={styles.editorialItemTitle}>{t.title}</div>
-                    <div className={styles.editorialItemSub}>{t.subtitle}</div>
+            {displayedTreatments.map((t) => {
+              const slug = getProcedureSlug(t);
+              // API results can name procedures outside the demo detail catalogue.
+              // Open the library instead of an unrelated fallback detail page.
+              const targetHref = TREATMENTS_PROCEDURES_DATA.some(procedure => procedure.slug === slug) ? `/procedures/${slug}` : "/treatments";
+              return (
+                <Link
+                  key={t.id}
+                  href={targetHref}
+                  className={`${styles.editorialItem} ${expandingId === t.id ? styles.editorialItemExpanding : ""}`}
+                  onClick={(e) => handleSmoothNavigate(e, targetHref, t.id)}
+                >
+                  <div className={styles.editorialItemLeft}>
+                    <span className={styles.editorialIconBox}>
+                      {renderTreatmentIcon(t.iconType)}
+                    </span>
+                    <div className={styles.editorialMeta}>
+                      <div className={styles.editorialItemTitle}>{t.title}</div>
+                      <div className={styles.editorialItemSub}>{t.subtitle}</div>
+                    </div>
                   </div>
-                </div>
-                <ChevronRight size={14} className={styles.editorialChevron} />
-              </Link>
-            ))}
+                  <ChevronRight size={14} className={styles.editorialChevron} />
+                </Link>
+              );
+            })}
           </div>
         </div>
       ) : (
@@ -165,33 +228,41 @@ export default function TertiaryResults({
       <div className={styles.editorialSection}>
         <div className={styles.editorialHeadingRow}>
           <span className={styles.sectionEyebrowTitle}>RELATED ARTICLES &amp; GUIDANCE</span>
-          <Link href={articlesViewAllHref} className={styles.editorialHeaderViewAll}>
+          <Link
+            href={articlesViewAllHref}
+            className={`${styles.editorialHeaderViewAll} ${expandingId === "articles-all" ? styles.viewAllExpanding : ""}`}
+            onClick={(e) => handleSmoothNavigate(e, articlesViewAllHref, "articles-all")}
+          >
             <span>View all</span>
             <ArrowRight size={11} />
           </Link>
         </div>
 
         <div className={styles.editorialList}>
-          {effectiveArticles.map((art, idx) => (
-            <Link
-              key={art.id}
-              href={`/search?tab=articles&q=${encodeURIComponent(art.title)}`}
-              className={styles.editorialItem}
-            >
-              <div className={styles.editorialItemLeft}>
-                <span className={styles.editorialIconBox}>
-                  {renderArticleIcon(art.iconType, idx)}
-                </span>
-                <div className={styles.editorialMeta}>
-                  <div className={styles.editorialItemTitle}>{art.title}</div>
-                  <div className={styles.editorialItemSub}>
-                    {art.readTime} • {art.category}
+          {effectiveArticles.map((art, idx) => {
+            const artHref = `/search?tab=articles&q=${encodeURIComponent(art.title)}`;
+            return (
+              <Link
+                key={art.id}
+                href={artHref}
+                className={`${styles.editorialItem} ${expandingId === art.id ? styles.editorialItemExpanding : ""}`}
+                onClick={(e) => handleSmoothNavigate(e, artHref, art.id)}
+              >
+                <div className={styles.editorialItemLeft}>
+                  <span className={styles.editorialIconBox}>
+                    {renderArticleIcon(art.iconType, idx)}
+                  </span>
+                  <div className={styles.editorialMeta}>
+                    <div className={styles.editorialItemTitle}>{art.title}</div>
+                    <div className={styles.editorialItemSub}>
+                      {art.readTime} • {art.category}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ChevronRight size={14} className={styles.editorialChevron} />
-            </Link>
-          ))}
+                <ChevronRight size={14} className={styles.editorialChevron} />
+              </Link>
+            );
+          })}
         </div>
       </div>
 
@@ -200,7 +271,11 @@ export default function TertiaryResults({
         <div className={styles.editorialSection}>
           <div className={styles.editorialHeadingRow}>
             <span className={styles.sectionEyebrowTitle}>RELATED SPECIALTIES &amp; CARE</span>
-            <Link href="/specialities" className={styles.editorialHeaderViewAll}>
+            <Link
+              href="/specialities"
+              className={`${styles.editorialHeaderViewAll} ${expandingId === "specialties-all" ? styles.viewAllExpanding : ""}`}
+              onClick={(e) => handleSmoothNavigate(e, "/specialities", "specialties-all")}
+            >
               <span>View all</span>
               <ArrowRight size={11} />
             </Link>

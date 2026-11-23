@@ -1,0 +1,105 @@
+{
+  "capturedAt": "2026-11-06T17:03:29+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Hosur",
+  "facility": "Narayana Clinic, Hosur",
+  "facilityId": "2013",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 3,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 3,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 3,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [
+    {
+      "name": "Master Health Check up - Male",
+      "kind": "package",
+      "city": "Hosur",
+      "facility": "Narayana Clinic, Hosur",
+      "facilityId": "2013",
+      "amount": 8699.0,
+      "localId": "snapshot-3bb81393de03db03",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For Male to assess the overall health",
+      "listPrice": 23480.0,
+      "sourceDisplayName": "Nhic Master Healthcheckup - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2013&code=PKG032011",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2013&code=PKG032011"
+      ],
+      "code": "PKG032011",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Male Senior Citizen Health Checkup",
+      "kind": "package",
+      "city": "Hosur",
+      "facility": "Narayana Clinic, Hosur",
+      "facilityId": "2013",
+      "amount": 6699.0,
+      "localId": "snapshot-bf8edd918b02bc61",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For Male Above 60 years",
+      "listPrice": 12470.0,
+      "sourceDisplayName": "Nhic Senior Citizen - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2013&code=PKG032009",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2013&code=PKG032009"
+      ],
+      "code": "PKG032009",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    },
+    {
+      "name": "Male Executive Health Checkup",
+      "kind": "package",
+      "city": "Hosur",
+      "facility": "Narayana Clinic, Hosur",
+      "facilityId": "2013",
+      "amount": 5699.0,
+      "localId": "snapshot-196adbadb40e13ea",
+      "detailStatus": "public-link-observed",
+      "subtitle": "For men to assess the overall health",
+      "listPrice": 10470.0,
+      "sourceDisplayName": "Nhic Executive Healthcheckup - Male",
+      "imageUrl": "https://www.narayanahealth.org/images/Health-Packages-Placeholder.webp",
+      "imageStatus": "source-placeholder",
+      "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2013&code=PKG032007",
+      "observedDetailUrls": [
+        "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2013&code=PKG032007"
+      ],
+      "code": "PKG032007",
+      "localImage": "/health-checkups/source/244d0a7c43bfee93d416c289.webp"
+    }
+  ],
+  "observedDetailUrls": [
+    "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=2013&code=PKG032011",
+    "https://www.narayanahealth.org/health-checkups/nhic-senior-citizen-male?unitCode=2013&code=PKG032009",
+    "https://www.narayanahealth.org/health-checkups/nhic-executive-healthcheckup-male?unitCode=2013&code=PKG032007"
+  ],
+  "unitCode": "2013",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-hosur-2013-packages.mhtml",
+      "sha256": "e0ee378c27f78f06816cbbfc2b65848f4b773c7db484dc992888b8bf9826b4cf",
+      "format": "mhtml",
+      "renderedCardCount": 3,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

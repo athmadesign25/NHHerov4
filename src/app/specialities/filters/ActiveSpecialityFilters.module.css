@@ -1,0 +1,75 @@
+.list {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: calc(var(--sp-1, 8px) * 0.75);
+  min-width: max-content;
+  padding-inline-start: calc(var(--sp-2, 16px) + 1px);
+  overflow-anchor: none;
+}
+
+.list::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 50%;
+  height: var(--sp-3, 24px);
+  border-inline-start: 1px solid var(--color-border);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.list > button {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: min(calc(var(--sp-16, 128px) * 2), calc(100vw - var(--sp-12, 96px)));
+}
+
+.list > button span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wrap {
+  flex-wrap: wrap;
+  min-width: 0;
+  padding: 0 0 var(--sp-2, 16px);
+  margin-bottom: var(--sp-2, 16px);
+  border-bottom: 1px solid var(--color-border);
+  gap: 6px;
+}
+
+.wrap::before {
+  content: none;
+}
+
+.wrap > button {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  text-align: start;
+}
+
+.wrap > button span {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.wrap > button {
+  font-size: var(--font-size-xs, 12px);
+  gap: calc(var(--sp-1, 8px) / 2);
+  padding: 3px 8px;
+}
+
+.wrap > button svg {
+  width: 12px;
+  height: 12px;
+}
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .wrap > button {
+    min-height: var(--sp-4, 32px);
+    padding-block: calc(var(--sp-1, 8px) / 2);
+  }
+}

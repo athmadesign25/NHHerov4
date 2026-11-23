@@ -1,0 +1,510 @@
+/* ─── PAGE-LEVEL STYLES — BOOK APPOINTMENT (Toshib Layout) ──────────────── */
+
+/* ─── PAGE WRAPPER ───────────────────────────────────────────────────────── */
+.page {
+  padding-top: var(--nav-height);
+  min-height: 100dvh;
+  background: var(--color-bg, #f8fafc);
+  padding-bottom: 100px; /* clearance for mweb sticky footer */
+}
+
+/* ─── CONTAINER ──────────────────────────────────────────────────────────── */
+.container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 80px);
+  box-sizing: border-box;
+}
+
+/* ─── NAV ROW ────────────────────────────────────────────────────────────── */
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+/* ─── 2-COLUMN GRID ──────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+/* ─── LEFT PANEL — UNIFIED DOCTOR & SUMMARY CARD ─────────────────────────── */
+.doctorPanel {
+  position: sticky;
+  top: calc(var(--nav-height) + 20px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.unifiedCard {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.docHeader {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.doctorImgWrap {
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--color-bg-subtle, #f1f5f9);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.doctorImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doctorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.doctorName {
+  font-size: clamp(18px, 1.4vw, 21px);
+  font-weight: 800;
+  color: var(--color-text, #0f172a);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.doctorSpec {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #034EA2);
+  margin: 2px 0 0 0;
+}
+
+.doctorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary, #64748b);
+  font-weight: 500;
+}
+
+.starIcon {
+  color: #f59e0b;
+}
+
+.metaMuted {
+  color: var(--color-text-tertiary, #94a3b8);
+}
+
+.cardDivider {
+  height: 1px;
+  background: var(--color-border-light, #f1f5f9);
+  width: 100%;
+  margin: 2px 0;
+}
+
+/* Fee Section */
+.feeSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 14px 18px;
+  border: 1px solid #edf2f7;
+}
+
+.feeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.feeLabel {
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  font-weight: 600;
+}
+
+.feeSubtext {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #059669;
+  font-weight: 600;
+}
+
+.trustCheck {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.feeAmount {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text, #0f172a);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* Slot selected preview pill inside left card */
+.slotSelectedSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 14px;
+}
+
+.slotSummaryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.slotDateText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary, #034EA2);
+}
+
+.slotCalendarIcon {
+  color: var(--color-primary, #034EA2);
+  flex-shrink: 0;
+}
+
+.slotTimeBadge {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--color-primary, #034EA2);
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+}
+
+.slotPendingBadge {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(3, 78, 162, 0.08);
+  color: var(--color-primary, #034EA2);
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.slotPatientText {
+  font-size: 12px;
+  color: var(--color-text-secondary, #64748b);
+  font-weight: 500;
+}
+
+.leftCardCtaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* ─── RIGHT PANEL — SPACIOUS & GESTALT-STRUCTURED ────────────────────────── */
+.bookingPanel {
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 24px;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 640px) {
+  .bookingPanel {
+    padding: 20px 18px;
+    gap: 20px;
+  }
+}
+
+.bookingSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionDivider {
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border-light, #f1f5f9);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionIcon {
+  color: var(--color-text-secondary);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ─── CTA BLOCK ──────────────────────────────────────────────────────────── */
+.ctaBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* Primary CTA */
+.ctaPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  outline: none;
+  letter-spacing: -0.01em;
+}
+
+.ctaPrimary:hover:not(.ctaDisabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ctaPrimary:active:not(.ctaDisabled) {
+  transform: translateY(0);
+}
+
+.ctaPrimary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.ctaDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ctaFullWidth {
+  width: 100%;
+}
+
+/* Explains why the primary CTA is disabled — positioned directly above Book Appointment */
+.ctaHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.ctaHintIcon {
+  color: var(--color-primary, #034EA2);
+  flex-shrink: 0;
+}
+
+/* Outline CTA (Call for Enquiry) */
+.ctaOutline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  letter-spacing: -0.01em;
+}
+
+.ctaOutline:hover {
+  background: var(--color-primary-light, #eff6ff);
+}
+
+/* ─── MWEB STICKY FOOTER ─────────────────────────────────────────────────── */
+.stickyFooter {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: var(--color-bg-card, #fff);
+  border-top: 1px solid var(--color-border);
+  padding: 12px var(--sp-4) max(16px, env(safe-area-inset-bottom));
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selectionChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  width: fit-content;
+}
+
+.callLinkMobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────────────────────── */
+
+/* Tablet: collapse to single column */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+
+  .doctorPanel {
+    position: static;
+  }
+
+  /* Flip order: booking panel first on tablet/mweb */
+  .bookingPanel {
+    order: -1;
+  }
+}
+
+/* Mobile: show sticky footer, hide inline CTAs */
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 140px;
+  }
+
+  .container {
+    padding: 0 var(--sp-3);
+  }
+
+  .navRow {
+    padding-top: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+
+  .stickyFooter {
+    display: flex;
+  }
+
+  .ctaBlock {
+    display: none; /* CTAs live in the sticky footer on mobile */
+  }
+
+  .doctorCard {
+    flex-direction: row;
+    gap: var(--sp-3);
+  }
+
+  .doctorImgWrap {
+    width: 72px;
+    height: 72px;
+  }
+
+  .bookingPanel {
+    padding: var(--sp-4);
+    gap: var(--sp-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--sp-2);
+  }
+
+  .bookingPanel {
+    padding: var(--sp-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .doctorCard {
+    padding: var(--sp-3);
+    border-radius: var(--radius-lg);
+  }
+}

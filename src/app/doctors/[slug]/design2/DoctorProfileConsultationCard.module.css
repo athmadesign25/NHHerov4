@@ -1,0 +1,79 @@
+.card {
+  --location-surface: var(--color-bg-card);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  border: var(--space-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--location-surface);
+  transition: background-color var(--duration-base) var(--ease-out), border-color var(--duration-base) var(--ease-out);
+}
+
+.card[data-has-image="true"] { grid-template-columns: 32% minmax(0, 1fr); }
+.card[data-bookable="true"] { cursor: pointer; }
+.media {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 32%;
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-end-start-radius: inherit;
+  -webkit-mask-image: linear-gradient(to right, var(--white) 75%, transparent);
+  mask-image: linear-gradient(to right, var(--white) 75%, transparent);
+}
+.image { object-fit: cover; transition: transform var(--duration-slower) var(--ease-out); }
+.card[data-mode="video"] .image {
+  object-fit: cover;
+  object-position: center top;
+  transform-origin: center top;
+}
+.content { display: flex; flex-direction: column; gap: var(--space-20); min-width: 0; padding: var(--space-20); }
+.card[data-has-image="true"] .content { grid-column: 2; padding-inline-start: var(--space-24); }
+.identity { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8); }
+.identity h3 { margin: 0; color: var(--color-text); font-size: var(--font-size-base); font-weight: 600; line-height: var(--leading-normal); overflow-wrap: anywhere; }
+.distance.distance { position: relative; z-index: 2; margin: 0; }
+.directionIcon { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.booking { display: flex; align-items: last baseline; flex-wrap: wrap; gap: var(--space-4) var(--space-16); margin-top: auto; }
+.booking > div { flex: 0 1 auto; }
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-8);
+  flex-shrink: 0;
+  min-height: calc(var(--space-40) + var(--space-4));
+  margin-block: calc(var(--space-8) * -1);
+  padding: var(--space-8) 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: var(--leading-body);
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out);
+}
+/* One keyboard action covers the whole tile; directions remains independent. */
+.action::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius-lg); }
+.card .action:focus-visible { outline: none; }
+.action:focus-visible::after { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.card:has(.action:focus-visible), .card:has(.action:active) { --location-surface: var(--color-primary-light); border-color: var(--color-primary); }
+.action:focus-visible, .action:active { color: var(--color-primary-dark); }
+@media (hover: hover) {
+  .card[data-bookable="true"]:hover:not(:has(.distance:hover)) { --location-surface: var(--color-primary-light); border-color: rgba(var(--blue-brand-rgb), .3); }
+  .card[data-bookable="true"]:hover:not(:has(.distance:hover)) .action { color: var(--color-primary-dark); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card[data-bookable="true"]:hover:not(:has(.distance:hover)) .image { transform: scale(1.04); }
+}
+@media (max-width: 639px) { .content { padding: var(--space-16); gap: var(--space-16); } }
+@media (prefers-reduced-motion: reduce) { .card, .image, .action { transition: none; } }
+@media (forced-colors: active) {
+  .card { background: Canvas; border-color: ButtonText; }
+  .identity h3 { color: CanvasText; }
+  .action { color: LinkText; }
+  .action:focus-visible::after { outline-color: Highlight; }
+}

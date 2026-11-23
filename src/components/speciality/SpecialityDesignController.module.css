@@ -1,0 +1,180 @@
+.controllerContainer {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  font-family: inherit;
+  user-select: none;
+}
+
+.controllerCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 10px;
+  background: rgba(11, 23, 44, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full, 9999px);
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transition: all var(--transition-base, 250ms ease);
+}
+
+.controllerCard:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+}
+
+.brandLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+  padding-right: 6px;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.brandDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00D47E;
+  box-shadow: 0 0 8px #00D47E;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.optionsGroup {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 2px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  gap: 2px;
+}
+
+.optionBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition-fast, 150ms ease);
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.optionBtn:hover {
+  color: #FFFFFF;
+}
+
+.optionBtnActive {
+  color: #FFFFFF;
+}
+
+.activeBackground {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, #034EA2 0%, #0077D7 100%);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.45);
+  z-index: -1;
+}
+
+.hotkeyBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.optionBtnActive .hotkeyBadge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+.collapseBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Collapsed Mini Pill */
+.collapsedPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: rgba(11, 23, 44, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full, 9999px);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: all var(--transition-base, 250ms ease);
+}
+
+.collapsedPill:hover {
+  background: rgba(15, 30, 58, 0.98);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.collapsedCurrentBadge {
+  background: #034EA2;
+  color: #FFFFFF;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .controllerContainer {
+    bottom: 16px;
+    left: 16px;
+  }
+}

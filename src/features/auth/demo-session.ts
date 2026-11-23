@@ -1,48 +1,46 @@
-// The booking preview's sign-in flag is not an authentication token.
-// Identities, OTPs and member details stay out of browser storage.
-let memoryFallback: boolean | null = null;
+// Start each fresh page load at Login; explicit sign-in survives client routing.
+// Storage flags remain compatible with the combined booking/search previews.
+// No phone numbers, OTPs, identities or patient details are persisted here.
+let signedIn = false;
 
-export function getDemoSession() {
-  let signedIn = false;
+function storedSession(): boolean | null {
+  let value = false;
   let readable = false;
   for (const key of ["localStorage", "sessionStorage"] as const) {
-    try {
-      signedIn ||= window[key].getItem("isLoggedIn") === "true";
-      readable = true;
-    } catch { /* Site storage may be unavailable. */ }
+    try { value ||= window[key].getItem("isLoggedIn") === "true"; readable = true; }
+    catch { /* Keep the preview usable with site storage disabled. */ }
   }
-  return memoryFallback ?? (readable && signedIn);
+  return readable ? value : null;
 }
 
-export function setDemoSession(signedIn: boolean) {
-  let saved = false;
+export function getDemoSession() { return signedIn; }
+
+export function setDemoSession(next: boolean) {
+  signedIn = next;
   for (const key of ["localStorage", "sessionStorage"] as const) {
     try {
-      if (signedIn) window[key].setItem("isLoggedIn", "true");
-      else {
-        window[key].removeItem("isLoggedIn");
-        window[key].removeItem("userName");
-      }
-      saved = true;
-    } catch { /* Keep the current preview usable without persistent storage. */ }
+      if (next) window[key].setItem("isLoggedIn", "true");
+      else { window[key].removeItem("isLoggedIn"); window[key].removeItem("userName"); }
+    } catch { /* The current tab's in-memory sign-in remains available. */ }
   }
-  memoryFallback = saved ? null : signedIn;
-  window.dispatchEvent(new Event("login-state-changed"));
+  window.dispatchEvent(new CustomEvent("login-state-changed", { detail: { signedIn: next } }));
 }
 
 export function subscribeDemoSession(listener: () => void) {
-  const storageChange = (event: StorageEvent) => {
-    if ((event.key === "isLoggedIn" || event.key === null) && event.newValue !== "true") {
-      // A sign-out in another tab also clears this tab's fallback session flag.
-      memoryFallback = null;
-      try { sessionStorage.removeItem("isLoggedIn"); } catch { memoryFallback = false; }
-    } else if (event.key === "isLoggedIn" && event.newValue === "true") memoryFallback = null;
+  const changed = (event: Event) => {
+    if (event instanceof CustomEvent && typeof event.detail?.signedIn === "boolean") signedIn = event.detail.signedIn;
+    else signedIn = storedSession() ?? signedIn;
     listener();
   };
-  window.addEventListener("login-state-changed", listener);
-  window.addEventListener("storage", storageChange);
-  return () => {
-    window.removeEventListener("login-state-changed", listener);
-    window.removeEventListener("storage", storageChange);
+  const storageChanged = (event: StorageEvent) => {
+    if (event.key !== "isLoggedIn" && event.key !== null) return;
+    if (event.newValue !== "true") {
+      signedIn = false;
+      try { sessionStorage.removeItem("isLoggedIn"); } catch { /* Already signed out in memory. */ }
+    } else signedIn = true;
+    listener();
   };
+  window.addEventListener("login-state-changed", changed);
+  window.addEventListener("storage", storageChanged);
+  return () => { window.removeEventListener("login-state-changed", changed); window.removeEventListener("storage", storageChanged); };
 }

@@ -1,0 +1,127 @@
+.root {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  min-height: var(--space-48);
+}
+
+.heading { min-width: 0; }
+
+.controls { display: flex; flex: none; gap: var(--space-4); }
+
+.controls button {
+  display: grid;
+  place-items: center;
+  width: var(--space-48);
+  height: var(--space-48);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: rgba(var(--slate-900-rgb), 0.05);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--duration-base) var(--ease-out), opacity var(--duration-base) var(--ease-out);
+}
+
+.controls svg { width: var(--space-20); height: var(--space-20); }
+.controls button:disabled { opacity: 0.3; cursor: default; }
+
+.rail {
+  min-width: 0;
+  display: grid;
+  grid-auto-flow: column;
+  /* Reserve a visible slice of the next card, including the gap. */
+  grid-auto-columns: calc((100% - var(--space-16)) / 1.2);
+  gap: var(--space-16);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: var(--space-8) var(--space-8) var(--space-16);
+  margin: 0 calc(-1 * var(--space-8));
+  scroll-padding-inline: var(--space-8);
+  scrollbar-width: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Alpha fades reveal the actual page gradient rather than painting over it. */
+.rail[data-fade-start],
+.rail[data-fade-end] {
+  --rail-fade-start: calc(var(--space-1) * 0);
+  --rail-fade-end: calc(var(--space-1) * 0);
+  --rail-fade-width: var(--space-24);
+  mask-image: linear-gradient(to right, transparent, var(--slate-900) var(--rail-fade-start), var(--slate-900) calc(100% - var(--rail-fade-end)), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, var(--slate-900) var(--rail-fade-start), var(--slate-900) calc(100% - var(--rail-fade-end)), transparent);
+}
+.rail[data-fade-start] { --rail-fade-start: var(--rail-fade-width); }
+.rail[data-fade-end] { --rail-fade-end: var(--rail-fade-width); }
+.rail::-webkit-scrollbar { display: none; }
+.rail[data-overflow] { cursor: grab; }
+.rail[data-dragging], .rail[data-dragging] * { cursor: grabbing !important; }
+.rail[data-dragging] a, .rail[data-dragging] img { transform: none; transition: none; }
+.item { min-width: 0; }
+.item:only-child { grid-column: 1; }
+.rail:has(.item:only-child) { grid-auto-columns: 100%; }
+
+.root:has(.rail:focus-visible), .controls button:focus-visible {
+  outline: var(--space-2) solid var(--color-primary);
+  outline-offset: var(--space-4);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: 768px) {
+  .rail {
+    grid-auto-columns: calc((100% - var(--space-48)) / 2.25);
+    gap: var(--space-24);
+  }
+  .rail[data-fade-start], .rail[data-fade-end] { --rail-fade-width: var(--space-48); }
+  /* Short collections do not imply that there are additional cards. */
+  .rail:has(.item:only-child),
+  .rail:has(.item:nth-child(2):last-child) { grid-auto-columns: calc((100% - var(--space-24)) / 2); }
+}
+
+@media (hover: hover) {
+  .controls button:hover:not(:disabled) { background: rgba(var(--slate-900-rgb), 0.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .controls button { transition: none; }
+}
+
+/* Keep keyboard focus and high-contrast outlines fully legible. */
+.rail:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .rail { mask-image: none; -webkit-mask-image: none; }
+}
+
+/* Wide photo cards and one-row category circles share the same native rail.
+   Side controls keep the centered section heading independent of the track. */
+.gallery, .circles { position: relative; gap: 0; }
+.gallery .header, .circles .header { min-height: 0; }
+.gallery .controls, .circles .controls { position: absolute; inset: 50% var(--space-16) auto; transform: translateY(-50%); z-index: 5; justify-content: space-between; pointer-events: none; }
+.gallery .controls button, .circles .controls button { pointer-events: auto; border: var(--space-1) solid var(--color-border); background: var(--color-surface); box-shadow: var(--elevation-2); backdrop-filter: blur(var(--blur-md)); color: var(--color-text); }
+.gallery .controls button:disabled, .circles .controls button:disabled { visibility: hidden; }
+.gallery .rail { grid-auto-columns: min(44vw, calc(var(--space-128) * 4)); gap: var(--space-24); padding: var(--space-12) max(var(--space-24), calc((100vw - var(--max-width)) / 2)) var(--space-24); margin: 0; scroll-padding-inline: max(var(--space-24), calc((100vw - var(--max-width)) / 2)); scroll-snap-type: x mandatory; }
+.gallery .item { scroll-snap-align: start; }
+.gallery .rail:has(.item:only-child), .gallery .rail:has(.item:nth-child(2):last-child) { grid-auto-columns: min(44vw, calc(var(--space-128) * 4)); }
+.circles { padding-inline: var(--space-56); }
+.circles .controls { inset-inline: 0; top: var(--space-40); }
+.circles .rail { grid-auto-columns: calc((100% - var(--space-96)) / 7); grid-auto-flow: column; grid-template-rows: auto; gap: var(--space-16); padding: var(--space-8) var(--space-4) var(--space-16); margin: 0; scroll-snap-type: x mandatory; }
+.circles .item { scroll-snap-align: start; }
+.circles .rail[data-fade-start], .circles .rail[data-fade-end] { --rail-fade-width: var(--space-8); }
+@media (max-width: 1024px) { .circles .rail { grid-auto-columns: calc((100% - var(--space-80)) / 6); } }
+@media (max-width: 768px) {
+  .gallery .rail, .gallery .rail:has(.item:only-child), .gallery .rail:has(.item:nth-child(2):last-child) { grid-auto-columns: calc(100% - var(--space-64)); gap: var(--space-16); padding-inline: var(--space-20); scroll-padding-inline: var(--space-20); }
+  .gallery .controls { inset-inline: var(--space-8); }
+  .circles { padding-inline: var(--space-40); }
+  .circles .controls button { width: var(--space-40); height: var(--space-48); box-shadow: none; background: transparent; border: 0; }
+  .circles .controls { top: var(--space-32); }
+  .circles .rail { grid-auto-columns: var(--space-80); gap: var(--space-12); }
+}

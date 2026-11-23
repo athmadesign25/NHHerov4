@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:46:32+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Ahmedabad",
+  "facility": "Narayana Multispeciality Hospital, Ahmedabad",
+  "facilityId": "1251",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1251",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1251-tests.mhtml",
+      "sha256": "d6015864873dad9a1c251cb5554f45f3dee468ccf2ee26a4f7eaa19952cd4ca5",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

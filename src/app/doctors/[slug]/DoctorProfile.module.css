@@ -1,0 +1,5 @@
+.grid { grid-template-columns: minmax(0, 1fr); }
+.grid > * { min-width: 0; }
+@media (min-width: 1100px) {
+  .grid { grid-template-columns: minmax(0, 1fr) minmax(0, calc(var(--sp-16) * 3 + var(--sp-2))); }
+}

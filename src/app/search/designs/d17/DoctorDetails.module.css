@@ -1,0 +1,5 @@
+.details { display: grid; gap: var(--sp-2); margin: 0; font-size: var(--font-size-sm); line-height: 1.6; }
+.details > div + div { padding-top: var(--sp-2); border-top: 1px solid var(--color-border-light); }
+.details dt { margin-bottom: calc(var(--sp-1) / 2); color: var(--color-text-secondary); font-size: var(--font-size-xs); font-weight: 500; }
+.details dd { margin: 0; color: var(--color-text); overflow-wrap: anywhere; }
+.details ul { margin: 0; padding-inline-start: var(--sp-2); }

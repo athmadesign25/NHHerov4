@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T16:36:48+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Clinic, Nagarabhavi",
+  "facilityId": "6538",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "6538",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-6538-tests.mhtml",
+      "sha256": "7c0b8a2d118dab9dd7c5ad07180b93eba4f4aed1c5b8c65db3f669e2f8d6bdd2",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

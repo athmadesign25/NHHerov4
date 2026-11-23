@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Send, Mic, Plus, Calendar, FileText, Heart,
@@ -15,6 +16,8 @@ import {
 import styles from "./PulseAIWorkspace.module.css";
 import lottie from "lottie-web";
 import PixelRipple from "@/components/ui/effects/PixelRipple";
+import { design20BookingEntryUrl } from "@/features/search/design20BookingEntry";
+import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
 
 function LottieAnimation({ animationPath, width = 60, height = 60 }: { animationPath: string; width?: number; height?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1323,7 +1326,8 @@ function OverallHealthGlance({ userName = "Omkar" }: { userName?: string }) {
 }
 
 /* ─── NO DATA ORGAN CARD ────────────────────────────────────── */
-function NoDataOrganCard({ organName, onConsult }: { organName: string; onConsult: () => void }) {
+function NoDataOrganCard({ organName }: { organName: string }) {
+  const router = useRouter();
   return (
     <div className={styles.noDataCard}>
       <div className={styles.noDataIllustration}>🩺</div>
@@ -1356,7 +1360,7 @@ function NoDataOrganCard({ organName, onConsult }: { organName: string; onConsul
         <div className={styles.specialistRecNote}>
           Complete a health checkup or upload your reports to get personalized insights for {organName}.
         </div>
-        <button className={styles.consultBtn} onClick={onConsult}>Consult</button>
+        <button className={styles.consultBtn} onClick={() => router.push("/health-checkups")}>Explore packages</button>
       </div>
     </div>
   );
@@ -1368,6 +1372,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
   onViewFindings: (o: OrganHealth) => void;
   onConsult: () => void;
 }) {
+  const router = useRouter();
   const isAttention = organ.status === "needs_attention";
   const isModerate  = organ.status === "moderate";
   const isGood      = organ.status === "doing_good";
@@ -1381,7 +1386,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
   const svgSrc         = organIconMap[organ.id];
 
   if (hasNoData) {
-    return <NoDataOrganCard organName={organ.name} onConsult={onConsult} />;
+    return <NoDataOrganCard organName={organ.name} />;
   }
 
   return (
@@ -1449,7 +1454,7 @@ function OrganCard({ organ, onViewFindings, onConsult }: {
             </div>
           </div>
           <div className={styles.specialistRecNote}>{organ.recommendation}</div>
-          <button className={styles.consultBtn} onClick={onConsult}>Consult</button>
+          <button className={styles.consultBtn} onClick={isGood ? () => router.push("/health-checkups") : onConsult}>{isGood ? "Explore packages" : "Consult"}</button>
         </div>
       </div>
     </div>
@@ -3694,6 +3699,7 @@ function Workspace({
   isMaximized?: boolean;
   onToggleMaximize?: () => void;
 }) {
+  const router = useRouter();
   // Associated Accounts Profiles selector
   const [activeProfile, setActiveProfile] = useState(ASSOCIATED_PROFILES[0]);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -3910,13 +3916,36 @@ function Workspace({
       return;
     }
 
+    // Explicit checkup/test booking intent opens its own journey.
+    if (/\b(book|explore|find)\b.*\b(health[ -]?checkups?|health packages?|lab tests?)\b/i.test(text)) {
+      router.push(/\blab tests?\b/i.test(text) ? "/health-checkups?tab=tests" : "/health-checkups");
+      return;
+    }
+
     // Default regular message route
     const userMsg: Message = { id: `u-${Date.now()}`, role: "user", text: text.trim(), ts: new Date() };
     setMsgs(prev => [...prev, userMsg]);
     setInput("");
     const resp = aiResponse(text, isLoggedIn, activeProfile.name);
     injectAI(resp);
-  }, [isThinking, isLoggedIn, injectAI, tutorialStep, activeProfile]);
+  }, [isThinking, isLoggedIn, injectAI, tutorialStep, activeProfile, router]);
+
+  const openDoctorBooking = useCallback((doctor: Doctor, mode: "hospital" | "video" = "hospital") => {
+    // Pulse's private mock IDs overlap other directories. Resolve the clinician by name.
+    const doctorSlug = `dr-${doctor.name.toLowerCase().replace(/^dr[.\s]*/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+    const matchedDoctor = getDesign20DirectoryDoctor(doctorSlug);
+    const listingParams = new URLSearchParams({ design: "d21", location: matchedDoctor?.city || "Bangalore", mode });
+    if (!matchedDoctor) {
+      const speciality = doctor.speciality.split("·")[0].trim();
+      listingParams.set("specialties", speciality === "General Physician" ? "General Medicine" : speciality);
+    }
+    const listing = `/search/doctors?${listingParams}`;
+    const destination = matchedDoctor
+      ? design20BookingEntryUrl(matchedDoctor, mode, "", listing)
+      : listing;
+    onClose();
+    router.push(destination);
+  }, [onClose, router]);
 
   const handleAction = useCallback((type: string, data?: unknown) => {
     switch (type) {
@@ -3950,38 +3979,16 @@ function Workspace({
         break;
       }
       case "book_now": {
-        const doc = data as Doctor;
-        const slotMsg: Message = { id: `slot-${Date.now()}`, role: "ai", text: `Great choice! Select a date and time to see ${doc.name}.`, ts: new Date(), rtype: "slot_picker", slotDoctor: doc };
-        setMsgs(prev => [...prev, slotMsg]);
+        openDoctorBooking(data as Doctor);
         break;
       }
       case "confirm_slot": {
-        const { doctor, slot, type: vtype, clinic, fee } = (data || {}) as {
-          doctor?: Doctor; slot?: string; type?: string; clinic?: string; fee?: number;
+        const { doctor, type: vtype } = (data || {}) as {
+          doctor?: Doctor; type?: string;
         };
         const lastSlotMsg = msgs.slice().reverse().find(m => m.rtype === "slot_picker");
         const doc = doctor || lastSlotMsg?.slotDoctor || MOCK_DOCTORS[0];
-        const finalClinic = clinic || (vtype === "video" ? "Narayana Tele-Health" : doc.hospital || "Mazumdar Shaw Medical Centre");
-
-        if (!isLoggedIn) {
-          setPendingAction({ type: "confirm_slot", data });
-          injectAI({
-            text: "To finalize your booking, please enter your mobile number to sign in or register:",
-            rtype: "inline_phone_input"
-          }, 300);
-        } else {
-          injectAI({
-            text: `Here is your order summary for **${doc.name}** at **${finalClinic}**. Please review your member discount, apply coupons, and complete payment:`,
-            rtype: "order_summary",
-            orderSummaryData: {
-              doctor: doc,
-              slot: slot || "Tomorrow, 09:15 AM",
-              visitType: vtype || "hospital",
-              clinicName: finalClinic,
-              fee: fee || 800
-            }
-          }, 500);
-        }
+        openDoctorBooking(doc, vtype === "video" ? "video" : "hospital");
         break;
       }
       case "submit_inline_phone": {
@@ -4078,7 +4085,7 @@ function Workspace({
       default:
         break;
     }
-  }, [isLoggedIn, injectAI, sendMessage, activeProfile]);
+  }, [isLoggedIn, injectAI, sendMessage, activeProfile, msgs, openDoctorBooking]);
 
 
   // After login, resume pending action

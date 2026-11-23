@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T17:00:56+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Howrah",
+  "facility": "Narayana Superspeciality Hospital, Howrah",
+  "facilityId": "1765",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No lab tests found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1765",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1765-tests.mhtml",
+      "sha256": "00f0458b861bf1e6d9bbfa68276e6e2df5de63b3da50e08809416f9856661d56",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

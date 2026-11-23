@@ -1,0 +1,50 @@
+[
+  {
+    "unitCode": "6024",
+    "code": "PKG037822",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-enhanced-health-m-45?unitCode=6024&code=PKG037822",
+    "testCounts": {
+      "operational": 28,
+      "cms": 26,
+      "profileGroups": 26
+    },
+    "testCountConflict": true,
+    "slotRuleBasis": "observed NH checkout rule: package requires slot; test-only skips slot",
+    "imageStorage": "local",
+    "sourceDisplayName": "Male Enhanced Health (m >45)",
+    "sourceSubtitle": "For men aged between 35-45 years",
+    "eligibilityInferred": false
+  },
+  {
+    "unitCode": "6024",
+    "code": "PKG037823",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups/male-comprehesive-wellness-m-45?unitCode=6024&code=PKG037823",
+    "testCounts": {
+      "operational": 1,
+      "cms": 31,
+      "profileGroups": 31
+    },
+    "testCountConflict": true,
+    "slotRuleBasis": "observed NH checkout rule: package requires slot; test-only skips slot",
+    "imageStorage": "local",
+    "sourceDisplayName": "Male Comprehesive Wellness (m >45)",
+    "sourceSubtitle": "For men above 45 years",
+    "eligibilityInferred": false
+  },
+  {
+    "unitCode": "3012",
+    "code": "PKG032011",
+    "sourceUrl": "https://www.narayanahealth.org/health-checkups/nhic-master-healthcheckup-male?unitCode=3012&code=PKG032011",
+    "testCounts": {
+      "operational": 23,
+      "cms": 20,
+      "profileGroups": 20
+    },
+    "testCountConflict": true,
+    "slotRuleBasis": "observed NH checkout rule: package requires slot; test-only skips slot",
+    "imageStorage": "remote",
+    "sourceDisplayName": "Nhic Master Healthcheckup - Male",
+    "sourceSubtitle": "For Male to assess the overall health",
+    "eligibilityInferred": false
+  }
+]

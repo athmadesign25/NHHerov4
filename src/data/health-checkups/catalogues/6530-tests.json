@@ -1,0 +1,382 @@
+{
+  "capturedAt": "2026-11-06T16:32:49+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Clinic, Chandapura",
+  "facilityId": "6530",
+  "kind": "test",
+  "coverage": {
+    "renderedCardCount": 30,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "captured",
+    "emptyStateMessage": null,
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 3,
+    "cardObservations": 90,
+    "duplicateCardObservations": 60,
+    "completeRenderedTraversal": true
+  },
+  "items": [
+    {
+      "name": "Stool Culture & Sensitivity",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1360.0,
+      "localId": "snapshot-97a49edd2a25af65",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Stool Reducing Substances",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 220.0,
+      "localId": "snapshot-902b69badc689ab8",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Aldosterone",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 2600.0,
+      "localId": "snapshot-ea0835f6c58bd608",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Asma (anti -smooth Muscle Antibodies )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 3000.0,
+      "localId": "snapshot-5aa0527969c3eee2",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Western Blot (hiv Confirmatory )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 4990.0,
+      "localId": "snapshot-9390051dc83a4b5d",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ascitic Fluid For Cytology /malignant Cells",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 760.0,
+      "localId": "snapshot-8e1f2e2619e502cf",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Weil Felix Test",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1310.0,
+      "localId": "snapshot-b330e2f6d6364e63",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Water For Culture",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1850.0,
+      "localId": "snapshot-114bb068403e1e36",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Anti Mitochondrial Antibody",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 3180.0,
+      "localId": "snapshot-b292785cbe7c58dd",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Amoebic Serology (entamoeba Histolytica Antibodies )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1900.0,
+      "localId": "snapshot-dfe21376182ef8a6",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ca -15-3",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1700.0,
+      "localId": "snapshot-2e61dd3a6cb15dcc",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Triglycerides",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 590.0,
+      "localId": "snapshot-4869c35b12105a94",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ca -19-9",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 3020.0,
+      "localId": "snapshot-9b29b19e0adc8eeb",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Bone Marrow Biopsy Reporting",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1050.0,
+      "localId": "snapshot-18b00be6caa84a75",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Crp (c -reactive Protein ) Hs",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 970.0,
+      "localId": "snapshot-50dba3304218f3dd",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Physiotherapy Rehabilitation Program",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 335.0,
+      "localId": "snapshot-adc9cb59f37225c5",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Bal Fluid For Cytology (bronchial Wash /alveolar Lavage )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1060.0,
+      "localId": "snapshot-d6cf172994e671ef",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Afb Smear",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 630.0,
+      "localId": "snapshot-774d79133912fb98",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Immunofixation Electrophoresis (ife ), Serum",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 11970.0,
+      "localId": "snapshot-14883dbff679578b",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Tracheal Aspiration For C /s",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1620.0,
+      "localId": "snapshot-61c6e3f3c9b0356b",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Erythropoietin",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 2500.0,
+      "localId": "snapshot-019b98a401fbfd89",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Tpha",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1070.0,
+      "localId": "snapshot-38a92f2984749235",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Ihc Single Marker",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 2090.0,
+      "localId": "snapshot-a631a60ff48842a4",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Stool Routine Examination",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 450.0,
+      "localId": "snapshot-ad180630357934c3",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Ige",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 1960.0,
+      "localId": "snapshot-f444ed201081c684",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Double Marker -2nd Trimester",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 2170.0,
+      "localId": "snapshot-74030b45910210b9",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Sgot (ast )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 550.0,
+      "localId": "snapshot-441a5e00e6eb8465",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Serum Globulin",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 310.0,
+      "localId": "snapshot-a7de8bb1b9d06643",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Urine For Sugar (post Prandial )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 170.0,
+      "localId": "snapshot-4627c609cd89477b",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    },
+    {
+      "name": "Urine For Sugar (fasting )",
+      "kind": "test",
+      "city": "Bangalore",
+      "facility": "Narayana Clinic, Chandapura",
+      "facilityId": "6530",
+      "amount": 170.0,
+      "localId": "snapshot-94abd30faaee2db2",
+      "detailStatus": "no-public-detail-link",
+      "testCount": 1
+    }
+  ],
+  "observedDetailUrls": [],
+  "unitCode": "6530",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-6530-tests-p1.mhtml",
+      "sha256": "d294e76cf6567f8ad291d7ad84b6764e9e6f61d94526ca6211e5703e85d220de",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    },
+    {
+      "file": "nh-live-6530-tests-p2.mhtml",
+      "sha256": "dec52a874d7b6e137ea584b660b898f92e6b13a55822039dd4552dfb07303be9",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    },
+    {
+      "file": "nh-live-6530-tests.mhtml",
+      "sha256": "91b4986180d80ad32e24e7044646169781d03a5f1d5268a4de541414db8a09a0",
+      "format": "mhtml",
+      "renderedCardCount": 30,
+      "status": "captured"
+    }
+  ],
+  "searchQuery": ""
+}

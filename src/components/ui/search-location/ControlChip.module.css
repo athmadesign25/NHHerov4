@@ -1,0 +1,72 @@
+.chip {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--sp-1) * .75);
+  min-height: var(--sp-6);
+  padding: var(--sp-1) calc(var(--sp-1) * 1.25);
+  border: 0;
+  border-radius: var(--radius-full);
+  color: var(--d3-ui-text, var(--color-text-secondary));
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  transition: color var(--d3-ui-fast, var(--transition-fast));
+}
+
+/* A 32px desktop / 36px touch capsule sits inside its 44px / 48px hit area. */
+.chip::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--sp-1) * .75) 0;
+  border: 1px solid var(--d3-ui-border, var(--color-border));
+  border-radius: inherit;
+  background: var(--d3-control-surface, var(--color-bg-card));
+  pointer-events: none;
+  transition: background-color var(--d3-ui-fast, var(--transition-fast)), border-color var(--d3-ui-fast, var(--transition-fast));
+}
+
+.chip svg { flex-shrink: 0; color: inherit; }
+.chip:is([aria-pressed="true"], [data-selected="true"]) { color: var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text))); }
+.chip:is([aria-pressed="true"], [data-selected="true"])::before { border-color: var(--d3-ui-selection, var(--color-emergency)); background: var(--d3-ui-selection-surface, var(--color-emergency-light)); }
+.chip:focus-visible { outline: 2px solid var(--d3-ui-focus, var(--color-text-secondary)); outline-offset: 2px; }
+.chip:disabled:not([aria-hidden="true"]) { color: var(--color-text-muted); cursor: not-allowed; }
+.chip:disabled:not([aria-hidden="true"])::before { border-color: var(--d3-ui-border, var(--color-border)); background: var(--d3-control-muted, var(--color-bg-alt)); }
+
+@media (hover: hover) {
+  .chip:not(:disabled):hover { color: var(--d3-ui-ink-hover, var(--color-text)); }
+  .chip:is([aria-pressed="true"], [data-selected="true"]):where(:not(:disabled)):hover { color: var(--d3-ui-selection-hover, var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text)))); }
+}
+
+.chip:not(:disabled):active { color: var(--d3-ui-ink-pressed, var(--color-text)); }
+.chip:is([aria-pressed="true"], [data-selected="true"]):where(:not(:disabled)):active { color: var(--d3-ui-selection-pressed, var(--d3-ui-selection-label, color-mix(in srgb, var(--color-emergency) 78%, var(--color-text)))); }
+
+@media (min-width: 1024px) and (pointer: fine) {
+  .chip { min-height: calc(var(--sp-6) - var(--sp-1) / 2); }
+}
+
+@media (forced-colors: active) {
+  .chip { forced-color-adjust: none; color: ButtonText; }
+  .chip, .chip::before { transition: none; }
+  .chip::before { border-color: ButtonText; background: Canvas; }
+  .chip:not(:disabled):is(:hover, :active) { color: Highlight; }
+  .chip:not(:disabled):is(:hover, :active)::before { border-color: Highlight; background: Canvas; }
+  /* Keep selection distinct from hover and press in the user's colour scheme. */
+  .chip:is([aria-pressed="true"], [data-selected="true"]),
+  .chip:is([aria-pressed="true"], [data-selected="true"]):is(:hover, :active) { color: HighlightText; }
+  .chip:is([aria-pressed="true"], [data-selected="true"])::before,
+  .chip:is([aria-pressed="true"], [data-selected="true"]):is(:hover, :active)::before { border-color: Highlight; background: Highlight; }
+  .chip:disabled:not([aria-hidden="true"]) { color: GrayText; }
+  .chip:disabled:not([aria-hidden="true"])::before { border-color: GrayText; background: Canvas; }
+  .chip:focus-visible { outline-color: Highlight; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip, .chip::before { transition: none; }
+}

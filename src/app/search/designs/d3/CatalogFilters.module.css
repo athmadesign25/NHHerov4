@@ -1,0 +1,11 @@
+.filters { display: flex; flex-direction: column; gap: var(--sp-3); }
+.filters fieldset { min-width: 0; border: 0; padding: 0; }
+.filters legend { font-size: var(--font-size-sm); font-weight: 600; margin-bottom: var(--sp-1); }
+.filters label { display: flex; align-items: center; min-height: var(--sp-6); gap: var(--sp-1); cursor: pointer; font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+.filters input { width: var(--font-size-lg); height: var(--font-size-lg); flex-shrink: 0; accent-color: var(--color-primary); }
+.filters span { overflow-wrap: anywhere; }
+.alphabet { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--sp-1) / 2); }
+.alphabet button { min-height: var(--sp-6); border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.alphabet button:hover, .alphabet button[aria-pressed="true"] { color: var(--color-primary); background: var(--color-primary-light); border-color: var(--color-primary); }
+.filters :is(input, button):focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+@media (min-width: 640px) and (max-width: 1023px) { .alphabet { grid-template-columns: repeat(6, minmax(0, 1fr)); } }

@@ -1,0 +1,3 @@
+.reserve {
+  min-height: calc(var(--booking-action-height, var(--space-128)) + var(--space-32) + env(safe-area-inset-bottom));
+}

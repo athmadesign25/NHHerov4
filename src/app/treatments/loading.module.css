@@ -1,0 +1,185 @@
+.loadingContainer {
+  min-height: 100vh;
+  background-color: #060e1b;
+  color: #ffffff;
+  padding-top: calc(var(--nav-height, 72px) + 36px);
+  padding-bottom: 60px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: clamp(20px, 4vw, 40px);
+  padding-right: clamp(20px, 4vw, 40px);
+}
+
+/* Quick Medical ECG / Pulse Shimmer Bar */
+.pulseTrack {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 36px;
+}
+
+.pulseBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #00C4FF, #8B5CF6, transparent);
+  animation: pulseSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulseSlide {
+  0% {
+    left: -35%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.heroSkeletonRow {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 48px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 900px) {
+  .heroSkeletonRow {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.titleSkeleton {
+  width: 65%;
+  height: 48px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+  animation: shimmer 1.5s ease-in-out infinite alternate;
+}
+
+.subtitleSkeleton {
+  width: 90%;
+  height: 20px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 24px;
+}
+
+.searchSkeleton {
+  width: 100%;
+  max-width: 580px;
+  height: 44px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statSkeletonCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding-left: 24px;
+}
+
+.statSkeletonItem {
+  width: 80px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Bubbles Row Skeleton */
+.bubblesSkeletonRow {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.bubbleSkeletonItem {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+/* Cards Grid Skeleton */
+.cardsSkeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 1024px) {
+  .cardsSkeletonGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cardsSkeletonGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cardSkeleton {
+  height: 440px;
+  border-radius: 18px;
+  background: #091322;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardImageSkeleton {
+  width: 100%;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cardBodySkeleton {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardLine1 {
+  width: 40%;
+  height: 12px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cardLine2 {
+  width: 85%;
+  height: 20px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cardLine3 {
+  width: 70%;
+  height: 14px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

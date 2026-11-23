@@ -1,0 +1,21 @@
+{
+  "capturedAt": "2026-11-06T16:24:31+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Bangalore",
+  "facility": "Narayana Clinic - Banashankari, Bangalore",
+  "facilityId": "",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Rendered catalogue cards present in the supplied snapshot; not proof of complete facility inventory"
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "snapshotFormat": "mhtml"
+}

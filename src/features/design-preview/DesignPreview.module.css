@@ -1,0 +1,99 @@
+/* Iteration tools share one quiet surface, separate from patient-facing actions. */
+.root {
+  --disclosure-icon-hover: transparent;
+  --preview-edge: var(--space-16);
+  --preview-bottom: calc(max(var(--preview-edge), env(safe-area-inset-bottom)) + var(--preview-dock-offset, 0px));
+  position: fixed;
+  left: max(var(--preview-edge), env(safe-area-inset-left));
+  bottom: var(--preview-bottom);
+  width: max-content;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: var(--leading-normal);
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-height: calc(var(--space-40) + var(--space-4));
+  padding: var(--space-8) var(--space-12);
+  border: var(--space-1) solid color-mix(in srgb, var(--slate-500) 20%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--slate-200) 80%, transparent);
+  backdrop-filter: blur(var(--space-12));
+  -webkit-backdrop-filter: blur(var(--space-12));
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.trigger svg {
+  width: var(--space-12);
+  height: var(--space-12);
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.expanded { transform: rotate(180deg); }
+
+.options {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + var(--space-8));
+  width: var(--preview-menu-width, var(--space-128));
+  max-width: calc(100vw - var(--space-32));
+  max-height: var(--preview-menu-space, calc(100dvh - var(--preview-bottom) - var(--space-64)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: var(--space-4);
+  border: var(--space-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--grey-100) 95%, transparent);
+  backdrop-filter: blur(var(--space-12));
+  -webkit-backdrop-filter: blur(var(--space-12));
+  box-shadow: none;
+}
+
+.options :is(a, button) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  width: 100%;
+  min-height: calc(var(--space-40) + var(--space-4));
+  padding: var(--space-8) var(--space-12);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.options :is([aria-pressed="true"], [aria-current]) { color: var(--color-text); font-weight: 500; }
+.options svg { width: var(--space-16); height: var(--space-16); flex-shrink: 0; }
+.options strong, .options small { display: block; }
+.options strong { font-weight: 500; }
+.options small { color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); }
+.root :is(a, button):focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+.root button:disabled { opacity: .5; cursor: not-allowed; }
+
+@media (hover: hover) {
+  .trigger:hover:not(:disabled), .options :is(a, button):hover:not(:disabled) { background-color: var(--slate-200); }
+}
+@media (max-width: 768px) { .root { --preview-edge: var(--space-8); } }
+@media (prefers-reduced-motion: reduce) { .root *, .options { animation: none; transition: none; } }
+@media (prefers-reduced-transparency: reduce) {
+  .trigger, .options { background: var(--grey-100); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) { .trigger, .options { border-color: ButtonText; background: Canvas; } }

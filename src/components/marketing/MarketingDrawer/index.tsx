@@ -72,7 +72,10 @@ export default function MarketingDrawerLab() {
     { id: "new-hospital", title: config.headline.parts.map(part => part.text).join(" "), image: "/navigation/hospitals/l3-hospital.webp", href: config.cta.primary.href, onSelect: () => { l3InIsland.current = false; reopen(); } },
     ...SUPPORTING_ANNOUNCEMENTS,
   ]), [config.headline.parts, config.cta.primary.href, reopen]);
-  useEffect(() => () => bannerCollapse.clear(), []);
+  useEffect(() => {
+    bannerCollapse.clear();
+    return () => { pendingCollapse.current = null; bannerCollapse.clear(); };
+  }, []);
   if (!mounted) return null;
 
   const ui = (

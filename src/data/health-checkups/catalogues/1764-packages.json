@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-11-06T17:00:56+00:00",
+  "sourceUrl": "https://www.narayanahealth.org/health-checkups",
+  "city": "Howrah",
+  "facility": "Narayana Multispeciality Hospital, Howrah",
+  "facilityId": "1764",
+  "kind": "package",
+  "coverage": {
+    "renderedCardCount": 0,
+    "unparsedCardCount": 0,
+    "observedDetailUrlCount": 0,
+    "paginationControls": [],
+    "mismatchedDetailUrlCount": 0,
+    "status": "observed-empty",
+    "emptyStateMessage": "No health packages found",
+    "completeCatalogue": false,
+    "scope": "Observed returned DOM for the selected facility, search and member/session context; not proof of complete server inventory",
+    "snapshotCount": 1,
+    "cardObservations": 0,
+    "duplicateCardObservations": 0,
+    "completeRenderedTraversal": false
+  },
+  "items": [],
+  "observedDetailUrls": [],
+  "unitCode": "1764",
+  "snapshotFormat": "mhtml",
+  "sourceSnapshots": [
+    {
+      "file": "nh-live-1764-packages.mhtml",
+      "sha256": "42c12fd8ffff52914fcf229a5f27d1f5f3455e3cf4d7078312a2fdbd81dc9834",
+      "format": "mhtml",
+      "renderedCardCount": 0,
+      "status": "observed-empty"
+    }
+  ],
+  "searchQuery": ""
+}

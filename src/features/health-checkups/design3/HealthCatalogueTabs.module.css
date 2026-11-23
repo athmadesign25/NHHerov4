@@ -1,0 +1,8 @@
+.tabs { display: flex; align-items: center; gap: var(--space-4); min-width: 0; }
+.tabs button { min-height: var(--space-48); padding: var(--space-8) var(--space-16); border: var(--space-1) solid transparent; border-radius: var(--radius-full); background: transparent; color: var(--color-text-secondary); font-size: var(--font-size-sm); font-weight: 500; line-height: var(--leading-body); white-space: nowrap; cursor: pointer; transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out); }
+.tabs button[aria-pressed="true"] { color: var(--color-primary); background: var(--color-primary-light); }
+.tabs button:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-2); }
+@media (hover: hover) { .tabs button:hover { color: var(--color-primary); } }
+@media (max-width: 640px) { .tabs { width: 100%; } .tabs button { flex: 1; padding-inline: var(--space-12); } }
+@media (prefers-reduced-motion: reduce) { .tabs button { transition: none; } }
+@media (forced-colors: active) { .tabs button[aria-pressed="true"] { border-color: Highlight; } }

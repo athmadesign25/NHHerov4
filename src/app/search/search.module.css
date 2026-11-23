@@ -1,6 +1,14 @@
+.previewLoading {
+  min-height: 100dvh;
+  padding: calc(var(--nav-height) + var(--sp-6)) var(--sp-2) var(--sp-6);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
 .searchForm {
   display: flex;
-  gap: var(--space-12);
+  gap: 12px;
   width: 100%;
 }
 
@@ -8,27 +16,24 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--color-surface);
+  background: #FFFFFF;
   border-radius: 12px;
-  padding: 0 var(--space-16);
+  padding: 0 16px;
   height: 52px;
-  box-shadow: var(--elevation-3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .tabScroll {
   display: flex;
   background: var(--color-bg-alt);
   overflow-x: auto;
-  padding-top: var(--space-24);
+  padding-top: 24px;
   padding-bottom: 0;
   border-bottom: none;
   margin-bottom: 24px;
   white-space: nowrap;
   scrollbar-width: none;
   width: 100vw;
-  position: sticky;
-  top: 68px; /* Navbar inner height is 68px */
-  z-index: 40;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
   padding-left: calc(50vw - 50% + 24px); /* Fallback padding to align with container */
@@ -44,8 +49,8 @@
 
 @media (max-width: 768px) {
   .tabScroll {
-    padding-left: var(--space-16);
-    padding-right: var(--space-16);
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
@@ -77,35 +82,49 @@
 .grid3col {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-16);
+  gap: 16px;
 }
 
 @media (max-width: 768px) {
   .searchForm {
     flex-direction: column;
-    gap: var(--space-12);
+    gap: 12px;
   }
-  
+
   .locationContainer {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .locationContainer select {
     flex: 1;
   }
 }
 
+.searchContainer {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .searchContainer {
+    padding: 0 16px;
+  }
+}
+
 .doctorsLayout {
   display: grid;
-  gap: var(--space-32);
+  gap: 24px;
   grid-template-columns: 1fr;
   align-items: start;
 }
 
 @media (min-width: 1024px) {
   .doctorsLayout {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 260px 1fr;
   }
 }
 
@@ -113,7 +132,7 @@
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  padding: var(--space-24);
+  padding: 24px;
   position: sticky;
   top: 150px;
   display: none;
@@ -136,7 +155,7 @@
 }
 
 .filterPanel:hover::-webkit-scrollbar-thumb {
-  background: rgba(var(--black-rgb), 0.16);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 1024px) {
@@ -145,36 +164,171 @@
   }
 }
 
+.filterPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #EFF3FA;
+}
+
+.filterPanelTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+}
+
+.resetAllBtn {
+  background: #EFF6FF;
+  border: 1px solid rgba(3, 78, 162, 0.15);
+  color: var(--color-primary);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.resetAllBtn:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
 .filterGroup {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .filterGroup:last-child {
   margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .filterTitle {
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1E293B;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Adidas & Nike Style Collapsible Filter Accordions */
+.filterAccordionItem {
+  border-bottom: 1px solid #EFF3FA;
+}
+
+.filterAccordionItem:last-child {
+  border-bottom: none;
+}
+
+.filterAccordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 13px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+  outline: none;
+  transition: opacity 0.15s ease;
+}
+
+.filterAccordionHeader:hover .filterAccordionTitle {
+  color: var(--color-primary);
+}
+
+.filterAccordionTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filterAccordionTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+  transition: color 0.15s ease;
+}
+
+.filterBadgeCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9999px;
+  background: #EFF6FF;
+  border: 1px solid rgba(3, 78, 162, 0.2);
+  color: var(--color-primary);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.filterAccordionRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filterSectionClearBtn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.filterSectionClearBtn:hover {
+  background: #EFF6FF;
+}
+
+.filterAccordionChevron {
+  color: #64748B;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.filterAccordionChevronOpen {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+
+.filterAccordionBody {
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .checkboxLabel {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 9px;
   cursor: pointer;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  transition: var(--transition-fast);
+  font-size: 13.5px;
+  color: #475569;
+  font-weight: 500;
+  transition: color 0.15s ease;
 }
 
 .checkboxLabel:hover {
-  color: var(--color-text);
+  color: #0F172A;
 }
 
 .checkboxLabel:last-child {
@@ -183,27 +337,27 @@
 
 .checkboxInput {
   appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--color-border);
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid #CBD5E1;
   border-radius: 4px;
-  background: var(--color-bg-card);
+  background: #ffffff;
   cursor: pointer;
   position: relative;
-  transition: var(--transition-fast);
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
 .checkboxInput:checked {
-  background: var(--color-emergency);
-  border-color: var(--color-emergency);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .checkboxInput:checked::after {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 5px;
+  top: 1.5px;
+  left: 4.5px;
   width: 4px;
   height: 8px;
   border: solid white;
@@ -211,20 +365,98 @@
   transform: rotate(45deg);
 }
 
+/* Phase 2: Top Sort & Location Controls */
+.sortPill,
+.locationPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 0 10px 0 12px;
+  height: 34px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sortPill:hover,
+.locationPill:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(3, 78, 162, 0.08);
+}
+
+.sortSelect,
+.locationSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  outline: none;
+  padding-right: 18px;
+}
+
+.sortChevron {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+}
+
+/* Results discovery summary header */
+.resultsSummaryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 6px 0;
+  margin-bottom: -10px;
+}
+
+.resultsSummaryLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.resultsCountBadge {
+  display: inline-flex;
+  align-items: center;
+  background: #EFF6FF;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.01em;
+}
+
+.resultsSummaryText {
+  font-size: 14px;
+  color: #475569;
+  font-weight: 500;
+}
+
 .executiveRibbon {
   position: absolute;
   top: -8px;
   right: 32px;
   background: linear-gradient(180deg, #F4C430 0%, #C59B0D 100%);
-  color: var(--color-text-inverse);
-  padding: var(--space-6) var(--space-16);
-  font-size: var(--font-size-sm);
+  color: #FFFFFF;
+  padding: 6px 16px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 4px;
-  box-shadow: var(--elevation-1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
   letter-spacing: 0.05em;
-  text-shadow: 0 1px 2px rgba(var(--black-rgb), 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .executiveRibbon::before,
@@ -245,4 +477,195 @@
   right: 0;
   border-top: 6px solid #8B6508;
   border-right: 6px solid transparent;
+}
+
+.loadingDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+}
+
+.loadingDots .dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loadingDots .dot:nth-child(1) { animation-delay: -0.32s; }
+.loadingDots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Design 1 · Tablet/mobile filters drawer
+   Only active with .filterDrawerOpen (Design 1). The Original design never
+   applies these classes, so its sidebar behaviour is unchanged.
+   The drawer stays below the fixed Navbar (it lives in a lower stacking
+   context), so it is offset from the top instead of covering it.
+   ───────────────────────────────────────────────────────────── */
+.filterDrawerBackdrop,
+.filterDrawerHandle,
+.filterDrawerClose,
+.filterDrawerFooter {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .filterDrawerBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    background: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    animation: drawerFade 220ms ease-out;
+  }
+
+  .filterPanel.filterDrawerOpen {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 60;
+    top: calc(var(--nav-height) + 12px);
+    right: 12px;
+    bottom: 12px;
+    width: min(400px, calc(100vw - 24px));
+    max-height: none;
+    padding: 20px 24px 0;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-xl);
+    overflow-y: auto;
+    animation: drawerSlideIn 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .filterDrawerOpen .filterPanelHeader {
+    justify-content: flex-start;
+    gap: var(--sp-1);
+  }
+
+  .filterDrawerOpen .filterPanelHeader > :first-child {
+    margin-right: auto;
+  }
+
+  .filterDrawerOpen .filterPanelHeader > .filterDrawerClose {
+    order: 2;
+  }
+
+  .filterDrawerClose {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .filterDrawerClose:hover {
+    background: var(--color-border);
+  }
+
+  .filterDrawerClose:focus-visible,
+  .filterDrawerApply:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .filterDrawerFooter {
+    display: block;
+    position: sticky;
+    bottom: 0;
+    margin: auto -24px 0;
+    padding: 12px 24px max(16px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--color-bg-card) 75%, rgba(255, 255, 255, 0));
+  }
+
+  .filterDrawerApply {
+    width: 100%;
+    height: 48px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    font-family: inherit;
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .filterDrawerApply:hover {
+    background: var(--color-primary-dark);
+  }
+
+  .filterDrawerApply:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Mobile: bottom sheet */
+@media (max-width: 640px) {
+  .filterPanel.filterDrawerOpen {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: min(86dvh, calc(100dvh - var(--nav-height) - 16px));
+    padding: 8px 20px 0;
+    border-radius: 24px 24px 0 0;
+    border-bottom: 0;
+    animation-name: drawerSheetIn;
+  }
+
+  .filterDrawerHandle {
+    display: block;
+    flex-shrink: 0;
+    width: 40px;
+    height: 4px;
+    margin: 0 auto 12px;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+  }
+
+  .filterDrawerFooter {
+    margin: auto -20px 0;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@keyframes drawerFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes drawerSlideIn {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes drawerSheetIn {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filterDrawerBackdrop,
+  .filterPanel.filterDrawerOpen {
+    animation: none;
+  }
 }
