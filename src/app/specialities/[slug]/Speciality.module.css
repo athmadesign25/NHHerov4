@@ -619,8 +619,9 @@
   transform: translateY(-120%) !important;
   opacity: 0 !important;
   pointer-events: none !important;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+  will-change: top;
+  transition: top 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.25s ease,
               padding 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.4s ease,
@@ -843,30 +844,34 @@
 }
 
 /* When the navbar slides into view on scroll up, the pinned tabs smoothly slide down flush against the navbar */
-:global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned {
-  top: 68px;
+:global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned,
+.programmeTabsWrapperPinned[data-nav-visible="true"] {
+  top: 68px !important;
   transform: translateY(0) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
 /* When scrolling down, keep the pinned tabs docked flush at the top */
-:global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned {
-  top: 0;
+:global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned,
+.programmeTabsWrapperPinned[data-nav-visible="false"] {
+  top: 0 !important;
   transform: translateY(0) !important;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
 @media (max-width: 1024px) {
-  :global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned {
-    top: 56px;
+  :global(html[data-nav-visible="true"]) .programmeTabsWrapperPinned,
+  .programmeTabsWrapperPinned[data-nav-visible="true"] {
+    top: 56px !important;
     transform: translateY(0) !important;
     opacity: 1 !important;
     pointer-events: auto !important;
   }
-  :global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned {
-    top: 0;
+  :global(html[data-nav-visible="false"]) .programmeTabsWrapperPinned,
+  .programmeTabsWrapperPinned[data-nav-visible="false"] {
+    top: 0 !important;
     transform: translateY(0) !important;
     opacity: 1 !important;
     pointer-events: auto !important;

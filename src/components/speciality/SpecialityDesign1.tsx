@@ -1123,6 +1123,59 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
 
   // Track the active navbar theme ("light" | "dark") from document.documentElement + probe
   const [navTheme, setNavTheme] = useState<"light" | "dark">("dark");
+
+  // Track whether navbar is visible on screen so pinned bar can smoothly dock below it when scrolled up
+  const [navVisible, setNavVisible] = useState(true);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    let lastY = window.scrollY;
+
+    const updateNavVisible = () => {
+      const attr = document.documentElement.getAttribute("data-nav-visible");
+      if (attr !== null) {
+        setNavVisible(attr !== "false");
+        return;
+      }
+      // Fallback scroll detection if attribute is not yet populated
+      const currentY = window.scrollY;
+      if (currentY < 120) {
+        setNavVisible(true);
+      } else if (Math.abs(currentY - lastY) >= 12) {
+        setNavVisible(currentY < lastY);
+      }
+      lastY = currentY;
+    };
+
+    updateNavVisible();
+
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === "attributes" && m.attributeName === "data-nav-visible") {
+          updateNavVisible();
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-nav-visible"],
+    });
+
+    window.addEventListener("scroll", updateNavVisible, { passive: true });
+    const lenis = (window as unknown as { lenis?: { on?: (evt: string, fn: () => void) => void; off?: (evt: string, fn: () => void) => void } }).lenis;
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", updateNavVisible);
+    }
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateNavVisible);
+      if (lenis && typeof lenis.off === "function") {
+        lenis.off("scroll", updateNavVisible);
+      }
+    };
+  }, []);
   useEffect(() => {
     if (typeof document === "undefined") return;
 
@@ -1526,17 +1579,30 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             <motion.div 
               key="pinned-programme-bar"
               data-theme={navTheme}
+              data-nav-visible={navVisible ? "true" : "false"}
               className={`${design2Styles.programmeTabsWrapper} ${design2Styles.programmeTabsWrapperPinned} ${navTheme === "light" ? design2Styles.programmeTabsWrapperLight : design2Styles.programmeTabsWrapperDark} ${isNearFooter ? design2Styles.programmeTabsWrapperHidden : ""}`}
               initial={{ y: -24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -24, opacity: 0 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                transition: "top 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
+                transition: "top 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
               }}
             >
               <div className={design2Styles.programmeTabsContainerPinned}>
                 <div className={design2Styles.pinnedBreadcrumbRow}>
+                  {/* -1. Home Link */}
+                  <Link
+                    href="/"
+                    className={`${design2Styles.breadcrumbLink} ${design2Styles.desktopOnlyBreadcrumb}`}
+                    title="Home"
+                    aria-label="Back to Narayana Health Home"
+                  >
+                    Home
+                  </Link>
+
+                  <ChevronRight size={14} className={`${design2Styles.breadcrumbChevron} ${design2Styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
+
                   {/* 0. Parent Directory Link */}
                   <Link
                     href={isCoE ? "/centre-of-excellence" : "/specialities"}
