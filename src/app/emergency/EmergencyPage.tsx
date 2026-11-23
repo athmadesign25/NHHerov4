@@ -16,6 +16,7 @@ import MenuAction from "@/components/layout/navigation/MenuAction";
 import navStyles from "@/components/layout/Navbar.module.css";
 import { duration, ease } from "@/lib/motion";
 import content from "./emergency-content.json";
+import playerStyles from "@/components/ui/DoctorOverviewCarousel.module.css";
 import styles from "./EmergencyPage.module.css";
 
 // Matches the visible number on NH's live banner and its condition callouts.
@@ -60,11 +61,9 @@ export default function EmergencyPage() {
   const [tabsPinned, setTabsPinned] = useState(false);
   const [city, setCity] = useState("Bangalore");
   const [videoOpen, setVideoOpen] = useState(false);
-  const [videoInline, setVideoInline] = useState(false);
-  const videoPoster = useRef<HTMLButtonElement>(null);
+  const videoPlay = useRef<HTMLButtonElement>(null);
+  const videoClose = useRef<HTMLButtonElement>(null);
   const [showCall, setShowCall] = useState(false);
-  const videoTrigger = useRef<HTMLElement | null>(null);
-  const videoDialog = useRef<HTMLDialogElement>(null);
   const hospitals = content.cities.find(item => item.label === city)?.hospitals ?? [];
   const appear = { initial: { opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.96 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slowest, ease: ease.spring } };
   const cardBlur = (index: number) => ({ initial: { opacity: reduced ? 1 : 0, y: reduced ? 0 : 16, filter: reduced ? "blur(0px)" : "blur(12px)" }, whileInView: { opacity: 1, y: 0, filter: "blur(0px)" }, viewport: { once: true, margin: "-40px" }, transition: { duration: reduced ? 0 : duration.slower, delay: reduced ? 0 : Math.min(index * 0.08, 0.4), ease: ease.out } });
@@ -109,23 +108,7 @@ export default function EmergencyPage() {
   }, []);
 
   useEffect(() => {
-    const node = videoPoster.current;
-    if (!node || reduced || videoInline) return;
-    let timer = 0;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) timer = window.setTimeout(() => setVideoInline(true), 3000);
-      else window.clearTimeout(timer);
-    }, { threshold: 0.5 });
-    observer.observe(node);
-    return () => { observer.disconnect(); window.clearTimeout(timer); };
-  }, [reduced, videoInline]);
-
-  useEffect(() => {
-    if (!videoOpen) { videoDialog.current?.close(); return; }
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    videoDialog.current?.showModal();
-    return () => { document.body.style.overflow = overflow; };
+    if (videoOpen) videoClose.current?.focus({ preventScroll: true });
   }, [videoOpen]);
 
   useEffect(() => {
@@ -144,9 +127,9 @@ export default function EmergencyPage() {
     return () => { cancelAnimationFrame(frame); window.removeEventListener("hashchange", sync); };
   }, []);
 
-  const openVideo = () => {
-    videoTrigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    setVideoOpen(true);
+  const closeVideo = () => {
+    setVideoOpen(false);
+    requestAnimationFrame(() => videoPlay.current?.focus({ preventScroll: true }));
   };
 
   const changeTab = (id: string) => {
@@ -246,14 +229,29 @@ export default function EmergencyPage() {
     </div></section>
 
 <section className={styles.section} data-nav-theme="light" aria-labelledby="inside-er-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="inside-er-title" className={styles.sectionTitle}>{content.video.title}</h2><p className={styles.subtitle}>{content.video.subtitle}</p></motion.div>
-      <motion.button ref={videoPoster} type="button" className={styles.videoPoster} onClick={openVideo} aria-label="Play Inside the Emergency Room"
-        initial={{ opacity: reduced ? 1 : 0, scale: reduced ? 1 : 0.94 }} whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-40px" }} transition={{ duration: reduced ? 0 : duration.slowest, ease: ease.spring }}>
-        {videoInline
-          ? <iframe className={styles.videoInline} src="https://www.youtube-nocookie.com/embed/PXX79R0w6Cc?autoplay=1&mute=1&controls=0&loop=1&playlist=PXX79R0w6Cc&playsinline=1" title="Inside the Emergency Room — Narayana Health" allow="autoplay; encrypted-media; picture-in-picture" tabIndex={-1} aria-hidden="true" />
-          : <Image src="/emergency/er-video.webp" alt="Inside ER: real emergency cases from Narayana Health" fill sizes="100vw" />}
-        <span className={styles.play}><Play aria-hidden="true" /></span>
-      </motion.button></section>
+      <motion.div {...reveal} className={`${styles.container} ${styles.emergencyVideo}`}>
+        <div className={playerStyles.videoCard}>
+          <div className={playerStyles.videoWrapper} onKeyDown={event => {
+            if (event.key === "Escape" && videoOpen) { event.preventDefault(); closeVideo(); }
+          }}>
+            {videoOpen ? <>
+              <iframe className={playerStyles.videoIframe}
+                src="https://www.youtube-nocookie.com/embed/PXX79R0w6Cc?autoplay=1&rel=0&modestbranding=1&playsinline=1"
+                title="Inside the Emergency Room — Narayana Health"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+              <button ref={videoClose} type="button" className={playerStyles.closePlayerBtn} onClick={closeVideo} aria-label="Close video player"><X aria-hidden="true" /></button>
+            </> : <>
+              <Image src="/emergency/er-video.webp" alt="Inside ER: real emergency cases from Narayana Health" fill
+                sizes="(max-width: 768px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 64px), (max-width: 1336px) calc(100vw - 96px), 1240px"
+                className={playerStyles.thumbnailImage} />
+              <div className={playerStyles.bottomOverlay} aria-hidden="true" />
+              <button ref={videoPlay} type="button" className={`${playerStyles.playButton} ${styles.videoPlay}`} onClick={() => setVideoOpen(true)} aria-label="Play Inside the Emergency Room">
+                <Play aria-hidden="true" fill="currentColor" strokeWidth={0} className={playerStyles.playIcon} />
+              </button>
+            </>}
+          </div>
+        </div>
+      </motion.div></section>
 
 <section className={styles.section} aria-labelledby="guide-title"><motion.div {...reveal} className={`${styles.container} ${styles.sectionHeader}`}><h2 id="guide-title" className={styles.sectionTitle}>{content.articles.title}</h2><p className={styles.subtitle}>{content.articles.subtitle}</p></motion.div>
       <motion.div {...appear} className={styles.container}><EmergencyGuideCarousel items={content.articles.items} labelledBy="guide-title" /></motion.div>
@@ -276,6 +274,6 @@ export default function EmergencyPage() {
     </div>
 
     {showCall && <aside className={styles.mobileCall} aria-label="Emergency call shortcut"><span><strong>24/7 Emergency</strong><small>No appointment needed</small></span><a href={CALL}><PhoneCall aria-hidden="true" /><span>Call now</span></a></aside>}
-    <dialog ref={videoDialog} data-lenis-prevent className={styles.videoDialog} aria-labelledby="emergency-video-title" onCancel={() => setVideoOpen(false)} onClose={() => { setVideoOpen(false); videoTrigger.current?.focus({ preventScroll: true }); }} onClick={event => { if (event.target === event.currentTarget) setVideoOpen(false); }}><div className={styles.videoDialogHeader}><h2 id="emergency-video-title">{content.video.title}</h2><button type="button" onClick={() => setVideoOpen(false)} aria-label="Close video"><X aria-hidden="true" /></button></div>{videoOpen && <iframe src="https://www.youtube-nocookie.com/embed/PXX79R0w6Cc?autoplay=1" title="Inside the Emergency Room — Narayana Health" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen />}</dialog>
+
   </div>;
 }
