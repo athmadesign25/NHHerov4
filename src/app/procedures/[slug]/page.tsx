@@ -54,43 +54,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
 
-  // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
-  const { scrollY } = useScroll();
-  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
-  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
-  const v2BodyColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
-  );
-  const v2MutedColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
-  );
-  const v2TocLinkColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
-  );
-  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
-  const v2TocActiveBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
-  );
-  const v2BorderColor = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
-  );
-  const v2CardBg = useTransform(
-    scrollY,
-    [0, 140, 260],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
-  );
-
-  // V4: Scroll-driven dynamic transition progress matching Blog Hero V3
+  // V4 & V2: Scroll-driven dynamic transition progress matching Blog Hero V3
   const v4Progress = useMotionValue(0);
 
   useEffect(() => {
@@ -114,6 +78,58 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       window.removeEventListener("resize", updateV4Transition);
     };
   }, [v4Progress]);
+
+  // V2: Scroll-driven section colour transition synchronized with smooth 60px..640px range
+  const v2BgColor = useTransform(
+    v4Progress,
+    [0, 0.42, 0.78, 1],
+    ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]
+  );
+  const v2HeadingColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["#ffffff", "#1e293b", "#0f172a"]
+  );
+  const v2SubtitleColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
+  );
+  const v2BodyColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.84)", "#334155", "#374151"]
+  );
+  const v2MutedColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.62)", "#64748b", "#64748b"]
+  );
+  const v2TocLinkColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.78)", "#475569", "#4b5563"]
+  );
+  const v2TocActiveColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["#38bdf8", "#0284c7", "#034EA2"]
+  );
+  const v2TocActiveBg = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+  );
+  const v2BorderColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+  );
+  const v2CardBg = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.06)", "#f8fafc", "#ffffff"]
+  );
 
   // V4 Dynamic Transforms (Exact Blog V3 stops: [0, 0.42, 0.78, 1])
   const v4BgColor = useTransform(
@@ -316,6 +332,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           ? ({
               "--v2-bg": v2BgColor,
               "--v2-heading": v2HeadingColor,
+              "--v2-subtitle": v2SubtitleColor,
               "--v2-body": v2BodyColor,
               "--v2-muted": v2MutedColor,
               "--v2-toc-link": v2TocLinkColor,
@@ -323,6 +340,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               "--v2-toc-active-bg": v2TocActiveBg,
               "--v2-border": v2BorderColor,
               "--v2-card-bg": v2CardBg,
+              "--hero-bottom-bg": v2BgColor,
               "--summary-bg": "rgba(var(--slate-50-rgb), 0.85)",
               "--summary-border": "rgba(var(--slate-900-rgb), 0.08)",
               "--summary-accent": "var(--color-primary, var(--blue-brand))",
@@ -515,19 +533,27 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               <div className={styles.topDoctorsHeader}>
                 <motion.h2 
                   className={styles.topDoctorsTitle}
-                  style={blendVersion === 4 ? { color: v4HeadingColor } : undefined}
+                  style={{
+                    color: blendVersion === 4 ? v4HeadingColor : blendVersion === 2 ? v2HeadingColor : undefined,
+                  }}
                 >
                   <TextSweepEffect
                     words={["Our Doctors"]}
-                    sweepMs={1400}
+                    sweepMs={1500}
                     sweepColor="#034EA2"
                     sweepHighlightColor="#ED1C24"
-                    finalColor="currentColor"
+                    finalColor="#0f172a"
                   />
                 </motion.h2>
                 <motion.p 
                   className={styles.topDoctorsSubtitle}
-                  style={blendVersion === 4 ? { color: v4SubtitleColor } : undefined}
+                  style={{
+                    color: blendVersion === 4 ? v4SubtitleColor : blendVersion === 2 ? v2SubtitleColor : undefined,
+                  }}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
                 >
                   Senior Narayana Health clinicians answering patient queries, providing second opinions, and performing advanced {detail.shortTitle.toLowerCase()} procedures.
                 </motion.p>
@@ -597,7 +623,9 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               </div>
               <motion.div 
                 className={styles.topDoctorsDivider} 
-                style={blendVersion === 4 ? { backgroundColor: v4BorderColor } : undefined}
+                style={{
+                  backgroundColor: blendVersion === 4 ? v4BorderColor : blendVersion === 2 ? v2BorderColor : undefined,
+                }}
               />
             </section>
           )}

@@ -83,18 +83,27 @@
   position: absolute;
   inset: 0;
   background:
-    /* Horizontal readability gradient: balanced navy behind left text, clear on right image */
+    /* Horizontal readability gradient: dark behind left typography */
     linear-gradient(90deg,
-      rgba(8, 20, 38, 0.90) 0%,
-      rgba(8, 20, 38, 0.84) 34%,
-      rgba(8, 20, 38, 0.54) 50%,
-      rgba(8, 20, 38, 0.16) 66%,
-      rgba(8, 20, 38, 0.03) 82%,
+      rgba(6, 14, 27, 0.94) 0%,
+      rgba(6, 14, 27, 0.88) 32%,
+      rgba(6, 14, 27, 0.55) 48%,
+      rgba(6, 14, 27, 0.18) 64%,
+      rgba(6, 14, 27, 0.03) 80%,
       transparent 100%),
+    /* Full-width 0deg bottom anchor scrim: guarantees dark navy foundation behind all 4 stats */
+    linear-gradient(0deg,
+      #060c18 0%,
+      #060c18 10%,
+      rgba(6, 14, 27, 0.94) 22%,
+      rgba(6, 14, 27, 0.78) 36%,
+      rgba(6, 14, 27, 0.45) 52%,
+      rgba(6, 14, 27, 0.15) 68%,
+      transparent 82%),
     /* Top edge blend */
     linear-gradient(180deg,
-      rgba(8, 20, 38, 0.60) 0%,
-      rgba(8, 20, 38, 0.14) 12%,
+      rgba(6, 14, 27, 0.60) 0%,
+      rgba(6, 14, 27, 0.12) 14%,
       transparent 24%);
   pointer-events: none;
   z-index: 1;
@@ -104,7 +113,7 @@
 /* Hero Inner Container (Matching CSR Hero 1320px Architecture) */
 .heroInner {
   position: relative;
-  z-index: 2;
+  z-index: 10;
   width: calc(100% - max(4vw, 40px) * 2);
   max-width: 1320px;
   margin-inline: auto;
@@ -266,7 +275,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 12px;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  position: relative;
+  z-index: 10;
 }
 
 .statsGrid {
@@ -304,7 +316,7 @@
   top: 12%;
   height: 76%;
   width: 1px;
-  background: rgba(var(--white-rgb), 0.14);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 @media (max-width: 1024px) {
@@ -315,21 +327,23 @@
 
 .statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(22px, 2vw, 28px);
-  font-weight: 500;
-  color: rgba(var(--white-rgb), 0.76);
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 600;
+  color: #ffffff;
   line-height: 1.15;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
 }
 
 .statLabel {
   font-size: var(--font-size-xs, 12px);
-  color: rgba(var(--white-rgb), 0.46);
+  color: rgba(255, 255, 255, 0.72);
   font-weight: 500;
   line-height: 1.35;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 }
 
 
@@ -344,7 +358,7 @@
   left: 0;
   right: 0;
   bottom: -1px;
-  height: clamp(140px, 18vh, 190px);
+  height: clamp(100px, 14vh, 140px);
   background: linear-gradient(180deg,
       transparent 0%,
       color-mix(in srgb, var(--v2-bg, #0a1128) 38%, transparent) 38%,
@@ -513,7 +527,7 @@
   left: 0;
   right: 0;
   bottom: -1px;
-  height: clamp(180px, 24vh, 240px);
+  height: clamp(100px, 14vh, 140px);
   background: linear-gradient(
     180deg,
     transparent 0%,
@@ -523,7 +537,7 @@
     var(--v4-bg, #060c18) 100%
   );
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
 }
 
 .readingExperienceWrapperV4 {
@@ -729,7 +743,7 @@
 .topDoctorsSubtitle {
   font-size: clamp(15px, 1.25vw, 16.5px);
   line-height: 1.6;
-  color: var(--v4-subtitle, var(--v2-muted, #475569));
+  color: var(--v4-subtitle, var(--v2-subtitle, var(--v2-muted, #475569)));
   margin: 0;
 }
 
