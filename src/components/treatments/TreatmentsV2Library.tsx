@@ -64,15 +64,15 @@ export default function TreatmentsV2Library({
   const [, startTransition] = useTransition();
 
   // Stats layout variation: 'c1' (spread across bottom) vs 'c2' (compact left-aligned below search)
-  const [statsLayout, setStatsLayout] = useState<"c1" | "c2">(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const val = params.get("stats")?.toLowerCase();
-      if (val === "c1") return "c1";
-      if (val === "c2") return "c2";
+  const [statsLayout, setStatsLayout] = useState<"c1" | "c2">("c1");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const val = params.get("stats")?.toLowerCase();
+    if (val === "c1" || val === "c2") {
+      setStatsLayout(val);
     }
-    return "c2";
-  });
+  }, []);
 
   const handleStatsLayoutChange = useCallback((layout: "c1" | "c2") => {
     setStatsLayout(layout);
@@ -81,6 +81,18 @@ export default function TreatmentsV2Library({
       url.searchParams.set("stats", layout);
       window.history.replaceState(null, "", url.toString());
     }
+  }, []);
+
+  // Screen width detection for automatic mweb switching
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Keyboard shortcut 'c' or 'C' to quickly toggle between C1 and C2 for review
@@ -115,23 +127,25 @@ export default function TreatmentsV2Library({
     };
   }, [isFilterSheetOpen]);
 
-  // Progressive scroll reveal for directory sub-filters & A–Z rail
-  const [isFilterRevealed, setIsFilterRevealed] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      if (window.scrollY > 30) return true;
-      const params = new URLSearchParams(window.location.search);
-      if (
-        params.get("search") ||
-        params.get("q") ||
-        params.get("organ") ||
-        params.get("letter") ||
-        params.get("filter")
-      ) {
-        return true;
-      }
+  // Progressive scroll reveal for directory sub-filters & A–Z rail (desktop only, always visible on mobile)
+  const [isFilterRevealed, setIsFilterRevealed] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (window.scrollY > 30) {
+      setIsFilterRevealed(true);
+      return;
     }
-    return false;
-  });
+    const params = new URLSearchParams(window.location.search);
+    if (
+      params.get("search") ||
+      params.get("q") ||
+      params.get("organ") ||
+      params.get("letter") ||
+      params.get("filter")
+    ) {
+      setIsFilterRevealed(true);
+    }
+  }, []);
 
   // Reveal on scroll (one-way latch: once revealed, stays in position until page refresh)
   useEffect(() => {
@@ -335,31 +349,8 @@ export default function TreatmentsV2Library({
                 theme="dark"
               />
 
-              <div className={styles.heroControlsRow}>
-                {/* Stats layout review pill: C1 Current (Spread) vs C2 New (Compact Left) */}
-                <div className={styles.reviewSwitcherGroup}>
-                  <span className={styles.reviewSwitcherLabel}>Stats:</span>
-                  <div className={styles.reviewPill}>
-                    <button
-                      type="button"
-                      className={`${styles.reviewOptionBtn} ${statsLayout === "c1" ? styles.reviewOptionBtnActive : ""}`}
-                      onClick={() => handleStatsLayoutChange("c1")}
-                      title="C1 Current: 4 numerical stats spread across bottom"
-                    >
-                      C1 Spread
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.reviewOptionBtn} ${statsLayout === "c2" ? styles.reviewOptionBtnActive : ""}`}
-                      onClick={() => handleStatsLayoutChange("c2")}
-                      title="C2 New: 4 numerical stats compact left-aligned below search bar"
-                    >
-                      C2 Compact
-                    </button>
-                  </div>
-                </div>
-
-                {onVersionChange && (
+              {onVersionChange && (
+                <div className={styles.heroControlsRow}>
                   <div className={styles.versionPillWrap}>
                     <button
                       type="button"
@@ -376,8 +367,8 @@ export default function TreatmentsV2Library({
                       V2 Library
                     </button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </motion.div>
 
             <motion.h1
@@ -386,12 +377,22 @@ export default function TreatmentsV2Library({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.48, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
             >
-              <TextSweepEffect
-                words={["Treatments & Procedures"]}
-                sweepMs={2400}
-                delayMs={80}
-                finalColor="#FFFFFF"
-              />
+              <span className={styles.desktopTitleText}>
+                <TextSweepEffect
+                  words={["Treatments & Procedures"]}
+                  sweepMs={2400}
+                  delayMs={80}
+                  finalColor="#FFFFFF"
+                />
+              </span>
+              <span className={styles.mobileTitleText}>
+                <TextSweepEffect
+                  words={["Treatments & Procedures"]}
+                  sweepMs={2400}
+                  delayMs={80}
+                  finalColor="#FFFFFF"
+                />
+              </span>
             </motion.h1>
 
             <motion.p
@@ -412,8 +413,19 @@ export default function TreatmentsV2Library({
             >
               <div className={styles.heroSearchRow}>
                 <div className={styles.searchBoxWrap}>
+                  <div className={styles.animatedBorderOutline} aria-hidden="true" />
                   <div className={styles.searchBox}>
-                    <Search size={16} strokeWidth={2.0} className={styles.searchIcon} />
+                    <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }} aria-hidden="true">
+                      <defs>
+                        <linearGradient id="nhSearchPillGradTreatments" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#00C4FF" />
+                          <stop offset="35%" stopColor="#8B5CF6" />
+                          <stop offset="70%" stopColor="#FF2E93" />
+                          <stop offset="100%" stopColor="#ED1C24" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <Search size={18} strokeWidth={2.0} className={styles.searchIcon} />
                     <input
                       type="text"
                       placeholder="Search treatments, surgery or condition..."
@@ -428,6 +440,7 @@ export default function TreatmentsV2Library({
                     />
                     {searchQuery && (
                       <button
+                        type="button"
                         className={styles.clearSearchBtn}
                         onClick={() => setSearchQuery("")}
                         aria-label="Clear search input"
@@ -564,18 +577,18 @@ export default function TreatmentsV2Library({
         className={styles.directoryControlsWrap}
         initial={false}
         animate={{
-          height: isFilterRevealed ? "auto" : 0,
-          opacity: isFilterRevealed ? 1 : 0,
-          marginTop: isFilterRevealed ? 14 : 0,
-          marginBottom: isFilterRevealed ? 20 : 0,
+          height: (isMobile || isFilterRevealed) ? "auto" : 0,
+          opacity: (isMobile || isFilterRevealed) ? 1 : 0,
+          marginTop: (isMobile || isFilterRevealed) ? 14 : 0,
+          marginBottom: (isMobile || isFilterRevealed) ? (isMobile ? 12 : 20) : 0,
         }}
         transition={{
           duration: 0.48,
           ease: [0.16, 1, 0.3, 1],
         }}
         style={{
-          overflow: "hidden",
-          pointerEvents: isFilterRevealed ? "auto" : "none",
+          overflow: isMobile ? "visible" : (isFilterRevealed ? "visible" : "hidden"),
+          pointerEvents: (isMobile || isFilterRevealed) ? "auto" : "none",
         }}
       >
         <div className={styles.directoryTopBar}>
@@ -633,6 +646,24 @@ export default function TreatmentsV2Library({
           onSelectLetter={setSelectedLetter}
           resultCount={displayedItems.length}
         />
+
+        {/* Mobile Results Summary (Placed below A-Z rail on mobile to match Figma) */}
+        <div className={styles.mobileFeedbackWrap}>
+          <p className={styles.mobileFeedbackText}>
+            Showing {displayedItems.length} {displayedItems.length === 1 ? "procedure" : "procedures"}
+          </p>
+          {(selectedOrgan || searchQuery.trim() || selectedSubFilter !== "all" || selectedLetter) && (
+            <button
+              type="button"
+              className={styles.clearFilterChip}
+              onClick={handleResetFilters}
+              aria-label="Clear active filters"
+            >
+              <RotateCcw size={12} />
+              <span>Reset all</span>
+            </button>
+          )}
+        </div>
 
         {isApiLoading && (
           <div className={styles.apiPulseBar}>

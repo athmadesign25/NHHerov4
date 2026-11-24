@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Download, Calendar, FileText } from "lucide-react";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { CsrEditorialItem } from "@/data/csrData";
@@ -12,6 +13,15 @@ interface CsrEditorialsGridProps {
 }
 
 export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const ambientY = useTransform(scrollYProgress, [0, 1], [-40, 60]);
+  const ambientOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.4, 0.8, 0.3]);
+
   const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
     // Graceful download trigger for PDF / Advisory
     e.preventDefault();
@@ -19,10 +29,25 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
   };
 
   return (
-    <section className={styles.sectionWrapper} data-nav-theme="dark">
+    <section ref={sectionRef} className={styles.sectionWrapper} data-nav-theme="dark">
+      {/* Dynamic Ambient Atmosphere connecting from Hero */}
+      <motion.div 
+        className={styles.topAtmosphere}
+        style={{
+          y: ambientY,
+          opacity: ambientOpacity,
+        }}
+      />
+
       <div className={styles.container}>
         {/* Section Header (Centered with TextSweepEffect Settling to Dark Stage) */}
-        <div className={styles.headerBlock}>
+        <motion.div 
+          className={styles.headerBlock}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        >
           <h2 className={styles.sectionTitle}>
             <TextSweepEffect
               words={["Downloadable CSR Editorials"]}
@@ -33,12 +58,27 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
           <p className={styles.sectionSubtitle}>
             Access our quarterly community impact newsletters, pandemic clinical advisories, and certified statutory governance charters.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 3-Column Editorial Cards Grid */}
+        {/* 3-Column Editorial Cards Grid with Staggered Scroll-In Reveal */}
         <div className={styles.editorialsGrid}>
-          {items.map((item) => (
-            <article key={item.id} className={styles.editorialCard}>
+          {items.map((item, index) => (
+            <motion.article 
+              key={item.id} 
+              className={styles.editorialCard}
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.12, 
+                ease: [0.16, 1, 0.3, 1] 
+              }}
+              whileHover={{ 
+                y: -6, 
+                transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] } 
+              }}
+            >
               {/* Full Background Image */}
               <Image
                 src={item.image}
@@ -94,10 +134,13 @@ export default function CsrEditorialsGrid({ items }: CsrEditorialsGridProps) {
                   </div>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
+
+      {/* Bottom Transition Zone: Gradient blend leading seamlessly into Flagship Programs */}
+      <div className={styles.bottomTransitionGlow} />
     </section>
   );
 }

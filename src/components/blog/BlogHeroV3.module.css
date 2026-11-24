@@ -108,15 +108,6 @@
   margin-bottom: 20px;
 }
 
-.eyebrow {
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(var(--white-rgb), 0.72);
-  margin-bottom: 12px;
-}
-
 .heroTitle {
   font-family: Inter, var(--font-sans), sans-serif;
   font-size: clamp(30px, 3.6vw, 46px);
@@ -149,17 +140,18 @@
   gap: 8px;
   background: var(--color-primary, var(--blue-brand));
   color: var(--white);
-  padding: 13px 26px;
+  padding: 12px 24px;
   border-radius: 8px;
   font-size: 14.5px;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(var(--blue-brand-rgb), 0.42);
+  box-shadow: none;
   transition: transform var(--duration-base) var(--ease-spring), background var(--duration-base) ease;
 }
 
 .exploreBtn:hover {
   background: #023877;
+  color: var(--white);
   transform: translateY(-2px);
 }
 

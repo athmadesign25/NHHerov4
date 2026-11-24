@@ -52,7 +52,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
+  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(2);
 
   // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
   const { scrollY } = useScroll();

@@ -3,17 +3,17 @@
   position: relative;
   z-index: 6;
   width: 100%;
-  padding-top: 80px;
-  padding-bottom: 40px;
-  background: linear-gradient(180deg, var(--slate-100) 0%, var(--color-bg-alt) 30%, var(--slate-50) 70%, var(--blue-tint-100) 100%);
+  padding-top: clamp(100px, 12vh, 140px);
+  padding-bottom: clamp(100px, 12vh, 140px);
+  background: linear-gradient(180deg, #f1f5f9 0%, var(--color-bg-alt) 30%, var(--slate-50) 65%, #ffffff 100%);
   overflow: visible;
   box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   .sectionWrapper {
-    padding-top: 50px;
-    padding-bottom: 24px;
+    padding-top: 64px;
+    padding-bottom: 60px;
   }
 }
 

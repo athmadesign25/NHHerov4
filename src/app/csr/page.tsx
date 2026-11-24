@@ -3,6 +3,7 @@
 import React from "react";
 import CsrHero from "@/components/csr/CsrHero";
 import CsrEditorialsGrid from "@/components/csr/CsrEditorialsGrid";
+import CsrTransitionBridge from "@/components/csr/CsrTransitionBridge";
 import CsrProgramsFlow from "@/components/csr/CsrProgramsFlow";
 import BlogCtaBanner from "@/components/blog/BlogCtaBanner";
 import ClinicalFloatingSideActions from "@/components/ui/ClinicalFloatingSideActions";
@@ -10,18 +11,28 @@ import { CSR_HERO_DATA, CSR_EDITORIALS_DATA, CSR_PROGRAMS_DATA } from "@/data/cs
 
 export default function CsrPage() {
   return (
-    <main style={{ minHeight: "100vh", backgroundColor: "#060c18" }}>
+    <main
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#060c18",
+        position: "relative",
+        overflowX: "clip",
+      }}
+    >
       {/* ── SECTION 1: HERO WITH VIDEO STORYTELLING & IMPACT NUMBERS (DARK STAGE) ── */}
       <CsrHero data={CSR_HERO_DATA} />
 
       {/* ── SECTION 2: DOWNLOADABLE CSR EDITORIALS (DARK STAGE CONTINUATION) ── */}
       <CsrEditorialsGrid items={CSR_EDITORIALS_DATA} />
 
-      {/* ── SECTION 3: FLAGSHIP PROGRAMS (LIGHT STAGE FOLDER CARDS) ── */}
+      {/* ── SECTION 3: SPACIOUS DYNAMIC HORIZON TRANSITION BRIDGE (480px LUXURIOUS GRADIENT) ── */}
+      <CsrTransitionBridge />
+
+      {/* ── SECTION 4: FLAGSHIP PROGRAMS (LIGHT STAGE FOLDER CARDS) ── */}
       <CsrProgramsFlow programs={CSR_PROGRAMS_DATA} />
 
-      {/* ── SECTION 4: EXACT SIGNATURE BLUE CTA BANNER (SAME AS BLOG & PROCEDURES) ── */}
-      <BlogCtaBanner />
+      {/* ── SECTION 5: EXACT SIGNATURE BLUE CTA BANNER ── */}
+      <BlogCtaBanner bg="white" />
 
       {/* ── UNIFIED CLINICAL SIDE ACTIONS ── */}
       <ClinicalFloatingSideActions

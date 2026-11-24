@@ -124,6 +124,14 @@
   text-shadow: 0 2px 14px rgba(var(--black-rgb), 0.6);
 }
 
+.desktopTitleText {
+  display: inline;
+}
+
+.mobileTitleText {
+  display: none;
+}
+
 .heroSubtitle {
   font-size: clamp(15px, 1.3vw, 17px);
   color: rgba(var(--white-rgb), 0.84);
@@ -133,7 +141,22 @@
   text-shadow: 0 1px 4px rgba(var(--black-rgb), 0.5);
 }
 
-/* ─── SEARCH INPUT (COMPACT PULSE SEARCH WITH CONIC MOTION GRADIENT & SPOTLIGHT) ─── */
+/* ─── SEARCH INPUT (UNIFIED SPOTLIGHT PILL — MATCHING LANDING PAGE SCROLL STAGE) ─── */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotateBorderAngle {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
 .heroSearchContainer {
   display: flex;
   flex-direction: column;
@@ -149,86 +172,98 @@
   width: 100%;
 }
 
-/* Compact Pulse search shell wrapper (Visible hairline gradient stroke with balanced contrast) */
+/* Spotlight Search Shell Wrapper */
 .searchBoxWrap {
   position: relative;
   flex: 1;
   min-width: 0;
+  height: 46px;
   border-radius: var(--radius-full, 9999px);
-  padding: 1.5px;
-  /* Clearly visible outline stroke */
-  background: linear-gradient(115deg,
-      rgba(168, 85, 247, 0.55) 0%,
-      rgba(var(--blue-500-rgb), 0.45) 35%,
-      rgba(var(--cyan-bright-rgb), 0.45) 65%,
-      rgba(236, 72, 153, 0.45) 85%,
-      rgba(var(--red-emergency-rgb), 0.40) 100%);
-  box-shadow: 0 0 20px -2px rgba(139, 92, 246, 0.22),
-    0 8px 24px rgba(var(--black-rgb), 0.45);
-  transition: all var(--duration-emphasis) var(--ease-spring);
-}
-
-/* Subtle, soft spotlight aura behind the search pill */
-.searchBoxWrap::before {
-  content: "";
-  position: absolute;
-  inset: -8px -12px;
-  background: radial-gradient(ellipse at center,
-      rgba(139, 92, 246, 0.18) 0%,
-      rgba(var(--cyan-bright-rgb), 0.08) 50%,
-      transparent 72%);
-  filter: blur(14px);
-  z-index: -1;
-  border-radius: var(--radius-full, 9999px);
-  pointer-events: none;
-  opacity: 0.75;
-  transition: opacity var(--duration-emphasis) ease;
-}
-
-.searchBoxWrap:hover {
-  box-shadow: 0 0 26px 1px rgba(139, 92, 246, 0.35),
-    0 10px 28px rgba(var(--black-rgb), 0.55);
-}
-
-.searchBoxWrap:focus-within {
-  background: linear-gradient(115deg,
-      rgba(168, 85, 247, 0.75) 0%,
-      rgba(var(--blue-500-rgb), 0.65) 35%,
-      rgba(var(--cyan-bright-rgb), 0.65) 65%,
-      rgba(236, 72, 153, 0.65) 85%,
-      rgba(var(--red-emergency-rgb), 0.60) 100%);
-  box-shadow: 0 0 32px 2px rgba(139, 92, 246, 0.45),
-    0 12px 32px rgba(var(--black-rgb), 0.65);
-}
-
-/* Inner Glass Shell in Compact Size (44px) */
-.searchBox {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  background: rgba(10, 15, 30, 0.90);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-radius: var(--radius-full, 9999px);
-  padding: 0 16px;
-  height: 44px;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* Clean Crisp White Search Icon */
-.searchIcon {
-  color: var(--white) !important;
-  stroke: var(--white) !important;
-  opacity: 0.88;
-  flex-shrink: 0;
-  margin-right: 6px;
-  transition: opacity var(--duration-base) ease, transform var(--duration-base) ease;
+/* Moving Motion Gradient Border Outline (Exact NH Red, Pulse Pink, Purple, NH Blue, Pulse Cyan, Royal Blue) */
+.animatedBorderOutline {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    rgba(237, 28, 36, 0.95) 0deg,      /* NH Red */
+    rgba(255, 46, 147, 0.90) 55deg,    /* Pulse Pink */
+    rgba(139, 92, 246, 0.90) 115deg,   /* Purple */
+    rgba(3, 78, 162, 0.95) 175deg,     /* NH Blue */
+    rgba(0, 196, 255, 0.95) 235deg,    /* Pulse Cyan */
+    rgba(37, 99, 235, 0.95) 295deg,    /* Royal Blue */
+    rgba(237, 28, 36, 0.95) 360deg     /* Loop to NH Red */
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: rotateBorderAngle 18s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.28;
+  box-sizing: border-box;
+  transition: opacity 0.35s ease;
 }
 
-.searchBox:hover .searchIcon,
-.searchBox:focus-within .searchIcon {
-  opacity: 1;
-  transform: scale(1.08);
+.searchBoxWrap:hover .animatedBorderOutline,
+.searchBoxWrap:focus-within .animatedBorderOutline {
+  opacity: 0.42;
+}
+
+/* Docked Dark Glass Pill Body — exact match to Landing Page Spotlight Pill */
+.searchBox {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: inherit;
+  padding: 0 16px;
+  background: rgba(30, 42, 60, 0.64);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 16px 40px -8px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(56, 189, 248, 0.12),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.26);
+  box-sizing: border-box;
+  transition: background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.searchBoxWrap:hover .searchBox,
+.searchBoxWrap:focus-within .searchBox {
+  background: rgba(36, 50, 72, 0.72);
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow:
+    0 20px 48px -8px rgba(0, 0, 0, 0.75),
+    0 0 32px rgba(56, 189, 248, 0.20),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
+}
+
+/* Landing Page Multi-colored Gradient Search Icon */
+.searchIcon {
+  stroke: url(#nhSearchPillGradTreatments) !important;
+  color: #00C4FF !important;
+  filter: drop-shadow(0 0 3px rgba(0, 196, 255, 0.40));
+  flex-shrink: 0;
+  margin-right: 8px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
+}
+
+.searchBoxWrap:hover .searchIcon,
+.searchBoxWrap:focus-within .searchIcon {
+  transform: scale(1.10);
+  filter: drop-shadow(0 0 6px rgba(0, 196, 255, 0.80)) drop-shadow(0 0 10px rgba(255, 46, 147, 0.50));
 }
 
 .searchInput {
@@ -237,14 +272,16 @@
   border: none;
   outline: none;
   font-family: inherit;
-  font-size: var(--font-size-sm);
-  color: var(--white);
-  padding: 4px 6px;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #ffffff;
   letter-spacing: -0.01em;
+  padding: 0;
+  height: 100%;
 }
 
 .searchInput::placeholder {
-  color: rgba(var(--white-rgb), 0.62);
+  color: rgba(255, 255, 255, 0.78);
   font-weight: 400;
 }
 
@@ -252,18 +289,18 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: rgba(var(--white-rgb), 0.7);
+  color: rgba(255, 255, 255, 0.70);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px;
   border-radius: 50%;
-  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .clearSearchBtn:hover {
-  color: var(--white);
-  background: rgba(var(--white-rgb), 0.15);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Mobile Filter Trigger Button (MWEB ONLY — hidden on desktop where circular carousel is used) */
@@ -747,6 +784,10 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.mobileFeedbackWrap {
+  display: none;
 }
 
 .feedbackText {
@@ -2020,6 +2061,7 @@
    Placed at the bottom of the cascade to override all base desktop rules
    ═════════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+
   /* Hero Container: Title starts at precisely 50% of screen height */
   .hero {
     position: relative;
@@ -2031,17 +2073,15 @@
 
   /* Clear transparent window in upper photo where specialist & patient live */
   .heroBgOverlay {
-    background: linear-gradient(
-      180deg,
-      rgba(6, 14, 27, 0.45) 0%,
-      rgba(6, 14, 27, 0.12) 14%,
-      transparent 22%,
-      transparent 38%,
-      rgba(6, 14, 27, 0.70) 48%,
-      rgba(6, 14, 27, 0.96) 62%,
-      #060e1b 80%,
-      #060e1b 100%
-    ) !important;
+    background: linear-gradient(180deg,
+        rgba(6, 14, 27, 0.45) 0%,
+        rgba(6, 14, 27, 0.12) 14%,
+        transparent 22%,
+        transparent 38%,
+        rgba(6, 14, 27, 0.70) 48%,
+        rgba(6, 14, 27, 0.96) 62%,
+        #060e1b 80%,
+        #060e1b 100%) !important;
   }
 
   .heroBgImage {
@@ -2064,31 +2104,48 @@
   /* Breadcrumbs anchored cleanly at top below navbar */
   .breadcrumbsContainer {
     position: absolute !important;
-    top: calc(var(--nav-height, 72px) + 10px) !important;
-    left: max(16px, 4vw) !important;
-    right: max(16px, 4vw) !important;
-    width: auto !important;
+    top: calc(var(--nav-height, 72px) + 12px) !important;
+    left: 16px !important;
+    right: 16px !important;
+    width: calc(100% - 32px) !important;
     margin: 0 !important;
     z-index: 10 !important;
+    box-sizing: border-box !important;
   }
 
   .heroControlsRow {
     display: none !important;
   }
 
-  /* Title starts from 50% height of screen */
-  .heroTitle {
-    font-size: clamp(25px, 7.2vw, 30px) !important;
+  .desktopTitleText {
+    display: none !important;
+  }
+
+  .mobileTitleText {
+    display: block !important;
+    font-size: clamp(26px, 7.5vw, 30px) !important;
+    font-weight: 600 !important;
     line-height: 1.15 !important;
-    margin: 0 0 8px 0 !important;
+    letter-spacing: -0.6px !important;
     color: #ffffff !important;
+    margin: 0 !important;
+  }
+
+  /* Title starts from 50% height of screen with 2-line break */
+  .heroTitle {
+    font-size: clamp(26px, 7.5vw, 30px) !important;
+    line-height: 1.15 !important;
+    margin: 0 0 10px 0 !important;
+    color: #ffffff !important;
+    max-width: 280px !important;
+    width: 100% !important;
   }
 
   /* 2-line optimized subtitle */
   .heroSubtitle {
     font-size: 13.5px !important;
     line-height: 1.45 !important;
-    margin: 0 0 14px 0 !important;
+    margin: 0 0 16px 0 !important;
     max-width: 100% !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 2 !important;
@@ -2099,16 +2156,78 @@
 
   .heroSearchContainer {
     max-width: 100% !important;
+    width: 100% !important;
     margin-bottom: 2px !important;
   }
 
+  .searchRow,
+  .heroSearchRow {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Exact Even Height 46px & Width Alignment */
   .searchBoxWrap {
-    height: 42px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .searchBox {
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 0 16px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .searchInput {
+    font-size: 13.5px !important;
+    height: 100% !important;
   }
 
   .mobileFilterBtn {
-    height: 42px !important;
-    padding: 0 14px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    padding: 0 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    background: rgba(30, 42, 60, 0.64) !important;
+    backdrop-filter: blur(28px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    box-shadow:
+      0 16px 40px -8px rgba(0, 0, 0, 0.65),
+      0 0 24px rgba(56, 189, 248, 0.12),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.26) !important;
+    color: #ffffff !important;
+    box-sizing: border-box !important;
+    border-radius: var(--radius-full, 9999px) !important;
+    flex-shrink: 0 !important;
+    font-size: var(--font-size-xs) !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: background 0.35s ease, border-color 0.35s ease, transform 0.2s ease !important;
+  }
+
+  .mobileFilterBtn:hover {
+    background: rgba(36, 50, 72, 0.75) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    transform: translateY(-1px) !important;
   }
 
   /* Hide desktop multi-column stats on mobile */
@@ -2120,20 +2239,55 @@
   /* Directory controls (filters & 2-row ABCD rail) directly below hero */
   .directoryControlsWrap {
     width: calc(100% - 32px) !important;
+    max-width: 100% !important;
     height: auto !important;
     opacity: 1 !important;
-    margin-top: 14px !important;
-    margin-bottom: 12px !important;
+    margin: 14px auto 12px !important;
+    padding: 0 !important;
     pointer-events: auto !important;
     overflow: visible !important;
+    display: block !important;
+    box-sizing: border-box !important;
   }
 
   .directoryTopBar {
     margin-bottom: 6px !important;
   }
 
+  /* In directoryTopBar, hide desktop feedbackTextWrapper on mobile since it renders below A-Z rail */
+  .feedbackTextWrapper {
+    display: none !important;
+  }
+
   .feedbackTextRow {
     width: calc(100% - 32px) !important;
     margin: 4px auto 10px !important;
+  }
+
+  .mobileFeedbackWrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin: 8px 0 14px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobileFeedbackText {
+    font-family: Inter, var(--font-sans), sans-serif !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    color: #b7bec7 !important;
+    margin: 0 !important;
+  }
+
+  .cardsGrid {
+    width: calc(100% - 32px) !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    box-sizing: border-box !important;
   }
 }

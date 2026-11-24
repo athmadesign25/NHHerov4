@@ -6,6 +6,7 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import MoreFromOurBlogCarousel from "@/components/blog/MoreFromOurBlogCarousel";
 import { ARTICLES_DIRECTORY_DATA } from "@/data/articlesDirectoryData";
 import styles from "./BlogHeroV3.module.css";
@@ -95,12 +96,13 @@ export default function BlogHeroV3() {
               />
             </div>
 
-            <div className={styles.eyebrow}>
-              Narayana Health &bull; Clinical Knowledge Hub
-            </div>
-
             <h1 className={styles.heroTitle}>
-              Health Blogs, Medical Guides &amp; Clinical Insights
+              <TextSweepEffect
+                words={["Health Blogs, Medical Guides & Clinical Insights"]}
+                sweepMs={2400}
+                delayMs={80}
+                finalColor="#FFFFFF"
+              />
             </h1>
 
             <p className={styles.heroSubtitle}>

@@ -64,13 +64,12 @@ export default function AlphabeticalFilterRail({
         {ALPHABET.map(renderLetterBtn)}
       </div>
 
-      {/* Mobile Web View: Two-Row Stacked Rail */}
+      {/* Mobile Web View: Two-Row 13-Column Grid */}
       <div className={`${styles.alphabetRailContainer} ${styles.mobileStackedRail}`} role="toolbar" aria-label="A to Z alphabetical filter (mobile 2-row)">
-        <div className={styles.mobileRailRow}>
-          {renderAllBtn()}
+        <div className={styles.mobileRailGrid}>
           {ROW_1_LETTERS.map(renderLetterBtn)}
         </div>
-        <div className={styles.mobileRailRow}>
+        <div className={styles.mobileRailGrid}>
           {ROW_2_LETTERS.map(renderLetterBtn)}
         </div>
       </div>

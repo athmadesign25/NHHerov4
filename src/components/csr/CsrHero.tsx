@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import RollingNumber from "@/components/ui/RollingNumber";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { Award, ArrowRight } from "lucide-react";
 import { CsrHeroData } from "@/data/csrData";
 import styles from "./CsrHero.module.css";
@@ -12,32 +14,83 @@ interface CsrHeroProps {
 }
 
 export default function CsrHero({ data }: CsrHeroProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 85,
+    damping: 24,
+    mass: 0.8,
+  });
+
+  const videoScale = useTransform(smoothProgress, [0, 1], [1, 1.08]);
+  const videoOpacity = useTransform(smoothProgress, [0, 0.85], [0.65, 0.20]);
+  const videoY = useTransform(smoothProgress, [0, 1], ["0%", "8%"]);
+  const contentY = useTransform(smoothProgress, [0, 1], [0, 36]);
+  const contentOpacity = useTransform(smoothProgress, [0, 0.75], [1, 0.4]);
+
   return (
-    <section className={styles.heroSection} data-nav-theme="dark">
-      {/* Background Video */}
+    <section ref={sectionRef} className={styles.heroSection} data-nav-theme="dark">
+      {/* Background Video with Dynamic Scroll Transform */}
       <div className={styles.videoWrapper}>
-        <video
+        <motion.video
           autoPlay
           loop
           muted
           playsInline
           poster={data.posterUrl}
           className={styles.heroVideo}
+          style={{
+            scale: videoScale,
+            y: videoY,
+            opacity: videoOpacity,
+          }}
         >
           <source src={data.videoUrl} type="video/mp4" />
-        </video>
-        <div className={styles.heroOverlay} />
+        </motion.video>
       </div>
 
-      {/* Main Container */}
-      <div className={styles.container}>
-        {/* Upper Editorial Text (Clean, comfortable placement, no shadows) */}
-        <div className={styles.contentBlock}>
+      {/* Atmospheric Overlays anchored firmly to the section */}
+      <div className={styles.heroOverlay} />
+      <div className={styles.bottomBlend} />
+      <div className={styles.ambientGlow} />
+
+      {/* Main Container with subtle scroll elevation */}
+      <motion.div 
+        className={styles.container}
+        style={{
+          y: contentY,
+          opacity: contentOpacity,
+        }}
+      >
+        {/* Upper Editorial Text */}
+        <motion.div 
+          className={styles.contentBlock}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className={styles.breadcrumbsWrapper}>
-            <Breadcrumbs items={[{ label: "CSR Overview", href: "/csr" }]} />
+            <Breadcrumbs
+              items={[
+                { label: "Home", href: "/" },
+                { label: "CSR Overview" },
+              ]}
+              theme="dark"
+            />
           </div>
 
-          <h1 className={styles.heroTitle}>{data.title}</h1>
+          <h1 className={styles.heroTitle}>
+            <TextSweepEffect
+              words={[data.title]}
+              sweepMs={2400}
+              delayMs={80}
+              finalColor="#FFFFFF"
+            />
+          </h1>
           <p className={styles.heroSubtitle}>{data.subtitle}</p>
 
           <div className={styles.heroCtaRow}>
@@ -46,17 +99,22 @@ export default function CsrHero({ data }: CsrHeroProps) {
               <ArrowRight size={14} />
             </a>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Bottom Metrics & Milestone Row (Matching Image 2 Speciality Hero) */}
-        <div className={styles.metricsBottomWrap}>
+        {/* Bottom Metrics & Milestone Row */}
+        <motion.div 
+          className={styles.metricsBottomWrap}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div className={styles.statsGrid}>
             {data.stats.map((stat, idx) => (
-              <div key={idx} className={styles.statItem}>
-                <span className={styles.statValue}>
+              <div key={idx} className={styles.statBlock}>
+                <span className={styles.statNumber}>
                   <RollingNumber value={stat.value} />
                 </span>
-                <p className={styles.statDesc}>{stat.description}</p>
+                <span className={styles.statLabel}>{stat.label}</span>
               </div>
             ))}
           </div>
@@ -74,8 +132,8 @@ export default function CsrHero({ data }: CsrHeroProps) {
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

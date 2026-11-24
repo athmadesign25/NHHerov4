@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -51,6 +51,42 @@ export default function SymptomDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // V2: Scroll-driven section colour transition (#0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
+  const { scrollY } = useScroll();
+  const v2BgColor = useTransform(scrollY, [0, 110, 220, 320], ["#0a1128", "#172d56", "#e2ebf6", "#ffffff"]);
+  const v2HeadingColor = useTransform(scrollY, [0, 140, 260], ["#ffffff", "#f1f5f9", "#111827"]);
+  const v2BodyColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.84)", "rgba(241, 245, 249, 0.90)", "#374151"]
+  );
+  const v2MutedColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.62)", "rgba(203, 213, 225, 0.85)", "#64748b"]
+  );
+  const v2TocLinkColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.78)", "rgba(226, 232, 240, 0.88)", "#4b5563"]
+  );
+  const v2TocActiveColor = useTransform(scrollY, [0, 140, 260], ["#38bdf8", "#7dd3fc", "#034EA2"]);
+  const v2TocActiveBg = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.16)", "rgba(3, 78, 162, 0.08)"]
+  );
+  const v2BorderColor = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.20)", "rgba(15, 23, 42, 0.10)"]
+  );
+  const v2CardBg = useTransform(
+    scrollY,
+    [0, 140, 260],
+    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -105,7 +141,22 @@ export default function SymptomDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className={styles.detailPageContainer}>
+    <motion.div
+      className={styles.detailPageContainer}
+      style={
+        {
+          "--v2-bg": v2BgColor,
+          "--v2-heading": v2HeadingColor,
+          "--v2-body": v2BodyColor,
+          "--v2-muted": v2MutedColor,
+          "--v2-toc-link": v2TocLinkColor,
+          "--v2-toc-active": v2TocActiveColor,
+          "--v2-toc-active-bg": v2TocActiveBg,
+          "--v2-border": v2BorderColor,
+          "--v2-card-bg": v2CardBg,
+        } as any
+      }
+    >
       {/* ─── STATIONARY ATMOSPHERIC CANVAS ─────────────────────────────────── */}
       <div className={styles.stationaryCanvas} aria-hidden="true">
         <motion.div
@@ -127,7 +178,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
       </div>
 
       {/* ─── DETAIL HERO ──────────────────────────────────────────────────── */}
-      <section className={styles.detailHero} data-nav-theme="dark">
+      <section className={`${styles.detailHero} ${styles.detailHeroV2}`} data-nav-theme="dark">
         <div className={styles.heroBgOverlay} />
 
         <div className={styles.heroInner}>
@@ -212,7 +263,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY ────────────────────────────────────────────── */}
-      <div className={styles.readingExperienceWrapper}>
+      <div className={`${styles.readingExperienceWrapper} ${styles.readingExperienceWrapperV2}`}>
         <main className={styles.mainLayoutContainer}>
           <div className={styles.twoColumnGrid}>
             {/* Sticky Table of Contents Sidebar */}
@@ -268,7 +319,10 @@ export default function SymptomDetailPage({ params }: PageProps) {
               <ShareWidget shareTitle={detail.title} title="Share this guide" />
 
               {/* 24×7 Care Helpline Contact Companion (Below Share on Index Side) */}
-              <ContactCareSidebarCard subtitle="Immediate guidance on warning signs, emergency triage & specialist consultations." />
+              <ContactCareSidebarCard
+                subtitle="Immediate guidance on warning signs, emergency triage & specialist consultations."
+                theme="dynamic"
+              />
             </aside>
 
             {/* Reading Content Focus Canvas */}
@@ -277,6 +331,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
               <ClinicalAtAGlanceCard
                 bookingHref="/book-an-appointment"
                 secondOpinionHref="/book-an-appointment?flow=second-opinion"
+                theme="dynamic"
               />
 
               {/* SECTION: Overview & 4-5 Line Clinical Summary */}
@@ -286,6 +341,7 @@ export default function SymptomDetailPage({ params }: PageProps) {
                   eyebrow={`${detail.speciality} · Symptom Triage Summary`}
                   summary={`${detail.leadParagraph} Prompt evaluation by a ${detail.metrics.specialist} helps differentiate benign triggers from high-priority medical conditions requiring rapid diagnostic workup (${detail.metrics.diagnosticTurnaround}) and targeted intervention.`}
                   reviewerName={detail.doctors[0]?.name || "Dr. Devi Prasad Shetty"}
+                  theme="dynamic"
                 />
                 <div className={styles.quickFactsGrid}>
                   <div className={styles.factCard}>
@@ -473,6 +529,6 @@ export default function SymptomDetailPage({ params }: PageProps) {
         pulseQuery={`I want to know about symptoms of ${detail.heroTitle}: possible causes, emergency signs, and consultation options.`}
         isScrolled={isScrolled}
       />
-    </div>
+    </motion.div>
   );
 }

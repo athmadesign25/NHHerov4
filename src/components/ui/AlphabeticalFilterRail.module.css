@@ -36,32 +36,33 @@
   .mobileStackedRail {
     display: flex !important;
     flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 2px 0 4px;
+    overflow: visible !important;
+  }
+
+  .mobileRailGrid {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
     gap: 4px;
     width: 100%;
-    overflow-x: auto;
-    padding: 2px 0 4px;
-  }
-
-  .mobileRailRow {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    width: max-content;
-    padding: 1px 0;
-  }
-
-  .allBtn {
-    height: 26px;
-    padding: 0 8px;
-    font-size: 11px;
-    border-radius: 5px;
   }
 
   .letterBtn {
-    width: 26px;
-    height: 26px;
-    border-radius: 5px;
+    width: 100%;
+    min-width: 0;
+    height: 24px;
+    border-radius: 4px;
     font-size: 12px;
+    background: rgba(220, 220, 220, 0.03);
+    color: #95a2b3;
+    padding: 0;
+  }
+
+  .letterBtnDisabled {
+    color: #3d4b60 !important;
+    opacity: 0.45 !important;
   }
 }
 

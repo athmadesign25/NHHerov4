@@ -31,6 +31,13 @@ export default function TextSweepEffect({
 }) {
   const word = words?.[0] ?? "";
   const isControlled = typeof active === "boolean";
+  const [isComplete, setIsComplete] = useState(false);
+
+  const handleComplete = () => {
+    setIsComplete(true);
+    onSweepComplete?.();
+  };
+
   const gradient = `
     linear-gradient(90deg,
       ${finalColor} 0%, ${finalColor} 40%,
@@ -48,19 +55,19 @@ export default function TextSweepEffect({
         style={{ position: "relative", display: "inline" }}
       >
         <motion.span
-          onAnimationComplete={onSweepComplete}
+          onAnimationComplete={handleComplete}
           style={{
             display: "inline",
-            backgroundOrigin: "padding-box",
-            backgroundImage: gradient,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            color: "transparent",
+            backgroundOrigin: isComplete ? undefined : "padding-box",
+            backgroundImage: isComplete ? "none" : gradient,
+            backgroundClip: isComplete ? undefined : "text",
+            WebkitBackgroundClip: isComplete ? undefined : "text",
+            WebkitTextFillColor: isComplete ? "currentColor" : "transparent",
+            color: isComplete ? "currentColor" : "transparent",
             backgroundRepeat: "no-repeat",
             backgroundSize: "400% 100%",
             willChange: "background-position, filter",
-            filter: "blur(var(--blur))",
+            filter: isComplete ? "none" : "blur(var(--blur))",
           }}
           initial={{ backgroundPositionX: "100%", "--blur": "4px" } as any}
           animate={isControlled ? (active ? { backgroundPositionX: "0%", "--blur": ["4px", "0.5px", "0px"] } : {}) : undefined}

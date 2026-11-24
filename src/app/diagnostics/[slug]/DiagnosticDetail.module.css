@@ -332,6 +332,26 @@
   margin: 0;
 }
 
+/* ─── V2: SCROLL-DRIVEN SECTION COLOUR-CHANGE LANGUAGE ─── */
+.detailHeroV2 {
+  position: relative;
+}
+
+.detailHeroV2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: clamp(140px, 18vh, 190px);
+  background: linear-gradient(180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--v2-bg, #0a1128) 38%, transparent) 38%,
+      color-mix(in srgb, var(--v2-bg, #0a1128) 76%, transparent) 72%,
+      var(--v2-bg, #0a1128) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* ─── MAIN CONTENT BODY OVER STATIONARY CANVAS (SMOOTH BLENDED READING SHEET) ─── */
 .readingExperienceWrapper {
@@ -345,6 +365,88 @@
   box-shadow:
     0 -24px 64px rgba(6, 14, 27, 0.45),
     0 -1px 0 rgba(var(--white-rgb), 0.9) inset;
+}
+
+/* ─── V2: SCROLL-DRIVEN SECTION COLOUR CHANGE (#0a1128 -> #172d56 -> #e2ebf6 -> var(--white)) ─── */
+.readingExperienceWrapperV2 {
+  margin-top: -1px;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--v2-bg, #0a1128);
+}
+
+.readingExperienceWrapperV2 .sectionHeading,
+.readingExperienceWrapperV2 .mainSectionTitle,
+.readingExperienceWrapperV2 .subSectionTitle {
+  color: var(--v2-heading, #111827);
+}
+
+.readingExperienceWrapperV2 .leadParagraph,
+.readingExperienceWrapperV2 .bodyParagraph {
+  color: var(--v2-body, #374151);
+}
+
+.readingExperienceWrapperV2 .tocEyebrow,
+.readingExperienceWrapperV2 .tocEyebrowIcon,
+.readingExperienceWrapperV2 .shareWidgetTitle {
+  color: var(--v2-muted, var(--slate-500));
+  border-bottom-color: var(--v2-border, rgba(var(--slate-900-rgb), 0.08));
+}
+
+.readingExperienceWrapperV2 .tocNavRail {
+  border-left-color: var(--v2-border, rgba(var(--slate-900-rgb), 0.10));
+}
+
+.readingExperienceWrapperV2 .tocLink {
+  color: var(--v2-toc-link, #4b5563);
+}
+
+.readingExperienceWrapperV2 .tocLink:hover {
+  color: var(--v2-toc-active, var(--blue-brand));
+  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.05));
+}
+
+.readingExperienceWrapperV2 .tocLinkActive {
+  color: var(--v2-toc-active, var(--blue-brand));
+  background: var(--v2-toc-active-bg, rgba(var(--blue-brand-rgb), 0.08));
+}
+
+.readingExperienceWrapperV2 .tocIndicatorMarker {
+  background: var(--v2-toc-active, var(--blue-brand));
+}
+
+.readingExperienceWrapperV2 .shareWidgetBorderless {
+  border-top-color: var(--v2-border, rgba(var(--blue-brand-rgb), 0.1));
+}
+
+.readingExperienceWrapperV2 .helplineSection {
+  border-top-color: var(--v2-border, rgba(var(--blue-brand-rgb), 0.1));
+}
+
+.readingExperienceWrapperV2 .helplineEyebrow {
+  color: var(--v2-muted, var(--slate-400));
+}
+
+.readingExperienceWrapperV2 .helplinePhoneLink {
+  color: var(--v2-heading, var(--slate-800));
+}
+
+.readingExperienceWrapperV2 .helplineSubtext {
+  color: var(--v2-muted, var(--slate-500));
+}
+
+.readingExperienceWrapperV2 .sidebarHelpCallout,
+.readingExperienceWrapperV2 .keyPointsCard {
+  background: var(--v2-card-bg, var(--slate-50));
+  border-color: var(--v2-border, var(--slate-200));
+}
+
+.readingExperienceWrapperV2 .helpCardTitle {
+  color: var(--v2-heading, var(--blue-900));
+}
+
+.readingExperienceWrapperV2 .helpCardDesc {
+  color: var(--v2-body, #4b5563);
 }
 
 /* ─── TWO COLUMN MAIN CONTENT BODY ───────────────────────────────────────── */

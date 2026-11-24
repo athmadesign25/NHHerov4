@@ -102,9 +102,15 @@ export default function Footer() {
               © {new Date().getFullYear()} Narayana Health. All rights reserved.
             </p>
             <div className={styles.bottomLinks}>
-              {["Privacy Policy", "Terms of Use", "Cookie Policy", "Sitemap"].map((item) => (
-                <Link key={item} href="/" className={styles.bottomLink} id={`footer-${item.toLowerCase().replace(/\s+/g, "-")}`}>
-                  {item}
+              {[
+                { label: "Disclaimer", href: "/disclaimer" },
+                { label: "Privacy Policy", href: "/privacy-policy" },
+                { label: "Terms of Use", href: "/disclaimer#liability" },
+                { label: "Cookie Policy", href: "/cookie-policy" },
+                { label: "Sitemap", href: "/sitemap" },
+              ].map((item) => (
+                <Link key={item.label} href={item.href} className={styles.bottomLink} id={`footer-${item.label.toLowerCase().replace(/\s+/g, "-")}`}>
+                  {item.label}
                 </Link>
               ))}
             </div>

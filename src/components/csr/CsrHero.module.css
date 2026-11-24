@@ -6,11 +6,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: transparent;
+  background-color: #060c18;
   overflow: hidden;
-  /* Comfortably pushed down, balanced lower vertically as per NH syntax */
+  /* Comfortably pushed down, balanced lower vertically with generous breathing space */
   padding-top: calc(var(--nav-height, 72px) + clamp(32px, 9vh, 140px));
-  padding-bottom: clamp(24px, 4.5vh, 44px);
+  padding-bottom: clamp(64px, 9vh, 108px);
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
   .heroSection {
     min-height: calc(100vh - 16px);
     padding-top: calc(var(--nav-height, 72px) + clamp(18px, 4vh, 44px));
-    padding-bottom: 24px;
+    padding-bottom: 48px;
   }
   .container {
     gap: 24px;
@@ -36,7 +36,7 @@
   .heroSection {
     min-height: auto;
     padding-top: calc(var(--nav-height, 72px) + 48px);
-    padding-bottom: 36px;
+    padding-bottom: 52px;
   }
 }
 
@@ -66,13 +66,51 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(6, 12, 24, 0.68) 0%,
-    rgba(6, 12, 24, 0.35) 35%,
-    rgba(6, 12, 24, 0.70) 75%,
-    rgba(6, 12, 24, 0.40) 92%,
-    transparent 100%
+    rgba(6, 12, 24, 0.72) 0%,
+    rgba(6, 12, 24, 0.38) 32%,
+    rgba(6, 12, 24, 0.65) 65%,
+    rgba(6, 12, 24, 0.90) 88%,
+    #060c18 100%
   );
   z-index: 2;
+  pointer-events: none;
+}
+
+/* Atmospheric bottom feathering & ambient glow to eliminate sharp video cutoff (Generous 420px height) */
+.bottomBlend {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 420px;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 12, 24, 0) 0%,
+    rgba(6, 12, 24, 0.12) 20%,
+    rgba(6, 12, 24, 0.35) 42%,
+    rgba(6, 12, 24, 0.65) 65%,
+    rgba(6, 12, 24, 0.90) 84%,
+    rgba(6, 12, 24, 0.98) 94%,
+    #060c18 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+.ambientGlow {
+  position: absolute;
+  bottom: -60px;
+  left: 10%;
+  right: 10%;
+  height: 340px;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(3, 78, 162, 0.28) 0%,
+    rgba(2, 45, 97, 0.14) 45%,
+    transparent 72%
+  );
+  filter: blur(56px);
+  z-index: 3;
   pointer-events: none;
 }
 
@@ -134,7 +172,7 @@
   max-width: 720px;
 }
 
-/* Outlined CTA Button (Matching "Find a specialist" in Image 2) */
+/* Primary Solid Brand Blue CTA Button (Rule C standard) */
 .heroCtaRow {
   display: flex;
   align-items: center;
@@ -146,26 +184,25 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 22px;
+  padding: 12px 24px;
   border-radius: 8px;
-  background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(var(--white-rgb), 0.40);
-  font-size: var(--font-size-sm);
+  background: var(--color-primary, var(--blue-brand, #034EA2));
+  color: #ffffff;
+  border: none;
+  font-size: var(--font-size-sm, 14px);
   font-weight: 600;
   text-decoration: none;
-  backdrop-filter: blur(8px);
-  transition: all var(--transition-fast, var(--duration-fast) ease);
+  box-shadow: none;
+  transition: background var(--duration-base, 0.2s) ease, transform var(--duration-base, 0.2s) var(--ease-spring);
 }
 
 .heroCtaBtn:hover {
-  background: var(--white);
-  color: var(--color-primary, var(--blue-brand));
-  border-color: var(--white);
+  background: #023877;
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
-/* ── Bottom Metrics & Milestone Wrap (Matching Image 2 Speciality) ── */
+/* ── Bottom Metrics & Milestone Wrap (Matching Library Page Syntax) ── */
 .metricsBottomWrap {
   display: flex;
   flex-direction: column;
@@ -175,7 +212,7 @@
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  gap: 28px;
   width: 100%;
 }
 
@@ -193,45 +230,47 @@
   }
 }
 
-.statItem {
+.statBlock {
   display: flex;
   flex-direction: column;
   gap: 8px;
   position: relative;
 }
 
-.statItem:not(:last-child)::after {
+.statBlock:not(:last-child)::after {
   content: "";
   position: absolute;
-  right: -16px;
-  top: 10%;
-  height: 80%;
+  right: -14px;
+  top: 12%;
+  height: 76%;
   width: 1px;
-  background: rgba(var(--white-rgb), 0.15);
+  background: rgba(var(--white-rgb), 0.14);
 }
 
 @media (max-width: 1024px) {
-  .statItem:not(:last-child)::after {
+  .statBlock:not(:last-child)::after {
     display: none;
   }
 }
 
-/* Clean Pure White Stat Number - Refined Size, NO shadows, NO blue */
-.statValue {
+/* Numeric credential metrics styling: medium 500 weight, soft white */
+.statNumber {
   font-family: Inter, var(--font-sans), sans-serif;
-  font-size: clamp(26px, 2.4vw, 30px);
+  font-size: clamp(22px, 2vw, 28px);
   font-weight: 500;
   color: rgba(var(--white-rgb), 0.76);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  margin-bottom: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
-/* Clean Stat Description (Exact 2-line layout like Image 2) */
-.statDesc {
-  font-size: var(--font-size-sm);
-  line-height: 1.4;
-  color: rgba(var(--white-rgb), 0.52);
+/* Uppercase muted white 12px label */
+.statLabel {
+  font-size: var(--font-size-xs, 12px);
+  color: rgba(var(--white-rgb), 0.46);
+  font-weight: 500;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 

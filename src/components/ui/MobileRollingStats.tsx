@@ -61,14 +61,13 @@ export default function MobileRollingStats({
           <motion.div
             key={currentIndex}
             className={styles.statItem}
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className={styles.statValue}>{displayValue}</span>
-            <span className={styles.statDivider}>•</span>
-            <span className={styles.statLabel}>{current.label}</span>
+            <div className={styles.statValue}>{displayValue}</div>
+            <div className={styles.statLabel}>{current.label}</div>
           </motion.div>
         </AnimatePresence>
       </div>

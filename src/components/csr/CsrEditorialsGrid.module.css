@@ -3,10 +3,55 @@
   position: relative;
   z-index: 5;
   width: 100%;
-  padding-block: 84px 96px;
+  padding-top: clamp(100px, 12vh, 140px);
+  padding-bottom: clamp(100px, 12vh, 140px);
   background-color: #060c18;
   color: #ffffff;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Atmospheric ambient glow seamlessly connecting from CsrHero */
+.topAtmosphere {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 440px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(3, 78, 162, 0.25) 0%,
+    rgba(2, 45, 97, 0.12) 45%,
+    transparent 72%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Atmospheric bottom ambient glow connecting to Transition Bridge */
+.bottomTransitionGlow {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 280px;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(3, 78, 162, 0.22) 0%,
+    rgba(2, 45, 97, 0.10) 45%,
+    transparent 72%
+  );
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .sectionWrapper {
+    padding-top: 64px;
+    padding-bottom: 72px;
+  }
 }
 
 @media (max-width: 768px) {
