@@ -14,7 +14,7 @@
 .textLinks li, .brandTiles li, .tileList li { min-width: 0; }
 .textLink {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-8);
   min-height: var(--space-32);
   padding-block: var(--space-8);
@@ -57,6 +57,7 @@
 .mobileGroup > h3 { margin: 0; }
 .mobile .textLink { min-height: var(--space-48); padding-block: var(--space-12); color: var(--slate-200); }
 .mobile .textLink:hover, .mobile .textLink:focus-visible { color: var(--sky-400); }
+.mobile .textLink .menuIcon { color: var(--color-primary); }
 .mobile .subheading { color: var(--slate-300); }
 .mobile .textLink:focus-visible, .mobile .serviceTile:focus-visible { outline-color: var(--sky-400); }
 .mobile .groupFooter a { color: var(--sky-400); }
