@@ -8,9 +8,10 @@
 .links { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
 .links[hidden] { display: none; }
 .links li { min-width: 0; }
-.link { display: flex; align-items: flex-start; gap: var(--space-8); min-height: var(--space-32); padding: var(--space-8) 0; border-radius: var(--radius-sm); text-decoration: none; color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
+.link { display: flex; align-items: flex-start; gap: var(--space-8); min-height: var(--space-32); padding: var(--space-8) 0; border-radius: var(--radius-sm); text-decoration: none; color: var(--color-text); }
 .label { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 400; transition: color var(--duration-fast) var(--ease-out); }
-.link:hover, .link:hover .label, .link:focus-visible .label { color: var(--color-primary); }
+.link:not(.ecosystemTile) { transition: color var(--duration-fast) var(--ease-out); }
+.link:not(.ecosystemTile):hover, .link:not(.ecosystemTile):hover .label, .link:focus-visible .label { color: var(--color-primary); }
 .itemCopy { display: flex; align-items: flex-start; gap: var(--space-8); min-width: 0; }
 .itemIcon { flex: 0 0 var(--space-16); width: var(--space-16); height: var(--space-16); margin-top: var(--space-2); color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
 .menu .link:hover .itemIcon, .menu .link:focus-visible .itemIcon { color: var(--color-primary); }
@@ -26,13 +27,13 @@
 .menu .feature.learningFeature img { object-position: 40% center; }
 .about .content { align-items: stretch; gap: var(--space-24); }
 .about .feature { height: 100%; }
-.aboutColumns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(max-content, 1.1fr); gap: var(--space-24); align-content: stretch; }
-.ecosystemLinks { grid-template-columns: minmax(0, 1fr); gap: var(--space-24); padding-top: var(--space-8); }
-.ecosystemTile { display: flex; align-items: center; justify-content: flex-start; min-width: 0; padding: 0; border: 0; background: transparent; }
-.ecosystemVisual { position: relative; display: block; width: min(100%, calc(var(--space-96) + var(--space-16))); height: var(--space-48); }
-.ecosystemLogo { object-fit: contain; object-position: left center; }
-.ecosystemAcademicMark { display: flex; align-items: center; min-height: var(--space-48); color: var(--color-text); font-size: var(--font-size-base); line-height: var(--leading-snug); font-weight: 600; }
-.menu .link:hover .ecosystemAcademicMark, .menu .link:focus-visible .ecosystemAcademicMark { color: var(--color-primary); }
+.aboutColumns { composes: layout from "./NavigationTile.module.css"; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--navigation-tile-width); gap: var(--space-24); align-content: stretch; }
+.ecosystemLinks { grid-template-columns: minmax(0, 1fr); gap: var(--space-12); padding-top: 0; }
+.ecosystemTile { composes: tile from "./NavigationTile.module.css"; align-items: center; justify-content: center; padding: var(--space-12); border-radius: calc(var(--radius-sm) + var(--space-2)); }
+.ecosystemVisual { position: relative; display: block; z-index: 1; width: min(100%, var(--space-128)); height: var(--space-48); }
+.athmaTile .ecosystemVisual { width: min(80%, calc(var(--space-96) + var(--space-8))); }
+.ecosystemLogo { object-fit: contain; object-position: center; }
+.ecosystemAcademicMark { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; text-align: center; min-height: var(--space-48); color: inherit; font-size: var(--font-size-sm); line-height: var(--leading-snug); font-weight: 600; }
 .menu .feature.storyFeature img { object-position: center 35%; transform: none; }
 .menu .storyVisual { top: calc(-1 * var(--space-24)); }
 .storyFeature header { max-width: 80%; }

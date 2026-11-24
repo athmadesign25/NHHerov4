@@ -1,15 +1,20 @@
+import {
+  Ambulance, Bean, Bone, Bot, Brain, Dna, HeartPulse, Ribbon, ScanLine,
+  Stethoscope, TestTubes, type LucideIcon,
+} from "lucide-react";
+
 // NH's live CoE directory order, verified 4 November 2026:
 // https://www.narayanahealth.org/center-of-excellence
 export const SERVICE_CENTRES = [
-  { label: "Cardiac Sciences", href: "/centre-of-excellence/cardiology" },
-  { label: "Cancer Care", href: "/centre-of-excellence/oncology" },
-  { label: "Neuro Sciences", href: "/centre-of-excellence/neurology" },
-  { label: "Gastro Sciences", href: "/centre-of-excellence/gastroenterology" },
-  { label: "Orthopaedics", href: "/centre-of-excellence/orthopaedics" },
-  { label: "Image Guided Therapy", href: "/search?q=Image%20Guided%20Therapy" },
-  { label: "Robotic Surgery", href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
-  { label: "Solid-Organ & Bone Marrow Transplant", href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
-  { label: "Renal Sciences", href: "https://www.narayanahealth.org/center-of-excellence/renal-sciences" },
+  { label: "Cardiac Sciences", icon: HeartPulse, href: "/centre-of-excellence/cardiology" },
+  { label: "Cancer Care", icon: Ribbon, href: "/centre-of-excellence/oncology" },
+  { label: "Neuro Sciences", icon: Brain, href: "/centre-of-excellence/neurology" },
+  { label: "Gastro Sciences", icon: Stethoscope, href: "/centre-of-excellence/gastroenterology" },
+  { label: "Orthopaedics", icon: Bone, href: "/centre-of-excellence/orthopaedics" },
+  { label: "Image Guided Therapy", icon: ScanLine, href: "/search?q=Image%20Guided%20Therapy" },
+  { label: "Robotic Surgery", icon: Bot, href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
+  { label: "Solid-Organ & Bone Marrow Transplant", icon: Dna, href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
+  { label: "Renal Sciences", icon: Bean, href: "https://www.narayanahealth.org/center-of-excellence/renal-sciences" },
 ];
 export const SERVICE_TILES = [
   { label: "Ambulance Service Emergency", lines: ["Ambulance", "Service", "Emergency"], href: "/emergency", image: "/navigation/services-ambulance.webp", tone: "emergency" },
@@ -26,7 +31,7 @@ interface ServiceMenuSection {
   image: string;
   imageSizes?: string;
   alt: string;
-  groups: { title: string; links: { label: string; href: string; lines?: string[] }[] }[];
+  groups: { title: string; links: { label: string; href: string; icon?: LucideIcon; lines?: string[]; image?: string; imageTreatment?: "cutout" | "portrait" | "ambulance" | "diagnostics"; tag?: string }[] }[];
   brands?: { label: string; href: string; logo: string; background: string; logoShape?: "wide" | "portrait"; descriptor?: string; tag?: string }[];
   notice?: string;
   footer?: { label: string; href: string };
@@ -37,7 +42,7 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
     id: "preventive", label: "Preventive Health",
     image: "/health-checkup-consultation.jpg", alt: "Preventive care at Narayana Health",
     groups: [
-      { title: "Health checkups", links: [{ label: "Book Health Checkup", href: SERVICE_TILES[1].href, lines: SERVICE_TILES[1].lines }] },
+      { title: "Health checkups", links: [{ label: "Book Health Checkup", href: SERVICE_TILES[1].href, lines: SERVICE_TILES[1].lines, image: "/health-packages/diabetes.png", imageTreatment: "cutout" }] },
     ],
     brands: [
       { label: "Aarogyam", href: SERVICE_TILES[3].href, logo: "/navigation/services/aarogyam-logo.svg", background: "/navigation/services/aarogyam-clinic.webp", logoShape: "wide", tag: "Clinic" },
@@ -47,15 +52,15 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
   {
     id: "insurance", label: "Insurance", image: "/doctor_patient.png", alt: "Narayana Health insurance",
     groups: [{ title: "Insurance plans", links: [
-      { label: "Narayana Aditi", href: "https://www.narayanahealth.insurance/aditi-lp1" },
-      { label: "Arya Health Insurance", href: "https://www.narayanahealth.insurance/arya-health-insurance" },
+      { label: "Narayana Aditi Insurance", lines: ["Narayana Aditi", "Insurance"], href: "https://www.narayanahealth.insurance/aditi-lp1", image: "/Health Checkup/Master health.png", imageTreatment: "portrait" },
+      { label: "Arya Health Insurance", href: "https://www.narayanahealth.insurance/arya-health-insurance", lines: ["Arya Health", "Insurance"], image: "/Health Checkup/Senior Citizen.png", imageTreatment: "portrait" },
     ] }],
   },
   {
     id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "Narayana Health services",
     groups: [{ title: "Care and services", links: [
-      { label: "Diagnostics", href: SERVICE_TILES[2].href },
-      { label: "Ambulance & Emergency", href: SERVICE_TILES[0].href },
+      { label: "Diagnostics", icon: TestTubes, href: SERVICE_TILES[2].href, image: "/bone-health-package.png", imageTreatment: "diagnostics" },
+      { label: "Ambulance & Emergency", icon: Ambulance, href: SERVICE_TILES[0].href, lines: ["Ambulance &", "Emergency"], image: "/navigation/services/nh-ambulance-cutout-v2.webp", imageTreatment: "ambulance" },
     ] }],
   },
   {

@@ -1,0 +1,13 @@
+[
+  {
+    "path": "/navigation/services/ambulance-cutout-v1.webp",
+    "tool": "built-in image_gen",
+    "source": "/navigation/services-ambulance.webp",
+    "prompt": "Use case: background-extraction. Asset type: small healthcare navigation tile cutout. Edit the reference photo: isolate the complete white ambulance vehicle, preserving its realistic proportions, white body, red stripe, blue medical star and red/blue light bar. Remove the entire building, pavement, plants and photographic background. Keep just the vehicle with clean detailed edges, all wheels and bumper visible, a soft natural grounding shadow only. Three-quarter front view as in the original, centered in a tight landscape canvas, soft neutral daylight, photorealistic rather than an illustration. Genuine transparent background. No new lettering, no invented logos, no graphic backdrop. This will sit on the right of a pale blue web tile."
+  },
+  {
+    "path": "/navigation/services/lab-cutout-v1.webp",
+    "tool": "built-in image_gen",
+    "prompt": "Use case: product-mockup. Asset type: transparent photographic cutout for a premium hospital website navigation tile. A realistic single pale-blue nitrile gloved hand gently holding two small clinical blood collection tubes upright, one red cap and one lavender cap, simple tiny blank white labels, no readable text. Wrist softly cropped at lower edge. Tubes and fingers completely visible, arranged compactly, with very light natural side lighting and realistic materials. Natural clinical photography, not cartoon, not glossy 3D render. Isolated on a genuinely transparent background, no rectangle or backdrop, no extra medical equipment, no icons or typography. Clean silhouette, will be displayed small on the right side of a light blue tile."
+  }
+]

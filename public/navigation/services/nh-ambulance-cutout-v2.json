@@ -1,0 +1,6 @@
+{
+  "file": "/navigation/services/nh-ambulance-cutout-v2.webp",
+  "tool": "built-in image_gen",
+  "source": "/emergency/nh-ambulance-night-v2.webp",
+  "prompt": "Use case: background-extraction. Asset type: transparent photographic cutout for a Narayana Health navigation tile. Edit target: the supplied emergency-page hero photo. Extract ONLY the exact white Narayana Health ambulance from this image. Preserve its three-quarter view with front pointing left, blue-and-red Narayana Health branding on the side, blue emergency lights, red stripe, wheels and realistic proportions and details. Remove all road, sky, poles, light trails and environment to genuinely transparent alpha. Keep the entire vehicle visible with tight transparent margins, no extra ground shadow or backdrop, no new objects. Make crisp clean edges. Do not redesign or substitute a generic ambulance. This will be cropped in CSS on the right edge of a small card."
+}
