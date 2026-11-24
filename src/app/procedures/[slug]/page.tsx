@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue } from "framer-motion";
 import { 
   Check, 
   CheckCircle2, 
@@ -52,7 +52,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
   const [activeSection, setActiveSection] = useState<string>("overview");
   const [copyToast, setCopyToast] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(2);
+  const [blendVersion, setBlendVersion] = useState<1 | 2 | 3 | 4>(4);
 
   // V2: Scroll-driven section colour transition (matching Speciality page: #0a1128 -> #172d56 -> #e2ebf6 -> #ffffff)
   const { scrollY } = useScroll();
@@ -90,61 +90,96 @@ export default function ProcedureDetailPage({ params }: PageProps) {
     ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.12)", "#f8fafc"]
   );
 
-  // V4: Refined Dynamic BG Change from #060c18 -> #0d2142 -> #eef4fb -> #ffffff
+  // V4: Scroll-driven dynamic transition progress matching Blog Hero V3
+  const v4Progress = useMotionValue(0);
+
+  useEffect(() => {
+    const updateV4Transition = () => {
+      // Exactly matching the smooth Blog page dynamism:
+      // As the user scrolls down from the hero (60px) into Our Doctors and the reading canvas (640px),
+      // smoothly morph: #060c18 -> #0d2142 -> #eef4fb -> #ffffff
+      const sy = window.scrollY || 0;
+      const startScroll = 60;
+      const endScroll = 640;
+      const raw = (sy - startScroll) / (endScroll - startScroll);
+      const clamped = Math.max(0, Math.min(1, raw));
+      v4Progress.set(clamped);
+    };
+
+    updateV4Transition();
+    window.addEventListener("scroll", updateV4Transition, { passive: true });
+    window.addEventListener("resize", updateV4Transition, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateV4Transition);
+      window.removeEventListener("resize", updateV4Transition);
+    };
+  }, [v4Progress]);
+
+  // V4 Dynamic Transforms (Exact Blog V3 stops: [0, 0.42, 0.78, 1])
   const v4BgColor = useTransform(
-    scrollY,
-    [0, 24, 145, 245, 320],
-    ["#060c18", "#060c18", "#0d2142", "#eef4fb", "#ffffff"]
+    v4Progress,
+    [0, 0.42, 0.78, 1],
+    ["#060c18", "#0d2142", "#eef4fb", "#ffffff"]
   );
   const v4HeadingColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["#ffffff", "#ffffff", "#1e293b", "#0f172a"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["#ffffff", "#1e293b", "#0f172a"]
+  );
+  const v4SubtitleColor = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.78)", "#475569", "#64748b"]
   );
   const v4EyebrowColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.72)", "rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.72)", "#0284c7", "#034EA2"]
   );
   const v4BodyColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.86)", "rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.86)", "#334155", "#1e293b"]
   );
   const v4MutedColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.64)", "rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.64)", "#64748b", "#64748b"]
   );
   const v4TocLinkColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.82)", "rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.82)", "#475569", "#4b5563"]
   );
   const v4TocActiveColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["#38bdf8", "#38bdf8", "#0284c7", "#034EA2"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["#38bdf8", "#0284c7", "#034EA2"]
   );
   const v4TocActiveBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.12)", "rgba(3, 78, 162, 0.08)", "rgba(3, 78, 162, 0.08)"]
   );
   const v4BorderColor = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.14)", "rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.14)", "rgba(15, 23, 42, 0.10)", "rgba(15, 23, 42, 0.08)"]
+  );
+  const v4CardBorder = useTransform(
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.18)", "rgba(15, 23, 42, 0.08)", "rgba(15, 23, 42, 0.09)"]
   );
   const v4SummaryBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.06)", "rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.06)", "rgba(248, 250, 252, 0.88)", "rgba(248, 250, 252, 0.92)"]
   );
   const v4BadgeBg = useTransform(
-    scrollY,
-    [0, 24, 175, 290],
-    ["rgba(255, 255, 255, 0.12)", "rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
+    v4Progress,
+    [0, 0.55, 1],
+    ["rgba(255, 255, 255, 0.12)", "#ffffff", "#ffffff"]
   );
 
   useEffect(() => {
@@ -166,9 +201,18 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         return;
       }
 
-      // Default to V2 style for abdominal issues in children as requested
+      // Default to V4 style (matching Blog smooth dynamic background change)
       if (slug === "abdominal-issues-children") {
-        setBlendVersion(2);
+        try {
+          const saved = localStorage.getItem("nh_procedure_detail_blend");
+          if (saved === "1" || saved === "2" || saved === "3" || saved === "4") {
+            setBlendVersion(Number(saved) as 1 | 2 | 3 | 4);
+            return;
+          }
+        } catch {
+          // Ignore
+        }
+        setBlendVersion(4);
         return;
       }
 
@@ -290,6 +334,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           ? ({
               "--v4-bg": v4BgColor,
               "--v4-heading": v4HeadingColor,
+              "--v4-subtitle": v4SubtitleColor,
               "--v4-eyebrow": v4EyebrowColor,
               "--v4-body": v4BodyColor,
               "--v4-muted": v4MutedColor,
@@ -297,6 +342,8 @@ export default function ProcedureDetailPage({ params }: PageProps) {
               "--v4-toc-active": v4TocActiveColor,
               "--v4-toc-active-bg": v4TocActiveBg,
               "--v4-border": v4BorderColor,
+              "--v4-card-border": v4CardBorder,
+              "--hero-bottom-bg": v4BgColor,
               "--summary-bg": v4SummaryBg,
               "--summary-border": v4BorderColor,
               "--summary-accent": v4TocActiveColor,
@@ -443,7 +490,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
       </section>
 
       {/* ─── MAIN CONTENT BODY OVER STATIONARY ATMOSPHERIC CANVAS ────────── */}
-      <div
+      <motion.div
         className={`${styles.readingExperienceWrapper} ${
           blendVersion === 2
             ? styles.readingExperienceWrapperV2
@@ -453,13 +500,23 @@ export default function ProcedureDetailPage({ params }: PageProps) {
             ? styles.readingExperienceWrapperV4
             : ""
         }`}
+        style={
+          blendVersion === 4
+            ? { backgroundColor: v4BgColor }
+            : blendVersion === 2
+            ? { backgroundColor: v2BgColor }
+            : undefined
+        }
       >
         <main className={styles.mainLayoutContainer}>
           {/* ─── TOP FEATURED DOCTORS SECTION (SHOWN FOR THIS PROCEDURE DIRECTLY BELOW HERO) ─── */}
           {detail.topDoctors && detail.topDoctors.length > 0 && (
             <section className={styles.topDoctorsSection} id="our-doctors" aria-label="Our Doctors">
               <div className={styles.topDoctorsHeader}>
-                <h2 className={styles.topDoctorsTitle}>
+                <motion.h2 
+                  className={styles.topDoctorsTitle}
+                  style={blendVersion === 4 ? { color: v4HeadingColor } : undefined}
+                >
                   <TextSweepEffect
                     words={["Our Doctors"]}
                     sweepMs={1400}
@@ -467,10 +524,13 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                     sweepHighlightColor="#ED1C24"
                     finalColor="currentColor"
                   />
-                </h2>
-                <p className={styles.topDoctorsSubtitle}>
+                </motion.h2>
+                <motion.p 
+                  className={styles.topDoctorsSubtitle}
+                  style={blendVersion === 4 ? { color: v4SubtitleColor } : undefined}
+                >
                   Senior Narayana Health clinicians answering patient queries, providing second opinions, and performing advanced {detail.shortTitle.toLowerCase()} procedures.
-                </p>
+                </motion.p>
               </div>
 
               <div className={styles.topDoctorsGrid}>
@@ -535,7 +595,10 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                   </div>
                 ))}
               </div>
-              <div className={styles.topDoctorsDivider} />
+              <motion.div 
+                className={styles.topDoctorsDivider} 
+                style={blendVersion === 4 ? { backgroundColor: v4BorderColor } : undefined}
+              />
             </section>
           )}
 
@@ -933,7 +996,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           </article>
         </div>
       </main>
-      </div>
+      </motion.div>
 
       {/* ─── PRE-FOOTER CTA CARD BANNER (UNIVERSAL DESIGN TOKEN) ─────── */}
       <BlogCtaBanner
