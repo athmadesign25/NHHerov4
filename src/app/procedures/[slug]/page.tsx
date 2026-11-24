@@ -165,6 +165,13 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         setBlendVersion(1);
         return;
       }
+
+      // Default to V2 style for abdominal issues in children as requested
+      if (slug === "abdominal-issues-children") {
+        setBlendVersion(2);
+        return;
+      }
+
       try {
         const saved = localStorage.getItem("nh_procedure_detail_blend");
         if (saved === "4") setBlendVersion(4);
@@ -175,7 +182,7 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         // Ignore storage errors
       }
     }
-  }, []);
+  }, [slug]);
 
   const handleBlendChange = (v: 1 | 2 | 3 | 4) => {
     setBlendVersion(v);
@@ -448,6 +455,79 @@ export default function ProcedureDetailPage({ params }: PageProps) {
         }`}
       >
         <main className={styles.mainLayoutContainer}>
+          {/* ─── TOP FEATURED DOCTORS SECTION (SHOWN FOR THIS PROCEDURE DIRECTLY BELOW HERO) ─── */}
+          {detail.topDoctors && detail.topDoctors.length > 0 && (
+            <section className={styles.topDoctorsSection} id="our-doctors" aria-label="Our Doctors">
+              <div className={styles.topDoctorsHeader}>
+                <div className={styles.topDoctorsEyebrow}>
+                  {detail.speciality} Care Team
+                </div>
+                <h2 className={styles.topDoctorsTitle}>
+                  Our Doctors
+                </h2>
+                <p className={styles.topDoctorsSubtitle}>
+                  Senior Narayana Health clinicians answering patient queries, providing second opinions, and performing advanced {detail.shortTitle.toLowerCase()} procedures.
+                </p>
+              </div>
+
+              <div className={styles.topDoctorsGrid}>
+                {detail.topDoctors.slice(0, 3).map((doc, idx) => (
+                  <div key={idx} className={styles.doctorBlendCard}>
+                    {/* Left: Full Image Blending onto Background */}
+                    <div className={styles.doctorImageBlendCol}>
+                      <Image
+                        src={doc.image}
+                        alt={doc.name}
+                        fill
+                        sizes="(max-width: 640px) 140px, (max-width: 1024px) 180px, 220px"
+                        className={styles.doctorBlendImg}
+                      />
+                      <div className={styles.doctorImageBlendOverlay} />
+                    </div>
+
+                    {/* Right: Text on that Style */}
+                    <div className={styles.doctorTextCol}>
+                      <div className={styles.doctorTextTop}>
+                        {doc.bio && (
+                          <p className={styles.doctorCardBio}>
+                            {doc.bio}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className={styles.doctorTextBottom}>
+                        <h3 className={styles.doctorCardName}>
+                          {doc.name}
+                        </h3>
+                        <div className={styles.doctorCardRole}>
+                          {doc.designation}
+                        </div>
+                        <div className={styles.doctorCardHospital}>
+                          {doc.hospital.replace(", Bangalore", "").replace(", Bengaluru", "")} &middot; {doc.experience}
+                        </div>
+                        <div className={styles.doctorCardActions}>
+                          <Link
+                            href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}&doctor=${encodeURIComponent(doc.name)}`}
+                            className={styles.doctorCardBookBtn}
+                          >
+                            <span>Book</span>
+                            <ArrowUpRight size={12} />
+                          </Link>
+                          <Link
+                            href={`/doctors?doctor=${encodeURIComponent(doc.name)}`}
+                            className={styles.doctorCardProfileLink}
+                          >
+                            <span>View Profile &rarr;</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           <div className={styles.twoColumnGrid}>
             {/* ─── LEFT COLUMN: UNBOXED SECTION SELECTOR ON GRADIENT ─────── */}
             <aside className={styles.stickySidebar}>
