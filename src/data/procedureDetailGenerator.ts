@@ -112,6 +112,30 @@ export interface ProcedureDetailData {
   toc: TOCItem[];
 }
 
+// Flagship high-definition doctor cards (Dr. Devi Prasad Shetty & Dr. Varun Shetty)
+export const FLAGSHIP_TOP_DOCTORS: DoctorItem[] = [
+  {
+    name: "Dr. Devi Prasad Shetty",
+    designation: "Founder & Chairman",
+    experience: "40+ Years Experience",
+    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
+    image: "/doctors/doc_devi_shetty.jpg",
+    speciality: "Chairman & Senior Consultant Surgeon",
+    bio: "Dr. Devi Prasad Shetty stands as a visionary force who has not only reshaped healthcare in India but has also transformed the landscape of cardiac surgery. As the Founder and Senior Consultant Cardiac Surgeon at Narayana Health, his strong commitment has propelled world-class clinical care and healthcare accessibility across the nation.",
+    profileSlug: "dr-devi-prasad-shetty",
+  },
+  {
+    name: "Dr. Varun Shetty",
+    designation: "Senior Consultant",
+    experience: "15+ Years Experience",
+    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
+    image: "/assets/doctor_1.png",
+    speciality: "Consultant Cardiothoracic Surgeon",
+    bio: "Dr. Varun Shetty is a dedicated Consultant Cardiac Surgeon at Narayana Institute of Cardiac Sciences in Bangalore. With a focus on delivering high-quality cardiac care, he brings expertise and commitment to his role as a Cardiac Surgery Consultant.",
+    profileSlug: "dr-varun-shetty",
+  },
+];
+
 // Curated specialist doctors by medical discipline
 const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
   cardiology: [
@@ -595,12 +619,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       insuranceNote: "All major health insurance policies and TPAs in India cover this surgical procedure. Narayana Health provides dedicated on-site insurance desk assistance for quick cashless authorization and paperless claims.",
     },
     doctors: docsList,
-    topDoctors:
-      slug === "abdominal-issues-children" || proc.specialitySlug === "paediatrics"
-        ? SPECIALTY_DOCTORS_MAP.paediatrics
-        : baseDocsList.length >= 3
-        ? baseDocsList.slice(0, 3)
-        : SPECIALTY_DOCTORS_MAP.default.slice(0, 3),
+    topDoctors: FLAGSHIP_TOP_DOCTORS,
     hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
