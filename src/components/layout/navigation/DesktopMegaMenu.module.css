@@ -33,3 +33,18 @@
 @media (min-width: 1100px) and (max-width: 1279px) {
   .shell[data-desktop-menu="hospitals"] { height: min(calc(var(--space-128) * 5 + var(--space-64)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32))); }
 }
+
+/* Equal hospital directory columns need room for the full Bangalore group. */
+.shell[data-desktop-menu="hospitals"]:has([data-hospital-variant="inline-clinics"]) {
+  height: min(calc(var(--space-128) * 5 + var(--space-64)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32)));
+}
+@media (min-width: 1100px) and (max-width: 1399px) {
+  .shell[data-desktop-menu="hospitals"]:has([data-hospital-variant="inline-clinics"]) {
+    height: min(calc(var(--space-128) * 6 + var(--space-32)), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32)));
+  }
+}
+
+/* Five preventive-health tiles share one column above the utility band. */
+.shell[data-desktop-menu="specialities"] {
+  height: min(calc(var(--space-128) * 5), calc(100dvh - var(--nav-height) - var(--band-height, 0px) - var(--space-32)));
+}

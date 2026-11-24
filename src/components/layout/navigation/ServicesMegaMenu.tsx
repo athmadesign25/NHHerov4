@@ -5,38 +5,59 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { SERVICE_MENU_SECTIONS } from "./service-menu-data";
-import ServicesMenuCollage from "./ServicesMenuCollage";
 import MenuAction from "./MenuAction";
 import ServicesContactBand from "./ServicesContactBand";
+import ServicesMenuCollage from "./ServicesMenuCollage";
 import mobilePatterns from "./MobileMenuPatterns.module.css";
 import { mobileMenuLabel } from "./mobile-menu-label";
 import styles from "./ServicesMegaMenu.module.css";
 import grouped from "./EditorialMegaMenu.module.css";
 
 type Section = (typeof SERVICE_MENU_SECTIONS)[number];
+type ServiceLink = Section["groups"][number]["links"][number];
+
+function ServiceTile({ link, onNavigate, mobile }: {
+  link: ServiceLink; onNavigate: () => void; mobile: boolean;
+}) {
+  const Icon = link.icon;
+  return <Link href={link.href} className={`${styles.serviceTile} ${link.imageTreatment === "portrait" ? styles.insuranceTile : ""} ${link.imageTreatment === "ambulance" ? styles.ambulanceTile : ""} ${link.imageTreatment === "diagnostics" ? styles.diagnosticsTile : ""}`} onClick={onNavigate} aria-label={link.label}>
+    {link.image && <span className={styles.tileImage} aria-hidden="true">
+      <Image src={link.image} alt="" fill sizes="(min-width: 1100px) 180px, 40vw" />
+    </span>}
+    <span className={`${grouped.itemCopy} ${styles.tileCopy}`}>
+      {Icon && <Icon className={`${grouped.itemIcon} ${styles.menuIcon}`} aria-hidden="true" />}
+      <span className={styles.tileLabel}>{(link.lines ?? [link.label]).map((line, index) => <span key={line}>
+        {mobile ? (index === 0 ? mobileMenuLabel(line) : line.toLowerCase()) : line}
+      </span>)}</span>
+    </span>
+    {link.tag && <span className={styles.brandTag}>{link.tag}</span>}
+  </Link>;
+}
 
 function ServiceContent({ section, onNavigate, mobile = false }: {
   section: Section; onNavigate: () => void; mobile?: boolean;
 }) {
   const id = useId();
-  const linkList = (group: Section["groups"][number]) => <ul className={styles.textLinks} aria-label={group.title}>
-    {group.links.map(link => <li key={link.href}>
-      <Link href={link.href} className={styles.textLink} onClick={onNavigate}>
-        {mobile ? mobileMenuLabel(link.label) : link.label}
-      </Link>
-    </li>)}
+  const tiled = section.id !== "centres";
+  const linkList = (group: Section["groups"][number]) => <ul className={tiled ? styles.tileList : styles.textLinks} aria-label={group.title}>
+    {group.links.map(link => {
+      const Icon = link.icon;
+      return <li key={link.href}>
+        {tiled ? <ServiceTile link={link} onNavigate={onNavigate} mobile={mobile} /> : <Link href={link.href} className={styles.textLink} onClick={onNavigate}>
+          {Icon && <Icon className={`${grouped.itemIcon} ${styles.menuIcon}`} aria-hidden="true" />}
+          <span>{mobile ? mobileMenuLabel(link.label) : link.label}</span>
+        </Link>}
+      </li>;
+    })}
   </ul>;
 
   return <div className={styles.sectionContent}>
     {!section.brands && linkList(section.groups[0])}
     {section.brands && <ul className={styles.brandTiles} aria-label="Preventive health">
-      <li><Link href={section.groups[0].links[0].href} className={`${styles.brandTile} ${styles.checkupTile}`} onClick={onNavigate}>
-        <span className={styles.checkupLabel}>{mobile
-          ? mobileMenuLabel(section.groups[0].links[0].label)
-          : (section.groups[0].links[0].lines ?? [section.groups[0].links[0].label]).map(line => <span key={line}>{line}</span>)}</span>
-      </Link></li>
+      <li><ServiceTile link={section.groups[0].links[0]} onNavigate={onNavigate} mobile={mobile} /></li>
       {section.brands.map(brand => <li key={brand.href}>
-        <Link href={brand.href} className={styles.brandTile} onClick={onNavigate} aria-label={`${brand.label} clinic`}>
+        <Link href={brand.href} className={`${styles.serviceTile} ${styles.brandTile}`} onClick={onNavigate} aria-label={`${brand.label} clinic`}>
+          <span className={styles.brandBackground} aria-hidden="true"><Image src={brand.background} alt="" fill sizes="(min-width: 1100px) 180px, 90vw" /></span>
           <span className={`${styles.brandLogo} ${brand.logoShape === "portrait" ? styles.portraitLogo : ""}`} aria-hidden="true">
             <Image src={brand.logo} alt="" aria-hidden="true" fill sizes="160px" />
           </span>
@@ -70,7 +91,6 @@ export default function ServicesMegaMenu({ onNavigate, mobile = false }: { onNav
         <ServiceContent section={section} onNavigate={onNavigate} mobile />
       </div>
     </section>)}
-    <div className={styles.mobileFeature}><ServicesMenuCollage /></div>
   </div>;
 
   const renderSection = (section: Section) => <section key={section.id} className={styles.serviceGroup} aria-labelledby={`${id}-${section.id}-heading`}>
@@ -81,8 +101,11 @@ export default function ServicesMegaMenu({ onNavigate, mobile = false }: { onNav
   return <div className={`${grouped.menu} ${styles.servicesMenu}`} data-service-menu>
     <div className={`${grouped.content} ${styles.servicesContent}`}>
       <ServicesMenuCollage />
-      <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "preventive").map(renderSection)}</div>
-      <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "insurance" || section.id === "services").map(renderSection)}</div>
+      <div className={styles.column}>
+        {SERVICE_MENU_SECTIONS.filter(section => section.id === "preventive").map(renderSection)}
+        <div className={styles.insuranceTiles}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "insurance").map(section => <ServiceContent key={section.id} section={section} onNavigate={onNavigate} />)}</div>
+      </div>
+      <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "services").map(renderSection)}</div>
       <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "centres").map(renderSection)}</div>
     </div>
     <ServicesContactBand onNavigate={onNavigate} />

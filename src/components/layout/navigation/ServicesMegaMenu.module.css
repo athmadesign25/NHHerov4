@@ -1,61 +1,73 @@
+.servicesContent { composes: layout from "./NavigationTile.module.css"; }
 .servicesMenu[data-service-menu] { height: 100%; padding: 0; gap: 0; }
 .servicesMenu .servicesContent {
   flex: 1;
   min-height: 0;
   padding: var(--space-24);
-  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 1.35fr);
-  gap: var(--space-24);
+  grid-template-columns: max-content var(--navigation-tile-width) var(--navigation-tile-width) minmax(0, 1fr);
+  gap: var(--space-20);
 }
-.column { display: flex; flex-direction: column; gap: var(--space-32); min-width: 0; min-height: 0; }
-.serviceGroup, .sectionContent { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.textLinks, .brandTiles { margin: 0; padding: 0; list-style: none; }
-.textLinks li { min-width: 0; }
+.servicesContent > [data-services-collage] { margin-right: var(--space-12); }
+.column, .serviceGroup, .sectionContent { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.insuranceTiles { margin-top: var(--space-12); }
+.textLinks, .brandTiles, .tileList { margin: 0; padding: 0; list-style: none; }
+.textLinks li, .brandTiles li, .tileList li { min-width: 0; }
 .textLink {
   display: flex;
-  align-items: center;
-  min-height: calc(var(--space-24) + var(--space-4));
-  padding-block: var(--space-4);
+  align-items: flex-start;
+  gap: var(--space-8);
+  min-height: var(--space-32);
+  padding-block: var(--space-8);
   border-radius: var(--radius-sm);
   color: var(--color-text);
   font-size: var(--font-size-sm);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-body);
   font-weight: 400;
   text-decoration: none;
   overflow-wrap: anywhere;
   transition: color var(--duration-fast) var(--ease-out);
 }
 .textLink:hover, .textLink:focus-visible { color: var(--color-primary); }
-.brandTiles { display: grid; gap: var(--space-24); width: 100%; margin-top: 0; padding-top: var(--space-8); }
-.brandTiles li { display: flex; min-width: 0; }
-.brandTile { display: flex; align-items: center; justify-content: flex-start; gap: var(--space-12); width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; text-decoration: none; }
-.checkupLabel { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; min-height: var(--space-48); color: var(--color-text); font-size: var(--font-size-base); line-height: var(--leading-snug); font-weight: 600; transition: color var(--duration-fast) var(--ease-out); }
-.checkupTile:hover .checkupLabel, .checkupTile:focus-visible .checkupLabel { color: var(--color-primary); }
-/* Shared logo box with the About Us ecosystem marks, so Aarogyam, One Health,
-   Medha and Athma all read at one size. */
-.brandLogo { position: relative; display: block; flex-shrink: 0; width: min(100%, calc(var(--space-96) + var(--space-16))); height: var(--space-48); }
-.portraitLogo { width: calc(var(--space-56) + var(--space-2)); height: var(--space-64); }
+.brandTiles, .tileList { display: grid; gap: var(--space-12); width: 100%; }
+.serviceTile { composes: tile from "./NavigationTile.module.css"; }
+.tileCopy { position: relative; z-index: 1; width: 100%; max-width: 100%; }
+.textLink .menuIcon, .tileCopy .menuIcon { color: inherit; }
+.tileLabel { position: relative; z-index: 1; display: flex; flex-direction: column; max-width: 80%; font-size: var(--font-size-sm); line-height: var(--leading-snug); font-weight: 600; }
+.tileImage { position: absolute; inset: auto 0 0 auto; width: 54%; height: 100%; pointer-events: none; }
+.tileImage img { object-fit: cover; object-position: left center; }
+.diagnosticsTile .tileImage { right: calc(-1 * var(--space-8)); width: 54%; height: 100%; }
+.diagnosticsTile .tileImage img { object-position: left top; }
+.insuranceTile .tileImage { width: 54%; height: 100%; opacity: 0.8; mask-image: linear-gradient(90deg, transparent, var(--black) 60%); }
+.insuranceTile .tileImage img { object-fit: cover; object-position: right 25%; }
+.ambulanceTile .tileImage { right: calc(-1 * var(--space-16)); width: 64%; mask-image: linear-gradient(90deg, transparent, var(--black) 75%); }
+.ambulanceTile .tileImage img { object-position: 20% center; }
+.brandBackground { position: absolute; inset: 0; opacity: 0.4; pointer-events: none; mask-image: linear-gradient(90deg, transparent, var(--black) 85%); }
+.brandBackground img { object-fit: cover; object-position: right center; }
+.brandLogo { position: relative; z-index: 1; display: block; flex-shrink: 0; width: min(48%, calc(var(--space-96) + var(--space-4))); height: var(--space-40); }
+.portraitLogo { width: var(--space-96); height: var(--space-80); }
 .brandLogo img { object-fit: contain; object-position: left center; }
-/* Same chip as the Hospitals & Clinics type tag, centred at the right end. */
-.brandTag { flex-shrink: 0; display: inline-flex; align-items: center; padding: var(--space-1) var(--space-6); border-radius: var(--radius-sm); border: var(--space-1) solid rgba(var(--slate-900-rgb), 0.08); background: var(--grey-100); color: var(--grey-500); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
+.brandTag { position: absolute; top: var(--space-8); right: var(--space-8); z-index: 2; display: inline-flex; align-items: center; padding: var(--space-1) var(--space-6); border: var(--space-1) solid rgba(var(--blue-brand-rgb), 0.16); border-radius: var(--radius-full); background: rgba(var(--white-rgb), 0.6); backdrop-filter: blur(var(--blur-md)); -webkit-backdrop-filter: blur(var(--blur-md)); color: var(--color-primary); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; white-space: nowrap; }
 .insuranceGroup { margin-top: var(--space-16); }
 .subheading { margin: 0 0 var(--space-4); color: var(--color-text-secondary); font-size: var(--font-size-xs); line-height: var(--leading-normal); font-weight: 500; }
 .groupFooter { padding-top: var(--space-8); }
-.textLink:focus-visible, .brandTile:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
+.servicesContent .groupFooter { padding-top: 0; }
+.servicesContent .groupFooter a { padding-block: var(--space-4); }
+.textLink:focus-visible, .serviceTile:focus-visible { outline: var(--space-2) solid var(--color-primary); outline-offset: var(--space-4); }
 .mobileGroup { border: 0; }
 .mobileGroup > h3 { margin: 0; }
-.mobileFeature { margin-top: var(--space-24); }
 .mobile .textLink { min-height: var(--space-48); padding-block: var(--space-12); color: var(--slate-200); }
 .mobile .textLink:hover, .mobile .textLink:focus-visible { color: var(--sky-400); }
 .mobile .subheading { color: var(--slate-300); }
-.mobile .checkupLabel { color: var(--slate-200); }
-.mobile .brandTile:hover .checkupLabel, .mobile .brandTile:focus-visible .checkupLabel { color: var(--sky-400); }
-.mobile .textLink:focus-visible, .mobile .brandTile:focus-visible { outline-color: var(--sky-400); }
+.mobile .textLink:focus-visible, .mobile .serviceTile:focus-visible { outline-color: var(--sky-400); }
 .mobile .groupFooter a { color: var(--sky-400); }
 @media (min-width: 1100px) and (max-width: 1280px) {
-  .servicesMenu .servicesContent { padding: var(--space-20); gap: var(--space-16); }
-  .brandLogo { width: min(100%, var(--space-96)); height: var(--space-40); }
-  .portraitLogo { width: var(--space-48); height: var(--space-56); }
-  .checkupLabel { min-height: var(--space-40); }
+  .servicesMenu .servicesContent { padding: var(--space-20); gap: var(--space-20); }
+  .servicesContent > [data-services-collage] { margin-right: 0; }
 }
-@media (max-width: 1099px) { .servicesMenu .servicesContent { grid-template-columns: minmax(0, 1fr); } }
-@media (prefers-reduced-motion: reduce) { .textLink, .checkupLabel { transition: none; } }
+@media (max-width: 1099px) {
+  .servicesMenu .servicesContent { grid-template-columns: minmax(0, 1fr); }
+  .tileLabel { max-width: 64%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .textLink { transition: none; }
+}
