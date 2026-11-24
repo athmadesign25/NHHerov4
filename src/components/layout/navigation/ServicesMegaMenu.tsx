@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { SERVICE_MENU_SECTIONS } from "./service-menu-data";
 import MenuAction from "./MenuAction";
-import ServicesContactBand from "./ServicesContactBand";
 import ServicesMenuCollage from "./ServicesMenuCollage";
 import mobilePatterns from "./MobileMenuPatterns.module.css";
 import { mobileMenuLabel } from "./mobile-menu-label";
@@ -19,13 +18,11 @@ type ServiceLink = Section["groups"][number]["links"][number];
 function ServiceTile({ link, onNavigate, mobile }: {
   link: ServiceLink; onNavigate: () => void; mobile: boolean;
 }) {
-  const Icon = link.icon;
   return <Link href={link.href} className={`${styles.serviceTile} ${link.imageTreatment === "portrait" ? styles.insuranceTile : ""} ${link.imageTreatment === "ambulance" ? styles.ambulanceTile : ""} ${link.imageTreatment === "diagnostics" ? styles.diagnosticsTile : ""}`} onClick={onNavigate} aria-label={link.label}>
     {link.image && <span className={styles.tileImage} aria-hidden="true">
       <Image src={link.image} alt="" fill sizes="(min-width: 1100px) 180px, 40vw" />
     </span>}
     <span className={`${grouped.itemCopy} ${styles.tileCopy}`}>
-      {Icon && <Icon className={`${grouped.itemIcon} ${styles.menuIcon}`} aria-hidden="true" />}
       <span className={styles.tileLabel}>{(link.lines ?? [link.label]).map((line, index) => <span key={line}>
         {mobile ? (index === 0 ? mobileMenuLabel(line) : line.toLowerCase()) : line}
       </span>)}</span>
@@ -44,7 +41,7 @@ function ServiceContent({ section, onNavigate, mobile = false }: {
       const Icon = link.icon;
       return <li key={link.href}>
         {tiled ? <ServiceTile link={link} onNavigate={onNavigate} mobile={mobile} /> : <Link href={link.href} className={styles.textLink} onClick={onNavigate}>
-          {Icon && <Icon className={`${grouped.itemIcon} ${styles.menuIcon}`} aria-hidden="true" />}
+          {Icon && <span className={grouped.iconBox} aria-hidden="true"><Icon className={`${grouped.itemIcon} ${styles.menuIcon}`} /></span>}
           <span>{mobile ? mobileMenuLabel(link.label) : link.label}</span>
         </Link>}
       </li>;
@@ -108,6 +105,5 @@ export default function ServicesMegaMenu({ onNavigate, mobile = false }: { onNav
       <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "services").map(renderSection)}</div>
       <div className={styles.column}>{SERVICE_MENU_SECTIONS.filter(section => section.id === "centres").map(renderSection)}</div>
     </div>
-    <ServicesContactBand onNavigate={onNavigate} />
   </div>;
 }

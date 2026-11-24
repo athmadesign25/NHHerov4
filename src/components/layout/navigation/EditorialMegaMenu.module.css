@@ -12,7 +12,23 @@
 .label { font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 400; transition: color var(--duration-fast) var(--ease-out); }
 .link:not(.ecosystemTile) { transition: color var(--duration-fast) var(--ease-out); }
 .link:not(.ecosystemTile):hover, .link:not(.ecosystemTile):hover .label, .link:focus-visible .label { color: var(--color-primary); }
-.itemCopy { display: flex; align-items: flex-start; gap: var(--space-8); min-width: 0; }
+.itemCopy { display: flex; align-items: center; gap: var(--space-8); min-width: 0; }
+.iconBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--space-32);
+  width: var(--space-32);
+  height: var(--space-32);
+  border-radius: var(--radius-md);
+  background: radial-gradient(167.94% 167.94% at 50.29% 115.88%,
+    color-mix(in srgb, var(--cyan-bright) 5%, var(--color-bg-card)) 16.88%,
+    color-mix(in srgb, color-mix(in srgb, var(--sky-400), var(--blue-500)) 20%, var(--color-bg-card)) 66.17%);
+  box-shadow: var(--shadow-inset-highlight);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+}
+.iconBox .itemIcon { margin: 0; }
 .itemIcon { flex: 0 0 var(--space-16); width: var(--space-16); height: var(--space-16); margin-top: var(--space-2); color: var(--color-text); transition: color var(--duration-fast) var(--ease-out); }
 .menu .link:hover .itemIcon, .menu .link:focus-visible .itemIcon { color: var(--color-primary); }
 .cta { display: inline-flex; align-items: center; min-height: var(--space-40); max-width: 100%; color: var(--white); font-size: var(--font-size-sm); line-height: var(--leading-body); font-weight: 600; text-decoration: none; }
@@ -29,7 +45,26 @@
 .about .feature { height: 100%; }
 .aboutColumns { composes: layout from "./NavigationTile.module.css"; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--navigation-tile-width); gap: var(--space-24); align-content: stretch; }
 .ecosystemLinks { grid-template-columns: minmax(0, 1fr); gap: var(--space-12); padding-top: 0; }
-.ecosystemTile { composes: tile from "./NavigationTile.module.css"; align-items: center; justify-content: center; padding: var(--space-12); border-radius: calc(var(--radius-sm) + var(--space-2)); }
+.ecosystemTile {
+  composes: tile from "./NavigationTile.module.css";
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  border-radius: calc(var(--radius-sm) + var(--space-2));
+  background: radial-gradient(ellipse at top right, rgba(var(--sky-400-rgb), 0.12), transparent 65%), linear-gradient(135deg, var(--color-bg-card) 45%, var(--color-bg-alt));
+}
+.ecosystemTile::after {
+  content: "";
+  position: absolute;
+  top: calc(-1 * var(--space-48));
+  right: calc(-1 * var(--space-32));
+  width: var(--space-128);
+  height: var(--space-128);
+  border: var(--space-1) solid rgba(var(--blue-brand-rgb), 0.05);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 var(--space-16) rgba(var(--blue-brand-rgb), 0.03), 0 0 0 var(--space-32) rgba(var(--blue-brand-rgb), 0.03);
+  pointer-events: none;
+}
 .ecosystemVisual { position: relative; display: block; z-index: 1; width: min(100%, var(--space-128)); height: var(--space-48); }
 .athmaTile .ecosystemVisual { width: min(80%, calc(var(--space-96) + var(--space-8))); }
 .ecosystemLogo { object-fit: contain; object-position: center; }
@@ -66,5 +101,6 @@
 .mobile .feature { margin-block: var(--space-24) 0; height: auto; }
 .mobile .cta { min-height: var(--space-48); }
 .mobile .itemIcon { color: inherit; }
+.mobile .link .iconBox .itemIcon { color: var(--color-primary); }
 .mobile .link:focus-visible, .mobile .toggle:focus-visible { outline-color: var(--sky-400); }
 @media (prefers-reduced-motion: reduce) { .link, .label, .itemIcon, .cta span::after, .toggle svg { transition: none; } }

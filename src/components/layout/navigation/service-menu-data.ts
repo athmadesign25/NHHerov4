@@ -1,6 +1,6 @@
 import {
-  Ambulance, Bean, Bone, Bot, Brain, Dna, HeartPulse, Ribbon, ScanLine,
-  Stethoscope, TestTubes, type LucideIcon,
+  Bean, Bone, Bot, Brain, Dna, HeartPulse, Ribbon, ScanLine,
+  Stethoscope, type LucideIcon,
 } from "lucide-react";
 
 // NH's live CoE directory order, verified 4 November 2026:
@@ -59,8 +59,8 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
   {
     id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "Narayana Health services",
     groups: [{ title: "Care and services", links: [
-      { label: "Diagnostics", icon: TestTubes, href: SERVICE_TILES[2].href, image: "/bone-health-package.png", imageTreatment: "diagnostics" },
-      { label: "Ambulance & Emergency", icon: Ambulance, href: SERVICE_TILES[0].href, lines: ["Ambulance &", "Emergency"], image: "/navigation/services/nh-ambulance-cutout-v2.webp", imageTreatment: "ambulance" },
+      { label: "Diagnostics", href: SERVICE_TILES[2].href, image: "/bone-health-package.png", imageTreatment: "diagnostics" },
+      { label: "Ambulance & Emergency", href: SERVICE_TILES[0].href, lines: ["Ambulance &", "Emergency"], image: "/navigation/services/nh-ambulance-cutout-v2.webp", imageTreatment: "ambulance" },
     ] }],
   },
   {
