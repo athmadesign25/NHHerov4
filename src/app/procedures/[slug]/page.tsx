@@ -459,11 +459,14 @@ export default function ProcedureDetailPage({ params }: PageProps) {
           {detail.topDoctors && detail.topDoctors.length > 0 && (
             <section className={styles.topDoctorsSection} id="our-doctors" aria-label="Our Doctors">
               <div className={styles.topDoctorsHeader}>
-                <div className={styles.topDoctorsEyebrow}>
-                  {detail.speciality} Care Team
-                </div>
                 <h2 className={styles.topDoctorsTitle}>
-                  Our Doctors
+                  <TextSweepEffect
+                    words={["Our Doctors"]}
+                    sweepMs={1400}
+                    sweepColor="#034EA2"
+                    sweepHighlightColor="#ED1C24"
+                    finalColor="currentColor"
+                  />
                 </h2>
                 <p className={styles.topDoctorsSubtitle}>
                   Senior Narayana Health clinicians answering patient queries, providing second opinions, and performing advanced {detail.shortTitle.toLowerCase()} procedures.
@@ -503,22 +506,28 @@ export default function ProcedureDetailPage({ params }: PageProps) {
                         <div className={styles.doctorCardRole}>
                           {doc.designation}
                         </div>
-                        <div className={styles.doctorCardHospital}>
-                          {doc.hospital.replace(", Bangalore", "").replace(", Bengaluru", "")} &middot; {doc.experience}
+                        <div className={styles.doctorMetaBlock}>
+                          <span className={styles.doctorExperiencePill}>
+                            {doc.experience}
+                          </span>
+                          <span className={styles.doctorHospitalName}>
+                            {doc.hospital.replace(", Bangalore", "").replace(", Bengaluru", "")}
+                          </span>
                         </div>
-                        <div className={styles.doctorCardActions}>
+                        <div className={styles.doctorCtaContainer}>
                           <Link
                             href={`/doctors?doctor=${encodeURIComponent(doc.name)}`}
-                            className={styles.doctorCardProfileLink}
+                            className={styles.doctorProfileLink}
                           >
                             <span>View Profile</span>
                           </Link>
+                          <span className={styles.doctorCtaDivider} aria-hidden="true">|</span>
                           <Link
                             href={`/doctors?speciality=${encodeURIComponent(detail.speciality)}&doctor=${encodeURIComponent(doc.name)}`}
-                            className={styles.doctorCardBookBtn}
+                            className={styles.doctorConsultLink}
                           >
-                            <span>Book Consultation</span>
-                            <ArrowUpRight size={13} />
+                            <span>Consult Now</span>
+                            <ArrowUpRight size={13} className={styles.ctaArrow} />
                           </Link>
                         </div>
                       </div>

@@ -25,6 +25,7 @@ export default function ClinicalAtAGlanceCard({
     >
       <div className={styles.labelGroup}>
         <span className={styles.stripBadge}>Clinical Care</span>
+        <span className={styles.stripDivider} aria-hidden="true">&bull;</span>
         <span className={styles.stripText}>
           Priority OPD consultation, multidisciplinary second opinions &amp; cashless insurance (30+ TPAs).
         </span>
