@@ -2283,7 +2283,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
               >
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link href="/doctors" className={styles.secondaryButton}>
-                    View more
+                    View all
                   </Link>
                 </motion.div>
               </motion.div>
