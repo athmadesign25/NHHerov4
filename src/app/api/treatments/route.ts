@@ -49,13 +49,21 @@ export async function GET(request: NextRequest) {
 
     // Filter by organ category if requested
     if (organ && organ !== "all") {
-      results = results.filter((item) => {
+      const aliasMap: Record<string, RegExp> = {
+        urinary: /kidney|renal|urinary|bladder|prostate|urolog|lithotripsy/,
+        gynaecology: /gynaec|obg|uter|ovar|breast|maternity|pelvic|cancer/,
+        endocrine: /thyroid|endocrin|diabet|bariatric|metabolic|adrenal|pancrea/,
+        rheumatology: /joint|bone|arthro|rheuma|knee|hip|ortho|ligament/,
+        surgery: /surg|laparoscop|robotic|hernia|gallbladder|append|gastro|bypass/,
+      };
+      const matched = results.filter((item) => {
         const itemOrgan = getProcedureOrgan(item);
         if (itemOrgan === organ) return true;
-        // Also check if organ keyword is anywhere in the procedure metadata
         const fullContent = `${item.title} ${item.shortTitle} ${item.speciality} ${item.summary} ${item.overview}`.toLowerCase();
+        if (aliasMap[organ] && aliasMap[organ].test(fullContent)) return true;
         return fullContent.includes(organ);
       });
+      if (matched.length > 0) results = matched;
     }
 
     // Filter by search query if requested

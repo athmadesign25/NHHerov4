@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: center;
   background-color: #060c18;
-  color: #ffffff;
+  color: var(--white);
   overflow: hidden;
   padding-top: calc(var(--nav-height, 72px) + clamp(48px, 9vh, 100px));
   padding-bottom: clamp(64px, 10vh, 96px);
@@ -139,22 +139,22 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11.5px;
+  font-size: var(--font-size-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .categoryLabel {
-  color: #38bdf8;
+  color: var(--sky-400);
 }
 
 .metaDot {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(var(--white-rgb), 0.4);
 }
 
 .publishDate {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(var(--white-rgb), 0.65);
   font-weight: 500;
 }
 
@@ -165,7 +165,7 @@
   font-weight: 800;
   line-height: 1.18;
   letter-spacing: -0.025em;
-  color: #ffffff;
+  color: var(--white);
   margin: 0;
   text-shadow: 0 2px 14px rgba(6, 12, 24, 0.95);
 }
@@ -174,7 +174,7 @@
 .heroSubtitle {
   font-size: clamp(14.5px, 1.25vw, 17px);
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(var(--white-rgb), 0.82);
   margin: 2px 0 6px 0;
   max-width: 660px;
   text-shadow: 0 1px 6px rgba(6, 12, 24, 0.85);
@@ -194,21 +194,21 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-primary, #034EA2);
-  color: #ffffff;
+  background: var(--color-primary, var(--blue-brand));
+  color: var(--white);
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 14.5px;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(3, 78, 162, 0.45);
-  transition: transform var(--transition-fast, 150ms ease), background var(--transition-fast, 150ms ease), box-shadow var(--transition-fast, 150ms ease);
+  box-shadow: 0 4px 18px rgba(var(--blue-brand-rgb), 0.45);
+  transition: transform var(--transition-fast, var(--duration-fast) ease), background var(--transition-fast, var(--duration-fast) ease), box-shadow var(--transition-fast, var(--duration-fast) ease);
 }
 
 .primaryBtn:hover {
   background: #023877;
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(3, 78, 162, 0.55);
+  box-shadow: 0 6px 22px rgba(var(--blue-brand-rgb), 0.55);
 }
 
 @media (max-width: 640px) {
@@ -247,26 +247,26 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(var(--white-rgb), 0.28);
+  background: rgba(var(--white-rgb), 0.16);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  color: #ffffff;
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
-  transition: all var(--transition-fast, 150ms ease);
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35), 0 0 0 1px rgba(var(--white-rgb), 0.12) inset;
+  transition: all var(--transition-fast, var(--duration-fast) ease);
   flex-shrink: 0;
 }
 
 .navBtn:hover {
-  background: rgba(3, 78, 162, 0.85);
-  border-color: rgba(56, 189, 248, 0.6);
-  color: #ffffff;
+  background: rgba(var(--blue-brand-rgb), 0.85);
+  border-color: rgba(var(--sky-400-rgb), 0.6);
+  color: var(--white);
   transform: scale(1.06);
-  box-shadow: 0 10px 28px rgba(3, 78, 162, 0.5), 0 0 12px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 10px 28px rgba(var(--blue-brand-rgb), 0.5), 0 0 12px rgba(var(--sky-400-rgb), 0.4);
 }
 
 .dotsWrap {
@@ -274,33 +274,33 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(var(--white-rgb), 0.14);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(var(--white-rgb), 0.22);
   border-radius: var(--radius-full, 9999px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  box-shadow: 0 8px 24px rgba(var(--black-rgb), 0.35), 0 0 0 1px rgba(var(--white-rgb), 0.08) inset;
 }
 
 .dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(var(--white-rgb), 0.45);
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: all var(--transition-fast, var(--duration-fast) ease);
 }
 
 .dot:hover {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(var(--white-rgb), 0.85);
   transform: scale(1.2);
 }
 
 .dotActive {
   width: 22px;
   border-radius: var(--radius-full, 9999px);
-  background: linear-gradient(90deg, #034EA2 0%, #0077D7 100%);
+  background: linear-gradient(90deg, var(--blue-brand) 0%, #0077D7 100%);
   box-shadow: 0 0 10px rgba(0, 119, 215, 0.7);
 }

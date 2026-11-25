@@ -1,0 +1,85 @@
+.container {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .statTrack {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+
+  .statItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .statValue {
+    font-family: Inter, var(--font-sans), sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 35px;
+    color: rgba(229, 233, 237, 0.89);
+    letter-spacing: -0.01em;
+  }
+
+  .statLabel {
+    font-family: Inter, var(--font-sans), sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.55px;
+    color: rgba(192, 203, 211, 0.64);
+  }
+
+  .dotsContainer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+    margin-left: 12px;
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(var(--white-rgb), 0.20);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .dotActive {
+    width: 10px;
+    border-radius: 4px;
+    background: rgba(var(--white-rgb), 0.65);
+  }
+}

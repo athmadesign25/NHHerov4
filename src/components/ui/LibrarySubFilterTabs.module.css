@@ -1,0 +1,187 @@
+.subFilterOuter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.eyebrowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dyn-eyebrow, rgba(var(--white-rgb), 0.56));
+}
+
+.subFilterContainer {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  gap: var(--space-8, 8px);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.subFilterContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Quick Filter Capsule Pill — matching Book Appointment Red Outline Selection */
+.chip,
+.tabBtn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--dyn-filter-border, rgba(var(--white-rgb), 0.16));
+  background: var(--dyn-filter-bg, rgba(var(--white-rgb), 0.04));
+  color: var(--dyn-filter-text, rgba(var(--white-rgb), 0.78));
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: var(--font-size-xs, 12.5px);
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast, 150ms) ease,
+    border-color var(--duration-fast, 150ms) ease,
+    color var(--duration-fast, 150ms) ease,
+    transform var(--duration-fast, 150ms) ease;
+}
+
+.chip:hover,
+.tabBtn:hover {
+  background: var(--dyn-filter-bg-hover, rgba(var(--white-rgb), 0.08));
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.45));
+  color: var(--dyn-filter-text-hover, #ffffff);
+}
+
+.chip:active,
+.tabBtn:active {
+  transform: scale(0.98);
+}
+
+.chip:focus-visible,
+.tabBtn:focus-visible {
+  outline: 2px solid rgba(var(--white-rgb), 0.35);
+  outline-offset: 2px;
+}
+
+/* Active / Pressed state — Book Appointment Red Outline Selection Style */
+.chipActive,
+.tabBtnActive,
+.chip[aria-pressed="true"] {
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.12)) !important;
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.68)) !important;
+  color: var(--dyn-red-sel-text, #ef4444) !important;
+  font-weight: 600;
+}
+
+.chipActive:hover,
+.tabBtnActive:hover,
+.chip[aria-pressed="true"]:hover {
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.16)) !important;
+  border-color: var(--dyn-red-sel-border, #ED1C24) !important;
+}
+
+/* Numeric Count Badge */
+.tabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: currentColor;
+  opacity: 0.72;
+  margin-inline-start: 1px;
+  transition: color var(--duration-fast, 150ms) ease;
+}
+
+.chip:hover .tabCount,
+.tabBtn:hover .tabCount {
+  opacity: 0.90;
+}
+
+.chipActive .tabCount,
+.tabBtnActive .tabCount,
+.chip[aria-pressed="true"] .tabCount {
+  color: currentColor;
+  opacity: 0.92;
+}
+
+/* Dismiss / Clear affordance ('X' icon) matching Book Appointment quick filters */
+.selectionClear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-inline-start: 2px;
+  color: currentColor;
+  opacity: 0.85;
+  border-radius: var(--radius-full, 9999px);
+  transition: opacity var(--duration-fast, 150ms) ease, transform var(--duration-fast, 150ms) ease;
+}
+
+.selectionClear:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.tabIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.tabLabel {
+  display: inline-block;
+  line-height: inherit;
+}
+
+.tabLabelFull {
+  display: inline;
+}
+
+.tabLabelShort {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .subFilterContainer {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+  }
+
+  .chip,
+  .tabBtn {
+    min-height: 30px;
+    padding: 4px 11px;
+    font-size: 11.5px;
+    gap: 5px;
+  }
+
+  .tabLabelFull {
+    display: none;
+  }
+
+  .tabLabelShort {
+    display: inline;
+  }
+
+  .tabCount {
+    font-size: 10.5px;
+  }
+}

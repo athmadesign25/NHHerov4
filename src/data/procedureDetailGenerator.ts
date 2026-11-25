@@ -1,4 +1,3 @@
-import { getDesign20DirectoryDoctor } from "@/features/search/design20Directory";
 import { TREATMENTS_PROCEDURES_DATA, TreatmentProcedureItem } from "./treatmentsProceduresData";
 import { HEART_TRANSPLANT_TOC, HEART_TRANSPLANT_DETAIL } from "./heartTransplantDetailData";
 import { HospitalItem, HOSPITALS_DATA } from "./hospitalsData";
@@ -26,6 +25,8 @@ export interface DoctorItem {
   hospital: string;
   image: string;
   speciality: string;
+  bio?: string;
+  profileSlug?: string;
 }
 
 export interface HospitalDetailItem {
@@ -105,13 +106,35 @@ export interface ProcedureDetailData {
     insuranceNote: string;
   };
   doctors: DoctorItem[];
+  topDoctors?: DoctorItem[];
   hospitals: HospitalItem[];
   faqs: FAQItem[];
   toc: TOCItem[];
 }
 
-// Reuse the established preview portrait instead of referencing an absent asset.
-const ashleyPortrait = getDesign20DirectoryDoctor("dr-ashley")?.img ?? "/assets/doctor_1.png";
+// Flagship high-definition doctor cards (Dr. Devi Prasad Shetty & Dr. Varun Shetty)
+export const FLAGSHIP_TOP_DOCTORS: DoctorItem[] = [
+  {
+    name: "Dr. Devi Prasad Shetty",
+    designation: "Founder & Chairman",
+    experience: "40+ Years Experience",
+    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
+    image: "/doctors/doc_devi_shetty.jpg",
+    speciality: "Chairman & Senior Consultant Surgeon",
+    bio: "Dr. Devi Prasad Shetty stands as a visionary force who has not only reshaped healthcare in India but has also transformed the landscape of cardiac surgery. As the Founder and Senior Consultant Cardiac Surgeon at Narayana Health, his strong commitment has propelled world-class clinical care and healthcare accessibility across the nation.",
+    profileSlug: "dr-devi-prasad-shetty",
+  },
+  {
+    name: "Dr. Varun Shetty",
+    designation: "Senior Consultant",
+    experience: "15+ Years Experience",
+    hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
+    image: "/assets/doctor_1.png",
+    speciality: "Consultant Cardiothoracic Surgeon",
+    bio: "Dr. Varun Shetty is a dedicated Consultant Cardiac Surgeon at Narayana Institute of Cardiac Sciences in Bangalore. With a focus on delivering high-quality cardiac care, he brings expertise and commitment to his role as a Cardiac Surgery Consultant.",
+    profileSlug: "dr-varun-shetty",
+  },
+];
 
 // Curated specialist doctors by medical discipline
 const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
@@ -123,6 +146,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
       image: "/Dr.Devi Shetty.png",
       speciality: "Cardiac Surgery",
+      bio: "Dr. Devi Prasad Shetty stands as a visionary force who has not only reshaped healthcare in India but has also transformed the landscape of cardiac surgery. As Founder and Senior Consultant at Narayana Health, his strong commitment has propelled world-class clinical care.",
+      profileSlug: "dr-devi-prasad-shetty",
     },
     {
       name: "Dr. Vivek Jawali",
@@ -131,6 +156,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
       image: "/doctors/doc_vivek.jpg",
       speciality: "Cardiothoracic Surgery",
+      bio: "Dr. Vivek Jawali is a pioneer in minimally invasive beating-heart bypass surgery and complex valvular reconstructions with over 35 years of clinical surgical excellence across Narayana Health.",
+      profileSlug: "dr-vivek-jawali",
     },
     {
       name: "Dr. Bagirath Raghuraman",
@@ -139,6 +166,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Narayana Health City, Bangalore",
       image: "/doctors/doc_bagirath.jpg",
       speciality: "Heart Failure Cardiology",
+      bio: "Dr. Bagirath Raghuraman leads specialized heart failure programmes, mechanical circulatory support, and thoracic organ transplantation protocols with exceptional long-term survival metrics.",
+      profileSlug: "dr-bagirath-raghuraman",
     },
   ],
   urology: [
@@ -147,8 +176,10 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       designation: "Senior Consultant Urologist & Renal Transplant Surgeon",
       experience: "32+ Years Experience",
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-      image: ashleyPortrait,
+      image: "/images/doctors/d20-real/dr-sanjay-rao.webp",
       speciality: "Urology & Renal Transplant",
+      bio: "Dr. Ashley D'Cruz is a pioneer in paediatric urology and renal transplantation, leading complex reconstructive interventions and multi-organ transplants at Narayana Health.",
+      profileSlug: "dr-ashley-dcruz",
     },
     {
       name: "Dr. Ravi Prakash",
@@ -157,14 +188,18 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
       image: "/assets/doctor_1.png",
       speciality: "Nephrology",
+      bio: "Dr. Ravi Prakash specializes in ABO-incompatible kidney transplants, preventive nephrology, and acute intensive renal care with compassionate patient guidance.",
+      profileSlug: "dr-ravi-prakash",
     },
     {
       name: "Dr. Sanjay Rao",
       designation: "Senior Consultant Paediatric & Reconstructive Urologist",
       experience: "26+ Years Experience",
       hospital: "NH Children's Hospital, Mumbai",
-      image: "/assets/doctor_2.png",
+      image: "/images/doctors/d20-real/dr-sanjay-rao.webp",
       speciality: "Paediatric Urology",
+      bio: "Dr. Sanjay Rao delivers advanced paediatric laparoscopic surgery, pyeloplasty, and congenital genitourinary defect reconstructions with high surgical success rates.",
+      profileSlug: "dr-sanjay-rao",
     },
   ],
   neurology: [
@@ -175,6 +210,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "NH Health City, Bangalore",
       image: "/assets/doctor_3.png",
       speciality: "Neurosurgery",
+      bio: "Dr. Ravi Shankar is an acclaimed neurosurgeon specializing in minimally invasive spine surgery, micro-vascular decompression, and complex neuro-oncology interventions.",
+      profileSlug: "dr-ravi-shankar",
     },
     {
       name: "Dr. Rajiv Menon",
@@ -183,24 +220,40 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
       image: "/assets/doctor_1.png",
       speciality: "Neurology",
+      bio: "Dr. Rajiv Menon provides cutting-edge neuro-interventional stroke care, endovascular thrombectomy, and comprehensive seizure management protocols.",
+      profileSlug: "dr-rajiv-menon",
     },
   ],
   paediatrics: [
     {
-      name: "Dr. Ashley D'Cruz",
-      designation: "Director - Paediatric Surgery & Organ Transplant",
-      experience: "34+ Years Experience",
-      hospital: "Narayana Health City, Bangalore",
-      image: ashleyPortrait,
-      speciality: "Paediatric Surgery",
-    },
-    {
       name: "Dr. Sanjay Rao",
-      designation: "Senior Consultant Paediatric Surgeon",
+      designation: "Senior Consultant - Paediatric Surgery",
       experience: "25+ Years Experience",
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
-      image: "/assets/doctor_2.png",
+      image: "/images/doctors/dr_sanjay_rao_hd.jpg",
       speciality: "Paediatric Surgery",
+      bio: "Dr. Sanjay Rao stands as a pioneer in advanced paediatric laparoscopy and neonatal surgical care. As Senior Consultant at Narayana Health, he brings over 25 years of surgical mastery in treating congenital abdominal anomalies, neonatal intestinal atresia, and complex gastrointestinal conditions. He has spearheaded structured pediatric surgical pathways that prioritize minimally invasive precision, ensuring significantly reduced post-operative discomfort and rapid clinical recovery for young infants.",
+      profileSlug: "dr-sanjay-rao",
+    },
+    {
+      name: "Dr. Anup Charles S.",
+      designation: "Consultant - Paediatric & Neonatal Surgery",
+      experience: "18+ Years Experience",
+      hospital: "Narayana Health City, Bangalore",
+      image: "/images/doctors/dr_anup_charles_hd.jpg",
+      speciality: "Paediatric Surgery",
+      bio: "Dr. Anup Charles is an experienced paediatric and neonatal surgeon dedicated to emergency and corrective surgical care in infants. His clinical expertise spans congenital diaphragmatic hernia, Hirschsprung disease, and advanced abdominal wall reconstruction. With 18+ years of dedicated paediatric surgical practice, he collaborates seamlessly with neonatal intensive care boards to manage delicate surgical interventions with world-class clinical outcomes.",
+      profileSlug: "dr-anup-charles-s",
+    },
+    {
+      name: "Dr. Deepthi Laldayal",
+      designation: "Consultant - Paediatric Surgery",
+      experience: "16+ Years Experience",
+      hospital: "Narayana Multispeciality Hospital, Bangalore",
+      image: "/images/doctors/dr_deepthi_laldayal_hd.jpg",
+      speciality: "Paediatric Surgery",
+      bio: "Dr. Deepthi Laldayal is an accomplished paediatric surgeon specializing in acute paediatric appendicitis, intussusception reduction, and gentle neonatal gastrointestinal interventions. With 16+ years of clinical experience, she champions compassionate, family-centered paediatric care, employing child-friendly diagnostic protocols and minimally invasive keyhole techniques that accelerate pediatric recovery and reassure young families.",
+      profileSlug: "dr-deepthi-laldayal",
     },
   ],
   default: [
@@ -211,6 +264,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Narayana Institute of Cardiac Sciences, Bangalore",
       image: "/Dr.Devi Shetty.png",
       speciality: "Surgical Sciences",
+      bio: "Dr. Devi Prasad Shetty stands as a visionary leader and Senior Consultant Surgeon at Narayana Health, guiding surgical boards and championing patient safety and healthcare affordability across India.",
+      profileSlug: "dr-devi-prasad-shetty",
     },
     {
       name: "Dr. Vivek Jawali",
@@ -219,6 +274,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Mazumdar Shaw Medical Centre, Bangalore",
       image: "/doctors/doc_vivek.jpg",
       speciality: "Senior Surgical Consultant",
+      bio: "Dr. Vivek Jawali brings over 35 years of clinical surgical leadership, advising multidisciplinary boards and reviewing complex operative protocols across Narayana Health facilities.",
+      profileSlug: "dr-vivek-jawali",
     },
     {
       name: "Dr. Bagirath Raghuraman",
@@ -227,6 +284,8 @@ const SPECIALTY_DOCTORS_MAP: Record<string, DoctorItem[]> = {
       hospital: "Narayana Health City, Bangalore",
       image: "/doctors/doc_bagirath.jpg",
       speciality: "Advanced Therapeutics",
+      bio: "Dr. Bagirath Raghuraman is a Senior Clinical Director coordinating specialized clinical pathways, innovative therapies, and comprehensive pre- and post-operative surgical patient care.",
+      profileSlug: "dr-bagirath-raghuraman",
     },
   ],
 };
@@ -382,7 +441,7 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       shortTitle: proc.shortTitle,
       speciality: proc.speciality,
       specialitySlug: proc.specialitySlug,
-      heroImage: "/images/procedures/heart_transplant_hero.jpg",
+      heroImage: "/images/procedures/hero_heart_transplant_v3.jpg",
       heroTitle: proc.title,
       heroSubtitle: proc.summary,
       leadParagraph: HEART_TRANSPLANT_DETAIL.leadParagraph,
@@ -424,8 +483,13 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
         inclusions: HEART_TRANSPLANT_DETAIL.costs.inclusions,
         insuranceNote: HEART_TRANSPLANT_DETAIL.costs.insuranceNote,
       },
-      doctors: SPECIALTY_DOCTORS_MAP.cardiology,
-      hospitals: HOSPITALS_DATA.slice(0, 3),
+      doctors: [
+        ...SPECIALTY_DOCTORS_MAP.cardiology,
+        ...SPECIALTY_DOCTORS_MAP.urology.slice(0, 2),
+        ...SPECIALTY_DOCTORS_MAP.neurology.slice(0, 1),
+      ],
+      topDoctors: FLAGSHIP_TOP_DOCTORS,
+      hospitals: HOSPITALS_DATA.slice(0, 8),
       faqs: HEART_TRANSPLANT_DETAIL.faqs,
       toc,
     };
@@ -434,7 +498,11 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
   // Find procedure from TREATMENTS_PROCEDURES_DATA or fallback
   const proc = TREATMENTS_PROCEDURES_DATA.find((p) => p.slug === slug) || TREATMENTS_PROCEDURES_DATA[0];
   const symptomsList = SYMPTOMS_DICTIONARY[slug] || SYMPTOMS_DICTIONARY.default;
-  const docsList = SPECIALTY_DOCTORS_MAP[proc.specialitySlug] || SPECIALTY_DOCTORS_MAP.default;
+  const baseDocsList = SPECIALTY_DOCTORS_MAP[proc.specialitySlug] || SPECIALTY_DOCTORS_MAP.default;
+  const docsList =
+    baseDocsList.length >= 6
+      ? baseDocsList
+      : [...baseDocsList, ...SPECIALTY_DOCTORS_MAP.default, ...SPECIALTY_DOCTORS_MAP.urology].slice(0, 6);
 
   const toc: TOCItem[] = [
     { id: "overview", label: `${proc.shortTitle}: Overview` },
@@ -457,7 +525,12 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
     shortTitle: proc.shortTitle,
     speciality: proc.speciality,
     specialitySlug: proc.specialitySlug,
-    heroImage: proc.image,
+    heroImage:
+      proc.slug === "abdominal-aortic-aneurysm-repair"
+        ? "/images/procedures/hero_aortic_aneurysm_v3.jpg"
+        : proc.slug === "abdominal-issues-children"
+        ? "/images/procedures/hero_pediatric_abdomen_v3.jpg"
+        : proc.image,
     heroTitle: proc.title,
     heroSubtitle: proc.summary,
     leadParagraph: `${proc.overview} At Narayana Health, multidisciplinary surgical boards employ advanced minimally invasive technologies, high-precision imaging, and structured clinical pathways to achieve superior patient outcomes with rapid post-operative recovery.`,
@@ -551,7 +624,8 @@ export function getProcedureDetailData(slug: string): ProcedureDetailData {
       insuranceNote: "All major health insurance policies and TPAs in India cover this surgical procedure. Narayana Health provides dedicated on-site insurance desk assistance for quick cashless authorization and paperless claims.",
     },
     doctors: docsList,
-    hospitals: HOSPITALS_DATA.slice(0, 3),
+    topDoctors: FLAGSHIP_TOP_DOCTORS,
+    hospitals: HOSPITALS_DATA.slice(0, 8),
     faqs: [
       {
         q: `What is the expected hospital stay for ${proc.shortTitle}?`,

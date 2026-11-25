@@ -125,18 +125,8 @@ export default function BlogBentoGrid({ scrollYProgress }: BlogBentoGridProps) {
   return (
     <section className={styles.bentoSection} data-nav-theme="dark">
       <div className={styles.container}>
-        {/* Section Header (Centered with TextSweepEffect & Clean Eyebrow) */}
+        {/* Section Header (Centered with TextSweepEffect Settling to Dark Stage) */}
         <div className={styles.sectionHeader}>
-          <motion.div
-            className={styles.cleanEyebrow}
-            style={{ color: eyebrowColor }}
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            CLINICAL EXCELLENCE IN HEALTH KNOWLEDGE
-          </motion.div>
           <motion.h2
             className={styles.sectionTitle}
             style={{
@@ -147,7 +137,7 @@ export default function BlogBentoGrid({ scrollYProgress }: BlogBentoGridProps) {
             <TextSweepEffect
               words={["Why Millions Trust Narayana Health Information"]}
               sweepMs={1500}
-              finalColor="var(--bento-title-color, #FFFFFF)"
+              finalColor="#FFFFFF"
             />
           </motion.h2>
           <motion.p

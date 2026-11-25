@@ -17,6 +17,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { CsrProgramItem } from "@/data/csrData";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import CsrProgramModal from "./CsrProgramModal";
 import styles from "./CsrProgramsFlow.module.css";
 
@@ -178,14 +179,25 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
   return (
     <section id="initiatives" className={styles.sectionWrapper} data-nav-theme="light">
       <div className={styles.container}>
-        {/* Section Header */}
-        <div className={styles.headerBlock}>
-          <span className={styles.eyebrow}>FLAGSHIP CSR PROGRAMS</span>
-          <h2 className={styles.sectionTitle}>Pioneering Grassroots Change</h2>
+        {/* Section Header (Centered with upward fluid entrance & TextSweepEffect) */}
+        <motion.div 
+          className={styles.headerBlock}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect
+              words={["Pioneering Grassroots Change"]}
+              sweepMs={1400}
+              finalColor="#0f172a"
+            />
+          </h2>
           <p className={styles.sectionSubtitle}>
             Four foundational initiatives driving measurable preventive health, educational upliftment, and community dialogue across rural India.
           </p>
-        </div>
+        </motion.div>
 
         {/* Pinned Folder Stacking Track: 100% complete docking, 0px empty void at end */}
         <div ref={trackRef} className={styles.stackingTrack}>
@@ -252,7 +264,7 @@ export default function CsrProgramsFlow({ programs }: CsrProgramsFlowProps) {
 
                       {/* Solid Rounded Rectangle "Know More" Link CTA to Detail Page */}
                       <Link
-                        href={`/csr/${prog.id}`}
+                        href={prog.id === "neighborhood-broadcasting" ? "/community-radioprogram" : `/csr/${prog.id}`}
                         className={styles.knowMoreBtn}
                         aria-label={`Read full initiative details on ${prog.title}`}
                       >

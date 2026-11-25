@@ -1,0 +1,111 @@
+.alphabetRailSection {
+  width: 100%;
+  margin: 6px 0 12px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.eyebrowLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dyn-eyebrow, rgba(var(--white-rgb), 0.56));
+}
+
+/* Exact Clinical Speciality A–Z Rounded Tile Bar with Red Selection Tone */
+.alphabetRailContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+  box-sizing: border-box;
+}
+
+.letterBtn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--dyn-filter-bg, rgba(255, 255, 255, 0.06));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--dyn-filter-border, rgba(255, 255, 255, 0.14));
+  color: var(--dyn-filter-text, rgba(255, 255, 255, 0.85));
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast, 150ms) ease;
+  user-select: none;
+}
+
+.allBtn {
+  flex: 1.6 1 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.letterBtn:hover:not(:disabled) {
+  background: var(--dyn-filter-bg-hover, rgba(255, 255, 255, 0.14));
+  color: var(--dyn-filter-text-hover, #ffffff);
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.45));
+  transform: translateY(-1px);
+}
+
+/* Selected State: Red Tone matching Book Appointment Selection */
+.letterBtnActive {
+  background: var(--dyn-red-sel-bg, rgba(237, 28, 36, 0.14)) !important;
+  border-color: var(--dyn-red-sel-border, rgba(237, 28, 36, 0.72)) !important;
+  color: var(--dyn-red-sel-text, #ef4444) !important;
+  font-weight: 700 !important;
+}
+
+.letterBtnDisabled {
+  opacity: 0.24;
+  cursor: not-allowed;
+  border-color: transparent;
+  background: transparent;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .alphabetRailContainer {
+    display: grid;
+    grid-template-columns: repeat(14, minmax(0, 1fr));
+    gap: 6px 3px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .letterBtn {
+    width: 100%;
+    min-width: 0;
+    height: 30px;
+    padding: 0;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 5px;
+  }
+
+  .allBtn {
+    grid-column: span 2;
+    min-width: 0;
+    padding: 0;
+    font-size: 11px;
+    font-weight: 700;
+  }
+}

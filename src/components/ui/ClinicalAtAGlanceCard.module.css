@@ -1,0 +1,159 @@
+/* ─── AUTHORITATIVE CLINICAL CARE BANNER (FLOWING GRADIENT) ─── */
+.actionStripContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 22px;
+  min-height: 52px;
+  border-radius: 12px;
+  /* Deep flowing gradient matching NH brand authority */
+  background: linear-gradient(135deg, #07172f 0%, #034EA2 52%, #0b2247 100%);
+  background-size: 200% 200%;
+  animation: gradientFlow 10s ease infinite;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+  margin: 0 0 28px 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--duration-fast, 0.15s) ease;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.actionStripContainer:hover {
+  transform: translateY(-1px);
+}
+
+.labelGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Banner Title (not a pill or button) */
+.bannerTitle {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stripDivider {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.stripText {
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.45;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Single High-Contrast Action Button: Check Consultations */
+.checkConsultBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #034EA2;
+  font-family: Inter, var(--font-sans), sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background var(--duration-fast, 0.15s) ease, transform var(--duration-fast, 0.15s) ease, color var(--duration-fast, 0.15s) ease;
+}
+
+.checkConsultBtn:hover {
+  background: #f8fafc;
+  color: #022d61;
+  transform: translateY(-1px);
+}
+
+.btnArrow {
+  transition: transform var(--duration-fast, 0.15s) ease;
+}
+
+.checkConsultBtn:hover .btnArrow {
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 960px) {
+  .labelGroup {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+  
+  .stripText {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 640px) {
+  .actionStripContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+
+  .labelGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .stripDivider {
+    display: none;
+  }
+
+  .buttonGroup {
+    width: 100%;
+  }
+
+  .checkConsultBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 9px 16px;
+  }
+}

@@ -2,10 +2,13 @@
 
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
-import { Search, X } from "lucide-react";
-import BlogArticleCard from "./BlogArticleCard";
-import { duration, ease } from "@/lib/motion";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, X, SlidersHorizontal, ChevronRight, ArrowUpRight, ArrowRight, Clock, Calendar } from "lucide-react";
+import TextSweepEffect from "@/components/ui/TextSweepEffect";
+import { CardTitleText, buildCardHoverReading } from "@/components/ui/CardTitleText";
+import AlphabeticalFilterRail from "@/components/ui/AlphabeticalFilterRail";
+import LibrarySubFilterTabs from "@/components/ui/LibrarySubFilterTabs";
 import { ArticleItem } from "@/data/articlesDirectoryData";
 import styles from "./BlogCategoryExplore.module.css";
 
@@ -34,10 +37,10 @@ interface BlogCategoryExploreProps {
 }
 
 export default function BlogCategoryExplore({ articles }: BlogCategoryExploreProps) {
-  const reduceMotion = useReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+  const [sortBy, setSortBy] = useState<"latest" | "visited" | "relevant">("latest");
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
 
   // Filtered articles
   const filteredArticles = useMemo(() => {
@@ -70,29 +73,60 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
       });
     }
 
-    // Sort
-    if (sortBy === "popular") {
+    // Filter by Alphabetical Letter
+    if (selectedLetter) {
+      list = list.filter((art) => art.title.toUpperCase().startsWith(selectedLetter));
+    }
+
+    // Sort: Latest, Most Visited, Most Relevant
+    if (sortBy === "visited") {
       list = list.sort((a, b) => (b.isPopular ? 1 : 0) - (a.isPopular ? 1 : 0));
+    } else if (sortBy === "relevant") {
+      list = list.sort((a, b) => b.keyTakeaways.length - a.keyTakeaways.length);
     }
 
     return list;
-  }, [articles, selectedCategory, searchQuery, sortBy]);
+  }, [articles, selectedCategory, searchQuery, sortBy, selectedLetter]);
 
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    articles.forEach((art) => {
+      const char = art.title[0]?.toUpperCase();
+      if (char >= "A" && char <= "Z") {
+        set.add(char);
+      }
+    });
+    return set;
+  }, [articles]);
+
+  const sortTabs = [
+    { id: "latest", label: "Latest" },
+    { id: "visited", label: "Most Visited" },
+    { id: "relevant", label: "Most Relevant" },
+  ];
+
+  // Generate Author badge text
+  const getAuthorInitials = (author: string) => {
+    if (author.toLowerCase().includes("narayana health")) return "NH";
+    const parts = author.replace(/^Dr\.\s*/i, "").trim().split(" ");
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return author.slice(0, 2).toUpperCase();
+  };
 
   return (
     <section className={styles.exploreSection} data-nav-theme="light" id="explore-categories">
       <div className={styles.container}>
-        {/* Section Header (Centered with Signature Color Gradient Title) */}
+        {/* Section Header (Centered with Dynamic TextSweepEffect) */}
         <div className={styles.sectionHeader}>
-          <motion.h2
-            className={styles.sectionTitle}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className={styles.gradientTitle}>Explore By Category</span>
-          </motion.h2>
+          <h2 className={styles.sectionTitle}>
+            <TextSweepEffect
+              words={["Explore By Category"]}
+              sweepMs={1400}
+              finalColor="#0f172a"
+            />
+          </h2>
           <p className={styles.sectionSubtitle}>
             Here are a few categories of blogs that you can explore
           </p>
@@ -153,46 +187,121 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
 
         {/* Metadata & Sort Row */}
         <div className={styles.toolbarRow}>
+          <LibrarySubFilterTabs
+            tabs={sortTabs}
+            activeTab={sortBy}
+            onTabChange={(t) => setSortBy(t as any)}
+            ariaLabel="Sort blog articles"
+            allowDeselect={false}
+          />
+
           <div className={styles.countBadge}>
             <strong>{filteredArticles.length}</strong> articles found
           </div>
-
-          <div className={styles.sortWrapper}>
-            <label htmlFor="blog-sort" className={styles.srOnly}>
-              Sort articles
-            </label>
-            <select
-              id="blog-sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "latest" | "popular")}
-              className={styles.sortSelect}
-            >
-              <option value="latest">Sort: Latest Published</option>
-              <option value="popular">Sort: Most Popular</option>
-            </select>
-          </div>
         </div>
+
+        {/* Alphabetical A–Z Filter Rail */}
+        <AlphabeticalFilterRail
+          availableLetters={availableLetters}
+          selectedLetter={selectedLetter}
+          onSelectLetter={setSelectedLetter}
+          resultCount={filteredArticles.length}
+        />
 
         {/* 3-Column Card Grid (Matching Our Standard Card Structure) */}
         {filteredArticles.length > 0 ? (
           <div className={styles.cardsGrid}>
-            {filteredArticles.map((article, idx) => (
-              <motion.div
-                key={article.id}
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reduceMotion ? 0 : duration.slow, delay: reduceMotion ? 0 : Math.min(idx * 0.05, 0.4), ease: ease.out }}
-              >
-                <BlogArticleCard
-                  title={article.title}
-                  href={`/blog/${article.slug}`}
-                  image={article.image}
-                  category={article.category}
-                  date={article.publishedDate}
-                  author={article.author}
-                />
-              </motion.div>
-            ))}
+            {filteredArticles.map((article, idx) => {
+              const initials = getAuthorInitials(article.author);
+              const isNH = initials === "NH";
+
+              return (
+                <motion.article
+                  key={article.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: Math.min(idx * 0.05, 0.4) }}
+                  className={styles.blogCard}
+                >
+                  <div className={styles.cardLink}>
+                    {/* Top Right Date Badge from Figma 468:624 */}
+                    <div className={styles.dateBadge}>
+                      <Calendar size={12} className={styles.dateIcon} />
+                      <span>{article.publishedDate}</span>
+                    </div>
+
+                    {/* Full Card Image Background */}
+                    <Image
+                      src={article.image || "/images/articles/blog_heart_health.png"}
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className={styles.cardBgImage}
+                    />
+
+                    {/* Atmospheric Gradient Scrim (Exact Figma "Image fade") */}
+                    <div className={styles.cardGradient} />
+
+                    {/* Bottom Card Content Layered On Gradient */}
+                    <div className={styles.cardContent}>
+                      <div className={styles.cardTextGroup}>
+                        <div className={styles.cardEyebrow}>
+                          {article.category}
+                        </div>
+
+                        <Link href={`/blog/${article.slug}`} className={styles.cardTitleLink}>
+                          <h3 className={styles.cardTitle} title={article.title}>
+                            <CardTitleText title={article.title} />
+                          </h3>
+                        </Link>
+
+                        <div className={styles.cardSubReveal}>
+                          <div className={styles.cardSubInner}>
+                            <p className={styles.cardSub}>
+                              {buildCardHoverReading([
+                                article.overview,
+                                article.summary,
+                                article.sections?.[0]?.body,
+                              ])}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Bottom Slot: Resting (Author + Arrow) vs Hover Full CTA ("Read more") */}
+                      <div className={styles.cardBottomSlot}>
+                        <div className={styles.cardRestingBottom}>
+                          <div className={styles.authorGroup}>
+                            <div className={styles.authorBadge}>
+                              {article.authorAvatar ? (
+                                <Image
+                                  src={article.authorAvatar}
+                                  alt={article.author}
+                                  width={24}
+                                  height={24}
+                                  className={styles.authorImg}
+                                />
+                              ) : (
+                                <span className={styles.authorInitials}>{initials}</span>
+                              )}
+                            </div>
+                            <span className={styles.authorName}>{article.author}</span>
+                          </div>
+                          <ArrowUpRight size={18} className={styles.restingArrow} />
+                        </div>
+
+                        <div className={styles.cardActions}>
+                          <Link href={`/blog/${article.slug}`} className={styles.cardDetailBtn}>
+                            <span>Read more</span>
+                            <ArrowUpRight size={13} className={styles.pillBtnArrow} />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
         ) : (
           <div className={styles.noResultsBox}>
@@ -216,3 +325,4 @@ export default function BlogCategoryExplore({ articles }: BlogCategoryExplorePro
     </section>
   );
 }
+

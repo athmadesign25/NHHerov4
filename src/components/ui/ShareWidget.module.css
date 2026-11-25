@@ -1,0 +1,72 @@
+/* ─── STANDARDIZED SOCIAL SHARE WIDGET ──────────────────────────────── */
+.shareWidgetBorderless {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1.5px solid rgba(var(--blue-brand-rgb), 0.10);
+  box-sizing: border-box;
+}
+
+.shareWidgetTitle {
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate-400);
+  margin-bottom: 2px;
+}
+
+.shareIconsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.shareBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--slate-900-rgb), 0.12);
+  background: rgba(var(--white-rgb), 0.70);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--slate-600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--duration-fast, 0.15s) ease;
+  box-shadow: none;
+}
+
+.shareBtn:hover {
+  background: var(--color-primary, var(--blue-brand));
+  color: var(--white);
+  border-color: var(--color-primary, var(--blue-brand));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(var(--blue-brand-rgb), 0.25);
+}
+
+.copyToastNotice {
+  font-size: var(--font-size-2xs);
+  color: var(--emerald-600);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  animation: toastFadeIn 0.2s ease;
+}
+
+@keyframes toastFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

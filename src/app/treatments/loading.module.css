@@ -1,7 +1,7 @@
 .loadingContainer {
   min-height: 100vh;
   background-color: #060e1b;
-  color: #ffffff;
+  color: var(--white);
   padding-top: calc(var(--nav-height, 72px) + 36px);
   padding-bottom: 60px;
   max-width: 1240px;
@@ -14,7 +14,7 @@
 .pulseTrack {
   width: 100%;
   height: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
   border-radius: 9999px;
   overflow: hidden;
   position: relative;
@@ -27,8 +27,8 @@
   left: 0;
   width: 35%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, #00C4FF, #8B5CF6, transparent);
-  animation: pulseSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  background: linear-gradient(90deg, transparent, var(--cyan-bright), #8B5CF6, transparent);
+  animation: pulseSlide 1.2s var(--ease-standard) infinite;
 }
 
 @keyframes pulseSlide {
@@ -58,7 +58,7 @@
   width: 65%;
   height: 48px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
   margin-bottom: 16px;
   animation: shimmer 1.5s ease-in-out infinite alternate;
 }
@@ -67,7 +67,7 @@
   width: 90%;
   height: 20px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--white-rgb), 0.05);
   margin-bottom: 24px;
 }
 
@@ -76,15 +76,15 @@
   max-width: 580px;
   height: 44px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(var(--white-rgb), 0.07);
+  border: 1px solid rgba(var(--white-rgb), 0.1);
 }
 
 .statSkeletonCol {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(var(--white-rgb), 0.1);
   padding-left: 24px;
 }
 
@@ -92,7 +92,7 @@
   width: 80px;
   height: 32px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--white-rgb), 0.06);
 }
 
 /* Bubbles Row Skeleton */
@@ -107,7 +107,7 @@
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--white-rgb), 0.06);
   flex-shrink: 0;
 }
 
@@ -133,8 +133,8 @@
 .cardSkeleton {
   height: 440px;
   border-radius: 18px;
-  background: #091322;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--navy-900);
+  border: 1px solid rgba(var(--white-rgb), 0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -143,7 +143,7 @@
 .cardImageSkeleton {
   width: 100%;
   height: 220px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(var(--white-rgb), 0.05);
 }
 
 .cardBodySkeleton {
@@ -158,21 +158,21 @@
   width: 40%;
   height: 12px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(var(--white-rgb), 0.08);
 }
 
 .cardLine2 {
   width: 85%;
   height: 20px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(var(--white-rgb), 0.06);
 }
 
 .cardLine3 {
   width: 70%;
   height: 14px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(var(--white-rgb), 0.04);
 }
 
 @keyframes shimmer {
