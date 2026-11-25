@@ -709,6 +709,17 @@
     display: block !important;
   }
 
+  .mobileNavigator.mobileOnly,
+  .mobileNavigator {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+    width: 100% !important;
+  }
+
   .videoWrapper {
     aspect-ratio: 16 / 9;
     min-height: unset;

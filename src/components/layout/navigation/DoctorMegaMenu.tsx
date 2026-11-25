@@ -19,7 +19,7 @@ const splitColumns = (items: string[]) => {
   return Array.from({ length: 3 }, (_, index) => items.slice(index * length, (index + 1) * length));
 };
 const sections = [
-  { id: "speciality", label: "Find Doctor By Specialty", columns: specialties, viewAll: "View All Specialties", href: "/specialities" },
+  { id: "speciality", label: "Find Doctor By Speciality", columns: specialties, viewAll: "View All Specialties", href: "/specialities" },
   { id: "location", label: "Find Doctor By Location", columns: [], viewAll: "View All Doctors", href: "/doctors" },
   { id: "condition", label: "Find Doctor By Disease/Condition", columns: splitColumns(DOCTOR_CONDITIONS), viewAll: "Search a condition or disease", href: "/search" },
   { id: "sunday", label: "Doctors Available on Sunday", columns: [], viewAll: "", href: "/doctors" },

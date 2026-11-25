@@ -435,12 +435,21 @@
   }
 }
 
+@media (max-width: 768px) {
+  .coeContainer {
+    padding-top: var(--space-8, 8px);
+    padding-block-start: var(--space-8, 8px);
+  }
+}
+
 @media (max-width: 640px) {
   .coeContainer {
     margin-left: -16px;
     margin-right: -16px;
     padding-left: 16px;
     padding-right: 16px;
+    padding-top: var(--space-8, 8px);
+    padding-block-start: var(--space-8, 8px);
   }
 }
 

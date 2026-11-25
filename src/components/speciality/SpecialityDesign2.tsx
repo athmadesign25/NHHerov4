@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
-import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Star, Clock, MapPin, ArrowUpRight, Stethoscope } from "lucide-react";
+import { ChevronRight, ChevronLeft, ChevronDown, Check, Shield, Star, Clock, MapPin, ArrowUpRight, Stethoscope, Home } from "lucide-react";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import TextSweepEffect from "@/components/ui/TextSweepEffect";
 import { MetricValueReveal } from "@/components/sections/hero/Hero";
@@ -1200,6 +1200,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
   };
 
   const [isTabsPinned, setIsTabsPinned] = useState(false);
+  const [isBreadcrumbExpanded, setIsBreadcrumbExpanded] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
   const tabsSentinelRef = useRef<HTMLDivElement>(null);
   const heroEndSentinelRef = useRef<HTMLDivElement>(null);
@@ -1607,45 +1608,69 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
           >
             <div className={styles.programmeTabsContainerPinned}>
               <div className={`${styles.pinnedBreadcrumbRow} ${isCoE ? styles.pinnedBreadcrumbRowHasDropdown : styles.pinnedBreadcrumbRowSpeciality}`}>
+                {/* 1. Home Link (Always visible: icon on mobile, icon + text on desktop) */}
+                <Link
+                  href="/"
+                  className={`${styles.breadcrumbLink} ${styles.breadcrumbHomeLink}`}
+                  title="Home"
+                  aria-label="Back to Narayana Health Home"
+                >
+                  <Home size={14} className={styles.breadcrumbHomeIcon} aria-hidden="true" />
+                  <span className={styles.breadcrumbHomeText}>Home</span>
+                </Link>
+
+                <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+
                 {isCoE ? (
                   <>
-                    {/* -1. Home Link */}
-                    <Link
-                      href="/"
-                      className={`${styles.breadcrumbLink} ${styles.desktopOnlyBreadcrumb}`}
-                      title="Home"
-                      aria-label="Back to Narayana Health Home"
-                    >
-                      Home
-                    </Link>
+                    {/* Collapsed Ellipsis Button on Mobile when not expanded */}
+                    {!isBreadcrumbExpanded && (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.breadcrumbEllipsisBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsBreadcrumbExpanded(true);
+                          }}
+                          aria-expanded={false}
+                          aria-label="Expand full breadcrumb trail"
+                          title="Show more"
+                        >
+                          ...
+                        </button>
+                        <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.breadcrumbEllipsisChevron}`} aria-hidden="true" />
+                      </>
+                    )}
 
-                    <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
+                    {/* Middle Items (Desktop always visible, Mobile visible when expanded) */}
+                    <span className={`${styles.breadcrumbMiddleGroup} ${isBreadcrumbExpanded ? styles.breadcrumbMiddleGroupExpanded : ""}`}>
+                      <Link
+                        href="/centre-of-excellence"
+                        className={styles.breadcrumbLink}
+                        title="Centres of Excellence"
+                        aria-label="View all centres of excellence"
+                      >
+                        Centres of Excellence
+                      </Link>
 
-                    {/* 0. Parent Directory Link */}
-                    <Link
-                      href="/centre-of-excellence"
-                      className={`${styles.breadcrumbLink} ${styles.desktopOnlyBreadcrumb}`}
-                      title="Centres of Excellence"
-                      aria-label="View all centres of excellence"
-                    >
-                      Centres of Excellence
-                    </Link>
+                      <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
 
-                    <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
+                      <button
+                        type="button"
+                        className={styles.breadcrumbSpecialityBtn}
+                        onClick={() => {
+                          const hero = document.getElementById("overview");
+                          if (hero) hero.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        title={`Scroll to ${title} overview`}
+                        aria-label={`Scroll to ${title} overview`}
+                      >
+                        {title}
+                      </button>
 
-                    {/* 1. Main Speciality Root */}
-                    <button
-                      type="button"
-                      className={`${styles.breadcrumbSpecialityBtn} ${styles.desktopOnlyBreadcrumb}`}
-                      onClick={() => {
-                        const hero = document.getElementById("overview");
-                        if (hero) hero.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      title={`Scroll to ${title} overview`}
-                      aria-label={`Scroll to ${title} overview`}
-                    >
-                      {title}
-                    </button>
+                      <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+                    </span>
 
                     {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
                     <div className={styles.programmeDropdownWrapper} ref={dropdownRef}>
@@ -1790,28 +1815,39 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
                   </>
                 ) : (
                   <>
-                    <Link
-                      href="/"
-                      className={`${styles.breadcrumbLink} ${styles.desktopOnlyBreadcrumb}`}
-                      title="Home"
-                      aria-label="Back to Narayana Health Home"
-                    >
-                      Home
-                    </Link>
+                    {/* Collapsed Ellipsis Button on Mobile when not expanded */}
+                    {!isBreadcrumbExpanded && (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.breadcrumbEllipsisBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsBreadcrumbExpanded(true);
+                          }}
+                          aria-expanded={false}
+                          aria-label="Expand full breadcrumb trail"
+                          title="Show more"
+                        >
+                          ...
+                        </button>
+                        <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.breadcrumbEllipsisChevron}`} aria-hidden="true" />
+                      </>
+                    )}
 
-                    <ChevronRight size={14} className={`${styles.breadcrumbChevron} ${styles.desktopOnlyBreadcrumb}`} aria-hidden="true" />
+                    {/* Middle Items (Desktop always visible, Mobile visible when expanded) */}
+                    <span className={`${styles.breadcrumbMiddleGroup} ${isBreadcrumbExpanded ? styles.breadcrumbMiddleGroupExpanded : ""}`}>
+                      <Link
+                        href="/specialities"
+                        className={`${styles.breadcrumbLink} ${styles.specialityBreadcrumbLink}`}
+                        title="All Specialities"
+                        aria-label="View all medical specialities"
+                      >
+                        Specialities
+                      </Link>
 
-                    <Link
-                      href="/specialities"
-                      className={`${styles.breadcrumbLink} ${styles.specialityBreadcrumbLink}`}
-                      title="All Specialities"
-                      aria-label="View all medical specialities"
-                    >
-                      <ChevronLeft size={14} className={styles.breadcrumbMobileBackChevron} aria-hidden="true" />
-                      <span>Specialities</span>
-                    </Link>
-
-                    <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+                      <ChevronRight size={14} className={styles.breadcrumbChevron} aria-hidden="true" />
+                    </span>
 
                     <button
                       type="button"

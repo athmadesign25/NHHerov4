@@ -6,11 +6,11 @@ import {
 // NH's live CoE directory order, verified 4 November 2026:
 // https://www.narayanahealth.org/center-of-excellence
 export const SERVICE_CENTRES = [
-  { label: "Cardiac Sciences", icon: HeartPulse, href: "/centre-of-excellence/cardiology" },
-  { label: "Cancer Care", icon: Ribbon, href: "/centre-of-excellence/oncology" },
-  { label: "Neuro Sciences", icon: Brain, href: "/centre-of-excellence/neurology" },
-  { label: "Gastro Sciences", icon: Stethoscope, href: "/centre-of-excellence/gastroenterology" },
-  { label: "Orthopaedics", icon: Bone, href: "/centre-of-excellence/orthopaedics" },
+  { label: "Cardiac Sciences", icon: HeartPulse, href: "/specialities/cardiology" },
+  { label: "Cancer Care", icon: Ribbon, href: "/specialities/oncology" },
+  { label: "Neuro Sciences", icon: Brain, href: "/specialities/neurology" },
+  { label: "Gastro Sciences", icon: Stethoscope, href: "/specialities/gastroenterology" },
+  { label: "Orthopaedics", icon: Bone, href: "/specialities/orthopaedics" },
   { label: "Image Guided Therapy", icon: ScanLine, href: "/search?q=Image%20Guided%20Therapy" },
   { label: "Robotic Surgery", icon: Bot, href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
   { label: "Solid-Organ & Bone Marrow Transplant", icon: Dna, href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
@@ -18,9 +18,9 @@ export const SERVICE_CENTRES = [
 ];
 export const SERVICE_TILES = [
   { label: "Ambulance Service Emergency", lines: ["Ambulance", "Service", "Emergency"], href: "/emergency", image: "/navigation/services-ambulance.webp", tone: "emergency" },
-  { label: "Book Health Checkup", lines: ["Book Health", "Checkup"], href: "/health-checkups", image: "/health-packages/diabetes.png", tone: "checkup" },
-  { label: "Diagnostics and tests", lines: ["Diagnostics", "and tests"], href: "/diagnostics", image: "/images/procedures/procedure_mri.png", tone: "diagnostics" },
-  { label: "Aarogyam", lines: ["Aarogyam"], href: "/health-checkups?hospital=prestige", image: "/health-checkup-consultation.jpg", tone: "wellness" },
+  { label: "Book Health Checkup", lines: ["Book Health", "Checkup"], href: "/#health-packages", image: "/health-packages/diabetes.png", tone: "checkup" },
+  { label: "Diagnostics and tests", lines: ["Diagnostics", "and tests"], href: "/search?q=Diagnostics%20and%20tests", image: "/images/procedures/procedure_mri.png", tone: "diagnostics" },
+  { label: "Aarogyam", lines: ["Aarogyam"], href: "/search?q=Aarogyam", image: "/health-checkup-consultation.jpg", tone: "wellness" },
   { label: "Clinical Specialties", lines: ["Clinical", "Specialties"], href: "/specialities", image: "/pulse_find_doctor_banner.png", tone: "clinical" },
   { label: "Health Insurance", lines: ["Health", "Insurance"], href: "https://www.narayanahealth.insurance/", image: "/doctor_patient.png", tone: "insurance" },
 ];
@@ -57,8 +57,9 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
     ] }],
   },
   {
-    id: "services", label: "Services", image: "/health-checkup-consultation.jpg", alt: "Narayana Health services",
+    id: "services", label: "Care & Services", image: "/health-checkup-consultation.jpg", alt: "Narayana Health services",
     groups: [{ title: "Care and services", links: [
+      { label: "Clinical Specialties", href: SERVICE_TILES[4].href, lines: SERVICE_TILES[4].lines, image: "/pulse_find_doctor_banner.png" },
       { label: "Diagnostics", href: SERVICE_TILES[2].href, image: "/bone-health-package.png", imageTreatment: "diagnostics" },
       { label: "Ambulance & Emergency", href: SERVICE_TILES[0].href, lines: ["Ambulance &", "Emergency"], image: "/navigation/services/nh-ambulance-cutout-v2.webp", imageTreatment: "ambulance" },
     ] }],

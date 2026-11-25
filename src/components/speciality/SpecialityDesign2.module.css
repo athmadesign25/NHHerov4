@@ -787,19 +787,90 @@
   width: 100%;
 }
 
+.breadcrumbHomeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.breadcrumbHomeIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.breadcrumbHomeLink:hover .breadcrumbHomeIcon {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.breadcrumbHomeText {
+  display: inline;
+}
+
 .desktopOnlyBreadcrumb {
   display: inline-flex;
 }
 
-@media (max-width: 768px) {
-  .desktopOnlyBreadcrumb {
-    display: none !important;
-  }
-  .pinnedBreadcrumbRowHasDropdown > .breadcrumbLink,
-  .pinnedBreadcrumbRowHasDropdown > .breadcrumbChevron,
-  .pinnedBreadcrumbRowHasDropdown > .breadcrumbSpecialityBtn {
-    display: none !important;
-  }
+/* Collapsible middle group on mobile */
+.breadcrumbMiddleGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Collapsed '...' dots button (clean typography, no box outline) */
+.breadcrumbEllipsisBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 4px;
+  color: rgba(var(--white-rgb), 0.75);
+  font-family: inherit;
+  font-size: var(--font-size-base, 16px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  user-select: none;
+}
+
+.breadcrumbEllipsisBtn:hover,
+.breadcrumbEllipsisBtn:active {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--white, #ffffff);
+  transform: none !important;
+}
+
+/* Light theme retint for breadcrumb ellipsis */
+:global(html[data-nav-theme-active="light"]) .breadcrumbEllipsisBtn,
+.programmeTabsWrapperLight .breadcrumbEllipsisBtn,
+[data-theme="light"] .breadcrumbEllipsisBtn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: rgba(var(--black-rgb), 0.6);
+}
+
+:global(html[data-nav-theme-active="light"]) .breadcrumbEllipsisBtn:hover,
+.programmeTabsWrapperLight .breadcrumbEllipsisBtn:hover,
+[data-theme="light"] .breadcrumbEllipsisBtn:hover {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--color-primary, #034EA2);
 }
 
 .specialityBreadcrumbLink {
@@ -843,10 +914,40 @@
 }
 
 @media (max-width: 768px) {
-  .breadcrumbMobileBackChevron {
-    display: inline-block;
+  .pinnedBreadcrumbRow {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    gap: 6px;
   }
-  
+
+  .pinnedBreadcrumbRow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .breadcrumbHomeText {
+    display: none !important;
+  }
+
+  .breadcrumbEllipsisBtn {
+    display: inline-flex !important;
+  }
+
+  .breadcrumbMiddleGroup {
+    display: none !important;
+  }
+
+  .breadcrumbMiddleGroup.breadcrumbMiddleGroupExpanded {
+    display: inline-flex !important;
+    gap: 6px;
+    animation: fadeInBreadcrumb 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .desktopOnlyBreadcrumb {
+    display: none !important;
+  }
+
   .pinnedBreadcrumbRowSpeciality {
     gap: 6px;
   }
@@ -865,6 +966,17 @@
     font-size: var(--font-size-xs, 12px);
     padding: 2px 4px;
     max-width: clamp(140px, 46vw, 240px);
+  }
+}
+
+@keyframes fadeInBreadcrumb {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -2493,22 +2605,28 @@
   }
 
   .doctorCarouselDots {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-top: 16px !important;
+    margin-bottom: 8px !important;
   }
 
   .doctorCarouselDot {
     width: 6px !important;
     height: 6px !important;
     border-radius: 6px !important;
-    background: rgba(var(--black-rgb), 0.2) !important;
+    background: #d2d2d2 !important;
     border: none !important;
     padding: 0 !important;
     cursor: pointer;
     transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
     flex-shrink: 0 !important;
+  }
+
+  .doctorCarouselDot:hover:not(.doctorActiveDot) {
+    background: #b0b0b0 !important;
   }
 
   .doctorActiveDot,
@@ -2520,7 +2638,10 @@
   }
 
   .doctorsViewMoreWrapper {
-    display: none !important;
+    display: flex !important;
+    justify-content: center;
+    margin-top: 24px;
+    width: 100%;
   }
 }
 
