@@ -10,6 +10,14 @@
   font-family: var(--font-family);
 }
 
+@media (min-width: 769px) {
+  .bandWrapper {
+    padding-top: var(--space-8, 8px);
+    padding-bottom: var(--space-64, 64px);
+    margin-top: calc(-1 * var(--space-32, 32px));
+  }
+}
+
 .bandContainer {
   width: 100%;
   max-width: 100%;
