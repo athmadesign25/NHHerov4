@@ -2525,7 +2525,7 @@ export default function SpecialityDesign2({ slug, isCoE: propIsCoE }: { slug: st
         <section 
           key={idx} 
           id={section.id} 
-          className={styles.doctorsSection} 
+          className={`${styles.doctorsSection} ${isFaqs ? styles.faqSection : ""} ${isHospitals ? styles.hospitalsSection : ""}`} 
           data-nav-theme={isDarkTheme ? "dark" : "light"} 
           style={{ 
             background: sectionBg,

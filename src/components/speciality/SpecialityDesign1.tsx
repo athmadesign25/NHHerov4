@@ -2139,6 +2139,8 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
             background: sectionBg, 
             marginTop: (isHospitals || isFaqs) ? "-2px" : undefined,
             marginBottom: isFaqs ? "-4px" : undefined,
+            paddingTop: isFaqs ? "48px" : undefined,
+            paddingBottom: isFaqs ? "80px" : undefined,
             position: "relative",
             zIndex: isFaqs ? 2 : undefined
           }}

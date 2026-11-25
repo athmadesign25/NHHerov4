@@ -2371,6 +2371,15 @@
   padding: 150px 0;
 }
 
+.hospitalsSection {
+  padding-bottom: var(--space-80, 80px);
+}
+
+.faqSection {
+  padding-top: var(--space-48, 48px);
+  padding-bottom: var(--space-96, 96px);
+}
+
 @media (max-width: 1024px) {
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
   .subConditionsGrid { 
@@ -2475,6 +2484,11 @@
     margin: 0 auto var(--space-20, 20px);
   }
   .doctorsSection { padding: 80px 0; }
+  .hospitalsSection { padding-bottom: var(--space-48, 48px); }
+  .faqSection {
+    padding-top: var(--space-24, 24px);
+    padding-bottom: var(--space-64, 64px);
+  }
 }
 
 @media (max-width: 480px) {
