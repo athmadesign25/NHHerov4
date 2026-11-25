@@ -75,8 +75,8 @@
 }
 
 .techItemRowActive {
-  background: var(--color-bg-alt, #F3F5F9) !important;
-  border-color: rgba(var(--blue-brand-rgb, 3, 78, 161), 0.12) !important;
+  background: var(--red-50) !important;
+  border-color: rgba(var(--red-600-rgb), 0.16) !important;
   box-shadow: 0 2px 10px rgba(var(--slate-900-rgb, 15, 23, 42), 0.04);
 }
 
@@ -108,7 +108,7 @@
 }
 
 .techItemRowActive .techItemNumber {
-  color: var(--color-primary);
+  color: var(--red-600) !important;
 }
 
 .techItemTitle {
@@ -149,8 +149,8 @@
 }
 
 .techActionBtnActive {
-  background: var(--navy-ink, #1a1a2e) !important;
-  border-color: var(--navy-ink, #1a1a2e) !important;
+  background: var(--red-600) !important;
+  border-color: var(--red-600) !important;
   color: var(--white, #ffffff) !important;
 }
 
@@ -260,8 +260,8 @@
     font-family: var(--font-family);
     font-size: var(--font-size-xs, 12px);
     font-weight: 700;
-    color: var(--color-primary, #034EA2);
-    background: rgba(var(--blue-brand-rgb, 3, 78, 161), 0.08);
+    color: var(--red-600);
+    background: rgba(var(--red-600-rgb, 220, 38, 38), 0.08);
     padding: 2px 8px;
     border-radius: var(--radius-sm, 6px);
     letter-spacing: 0.05em;

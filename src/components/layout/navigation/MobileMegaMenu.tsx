@@ -21,12 +21,12 @@ import BookingMemberMenu from "../BookingMemberMenu";
 
 type Page = "main" | "find-a-doctor" | "hospitals" | "specialities" | "health-library" | "about-us" | "specialty" | "city" | "condition" | "sunday" | "today";
 const titles: Record<Page, string> = {
-  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Hospitals & clinics", specialities: "Clinical Specialties",
+  main: "How can we help?", "find-a-doctor": "Find a doctor", hospitals: "Hospitals & clinics", specialities: "Services",
   "health-library": "Health library", "about-us": "About us",
   specialty: "Find a doctor by specialty", city: "Find a doctor by location", condition: "Find a doctor by disease / condition",
   sunday: "Find a doctor available on Sunday", today: "Find a doctor available today",
 };
-const descriptions = ["By specialty, city or condition", "Explore hospitals and clinics by city", "Clinical specialities, centres of excellence & services", "Articles, stories and videos", "Our people and our purpose"];
+const descriptions = ["By specialty, city or condition", "Explore hospitals and clinics by city", "Specialist care, tests and more", "Articles, stories and videos", "Our people and our purpose"];
 const doctorChoices: { page: Page; label: string }[] = [
   { page: "specialty", label: "By specialty" }, { page: "city", label: "By location" },
   { page: "condition", label: "By disease / condition" }, { page: "sunday", label: "Doctors available on Sunday" },

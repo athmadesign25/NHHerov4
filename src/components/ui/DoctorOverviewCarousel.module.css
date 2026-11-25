@@ -457,7 +457,7 @@
 .doctorRole {
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
-  color: var(--color-primary, #034EA1);
+  color: var(--black, #000000);
   margin: 0;
   line-height: 1.35;
 }

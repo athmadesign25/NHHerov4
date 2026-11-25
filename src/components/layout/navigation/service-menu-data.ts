@@ -6,15 +6,15 @@ import {
 // NH's live CoE directory order, verified 4 November 2026:
 // https://www.narayanahealth.org/center-of-excellence
 export const SERVICE_CENTRES = [
-  { label: "Cardiac Sciences", icon: HeartPulse, href: "/specialities/cardiology" },
-  { label: "Cancer Care", icon: Ribbon, href: "/specialities/oncology" },
-  { label: "Neuro Sciences", icon: Brain, href: "/specialities/neurology" },
-  { label: "Gastro Sciences", icon: Stethoscope, href: "/specialities/gastroenterology" },
-  { label: "Orthopaedics", icon: Bone, href: "/specialities/orthopaedics" },
-  { label: "Image Guided Therapy", icon: ScanLine, href: "/search?q=Image%20Guided%20Therapy" },
-  { label: "Robotic Surgery", icon: Bot, href: "https://www.narayanahealth.org/center-of-excellence/robotic-surgery" },
-  { label: "Solid-Organ & Bone Marrow Transplant", icon: Dna, href: "https://www.narayanahealth.org/center-of-excellence/solid-organ-bone-marrow-transplant" },
-  { label: "Renal Sciences", icon: Bean, href: "https://www.narayanahealth.org/center-of-excellence/renal-sciences" },
+  { label: "Cardiac Sciences", icon: HeartPulse, href: "/centre-of-excellence/cardiology" },
+  { label: "Cancer Care", icon: Ribbon, href: "/centre-of-excellence/oncology?design=2" },
+  { label: "Neuro Sciences", icon: Brain, href: "/centre-of-excellence/neurology" },
+  { label: "Gastro Sciences", icon: Stethoscope, href: "/centre-of-excellence/gastroenterology" },
+  { label: "Orthopaedics", icon: Bone, href: "/centre-of-excellence/orthopaedics" },
+  { label: "Image Guided Therapy", icon: ScanLine, href: "/centre-of-excellence/image-guided-therapy" },
+  { label: "Robotic Surgery", icon: Bot, href: "/centre-of-excellence/robotic-surgery" },
+  { label: "Solid-Organ & Bone Marrow Transplant", icon: Dna, href: "/centre-of-excellence/haematology-bmt" },
+  { label: "Renal Sciences", icon: Bean, href: "/centre-of-excellence/nephrology" },
 ];
 export const SERVICE_TILES = [
   { label: "Ambulance Service Emergency", lines: ["Ambulance", "Service", "Emergency"], href: "/emergency", image: "/navigation/services-ambulance.webp", tone: "emergency" },
