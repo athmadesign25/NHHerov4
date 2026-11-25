@@ -56,7 +56,7 @@ interface ActiveTurnState {
   doctor?: DoctorCardData;
   emergency?: boolean;
   followupChips: string[];
-  phase: "thinking" | "drafting" | "skeleton" | "complete";
+  phase: "settling" | "thinking" | "drafting" | "skeleton" | "complete";
 }
 
 export default function SearchResultsCanvas({
@@ -86,19 +86,27 @@ export default function SearchResultsCanvas({
 
   const topInputRef = useRef<HTMLInputElement>(null);
   const pulseInputRef = useRef<HTMLInputElement>(null);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const leftColWrapRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
   const unifiedScrollRef = useRef<HTMLDivElement>(null);
   const chatStartRef = useRef<HTMLDivElement>(null);
+  const activeTurnRef = useRef<HTMLDivElement>(null);
   const chatAnchorRef = useRef<HTMLDivElement>(null);
+  const reverseScrollStepsRef = useRef(0);
+  const lastLeftScrollTopRef = useRef(0);
+  const lastReverseWheelTimeRef = useRef(0);
 
-  // Follow-up intent belongs to the same result set as the current cards.
-  const [hasScrolledDoctors, setHasScrolledDoctors] = useState(false);
+  // Follow-up dock visibility: hidden initially on landing, revealed only when scrolled to bottom of primary doctors (sticky once Pulse is active)
+  const [hasReachedDoctorsBottom, setHasReachedDoctorsBottom] = useState(false);
   const [isPulseInputFocused, setIsPulseInputFocused] = useState(false);
 
   // Synchronize incoming props
   useEffect(() => {
     setCurrentResults(results);
-    setHasScrolledDoctors(false);
+    setHasReachedDoctorsBottom(false);
+    reverseScrollStepsRef.current = 0;
+    lastLeftScrollTopRef.current = 0;
   }, [results]);
 
   useEffect(() => {
@@ -117,11 +125,6 @@ export default function SearchResultsCanvas({
       // Re-appear when user scrolls all the way up to semantic results (<= 35px from top)
       const atTop = container.scrollTop <= 35;
       setIsScrolledToTop(atTop);
-      if (container.scrollTop > 18) {
-        setHasScrolledDoctors(true);
-      } else if (container.scrollTop <= 8 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
-        setHasScrolledDoctors(false);
-      }
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -134,21 +137,50 @@ export default function SearchResultsCanvas({
     if (!leftEl) return;
 
     const handleLeftScroll = () => {
-      if (leftEl.scrollTop > 18) {
-        setHasScrolledDoctors(true);
-      } else if (leftEl.scrollTop <= 8 && (!unifiedScrollRef.current || unifiedScrollRef.current.scrollTop <= 8)) {
-        setHasScrolledDoctors(false);
+      const currentTop = leftEl.scrollTop;
+      const prevTop = lastLeftScrollTopRef.current;
+      lastLeftScrollTopRef.current = currentTop;
+
+      const maxScroll = Math.max(0, leftEl.scrollHeight - leftEl.clientHeight);
+      if (maxScroll > 20) {
+        const distFromBottom = maxScroll - currentTop;
+        if (currentTop > 24 && distFromBottom <= 80) {
+          reverseScrollStepsRef.current = 0;
+          setHasReachedDoctorsBottom(true);
+        } else if (currentTop < prevTop) {
+          // Require 2 deliberate scroll-backs (or >= 260px reverse distance / top reach) to hide
+          if (currentTop <= 20 || distFromBottom >= 260) {
+            reverseScrollStepsRef.current = 0;
+            setHasReachedDoctorsBottom(false);
+          }
+        } else if (currentTop > prevTop) {
+          reverseScrollStepsRef.current = 0;
+        }
       }
     };
 
     const handleLeftWheel = (e: WheelEvent) => {
-      if (e.deltaY > 15) {
-        setHasScrolledDoctors(true);
-      } else if (e.deltaY < -15 && leftEl.scrollTop <= 8) {
-        setHasScrolledDoctors(false);
+      const maxScroll = Math.max(0, leftEl.scrollHeight - leftEl.clientHeight);
+      const now = Date.now();
+      if (e.deltaY < -12) {
+        // Group trackpad inertia events within 220ms into one discrete scroll-back gesture
+        if (now - lastReverseWheelTimeRef.current > 220) {
+          reverseScrollStepsRef.current += 1;
+          lastReverseWheelTimeRef.current = now;
+        }
+        if (reverseScrollStepsRef.current >= 2) {
+          reverseScrollStepsRef.current = 0;
+          setHasReachedDoctorsBottom(false);
+        }
+      } else if (e.deltaY > 15) {
+        reverseScrollStepsRef.current = 0;
+        if (maxScroll <= 20) {
+          setHasReachedDoctorsBottom(true);
+        }
       }
     };
 
+    handleLeftScroll();
     leftEl.addEventListener("scroll", handleLeftScroll, { passive: true });
     leftEl.addEventListener("wheel", handleLeftWheel, { passive: true });
     return () => {
@@ -157,37 +189,47 @@ export default function SearchResultsCanvas({
     };
   }, [currentResults, isRequerying, isPulseActive]);
 
-  // Top search bar is visible if:
-  // 1. In non-active mode (standard semantic search)
-  // 2. In active Pulse mode, ONLY when scrolled up to the end of semantic results
-  const showTopSearchBar = !isPulseActive || isScrolledToTop;
+  // Top search query bar remains cleanly anchored at the top without collapsing/jumping mid-scroll
+  const showTopSearchBar = true;
 
-  // Measure primary result column width so the docked Pulse bar matches it exactly in non-active mode
-  const [leftColWidth, setLeftColWidth] = useState<number | null>(null);
+  // Measure both primary column bounds and full container width so Ask Pulse dock expands via pixel interpolation
+  const [dockMetrics, setDockMetrics] = useState<{
+    left: number;
+    leftWidth: number;
+    containerWidth: number;
+  } | null>(null);
 
   useEffect(() => {
-    const el = leftColRef.current;
-    if (!el) return;
+    const containerEl = resultsContainerRef.current;
+    const wrapEl = leftColWrapRef.current;
+    if (!containerEl || !wrapEl) return;
 
     const measure = () => {
-      if (leftColRef.current) {
-        const gridEl = leftColRef.current.querySelector<HTMLElement>(`.${styles.refDoctorsGrid}`);
-        const targetEl = gridEl || leftColRef.current;
-        if (targetEl.offsetWidth > 0) {
-          setLeftColWidth(targetEl.offsetWidth);
-        }
+      if (window.innerWidth <= 900) {
+        setDockMetrics(null);
+        return;
+      }
+      const cRect = containerEl.getBoundingClientRect();
+      const wRect = wrapEl.getBoundingClientRect();
+      if (wRect.width > 0 && cRect.width > 0) {
+        setDockMetrics({
+          left: Math.round(wRect.left - cRect.left),
+          leftWidth: Math.round(wRect.width),
+          containerWidth: Math.round(cRect.width),
+        });
       }
     };
 
     measure();
     const ro = new ResizeObserver(measure);
-    ro.observe(el);
+    ro.observe(containerEl);
+    ro.observe(wrapEl);
     window.addEventListener("resize", measure);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [currentResults]);
+  }, [currentResults, isPulseActive, isRequerying]);
 
   // Handle top search query bar submit (re-queries semantic search)
   const handleTopSearchSubmit = async (e?: React.FormEvent, customQuery?: string) => {
@@ -209,7 +251,7 @@ export default function SearchResultsCanvas({
         setCurrentResults(newResults);
         // Reset to initial semantic mode where left column scrolls independently
         setIsPulseActive(false);
-        setHasScrolledDoctors(false);
+        setHasReachedDoctorsBottom(false);
         setActiveTurn(null);
         setCompletedTurns([]);
         if (unifiedScrollRef.current) {
@@ -227,14 +269,23 @@ export default function SearchResultsCanvas({
   };
 
   // ── Stage Orchestrator for Active Turn ──
-  // 1. Thinking phase (750ms) -> Drafting phase
+  // 0. Settling phase (380ms): prompt smoothly glides up near the top before response unfolds
+  useEffect(() => {
+    if (!activeTurn || activeTurn.phase !== "settling") return;
+    const timer = setTimeout(() => {
+      setActiveTurn((prev) => (prev ? { ...prev, phase: "thinking" } : null));
+    }, 380);
+    return () => clearTimeout(timer);
+  }, [activeTurn?.id, activeTurn?.phase]);
+
+  // 1. Thinking phase (650ms) -> Drafting phase
   useEffect(() => {
     if (!activeTurn || activeTurn.phase !== "thinking") return;
     const timer = setTimeout(() => {
       setActiveTurn((prev) => (prev ? { ...prev, phase: "drafting" } : null));
-    }, 750);
+    }, 650);
     return () => clearTimeout(timer);
-  }, [activeTurn?.phase]);
+  }, [activeTurn?.id, activeTurn?.phase]);
 
   // 2. Drafting typewriter character-by-character effect (14ms per char)
   useEffect(() => {
@@ -267,31 +318,34 @@ export default function SearchResultsCanvas({
     if (!activeTurn || activeTurn.phase !== "skeleton") return;
     const timer = setTimeout(() => {
       setActiveTurn((prev) => (prev ? { ...prev, phase: "complete" } : null));
-      // Smoothly ensure solution is in view
+      // Keep the user prompt comfortably near the top; only nudge if card bottom sits below dock
       setTimeout(() => {
-        chatAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      }, 80);
+        chatAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 90);
     }, 650);
     return () => clearTimeout(timer);
   }, [activeTurn?.phase]);
 
-  // Smooth scroll handler to glide semantic results UP so chat begins right at the top
-  const performScrollToChat = useCallback(() => {
-    if (!unifiedScrollRef.current) return;
+  // Smooth scroll handler to glide newest prompt smoothly near the top of the Pulse viewport
+  const performScrollToTurnTop = useCallback(() => {
     const container = unifiedScrollRef.current;
+    if (!container) return;
 
     // Reset internal scroll of doctor cards column if it had been scrolled in non-active mode
     if (leftColRef.current) {
       leftColRef.current.scrollTop = 0;
     }
 
-    let targetY = 460;
-    if (chatStartRef.current) {
-      const offset = chatStartRef.current.offsetTop;
-      if (offset > 120) {
-        // Leave the bottom ~75px of Row 2 doctor cards peeking at the top (matching reference Image)
-        targetY = Math.max(0, offset - 75);
-      }
+    const turnEl = activeTurnRef.current;
+    let targetY = 0;
+    if (turnEl) {
+      const containerRect = container.getBoundingClientRect();
+      const turnRect = turnEl.getBoundingClientRect();
+      targetY = Math.max(0, Math.round(container.scrollTop + (turnRect.top - containerRect.top) - 18));
+    } else if (chatStartRef.current) {
+      const containerRect = container.getBoundingClientRect();
+      const startRect = chatStartRef.current.getBoundingClientRect();
+      targetY = Math.max(0, Math.round(container.scrollTop + (startRect.top - containerRect.top) - 24));
     }
 
     container.scrollTo({
@@ -313,24 +367,20 @@ export default function SearchResultsCanvas({
       return () => cancelAnimationFrame(frame);
     }
 
-    if (completedTurns.length === 0) {
-      // First turn: smoothly glide semantic cards up so chat begins right at the top
-      const t1 = setTimeout(performScrollToChat, 30);
-      const t2 = setTimeout(performScrollToChat, 100);
-      const t3 = setTimeout(performScrollToChat, 220);
-      return () => {
-        clearTimeout(t1);
-        clearTimeout(t2);
-        clearTimeout(t3);
-      };
-    } else {
-      // Subsequent turns in conversation: scroll down to reveal new turn
-      const t = setTimeout(() => {
-        chatAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-      }, 80);
-      return () => clearTimeout(t);
-    }
-  }, [isPulseActive, activeTurn?.id, completedTurns.length, performScrollToChat]);
+    // Wait for DOM layout commit with overflowY: auto & unclipped split layout, then glide smoothly
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        performScrollToTurnTop();
+      });
+    });
+    const fallbackTimer = setTimeout(performScrollToTurnTop, 160);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      clearTimeout(fallbackTimer);
+    };
+  }, [isPulseActive, activeTurn?.id, performScrollToTurnTop]);
 
   // Intelligent clinical responder that analyzes the user's inquiry and selects matching verified specialists
   const resolvePulseAIResponse = (
@@ -891,7 +941,7 @@ export default function SearchResultsCanvas({
       doctor: pulseReply.doctor,
       emergency: Boolean(emergencyReply),
       followupChips: pulseReply.followupChips,
-      phase: emergencyReply ? "complete" : "thinking",
+      phase: emergencyReply ? "complete" : "settling",
     });
   };
 
@@ -903,10 +953,17 @@ export default function SearchResultsCanvas({
 
   const showPulseFollowupBar =
     !isZeroResults &&
-    (isPulseActive || hasScrolledDoctors || isPulseInputFocused || pulseInput.trim().length > 0);
+    !isRequerying &&
+    (isPulseActive || hasReachedDoctorsBottom || isPulseInputFocused || pulseInput.trim().length > 0);
+
+  const semanticQuickChips = [
+    "Who's available tomorrow?",
+    "Compare the first two",
+    "Help me choose",
+  ];
 
   return (
-    <div className={styles.resultsContainer} style={{ position: "relative" }}>
+    <div ref={resultsContainerRef} className={styles.resultsContainer} style={{ position: "relative" }}>
       {/* ── Active Pulse Ambient Background Aura (Soft gradient aura in active chat mode) ── */}
       <div
         className={`${styles.pulseActiveAmbientBg} ${isPulseActive ? styles.pulseActiveAmbientBgVisible : ""}`}
@@ -1063,20 +1120,16 @@ export default function SearchResultsCanvas({
           </div>
         ) : (
           <div
-            className={styles.resultsSplitLayout}
+            className={`${styles.resultsSplitLayout} ${isPulseActive ? styles.resultsSplitLayoutPulseActive : ""}`}
             data-mobile-tab={mobileTab}
-            onWheel={(e) => {
-              if (e.deltaY > 15) {
-                setHasScrolledDoctors(true);
-              } else if (e.deltaY < -15 && (!leftColRef.current || leftColRef.current.scrollTop <= 8)) {
-                setHasScrolledDoctors(false);
-              }
-            }}
           >
             {/* ── LEFT COLUMN: Recommended Doctors ── */}
-            {/* Before Pulse is active: ONLY this left column scrolls vertically, with white gradient blur at bottom */}
+            {/* Before Pulse is active: ONLY this left column scrolls vertically under the smooth frosted gradient blur */}
             {/* When Pulse is active: overflow becomes visible so content flows up into the unified feed */}
-            <div className={styles.resultsLeftColWrap}>
+            <div
+              ref={leftColWrapRef}
+              className={`${styles.resultsLeftColWrap} ${isPulseActive ? styles.resultsLeftColWrapPulseActive : ""}`}
+            >
               <div
                 ref={leftColRef}
                 className={styles.resultsLeftCol}
@@ -1086,18 +1139,12 @@ export default function SearchResultsCanvas({
                 aria-label="Doctors list"
                 style={
                   isPulseActive
-                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0, maskImage: "none", WebkitMaskImage: "none" }
+                    ? { overflowY: "visible", height: "auto", maxHeight: "none", paddingBottom: 0 }
                     : {
                         overflowY: "auto",
                         height: "100%",
                         maxHeight: "100%",
-                        paddingBottom: 84,
-                        maskImage: showPulseFollowupBar
-                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
-                          : "none",
-                        WebkitMaskImage: showPulseFollowupBar
-                          ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 62px), rgba(0,0,0,0.28) calc(100% - 54px), transparent calc(100% - 50px))"
-                          : "none",
+                        paddingBottom: currentResults.doctors.length > 4 ? 132 : 24,
                       }
                 }
               >
@@ -1223,16 +1270,16 @@ export default function SearchResultsCanvas({
               </div>
             ))}
 
-            {/* Active Animated Turn (Prompt Inputted -> Thinking -> Drafting -> Skeleton -> Solution) */}
+            {/* Active Animated Turn (Prompt glides up -> Thinking -> Drafting -> Skeleton -> Solution) */}
             {activeTurn && (
-              <div key={activeTurn.id} className={styles.aiTurnBlock}>
-                {/* Step 1: User Prompt Message Bubble animates in */}
+              <div key={activeTurn.id} ref={activeTurnRef} className={styles.aiTurnBlock}>
+                {/* Step 1: User Prompt Message Bubble glides smoothly upward from input */}
                 <div className={styles.aiUserBubbleRow}>
                   <motion.div
                     className={styles.aiUserBubble}
-                    initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 36, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
                   >
                     {activeTurn.userPrompt}
                   </motion.div>
@@ -1384,32 +1431,83 @@ export default function SearchResultsCanvas({
         )}
       </div>
 
-      {/* ── Clean Edge Backing & Follow-up "Ask Pulse ai" Input Bar ── */}
-      {/* Appears smoothly ONLY when user scrolls down primary doctor results (or activates Pulse AI) */}
+      {/* ── Smooth Frosted Gradient Blur & Follow-up "Ask Pulse" Bar (Figma 523:389) ── */}
       {!isZeroResults && (
         <>
           <div
             className={`${styles.pulseDockBackdrop} ${isPulseActive ? styles.pulseDockBackdropActive : styles.pulseDockBackdropCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
+            style={
+              dockMetrics
+                ? isPulseActive
+                  ? {
+                      left: 0,
+                      width: dockMetrics.containerWidth,
+                      right: "auto",
+                    }
+                  : {
+                      left: Math.max(0, dockMetrics.left - 10),
+                      width: dockMetrics.leftWidth + 20,
+                      right: "auto",
+                    }
+                : undefined
+            }
             aria-hidden="true"
           />
 
           <div
             className={`${styles.floatingPulseDock} ${isPulseActive ? styles.floatingPulseDockExpanded : styles.floatingPulseDockCompact} ${showPulseFollowupBar ? styles.pulseDockVisible : styles.pulseDockHidden}`}
-            style={{ zIndex: 25 }}
+            style={
+              dockMetrics
+                ? isPulseActive
+                  ? {
+                      left: 18,
+                      width: Math.max(280, dockMetrics.containerWidth - 36),
+                      right: "auto",
+                      zIndex: 25,
+                    }
+                  : {
+                      left: dockMetrics.left,
+                      width: dockMetrics.leftWidth,
+                      right: "auto",
+                      zIndex: 25,
+                    }
+                : { zIndex: 25 }
+            }
           >
             <div
               className={styles.floatingPulseDockCol}
               style={{ width: "100%", maxWidth: "100%" }}
             >
-              <form
-                className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
-                style={{ width: "100%", maxWidth: "100%", pointerEvents: showPulseFollowupBar ? "auto" : "none" }}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSendPulsePrompt();
-                }}
+              <AnimatePresence initial={false}>
+                {!isPulseActive && (
+                  <motion.div
+                    key="semanticQuickChipsRow"
+                    className={styles.pulseQuickChipsRow}
+                    initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                    animate={{ opacity: 1, height: "auto", marginBottom: 9 }}
+                    exit={{ opacity: 0, height: 0, marginBottom: 0, overflow: "hidden" }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ pointerEvents: showPulseFollowupBar ? "auto" : "none" }}
+                  >
+                    {semanticQuickChips.map((chipText) => (
+                      <button
+                        key={chipText}
+                        type="button"
+                        className={styles.pulseQuickChip}
+                        onClick={() => handleSendPulsePrompt(chipText)}
+                      >
+                        {chipText}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div
+                className={styles.floatingPulseComposerRow}
+                style={{ pointerEvents: showPulseFollowupBar ? "auto" : "none" }}
               >
-                {/* Round Blue Plus Button */}
+                {/* Round Gradient-Blue Plus Button Outside Pill (Figma 523:399) */}
                 <button
                   type="button"
                   className={styles.floatingPulsePlusBtn}
@@ -1420,47 +1518,59 @@ export default function SearchResultsCanvas({
                   <Plus size={18} strokeWidth={2.0} />
                 </button>
 
-                {/* Input Field */}
-                <input
-                  ref={pulseInputRef}
-                  type="text"
-                  className={styles.floatingPulseInput}
-                  placeholder="Ask Pulse ai"
-                  value={pulseInput}
-                  onChange={(e) => setPulseInput(e.target.value)}
-                  onFocus={() => setIsPulseInputFocused(true)}
-                  onBlur={() => setIsPulseInputFocused(false)}
-                  aria-label="Ask Pulse AI"
-                />
+                <form
+                  className={`${styles.floatingPulsePill} ${isPulseActive ? styles.floatingPulsePillExpanded : styles.floatingPulsePillCompact}`}
+                  style={{ flex: 1, minWidth: 0 }}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSendPulsePrompt();
+                  }}
+                >
+                  {/* Input Field */}
+                  <input
+                    ref={pulseInputRef}
+                    type="text"
+                    className={styles.floatingPulseInput}
+                    placeholder="Ask Pulse"
+                    value={pulseInput}
+                    onChange={(e) => setPulseInput(e.target.value)}
+                    onFocus={() => setIsPulseInputFocused(true)}
+                    onBlur={() => setIsPulseInputFocused(false)}
+                    aria-label="Ask Pulse"
+                  />
 
-                {/* Right Action: Send Button (if text entered) or Mic Icon */}
-                {pulseInput.trim().length > 0 ? (
-                  <button
-                    type="submit"
-                    className={styles.floatingPulseSendBtn}
-                    aria-label="Send prompt"
-                    title="Send to Pulse AI"
-                  >
-                    <Send size={15} />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
-                    onClick={() => {
-                      setIsListening((prev) => !prev);
-                      if (!isListening) {
-                        setPulseInput("Tell me more about Dr Pradeep kumar");
-                        pulseInputRef.current?.focus();
-                      }
-                    }}
-                    aria-label="Voice input"
-                    title={isListening ? "Listening..." : "Speak to Pulse AI"}
-                  >
-                    <Mic size={19} />
-                  </button>
-                )}
-              </form>
+                  <div className={styles.floatingPulseTrailingActions}>
+                    <span className={styles.floatingPulseDivider} aria-hidden="true" />
+                    {/* Right Action: Send Button (if text entered) or Mic Icon */}
+                    {pulseInput.trim().length > 0 ? (
+                      <button
+                        type="submit"
+                        className={styles.floatingPulseSendBtn}
+                        aria-label="Send prompt"
+                        title="Send to Pulse AI"
+                      >
+                        <Send size={15} />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className={`${styles.floatingPulseMicBtn} ${isListening ? styles.floatingPulseMicActive : ""}`}
+                        onClick={() => {
+                          setIsListening((prev) => !prev);
+                          if (!isListening) {
+                            setPulseInput("Tell me more about Dr Pradeep kumar");
+                            pulseInputRef.current?.focus();
+                          }
+                        }}
+                        aria-label="Voice input"
+                        title={isListening ? "Listening..." : "Speak to Pulse AI"}
+                      >
+                        <Mic size={19} />
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </>

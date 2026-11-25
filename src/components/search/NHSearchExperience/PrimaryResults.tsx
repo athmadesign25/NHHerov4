@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -63,8 +63,6 @@ export default function PrimaryResults({
   onSelectSpecialty,
 }: PrimaryResultsProps) {
   const [pulsePrompt, setPulsePrompt] = useState("");
-  // Staggered loading sequence stage: "text" -> "skeleton" -> "cards"
-  const [animStage, setAnimStage] = useState<"text" | "skeleton" | "cards">("text");
 
   // Construct word tokens for word-by-word typing effect
   const wordsToAnimate = React.useMemo(() => {
@@ -95,33 +93,6 @@ export default function PrimaryResults({
       { text: `${selectedLocation || "Bangalore"}:`, isBold: true },
     ];
   }, [pulseRecommendationText, query, selectedLocation, doctors.length]);
-
-  useEffect(() => {
-    // Stage 1: Word-by-word typing text animation
-    setAnimStage("text");
-    const textTypingDuration = Math.max(wordsToAnimate.length * 35 + 100, 600);
-
-    // Stage 2: Skeleton shimmer placeholders appear after typing finishes
-    const t1 = setTimeout(() => {
-      setAnimStage("skeleton");
-    }, textTypingDuration);
-
-    // Stage 3: Real doctor cards reveal smoothly
-    const t2 = setTimeout(() => {
-      setAnimStage("cards");
-    }, textTypingDuration + 420);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, [query, doctors, wordsToAnimate]);
-
-  // Dynamic skeleton placeholder count matching doctor results count (up to 8 cards max)
-  const skeletonItems = React.useMemo(() => {
-    const count = Math.min(Math.max(doctors.length, 1), 8);
-    return Array.from({ length: count }, (_, i) => i + 1);
-  }, [doctors.length]);
 
   // Limit displayed doctors to maximum 8 cards
   const displayDoctors = React.useMemo(() => {
@@ -302,30 +273,13 @@ export default function PrimaryResults({
         )}
       </motion.div>
 
-      {/* ── STAGE 2: Doctor Card Skeleton Shimmer Loader (Matches Doctor Count up to 8) ── */}
-      {animStage === "skeleton" && (
-        <div className={`${styles.refDoctorsGrid} ${isSingleDoctor ? styles.refDoctorsGridSingle : ""}`}>
-          {skeletonItems.map((idx) => (
-            <div key={idx} className={`${styles.refDocSkeletonCard} ${isSingleDoctor ? styles.refDocCardSingle : ""}`}>
-              <div className={styles.refDocSkeletonShimmer} />
-              <div className={styles.refDocSkeletonBottom}>
-                <div className={styles.refDocSkeletonLine1} />
-                <div className={styles.refDocSkeletonLine2} />
-                <div className={styles.refDocSkeletonLine3} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* ── STAGE 3: Real Verified Doctor Cards Reveal (Maximum 8 cards) ── */}
-      {(animStage === "cards" || animStage === "text") && (
-        <motion.div
-          className={`${styles.refDoctorsGrid} ${isSingleDoctor ? styles.refDoctorsGridSingle : ""}`}
-          initial={{ opacity: animStage === "cards" ? 0 : 1 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
+      {/* ── Verified Doctor Cards Reveal (Single smooth entrance, zero post-load skeleton swap) ── */}
+      <motion.div
+        className={`${styles.refDoctorsGrid} ${isSingleDoctor ? styles.refDoctorsGridSingle : ""}`}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+      >
           {displayDoctors.map((doc) => {
             const isLongName = doc.name.length > 18;
             const isVcDoctor =
@@ -401,8 +355,7 @@ export default function PrimaryResults({
               </div>
             );
           })}
-        </motion.div>
-      )}
+      </motion.div>
 
       {/* Clean View all doctors Link */}
       <div className={styles.refViewAllRow}>

@@ -567,8 +567,8 @@ export default function NHSearchExperience({
     setSearchState("results");
   };
 
-  // Voice Submit: Triggers analyzing screen, speaks "Getting you the right care" female voice, then populates results
-  const handleVoiceSubmit = async (transcript: string) => {
+  // Voice Submit: Takes transcribed text straight into Active Search stage so user can review/edit before submitting
+  const handleVoiceSubmit = (transcript: string) => {
     captureOrigin();
     const currentScroll = typeof window !== "undefined"
       ? (window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0)
@@ -581,30 +581,8 @@ export default function NHSearchExperience({
     setPulseInitialQuery(targetQuery);
     setActivePill(null);
 
-    // Step 1: Transition into analyzing screen
-    setSearchState("skeleton");
+    setSearchState("active");
     onOpenChange?.(true);
-
-    // Step 2: Speak warm female empathetic audio voice: "Getting you the right care"
-    playFemaleEmpatheticVoice("Getting you the right care");
-
-    // Step 3: Concurrently fetch matching doctors and hold analyzing screen until voice audio completes (~1900ms)
-    try {
-      const triage = analyzePulseIntent(targetQuery, [], selectedLocation);
-      const [matchedResults] = await Promise.all([
-        getSearchResults(triage.searchQueryForApi || targetQuery, selectedLocation),
-        new Promise((resolve) => setTimeout(resolve, 1950)),
-      ]);
-
-      if (matchedResults && matchedResults.doctors.length > 0) {
-        setResultsData(matchedResults);
-      }
-    } catch (e) {
-      console.warn("Failed fetching voice matching results:", e);
-    }
-
-    // Step 4: After voice output finishes, populate the results!
-    setSearchState("pulse");
   };
 
   // Document Submit: Directly opens Pulse AI to understand and explain attached health report

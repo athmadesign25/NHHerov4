@@ -52,6 +52,8 @@ export default function ActiveSearchCanvas({
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedSugIndex, setSelectedSugIndex] = useState<number>(-1);
   const [livePrediction, setLivePrediction] = useState<PredictiveState | null>(null);
+  const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const voiceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Recent Searches (History for logged in user, cache for guest user)
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -161,10 +163,99 @@ export default function ActiveSearchCanvas({
     ? (localPrediction || livePrediction)
     : (livePrediction || localPrediction);
 
-  // Auto-focus input when opening
+  // Auto-focus input when opening & place cursor cleanly at end of any pre-filled transcript
   useEffect(() => {
-    inputRef.current?.focus();
+    const el = inputRef.current;
+    if (!el) return;
+    el.focus();
+    const len = el.value.length;
+    if (len > 0) {
+      el.setSelectionRange(len, len);
+    }
+    return () => {
+      if (voiceTimerRef.current) clearInterval(voiceTimerRef.current);
+    };
   }, []);
+
+  const handleToggleActiveVoice = () => {
+    if (isVoiceListening) {
+      if (voiceTimerRef.current) {
+        clearInterval(voiceTimerRef.current);
+        voiceTimerRef.current = null;
+      }
+      setIsVoiceListening(false);
+      inputRef.current?.focus();
+      return;
+    }
+
+    setIsVoiceListening(true);
+    const words = "I have chest pain and shortness of breath since morning".split(" ");
+    let idx = 0;
+    let accum = "";
+
+    if (typeof window !== "undefined") {
+      const win = window as unknown as {
+        SpeechRecognition?: new () => {
+          lang: string;
+          interimResults: boolean;
+          onresult: ((ev: { results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }> }) => void) | null;
+          onend: (() => void) | null;
+          start: () => void;
+          stop: () => void;
+        };
+        webkitSpeechRecognition?: new () => {
+          lang: string;
+          interimResults: boolean;
+          onresult: ((ev: { results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal?: boolean }> }) => void) | null;
+          onend: (() => void) | null;
+          start: () => void;
+          stop: () => void;
+        };
+      };
+      const SpeechCtor = win.SpeechRecognition || win.webkitSpeechRecognition;
+      if (SpeechCtor) {
+        try {
+          const rec = new SpeechCtor();
+          rec.lang = "en-IN";
+          rec.interimResults = true;
+          rec.onresult = (ev) => {
+            if (voiceTimerRef.current) {
+              clearInterval(voiceTimerRef.current);
+              voiceTimerRef.current = null;
+            }
+            const parts: string[] = [];
+            for (let i = 0; i < ev.results.length; i++) {
+              parts.push(ev.results[i]?.[0]?.transcript || "");
+            }
+            const nextText = enforceWordLimit(parts.join(" ").trim(), MAX_SEARCH_WORDS);
+            if (nextText) onQueryChange(nextText);
+          };
+          rec.onend = () => {
+            setIsVoiceListening(false);
+            inputRef.current?.focus();
+          };
+          rec.start();
+        } catch {
+          // Fallback to interactive word stream
+        }
+      }
+    }
+
+    voiceTimerRef.current = setInterval(() => {
+      if (idx < words.length) {
+        accum += (accum ? " " : "") + words[idx];
+        onQueryChange(accum);
+        idx++;
+      } else {
+        if (voiceTimerRef.current) {
+          clearInterval(voiceTimerRef.current);
+          voiceTimerRef.current = null;
+        }
+        setIsVoiceListening(false);
+        inputRef.current?.focus();
+      }
+    }, 240);
+  };
 
   // Keyboard handler for Tab completion, arrow navigation, enter submit
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -327,7 +418,10 @@ export default function ActiveSearchCanvas({
         <button 
           type="button" 
           className={styles.standaloneIconBtn} 
-          aria-label="Voice search"
+          onClick={handleToggleActiveVoice}
+          aria-label={isVoiceListening ? "Stop voice input" : "Voice search"}
+          title={isVoiceListening ? "Stop voice input" : "Speak to type"}
+          style={isVoiceListening ? { color: "#ED1C24", background: "rgba(237, 28, 36, 0.10)" } : undefined}
         >
           <Mic size={18} />
         </button>
