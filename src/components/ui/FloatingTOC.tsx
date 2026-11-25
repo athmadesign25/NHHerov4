@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
 import styles from "./FloatingTOC.module.css";
 
@@ -22,7 +22,16 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(theme ? theme === "dark" : true);
   const tagRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
+
+  // High-performance Framer Motion scroll progress (hardware-accelerated, zero-lag)
+  const ringCircumference = 44; // 2 * PI * 7 ~ 43.98
+  const { scrollYProgress } = useScroll();
+  const ringOffset = useTransform(scrollYProgress, [0, 1], [ringCircumference, 0]);
+
+  // Keep numerical percentage in sync for dropdown without re-rendering the SVG ring
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollProgress(latest);
+  });
 
   // Sync directly with theme prop passed from parent pinned bar
   useEffect(() => {
@@ -62,103 +71,35 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
     return () => observer.disconnect();
   }, []);
 
-  // Probe active section, scroll progress, and background theme
-  const updateScrollAndTheme = useCallback(() => {
-    if (!items.length) return;
-
-    // 1. Calculate overall scroll progress (0.0 to 1.0)
-    const docElem = document.documentElement;
-    const docBody = document.body;
-    const scrollTop = window.pageYOffset || docElem.scrollTop || docBody.scrollTop || 0;
-    const scrollHeight = Math.max(
-      docBody.scrollHeight,
-      docElem.scrollHeight,
-      docBody.offsetHeight,
-      docElem.offsetHeight
-    );
-    const clientHeight = docElem.clientHeight || window.innerHeight;
-    const totalScroll = scrollHeight - clientHeight;
-    const progress = totalScroll > 0 ? Math.min(Math.max(scrollTop / totalScroll, 0), 1) : 0;
-    setScrollProgress(progress);
-
-    // 2. Determine active section based on scroll position
-    const triggerY = window.innerHeight * 0.35;
-    let currentId = items[0].id;
-    for (const item of items) {
-      const el = document.getElementById(item.id);
-      if (!el) continue;
-      const top = el.getBoundingClientRect().top;
-      if (top <= triggerY) {
-        currentId = item.id;
-      }
-    }
-    setActiveId(currentId);
-
-    // 3. Determine theme (dark vs light) - priority to active navbar/pinned bar theme
-    const navThemeAttr = document.documentElement.getAttribute("data-nav-theme-active");
-    if (navThemeAttr === "light") {
-      setIsDarkTheme(false);
-      return;
-    } else if (navThemeAttr === "dark") {
-      setIsDarkTheme(true);
-      return;
-    }
-
-    const probeX = Math.min(Math.max(window.innerWidth * 0.15, 60), 200);
-    const probeY = 120;
-    const elements = document.elementsFromPoint(probeX, probeY);
-    let dark: boolean | null = null;
-
-    for (const el of elements) {
-      if (el.closest("aside") || el.closest("nav") || el.closest("footer") || el.tagName === "HTML" || el.tagName === "BODY") continue;
-      const bg = window.getComputedStyle(el).backgroundColor;
-      if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") {
-        const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-        if (match) {
-          const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
-          if (a > 0.2) {
-            const r = parseInt(match[1], 10);
-            const g = parseInt(match[2], 10);
-            const b = parseInt(match[3], 10);
-            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-            dark = luminance < 0.5;
-            break;
-          }
-        }
-      }
-    }
-
-    if (dark === null) {
-      for (const el of elements) {
-        if (el.closest("aside") || el.closest("nav") || el.closest("footer")) continue;
-        const themeEl = el.closest("[data-nav-theme]");
-        if (themeEl && !themeEl.closest("footer")) {
-          dark = themeEl.getAttribute("data-nav-theme") === "dark";
-          break;
-        }
-      }
-    }
-
-    if (dark === null) {
-      const activeEl = document.getElementById(currentId);
-      if (activeEl && !activeEl.closest("footer")) {
-        const themeEl = activeEl.closest("[data-nav-theme]") || (activeEl.hasAttribute("data-nav-theme") ? activeEl : null);
-        if (themeEl && !themeEl.closest("footer")) {
-          dark = themeEl.getAttribute("data-nav-theme") === "dark";
-        }
-      }
-    }
-
-    setIsDarkTheme(dark ?? true);
-  }, [items]);
-
+  // Determine active section (only triggers React state update when active section actually changes)
   useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(updateScrollAndTheme);
+    let ticking = false;
+
+    const checkActiveSection = () => {
+      const triggerY = window.innerHeight * 0.35;
+      let currentId = items[0]?.id;
+      for (const item of items) {
+        const el = document.getElementById(item.id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        if (top <= triggerY) {
+          currentId = item.id;
+        }
+      }
+      if (currentId) {
+        setActiveId((prev) => (prev !== currentId ? currentId : prev));
+      }
+      ticking = false;
     };
 
-    updateScrollAndTheme();
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(checkActiveSection);
+        ticking = true;
+      }
+    };
+
+    checkActiveSection();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
@@ -173,9 +114,8 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
       if (lenis && typeof lenis.off === "function") {
         lenis.off("scroll", onScroll);
       }
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [updateScrollAndTheme]);
+  }, [items]);
 
   // Click outside to dismiss menu
   useEffect(() => {
@@ -220,8 +160,6 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
 
   const activeIndex = Math.max(items.findIndex((item) => item.id === activeId), 0);
   const activeItem = items[activeIndex] || items[0];
-  const ringCircumference = 44; // 2 * PI * 7 ~ 43.98
-  const ringOffset = ringCircumference * (1 - scrollProgress);
 
   return (
     <div
@@ -245,7 +183,7 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
           }
         }}
       >
-        {/* Circular Progress Ring */}
+        {/* Seamless Hardware-Accelerated Circular Progress Ring */}
         <div
           className={styles.progressRingWrapper}
           title={`${Math.round(scrollProgress * 100)}% page scrolled`}
@@ -258,14 +196,14 @@ export default function FloatingTOC({ items, defaultActiveId, theme }: FloatingT
               r="7"
               strokeWidth="1.8"
             />
-            <circle
+            <motion.circle
               className={styles.progressRingFill}
               cx="9"
               cy="9"
               r="7"
               strokeWidth="2"
+              strokeDasharray={ringCircumference}
               style={{
-                strokeDasharray: ringCircumference,
                 strokeDashoffset: ringOffset,
               }}
             />

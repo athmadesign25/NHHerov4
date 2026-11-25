@@ -197,7 +197,7 @@
 .progressRingFill {
   fill: none;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.15s ease;
+  transition: none !important;
 }
 
 /* Section Counter Badge */
