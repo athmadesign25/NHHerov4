@@ -68,6 +68,6 @@ export const SERVICE_MENU_SECTIONS: ServiceMenuSection[] = [
     id: "centres", label: "Centres of Excellence",
     image: "/navigation/hospitals/cardiac-sciences-original.png", imageSizes: "(min-width: 1100px) 1400px, 100vw", alt: "Narayana Health hospital campus",
     groups: [{ title: "Specialist care", links: SERVICE_CENTRES }],
-    footer: { label: "View all", href: "/specialities?category=Centres+of+Excellence" },
+    footer: { label: "View all", href: "/centre-of-excellence" },
   },
 ];
