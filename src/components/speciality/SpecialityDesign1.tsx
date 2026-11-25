@@ -1602,6 +1602,20 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                   </Link>
 
                   <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
+                  <span className={design2Styles.breadcrumbSlash} aria-hidden="true">/</span>
+
+                  {/* First category level (always visible on mobile & desktop, matching "Settings" in spec) */}
+                  <Link
+                    href={isCoE ? "/centre-of-excellence" : "/specialities"}
+                    className={design2Styles.breadcrumbLink}
+                    title={isCoE ? "Centres of Excellence" : "All Specialities"}
+                    aria-label={isCoE ? "View all centres of excellence" : "View all medical specialities"}
+                  >
+                    {isCoE ? "Centres of Excellence" : "Specialities"}
+                  </Link>
+
+                  <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
+                  <span className={design2Styles.breadcrumbSlash} aria-hidden="true">/</span>
 
                   {/* Collapsed Ellipsis Button on Mobile when not expanded */}
                   {!isBreadcrumbExpanded && (
@@ -1620,22 +1634,12 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                         ...
                       </button>
                       <ChevronRight size={14} className={`${design2Styles.breadcrumbChevron} ${design2Styles.breadcrumbEllipsisChevron}`} aria-hidden="true" />
+                      <span className={`${design2Styles.breadcrumbSlash} ${design2Styles.breadcrumbEllipsisSlash}`} aria-hidden="true">/</span>
                     </>
                   )}
 
                   {/* Middle Items (Desktop always visible, Mobile visible when expanded) */}
                   <span className={`${design2Styles.breadcrumbMiddleGroup} ${isBreadcrumbExpanded ? design2Styles.breadcrumbMiddleGroupExpanded : ""}`}>
-                    <Link
-                      href={isCoE ? "/centre-of-excellence" : "/specialities"}
-                      className={design2Styles.breadcrumbLink}
-                      title={isCoE ? "Centres of Excellence" : "All Specialities"}
-                      aria-label={isCoE ? "View all centres of excellence" : "View all medical specialities"}
-                    >
-                      {isCoE ? "Centres of Excellence" : "Specialities"}
-                    </Link>
-
-                    <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
-
                     <button
                       type="button"
                       className={design2Styles.breadcrumbSpecialityBtn}
@@ -1650,6 +1654,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                     </button>
 
                     <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
+                    <span className={design2Styles.breadcrumbSlash} aria-hidden="true">/</span>
                   </span>
 
                   {/* 2 & 3. Patient Type + Sub-Specialty Programme Dropdown */}
@@ -1671,6 +1676,7 @@ export default function SpecialityDesign1({ slug, isCoE: propIsCoE }: { slug: st
                       </button>
 
                       <ChevronRight size={14} className={design2Styles.breadcrumbChevron} aria-hidden="true" />
+                      <span className={design2Styles.breadcrumbSlash} aria-hidden="true">/</span>
 
                       <button
                         type="button"

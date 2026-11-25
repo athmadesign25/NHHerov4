@@ -823,6 +823,25 @@
   flex-shrink: 0;
 }
 
+/* Forward slash breadcrumb separator on mobile (matching spec: Home / Settings / ... / Team) */
+.breadcrumbSlash {
+  display: none;
+  align-items: center;
+  color: rgba(var(--white-rgb), 0.35);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: 300;
+  line-height: 1;
+  user-select: none;
+  flex-shrink: 0;
+  padding: 0 1px;
+}
+
+:global(html[data-nav-theme-active="light"]) .breadcrumbSlash,
+.programmeTabsWrapperLight .breadcrumbSlash,
+[data-theme="light"] .breadcrumbSlash {
+  color: rgba(var(--black-rgb), 0.35);
+}
+
 /* Collapsed '...' dots button (clean typography, no box outline) */
 .breadcrumbEllipsisBtn {
   display: none;
@@ -832,12 +851,12 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  padding: 0 4px;
+  padding: 0 2px;
   color: rgba(var(--white-rgb), 0.75);
   font-family: inherit;
-  font-size: var(--font-size-base, 16px);
+  font-size: var(--font-size-sm, 14px);
   font-weight: 500;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
@@ -928,6 +947,14 @@
 
   .breadcrumbHomeText {
     display: none !important;
+  }
+
+  .breadcrumbChevron {
+    display: none !important;
+  }
+
+  .breadcrumbSlash {
+    display: inline-flex !important;
   }
 
   .breadcrumbEllipsisBtn {
